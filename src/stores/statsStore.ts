@@ -1,4 +1,4 @@
-import type { invoiceT, FilteredStockData, stockMvmT } from "@/types";
+import type { invoiceT, FilteredStockData, stockMvmT, productT } from "@/types";
 import { defineStore } from "pinia";
 import database from "@/database/db";
 
@@ -52,10 +52,13 @@ export const useStatsStore = defineStore("StatsStore", {
       return [result, months];
     },
     getOrderedProduct: async (id: number, invoices: invoiceT[]) => {
-      const FiltredInvoices = invoices.filter(
-        (invoice) => invoice.client_id == id
-      );
-      console.log(FiltredInvoices);
+      const FiltredItems = invoices
+        .filter((invoice) => invoice.client_id == id)
+        .map((item) => item.invoiceItems);
+      // .map((item) => ({
+      //   ...item,
+      // })).map((item)=> [...item]);
+      console.log(FiltredItems);
     },
     ////////////////// GET FROM DB /////////////
     getPastThreeMonths: async function () {},

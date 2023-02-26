@@ -30,8 +30,8 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
           "SELECT * FROM invoice_items"
         );
         for await (const item of invoiceItems) {
-          let product: { price: number }[] = await db.select(
-            "SELECT price FROM products WHERE id = $1",
+          let product: { price: number; name: string }[] = await db.select(
+            "SELECT price ,name FROM products WHERE id = $1",
             [item.product_id]
           );
           invoiceItems[invoiceItems.indexOf(item)]["product"] = product[0];
