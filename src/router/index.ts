@@ -1,24 +1,24 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { NotificationsView } from "@/views/content/NotificationsView";
 import { CommandDetails } from "@/views/content/CommandDetails";
+import { InvoiceDetails } from "@/views/content/InvoiceDetails";
+import { ClientDetails } from "@/views/content/ClientDetails";
+import { SellerDetails } from "@/views/content/SellerDetails";
 import { CommandIndex } from "@/views/content/CommandIndex";
+import { InvoiceIndex } from "@/views/content/InvoiceIndex";
 import { ProductView } from "@/views/content/ProductView";
 import { CommandView } from "@/views/content/CommandView";
 import { InvoiceView } from "@/views/content/InvoiceView";
+import { ClientIndex } from "@/views/content/ClientIndex";
+import { SellerIndex } from "@/views/content/SellerIndex";
 import { SellerView } from "@/views/content/SellerView";
 import { ClientView } from "@/views/content/ClientView";
 import { StockView } from "@/views/content/StockView";
 import { StatsView } from "@/views/content/StatsView";
-import { IndexView } from "../views/IndexView";
-import { AuthView } from "@/views/AuthView";
-import { InvoiceDetails } from "@/views/content/InvoiceDetails";
-import { InvoiceIndex } from "@/views/content/InvoiceIndex";
-import { HomeView } from "@/views/content/HomeView";
-import { ClientDetails } from "@/views/content/ClientDetails";
-import { ClientIndex } from "@/views/content/ClientIndex";
-import { SellerDetails } from "@/views/content/SellerDetails";
-import { SellerIndex } from "@/views/content/SellerIndex";
 import { CrediView } from "@/views/content/CrediView";
+import { HomeView } from "@/views/content/HomeView";
+import { IndexView } from "@/views/IndexView";
+import { AuthView } from "@/views/AuthView";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
