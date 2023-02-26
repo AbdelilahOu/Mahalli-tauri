@@ -22,7 +22,6 @@ export const StockTable = defineComponent({
   },
   components: { UiPagination },
   setup(props) {
-    console.log(props.Stock);
     const pagination = ref<number>(0);
     return () => (
       <div class="flex flex-col w-full h-fit">
