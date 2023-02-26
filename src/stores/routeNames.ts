@@ -1,0 +1,88 @@
+import type { RouteLinksTypeT } from "../types";
+
+export const RouteLinks: RouteLinksTypeT[] = [
+  {
+    path: "/Clients/all",
+    component: "Clients",
+    name: "Clients",
+    icon: "👭",
+    display: true,
+  },
+  {
+    path: "/Sellers/all",
+    component: "Sellers",
+    name: "Sellers",
+    icon: "👥",
+    display: true,
+  },
+  {
+    path: "/Products",
+    component: "Products",
+    name: "Products",
+    icon: "📦",
+    display: true,
+  },
+  {
+    path: "/Commands/all",
+    component: "Commands",
+    name: "Commands",
+    icon: "🚚",
+    display: true,
+  },
+  {
+    path: "/Invoices/all",
+    component: "Invoices",
+    name: "Invoices",
+    icon: "📋",
+    display: true,
+  },
+  {
+    path: "/Stocks",
+    component: "Stocks",
+    name: "Stock",
+    icon: "🏪",
+    display: true,
+  },
+  {
+    path: "/Stats",
+    component: "Stats",
+    name: "Statistics",
+    icon: "📊",
+    display: true,
+  },
+  {
+    path: "/Credi",
+    component: "Credi",
+    name: "Credi",
+    icon: "💵",
+    display: true,
+  },
+  {
+    path: "/CommandDetails",
+    component: "CommandDetails",
+    name: "Commands",
+    icon: "🚚",
+    display: false,
+  },
+  {
+    path: "/InvoiceDetails",
+    component: "InvoiceDetails",
+    name: "Invoices",
+    icon: "📋",
+    display: false,
+  },
+  {
+    path: "/ClientDetails",
+    component: "ClientDetails",
+    name: "Clients",
+    icon: "👭",
+    display: false,
+  },
+  {
+    path: "/SellerDetails",
+    component: "SellerDetails",
+    name: "Sellers",
+    icon: "👥",
+    display: false,
+  },
+];

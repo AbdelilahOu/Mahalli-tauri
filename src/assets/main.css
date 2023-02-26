@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* we will explain what these classes do next! */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+.router-enter-active,
+.router-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.router-enter-from,
+.router-leave-to {
+  opacity: 0;
+}
+
+.list-move,
+/* apply transition to moving elements */
+.list-enter-active {
+  transition: all 0.3s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.router-link-active {
+  @apply bg-gray-300 transition-all transform duration-200;
+}
+
+.defaultInput {
+  @apply rounded-sm  px-2 py-1  focus:outline-0 transition-all duration-200 focus:placeholder-primary w-full h-full;
+}
+
+.defaultButton {
+  @apply h-9 px-4 print:hidden w-full font-semibold disabled:cursor-default py-1 active:ring-1 active:ring-gray-500 transition-all duration-200 flex items-center whitespace-nowrap justify-center text-center rounded-sm border;
+}
+
+* {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
