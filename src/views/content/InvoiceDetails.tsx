@@ -47,7 +47,7 @@ export const InvoiceDetails = defineComponent({
                     <td class="p-2">
                       <span class="h-full w-full grid">
                         {new Date(
-                          invoice.value?.createdAt ?? new Date()
+                          invoice.value?.created_at ?? new Date()
                         ).toLocaleDateString("fr-fr", {
                           month: "2-digit",
                           year: "2-digit",
@@ -140,7 +140,7 @@ export const InvoiceDetails = defineComponent({
                 <thead class="text-xs h-9 rounded-sm font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
                   <tr>
                     <th></th>
-                    {[0, 1, 2, 3, 4, 5, 6].map((index) => (
+                    {[0, 1, 2, 3, 4, 5, 6, 7].map((index) => (
                       <th class="p-2">
                         <div class="font-semibold text-left">
                           {globalTranslate(
@@ -165,7 +165,12 @@ export const InvoiceDetails = defineComponent({
                       </td>
                       <td class="p-2">
                         <div class="font-medium text-gray-800">
-                          {item.productId}
+                          {item.product_id}
+                        </div>
+                      </td>
+                      <td class="p-2">
+                        <div class="font-medium text-gray-800 max-w-[120px] overflow-hidden">
+                          {item.product.description}
                         </div>
                       </td>
                       <td class="p-2">
@@ -187,12 +192,13 @@ export const InvoiceDetails = defineComponent({
                             item.product.price *
                             (item.product.tva / 100) *
                             item.quantity
-                          ).toFixed(2)}
+                          ).toFixed(2)}{" "}
+                          DH
                         </div>
                       </td>
                       <td class="p-2">
                         <div class="flex  justify-start gap-3">
-                          {(item.product.price * item.quantity).toFixed(2)}
+                          {(item.product.price * item.quantity).toFixed(2)} DH
                         </div>
                       </td>
                       <td class="p-2">
@@ -201,6 +207,7 @@ export const InvoiceDetails = defineComponent({
                     </tr>
                   ))}
                   <tr>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -217,7 +224,7 @@ export const InvoiceDetails = defineComponent({
                               (curr.product.tva / 100)),
                           0
                         )
-                        .toFixed(2)}
+                        .toFixed(2)}{" "}
                       DH
                     </td>
                     <td class="p-2 font-semibold">
@@ -227,11 +234,12 @@ export const InvoiceDetails = defineComponent({
                             (acc += curr.quantity * curr.product.price),
                           0
                         )
-                        .toFixed(2)}
+                        .toFixed(2)}{" "}
                       DH
                     </td>
                   </tr>
                   <tr>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -254,7 +262,7 @@ export const InvoiceDetails = defineComponent({
                             (acc += curr.quantity * curr.product.price),
                           0
                         ) ?? 0)
-                      ).toFixed(2)}
+                      ).toFixed(2)}{" "}
                       DH
                     </td>
                   </tr>

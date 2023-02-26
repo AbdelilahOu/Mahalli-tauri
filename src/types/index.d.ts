@@ -130,6 +130,7 @@ export interface invoiceDetailsItemT extends invoiceItemT {
     price: number;
     name: string;
     tva: number;
+    description: string;
   };
 }
 
