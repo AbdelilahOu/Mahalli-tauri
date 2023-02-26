@@ -183,7 +183,7 @@ export const CommandDetails = defineComponent({
                         </div>
                       </td>
                       <td class="p-2">
-                        <div class="font-medium text-gray-800 max-w-[100px] overflow-hidden">
+                        <div class="font-medium text-gray-800 max-w-[120px] overflow-hidden">
                           {item.product?.description}
                         </div>
                       </td>
@@ -206,7 +206,8 @@ export const CommandDetails = defineComponent({
                           {(item.price === 0
                             ? item.product.price * item.quantity
                             : item.price * item.quantity
-                          ).toFixed(2)}
+                          ).toFixed(2)}{" "}
+                          DH
                         </div>
                       </td>
                       <td class="p-2">

@@ -69,11 +69,15 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
           [id]
         );
         for await (const item of invoiceItems) {
-          let product: { name: string; price: number; tva: number }[] =
-            await db.select(
-              "SELECT name, price, tva FROM products WHERE id = $1",
-              [item.product_id]
-            );
+          let product: {
+            name: string;
+            price: number;
+            tva: number;
+            description: string;
+          }[] = await db.select(
+            "SELECT name, price, tva, description FROM products WHERE id = $1",
+            [item.product_id]
+          );
           invoiceItems[invoiceItems.indexOf(item)]["product"] = product[0];
         }
         this.invoice = {
