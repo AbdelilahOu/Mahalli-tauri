@@ -16,10 +16,40 @@ export const ClientDetails = defineComponent({
     const { client } = storeToRefs(clientStore);
     onBeforeMount(() => clientStore.getOneClient(Number(id)));
 
-    const ClientStats = useStatsStore().getOrderedProduct(
+    const [data, dates, products] = useStatsStore().getOrderedProduct(
       Number(id),
-      useInvoiceStore().invoices
+      storeToRefs(useInvoiceStore()).invoices.value
     );
+
+    const options = {
+      responsive: true,
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+          ticks: {
+            color: "rgba(25,23,17,0.6)",
+            textStrokeWidth: 10,
+          },
+          border: {
+            display: false,
+          },
+        },
+        y: {
+          grid: {
+            lineWidth: 1,
+            drawBorder: false,
+          },
+          border: {
+            display: false,
+          },
+          ticks: {
+            display: false,
+          },
+        },
+      },
+    };
 
     return () => (
       <main class="w-full h-full px-3">
@@ -39,35 +69,7 @@ export const ClientDetails = defineComponent({
                 },
               ],
             }}
-            chartOptions={{
-              responsive: true,
-              scales: {
-                x: {
-                  grid: {
-                    display: false,
-                  },
-                  ticks: {
-                    color: "rgba(25,23,17,0.6)",
-                    textStrokeWidth: 10,
-                  },
-                  border: {
-                    display: false,
-                  },
-                },
-                y: {
-                  grid: {
-                    lineWidth: 1,
-                    drawBorder: false,
-                  },
-                  border: {
-                    display: false,
-                  },
-                  ticks: {
-                    display: false,
-                  },
-                },
-              },
-            }}
+            chartOptions={options}
           />
         </div>
       </main>
