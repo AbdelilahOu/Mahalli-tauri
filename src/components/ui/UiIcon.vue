@@ -15,6 +15,7 @@ const icon = defineAsyncComponent(
   () => import(`../../assets/svg/${props.name}.svg`)
 );
 </script>
+
 <template>
   <component
     :class="[

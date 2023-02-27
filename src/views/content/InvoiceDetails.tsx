@@ -9,11 +9,8 @@ export const InvoiceDetails = defineComponent({
   name: "InvoiceDetails",
   setup() {
     const id = useRoute().params.id;
-
     const InvoiceStore = useInvoiceStore();
-
     const { invoice } = storeToRefs(InvoiceStore);
-
     onBeforeMount(() => InvoiceStore.getOneInvoice(Number(id)));
 
     return () => (
