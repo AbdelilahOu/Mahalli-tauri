@@ -9,7 +9,7 @@ export const ClientCard = defineComponent({
       type: Object as PropType<clientT | null>,
     },
   },
-  setup(props, ctx) {
+  setup(props) {
     return () => (
       <div class="w-full grid grid-cols-2 grid-rows-1 rounded-sm">
         <span class="flex fill-gray-400 gap-2 items-center">
