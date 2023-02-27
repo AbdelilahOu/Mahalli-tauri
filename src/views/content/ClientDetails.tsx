@@ -16,11 +16,21 @@ export const ClientDetails = defineComponent({
     const { client } = storeToRefs(clientStore);
     onBeforeMount(() => clientStore.getOneClient(Number(id)));
 
-    const [data, dates, products] = useStatsStore().getOrderedProduct(
-      Number(id),
-      storeToRefs(useInvoiceStore()).invoices.value
-    );
-
+    const [data, productsInDates, dates, products] =
+      useStatsStore().getOrderedProduct(
+        Number(id),
+        storeToRefs(useInvoiceStore()).invoices.value
+      );
+    // let result = dates.map((date) => {
+    //   return products.map((product) => ({
+    //     label: product,
+    //     backgroundColor: "rgba(255, 200, 0, 0.2)",
+    //     borderColor: "rgba(255, 200, 0,0.5)",
+    //     // data: [...productsInDates[date].map((product) => data[date][product])],
+    //     data: data[date][product],
+    //     borderWidth: 2,
+    //   }));
+    // });
     const options = {
       responsive: true,
       scales: {
@@ -58,16 +68,35 @@ export const ClientDetails = defineComponent({
           <ChartBar
             id="stock-mouvements-for-past-three-months"
             chartData={{
-              labels: [],
+              labels: [...dates],
               datasets: [
                 {
-                  label: globalTranslate("Stats.Labels[0]"),
+                  label: "oile",
                   backgroundColor: "rgba(255, 200, 0, 0.2)",
                   borderColor: "rgba(255, 200, 0,0.5)",
-                  data: [100, 90],
+                  // data: [...productsInDates[date].map((product) => data[date][product])],
+                  data: [9],
                   borderWidth: 2,
                 },
               ],
+              // datasets: [
+              //   {
+              //     label: "yes",
+              //     backgroundColor: "rgba(255, 200, 0, 0.2)",
+              //     borderColor: "rgba(255, 200, 0,0.5)",
+              //     // data: [...productsInDates[date].map((product) => data[date][product])],
+              //     data: [5, 6],
+              //     borderWidth: 2,
+              //   },
+              //   {
+              //     label: "yes",
+              //     backgroundColor: "rgba(255, 200, 0, 0.2)",
+              //     borderColor: "rgba(255, 200, 0,0.5)",
+              //     // data: [...productsInDates[date].map((product) => data[date][product])],
+              //     data: [5, 8],
+              //     borderWidth: 2,
+              //   },
+              // ],
             }}
             chartOptions={options}
           />
