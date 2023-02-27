@@ -1,4 +1,10 @@
-import type { invoiceT, FilteredStockData, stockMvmT, productT } from "@/types";
+import type {
+  invoiceT,
+  FilteredStockData,
+  stockMvmT,
+  productT,
+  invoiceItemT,
+} from "@/types";
 import { defineStore } from "pinia";
 import database from "@/database/db";
 
@@ -51,14 +57,56 @@ export const useStatsStore = defineStore("StatsStore", {
       }
       return [result, months];
     },
-    getOrderedProduct: async (id: number, invoices: invoiceT[]) => {
-      const FiltredItems = invoices
+    getOrderedProduct: (
+      id: number,
+      invoices: invoiceT[]
+    ): [
+      { [key: string]: { [key: string]: number } },
+      string[],
+      { [key: string]: string[] }
+    ] => {
+      const existingDates: string[] = [];
+      const existingProduct: { [key: string]: string[] } = {};
+      const result: { [key: string]: { [key: string]: number } } = {};
+
+      let FiltredItems: {
+        [key: string]: { quantity: number; name: string }[];
+      } = invoices
         .filter((invoice) => invoice.client_id == id)
-        .map((item) => item.invoiceItems);
-      // .map((item) => ({
-      //   ...item,
-      // })).map((item)=> [...item]);
-      console.log(FiltredItems);
+        .map((item) => ({
+          date: new Date(item.created_at).toLocaleDateString("fr-fr", {
+            month: "long",
+          }),
+          items: item.invoiceItems.map(({ quantity, product: { name } }) => ({
+            quantity,
+            name,
+          })),
+        }))
+        .reduce((r, { date, items }) => {
+          !existingDates.includes(date)
+            ? existingDates.push(date)
+            : existingDates;
+
+          r[date] = r[date] || [];
+          r[date].push(...items);
+          return r;
+        }, Object.create(null));
+
+      for (const date of existingDates) {
+        existingProduct[date] = [];
+
+        result[date] = FiltredItems[date].reduce((pre, cur) => {
+          !existingProduct[date].includes(cur.name)
+            ? existingProduct[date].push(cur.name)
+            : existingProduct[date];
+
+          pre[cur.name] = pre[cur.name] || 0;
+          pre[cur.name] += cur.quantity;
+          return pre;
+        }, Object.create(null));
+      }
+
+      return [result, existingDates, existingProduct];
     },
     ////////////////// GET FROM DB /////////////
     getPastThreeMonths: async function () {},

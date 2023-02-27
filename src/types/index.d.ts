@@ -109,6 +109,7 @@ export type invoiceItemT = {
   stock_id: number;
   product: {
     price: number;
+    name: string;
   };
 };
 
