@@ -68,14 +68,18 @@ export const ClientDetails = defineComponent({
           <ChartBar
             id="stock-mouvements-for-past-three-months"
             chartData={{
-              labels: [...dates],
+              labels: dates,
               datasets: [
                 {
                   label: "oile",
                   backgroundColor: "rgba(255, 200, 0, 0.2)",
                   borderColor: "rgba(255, 200, 0,0.5)",
-                  // data: [...productsInDates[date].map((product) => data[date][product])],
-                  data: [9],
+                  data: [
+                    ...productsInDates[date].map(
+                      (product) => data[date][product]
+                    ),
+                  ],
+                  // data: [9],
                   borderWidth: 2,
                 },
               ],
