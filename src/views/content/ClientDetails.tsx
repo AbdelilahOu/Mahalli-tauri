@@ -16,21 +16,17 @@ export const ClientDetails = defineComponent({
     const { client } = storeToRefs(clientStore);
     onBeforeMount(() => clientStore.getOneClient(Number(id)));
 
+    const randomNumber = (min: number, max: number) =>
+      Math.floor(Math.random() * (max - min + 1) + min);
+    const randomByte = () => randomNumber(0, 255);
+    const randomCssRgba = () =>
+      `rgba(${[randomByte(), randomByte(), randomByte(), 0.2].join(",")})`;
+
     const [data, productsInDates, dates, products] =
       useStatsStore().getOrderedProduct(
         Number(id),
         storeToRefs(useInvoiceStore()).invoices.value
       );
-    // let result = dates.map((date) => {
-    //   return products.map((product) => ({
-    //     label: product,
-    //     backgroundColor: "rgba(255, 200, 0, 0.2)",
-    //     borderColor: "rgba(255, 200, 0,0.5)",
-    //     // data: [...productsInDates[date].map((product) => data[date][product])],
-    //     data:
-    //     borderWidth: 2,
-    //   }));
-    // });
     const options = {
       responsive: true,
       scales: {
@@ -69,39 +65,16 @@ export const ClientDetails = defineComponent({
             id="stock-mouvements-for-past-three-months"
             chartData={{
               labels: dates,
-              datasets: [
-                {
-                  label: "oile",
-                  backgroundColor: "rgba(255, 200, 0, 0.2)",
-                  borderColor: "rgba(255, 200, 0,0.5)",
-                  data: [
-                    9, 0,
-                    // ...productsInDates[date].map(
-                    //   (product) => data[date][product]
-                    // ),
-                  ],
-                  // data: [9],
+              datasets: products.map((product) => {
+                const color = randomCssRgba();
+                return {
+                  label: product,
+                  backgroundColor: color,
+                  borderColor: color.replace("0.2", "0.5"),
+                  data: data[product],
                   borderWidth: 2,
-                },
-              ],
-              // datasets: [
-              //   {
-              //     label: "yes",
-              //     backgroundColor: "rgba(255, 200, 0, 0.2)",
-              //     borderColor: "rgba(255, 200, 0,0.5)",
-              //     // data: [...productsInDates[date].map((product) => data[date][product])],
-              //     data: [5, 6],
-              //     borderWidth: 2,
-              //   },
-              //   {
-              //     label: "yes",
-              //     backgroundColor: "rgba(255, 200, 0, 0.2)",
-              //     borderColor: "rgba(255, 200, 0,0.5)",
-              //     // data: [...productsInDates[date].map((product) => data[date][product])],
-              //     data: [5, 8],
-              //     borderWidth: 2,
-              //   },
-              // ],
+                };
+              }),
             }}
             chartOptions={options}
           />
