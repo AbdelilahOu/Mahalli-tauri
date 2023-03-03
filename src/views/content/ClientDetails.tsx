@@ -21,16 +21,16 @@ export const ClientDetails = defineComponent({
         Number(id),
         storeToRefs(useInvoiceStore()).invoices.value
       );
-    let result = dates.map((date) => {
-      return products.map((product) => ({
-        label: product,
-        backgroundColor: "rgba(255, 200, 0, 0.2)",
-        borderColor: "rgba(255, 200, 0,0.5)",
-        // data: [...productsInDates[date].map((product) => data[date][product])],
-        data: data[date][product],
-        borderWidth: 2,
-      }));
-    });
+    // let result = dates.map((date) => {
+    //   return products.map((product) => ({
+    //     label: product,
+    //     backgroundColor: "rgba(255, 200, 0, 0.2)",
+    //     borderColor: "rgba(255, 200, 0,0.5)",
+    //     // data: [...productsInDates[date].map((product) => data[date][product])],
+    //     data:
+    //     borderWidth: 2,
+    //   }));
+    // });
     const options = {
       responsive: true,
       scales: {
@@ -75,9 +75,10 @@ export const ClientDetails = defineComponent({
                   backgroundColor: "rgba(255, 200, 0, 0.2)",
                   borderColor: "rgba(255, 200, 0,0.5)",
                   data: [
-                    ...productsInDates[date].map(
-                      (product) => data[date][product]
-                    ),
+                    9, 0,
+                    // ...productsInDates[date].map(
+                    //   (product) => data[date][product]
+                    // ),
                   ],
                   // data: [9],
                   borderWidth: 2,
