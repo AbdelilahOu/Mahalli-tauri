@@ -35,7 +35,7 @@ export const ClientDetails = defineComponent({
           <ChartBar
             id="stock-mouvements-for-past-three-months"
             chartData={{
-              labels: dates,
+              labels: dates.reverse(),
               datasets: products.map((product) => {
                 const color = randomCssRgba();
                 return {
