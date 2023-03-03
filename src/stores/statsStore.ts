@@ -1,12 +1,5 @@
-import type {
-  invoiceT,
-  FilteredStockData,
-  stockMvmT,
-  productT,
-  invoiceItemT,
-} from "@/types";
+import type { invoiceT, FilteredStockData, stockMvmT } from "@/types";
 import { defineStore } from "pinia";
-import database from "@/database/db";
 
 const getMonth = (i: number) =>
   new Date(
