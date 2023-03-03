@@ -61,7 +61,7 @@ export const useStatsStore = defineStore("StatsStore", {
       id: number,
       invoices: invoiceT[]
     ): [
-      { [key: string]: { [key: string]: number } },
+      { [key: string]: number[] },
       { [key: string]: string[] },
       string[],
       string[]
@@ -110,7 +110,21 @@ export const useStatsStore = defineStore("StatsStore", {
         }, Object.create(null));
       }
 
-      return [result, existingProductInDates, existingDates, existingProducts];
+      let dataPerProduct: { [key: string]: number[] } = {};
+
+      for (const product of existingProducts) {
+        dataPerProduct[product] = [];
+        for (const date of existingDates) {
+          dataPerProduct[product].push(result[date][product] ?? 0);
+        }
+      }
+
+      return [
+        dataPerProduct,
+        existingProductInDates,
+        existingDates,
+        existingProducts,
+      ];
     },
     ////////////////// GET FROM DB /////////////
     getPastThreeMonths: async function () {},
