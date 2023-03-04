@@ -13,9 +13,6 @@ export const ClientCard = defineComponent({
     return () => (
       <div class="w-full grid grid-cols-2 grid-rows-1 rounded-sm">
         <span class="flex fill-gray-400 gap-2 items-center">
-          <UiIcon IsStyled={true} name={"person"} /> {props.client?.name}
-        </span>
-        <span class="flex fill-gray-400 gap-2 items-center">
           <UiIcon IsStyled={true} name={"tag"} />
           {props.client?.id}
         </span>
