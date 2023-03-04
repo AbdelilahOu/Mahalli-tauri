@@ -7,6 +7,7 @@ import { ChartBar } from "@/components/ChartBart";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { useStatsStore } from "@/stores/statsStore";
 import { useInvoiceStore } from "@/stores/invoiceStore";
+import UiIcon from "@/components/ui/UiIcon.vue";
 
 export const ClientDetails = defineComponent({
   name: "ClientDetails",
@@ -22,20 +23,23 @@ export const ClientDetails = defineComponent({
     const randomCssRgba = () =>
       `rgba(${[randomByte(), randomByte(), randomByte(), 0.2].join(",")})`;
 
-    const [data, productsInDates, dates, products] =
-      useStatsStore().getOrderedProduct(
-        Number(id),
-        storeToRefs(useInvoiceStore()).invoices.value
-      );
+    const [data, dates, products] = useStatsStore().getOrderedProduct(
+      Number(id),
+      storeToRefs(useInvoiceStore()).invoices.value
+    );
 
     return () => (
       <main class="w-full h-full px-3">
-        <div class="w-full h-full text-black flex flex-col print:pr-12">
+        <div class="w-full h-full text-black flex  flex-col print:pr-12">
+          <h1 class="font-semibold text-lg mb-1 text-gray-800 border-b-2 flex items-center border-b-gray-200 uppercase text-left">
+            <UiIcon IsStyled={true} name={"person"} /> {client.value?.name}
+          </h1>
           <ClientCard client={client.value} />
+          <div class=" my-3  border-b-2 border-b-gray-200"></div>
           <ChartBar
             id="stock-mouvements-for-past-three-months"
             chartData={{
-              labels: dates.reverse(),
+              labels: dates,
               datasets: products.map((product) => {
                 const color = randomCssRgba();
                 return {

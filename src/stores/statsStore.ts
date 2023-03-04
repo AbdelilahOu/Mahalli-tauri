@@ -53,21 +53,19 @@ export const useStatsStore = defineStore("StatsStore", {
     getOrderedProduct: (
       id: number,
       invoices: invoiceT[]
-    ): [
-      { [key: string]: number[] },
-      { [key: string]: string[] },
-      string[],
-      string[]
-    ] => {
-      const existingDates: string[] = [];
-      const existingProductInDates: { [key: string]: string[] } = {};
+    ): [{ [key: string]: number[] }, string[], string[]] => {
       const result: { [key: string]: { [key: string]: number } } = {};
+      const existingDates: string[] = [];
       const existingProducts: string[] = [];
 
       let FiltredItems: {
         [key: string]: { quantity: number; name: string }[];
       } = invoices
         .filter((invoice) => invoice.client_id == id)
+        .sort(
+          (a, b) =>
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        )
         .map((item) => ({
           date: new Date(item.created_at).toLocaleDateString("fr-fr", {
             month: "long",
@@ -88,12 +86,7 @@ export const useStatsStore = defineStore("StatsStore", {
         }, Object.create(null));
 
       for (const date of existingDates) {
-        existingProductInDates[date] = [];
-
         result[date] = FiltredItems[date].reduce((pre, cur) => {
-          !existingProductInDates[date].includes(cur.name)
-            ? existingProductInDates[date].push(cur.name)
-            : existingProductInDates[date];
           !existingProducts.includes(cur.name)
             ? existingProducts.push(cur.name)
             : existingProducts;
@@ -112,12 +105,7 @@ export const useStatsStore = defineStore("StatsStore", {
         }
       }
 
-      return [
-        dataPerProduct,
-        existingProductInDates,
-        existingDates,
-        existingProducts,
-      ];
+      return [dataPerProduct, existingDates, existingProducts];
     },
     ////////////////// GET FROM DB /////////////
     getPastThreeMonths: async function () {},
