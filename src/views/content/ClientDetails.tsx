@@ -4,10 +4,9 @@ import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { ClientCard } from "@/components/ClientCard";
 import { ChartBar } from "@/components/ChartBart";
-import { globalTranslate } from "@/utils/globalTranslate";
 import { useStatsStore } from "@/stores/statsStore";
 import { useInvoiceStore } from "@/stores/invoiceStore";
-import UiIcon from "@/components/ui/UiIcon.vue";
+import { generateColor } from "@/utils/generateColor";
 
 export const ClientDetails = defineComponent({
   name: "ClientDetails",
@@ -16,12 +15,6 @@ export const ClientDetails = defineComponent({
     const clientStore = useClientStore();
     const { client } = storeToRefs(clientStore);
     onBeforeMount(() => clientStore.getOneClient(Number(id)));
-
-    const randomNumber = (min: number, max: number) =>
-      Math.floor(Math.random() * (max - min + 1) + min);
-    const randomByte = () => randomNumber(0, 255);
-    const randomCssRgba = () =>
-      `rgba(${[randomByte(), randomByte(), randomByte(), 0.2].join(",")})`;
 
     const [data, dates, products] = useStatsStore().getOrderedProduct(
       Number(id),
@@ -38,13 +31,13 @@ export const ClientDetails = defineComponent({
             </div>
           </div>
           <div class=" my-3  border-b-2 border-b-gray-200"></div>
-          <h1></h1>
+          <h1>Products baught last three months</h1>
           <ChartBar
             id="stock-mouvements-for-past-three-months"
             chartData={{
               labels: dates,
               datasets: products.map((product) => {
-                const color = randomCssRgba();
+                const color = generateColor();
                 return {
                   label: product,
                   backgroundColor: color,
@@ -71,7 +64,7 @@ export const ClientDetails = defineComponent({
                 },
                 y: {
                   grid: {
-                    lineWidth: 0.5,
+                    lineWidth: 0,
                     drawBorder: false,
                   },
                   border: {
