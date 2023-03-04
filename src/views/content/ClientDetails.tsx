@@ -29,7 +29,7 @@ export const ClientDetails = defineComponent({
     );
 
     return () => (
-      <main class="w-full h-full px-3">
+      <main class="w-full h-full px-3 pt-1">
         <div class="w-full h-full text-black flex flex-col print:pr-12">
           <div class="w-full grid-cols-[400px_1fr] grid-rows-1 grid">
             <div class="w-full h-full">
@@ -71,7 +71,7 @@ export const ClientDetails = defineComponent({
                 },
                 y: {
                   grid: {
-                    lineWidth: 1,
+                    lineWidth: 0.5,
                     drawBorder: false,
                   },
                   border: {
