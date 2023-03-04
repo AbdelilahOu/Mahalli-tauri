@@ -103,10 +103,10 @@ export const CommandTable = defineComponent({
                         <span
                           class={`px-2 py-[1px] rounded-full ${
                             Command.status == "pending"
-                              ? "bg-yellow-300"
+                              ? "bg-yellow-300/60 text-yellow-800"
                               : Command.status == "delivered"
-                              ? "bg-green-300"
-                              : "bg-red-300"
+                              ? "bg-green-300/60 text-green-800"
+                              : "bg-red-300/60 text-red-800"
                           }`}
                         >
                           {globalTranslate(
