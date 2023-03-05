@@ -78,9 +78,16 @@ export const CommandTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="text-left whitespace-nowrap overflow-ellipsis">
-                      {Command.seller_id ?? (
-                        <span class="text-red-400">No email</span>
-                      )}
+                      <RouterLink
+                        to={{
+                          name: "SellerDetails",
+                          params: {
+                            id: Command.seller_id,
+                          },
+                        }}
+                      >
+                        {Command.seller_id}
+                      </RouterLink>
                     </div>
                   </td>
                   <td class="p-2">
