@@ -74,9 +74,16 @@ export const InvoiceTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="text-left whitespace-nowrap overflow-ellipsis">
-                      {Invoice.client_id ?? (
-                        <span class="text-red-400">No email</span>
-                      )}
+                      <RouterLink
+                        to={{
+                          name: "ClientDetails",
+                          params: {
+                            id: Invoice.client_id,
+                          },
+                        }}
+                      >
+                        {Invoice.client_id}
+                      </RouterLink>
                     </div>
                   </td>
                   <td class="p-2">
