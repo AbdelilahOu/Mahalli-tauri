@@ -9,6 +9,7 @@ import { useInvoiceStore } from "@/stores/invoiceStore";
 import { generateColor } from "@/utils/generateColor";
 import type { clientT } from "@/types";
 import { useModalStore } from "@/stores/modalStore";
+import { ClientAdditional } from "@/components/ClientAdditional";
 
 export const ClientDetails = defineComponent({
   name: "ClientDetails",
@@ -31,18 +32,17 @@ export const ClientDetails = defineComponent({
 
     return () => (
       <main class="w-full h-full px-3 pt-1">
-        <div class="w-full h-full relative text-black grid gap-4 grid-cols-[400px_2px_1fr] print:pr-12">
-          <div class="w-full grid-cols-[400px] items-start justify-center grid">
-            <div className="w-full h-fit flex flex-col gap-2">
-              <ClientCard
-                updateClient={() => {
-                  toggleThisClient(client.value, "ClientUpdate");
-                }}
-                client={client.value}
-              />
-            </div>
+        <div class="w-full h-full text-black grid gap-4 xl:grid-cols-[400px_2px_1fr] xl:grid-rows-1 grid-rows-[200px_2px_1fr] grid-cols-1 print:pr-12">
+          <div class="w-full grid-cols-[400px_1fr] xl:grid-rows-[200px_calc(100vh-264px)] xl:grid-cols-1 items-start justify-start gap-3 grid">
+            <ClientCard
+              updateClient={() => {
+                toggleThisClient(client.value, "ClientUpdate");
+              }}
+              client={client.value}
+            />
+            <ClientAdditional />
           </div>
-          <div class="border-l-2 border-b-white"></div>
+          <div class="xl:border-l-2 border-b-2"></div>
           <div class="w-full">
             <h1>Products baught last three months</h1>
             <ChartBar

@@ -12,6 +12,7 @@ module.exports = {
       transitionProperty: {
         width: "width",
       },
+      screens: {},
     },
   },
   plugins: [require("tailwind-scrollbar")],
