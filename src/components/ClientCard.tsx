@@ -8,6 +8,10 @@ export const ClientCard = defineComponent({
     client: {
       type: Object as PropType<clientT | null>,
     },
+    updateClient: {
+      type: Function as PropType<() => void>,
+      required: true,
+    },
   },
   setup(props) {
     return () => (
@@ -22,7 +26,7 @@ export const ClientCard = defineComponent({
         <div class="w-full h-fit px-2">
           <div class="w-full flex justify-between  border-b-2 pb-1 border-gray-500">
             <h1 class="text-xl px-1 font-semibold font-sans">Client Details</h1>
-            <UiIcon name={"edit_2"} />
+            <UiIcon onClick={() => props.updateClient()} name={"edit_2"} />
           </div>
         </div>
         <div class="w-full h-full px-2">
