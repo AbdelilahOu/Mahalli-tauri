@@ -7,6 +7,8 @@ import { ChartBar } from "@/components/ChartBart";
 import { useStatsStore } from "@/stores/statsStore";
 import { useInvoiceStore } from "@/stores/invoiceStore";
 import { generateColor } from "@/utils/generateColor";
+import type { clientT } from "@/types";
+import { useModalStore } from "@/stores/modalStore";
 
 export const ClientDetails = defineComponent({
   name: "ClientDetails",
@@ -21,12 +23,23 @@ export const ClientDetails = defineComponent({
       storeToRefs(useInvoiceStore()).invoices.value
     );
 
+    const toggleThisClient = (client: clientT | null, name: string) => {
+      useModalStore().updateModal({ key: "show", value: true });
+      useModalStore().updateModal({ key: "name", value: name });
+      useModalStore().updateClientRow(client);
+    };
+
     return () => (
       <main class="w-full h-full px-3 pt-1">
         <div class="w-full h-full text-black flex flex-col print:pr-12">
           <div class="w-full grid-cols-[400px_1fr] grid-rows-1 grid">
             <div class="w-full h-full">
-              <ClientCard client={client.value} />
+              <ClientCard
+                updateClient={() => {
+                  toggleThisClient(client.value, "ClientUpdate");
+                }}
+                client={client.value}
+              />
               <div class="w-full h-full"></div>
             </div>
           </div>
