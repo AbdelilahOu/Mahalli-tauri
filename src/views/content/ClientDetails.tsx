@@ -31,65 +31,66 @@ export const ClientDetails = defineComponent({
 
     return () => (
       <main class="w-full h-full px-3 pt-1">
-        <div class="w-full h-full text-black flex flex-col print:pr-12">
-          <div class="w-full grid-cols-[400px_1fr] grid-rows-1 grid">
-            <div class="w-full h-full">
+        <div class="w-full h-full relative text-black grid gap-4 grid-cols-[400px_2px_1fr] print:pr-12">
+          <div class="w-full grid-cols-[400px] items-start justify-center grid">
+            <div className="w-full h-fit flex flex-col gap-2">
               <ClientCard
                 updateClient={() => {
                   toggleThisClient(client.value, "ClientUpdate");
                 }}
                 client={client.value}
               />
-              <div class="w-full h-full"></div>
             </div>
           </div>
-          <div class=" my-3  border-b-2 border-b-gray-200"></div>
-          <h1>Products baught last three months</h1>
-          <ChartBar
-            id="stock-mouvements-for-past-three-months"
-            chartData={{
-              labels: dates,
-              datasets: products.map((product) => {
-                const color = generateColor();
-                return {
-                  label: product,
-                  backgroundColor: color,
-                  borderColor: color.replace("0.2", "0.5"),
-                  data: data[product],
-                  borderWidth: 2,
-                };
-              }),
-            }}
-            chartOptions={{
-              responsive: true,
-              scales: {
-                x: {
-                  grid: {
-                    display: false,
+          <div class="border-l-2 border-b-white"></div>
+          <div class="w-full">
+            <h1>Products baught last three months</h1>
+            <ChartBar
+              id="stock-mouvements-for-past-three-months"
+              chartData={{
+                labels: dates,
+                datasets: products.map((product) => {
+                  const color = generateColor();
+                  return {
+                    label: product,
+                    backgroundColor: color,
+                    borderColor: color.replace("0.2", "0.5"),
+                    data: data[product],
+                    borderWidth: 2,
+                  };
+                }),
+              }}
+              chartOptions={{
+                responsive: true,
+                scales: {
+                  x: {
+                    grid: {
+                      display: false,
+                    },
+                    ticks: {
+                      color: "rgba(25,23,17,0.6)",
+                      textStrokeWidth: 10,
+                    },
+                    border: {
+                      display: false,
+                    },
                   },
-                  ticks: {
-                    color: "rgba(25,23,17,0.6)",
-                    textStrokeWidth: 10,
-                  },
-                  border: {
-                    display: false,
+                  y: {
+                    grid: {
+                      lineWidth: 0,
+                      drawBorder: false,
+                    },
+                    border: {
+                      display: false,
+                    },
+                    ticks: {
+                      display: false,
+                    },
                   },
                 },
-                y: {
-                  grid: {
-                    lineWidth: 0,
-                    drawBorder: false,
-                  },
-                  border: {
-                    display: false,
-                  },
-                  ticks: {
-                    display: false,
-                  },
-                },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
       </main>
     );
