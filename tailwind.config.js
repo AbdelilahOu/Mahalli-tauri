@@ -6,9 +6,6 @@ module.exports = {
       colors: {
         primary: "rgba(25,23,17,0.6)",
       },
-      fontFamily: {
-        // sans: ["gotham"],
-      },
       transitionProperty: {
         width: "width",
       },
