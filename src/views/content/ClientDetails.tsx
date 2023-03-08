@@ -1,15 +1,15 @@
+import { ClientAdditional } from "@/components/ClientAdditional";
+import { useInvoiceStore } from "@/stores/invoiceStore";
 import { useClientStore } from "@/stores/clientStore";
+import { generateColor } from "@/utils/generateColor";
+import { ClientCard } from "@/components/ClientCard";
 import { defineComponent, onBeforeMount } from "vue";
+import { useStatsStore } from "@/stores/statsStore";
+import { useModalStore } from "@/stores/modalStore";
+import { ChartBar } from "@/components/ChartBart";
+import type { clientT } from "@/types";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
-import { ClientCard } from "@/components/ClientCard";
-import { ChartBar } from "@/components/ChartBart";
-import { useStatsStore } from "@/stores/statsStore";
-import { useInvoiceStore } from "@/stores/invoiceStore";
-import { generateColor } from "@/utils/generateColor";
-import type { clientT } from "@/types";
-import { useModalStore } from "@/stores/modalStore";
-import { ClientAdditional } from "@/components/ClientAdditional";
 
 export const ClientDetails = defineComponent({
   name: "ClientDetails",
@@ -17,18 +17,17 @@ export const ClientDetails = defineComponent({
     const id = useRoute().params.id;
     const clientStore = useClientStore();
     const { client } = storeToRefs(clientStore);
-    onBeforeMount(() => clientStore.getOneClient(Number(id)));
-
     const [data, dates, products] = useStatsStore().getOrderedProduct(
       Number(id),
       storeToRefs(useInvoiceStore()).invoices.value
     );
-
     const toggleThisClient = (client: clientT | null, name: string) => {
       useModalStore().updateModal({ key: "show", value: true });
       useModalStore().updateModal({ key: "name", value: name });
       useModalStore().updateClientRow(client);
     };
+
+    onBeforeMount(() => clientStore.getOneClient(Number(id)));
 
     return () => (
       <main class="w-full h-full px-3 pt-1">
@@ -68,8 +67,7 @@ export const ClientDetails = defineComponent({
                       display: false,
                     },
                     ticks: {
-                      color: "rgba(25,23,17,0.6)",
-                      textStrokeWidth: 10,
+                      color: "rgba(25,23,17,0.9)",
                     },
                     border: {
                       display: false,
