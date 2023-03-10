@@ -18,10 +18,6 @@ export const SideBar = defineComponent({
   },
   components: { UiSideLink },
   setup(props) {
-    const TriggerColapse = () => {
-      props.Collapse();
-    };
-
     return () => (
       <aside class="w-full rounded-md h-full sticky top-0 z-50 bg-sky-200">
         <div class="w-full h-screen print:hidden sticky top-0 z-50 grid grid-rows-[46px_1fr] gap-1">
@@ -39,7 +35,7 @@ export const SideBar = defineComponent({
                 </span>
               )}
               <span
-                onClick={() => TriggerColapse()}
+                onClick={() => props.Collapse()}
                 class={`transition-all duration-200 cursor-pointer transform hover:fill-gray-800 fill-primary ${
                   props.IsCollapse ? "rotate-180" : ""
                 }`}

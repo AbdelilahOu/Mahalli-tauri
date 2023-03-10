@@ -16,7 +16,7 @@ export const ClientCard = defineComponent({
   setup(props) {
     return () => (
       // <UiIcon IsStyled={true} name={"person"} />
-      <div class="w-full flex xl:sticky xl:top-[50px] z-20 pb-1 rounded-md gap-2 border-[1px] border-gray-501 flex-col bg-gray-100">
+      <div class="w-full flex xl:sticky xl:top-[54px] z-20 pb-1 rounded-md gap-2 border-[1px] border-gray-501 flex-col bg-gray-100">
         <div class="text-3xl  font-sans py-1 flex items-center  font-medium">
           <span class="h-full flex items-center justify-center pt-1">
             <UiIcon IsStyled={true} name={"tag"} />
