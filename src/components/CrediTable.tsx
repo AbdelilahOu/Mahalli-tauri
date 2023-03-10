@@ -21,7 +21,7 @@ export const CrediTable = defineComponent({
       default: "",
     },
   },
-  components: { UiPagination },
+  components: { UiPagination, UiIcon },
   setup(props) {
     const pagination = ref<number>(0);
     const toggleThisCredi = (credi: crediT, name: string) => {

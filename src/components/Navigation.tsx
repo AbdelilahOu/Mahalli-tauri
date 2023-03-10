@@ -43,9 +43,9 @@ export const Navigation = defineComponent({
               </svg>
             </span>
             <span class="pb-[3px] text-primary ">
-              <RouterLink to="/Home">
-                <span class={"w-full h-full bg-white"}>🏠</span>
-              </RouterLink>{" "}
+              <button onClick={() => router.push("/Home")}>
+                <span class={"w-full h-full cursor-pointer bg-white"}>🏠</span>
+              </button>{" "}
               {route.fullPath !== "/" ? (
                 <span class="">
                   <span>
