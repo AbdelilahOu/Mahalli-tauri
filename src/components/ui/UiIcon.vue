@@ -20,7 +20,7 @@ const icon = defineAsyncComponent(
   <component
     :class="[
       'w-8 h-8 p-1',
-      IsStyled ? '' : 'cursor-pointer rounded-full hover:bg-gray-100',
+      IsStyled ? '' : 'cursor-pointer rounded-md hover:bg-gray-100',
     ]"
     :is="icon"
   />

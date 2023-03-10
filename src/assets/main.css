@@ -36,7 +36,7 @@
 }
 
 .router-link-active {
-  @apply bg-white transition-colors rounded-md border-2 border-sky-400 transform duration-200;
+  @apply bg-white transition-colors rounded-md  border-sky-400 transform duration-200;
 }
 
 .defaultInput {

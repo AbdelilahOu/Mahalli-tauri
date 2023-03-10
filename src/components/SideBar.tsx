@@ -1,4 +1,4 @@
-import { defineComponent, ref, type PropType } from "vue";
+import { defineComponent, type PropType } from "vue";
 import { RouteLinks } from "@/stores/routeNames";
 import { UiSideLink } from "./ui/UiSideLink";
 import { useModalStore } from "@/stores/modalStore";
@@ -68,12 +68,12 @@ export const SideBar = defineComponent({
                 );
               })}
             </div>
-            {/* <UiSideLink
+            <UiSideLink
               IsText={!props.IsCollapse}
               LinkPath={"/Notifications"}
               LinkIcon={"🔔"}
               LinkText={"Notifications"}
-            /> */}
+            />
 
             <button
               onClick={() => {
@@ -84,7 +84,7 @@ export const SideBar = defineComponent({
                 });
               }}
               class={
-                "w-full flex h-9 whitespace-nowrap flex-nowrap overflow-hidden rounded-md items-center text-[rgba(25,23,17,0.6)] py-1 px-2 hover:bg-white transition-all duration-300"
+                "w-full flex filter contrast-more:text-black h-9 whitespace-nowrap flex-nowrap overflow-hidden rounded-md items-center text-[rgba(25,23,17,0.6)] py-1 px-2 hover:bg-white transition-all duration-300"
               }
             >
               🌐{" "}
