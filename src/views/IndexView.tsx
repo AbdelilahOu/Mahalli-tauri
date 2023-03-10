@@ -36,7 +36,7 @@ export const IndexView = defineComponent({
         class={`w-screen h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-transparent  flex `}
       >
         <div
-          class={`transition-all sticky top-0 z-50 m-1 duration-200 transform ${
+          class={`transition-all sticky top-1 z-50 m-1 duration-200 transform ${
             IsCollapse.value ? "w-12 min-w-[48px]" : "w-52 min-w-[12rem]"
           }`}
         >
