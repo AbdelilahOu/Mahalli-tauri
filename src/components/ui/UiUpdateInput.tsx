@@ -26,7 +26,7 @@ export const UiUpdateInput = defineComponent({
     const emitChange = () => props.OnInputChange(inputValue.value);
     return () => (
       <input
-        class={"defaultInput border-2 rounded-sm"}
+        class={"defaultInput border-2 rounded-md"}
         vModel={inputValue.value}
         disabled={props.Disable}
         onInput={emitChange}

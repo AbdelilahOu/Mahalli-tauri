@@ -40,8 +40,8 @@ export const ClientTable = defineComponent({
     };
     return () => (
       <div class="flex flex-col w-full">
-        <table class=" rounded-sm overflow-hidden w-full">
-          <thead class="text-xs h-9 max-w-lg w-fit rounded-sm font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
+        <table class=" rounded-md overflow-hidden w-full">
+          <thead class="text-xs h-9 max-w-lg w-fit rounded-md font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
               <th></th>
               {[0, 1, 2, 3, 4].map((index) => (

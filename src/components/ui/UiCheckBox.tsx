@@ -18,8 +18,8 @@ export const UiCheckBox = defineComponent({
         }}
         class={
           checked.value
-            ? "w-4 h-4 border-2 cursor-pointer flex items-center justify-center relative transition-all transform duration-100 border-gray-400  rounded-sm bg-gray-300 text-white"
-            : "w-4 h-4 flex rounded-sm border-gray-400 cursor-pointer rounded-ms border-2 transition-all transform duration-150"
+            ? "w-4 h-4 border-2 cursor-pointer flex items-center justify-center relative transition-all transform duration-100 border-gray-400  rounded-md bg-gray-300 text-white"
+            : "w-4 h-4 flex rounded-md border-gray-400 cursor-pointer rounded-ms border-2 transition-all transform duration-150"
         }
       >
         {checked.value ? (

@@ -27,9 +27,9 @@ export const UiSideLink = defineComponent({
     return () => (
       <RouterLink to={props.LinkPath}>
         <span
-          class={
-            "w-full flex h-9 rounded-sm items-center py-1 px-2 hover:bg-gray-200 transition-all duration-300"
-          }
+          class={`w-full flex h-9 rounded-md items-center py-1 px-2 hover:bg-white transition-all duration-300 ${
+            props.IsText ? "justify-start" : "justify-center"
+          }`}
         >
           {props.LinkIcon}
           {props.IsText ? (
@@ -37,7 +37,7 @@ export const UiSideLink = defineComponent({
               {props.LinkText}
             </span>
           ) : (
-            ""
+            <span class="w-full "></span>
           )}
         </span>
       </RouterLink>

@@ -66,7 +66,7 @@ export const Navigation = defineComponent({
               )}
             </span>
           </div>
-          <div class="cursor-pointer p-[3px] hover:bg-gray-200 transition-all duration-300  rounded-sm">
+          <div class="cursor-pointer p-[3px] hover:bg-gray-200 transition-all duration-300  rounded-md">
             🔔
           </div>
         </div>
