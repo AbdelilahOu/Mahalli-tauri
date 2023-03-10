@@ -28,7 +28,7 @@ export const UiInput = defineComponent({
     const emitChange = () => props.OnInputChange(inputValue.value);
     return () => (
       <div
-        class={`flex flex-nowrap h-full items-center border-2 rounded-sm transition-all duration-200 ${
+        class={`flex flex-nowrap h-full items-center border-2 rounded-md transition-all duration-200 ${
           props.IsEmpty ? "border-red-300 placeholder:text-red-300" : ""
         }`}
       >

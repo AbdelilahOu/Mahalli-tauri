@@ -36,15 +36,15 @@
 }
 
 .router-link-active {
-  @apply bg-gray-300 transition-all transform duration-200;
+  @apply bg-white transition-colors rounded-md border-2 border-sky-400 transform duration-200;
 }
 
 .defaultInput {
-  @apply rounded-sm  px-2 py-1  focus:outline-0 transition-all duration-200 focus:placeholder-primary w-full h-full;
+  @apply rounded-md  px-2 py-1  focus:outline-0 transition-all duration-200 focus:placeholder-primary w-full h-full;
 }
 
 .defaultButton {
-  @apply h-9 px-4 print:hidden w-full font-semibold disabled:cursor-default py-1 active:ring-1 active:ring-gray-500 transition-all duration-200 flex items-center whitespace-nowrap justify-center text-center rounded-sm border;
+  @apply h-9 px-4 print:hidden w-full font-semibold disabled:cursor-default py-1 active:ring-1 active:ring-gray-500 transition-all duration-200 flex items-center whitespace-nowrap justify-center text-center rounded-md border;
 }
 
 * {

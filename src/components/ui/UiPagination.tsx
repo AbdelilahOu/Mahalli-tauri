@@ -33,7 +33,7 @@ export const UiPagination = defineComponent({
     };
     return () => (
       <div class="h-8 w-full mt-2 flex items-center justify-center">
-        <div class="h-fit w-fit flex items-center  text-lg bg-slate-200 px-4 rounded-sm font-semibold text-gray-800 gap-4">
+        <div class="h-fit w-fit flex items-center  text-lg bg-slate-200 px-4 rounded-md font-semibold text-gray-800 gap-4">
           <span
             class=" rounded-full flex items-center justify-center cursor-pointer"
             onClick={() => goBack()}

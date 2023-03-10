@@ -25,8 +25,8 @@ export const StockTable = defineComponent({
     const pagination = ref<number>(0);
     return () => (
       <div class="flex flex-col w-full h-fit">
-        <table class="table-auto rounded-sm overflow-hidden w-full">
-          <thead class="text-xs h-9 rounded-sm font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
+        <table class="table-auto rounded-md overflow-hidden w-full">
+          <thead class="text-xs h-9 rounded-md font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
               {[0, 1, 2, 3, 4, 5, 6, 7].map((index) => (
                 <th class="p-2">

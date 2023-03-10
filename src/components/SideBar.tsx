@@ -23,7 +23,7 @@ export const SideBar = defineComponent({
     };
 
     return () => (
-      <aside class="w-full h-full sticky top-0 z-50 bg-gray-100">
+      <aside class="w-full rounded-md h-full sticky top-0 z-50 bg-sky-200">
         <div class="w-full h-screen print:hidden sticky top-0 z-50 grid grid-rows-[46px_1fr] gap-1">
           <div class="w-full bg-gray-300/10  h-full px-1 grid grid-cols-1 items-center justify-start">
             <span
@@ -84,7 +84,7 @@ export const SideBar = defineComponent({
                 });
               }}
               class={
-                "w-full flex h-9 whitespace-nowrap flex-nowrap overflow-hidden rounded-sm items-center text-[rgba(25,23,17,0.6)] py-1 px-2 hover:bg-gray-200 transition-all duration-300"
+                "w-full flex h-9 whitespace-nowrap flex-nowrap overflow-hidden rounded-md items-center text-[rgba(25,23,17,0.6)] py-1 px-2 hover:bg-white transition-all duration-300"
               }
             >
               🌐{" "}

@@ -24,7 +24,7 @@ export const CommandDetails = defineComponent({
               <h1 class="uppercase font-semibold mb-1">
                 {globalTranslate("CommandDetails.details.command.title")}
               </h1>
-              <table class="table-auto rounded-sm overflow-hidden w-full">
+              <table class="table-auto rounded-md overflow-hidden w-full">
                 <tbody class="text-sm divide-y divide-gray-100">
                   <tr>
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
@@ -79,7 +79,7 @@ export const CommandDetails = defineComponent({
               <h1 class="uppercase font-semibold mb-1">
                 {globalTranslate("CommandDetails.details.seller.title")}
               </h1>
-              <table class="table-auto rounded-sm overflow-hidden w-full">
+              <table class="table-auto rounded-md overflow-hidden w-full">
                 <tbody class="text-sm divide-y divide-gray-100">
                   <tr>
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
@@ -150,8 +150,8 @@ export const CommandDetails = defineComponent({
               <h1 class="uppercase font-semibold mb-1">
                 {globalTranslate("CommandDetails.details.items.title")}
               </h1>
-              <table class="table-auto rounded-sm overflow-hidden w-full">
-                <thead class="text-xs h-9 rounded-sm font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
+              <table class="table-auto rounded-md overflow-hidden w-full">
+                <thead class="text-xs h-9 rounded-md font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
                   <tr>
                     <th></th>
                     {[0, 1, 2, 3, 4, 5, 6].map((index) => (
