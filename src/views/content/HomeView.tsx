@@ -64,8 +64,8 @@ export const HomeView = defineComponent({
         <div class="w-full h-full flex justify-center items-center flex-col">
           <div class="grid grid-rows-[1fr_46px] max-w-3xl max-h-[48rem] w-full h-full grid-cols-[1fr_48px]">
             <div class="md:h-[700px] w-full h-full p-3 gap-3 grid-cols-3 grid-rows-3 grid">
-              {Pages.map((page) => (
-                <div class="w-full h-full">
+              {Pages.map((page, index) => (
+                <div v-fade={index + 1} class="w-full h-full">
                   <RouterLink to={page.path}>
                     <div class="w-full h-full overflow-hidden cursor-pointer relative hover:-translate-y-1 group transition-all duration-250 flex justify-center rounded-md items-center bg-gray-400">
                       <img
