@@ -58,8 +58,21 @@ export const ClientTable = defineComponent({
               JSON.stringify(c).toLocaleLowerCase().includes(props.FilterParam)
             )
               .slice(pagination.value * 15, pagination.value * 15 + 15)
-              .map((client) => (
-                <tr>
+              .map((client, index) => (
+                <tr
+                  v-motion
+                  initial={{
+                    opacity: 0,
+                    // x: 100,
+                  }}
+                  enter={{
+                    opacity: 1,
+                    // x: 0,
+                    transition: {
+                      delay: (index + 1) * 100,
+                    },
+                  }}
+                >
                   <td class="p-2">
                     <span class="h-full w-full grid">
                       <UiCheckBox
