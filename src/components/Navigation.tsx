@@ -23,7 +23,7 @@ export const Navigation = defineComponent({
       ActiveLink.value = RouteLinks.find((link) => link.component === to.name);
     });
     return () => (
-      <header class="w-full h-full print:hidden sticky top-1 z-50 bg-white">
+      <header class="w-full h-full print:hidden pt-1 sticky top-0 z-50 bg-white">
         <div class="w-full h-full flex  items-center p-3 justify-between">
           <div class="text-black flex items-center justify-center gap-2">
             <span

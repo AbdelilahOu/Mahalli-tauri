@@ -45,7 +45,7 @@ export const IndexView = defineComponent({
             Collapse={() => (IsCollapse.value = !IsCollapse.value)}
           />
         </div>
-        <div class="grid grid-rows-[46px_1fr] mt-1 w-full relative">
+        <div class="grid grid-rows-[46px_1fr]  w-full relative">
           <Navigation />
           <div class="w-full h-full flex flex-col items-center justify-center">
             {theModal.value.show ? (

@@ -12,6 +12,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@vueuse/motion": "^2.0.0-beta.12",
     "chart.js": "^4.2.0",
     "pinia": "^2.0.28",
     "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql",
