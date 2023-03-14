@@ -14,7 +14,7 @@ onBeforeMount(async () => {
   useProductStore().getAllProducts();
   await main();
   // await drop();
-  router.push("/Clients/client/1");
+  router.push("/Home");
 });
 </script>
 

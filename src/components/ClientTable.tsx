@@ -40,9 +40,9 @@ export const ClientTable = defineComponent({
     };
     return () => (
       <div class="flex flex-col w-full">
-        <table class=" rounded-md overflow-hidden w-full">
-          <thead class="text-xs h-9 max-w-lg w-fit rounded-md font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
-            <tr>
+        <table class="w-full">
+          <thead class="text-xs h-9 bg-gray-300 max-w-lg w-fit rounded-md font-semibold uppercase text-[rgba(25,23,17,0.6)] ">
+            <tr class="rounded-md">
               <th></th>
               {[0, 1, 2, 3, 4].map((index) => (
                 <th class="p-2 w-fit ">
@@ -59,20 +59,7 @@ export const ClientTable = defineComponent({
             )
               .slice(pagination.value * 15, pagination.value * 15 + 15)
               .map((client, index) => (
-                <tr
-                  v-motion
-                  initial={{
-                    opacity: 0,
-                    // x: 100,
-                  }}
-                  enter={{
-                    opacity: 1,
-                    // x: 0,
-                    transition: {
-                      delay: (index + 1) * 100,
-                    },
-                  }}
-                >
+                <tr v-slide={index}>
                   <td class="p-2">
                     <span class="h-full w-full grid">
                       <UiCheckBox

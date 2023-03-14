@@ -54,18 +54,7 @@ export const SideBar = defineComponent({
               {RouteLinks.map((link, index) => {
                 return link.display ? (
                   <UiSideLink
-                    v-motion
-                    initial={{
-                      opacity: 0,
-                      // x: 100,
-                    }}
-                    enter={{
-                      opacity: 1,
-                      // x: 0,
-                      transition: {
-                        delay: (index + 1) * 80,
-                      },
-                    }}
+                    v-fade={index}
                     IsText={!props.IsCollapse}
                     LinkPath={link.path}
                     LinkIcon={link.icon}
@@ -77,18 +66,7 @@ export const SideBar = defineComponent({
               })}
             </div>
             <UiSideLink
-              v-motion
-              initial={{
-                opacity: 0,
-                // x: 100,
-              }}
-              enter={{
-                opacity: 1,
-                // x: 0,
-                transition: {
-                  delay: 9 * 80,
-                },
-              }}
+              v-fade={9}
               IsText={!props.IsCollapse}
               LinkPath={"/Notifications"}
               LinkIcon={"🔔"}
@@ -96,18 +74,7 @@ export const SideBar = defineComponent({
             />
 
             <button
-              v-motion
-              initial={{
-                opacity: 0,
-                // x: 100,
-              }}
-              enter={{
-                opacity: 1,
-                // x: 0,
-                transition: {
-                  delay: 10 * 80,
-                },
-              }}
+              v-fade={10}
               onClick={() => {
                 useModalStore().updateModal({ key: "show", value: true });
                 useModalStore().updateModal({
