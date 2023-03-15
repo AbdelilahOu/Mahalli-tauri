@@ -42,8 +42,8 @@ export const StockTable = defineComponent({
               JSON.stringify(c).toLocaleLowerCase().includes(props.FilterParam)
             )
               .slice(pagination.value * 15, pagination.value * 15 + 15)
-              .map((mvm) => (
-                <tr>
+              .map((mvm, index) => (
+                <tr v-slide={index}>
                   <td class="p-2">
                     <div class="font-medium text-gray-800">{mvm.id}</div>
                   </td>
