@@ -35,13 +35,13 @@ export const ProductTable = defineComponent({
     };
     return () => (
       <div class="w-full flex flex-col">
-        <table class="table-auto rounded-md overflow-hidden w-full">
-          <thead class="text-xs h-9 rounded-md font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
+        <table class="table-auto  w-full">
+          <thead class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
-              <th></th>
+              <th class="rounded-l-md"></th>
               {[0, 1, 2, 3, 4, 5, 6].map((index) => (
-                <th class="p-2 w-fit ">
-                  <div class="font-semibold text-left">
+                <th class="p-2 w-fit last:rounded-r-md">
+                  <div class="font-semibold  text-left">
                     {globalTranslate(`Products.index.feilds[${index}]`)}
                   </div>
                 </th>
