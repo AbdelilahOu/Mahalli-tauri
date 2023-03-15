@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "rgba(25,23,17,0.6)",
+        primary: "#00BBF0",
       },
       transitionProperty: {
         width: "width",
