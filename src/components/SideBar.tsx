@@ -4,6 +4,7 @@ import { UiSideLink } from "./ui/UiSideLink";
 import { useModalStore } from "@/stores/modalStore";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { useTranslationStore } from "@/stores/translationStore";
+import UiIconVue from "./ui/UiIcon.vue";
 export const SideBar = defineComponent({
   name: "SideBar",
   props: {
@@ -19,7 +20,7 @@ export const SideBar = defineComponent({
   components: { UiSideLink },
   setup(props) {
     return () => (
-      <aside class="w-full rounded-md h-full sticky top-0 z-50 bg-sky-200">
+      <aside class="w-full rounded-md h-full sticky top-0 z-50 bg-primary">
         <div class="w-full h-screen print:hidden sticky top-0 z-50 grid grid-rows-[46px_1fr] gap-1">
           <div class="w-full bg-gray-300/10  h-full px-1 grid grid-cols-1 items-center justify-start">
             <span
@@ -36,7 +37,7 @@ export const SideBar = defineComponent({
               )}
               <span
                 onClick={() => props.Collapse()}
-                class={`transition-all duration-200 cursor-pointer transform hover:fill-gray-800 fill-primary ${
+                class={`transition-all duration-200 cursor-pointer transform hover:fill-sky-800 fill-white ${
                   props.IsCollapse ? "rotate-180" : ""
                 }`}
               >
@@ -57,7 +58,7 @@ export const SideBar = defineComponent({
                     v-fade={index}
                     IsText={!props.IsCollapse}
                     LinkPath={link.path}
-                    LinkIcon={link.icon}
+                    Icon={link.name}
                     LinkText={globalTranslate(`Global.routes.${link.name}`)}
                   />
                 ) : (
@@ -67,9 +68,9 @@ export const SideBar = defineComponent({
             </div>
             <UiSideLink
               v-fade={9}
+              Icon="Notifications"
               IsText={!props.IsCollapse}
               LinkPath={"/Notifications"}
-              LinkIcon={"🔔"}
               LinkText={"Notifications"}
             />
 
@@ -82,14 +83,25 @@ export const SideBar = defineComponent({
                   value: "TranslationModal",
                 });
               }}
-              class={
-                "w-full flex filter contrast-more:text-black h-9 whitespace-nowrap flex-nowrap overflow-hidden rounded-md items-center text-[rgba(25,23,17,0.6)] py-1 px-2 hover:bg-white transition-all duration-300"
-              }
             >
-              🌐{" "}
-              {!props.IsCollapse
-                ? useTranslationStore().currentLocale.text
-                : ""}
+              <span
+                class={`w-full flex h-9 rounded-md items-center group py-1 px-2 hover:bg-white transition-all duration-300 ${
+                  !props.IsCollapse ? "justify-start" : "justify-center"
+                }`}
+              >
+                <UiIconVue
+                  IsStyled={true}
+                  class={"min-w-[40px] group-hover:text-primary text-white"}
+                  name={"Lang"}
+                />
+                {!props.IsCollapse ? (
+                  <span class="text-white group-hover:text-primary ml-1 whitespace-nowrap">
+                    {useTranslationStore().currentLocale.text}
+                  </span>
+                ) : (
+                  <span class="w-full "></span>
+                )}
+              </span>
             </button>
           </div>
         </div>

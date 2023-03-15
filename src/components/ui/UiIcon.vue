@@ -10,6 +10,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  Class: {
+    type: String,
+    default: "",
+  },
 });
 const icon = defineAsyncComponent(
   () => import(`../../assets/svg/${props.name}.svg`)
@@ -19,7 +23,7 @@ const icon = defineAsyncComponent(
 <template>
   <component
     :class="[
-      'w-8 h-8 p-1',
+      Class ? Class : 'w-8 h-8 p-1',
       IsStyled ? '' : 'cursor-pointer rounded-md hover:bg-gray-100',
     ]"
     :is="icon"

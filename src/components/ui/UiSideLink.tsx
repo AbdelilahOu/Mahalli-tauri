@@ -1,5 +1,6 @@
 import { defineComponent } from "vue";
 import { RouterLink } from "vue-router";
+import UiIconVue from "./UiIcon.vue";
 
 export const UiSideLink = defineComponent({
   name: "UiSideLink",
@@ -13,11 +14,11 @@ export const UiSideLink = defineComponent({
       default: "/",
       required: true,
     },
-    LinkIcon: {
+    LinkText: {
       type: String,
       required: true,
     },
-    LinkText: {
+    Icon: {
       type: String,
       required: true,
     },
@@ -27,13 +28,17 @@ export const UiSideLink = defineComponent({
     return () => (
       <RouterLink to={props.LinkPath}>
         <span
-          class={`w-full flex h-9 rounded-md items-center py-1 px-2 hover:bg-white transition-all duration-300 ${
+          class={`w-full flex h-9 rounded-md items-center py-1 px-2 hover:bg-white group transition-all duration-300 ${
             props.IsText ? "justify-start" : "justify-center"
           }`}
         >
-          {props.LinkIcon}
+          <UiIconVue
+            IsStyled={true}
+            class={"min-w-[40px] group-hover:text-primary text-white"}
+            name={props.Icon}
+          />
           {props.IsText ? (
-            <span class="text-[rgba(25,23,17,0.6)] ml-1 whitespace-nowrap">
+            <span class="text-white ml-1 whitespace-nowrap group-hover:text-primary">
               {props.LinkText}
             </span>
           ) : (

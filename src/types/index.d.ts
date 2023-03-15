@@ -225,6 +225,5 @@ export interface RouteLinksTypeT {
   path: string;
   name: string;
   component: string;
-  icon: string;
   display: boolean;
 }
