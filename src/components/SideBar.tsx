@@ -91,7 +91,9 @@ export const SideBar = defineComponent({
               >
                 <UiIconVue
                   IsStyled={true}
-                  class={"min-w-[40px] group-hover:text-primary text-white"}
+                  class={
+                    "min-w-[30px] h-[30px] group-hover:text-primary text-white"
+                  }
                   name={"Lang"}
                 />
                 {!props.IsCollapse ? (

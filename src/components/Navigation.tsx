@@ -1,15 +1,12 @@
-import {
-  onBeforeRouteUpdate,
-  RouterLink,
-  useRoute,
-  useRouter,
-} from "vue-router";
+import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { defineComponent, onMounted, ref } from "vue";
 import { RouteLinks } from "@/stores/routeNames";
 import { globalTranslate } from "@/utils/globalTranslate";
+import UiIconVue from "./ui/UiIcon.vue";
 
 export const Navigation = defineComponent({
   name: "Navigation",
+  components: { UiIconVue },
   setup() {
     const router = useRouter();
     const route = useRoute();
@@ -42,19 +39,31 @@ export const Navigation = defineComponent({
                 <path d="m11.1 19.1-6.45-6.475q-.15-.125-.212-.288-.063-.162-.063-.337 0-.175.063-.338.062-.162.212-.287L11.1 4.9q.225-.2.525-.213.3-.012.525.213.225.225.237.525.013.3-.212.55l-5.3 5.275H18.5q.3 0 .525.212.225.213.225.538 0 .325-.225.537-.225.213-.525.213H6.875l5.3 5.3q.2.2.212.512.013.313-.212.538-.225.225-.537.225-.313 0-.538-.225Z" />
               </svg>
             </span>
-            <span class="pb-[3px] text-primary ">
+            <span class="pb-[3px] text-primary flex items-center">
               <button onClick={() => router.push("/Home")}>
-                <span class={"w-full h-full cursor-pointer bg-white"}>🏠</span>
+                <span class={"w-full h-full cursor-pointer  bg-white"}>
+                  <UiIconVue
+                    IsStyled={true}
+                    class={"min-w-[40px] text-primary"}
+                    name={"Home"}
+                  />
+                </span>
               </button>{" "}
               {route.fullPath !== "/" ? (
-                <span class="">
-                  <span>
-                    {""}
+                <span class="flex items-center">
+                  <span class="flex items-center">
+                    {ActiveLink.value ? " / " : ""}
+                    {ActiveLink.value ? (
+                      <UiIconVue
+                        IsStyled={true}
+                        class={"min-w-[40px] text-primary/80"}
+                        name={ActiveLink.value.name}
+                      />
+                    ) : (
+                      ""
+                    )}
                     {ActiveLink.value
-                      ? "/ " +
-                        ActiveLink.value.icon +
-                        " " +
-                        globalTranslate(
+                      ? globalTranslate(
                           `Global.routes.${ActiveLink.value.name}`
                         )
                       : ""}{" "}
