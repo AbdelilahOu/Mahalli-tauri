@@ -52,7 +52,7 @@ export const UiUpdateSelect = defineComponent({
         >
           {selectedItem.value !== "" ? selectedItem.value : slots.default?.()}
         </div>
-        {isOpen.value ? (
+        {isOpen.value && (
           <Transition appear>
             <div class="flex rounded-md scrollbar-thin bg-white scrollbar-thumb-transparent flex-col max-h-[105px] overflow-auto gap-[2px] w-full absolute z-50  mt-1">
               {props.items.map((item) => (
@@ -65,8 +65,6 @@ export const UiUpdateSelect = defineComponent({
               ))}
             </div>
           </Transition>
-        ) : (
-          ""
         )}
       </div>
     );
