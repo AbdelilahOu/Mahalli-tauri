@@ -24,7 +24,7 @@ export const UiCheckBox = defineComponent({
       >
         {checked.value ? (
           <Transition>
-            <span class="text-white   text-[10px] absolute ">✔</span>
+            <span class="text-white text-[10px] absolute ">✔</span>
           </Transition>
         ) : (
           ""

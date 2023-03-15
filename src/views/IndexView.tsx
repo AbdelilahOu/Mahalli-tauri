@@ -48,7 +48,7 @@ export const IndexView = defineComponent({
         <div class="grid grid-rows-[46px_1fr]  w-full relative">
           <Navigation />
           <div class="w-full h-full flex flex-col items-center justify-center">
-            {theModal.value.show ? (
+            {theModal.value.show && (
               <div
                 onClick={withModifiers(
                   () => modalStore.updateModal({ key: "show", value: false }),
@@ -58,10 +58,7 @@ export const IndexView = defineComponent({
               >
                 <Xcomponent name={modalStore.theModal.name} />
               </div>
-            ) : (
-              ""
             )}
-            {/* <RouterView v-slots={slots}></RouterView> */}
             <RouterView></RouterView>
           </div>
         </div>

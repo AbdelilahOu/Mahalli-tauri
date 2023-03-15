@@ -52,21 +52,18 @@ export const Navigation = defineComponent({
               {route.fullPath !== "/" ? (
                 <span class="flex items-center">
                   <span class="flex items-center">
-                    {ActiveLink.value ? " / " : ""}
-                    {ActiveLink.value ? (
+                    {ActiveLink.value && " / "}
+                    {ActiveLink.value && (
                       <UiIconVue
                         IsStyled={true}
                         class={"min-w-[40px] text-primary/80"}
                         name={ActiveLink.value.name}
                       />
-                    ) : (
-                      ""
                     )}
-                    {ActiveLink.value
-                      ? globalTranslate(
-                          `Global.routes.${ActiveLink.value.name}`
-                        )
-                      : ""}{" "}
+                    {ActiveLink.value &&
+                      globalTranslate(
+                        `Global.routes.${ActiveLink.value.name}`
+                      )}{" "}
                     {route.params.id ? `/ n° ${route.params.id}` : ""}
                   </span>
                 </span>
