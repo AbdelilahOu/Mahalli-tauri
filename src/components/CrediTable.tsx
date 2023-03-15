@@ -48,8 +48,8 @@ export const CrediTable = defineComponent({
               JSON.stringify(c).toLocaleLowerCase().includes(props.FilterParam)
             )
               .slice(pagination.value * 15, pagination.value * 15 + 15)
-              .map((credi) => (
-                <tr>
+              .map((credi, index) => (
+                <tr v-slide={index}>
                   <td class="p-2">
                     <div class="font-medium text-gray-800">{credi.id}</div>
                   </td>
