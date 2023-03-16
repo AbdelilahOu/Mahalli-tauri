@@ -34,11 +34,13 @@ export const UiSideLink = defineComponent({
         >
           <UiIconVue
             IsStyled={false}
-            class={"min-w-[30px] h-[30px] group-hover:text-primary text-white"}
+            class={
+              "min-w-[30px] h-[30px] w-[30px] group-hover:text-primary transition-all duration-150 text-gray-400"
+            }
             name={props.Icon}
           />
           {props.IsText ? (
-            <span class="text-white ml-1 whitespace-nowrap group-hover:text-primary">
+            <span class="text-gray-500 ml-1 whitespace-nowrap group-hover:text-primary">
               {props.LinkText}
             </span>
           ) : (
