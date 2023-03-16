@@ -20,25 +20,23 @@ export const SideBar = defineComponent({
   components: { UiSideLink },
   setup(props) {
     return () => (
-      <aside class="w-full rounded-md h-full sticky top-0 z-50 bg-primary">
+      <aside class="w-full rounded-md h-full sticky top-0 z-50 bg-gray-50 border-2 border-gray-50">
         <div class="w-full h-screen print:hidden sticky top-0 z-50 grid grid-rows-[46px_1fr] gap-1">
-          <div class="w-full bg-gray-300/10  h-full px-1 grid grid-cols-1 items-center justify-start">
+          <div class="w-full h-full px-1 grid grid-cols-1 items-center justify-start">
             <span
               class={`font-medium  text-black flex items-center px-1 ${
                 props.IsCollapse ? "justify-around" : "justify-between"
               }`}
             >
-              {props.IsCollapse ? (
-                ""
-              ) : (
-                <span class="whitespace-nowrap pl-2 text-primary overflow-hidden">
+              {!props.IsCollapse && (
+                <span class="whitespace-nowrap pl-2 text-gray-800 overflow-hidden">
                   The Stocker
                 </span>
               )}
               <span
                 onClick={() => props.Collapse()}
-                class={`transition-all duration-200 cursor-pointer transform hover:fill-sky-800 fill-white ${
-                  props.IsCollapse ? "rotate-180" : ""
+                class={`transition-all duration-200 cursor-pointer transform hover:fill-sky-800 fill-gray-800 ${
+                  props.IsCollapse && "rotate-180"
                 }`}
               >
                 <svg
@@ -53,16 +51,16 @@ export const SideBar = defineComponent({
           <div class="w-full px-1 h-full overflow-x-hidden grid grid-cols-1 gap-1 grid-rows-[1fr_36px] justify-between pb-[18px]">
             <div class="w-full h-full flex flex-col gap-1">
               {RouteLinks.map((link, index) => {
-                return link.display ? (
-                  <UiSideLink
-                    v-fade={index}
-                    IsText={!props.IsCollapse}
-                    LinkPath={link.path}
-                    Icon={link.name}
-                    LinkText={globalTranslate(`Global.routes.${link.name}`)}
-                  />
-                ) : (
-                  ""
+                return (
+                  link.display && (
+                    <UiSideLink
+                      v-fade={index}
+                      IsText={!props.IsCollapse}
+                      LinkPath={link.path}
+                      Icon={link.name}
+                      LinkText={globalTranslate(`Global.routes.${link.name}`)}
+                    />
+                  )
                 );
               })}
             </div>
@@ -92,12 +90,12 @@ export const SideBar = defineComponent({
                 <UiIconVue
                   IsStyled={true}
                   class={
-                    "min-w-[30px] h-[30px] group-hover:text-primary text-white"
+                    "min-w-[30px] h-[30px] group-hover:text-primary text-gray-700"
                   }
                   name={"Lang"}
                 />
                 {!props.IsCollapse ? (
-                  <span class="text-white group-hover:text-primary ml-1 whitespace-nowrap">
+                  <span class="text-gray-700 group-hover:text-primary ml-1 whitespace-nowrap">
                     {useTranslationStore().currentLocale.text}
                   </span>
                 ) : (

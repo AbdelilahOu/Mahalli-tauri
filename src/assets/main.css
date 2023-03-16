@@ -36,7 +36,7 @@
 }
 
 .router-link-active {
-  @apply bg-white transition-colors rounded-md border-sky-400 transform duration-200;
+  @apply bg-white transition-colors bg-primary/10 rounded-md border-sky-400 transform duration-200;
 }
 
 .router-link-active > span > span,
