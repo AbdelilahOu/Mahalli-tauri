@@ -33,7 +33,7 @@ export const IndexView = defineComponent({
 
     return () => (
       <main
-        class={`w-screen h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-transparent  flex `}
+        class={`w-screen h-screen overflow-y-auto bg-gray-100 scrollbar-thin scrollbar-thumb-transparent  flex `}
       >
         <div
           class={`transition-all sticky top-1 z-50 m-1 duration-200 transform ${

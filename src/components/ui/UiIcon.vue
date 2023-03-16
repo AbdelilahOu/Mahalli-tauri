@@ -1,6 +1,6 @@
 <!-- npm i vite-svg-loader -->
 <script setup lang="ts">
-import { defineAsyncComponent } from "vue";
+import { computed, defineAsyncComponent, getCurrentInstance, watch } from "vue";
 const props = defineProps({
   name: {
     type: String,
@@ -16,7 +16,16 @@ const props = defineProps({
   },
 });
 const icon = defineAsyncComponent(
-  () => import(`../../assets/svg/${props.name}.svg`)
+  () => import(`../../assets/svg/${computed(() => props.name).value}.svg`)
+);
+
+watch(
+  () => props.name,
+  () => {
+    const currentInstance = getCurrentInstance();
+    currentInstance?.proxy?.$forceUpdate();
+    console.log(true, currentInstance);
+  }
 );
 </script>
 
