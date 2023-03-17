@@ -1,12 +1,5 @@
 import { onBeforeRouteUpdate, RouterView } from "vue-router";
-import {
-  defineComponent,
-  ref,
-  resolveDynamicComponent,
-  Transition,
-  withModifiers,
-  type Component,
-} from "vue";
+import { defineComponent, ref, withModifiers } from "vue";
 import Xcomponent from "@/components/Xcomponent.vue";
 import { Navigation } from "@/components/Navigation";
 import { useModalStore } from "@/stores/modalStore";
