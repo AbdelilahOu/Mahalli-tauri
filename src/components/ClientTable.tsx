@@ -39,7 +39,7 @@ export const ClientTable = defineComponent({
       modalStore.updateClientRow(client);
     };
     return () => (
-      <div class="flex flex-col w-full">
+      <div class="flex flex-col h-full w-full">
         <table class="w-full">
           <thead class="text-xs h-9 bg-gray-300 max-w-lg w-fit font-semibold uppercase text-[rgba(25,23,17,0.6)] ">
             <tr>

@@ -20,8 +20,8 @@ export const SideBar = defineComponent({
   components: { UiSideLink },
   setup(props) {
     return () => (
-      <aside class="w-full rounded-md h-full sticky top-0 z-50 bg-gray-50 border-2 border-gray-50">
-        <div class="w-full h-screen print:hidden sticky top-0 z-50 grid grid-rows-[46px_1fr] gap-1">
+      <aside class="w-full rounded-md h-full sticky top-0 z-50 bg-white ">
+        <div class="w-full h-screen print:hidden sticky top-0 bg-white z-50 grid grid-rows-[50px_1fr] gap-1">
           <div class="w-full h-full px-1 grid grid-cols-1 items-center justify-start">
             <span
               class={`font-medium  text-black flex items-center px-1 ${
@@ -90,7 +90,7 @@ export const SideBar = defineComponent({
                 <UiIconVue
                   IsStyled={true}
                   class={
-                    "min-w-[30px] h-[30px] group-hover:text-primary text-gray-700"
+                    "min-w-[30px] w-[30px] h-[30px] group-hover:text-primary text-gray-400"
                   }
                   name={"Lang"}
                 />
