@@ -8,7 +8,7 @@ import "./assets/main.css";
 
 createApp(App)
   .directive("fade", {
-    mounted: (el, bin) => {
+    mounted: (el: HTMLElement, bin) => {
       useMotion(el, {
         initial: {
           opacity: 0,

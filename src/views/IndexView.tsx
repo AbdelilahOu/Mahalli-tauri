@@ -24,13 +24,6 @@ export const IndexView = defineComponent({
     onBeforeRouteUpdate(() => {
       modalStore.updateModal({ key: "show", value: false });
     });
-
-    const slots = (view: { Component: Component }) => (
-      <Transition appear={true}>
-        {resolveDynamicComponent(view.Component)}
-      </Transition>
-    );
-
     return () => (
       <main
         class={`w-screen h-screen overflow-y-auto bg-white scrollbar-thin scrollbar-thumb-transparent  flex `}
