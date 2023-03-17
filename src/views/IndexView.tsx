@@ -19,10 +19,10 @@ export const IndexView = defineComponent({
     });
     return () => (
       <main
-        class={`w-screen h-screen overflow-y-auto bg-white scrollbar-thin scrollbar-thumb-transparent  flex `}
+        class={`w-screen h-screen overflow-y-auto bg-gray-100 scrollbar-thin scrollbar-thumb-transparent  flex `}
       >
         <div
-          class={`transition-all sticky top-1 z-50 m-1 duration-200 transform ${
+          class={`transition-all sticky top-1 z-50 m-1 flex justify-center duration-200 transform ${
             IsCollapse.value ? "w-12 min-w-[48px]" : "w-52 min-w-[12rem]"
           }`}
         >
@@ -31,7 +31,7 @@ export const IndexView = defineComponent({
             Collapse={() => (IsCollapse.value = !IsCollapse.value)}
           />
         </div>
-        <div class="grid grid-rows-[46px_1fr]  w-full relative">
+        <div class="grid grid-rows-[50px_1fr] gap-1 w-full relative">
           <Navigation />
           <div class="w-full h-full flex flex-col items-center justify-center">
             {theModal.value.show && (
@@ -45,7 +45,7 @@ export const IndexView = defineComponent({
                 <Xcomponent name={modalStore.theModal.name} />
               </div>
             )}
-            <div class="w-full bg-white rounded-md h-full">
+            <div class="w-full bg-white rounded-md py-2 h-full">
               <RouterView></RouterView>
             </div>
           </div>
