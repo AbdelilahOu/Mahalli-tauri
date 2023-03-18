@@ -1,11 +1,11 @@
+import { useTranslationStore } from "@/stores/translationStore";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, type PropType } from "vue";
+import { useModalStore } from "@/stores/modalStore";
 import { RouteLinks } from "@/stores/routeNames";
 import { UiSideLink } from "./ui/UiSideLink";
-import { useModalStore } from "@/stores/modalStore";
-import { globalTranslate } from "@/utils/globalTranslate";
-import { useTranslationStore } from "@/stores/translationStore";
-import UiIconVue from "./ui/UiIcon.vue";
 import { RouterLink } from "vue-router";
+
 export const SideBar = defineComponent({
   name: "SideBar",
   props: {
@@ -18,7 +18,6 @@ export const SideBar = defineComponent({
       required: true,
     },
   },
-  components: { UiSideLink },
   setup(props) {
     return () => (
       <aside class="w-full rounded-md h-full overflow-hidden sticky top-0 z-50 bg-white ">
