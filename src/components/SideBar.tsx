@@ -5,6 +5,7 @@ import { useModalStore } from "@/stores/modalStore";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { useTranslationStore } from "@/stores/translationStore";
 import UiIconVue from "./ui/UiIcon.vue";
+import { RouterLink } from "vue-router";
 export const SideBar = defineComponent({
   name: "SideBar",
   props: {
@@ -48,31 +49,34 @@ export const SideBar = defineComponent({
               </span>
             </span>
           </div>
-          <div class="w-full px-1 h-full overflow-x-hidden grid grid-cols-1 gap-1 grid-rows-[1fr_36px] justify-between pb-[18px]">
+          <div class="w-full px-1 mt-2 h-full overflow-x-hidden grid grid-cols-1 gap-1 grid-rows-[1fr_36px] justify-between pb-[18px]">
             <div class="w-full h-full flex flex-col gap-1">
               {RouteLinks.map((link, index) => {
                 return (
                   link.display && (
-                    <UiSideLink
-                      v-fade={index}
-                      IsText={!props.IsCollapse}
-                      LinkPath={link.path}
-                      Icon={link.name}
-                      LinkText={globalTranslate(`Global.routes.${link.name}`)}
-                    />
+                    <RouterLink to={link.path}>
+                      <UiSideLink
+                        v-fade={index}
+                        IsText={!props.IsCollapse}
+                        Icon={link.name}
+                        LinkText={globalTranslate(`Global.routes.${link.name}`)}
+                      />
+                    </RouterLink>
                   )
                 );
               })}
             </div>
-            <UiSideLink
-              v-fade={9}
-              Icon="Notifications"
-              IsText={!props.IsCollapse}
-              LinkPath={"/Notifications"}
-              LinkText={"Notifications"}
-            />
+            <RouterLink to="/Notifications">
+              <UiSideLink
+                v-fade={9}
+                Icon="Notifications"
+                IsText={!props.IsCollapse}
+                LinkText={"Notifications"}
+              />
+            </RouterLink>
 
-            <button
+            <div
+              class="w-full cursor-pointer"
               v-fade={10}
               onClick={() => {
                 useModalStore().updateModal({ key: "show", value: true });
@@ -82,27 +86,13 @@ export const SideBar = defineComponent({
                 });
               }}
             >
-              <span
-                class={`w-full flex h-9 rounded-md items-center group py-1 px-2 hover:bg-white transition-all duration-300 ${
-                  !props.IsCollapse ? "justify-start" : "justify-center"
-                }`}
-              >
-                <UiIconVue
-                  IsStyled={true}
-                  class={
-                    "min-w-[30px] w-[30px] h-[30px] group-hover:text-primary text-gray-400"
-                  }
-                  name={"Lang"}
-                />
-                {!props.IsCollapse ? (
-                  <span class="text-gray-700 group-hover:text-primary ml-1 whitespace-nowrap">
-                    {useTranslationStore().currentLocale.text}
-                  </span>
-                ) : (
-                  <span class="w-full "></span>
-                )}
-              </span>
-            </button>
+              <UiSideLink
+                v-fade={10}
+                Icon="Lang"
+                IsText={!props.IsCollapse}
+                LinkText={useTranslationStore().currentLocale.text}
+              />
+            </div>
           </div>
         </div>
       </aside>

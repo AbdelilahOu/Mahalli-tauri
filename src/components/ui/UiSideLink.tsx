@@ -9,11 +9,6 @@ export const UiSideLink = defineComponent({
       type: Boolean,
       required: true,
     },
-    LinkPath: {
-      type: String,
-      default: "/",
-      required: true,
-    },
     LinkText: {
       type: String,
       required: true,
@@ -26,28 +21,26 @@ export const UiSideLink = defineComponent({
 
   setup(props) {
     return () => (
-      <RouterLink to={props.LinkPath}>
-        <span
-          class={`w-full flex h-9 rounded-md items-center py-1 px-2 hover:bg-white group transition-all duration-300 ${
-            props.IsText ? "justify-start" : "justify-center"
-          }`}
-        >
-          <UiIconVue
-            IsStyled={false}
-            class={
-              "min-w-[30px] h-[30px] w-[30px] group-hover:text-primary transition-all duration-150 text-gray-400"
-            }
-            name={props.Icon}
-          />
-          {props.IsText ? (
-            <span class="text-gray-500 ml-1 whitespace-nowrap group-hover:text-primary">
-              {props.LinkText}
-            </span>
-          ) : (
-            <span class="w-full "></span>
-          )}
-        </span>
-      </RouterLink>
+      <span
+        class={`w-full flex h-9 rounded-md items-center py-1 px-2 hover:bg-white group transition-all duration-300 ${
+          props.IsText ? "justify-start" : "justify-center"
+        }`}
+      >
+        <UiIconVue
+          IsStyled={false}
+          class={
+            "min-w-[30px] h-[30px] w-[30px] max-w-[30px] group-hover:text-primary transition-all duration-150 text-gray-400"
+          }
+          name={props.Icon}
+        />
+        {props.IsText ? (
+          <span class="text-gray-500 ml-1 whitespace-nowrap group-hover:text-primary">
+            {props.LinkText}
+          </span>
+        ) : (
+          <span class="w-full "></span>
+        )}
+      </span>
     );
   },
 });
