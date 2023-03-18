@@ -19,7 +19,7 @@ export const IndexView = defineComponent({
     });
     return () => (
       <main
-        class={`w-screen h-screen overflow-y-auto bg-gray-100 scrollbar-thin scrollbar-thumb-transparent  flex `}
+        class={`w-screen h-screen overflow-y-auto bg-gray-200 scrollbar-thin scrollbar-thumb-transparent  flex `}
       >
         <div
           class={`transition-all sticky top-1 z-50 m-1 flex justify-center duration-200 transform ${
@@ -33,7 +33,7 @@ export const IndexView = defineComponent({
         </div>
         <div class="grid grid-rows-[50px_1fr] gap-1 w-full relative">
           <Navigation />
-          <div class="w-full h-full flex flex-col items-center justify-center">
+          <div class="w-full h-full flex flex-col pr-1 pb-1 items-center justify-center">
             {theModal.value.show && (
               <div
                 onClick={withModifiers(
@@ -45,7 +45,7 @@ export const IndexView = defineComponent({
                 <Xcomponent name={modalStore.theModal.name} />
               </div>
             )}
-            <div class="w-full bg-white rounded-md py-2 h-full">
+            <div class="w-full bg-white rounded-md py-2 pr-1 h-full">
               <RouterView></RouterView>
             </div>
           </div>
