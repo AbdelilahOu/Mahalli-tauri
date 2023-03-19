@@ -30,7 +30,7 @@ export const ClientDetails = defineComponent({
     onBeforeMount(() => clientStore.getOneClient(Number(id)));
 
     return () => (
-      <main class="w-full h-full px-3 pt-1">
+      <main class="w-full h-full px-3">
         <div class="w-full h-full text-black grid gap-4 xl:grid-cols-[400px_2px_1fr] xl:grid-rows-1 grid-rows-[200px_2px_1fr] grid-cols-1 print:pr-12">
           <div class="w-full grid-cols-[400px_1fr] xl:grid-rows-[200px_calc(100vh-275px)] xl:grid-cols-1 items-start justify-start gap-3 grid">
             <ClientCard
