@@ -60,7 +60,7 @@ export const HomeView = defineComponent({
       },
     ];
     return () => (
-      <main class="w-screen h-screen">
+      <main class="w-full h-full px-3">
         <div class="w-full h-full flex justify-center items-center flex-col">
           <div class="grid grid-rows-[1fr_46px] max-w-3xl max-h-[48rem] w-full h-full grid-cols-[1fr_48px]">
             <div class="md:h-[700px] w-full h-full p-3 gap-3 grid-cols-3 grid-rows-3 grid">
