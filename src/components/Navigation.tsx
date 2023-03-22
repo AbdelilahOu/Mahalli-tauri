@@ -44,7 +44,7 @@ export const Navigation = defineComponent({
                 <span class={"w-full h-full cursor-pointer  bg-white"}>
                   <UiIconVue
                     IsStyled={true}
-                    class={"min-w-[40px] text-gray-700"}
+                    class={"   text-gray-700"}
                     name={"Home"}
                   />
                 </span>
@@ -55,8 +55,8 @@ export const Navigation = defineComponent({
                     {ActiveLink.value && " /"}
                     {ActiveLink.value && (
                       <UiIconVue
-                        IsStyled={true}
-                        class={"min-w-[40px] ml-1 text-gray-700"}
+                        IsStyled={false}
+                        class={"min-w-[32px] max-w-[32px] ml-1 text-gray-700"}
                         name={ActiveLink.value.name}
                       />
                     )}
