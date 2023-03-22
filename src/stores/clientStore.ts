@@ -6,7 +6,7 @@ export const useClientStore = defineStore("ClientStore", {
     return {
       clients: [],
       client: null,
-    };
+    };  
   },
   actions: {
     getAllClients: async function () {
