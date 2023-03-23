@@ -49,7 +49,7 @@ export const Navigation = defineComponent({
                   />
                 </span>
               </button>{" "}
-              {route.fullPath !== "/" ? (
+              {route.fullPath !== "/" && (
                 <span class="flex items-center">
                   <span class="flex items-center">
                     {ActiveLink.value && " /"}
@@ -69,8 +69,6 @@ export const Navigation = defineComponent({
                     {route.params.id ? `/ n° ${route.params.id}` : ""}
                   </span>
                 </span>
-              ) : (
-                ""
               )}
             </span>
           </div>
