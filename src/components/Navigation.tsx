@@ -54,11 +54,13 @@ export const Navigation = defineComponent({
                   <span class="flex items-center">
                     {ActiveLink.value && " /"}
                     {ActiveLink.value && (
-                      <UiIconVue
-                        IsStyled={false}
-                        class={"min-w-[32px] max-w-[32px] ml-1 text-gray-700"}
-                        name={ActiveLink.value.name}
-                      />
+                      <span class="w-8 h-8 mr-1">
+                        <UiIconVue
+                          IsStyled={false}
+                          class={"min-w-[30px] max-w-[30px] ml-1 text-gray-700"}
+                          name={ActiveLink.value.name}
+                        />
+                      </span>
                     )}
                     {ActiveLink.value &&
                       globalTranslate(
