@@ -24,6 +24,7 @@ export const UiUploader = defineComponent({
       });
       onSave(selectedFile.value);
     };
+
     const getpath = (src: string) => new URL(src, import.meta.url).toString();
 
     return () => (
