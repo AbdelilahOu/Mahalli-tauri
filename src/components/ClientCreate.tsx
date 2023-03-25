@@ -5,6 +5,7 @@ import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
 import { useModalStore } from "@/stores/modalStore";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { UiUploader } from "./ui/UiUploader";
 export const ClientCreate = defineComponent({
   name: "ClientCreate",
   components: { UiButton, UiInput },
@@ -12,10 +13,10 @@ export const ClientCreate = defineComponent({
     const modalStore = useModalStore();
     const isFlash = ref<boolean>(false);
     const newClient = reactive<newClientT>({
-      name: "",
-      email: "",
-      phone: "",
-      addresse: "",
+      name: String(),
+      email: String(),
+      phone: String(),
+      addresse: String(),
     });
     const createNewClient = () => {
       isFlash.value = true;
@@ -33,6 +34,7 @@ export const ClientCreate = defineComponent({
           {globalTranslate("Clients.create.title")}
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
+          <UiUploader onSave={() => ""} />
           <UiInput
             IsEmpty={isFlash.value && newClient["name"] == ""}
             OnInputChange={(value) =>
