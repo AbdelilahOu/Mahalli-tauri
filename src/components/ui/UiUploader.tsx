@@ -42,11 +42,12 @@ export const UiUploader = defineComponent({
       }
       console.log("sth went wrong reading the file");
     };
+
     const saveFile = async (path: string) => {
       onSave(path);
     };
 
-    const checkIfExistsInFs = async (file: string, path: string) => {
+    const checkIfExistsInFs = async (file: string, path: BaseDirectory) => {
       return await exists(file, {
         dir: path,
       });
