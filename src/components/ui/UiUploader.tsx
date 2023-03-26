@@ -53,6 +53,15 @@ export const UiUploader = defineComponent({
       });
     };
 
+    const createFolder = async (folder: string, path: BaseDirectory) => {
+      if (await checkIfExistsInFs(folder, path)) {
+        return await createDir(folder, {
+          dir: path,
+        });
+      }
+      return String().concat(path.toString(), folder);
+    };
+
     return () => <UiUploaderHtml openDialog={() => OpenDialog()} />;
   },
 });
