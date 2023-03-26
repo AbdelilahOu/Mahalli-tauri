@@ -46,7 +46,11 @@ export const UiUploader = defineComponent({
       onSave(path);
     };
 
-    const getpath = (src: string) => new URL(src, import.meta.url).toString();
+    const checkIfExistsInFs = async (file: string, path: string) => {
+      return await exists(file, {
+        dir: path,
+      });
+    };
 
     return () => <UiUploaderHtml openDialog={() => OpenDialog()} />;
   },

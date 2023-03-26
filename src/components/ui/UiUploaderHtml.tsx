@@ -12,17 +12,18 @@ export const UiUploaderHtml = defineComponent({
       type: Function as PropType<() => void>,
       required: true,
     },
+    selectedFile: String,
   },
   components: { UiIcon },
-  setup({ FileType, openDialog }) {
+  setup({ FileType, openDialog, selectedFile }) {
+    const getpath = (src: string) => new URL(src, import.meta.url).toString();
+
     return () => {
       <div class="w-36 relative h-36 rounded-md overflow-hidden flex text-black justify-center items-center">
-        {/* <img
-            class="absolute top-0 rounded-md object-cover w-full h-full"
-            src={
-              selectedFile.value ?? getpath("../../assets/images/clients.jpg")
-            }
-          /> */}
+        <img
+          class="absolute top-0 rounded-md object-cover w-full h-full"
+          src={selectedFile ?? getpath("../../assets/images/clients.jpg")}
+        />
         <div class="w-full bg-white/40 transition-all duration-200 group hover:bg-white/30 absolute top-0 z-10 h-full">
           <button
             onClick={() => openDialog()}
