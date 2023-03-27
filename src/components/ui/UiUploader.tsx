@@ -5,6 +5,7 @@ import { pictureDir, downloadDir, appDataDir, sep } from "@tauri-apps/api/path";
 import { defineComponent, ref, type PropType } from "vue";
 import { UiUploaderHtml } from "./UiUploaderHtml";
 import { open } from "@tauri-apps/api/dialog";
+import { ImagesFiles } from "@/constants/FileTypes";
 
 export const UiUploader = defineComponent({
   name: "UiUploader",
@@ -16,7 +17,7 @@ export const UiUploader = defineComponent({
     },
     extensions: {
       type: Array as PropType<string[]>,
-      default: ["png", "jpeg", "webp"],
+      default: ImagesFiles,
     },
     name: {
       type: String as PropType<"Image" | "Pdf" | "Word">,
@@ -53,7 +54,7 @@ export const UiUploader = defineComponent({
           });
           await copyFile(
             path,
-            (await appDataDir())
+            "Image"
               .concat(sep)
               .concat(selectedFile.value?.split("/")[-1] as string),
             {
