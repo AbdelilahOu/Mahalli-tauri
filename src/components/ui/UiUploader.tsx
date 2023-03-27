@@ -1,11 +1,11 @@
+import { pictureDir, downloadDir, appDataDir, sep } from "@tauri-apps/api/path";
 import { BaseDirectory, createDir, copyFile } from "@tauri-apps/api/fs";
 import { exists, renameFile, writeBinaryFile } from "@tauri-apps/api/fs";
 import { sendNotification } from "@tauri-apps/api/notification";
-import { pictureDir, downloadDir, appDataDir, sep } from "@tauri-apps/api/path";
 import { defineComponent, ref, type PropType } from "vue";
+import { ImagesFiles } from "@/constants/FileTypes";
 import { UiUploaderHtml } from "./UiUploaderHtml";
 import { open } from "@tauri-apps/api/dialog";
-import { ImagesFiles } from "@/constants/FileTypes";
 
 export const UiUploader = defineComponent({
   name: "UiUploader",
