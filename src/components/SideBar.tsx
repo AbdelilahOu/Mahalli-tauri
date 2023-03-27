@@ -2,7 +2,7 @@ import { useTranslationStore } from "@/stores/translationStore";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, type PropType } from "vue";
 import { useModalStore } from "@/stores/modalStore";
-import { RouteLinks } from "@/stores/routeNames";
+import { RouteLinks } from "@/constants/RouteNames";
 import { UiSideLink } from "./ui/UiSideLink";
 import { RouterLink } from "vue-router";
 

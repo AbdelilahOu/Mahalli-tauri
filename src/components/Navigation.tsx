@@ -1,6 +1,6 @@
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { defineComponent, onMounted, ref } from "vue";
-import { RouteLinks } from "@/stores/routeNames";
+import { RouteLinks } from "@/constants/RouteNames";
 import { globalTranslate } from "@/utils/globalTranslate";
 import UiIconVue from "./ui/UiIcon.vue";
 
