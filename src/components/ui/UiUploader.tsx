@@ -1,20 +1,14 @@
+import { BaseDirectory, createDir, copyFile } from "@tauri-apps/api/fs";
+import { exists, renameFile, writeBinaryFile } from "@tauri-apps/api/fs";
+import { sendNotification } from "@tauri-apps/api/notification";
+import { pictureDir, downloadDir, appDataDir, sep } from "@tauri-apps/api/path";
 import { defineComponent, ref, type PropType } from "vue";
-import { open, save } from "@tauri-apps/api/dialog";
-import { pictureDir, downloadDir } from "@tauri-apps/api/path";
-import {
-  BaseDirectory,
-  writeBinaryFile,
-  createDir,
-  exists,
-} from "@tauri-apps/api/fs";
-import {
-  sendNotification,
-  isPermissionGranted,
-} from "@tauri-apps/api/notification";
 import { UiUploaderHtml } from "./UiUploaderHtml";
+import { open } from "@tauri-apps/api/dialog";
 
 export const UiUploader = defineComponent({
   name: "UiUploader",
+  components: { UiUploaderHtml },
   props: {
     onSave: {
       type: Function as PropType<(path: string) => void>,
@@ -25,43 +19,99 @@ export const UiUploader = defineComponent({
       default: ["png", "jpeg", "webp"],
     },
     name: {
-      type: String,
+      type: String as PropType<"Image" | "Pdf" | "Word">,
       default: "Image",
     },
   },
   setup({ onSave, extensions, name }) {
     const selectedFile = ref<string | null>();
     const OpenDialog = async () => {
-      selectedFile.value = await save({
-        filters: [{ name, extensions }],
-        defaultPath: name == "Image" ? await pictureDir() : await downloadDir(),
-      });
-      if (selectedFile.value) {
-        saveFile(selectedFile.value);
-        return;
+      try {
+        selectedFile.value = (await open({
+          multiple: false,
+          filters: [{ name, extensions }],
+          defaultPath:
+            name == "Image" ? await pictureDir() : await downloadDir(),
+          // C:\Users\abdel\AppData\Roaming\tauriApp
+        })) as string | null;
+
+        if (selectedFile.value) {
+          saveFile(selectedFile.value);
+          return;
+        }
+      } catch (error) {
+        console.log("sth went wrong reading the file");
       }
-      console.log("sth went wrong reading the file");
     };
 
     const saveFile = async (path: string) => {
-      onSave(path);
-    };
-
-    const checkIfExistsInFs = async (file: string, path: BaseDirectory) => {
-      return await exists(file, {
-        dir: path,
-      });
-    };
-
-    const createFolder = async (folder: string, path: BaseDirectory) => {
-      if (await checkIfExistsInFs(folder, path)) {
-        return await createDir(folder, {
-          dir: path,
-        });
+      try {
+        if (name === "Image") {
+          await createFolder("Images");
+          await writeBinaryFile(path, new Uint32Array([]), {
+            dir: BaseDirectory.AppData,
+          });
+          await copyFile(
+            path,
+            (await appDataDir())
+              .concat(sep)
+              .concat(selectedFile.value?.split("/")[-1] as string),
+            {
+              dir: BaseDirectory.AppData,
+            }
+          );
+          onSave(path);
+          return;
+        }
+        await createFolder("Docs");
+        onSave(path);
+      } catch (error) {
+        console.log("sth went wrong", error);
       }
-      return String().concat(path.toString(), folder);
     };
 
-    return () => <UiUploaderHtml openDialog={() => OpenDialog()} />;
+    const createFolder = async (folder: string) => {
+      if (!(await checkIfExistsInFs(folder))) {
+        try {
+          await createDir(folder, {
+            dir: BaseDirectory.AppData,
+            recursive: true,
+          });
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }
+      return true;
+    };
+
+    const checkIfExistsInFs = async (fileOrFolder: string) => {
+      try {
+        return await exists(fileOrFolder, {
+          dir: BaseDirectory.AppData,
+        });
+      } catch (error) {
+        console.log("err in exists");
+      }
+    };
+
+    const rename = async (old: string, fileName: string) => {
+      try {
+        const dataPath = (await appDataDir()).concat(sep);
+        await renameFile(dataPath.concat(old), dataPath.concat(fileName), {
+          dir: BaseDirectory.AppData,
+        });
+      } catch (error) {
+        console.log("err in rename");
+      }
+    };
+
+    return () => (
+      <UiUploaderHtml
+        selectedFile={selectedFile.value ?? ""}
+        openDialog={() => OpenDialog()}
+        FileType={name}
+      />
+    );
   },
 });
