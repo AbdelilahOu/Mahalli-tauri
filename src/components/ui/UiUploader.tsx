@@ -1,11 +1,11 @@
+import { BaseDirectory, createDir, copyFile, exists } from "@tauri-apps/api/fs";
+// import { sendNotification } from "@tauri-apps/api/notification";
 import { pictureDir, downloadDir, appDataDir, sep } from "@tauri-apps/api/path";
-import { BaseDirectory, createDir, copyFile } from "@tauri-apps/api/fs";
-import { exists, renameFile, writeBinaryFile } from "@tauri-apps/api/fs";
-import { sendNotification } from "@tauri-apps/api/notification";
 import { defineComponent, ref, type PropType } from "vue";
-import { ImagesFiles } from "@/constants/FileTypes";
 import { UiUploaderHtml } from "./UiUploaderHtml";
 import { open } from "@tauri-apps/api/dialog";
+import { ImagesFiles } from "@/constants/FileTypes";
+import type { FileNames } from "@/constants/FileType";
 
 export const UiUploader = defineComponent({
   name: "UiUploader",
@@ -20,7 +20,7 @@ export const UiUploader = defineComponent({
       default: ImagesFiles,
     },
     name: {
-      type: String as PropType<"Image" | "Pdf" | "Word">,
+      type: String as PropType<FileNames>,
       default: "Image",
     },
   },
@@ -46,24 +46,23 @@ export const UiUploader = defineComponent({
     };
 
     const saveFile = async (path: string) => {
+      const RightFolder = name === "Image" ? "Images" : "Docs";
       try {
-        if (name === "Image") {
-          await createFolder("Images");
-          await writeBinaryFile(path, new Uint32Array([]), {
+        await createFolder(RightFolder);
+        const fileName = path.split(sep)[path.split(sep).length - 1];
+        const fileExtention = fileName.split(".")[1];
+        await copyFile(
+          path,
+          (await appDataDir())
+            .concat(sep)
+            .concat(RightFolder)
+            .concat(sep)
+            .concat(fileName),
+          {
             dir: BaseDirectory.AppData,
-          });
-          await copyFile(
-            path,
-            "Image"
-              .concat(sep)
-              .concat(selectedFile.value?.split("/")[-1] as string),
-            {
-              dir: BaseDirectory.AppData,
-            }
-          );
-          onSave(path);
-          return;
-        }
+          }
+        );
+        onSave(fileName);
         await createFolder("Docs");
         onSave(path);
       } catch (error) {
@@ -93,17 +92,6 @@ export const UiUploader = defineComponent({
         });
       } catch (error) {
         console.log("err in exists");
-      }
-    };
-
-    const rename = async (old: string, fileName: string) => {
-      try {
-        const dataPath = (await appDataDir()).concat(sep);
-        await renameFile(dataPath.concat(old), dataPath.concat(fileName), {
-          dir: BaseDirectory.AppData,
-        });
-      } catch (error) {
-        console.log("err in rename");
       }
     };
 
