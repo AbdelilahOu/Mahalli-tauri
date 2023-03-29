@@ -10,7 +10,8 @@ export default async () => {
         name TEXT NOT NULL,
         phone TEXT DEFAULT '',
         email TEXT DEFAULT '',
-        addresse TEXT DEFAULT ''
+        addresse TEXT DEFAULT '',
+        image TEXT DEFAULT ''
       );
     `);
   };
@@ -23,7 +24,7 @@ export default async () => {
         description TEXT DEFAULT '',
         price REAL NOT NULL,
         tva REAL NOT NULL DEFAULT 0,
-        type TEXT NOT NULL DEFAULT 'Product'
+        image TEXT DEFAULT ''
       );
     `);
     await db.execute(
@@ -38,7 +39,8 @@ export default async () => {
         name TEXT NOT NULL,
         phone TEXT DEFAULT '',
         email TEXT DEFAULT '',
-        addresse TEXT DEFAULT ''
+        addresse TEXT DEFAULT '',
+        image TEXT DEFAULT ''
       );
     `);
   };
