@@ -148,6 +148,7 @@ export interface clientT {
   phone?: string;
   addresse?: string;
   email?: string;
+  image?: string;
 }
 
 export interface newClientT extends Omit<clientT, "id"> {}

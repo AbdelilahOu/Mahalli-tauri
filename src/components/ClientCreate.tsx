@@ -17,6 +17,7 @@ export const ClientCreate = defineComponent({
       email: String(),
       phone: String(),
       addresse: String(),
+      image: String(),
     });
     const createNewClient = () => {
       isFlash.value = true;
