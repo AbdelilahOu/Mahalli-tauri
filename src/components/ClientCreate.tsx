@@ -35,7 +35,7 @@ export const ClientCreate = defineComponent({
           {globalTranslate("Clients.create.title")}
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
-          <UiUploader onSave={() => ""} />
+          <UiUploader onSave={(image) => (newClient.image = image)} />
           <UiInput
             IsEmpty={isFlash.value && newClient["name"] == ""}
             OnInputChange={(value) =>
