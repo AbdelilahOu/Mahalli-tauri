@@ -1,11 +1,8 @@
-import { BaseDirectory, createDir, copyFile, exists } from "@tauri-apps/api/fs";
-// import { sendNotification } from "@tauri-apps/api/notification";
-import { pictureDir, downloadDir, appDataDir, sep } from "@tauri-apps/api/path";
+import { pictureDir, downloadDir } from "@tauri-apps/api/path";
 import { defineComponent, ref, type PropType } from "vue";
+import type { FileNames } from "@/types";
 import { UiUploaderHtml } from "./UiUploaderHtml";
 import { open } from "@tauri-apps/api/dialog";
-import { ImagesFiles } from "@/constants/FileTypes";
-import type { FileNames } from "@/constants/FileType";
 
 export const UiUploader = defineComponent({
   name: "UiUploader",
@@ -17,11 +14,11 @@ export const UiUploader = defineComponent({
     },
     extensions: {
       type: Array as PropType<string[]>,
-      default: ImagesFiles,
+      required: true,
     },
     name: {
       type: String as PropType<FileNames>,
-      default: "Image",
+      required: true,
     },
   },
   setup({ onSave, extensions, name }) {
@@ -37,64 +34,13 @@ export const UiUploader = defineComponent({
         })) as string | null;
 
         if (selectedFile.value) {
-          saveFile(selectedFile.value);
+          onSave(selectedFile.value);
           return;
         }
       } catch (error) {
         console.log("sth went wrong reading the file");
       }
     };
-
-    const saveFile = async (path: string) => {
-      const RightFolder = name === "Image" ? "Images" : "Docs";
-      try {
-        await createFolder(RightFolder);
-        const fileName = path.split(sep)[path.split(sep).length - 1];
-        const fileExtention = fileName.split(".")[1];
-        await copyFile(
-          path,
-          (await appDataDir())
-            .concat(sep)
-            .concat(RightFolder)
-            .concat(sep)
-            .concat(fileName),
-          {
-            dir: BaseDirectory.AppData,
-          }
-        );
-        onSave(fileName);
-        await createFolder("Docs");
-        onSave(path);
-      } catch (error) {
-        console.log("sth went wrong", error);
-      }
-    };
-
-    const createFolder = async (folder: string) => {
-      if (!(await checkIfExistsInFs(folder))) {
-        try {
-          await createDir(folder, {
-            dir: BaseDirectory.AppData,
-            recursive: true,
-          });
-          return true;
-        } catch (error) {
-          return false;
-        }
-      }
-      return true;
-    };
-
-    const checkIfExistsInFs = async (fileOrFolder: string) => {
-      try {
-        return await exists(fileOrFolder, {
-          dir: BaseDirectory.AppData,
-        });
-      } catch (error) {
-        console.log("err in exists");
-      }
-    };
-
     return () => (
       <UiUploaderHtml
         selectedFile={selectedFile.value ?? ""}

@@ -228,3 +228,5 @@ export interface RouteLinksTypeT {
   component: string;
   display: boolean;
 }
+
+export type FileNames = "Image" | "Doc";
