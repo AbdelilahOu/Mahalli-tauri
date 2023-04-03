@@ -14,7 +14,7 @@ export const ClientCreate = defineComponent({
   setup() {
     const modalStore = useModalStore();
     const isFlash = ref<boolean>(false);
-    const newClient = reactive<newClientT>({
+    const Client = reactive<newClientT>({
       name: String(),
       email: String(),
       phone: String(),
@@ -23,8 +23,8 @@ export const ClientCreate = defineComponent({
     });
     const createNewClient = () => {
       isFlash.value = true;
-      if (newClient.name !== "") {
-        useClientStore().createOneClient(newClient);
+      if (Client.name !== "") {
+        useClientStore().createOneClient(Client);
         modalStore.updateModal({ key: "show", value: false });
       }
       setTimeout(() => {
@@ -40,39 +40,39 @@ export const ClientCreate = defineComponent({
           <UiUploader
             name="Image"
             extensions={ImagesFiles}
-            onSave={(image) => (newClient.image = image)}
+            onSave={(image) => (Client.image = image)}
           />
           <UiInput
-            IsEmpty={isFlash.value && newClient["name"] == ""}
+            IsEmpty={isFlash.value && Client["name"] == ""}
             OnInputChange={(value) =>
-              (newClient["name"] =
+              (Client["name"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Clients.create.placeholders[0]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && newClient["email"] == ""}
+            IsEmpty={isFlash.value && Client["email"] == ""}
             OnInputChange={(value) =>
-              (newClient["email"] =
+              (Client["email"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Clients.create.placeholders[1]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && newClient["phone"] == ""}
+            IsEmpty={isFlash.value && Client["phone"] == ""}
             OnInputChange={(value) =>
-              (newClient["phone"] =
+              (Client["phone"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Clients.create.placeholders[2]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && newClient["addresse"] == ""}
+            IsEmpty={isFlash.value && Client["addresse"] == ""}
             OnInputChange={(value) =>
-              (newClient["addresse"] =
+              (Client["addresse"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
