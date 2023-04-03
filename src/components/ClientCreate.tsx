@@ -2,11 +2,11 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import { useClientStore } from "@/stores/clientStore";
 import { defineComponent, reactive, ref } from "vue";
 import { useModalStore } from "@/stores/modalStore";
+import { ImagesFiles } from "@/constants/FileTypes";
 import { UiUploader } from "./ui/UiUploader";
 import type { newClientT } from "@/types";
 import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
-import { ImagesFiles } from "@/constants/FileTypes";
 
 export const ClientCreate = defineComponent({
   name: "ClientCreate",
