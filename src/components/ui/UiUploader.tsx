@@ -1,7 +1,7 @@
 import { pictureDir, downloadDir } from "@tauri-apps/api/path";
 import { defineComponent, ref, type PropType } from "vue";
-import type { FileNames } from "@/types";
 import { open } from "@tauri-apps/api/dialog";
+import type { FileNames } from "@/types";
 import UiIcon from "./UiIcon.vue";
 
 export const UiUploader = defineComponent({
