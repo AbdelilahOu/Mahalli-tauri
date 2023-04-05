@@ -1,12 +1,12 @@
 import { pictureDir, downloadDir } from "@tauri-apps/api/path";
 import { defineComponent, ref, type PropType } from "vue";
 import type { FileNames } from "@/types";
-import { UiUploaderHtml } from "./UiUploaderHtml";
 import { open } from "@tauri-apps/api/dialog";
+import UiIcon from "./UiIcon.vue";
 
 export const UiUploader = defineComponent({
   name: "UiUploader",
-  components: { UiUploaderHtml },
+  components: { UiIcon },
   props: {
     onSave: {
       type: Function as PropType<(path: string) => void>,
@@ -41,12 +41,29 @@ export const UiUploader = defineComponent({
         console.log("sth went wrong reading the file");
       }
     };
+
+    const getpath = (src: string) => new URL(src, import.meta.url).toString();
+
     return () => (
-      <UiUploaderHtml
-        selectedFile={selectedFile.value ?? ""}
-        openDialog={() => OpenDialog()}
-        FileType={name}
-      />
+      <div class="w-36 relative h-36 rounded-md overflow-hidden flex text-black justify-center items-center">
+        {name === "Image" ?? (
+          <img
+            class="absolute top-0 rounded-md object-cover w-full h-full"
+            src={getpath("../../assets/images/clients.jpg")}
+          />
+        )}
+        <div class="w-full bg-white/40 transition-all duration-200 group hover:bg-white/30 absolute top-0 z-10 h-full">
+          <button
+            onClick={() => OpenDialog()}
+            class="w-full text-gray-500 transition-all duration-200 hover:scale-125  h-full grid hover:text-black  justify-center items-center"
+          >
+            <UiIcon
+              Class=" "
+              name={name === "Image" ? "addPicture" : "AddDoc"}
+            />
+          </button>
+        </div>
+      </div>
     );
   },
 });
