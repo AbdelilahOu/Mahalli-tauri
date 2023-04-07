@@ -56,6 +56,7 @@ export const Navigation = defineComponent({
                     {ActiveLink.value && (
                       <span class="w-8 h-8 mr-1">
                         <UiIconVue
+                          key={ActiveLink.value.name}
                           IsStyled={false}
                           class={"min-w-[30px] max-w-[30px] ml-1 text-gray-700"}
                           name={ActiveLink.value.name}
