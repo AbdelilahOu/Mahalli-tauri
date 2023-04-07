@@ -1,6 +1,6 @@
 <!-- npm i vite-svg-loader -->
 <script setup lang="ts">
-import { defineAsyncComponent, ref, watch, type Component } from "vue";
+import { defineAsyncComponent } from "vue";
 const props = defineProps({
   name: {
     type: String,
@@ -15,20 +15,9 @@ const props = defineProps({
     default: "",
   },
 });
-const icon = ref<Component>(
-  defineAsyncComponent({
-    loader: () => import(`../../assets/svg/${props.name}.svg`),
-  })
-);
-
-watch(
-  () => props.name,
-  (name) => {
-    icon.value = defineAsyncComponent({
-      loader: () => import(`../../assets/svg/${name}.svg`),
-    });
-  }
-);
+const icon = defineAsyncComponent({
+  loader: () => import(`../../assets/svg/${props.name}.svg`),
+});
 </script>
 
 <template>
@@ -39,5 +28,6 @@ watch(
       IsStyled && 'cursor-pointer rounded-md hover:bg-gray-100',
     ]"
     :is="icon"
+    :key="icon"
   />
 </template>
