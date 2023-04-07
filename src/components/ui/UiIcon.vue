@@ -28,6 +28,5 @@ const icon = defineAsyncComponent({
       IsStyled && 'cursor-pointer rounded-md hover:bg-gray-100',
     ]"
     :is="icon"
-    :key="icon"
   />
 </template>
