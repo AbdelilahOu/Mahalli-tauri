@@ -12,7 +12,6 @@ const props = defineProps({
   },
   Class: {
     type: String,
-    default: "",
   },
 });
 const icon = defineAsyncComponent({
@@ -24,7 +23,7 @@ const icon = defineAsyncComponent({
   <component
     v-fade="0"
     :class="[
-      Class ? Class : 'w-8 h-8 minh-[2rem] max-h-8 p-1',
+      Class ?? 'w-8 h-8 minh-[2rem] max-h-8 p-1',
       IsStyled && 'cursor-pointer rounded-md hover:bg-gray-100',
     ]"
     :is="icon"
