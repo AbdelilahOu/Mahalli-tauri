@@ -36,12 +36,14 @@ export const ClientCreate = defineComponent({
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Clients.create.title")}
         </h1>
-        <div class="h-full w-full flex flex-col gap-2">
-          <UiUploader
-            name="Image"
-            extensions={ImagesFiles}
-            onSave={(image) => (Client.image = image)}
-          />
+        <div class="h-full w-full flex  flex-col gap-2">
+          <div class="w-full h-fit flex justify-center">
+            <UiUploader
+              name="Image"
+              extensions={ImagesFiles}
+              onSave={(image) => (Client.image = image)}
+            />
+          </div>
           <UiInput
             IsEmpty={isFlash.value && Client["name"] == ""}
             OnInputChange={(value) =>
