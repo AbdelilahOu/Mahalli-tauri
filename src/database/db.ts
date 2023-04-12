@@ -1,7 +1,7 @@
 import database from "tauri-plugin-sql-api";
 
 export default async () => {
-  const db = await database.load("sqlite:db.sqlite");
+  const db = await database.load("sqlite:db1.sqlite");
 
   const createClientTable = async () => {
     await db.execute(`
