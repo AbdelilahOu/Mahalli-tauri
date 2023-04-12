@@ -1,12 +1,13 @@
 import type { clientT, clientState, updateClientT, newClientT } from "@/types";
 import database from "@/database/db";
 import { defineStore } from "pinia";
+import { saveFile } from "@/utils/fs";
 export const useClientStore = defineStore("ClientStore", {
   state: (): clientState => {
     return {
       clients: [],
       client: null,
-    };  
+    };
   },
   actions: {
     getAllClients: async function () {
@@ -36,11 +37,17 @@ export const useClientStore = defineStore("ClientStore", {
       }
     },
     createOneClient: async function (Client: newClientT) {
+      const { image: imagePath } = Client;
       try {
         const { db } = await database();
+        let image: string = "";
+        if (imagePath) {
+          console.log(await saveFile(imagePath, "Image"));
+          image = (await saveFile(imagePath, "Image")) ?? "";
+        }
         await db.execute(
-          "INSERT INTO clients (name,email,phone,addresse) VALUES ($1,$2,$3,$4)",
-          [Client.name, Client.email, Client.phone, Client.addresse]
+          "INSERT INTO clients (name,email,phone,addresse,image) VALUES ($1,$2,$3,$4,$5)",
+          [Client.name, Client.email, Client.phone, Client.addresse, image]
         );
         this.getAllClients();
       } catch (error) {
