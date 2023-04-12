@@ -43,6 +43,7 @@ export const ClientDetails = defineComponent({
           </div>
           <div class="xl:border-l-2 border-b-2"></div>
           <div class="w-full">
+            {JSON.stringify(client.value)}
             <h1>Products baught last three months</h1>
             <ChartBar
               id="stock-mouvements-for-past-three-months"

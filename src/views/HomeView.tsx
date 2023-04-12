@@ -1,12 +1,3 @@
-import products from "../../assets/images/products.jpg";
-import commands from "../../assets/images/commands.jpg";
-import invoices from "../../assets/images/invoices.jpg";
-import sellers from "../../assets/images/sellers.jpeg";
-import clients from "../../assets/images/clients.jpg";
-import stock from "../../assets/images/stock.jpg";
-import stats from "../../assets/images/stats.jpg";
-import credi from "../../assets/images/credi.webp";
-
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
@@ -19,42 +10,42 @@ export const HomeView = defineComponent({
   setup() {
     const Pages: { image: string; text: string; path: string }[] = [
       {
-        image: clients,
+        image: "/clients.jpg",
         text: "Clients",
         path: "/Clients/all",
       },
       {
-        image: products,
+        image: "/products.jpg",
         text: "Products",
         path: "/Products",
       },
       {
-        image: sellers,
+        image: "/sellers.jpeg",
         text: "Sellers",
         path: "/Sellers/all",
       },
       {
-        image: commands,
+        image: "/commands.jpg",
         text: "Commands",
         path: "/Commands/all",
       },
       {
-        image: invoices,
+        image: "/invoices.jpg",
         text: "Invoices",
         path: "/Invoices/all",
       },
       {
-        image: stock,
+        image: "/stock.jpg",
         text: "Stock",
         path: "/Stocks",
       },
       {
-        image: stats,
+        image: "/stats.jpg",
         text: "Statistics",
         path: "/Stats",
       },
       {
-        image: credi,
+        image: "/credi.webp",
         text: "Credi",
         path: "/Credi",
       },
