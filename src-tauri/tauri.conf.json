@@ -22,7 +22,8 @@
         "all": true
       },
       "fs": {
-        "all": true
+        "all": true,
+        "scope": ["**"]
       }
     },
     "bundle": {
