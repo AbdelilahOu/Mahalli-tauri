@@ -45,22 +45,21 @@ export const UiUploader = defineComponent({
     const getpath = (src: string) => new URL(src, import.meta.url).toString();
 
     return () => (
-      <div class="w-36 relative h-36 rounded-md overflow-hidden flex text-black justify-center items-center">
-        {name === "Image" ?? (
+      <div class="w-36 relative h-36 bg-gray-300 rounded-md overflow-hidden flex text-black justify-center items-center">
+        {name === "Image" ? (
           <img
             class="absolute top-0 rounded-md object-cover w-full h-full"
-            src={getpath("../../assets/images/clients.jpg")}
+            src={"/clients.jpg"}
           />
+        ) : (
+          ""
         )}
         <div class="w-full bg-white/40 transition-all duration-200 group hover:bg-white/30 absolute top-0 z-10 h-full">
           <button
             onClick={() => OpenDialog()}
             class="w-full text-gray-500 transition-all duration-200 hover:scale-125  h-full grid hover:text-black  justify-center items-center"
           >
-            <UiIcon
-              Class=" "
-              name={name === "Image" ? "addPicture" : "AddDoc"}
-            />
+            <UiIcon Class=" " name={name === "Image" ? "addDoc" : "addDoc"} />
           </button>
         </div>
       </div>

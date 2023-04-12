@@ -3,7 +3,7 @@
   "build": {
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run dev",
-    "devPath": "http://localhost:5173",
+    "devPath": "http://localhost:5173/",
     "distDir": "../dist"
   },
   "package": {
@@ -13,17 +13,15 @@
   "tauri": {
     "allowlist": {
       "dialog": {
-        "all": true,
-        "ask": true,
-        "confirm": true,
-        "message": true,
-        "open": true,
-        "save": true
+        "open": true
       },
       "notification": {
         "all": true
       },
       "path": {
+        "all": true
+      },
+      "fs": {
         "all": true
       }
     },

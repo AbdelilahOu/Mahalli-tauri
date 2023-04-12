@@ -21,7 +21,6 @@ const icon = defineAsyncComponent({
 
 <template>
   <component
-    v-fade="0"
     :class="[
       Class ?? 'w-8 h-8 minh-[2rem] max-h-8 p-1',
       IsStyled && 'cursor-pointer rounded-md hover:bg-gray-100',
