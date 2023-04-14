@@ -1,6 +1,7 @@
 import { pictureDir, downloadDir } from "@tauri-apps/api/path";
 import { defineComponent, ref, type PropType } from "vue";
 import { open } from "@tauri-apps/api/dialog";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
 import type { FileNames } from "@/types";
 import UiIcon from "./UiIcon.vue";
 
@@ -35,6 +36,9 @@ export const UiUploader = defineComponent({
 
         if (selectedFile.value) {
           onSave(selectedFile.value);
+          if (name === "Image") {
+            selectedFile.value = convertFileSrc(selectedFile.value);
+          }
           return;
         }
       } catch (error) {
@@ -49,7 +53,7 @@ export const UiUploader = defineComponent({
         {name === "Image" ? (
           <img
             class="absolute top-0 rounded-md object-cover w-full h-full"
-            src={"/clients.jpg"}
+            src={selectedFile.value ?? "/clients.jpg"}
           />
         ) : (
           ""
