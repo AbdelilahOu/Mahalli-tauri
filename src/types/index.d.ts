@@ -80,7 +80,6 @@ export interface commandDetailsItemsT extends commandItemT {
   product: {
     name: string;
     price: number;
-    type: string;
     description?: string;
   };
 }
@@ -189,7 +188,6 @@ export interface productT {
   quantity: number;
   description?: string;
   tva: number;
-  type: string;
 }
 export interface newProductT extends Omit<productT, "id"> {}
 export interface productTfromApiT extends Omit<productT, "stock"> {

@@ -10,6 +10,7 @@ import { ChartBar } from "@/components/ChartBart";
 import type { clientT } from "@/types";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
+import { UiDrop } from "@/components/ui/UiDrop";
 
 export const ClientDetails = defineComponent({
   name: "ClientDetails",
