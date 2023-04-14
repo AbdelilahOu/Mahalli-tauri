@@ -1,5 +1,5 @@
 import { BaseDirectory, createDir, copyFile, exists } from "@tauri-apps/api/fs";
-import { appDataDir, sep } from "@tauri-apps/api/path";
+import { appDataDir, sep, join } from "@tauri-apps/api/path";
 
 export const updateFile = async (path: string, name: string) => {
   if (path.split(sep).length > 1) {
@@ -12,19 +12,14 @@ export const saveFile = async (path: string, name: string) => {
   const RightFolder = name === "Image" ? "Images" : "Docs";
   try {
     const fileName = path.split(sep)[path.split(sep).length - 1];
-    // const fileExtention = fileName.split(".")[1];
     await createFolder(RightFolder);
-    await copyFile(
-      path,
-      (await appDataDir())
-        .concat(sep)
-        .concat(RightFolder)
-        .concat(sep)
-        .concat(fileName),
-      {
-        dir: BaseDirectory.AppData,
-      }
-    );
+
+    const filePath = await join(await appDataDir(), RightFolder, fileName);
+
+    await copyFile(path, filePath, {
+      dir: BaseDirectory.AppData,
+    });
+
     return fileName;
   } catch (error) {
     console.log("sth went wrong", error);
