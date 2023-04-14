@@ -42,7 +42,6 @@ export const useClientStore = defineStore("ClientStore", {
         const { db } = await database();
         let image: string = "";
         if (imagePath) {
-          console.log(await saveFile(imagePath, "Image"));
           image = (await saveFile(imagePath, "Image")) ?? "";
         }
         await db.execute(

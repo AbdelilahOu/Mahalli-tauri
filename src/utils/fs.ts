@@ -12,7 +12,7 @@ export const saveFile = async (path: string, name: string) => {
   const RightFolder = name === "Image" ? "Images" : "Docs";
   try {
     const fileName = path.split(sep)[path.split(sep).length - 1];
-    const fileExtention = fileName.split(".")[1];
+    // const fileExtention = fileName.split(".")[1];
     await createFolder(RightFolder);
     await copyFile(
       path,

@@ -1,11 +1,10 @@
-import { defineComponent, reactive, ref, type PropType } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import { useProductStore } from "@/stores/productStore";
 import type { newProductT } from "@/types";
 import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
 import { useModalStore } from "@/stores/modalStore";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { UiSelect } from "./ui/UiSelect";
 
 export const ProductCreate = defineComponent({
   name: "ProductCreate",
@@ -18,7 +17,6 @@ export const ProductCreate = defineComponent({
       quantity: 0,
       description: "aaaaaaaaa",
       tva: 0,
-      type: "",
     });
     const createNewProduct = () => {
       isFlash.value = true;
@@ -45,24 +43,6 @@ export const ProductCreate = defineComponent({
             Type="text"
             PlaceHolder={globalTranslate("Products.create.placeholders[0]")}
           />
-          <UiSelect
-            IsClickedOuside={false}
-            items={[
-              {
-                id: 1,
-                name: "Produit",
-              },
-              {
-                id: 2,
-                name: "Service",
-              },
-            ]}
-            onSelect={(val) =>
-              (newProduct.type = val == 1 ? "Produit" : "Service")
-            }
-          >
-            {globalTranslate("Products.create.placeholders[1]")}
-          </UiSelect>
           <UiInput
             IsEmpty={isFlash.value && newProduct["price"] == 0}
             OnInputChange={(value) => (newProduct["price"] = Number(value))}

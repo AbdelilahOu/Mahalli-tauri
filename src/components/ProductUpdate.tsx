@@ -20,7 +20,6 @@ export const ProductUpdate = defineComponent({
       quantity: undefined,
       description: undefined,
       tva: undefined,
-      type: undefined,
     };
     const updateProduct = reactive<updateProductT>({
       ...(ProductRow.value ? ProductRow.value : Product),
@@ -49,25 +48,6 @@ export const ProductUpdate = defineComponent({
             Type="text"
             PlaceHolder="Name"
           />
-          <UiUpdateSelect
-            IsClickedOuside={false}
-            items={[
-              {
-                id: 1,
-                name: "Produit",
-              },
-              {
-                id: 2,
-                name: "Service",
-              },
-            ]}
-            Value={updateProduct.type ?? ""}
-            onSelect={(val) =>
-              (updateProduct.type = val === 1 ? "Produit" : "Service")
-            }
-          >
-            Select product Type
-          </UiUpdateSelect>
           <UiUpdateInput
             Value={ProductRow.value?.price}
             OnInputChange={(value) => (updateProduct["price"] = Number(value))}
