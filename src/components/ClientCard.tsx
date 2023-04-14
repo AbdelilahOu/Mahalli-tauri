@@ -1,4 +1,6 @@
-import { defineComponent, type PropType } from "vue";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
+import { join, appDataDir } from "@tauri-apps/api/path";
+import { ref, defineComponent, onMounted, type PropType } from "vue";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import type { clientT } from "@/types";
 
@@ -13,11 +15,28 @@ export const ClientCard = defineComponent({
       required: true,
     },
   },
+
   setup(props) {
+    const clientImage = ref("");
+
+    onMounted(async () => {
+      if (props.client?.image)
+        clientImage.value = convertFileSrc(
+          await join(await appDataDir(), "Images", props.client.image)
+        );
+    });
     return () => (
       // <UiIcon IsStyled={true} name={"person"} />
       <div class="w-full flex xl:sticky xl:top-[54px] z-20 pb-1 rounded-md gap-2 border-[1px] border-gray-501 flex-col bg-gray-100">
         <div class="text-3xl  font-sans py-1 flex items-center  font-medium">
+          {props.client?.image ? (
+            <img
+              class=" rounded-full w-20 h-20 m-2 object-fill"
+              src={clientImage.value}
+            />
+          ) : (
+            ""
+          )}
           <span class="h-full flex items-center justify-center pt-1">
             <UiIcon IsStyled={true} name={"tag"} />
           </span>
