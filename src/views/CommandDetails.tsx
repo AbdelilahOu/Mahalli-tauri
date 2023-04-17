@@ -199,9 +199,6 @@ export const CommandDetails = defineComponent({
                         </div>
                       </td>
                       <td class="p-2">
-                        <div class="text-left"> {item.product.type} </div>
-                      </td>
-                      <td class="p-2">
                         <div class="flex  justify-start gap-3">
                           {(item.price === 0
                             ? item.product.price * item.quantity

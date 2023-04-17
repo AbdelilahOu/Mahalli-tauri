@@ -38,10 +38,10 @@ export const useProductStore = defineStore("ProductStore", {
     createOneProduct: async function (Product: newProductT) {
       const { db } = await database();
       try {
-        const { name, description, price, tva, type } = Product;
+        const { name, description, price, tva } = Product;
         await db.execute(
-          "INSERT INTO products (name,description,price,tva,type) VALUES ($1,$2,$3,$4,$5)",
-          [name, description, price, tva, type]
+          "INSERT INTO products (name,description,price,tva) VALUES ($1,$2,$3,$4)",
+          [name, description, price, tva]
         );
         const id: { id: number }[] = await db.select(
           "SELECT max(id) as id FROM products"
@@ -58,10 +58,10 @@ export const useProductStore = defineStore("ProductStore", {
     updateOneProduct: async function (id: number, Product: updateProductT) {
       try {
         const { db } = await database();
-        const { name, tva, type, price, description } = Product;
+        const { name, tva, price, description } = Product;
         await db.execute(
-          "UPDATE products SET name = $1,tva = $2,type = $3,price = $4,description = $5 WHERE id = $6",
-          [name, tva, type, price, description, id]
+          "UPDATE products SET name = $1,tva = $2,price = $3,description = $4 WHERE id = $5",
+          [name, tva, price, description, id]
         );
         if (Product?.quantity && Product.quantity > 0) {
           await db.execute(
