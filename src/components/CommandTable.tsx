@@ -134,18 +134,20 @@ export const CommandTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="flex  justify-start gap-3">
-                      <UiIcon
+                      <span
                         onClick={() =>
                           toggleThisCommand(Command, "CommandDelete")
                         }
-                        name={"delete"}
-                      />
-                      <UiIcon
+                      >
+                        <UiIcon name={"delete"} />
+                      </span>
+                      <span
                         onClick={() =>
                           toggleThisCommand(Command, "CommandUpdate")
                         }
-                        name={"edit"}
-                      />
+                      >
+                        <UiIcon name={"edit"} />
+                      </span>
                       <RouterLink
                         to={{
                           name: "CommandDetails",

@@ -115,18 +115,20 @@ export const InvoiceTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="flex  justify-start gap-3">
-                      <UiIcon
+                      <span
                         onClick={() =>
                           toggleThisInvoice(Invoice, "InvoiceDelete")
                         }
-                        name={"delete"}
-                      />
-                      <UiIcon
+                      >
+                        <UiIcon name={"delete"} />
+                      </span>
+                      <span
                         onClick={() =>
                           toggleThisInvoice(Invoice, "InvoiceUpdate")
                         }
-                        name={"edit"}
-                      />
+                      >
+                        <UiIcon name={"edit"} />
+                      </span>
                       <RouterLink
                         to={{
                           name: "InvoiceDetails",
