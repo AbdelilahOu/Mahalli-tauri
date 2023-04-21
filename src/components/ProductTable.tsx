@@ -89,18 +89,20 @@ export const ProductTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="flex  justify-start gap-3">
-                      <UiIcon
+                      <span
                         onClick={() =>
                           toggleThisProduct(product, "ProductDelete")
                         }
-                        name={"delete"}
-                      />
-                      <UiIcon
+                      >
+                        <UiIcon name={"delete"} />
+                      </span>
+                      <span
                         onClick={() =>
                           toggleThisProduct(product, "ProductUpdate")
                         }
-                        name={"edit"}
-                      />
+                      >
+                        <UiIcon name={"edit"} />
+                      </span>
                     </div>
                   </td>
                 </tr>

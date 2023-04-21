@@ -93,14 +93,16 @@ export const ClientTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="flex  justify-start gap-3">
-                      <UiIcon
+                      <span
                         onClick={() => toggleThisClient(client, "ClientDelete")}
-                        name={"delete"}
-                      />
-                      <UiIcon
+                      >
+                        <UiIcon name={"delete"} />
+                      </span>
+                      <span
                         onClick={() => toggleThisClient(client, "ClientUpdate")}
-                        name={"edit"}
-                      />
+                      >
+                        <UiIcon name={"edit"} />
+                      </span>
                       <RouterLink
                         to={{
                           name: "ClientDetails",

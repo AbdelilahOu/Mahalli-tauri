@@ -93,14 +93,16 @@ export const SellerTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="flex  w-full justify-start gap-3">
-                      <UiIcon
+                      <span
                         onClick={() => toggleThisSeller(Seller, "SellerDelete")}
-                        name={"delete"}
-                      />
-                      <UiIcon
+                      >
+                        <UiIcon name={"delete"} />
+                      </span>
+                      <span
                         onClick={() => toggleThisSeller(Seller, "SellerUpdate")}
-                        name={"edit"}
-                      />
+                      >
+                        <UiIcon name={"edit"} />
+                      </span>
                       <RouterLink
                         to={{
                           name: "SellerDetails",
