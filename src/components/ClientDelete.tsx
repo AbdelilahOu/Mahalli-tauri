@@ -24,13 +24,11 @@ export const ClientDelete = defineComponent({
           {globalTranslate("Clients.delete.title")} {client.value?.name} ?
         </h1>
         <div class="flex gap-2">
-          <UiButton colorTheme="a" onClick={() => deleteTheClient()}>
+          <UiButton colorTheme="a" Click={() => deleteTheClient()}>
             {globalTranslate("Clients.delete.yes")}
           </UiButton>
           <UiButton
-            onClick={() =>
-              modalStore.updateModal({ key: "show", value: false })
-            }
+            Click={() => modalStore.updateModal({ key: "show", value: false })}
           >
             {globalTranslate("Clients.delete.no")}
           </UiButton>
