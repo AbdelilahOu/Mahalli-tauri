@@ -267,7 +267,7 @@ export const InvoiceDetails = defineComponent({
               </table>
               <div class="w-full flex items-center justify-center">
                 <div class="w-1/3">
-                  <UiButton onClick={() => window.print()} colorTheme="A">
+                  <UiButton Click={() => window.print()} colorTheme="A">
                     {globalTranslate("InvoiceDetails.details.button")}
                   </UiButton>
                 </div>

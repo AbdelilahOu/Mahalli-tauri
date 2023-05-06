@@ -24,8 +24,9 @@ export const UiInput = defineComponent({
     },
   },
   setup(props, { slots }) {
-    const inputValue = ref<string | number>("");
-    const emitChange = () => props.OnInputChange(inputValue.value);
+    const emitChange = (e: Event) => {
+      props.OnInputChange(e.target?.value as string | number);
+    };
     return () => (
       <div
         class={`flex flex-nowrap h-full items-center border-2 rounded-md transition-all duration-200 ${
@@ -37,7 +38,6 @@ export const UiInput = defineComponent({
           class={`defaultInput border-none ${
             props.IsEmpty && "placeholder:text-red-300"
           }`}
-          vModel={inputValue.value}
           disabled={props.Disable}
           onInput={emitChange}
           type={props.Type}

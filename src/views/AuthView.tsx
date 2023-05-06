@@ -51,7 +51,7 @@ export const AuthView = defineComponent({
               />
             </div>
             <div class="flex">
-              <UiButton colorTheme="a" onClick={() => LogIn()}>
+              <UiButton colorTheme="a" Click={() => LogIn()}>
                 {globalTranslate("Auth.title")}
               </UiButton>
             </div>
