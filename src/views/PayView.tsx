@@ -56,7 +56,7 @@ export const PayView = defineComponent({
               <div class="w-1/4 flex gap-2">
                 <UiButton
                   colorTheme="a"
-                  onClick={() => updateModal("CrediCreate")}
+                  Click={() => updateModal("CrediCreate")}
                 >
                   <UiIcon
                     class=" fill-gray-900 cursor-default hover:bg-transparent"

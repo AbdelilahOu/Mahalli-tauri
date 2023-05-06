@@ -12,11 +12,15 @@ export const UiButton = defineComponent({
       type: Boolean,
       default: false,
     },
+    Click: {
+      type: Function as PropType<() => void>,
+      required: true,
+    },
   },
   setup(props, { slots }) {
     return () => (
       <button
-        // onClick={() => props.Click()}
+        onClick={() => props.Click()}
         disabled={props.Disable}
         class={`defaultButton disabled:hover:border-sky-200 hover:bg-sky-300/40 hover:border-sky-300 hover:text-black ${
           props.colorTheme == "primary"

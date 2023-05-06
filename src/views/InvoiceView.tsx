@@ -60,7 +60,7 @@ export const InvoiceView = defineComponent({
               <div class="w-1/4 flex gap-2">
                 <UiButton
                   colorTheme="a"
-                  onClick={() => updateModal("InvoiceCreate")}
+                  Click={() => updateModal("InvoiceCreate")}
                 >
                   <UiIcon
                     class=" fill-gray-900 cursor-default hover:bg-transparent"
