@@ -120,19 +120,19 @@ export const useCommandStore = defineStore("CommandStore", {
               "UPDATE stock_mouvements SET quantity = $1 WHERE id = $2",
               [item.quantity, item.stock_id]
             );
-          } else {
-            await db.execute(
-              "INSERT INTO stock_mouvements (quantity,model,product_id) VALUES ($1,$2,$3)",
-              [item.quantity, "IN", item.product_id]
-            );
-            const stock_id: { id: number }[] = await db.select(
-              "SELECT max(id) as id FROM stock_mouvements"
-            );
-            await db.execute(
-              "INSERT INTO command_items (quantity,product_id,command_id,stock_id,price) VALUES ($1,$2,$3,$4,$5)",
-              [item.quantity, item.product_id, id, stock_id[0].id, item.price]
-            );
+            continue;
           }
+          await db.execute(
+            "INSERT INTO stock_mouvements (quantity,model,product_id) VALUES ($1,$2,$3)",
+            [item.quantity, "IN", item.product_id]
+          );
+          const stock_id: { id: number }[] = await db.select(
+            "SELECT max(id) as id FROM stock_mouvements"
+          );
+          await db.execute(
+            "INSERT INTO command_items (quantity,product_id,command_id,stock_id,price) VALUES ($1,$2,$3,$4,$5)",
+            [item.quantity, item.product_id, id, stock_id[0].id, item.price]
+          );
         }
         this.getAllCommands();
       } catch (error) {
