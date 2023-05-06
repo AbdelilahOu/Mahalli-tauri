@@ -20,6 +20,10 @@ export const UiUpdateInput = defineComponent({
       type: Function as PropType<(value: string | number) => void>,
       required: true,
     },
+    PlaceHolder: {
+      type: String,
+      required: true,
+    },
   },
   setup(props) {
     const inputValue = ref<string | number>(props.Value ?? "");
@@ -27,10 +31,11 @@ export const UiUpdateInput = defineComponent({
     return () => (
       <input
         class={"defaultInput border-2 rounded-md"}
-        vModel={inputValue.value}
+        value={inputValue.value}
         disabled={props.Disable}
         onInput={emitChange}
         type={props.Type}
+        placeholder={props.PlaceHolder}
       />
     );
   },

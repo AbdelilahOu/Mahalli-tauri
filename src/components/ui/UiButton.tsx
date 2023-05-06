@@ -1,4 +1,4 @@
-import { defineComponent } from "vue";
+import { defineComponent, type PropType } from "vue";
 
 export const UiButton = defineComponent({
   name: "UiButton",
@@ -16,6 +16,7 @@ export const UiButton = defineComponent({
   setup(props, { slots }) {
     return () => (
       <button
+        // onClick={() => props.Click()}
         disabled={props.Disable}
         class={`defaultButton disabled:hover:border-sky-200 hover:bg-sky-300/40 hover:border-sky-300 hover:text-black ${
           props.colorTheme == "primary"
