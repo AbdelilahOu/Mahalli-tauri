@@ -82,7 +82,7 @@ export const ClientCreate = defineComponent({
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" onClick={() => createNewClient()}>
+          <UiButton colorTheme="a" Click={() => createNewClient()}>
             {globalTranslate("Clients.create.button")}
           </UiButton>
         </div>
