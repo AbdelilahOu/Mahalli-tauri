@@ -61,7 +61,7 @@ export const CrediCreate = defineComponent({
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" onClick={() => createNewCredi()}>
+          <UiButton colorTheme="a" Click={() => createNewCredi()}>
             {globalTranslate("Credis.create.button")}
           </UiButton>
         </div>
