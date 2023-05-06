@@ -39,8 +39,6 @@ export const ChartBar = defineComponent({
       LinearScale
     );
 
-    return () => (
-      <Bar id={props.id} options={props.chartOptions} data={props.chartData} />
-    );
+    return () => <Bar options={props.chartOptions} data={props.chartData} />;
   },
 });
