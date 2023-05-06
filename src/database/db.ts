@@ -3,7 +3,7 @@ import database from "tauri-plugin-sql-api";
 export default async () => {
   const db = await database.load("sqlite:db1.sqlite");
 
-  const createClientTable = async () => {
+  const seedDatabase = async () => {
     await db.execute(`
       CREATE TABLE IF NOT EXISTS clients (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -13,11 +13,7 @@ export default async () => {
         addresse TEXT DEFAULT '',
         image TEXT DEFAULT ''
       );
-    `);
-  };
 
-  const createProductsTable = async () => {
-    await db.execute(`
       CREATE TABLE IF NOT EXISTS products (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -26,14 +22,7 @@ export default async () => {
         tva REAL NOT NULL DEFAULT 0,
         image TEXT DEFAULT ''
       );
-    `);
-    await db.execute(
-      `CREATE UNIQUE INDEX IF NOT EXISTS products_name_key ON products (name);`
-    );
-  };
 
-  const createSellersTable = async () => {
-    await db.execute(`
       CREATE TABLE IF NOT EXISTS sellers (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -42,10 +31,7 @@ export default async () => {
         addresse TEXT DEFAULT '',
         image TEXT DEFAULT ''
       );
-    `);
-  };
-  const createInvoicesTable = async () => {
-    await db.execute(`
+
       CREATE TABLE IF NOT EXISTS invoices (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         total REAL NOT NULL,
@@ -53,10 +39,7 @@ export default async () => {
         client_id INTEGER NOT NULL,
         CONSTRAINT invoices_client_id_fkey FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE ON UPDATE CASCADE
       );
-    `);
-  };
-  const createInvoiceItemsTable = async () => {
-    await db.execute(`
+      
       CREATE TABLE IF NOT EXISTS invoice_items (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         product_id INTEGER NOT NULL,
@@ -67,13 +50,7 @@ export default async () => {
         CONSTRAINT invoice_items_invoice_id_fkey FOREIGN KEY (invoice_id) REFERENCES invoices (id) ON DELETE CASCADE ON UPDATE CASCADE,
         CONSTRAINT invoice_items_stock_id_fkey FOREIGN KEY (stock_id) REFERENCES stock_mouvements (id) ON DELETE NO ACTION ON UPDATE CASCADE
       );
-   `);
-    await db.execute(`
-    CREATE UNIQUE INDEX IF NOT EXISTS invoice_items_stock_id_key ON invoice_items (stock_id);
-  `);
-  };
-  const createCommandsTable = async () => {
-    await db.execute(`
+
       CREATE TABLE IF NOT EXISTS commands (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         status TEXT NOT NULL,
@@ -81,10 +58,7 @@ export default async () => {
         seller_id INTEGER NOT NULL,
         CONSTRAINT commands_seller_id_fkey FOREIGN KEY (seller_id) REFERENCES sellers (id) ON DELETE CASCADE ON UPDATE CASCADE
       );
-   `);
-  };
-  const createCommandItemsTable = async () => {
-    await db.execute(`
+
       CREATE TABLE IF NOT EXISTS command_items (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         product_id INTEGER NOT NULL,
@@ -96,17 +70,7 @@ export default async () => {
         CONSTRAINT command_items_command_id_fkey FOREIGN KEY (command_id) REFERENCES commands (id) ON DELETE CASCADE ON UPDATE CASCADE,
         CONSTRAINT command_items_stock_id_fkey FOREIGN KEY (stock_id) REFERENCES stock_mouvements (id) ON DELETE NO ACTION ON UPDATE CASCADE
       );
-   `);
-    await db.execute(`
-      CREATE UNIQUE INDEX IF NOT EXISTS command_items_stock_id_key ON command_items (stock_id);
-    `);
-    await db.execute(`
-      CREATE UNIQUE INDEX IF NOT EXISTS command_items_id_key ON command_items (id);
-    `);
-  };
 
-  const createStockTable = async () => {
-    await db.execute(`
       CREATE TABLE IF NOT EXISTS stock_mouvements (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -115,20 +79,19 @@ export default async () => {
         product_id INTEGER NOT NULL,
         CONSTRAINT stock_mouvements_product_id_fkey FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE ON UPDATE CASCADE
       );
+
+      CREATE UNIQUE INDEX IF NOT EXISTS command_items_stock_id_key ON command_items (stock_id);
+      CREATE UNIQUE INDEX IF NOT EXISTS command_items_id_key ON command_items (id);
+      CREATE UNIQUE INDEX IF NOT EXISTS invoice_items_stock_id_key ON invoice_items (stock_id);
+      CREATE UNIQUE INDEX IF NOT EXISTS products_name_key ON products (name);
+
     `);
   };
 
   const main = async () => {
     console.log("run create tables");
     try {
-      createClientTable();
-      createCommandItemsTable();
-      createCommandsTable();
-      createInvoiceItemsTable();
-      createInvoicesTable();
-      createProductsTable();
-      createSellersTable();
-      createStockTable();
+      seedDatabase();
     } catch (error) {
       console.log(error);
     }
