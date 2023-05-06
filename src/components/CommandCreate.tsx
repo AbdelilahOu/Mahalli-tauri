@@ -125,7 +125,7 @@ export const CommandCreate = defineComponent({
               class="w-full  h-full flex flex-col gap-1"
             >
               <UiButton
-                onClick={() =>
+                Click={() =>
                   commandItems.value.push({
                     product_id: 0,
                     quantity: 0,
@@ -206,7 +206,7 @@ export const CommandCreate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" onClick={() => createNewCommand()}>
+          <UiButton colorTheme="a" Click={() => createNewCommand()}>
             {globalTranslate("Commands.create.button")}
           </UiButton>
         </div>

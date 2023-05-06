@@ -27,13 +27,11 @@ export const CommandDelete = defineComponent({
           {globalTranslate("Commands.delete.title")}n° {command.value?.id} ?
         </h1>
         <div class="flex gap-2">
-          <UiButton colorTheme="a" onClick={() => deleteTheCommand()}>
+          <UiButton colorTheme="a" Click={() => deleteTheCommand()}>
             {globalTranslate("Commands.delete.yes")}
           </UiButton>
           <UiButton
-            onClick={() =>
-              modalStore.updateModal({ key: "show", value: false })
-            }
+            Click={() => modalStore.updateModal({ key: "show", value: false })}
           >
             {globalTranslate("Commands.delete.no")}
           </UiButton>

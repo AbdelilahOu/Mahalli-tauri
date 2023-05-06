@@ -135,7 +135,7 @@ export const CommandUpdate = defineComponent({
               class="w-full  h-full flex flex-col gap-1"
             >
               <UiButton
-                onClick={() =>
+                Click={() =>
                   updateCommand.commandItems?.push({
                     product_id: 0,
                     quantity: 0,
@@ -179,7 +179,7 @@ export const CommandUpdate = defineComponent({
                           (item.quantity = Number(value))
                         }
                       />
-                      <span class="h-full text-gray-400 px-2 border-2 border-l-0 flex items-center justify-center">
+                      <span class="h-full rounded-r-md text-gray-400 px-2 border-2 border-l-0 flex items-center justify-center">
                         Item
                       </span>
                     </div>
@@ -197,7 +197,7 @@ export const CommandUpdate = defineComponent({
                         Type="number"
                         OnInputChange={(value) => (item.price = Number(value))}
                       />
-                      <span class="h-full text-gray-400 px-2 border-2 border-l-0 flex items-center justify-center">
+                      <span class="h-full rounded-r-md text-gray-400 px-2 border-2 border-l-0 flex items-center justify-center">
                         DH
                       </span>
                     </div>
