@@ -43,8 +43,6 @@ export const ChartLine = defineComponent({
       Title
     );
 
-    return () => (
-      <Line id={props.id} options={props.chartOptions} data={props.chartData} />
-    );
+    return () => <Line options={props.chartOptions} data={props.chartData} />;
   },
 });
