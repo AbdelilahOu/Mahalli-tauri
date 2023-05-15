@@ -27,13 +27,11 @@ export const InvoiceDelete = defineComponent({
           {globalTranslate("Invoices.delete.title")} n° {invoice.value?.id} ?
         </h1>
         <div class="flex gap-2">
-          <UiButton colorTheme="a" onClick={() => deleteTheInvoice()}>
+          <UiButton colorTheme="a" Click={() => deleteTheInvoice()}>
             {globalTranslate("Invoices.delete.yes")}
           </UiButton>
           <UiButton
-            onClick={() =>
-              modalStore.updateModal({ key: "show", value: false })
-            }
+            Click={() => modalStore.updateModal({ key: "show", value: false })}
           >
             {globalTranslate("Invoices.delete.no")}
           </UiButton>
