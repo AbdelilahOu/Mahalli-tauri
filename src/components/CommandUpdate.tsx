@@ -207,7 +207,7 @@ export const CommandUpdate = defineComponent({
                   {updateCommand.commandItems?.map((item, index) => (
                     <div class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full">
                       <UiIcon
-                        onClick={() => {
+                        Click={() => {
                           updateCommand.commandItems?.splice(index, 1);
                           if (item.id)
                             useCommandStore().deleteOneCommandItem(item.id);
@@ -222,7 +222,7 @@ export const CommandUpdate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" onClick={() => updateTheCommand()}>
+          <UiButton colorTheme="a" Click={() => updateTheCommand()}>
             {globalTranslate("Commands.update.button")}
           </UiButton>
         </div>
