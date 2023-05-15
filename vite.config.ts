@@ -13,10 +13,6 @@ export default defineConfig({
     vueJsx(),
     svgLoader(),
     VueI18nPlugin({
-      // include: resolve(
-      //   dirname(fileURLToPath(import.meta.url)),
-      //   "./src/locales/**"
-      // ),
       include: "./src/locales/**",
     }),
   ],
