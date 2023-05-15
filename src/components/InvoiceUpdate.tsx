@@ -140,7 +140,15 @@ export const InvoiceUpdate = defineComponent({
                         OnInputChange={(value) =>
                           (item.quantity = Number(value))
                         }
-                      />
+                      >
+                        {{
+                          unite: () => (
+                            <span class="h-full text-gray-400 rounded-md px-2  flex items-center justify-center">
+                              Item
+                            </span>
+                          ),
+                        }}
+                      </UiUpdateInput>
                     </div>
                   ))}
                 </div>
