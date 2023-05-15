@@ -165,10 +165,15 @@ export const CommandCreate = defineComponent({
                         OnInputChange={(value) =>
                           (item.quantity = Number(value))
                         }
-                      />
-                      <span class="h-full text-gray-400 px-2 border-2 border-l-0 flex items-center justify-center">
-                        Item
-                      </span>
+                      >
+                        {{
+                          unite: () => (
+                            <span class="h-full text-gray-400 rounded-md px-2 border-r-2  flex items-center justify-center">
+                              Item
+                            </span>
+                          ),
+                        }}
+                      </UiInput>
                     </div>
                   ))}
                 </div>
@@ -183,10 +188,15 @@ export const CommandCreate = defineComponent({
                         )}
                         Type="number"
                         OnInputChange={(value) => (item.price = Number(value))}
-                      />
-                      <span class="h-full text-gray-400 px-2 border-2 border-l-0 flex items-center justify-center">
-                        DH
-                      </span>
+                      >
+                        {{
+                          unite: () => (
+                            <span class="h-full text-gray-400 rounded-md px-2 border-r-2  flex items-center justify-center">
+                              DH
+                            </span>
+                          ),
+                        }}
+                      </UiInput>
                     </div>
                   ))}
                 </div>
