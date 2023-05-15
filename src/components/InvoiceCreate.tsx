@@ -88,7 +88,7 @@ export const InvoiceCreate = defineComponent({
               class="w-full  h-full flex flex-col gap-1"
             >
               <UiButton
-                onClick={() =>
+                Click={() =>
                   InvoiceItems.value.push({ product_id: 0, quantity: 0 })
                 }
               >
@@ -129,11 +129,11 @@ export const InvoiceCreate = defineComponent({
                 </div>
                 <div class="flex flex-col gap-2">
                   {InvoiceItems.value.map((_item, index) => (
-                    <div class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full">
-                      <UiIcon
-                        onClick={() => InvoiceItems.value.splice(index, 1)}
-                        name="delete"
-                      />
+                    <div
+                      onClick={() => InvoiceItems.value.splice(index, 1)}
+                      class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
+                    >
+                      <UiIcon name="delete" />
                     </div>
                   ))}
                 </div>
@@ -142,7 +142,7 @@ export const InvoiceCreate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" onClick={() => createNewInvoice()}>
+          <UiButton colorTheme="a" Click={() => createNewInvoice()}>
             {globalTranslate("Invoices.create.button")}
           </UiButton>
         </div>
