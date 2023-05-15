@@ -46,6 +46,7 @@ export const CommandUpdate = defineComponent({
     //
     const updateTheCommand = () => {
       if (updateCommand.id) {
+        console.log(updateCommand);
         useCommandStore().updateOneCommand(updateCommand.id, updateCommand);
         modalStore.updateModal({ key: "show", value: false });
       }
@@ -176,7 +177,8 @@ export const CommandUpdate = defineComponent({
                         )}
                         Type="number"
                         OnInputChange={(value) =>
-                          (item.quantity = Number(value))
+                          (updateCommand.commandItems[index].quantity =
+                            Number(value))
                         }
                       />
                       <span class="h-full rounded-r-md text-gray-400 px-2 border-2 border-l-0 flex items-center justify-center">
@@ -195,7 +197,10 @@ export const CommandUpdate = defineComponent({
                           "Commands.create.details.command.placeholder[1]"
                         )}
                         Type="number"
-                        OnInputChange={(value) => (item.price = Number(value))}
+                        OnInputChange={(value) =>
+                          (updateCommand.commandItems[index].price =
+                            Number(value))
+                        }
                       />
                       <span class="h-full rounded-r-md text-gray-400 px-2 border-2 border-l-0 flex items-center justify-center">
                         DH
@@ -205,15 +210,15 @@ export const CommandUpdate = defineComponent({
                 </div>
                 <div class="flex flex-col gap-2">
                   {updateCommand.commandItems?.map((item, index) => (
-                    <div class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full">
-                      <UiIcon
-                        Click={() => {
-                          updateCommand.commandItems?.splice(index, 1);
-                          if (item.id)
-                            useCommandStore().deleteOneCommandItem(item.id);
-                        }}
-                        name="delete"
-                      />
+                    <div
+                      onClick={() => {
+                        updateCommand.commandItems?.splice(index, 1);
+                        if (item.id)
+                          useCommandStore().deleteOneCommandItem(item.id);
+                      }}
+                      class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
+                    >
+                      <UiIcon name="delete" />
                     </div>
                   ))}
                 </div>
