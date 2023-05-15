@@ -48,10 +48,6 @@ export const StockCreate = defineComponent({
             {globalTranslate("Stocks.create.select")}
           </UiSelect>
           <UiInput
-            onClick={withModifiers(
-              () => (IsClicked.value = !IsClicked.value),
-              ["self"]
-            )}
             Type="number"
             PlaceHolder={globalTranslate("Stocks.create.placeholder")}
             IsEmpty={false}
@@ -59,7 +55,7 @@ export const StockCreate = defineComponent({
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" onClick={() => createNewStock()}>
+          <UiButton colorTheme="a" Click={() => createNewStock()}>
             {globalTranslate("Stocks.create.button")}
           </UiButton>
         </div>
