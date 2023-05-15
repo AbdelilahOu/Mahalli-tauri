@@ -25,18 +25,23 @@ export const UiUpdateInput = defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup(props, { slots }) {
     const emitChange = ({ target }: { target: HTMLInputElement }) =>
       props.OnInputChange(target.value);
     return () => (
-      <input
-        class={"defaultInput border-2 rounded-md"}
-        value={props.Value}
-        disabled={props.Disable}
-        onInput={(e) => emitChange(e as { target: any })}
-        type={props.Type}
-        placeholder={props.PlaceHolder}
-      />
+      <div
+        class={`flex flex-nowrap h-full items-center border-2 rounded-md transition-all duration-200`}
+      >
+        <input
+          class={"defaultInput border-none"}
+          value={props.Value}
+          disabled={props.Disable}
+          onInput={(e) => emitChange(e as { target: any })}
+          type={props.Type}
+          placeholder={props.PlaceHolder}
+        />
+        {slots.unite?.()}
+      </div>
     );
   },
 });
