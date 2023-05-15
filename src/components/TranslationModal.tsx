@@ -28,7 +28,7 @@ export const TranslationModal = defineComponent({
         </h1>
         <div class="grid grid-cols-2 gap-2 ">
           {availableLocals.value.map((item) => (
-            <UiButton onClick={() => ChangeLocale(item)}>
+            <UiButton Click={() => ChangeLocale(item)}>
               <span class="w-3/5 items-center h-full text-start flex justify-center gap-2">
                 <span class="py-2">
                   <UiIcon IsStyled={true} name={item.key} />
