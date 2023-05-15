@@ -100,7 +100,7 @@ export const InvoiceUpdate = defineComponent({
               class="w-full  h-full flex flex-col gap-1"
             >
               <UiButton
-                onClick={() =>
+                Click={() =>
                   updateInvoice.invoiceItems?.push({
                     product_id: 0,
                     quantity: 0,
@@ -146,15 +146,15 @@ export const InvoiceUpdate = defineComponent({
                 </div>
                 <div class="flex flex-col gap-2">
                   {updateInvoice.invoiceItems?.map((item, index) => (
-                    <div class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full">
-                      <UiIcon
-                        onClick={() => {
-                          updateInvoice.invoiceItems?.splice(index, 1);
-                          if (item.id)
-                            useInvoiceStore().deleteOneInvoiceItem(item.id);
-                        }}
-                        name="delete"
-                      />
+                    <div
+                      onClick={() => {
+                        updateInvoice.invoiceItems?.splice(index, 1);
+                        if (item.id)
+                          useInvoiceStore().deleteOneinvoiceItem(item.id);
+                      }}
+                      class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
+                    >
+                      <UiIcon name="delete" />
                     </div>
                   ))}
                 </div>
@@ -163,7 +163,7 @@ export const InvoiceUpdate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" onClick={() => updateTheInvoice()}>
+          <UiButton colorTheme="a" Click={() => updateTheInvoice()}>
             {globalTranslate("Invoices.update.button")}
           </UiButton>
         </div>
