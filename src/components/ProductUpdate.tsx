@@ -79,7 +79,7 @@ export const ProductUpdate = defineComponent({
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" onClick={() => updateTheProduct()}>
+          <UiButton colorTheme="a" Click={() => updateTheProduct()}>
             Update {updateProduct.name}
           </UiButton>
         </div>
