@@ -193,11 +193,11 @@ export const CommandCreate = defineComponent({
 
                 <div class="flex flex-col gap-2">
                   {commandItems.value.map((item, index) => (
-                    <div class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full">
-                      <UiIcon
-                        onClick={() => commandItems.value.splice(index, 1)}
-                        name="delete"
-                      />
+                    <div
+                      onClick={() => commandItems.value.splice(index, 1)}
+                      class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
+                    >
+                      <UiIcon name="delete" />
                     </div>
                   ))}
                 </div>
