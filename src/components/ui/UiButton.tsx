@@ -25,7 +25,7 @@ export const UiButton = defineComponent({
         class={`defaultButton disabled:hover:border-sky-200 hover:bg-sky-300/40 hover:border-sky-300 hover:text-black ${
           props.colorTheme == "primary"
             ? " disabled:hover:bg-sky-50 text-sky-600 bg-sky-50"
-            : " disabled:hover:bg-sky-500 text-black bg-sky-400"
+            : " disabled:hover:bg-sky-500 text-black bg-sky-400 border-sky-400"
         }`}
       >
         <div class="flex items-center w-full h-full justify-center">
