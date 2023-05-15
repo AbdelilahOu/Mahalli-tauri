@@ -1,4 +1,4 @@
-import { defineComponent, ref, type PropType } from "vue";
+import { defineComponent, ref, type PropType, watch } from "vue";
 
 export const UiUpdateInput = defineComponent({
   name: "UiUpdateInput",
@@ -26,14 +26,14 @@ export const UiUpdateInput = defineComponent({
     },
   },
   setup(props) {
-    const inputValue = ref<string | number>(props.Value ?? "");
-    const emitChange = () => props.OnInputChange(inputValue.value);
+    const emitChange = ({ target }: { target: HTMLInputElement }) =>
+      props.OnInputChange(target.value);
     return () => (
       <input
         class={"defaultInput border-2 rounded-md"}
-        value={inputValue.value}
+        value={props.Value}
         disabled={props.Disable}
-        onInput={emitChange}
+        onInput={(e) => emitChange(e as { target: any })}
         type={props.Type}
         placeholder={props.PlaceHolder}
       />
