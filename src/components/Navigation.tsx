@@ -2,11 +2,11 @@ import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { defineComponent, onMounted, ref } from "vue";
 import { RouteLinks } from "@/constants/RouteNames";
 import { globalTranslate } from "@/utils/globalTranslate";
-import UiIconVue from "./ui/UiIcon.vue";
+import UiIcon from "./ui/UiIcon.vue";
 
 export const Navigation = defineComponent({
   name: "Navigation",
-  components: { UiIconVue },
+  components: { UiIcon },
   setup() {
     const router = useRouter();
     const route = useRoute();
@@ -42,9 +42,9 @@ export const Navigation = defineComponent({
             <span class="pb-[3px] text-gray-700 flex items-center">
               <button onClick={() => router.push("/Home")}>
                 <span class={"w-full h-full cursor-pointer  bg-white"}>
-                  <UiIconVue
+                  <UiIcon
                     IsStyled={true}
-                    class={"   text-gray-700"}
+                    class={"text-gray-700"}
                     name={"Home"}
                   />
                 </span>
@@ -52,17 +52,17 @@ export const Navigation = defineComponent({
               {route.fullPath !== "/" && (
                 <span class="flex items-center">
                   <span class="flex items-center">
-                    {ActiveLink.value && " /"}
-                    {ActiveLink.value && (
+                    {ActiveLink.value && " / "}
+                    {/* {ActiveLink.value && (
                       <span class="w-8 h-8 mr-1">
-                        <UiIconVue
+                        <UiIcon
                           key={ActiveLink.value.name}
                           IsStyled={false}
                           class={"min-w-[30px] max-w-[30px] ml-1 text-gray-700"}
                           name={ActiveLink.value.name}
                         />
                       </span>
-                    )}
+                    )} */}{" "}
                     {ActiveLink.value &&
                       globalTranslate(
                         `Global.routes.${ActiveLink.value.name}`
