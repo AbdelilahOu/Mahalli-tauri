@@ -24,8 +24,8 @@ export const UiInput = defineComponent({
     },
   },
   setup(props, { slots }) {
-    const emitChange = (e: Event) => {
-      props.OnInputChange(e.target?.value as string | number);
+    const emitChange = ({ target }: { target: HTMLInputElement }) => {
+      props.OnInputChange(target.value);
     };
     return () => (
       <div
@@ -39,10 +39,11 @@ export const UiInput = defineComponent({
             props.IsEmpty && "placeholder:text-red-300"
           }`}
           disabled={props.Disable}
-          onInput={emitChange}
+          onInput={(e) => emitChange(e as { target: any })}
           type={props.Type}
           placeholder={props.PlaceHolder}
         />
+        {slots.unite?.()}
       </div>
     );
   },
