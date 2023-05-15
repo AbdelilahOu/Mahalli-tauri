@@ -19,7 +19,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="w-screen overflow-x-hidden h-screen bg-white">
+  <div class="w-screen overflow-x-hidden h-screen bg-slate-50">
     <RouterView v-slot="{ Component }">
       <Transition name="router" :appear="true">
         <component :is="Component" />
