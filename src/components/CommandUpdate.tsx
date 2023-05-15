@@ -180,10 +180,15 @@ export const CommandUpdate = defineComponent({
                           (updateCommand.commandItems[index].quantity =
                             Number(value))
                         }
-                      />
-                      <span class="h-full rounded-r-md text-gray-400 px-2 border-2 border-l-0 flex items-center justify-center">
-                        Item
-                      </span>
+                      >
+                        {{
+                          unite: () => (
+                            <span class="h-full text-gray-400 rounded-md px-2 border-r-2  flex items-center justify-center">
+                              Item
+                            </span>
+                          ),
+                        }}
+                      </UiUpdateInput>
                     </div>
                   ))}
                 </div>
@@ -201,10 +206,15 @@ export const CommandUpdate = defineComponent({
                           (updateCommand.commandItems[index].price =
                             Number(value))
                         }
-                      />
-                      <span class="h-full rounded-r-md text-gray-400 px-2 border-2 border-l-0 flex items-center justify-center">
-                        DH
-                      </span>
+                      >
+                        {{
+                          unite: () => (
+                            <span class="h-full text-gray-400 rounded-md px-2 border-r-2  flex items-center justify-center">
+                              DH
+                            </span>
+                          ),
+                        }}
+                      </UiUpdateInput>
                     </div>
                   ))}
                 </div>
