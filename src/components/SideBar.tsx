@@ -55,7 +55,7 @@ export const SideBar = defineComponent({
                   link.display && (
                     <RouterLink to={link.path}>
                       <UiSideLink
-                        v-fade={index}
+                        // v-fade={0}
                         IsText={!props.IsCollapse}
                         Icon={link.name}
                         LinkText={globalTranslate(`Global.routes.${link.name}`)}
@@ -67,7 +67,7 @@ export const SideBar = defineComponent({
             </div>
             <RouterLink to="/Notifications">
               <UiSideLink
-                v-fade={9}
+                // v-fade={9}
                 Icon="Notifications"
                 IsText={!props.IsCollapse}
                 LinkText={"Notifications"}
@@ -76,7 +76,7 @@ export const SideBar = defineComponent({
 
             <div
               class="w-full cursor-pointer"
-              v-fade={10}
+              // v-fade={10}
               onClick={() => {
                 useModalStore().updateModal({ key: "show", value: true });
                 useModalStore().updateModal({
@@ -86,7 +86,7 @@ export const SideBar = defineComponent({
               }}
             >
               <UiSideLink
-                v-fade={10}
+                // v-fade={10}
                 Icon="Lang"
                 IsText={!props.IsCollapse}
                 LinkText={useTranslationStore().currentLocale.text}
