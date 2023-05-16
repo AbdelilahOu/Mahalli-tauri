@@ -7,7 +7,6 @@ import type {
   clientT,
   invoiceDetailsItemT,
 } from "@/types";
-import { formatDate } from "@/utils/formatDate";
 import { defineStore } from "pinia";
 import database from "@/database/db";
 
