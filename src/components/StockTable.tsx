@@ -4,6 +4,7 @@ import { UiPagination } from "./ui/UiPagination";
 import { RouterLink } from "vue-router";
 import { formatDate } from "@/utils/formatDate";
 import { globalTranslate } from "@/utils/globalTranslate";
+import UiIconVue from "./ui/UiIcon.vue";
 
 export const StockTable = defineComponent({
   name: "StockTable",
@@ -96,7 +97,11 @@ export const StockTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="flex  justify-start gap-3 font-bold text-xl h-8 p-1">
-                      {mvm.model == "IN" ? "📈" : "📉"}
+                      {mvm.model == "IN" ? (
+                        <UiIconVue name="chartUp" />
+                      ) : (
+                        <UiIconVue name="chartDown" />
+                      )}
                     </div>
                   </td>
                 </tr>
