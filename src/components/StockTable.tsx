@@ -4,6 +4,7 @@ import { UiPagination } from "./ui/UiPagination";
 import { RouterLink } from "vue-router";
 import { formatDate } from "@/utils/formatDate";
 import { globalTranslate } from "@/utils/globalTranslate";
+
 export const StockTable = defineComponent({
   name: "StockTable",
   props: {
@@ -28,8 +29,9 @@ export const StockTable = defineComponent({
         <table class="table-auto  w-full">
           <thead class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
-              {[0, 1, 2, 3, 4, 5, 6, 7].map((index) => (
-                <th class="p-2 first:rounded-l-md last:rounded-r-md">
+              <th class="p-2 rounded-l-md"></th>
+              {[1, 2, 3, 4, 5, 6, 7].map((index) => (
+                <th class="p-2 last:rounded-r-md">
                   <div class="font-semibold text-left ">
                     {globalTranslate(`Stocks.index.feilds[${index}]`)}
                   </div>
@@ -43,7 +45,7 @@ export const StockTable = defineComponent({
             )
               .slice(pagination.value * 15, pagination.value * 15 + 15)
               .map((mvm, index) => (
-                <tr v-slide={index}>
+                <tr v-fade={index} key={mvm.id}>
                   <td class="p-2">
                     <div class="font-medium text-gray-800">{mvm.id}</div>
                   </td>
