@@ -75,14 +75,14 @@ export const ClientDetails = defineComponent({
                   },
                   y: {
                     grid: {
-                      lineWidth: 0,
+                      lineWidth: 1,
                       drawBorder: false,
                     },
                     border: {
                       display: false,
                     },
                     ticks: {
-                      display: false,
+                      display: true,
                     },
                   },
                 },

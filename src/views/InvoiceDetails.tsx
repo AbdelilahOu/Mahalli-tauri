@@ -1,8 +1,8 @@
-import { UiButton } from "@/components/ui/UiButton";
-import { useInvoiceStore } from "@/stores/invoiceStore";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { storeToRefs } from "pinia";
+import { useInvoiceStore } from "@/stores/invoiceStore";
 import { defineComponent, onBeforeMount } from "vue";
+import { UiButton } from "@/components/ui/UiButton";
+import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 
 export const InvoiceDetails = defineComponent({
@@ -11,6 +11,7 @@ export const InvoiceDetails = defineComponent({
     const id = useRoute().params.id;
     const InvoiceStore = useInvoiceStore();
     const { invoice } = storeToRefs(InvoiceStore);
+
     onBeforeMount(() => InvoiceStore.getOneInvoice(Number(id)));
 
     return () => (

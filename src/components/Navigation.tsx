@@ -20,7 +20,7 @@ export const Navigation = defineComponent({
       ActiveLink.value = RouteLinks.find((link) => link.component === to.name);
     });
     return () => (
-      <header class="w-full h-full print:hidden pt-1 pr-1 sticky top-0 mb-2 z-50 overflow-hidden bg-gray-200">
+      <header class="w-full h-full print:hidden pt-1 pr-1 sticky top-0 mb-2 z-50 overflow-hidden bg-transparent">
         <div class="w-full h-full flex  items-center p-3 rounded-md  bg-white justify-between">
           <div class="text-black flex items-center justify-center gap-2">
             <span
@@ -62,7 +62,7 @@ export const Navigation = defineComponent({
                           name={ActiveLink.value.name}
                         />
                       </span>
-                    )} */}{" "}
+                    )} */}
                     {ActiveLink.value &&
                       globalTranslate(
                         `Global.routes.${ActiveLink.value.name}`
