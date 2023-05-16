@@ -4,6 +4,7 @@ export default async () => {
   const db = await database.load("sqlite:db1.sqlite");
 
   const seedDatabase = async () => {
+    console.log("run create tables");
     await db.execute(`
       CREATE TABLE IF NOT EXISTS clients (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -88,15 +89,6 @@ export default async () => {
     `);
   };
 
-  const main = async () => {
-    console.log("run create tables");
-    try {
-      seedDatabase();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const drop = async () => {
     console.log("run drop tables");
     try {
@@ -116,6 +108,6 @@ export default async () => {
   return {
     db,
     drop,
-    main,
+    seedDatabase,
   };
 };
