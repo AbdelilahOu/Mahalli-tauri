@@ -49,7 +49,7 @@ export const CrediTable = defineComponent({
             )
               .slice(pagination.value * 15, pagination.value * 15 + 15)
               .map((credi, index) => (
-                <tr v-slide={index}>
+                <tr v-fade={index} key={credi.id}>
                   <td class="p-2">
                     <div class="font-medium text-gray-800">{credi.id}</div>
                   </td>
@@ -69,11 +69,11 @@ export const CrediTable = defineComponent({
                     <div class="text-left">{formatDate(credi.createdAt)}</div>
                   </td>
                   <td class="p-2">
-                    <div class="flex  justify-start gap-3">
-                      <UiIcon
-                        onClick={() => toggleThisCredi(credi, "CrediDelete")}
-                        name={"delete"}
-                      />
+                    <div
+                      onClick={() => toggleThisCredi(credi, "CrediDelete")}
+                      class="flex  justify-start gap-3"
+                    >
+                      <UiIcon name={"delete"} />
                     </div>
                   </td>
                 </tr>
