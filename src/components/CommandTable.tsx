@@ -65,7 +65,7 @@ export const CommandTable = defineComponent({
             )
               .slice(pagination.value * 15, pagination.value * 15 + 15)
               .map((Command, index) => (
-                <tr v-slide={index}>
+                <tr v-fade={index} key={Command.id}>
                   <td class="p-2">
                     <span class="h-full w-full grid">
                       <UiCheckBox
