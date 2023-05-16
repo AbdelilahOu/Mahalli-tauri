@@ -59,7 +59,7 @@ export const SellerTable = defineComponent({
             )
               .slice(pagination.value * 15, pagination.value * 15 + 15)
               .map((Seller, index) => (
-                <tr v-slide={index}>
+                <tr v-fade={index} key={Seller.id}>
                   <td class="p-2">
                     <span class="h-full w-full grid">
                       <UiCheckBox
