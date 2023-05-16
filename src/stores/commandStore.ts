@@ -26,17 +26,16 @@ export const useCommandStore = defineStore("CommandStore", {
         const commands: commandT[] = await db.select(
           "SELECT * FROM commands ORDER BY id DESC"
         );
-        // console.log(commands);
-        const commandsItems: commandItemT[] = await db.select(
-          "SELECT * FROM command_items"
-        );
-        this.commands = commands.map((command) => ({
-          ...command,
-          commandItems: commandsItems.filter(
-            (items) => items.command_id === command.id
-          ),
-          created_at: formatDate(command.created_at),
-        }));
+
+        for await (const command of commands) {
+          let command_items: commandItemT[] = await db.select(
+            "SELECT * FROM command_items WHERE command_id = $1",
+            [command.id]
+          );
+          command.commandItems = command_items;
+          command.created_at = formatDate(command.created_at);
+        }
+        this.commands = commands;
         console.log(this.commands);
       } catch (error) {
         console.log(error);

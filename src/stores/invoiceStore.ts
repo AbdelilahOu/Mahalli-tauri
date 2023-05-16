@@ -25,30 +25,32 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
         const invoices: invoiceT[] = await db.select(
           "SELECT * FROM invoices ORDER BY id DESC"
         );
-        // console.log(invoices);
-        const invoiceItems: invoiceItemT[] = await db.select(
-          "SELECT * FROM invoice_items"
-        );
-        for await (const item of invoiceItems) {
-          let product: { price: number; name: string }[] = await db.select(
-            "SELECT price ,name FROM products WHERE id = $1",
-            [item.product_id]
+
+        for await (const invoice of invoices) {
+          const invoice_items: invoiceItemT[] = await db.select(
+            "SELECT * FROM invoice_items WHERE invoice_id = $1",
+            [invoice.id]
           );
-          invoiceItems[invoiceItems.indexOf(item)]["product"] = product[0];
+          for await (const item of invoice_items) {
+            let product: { price: number; name: string }[] = await db.select(
+              "SELECT price ,name FROM products WHERE id = $1",
+              [item.product_id]
+            );
+            invoice_items[invoice_items.indexOf(item)]["product"] = product[0];
+          }
+          invoices[invoices.indexOf(invoice)]["invoiceItems"] =
+            invoice_items.map((invoice: invoiceItemT) => ({
+              ...invoice,
+              quantity: Math.abs(invoice.quantity),
+            }));
+          // map each invoice and create a total from quantity and price of its prodducts
+          invoices[invoices.indexOf(invoice)]["total"] = invoice_items.reduce(
+            (acc, curr) =>
+              (acc += Math.abs(curr.quantity) * curr.product.price),
+            0
+          );
         }
-        this.invoices = invoices.map((invoice) => ({
-          ...invoice,
-          invoiceItems: invoiceItems
-            .filter((items) => items.invoice_id === invoice.id)
-            .map((item) => ({ ...item, quantity: Math.abs(item.quantity) })),
-          total: invoiceItems
-            .filter((items) => items.invoice_id === invoice.id)
-            .reduce(
-              (acc, curr) =>
-                (acc += Math.abs(curr.quantity) * curr.product.price),
-              0
-            ),
-        }));
+        this.invoices = invoices;
       } catch (error) {
         console.log(error);
       }
