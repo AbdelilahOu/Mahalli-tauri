@@ -8,11 +8,11 @@ import database from "@/database/db";
 const router = useRouter();
 
 onBeforeMount(async () => {
-  const { main, drop } = await database();
+  const { seedDatabase, drop } = await database();
   useClientStore().getAllClients();
   useSellerStore().getAllSellers();
   useProductStore().getAllProducts();
-  await main();
+  await seedDatabase();
   // await drop();
   router.push("/Home");
 });
