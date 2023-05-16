@@ -28,7 +28,7 @@ export const ClientCard = defineComponent({
     return () => (
       // <UiIcon IsStyled={true} name={"person"} />
       <div class="w-full flex xl:sticky xl:top-[54px] z-20 pb-1 rounded-md gap-2 border-[1px] border-gray-501 flex-col bg-gray-100">
-        <div class="text-3xl  font-sans py-1 flex items-center  font-medium">
+        <div class="text-2xl font-sans py-1 flex items-center font-medium">
           {props.client?.image ? (
             <img
               class=" rounded-full w-20 h-20 m-2 object-fill"
@@ -37,10 +37,12 @@ export const ClientCard = defineComponent({
           ) : (
             ""
           )}
-          <span class="h-full flex items-center justify-center pt-1">
-            <UiIcon IsStyled={true} name={"tag"} />
-          </span>
-          {props.client?.id} - {props.client?.name}
+          <h1 class="flex whitespace-nowrap overflow-ellipsis">
+            <span class="h-full flex items-center justify-center pt-1">
+              <UiIcon IsStyled={true} name={"tag"} />
+            </span>
+            {props.client?.id} - {props.client?.name}
+          </h1>
         </div>
         <div class="w-full h-fit px-2">
           <div class="w-full flex justify-between  border-b-2 pb-1 border-gray-500">
