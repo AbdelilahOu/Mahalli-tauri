@@ -46,7 +46,8 @@ export const InvoiceTable = defineComponent({
           <thead class="text-xs h-9  font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
               <th class="rounded-l-md"></th>
-              {[0, 1, 2, 3, 4, 5].map((index) => (
+              <th class=""></th>
+              {[1, 2, 3, 4, 5].map((index) => (
                 <th class="p-2 w-fit ">
                   <div class="font-semibold last:rounded-r-md text-left">
                     {globalTranslate(`Invoices.index.feilds[${index}]`)}
