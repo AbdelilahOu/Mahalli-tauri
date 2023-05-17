@@ -19,8 +19,8 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
   },
   actions: {
     getAllInvoices: async function () {
-      const { db } = await database();
       try {
+        const { db } = await database();
         const invoices: invoiceT[] = await db.select(
           "SELECT * FROM invoices ORDER BY id DESC"
         );
@@ -29,6 +29,10 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
           const invoice_items: invoiceItemT[] = await db.select(
             "SELECT * FROM invoice_items WHERE invoice_id = $1",
             [invoice.id]
+          );
+          let client_name: { name: string }[] = await db.select(
+            "SELECT name FROM clients WHERE id = $1",
+            [invoice.client_id]
           );
           for await (const item of invoice_items) {
             let product: { price: number; name: string }[] = await db.select(
@@ -48,6 +52,8 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
               (acc += Math.abs(curr.quantity) * curr.product.price),
             0
           );
+          invoices[invoices.indexOf(invoice)]["client_name"] =
+            client_name[0].name;
         }
         this.invoices = invoices;
       } catch (error) {
@@ -55,8 +61,8 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
       }
     },
     getOneInvoice: async function (id: number) {
-      const { db } = await database();
       try {
+        const { db } = await database();
         const invoice: invoiceT[] = await db.select(
           "SELECT * FROM invoices WHERE id = $1",
           [id]
@@ -94,8 +100,8 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
       }
     },
     createOneInvoice: async function (invoice: newInvoiceT) {
-      const { db } = await database();
       try {
+        const { db } = await database();
         const { client_id, invoiceItems } = invoice;
         await db.execute(
           "INSERT INTO invoices (client_id,total) VALUES ($1,$2)",
@@ -123,8 +129,8 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
       }
     },
     updateOneInvoice: async function (id: number, invoice: updateInvoiceT) {
-      const { db } = await database();
       try {
+        const { db } = await database();
         const { total, client_id, invoiceItems } = invoice;
         await db.execute(
           "UPDATE invoices SET total = $1 , client_id = $2 WHERE id = $3",
@@ -160,8 +166,8 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
       }
     },
     deleteOneInvoice: async function (id: number) {
-      const { db } = await database();
       try {
+        const { db } = await database();
         await db.execute("DELETE FROM invoices WHERE id = $1", [id]);
         this.getAllInvoices();
       } catch (error) {
@@ -169,8 +175,8 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
       }
     },
     deleteOneinvoiceItem: async function (id: number) {
-      const { db } = await database();
       try {
+        const { db } = await database();
         await db.execute("DELETE FROM invoice_items WHERE id = $1", [id]);
         this.getAllInvoices();
       } catch (error) {
