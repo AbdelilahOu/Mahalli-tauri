@@ -8,15 +8,15 @@ const getMonth = (i: number) =>
     month: "long",
   });
 
+type resultMVM = [result: FilteredStockData, months: [string, string, string]];
+type resultPRD = [{ [key: string]: number[] }, string[], string[]];
 const olderThanThreeMonths = (date: string): boolean =>
   new Date(date) >
   new Date(new Date().getTime() - 2 * 30 * 24 * 60 * 60 * 1000);
 
 export const useStatsStore = defineStore("StatsStore", {
   actions: {
-    getStockMouvementStats: (
-      stocks: stockMvmT[]
-    ): [result: FilteredStockData, months: [string, string, string]] => {
+    getStockMouvementStats: (stocks: stockMvmT[]): resultMVM => {
       let result: FilteredStockData = {};
       const months: [string, string, string] = [
         getMonth(2),
@@ -50,10 +50,7 @@ export const useStatsStore = defineStore("StatsStore", {
       }
       return [result, months];
     },
-    getOrderedProduct: (
-      id: number,
-      invoices: invoiceT[]
-    ): [{ [key: string]: number[] }, string[], string[]] => {
+    getOrderedProduct: (id: number, invoices: invoiceT[]): resultPRD => {
       const result: { [key: string]: { [key: string]: number } } = {};
       const existingDates: string[] = [];
       const existingProducts: string[] = [];
