@@ -11,8 +11,8 @@ export const useClientStore = defineStore("ClientStore", {
   },
   actions: {
     getAllClients: async function () {
-      const { db } = await database();
       try {
+        const { db } = await database();
         const allClients: clientT[] = await db.select(
           "SELECT * FROM clients ORDER BY id DESC"
         );
@@ -37,8 +37,8 @@ export const useClientStore = defineStore("ClientStore", {
       }
     },
     createOneClient: async function (Client: newClientT) {
-      const { image: imagePath } = Client;
       try {
+        const { image: imagePath } = Client;
         const { db } = await database();
         let image: string = "";
         if (imagePath) {
