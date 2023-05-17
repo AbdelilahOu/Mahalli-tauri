@@ -15,8 +15,8 @@ export const useProductStore = defineStore("ProductStore", {
   },
   actions: {
     getAllProducts: async function () {
-      const { db } = await database();
       try {
+        const { db } = await database();
         const allProducts: productT[] = await db.select(
           "SELECT products.* FROM products ORDER BY id DESC"
         );
@@ -36,8 +36,8 @@ export const useProductStore = defineStore("ProductStore", {
       }
     },
     createOneProduct: async function (Product: newProductT) {
-      const { db } = await database();
       try {
+        const { db } = await database();
         const { name, description, price, tva } = Product;
         await db.execute(
           "INSERT INTO products (name,description,price,tva) VALUES ($1,$2,$3,$4)",
