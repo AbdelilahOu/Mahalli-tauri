@@ -82,7 +82,7 @@
   "Commands": {
     "index": {
       "addButton": "Add new Command",
-      "feilds": ["command id", "seller id", "items", "STATUS", "Date", "action"]
+      "feilds": ["id", "seller", "items", "STATUS", "Date", "action"]
     },
     "create": {
       "title": "create new command",
@@ -191,7 +191,7 @@
   "Invoices": {
     "index": {
       "addButton": "Add new Invoice",
-      "feilds": ["invoice id", "client id", "items", "total", "Date", "action"]
+      "feilds": ["id", "client", "items", "total", "Date", "action"]
     },
     "create": {
       "title": "create new invoice",
