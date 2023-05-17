@@ -55,7 +55,9 @@ export const StockTable = defineComponent({
                     <div class="text-left font-medium">{mvm.product?.name}</div>
                   </td>
                   <td class="p-2">
-                    <div class="text-left">{mvm.product?.price.toFixed(2)}</div>
+                    <div class="text-left">
+                      {mvm.product?.price?.toFixed(2)}
+                    </div>
                   </td>
                   <td class="p-2">
                     <div class="text-left">{Math.abs(mvm.quantity)}</div>
