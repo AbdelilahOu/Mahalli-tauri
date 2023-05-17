@@ -50,7 +50,8 @@ export const CommandTable = defineComponent({
           <thead class="text-xs h-9  font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
               <th class="rounded-l-md"></th>
-              {[0, 1, 2, 3, 4, 5].map((index) => (
+              <th class=""></th>
+              {[1, 2, 3, 4, 5].map((index) => (
                 <th class="p-2 w-fit last:rounded-r-md ">
                   <div class="font-semibold text-left">
                     {globalTranslate(`Commands.index.feilds[${index}]`)}
