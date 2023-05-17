@@ -52,6 +52,7 @@ export interface commandT {
   created_at: string;
   status: string;
   seller_id: number;
+  seller_name: string;
   commandItems: commandItemT[];
 }
 
@@ -97,6 +98,7 @@ export type invoiceT = {
   total: number;
   created_at: string;
   client_id: number;
+  client_name: string;
   invoiceItems: invoiceItemT[];
 };
 
@@ -170,8 +172,8 @@ export interface stockMvmT {
   quantity: number;
   product_id: number;
   product?: Pick<productT, "price" | "name">;
-  commandItem?: Pick<commandItemT, "quantity" | "command_id">;
-  invoiceItem?: Pick<invoiceItemT, "quantity" | "invoice_id">;
+  commandItem?: Pick<commandItemT, "command_id">;
+  invoiceItem?: Pick<invoiceItemT, "invoice_id">;
 }
 export interface stockT
   extends Omit<stockMvmT, "product" | "commandItem" | "invoiceItem"> {}
