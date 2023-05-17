@@ -21,29 +21,32 @@ export const useCommandStore = defineStore("CommandStore", {
   },
   actions: {
     getAllCommands: async function () {
-      const { db } = await database();
       try {
+        const { db } = await database();
         const commands: commandT[] = await db.select(
           "SELECT * FROM commands ORDER BY id DESC"
         );
-
         for await (const command of commands) {
           let command_items: commandItemT[] = await db.select(
             "SELECT * FROM command_items WHERE command_id = $1",
             [command.id]
           );
+          let seller_name: { name: string }[] = await db.select(
+            "SELECT name FROM sellers WHERE id = $1",
+            [command.seller_id]
+          );
           command.commandItems = command_items;
+          command.seller_name = seller_name[0].name;
           command.created_at = formatDate(command.created_at);
         }
         this.commands = commands;
-        console.log(this.commands);
       } catch (error) {
         console.log(error);
       }
     },
     getOneCommand: async function (id: number) {
-      const { db } = await database();
       try {
+        const { db } = await database();
         const command: commandT[] = await db.select(
           "SELECT * FROM commands WHERE id = $1",
           [id]
@@ -73,8 +76,8 @@ export const useCommandStore = defineStore("CommandStore", {
       }
     },
     createOneCommand: async function (Command: newCommandT) {
-      const { db } = await database();
       try {
+        const { db } = await database();
         const { seller_id, status, commandItems } = Command;
         await db.execute(
           "INSERT INTO commands (seller_id,status) VALUES ($1,$2)",
@@ -102,8 +105,8 @@ export const useCommandStore = defineStore("CommandStore", {
       }
     },
     updateOneCommand: async function (id: number, Command: updateCommandT) {
-      const { db } = await database();
       try {
+        const { db } = await database();
         const { status, seller_id, commandItems } = Command;
         await db.execute(
           "UPDATE commands SET status = $1 , seller_id = $2 WHERE id = $3",
@@ -139,8 +142,8 @@ export const useCommandStore = defineStore("CommandStore", {
       }
     },
     deleteOneCommand: async function (id: number) {
-      const { db } = await database();
       try {
+        const { db } = await database();
         await db.execute("DELETE FROM commands WHERE id = $1", [id]);
         this.getAllCommands();
       } catch (error) {
@@ -148,8 +151,8 @@ export const useCommandStore = defineStore("CommandStore", {
       }
     },
     deleteOneCommandItem: async function (id: number) {
-      const { db } = await database();
       try {
+        const { db } = await database();
         await db.execute("DELETE FROM command_items WHERE id = $1", [id]);
         this.getAllCommands();
       } catch (error) {
