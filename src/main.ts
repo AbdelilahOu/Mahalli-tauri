@@ -12,7 +12,7 @@ const locale = localStorage.getItem("locale");
 createApp(App)
   .directive("slide", { mounted: slide })
   .directive("fade", { mounted: fade })
-  .directive("aaaaa", {
+  .directive("drop", {
     mounted: (el: HTMLElement, bin) => {
       el.addEventListener("dragstart", (e: DragEventInit) => {});
     },
