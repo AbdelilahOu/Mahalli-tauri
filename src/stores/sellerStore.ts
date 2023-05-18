@@ -40,8 +40,8 @@ export const useSellerStore = defineStore("SellerStore", {
       try {
         const { db } = await database();
         await db.execute(
-          "INSERT INTO sellers (name,email,phone,addresse) VALUES ($1,$2,$3,$4)",
-          [seller.name, seller.email, seller.phone, seller.addresse]
+          "INSERT INTO sellers (name,email,phone,address) VALUES ($1,$2,$3,$4)",
+          [seller.name, seller.email, seller.phone, seller.address]
         );
         this.getAllSellers();
       } catch (error) {
@@ -61,8 +61,8 @@ export const useSellerStore = defineStore("SellerStore", {
       try {
         const { db } = await database();
         await db.execute(
-          "UPDATE sellers SET name = $1,email = $2,phone = $3,addresse = $4 WHERE id = $5",
-          [seller.name, seller.email, seller.phone, seller.addresse, seller.id]
+          "UPDATE sellers SET name = $1,email = $2,phone = $3,address = $4 WHERE id = $5",
+          [seller.name, seller.email, seller.phone, seller.address, seller.id]
         );
         this.getAllSellers();
       } catch (error) {
