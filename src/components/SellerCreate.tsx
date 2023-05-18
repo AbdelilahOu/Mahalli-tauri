@@ -14,7 +14,7 @@ export const SellerCreate = defineComponent({
       name: "",
       email: "",
       phone: "",
-      addresse: "",
+      address: "",
     });
     const createNewseller = () => {
       isFlash.value = true;
@@ -60,9 +60,9 @@ export const SellerCreate = defineComponent({
             PlaceHolder={globalTranslate("Sellers.create.placeholders[2]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && newseller["addresse"] == ""}
+            IsEmpty={isFlash.value && newseller["address"] == ""}
             OnInputChange={(value) =>
-              (newseller["addresse"] =
+              (newseller["address"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
