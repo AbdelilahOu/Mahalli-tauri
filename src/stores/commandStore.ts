@@ -1,14 +1,5 @@
-import type {
-  commandState,
-  commandT,
-  newCommandT,
-  updateCommandT,
-  commandItemT,
-  sellerT,
-  commandDetailsItemsT,
-  productT,
-} from "@/types";
-import { formatDate } from "@/utils/formatDate";
+import type { commandState, newCommandT, updateCommandT } from "@/types";
+import { commandDetailsJoins, commandsJoins } from "@/constants/dbQueryJson";
 import { defineStore } from "pinia";
 import database from "@/database/db";
 
@@ -23,23 +14,8 @@ export const useCommandStore = defineStore("CommandStore", {
     getAllCommands: async function () {
       try {
         const { db } = await database();
-        const commands: commandT[] = await db.select(
-          "SELECT * FROM commands ORDER BY id DESC"
-        );
-        for await (const command of commands) {
-          let command_items: commandItemT[] = await db.select(
-            "SELECT * FROM command_items WHERE command_id = $1",
-            [command.id]
-          );
-          let seller_name: { name: string }[] = await db.select(
-            "SELECT name FROM sellers WHERE id = $1",
-            [command.seller_id]
-          );
-          command.commandItems = command_items;
-          command.seller_name = seller_name[0].name;
-          command.created_at = formatDate(command.created_at);
-        }
-        this.commands = commands;
+        const result = (await db.select(commandsJoins)) as { data: string }[];
+        this.commands = result.map((c) => JSON.parse(c.data));
       } catch (error) {
         console.log(error);
       }
@@ -47,30 +23,10 @@ export const useCommandStore = defineStore("CommandStore", {
     getOneCommand: async function (id: number) {
       try {
         const { db } = await database();
-        const command: commandT[] = await db.select(
-          "SELECT * FROM commands WHERE id = $1",
-          [id]
-        );
-        const seller: sellerT[] = await db.select(
-          "SELECT * FROM sellers WHERE id = $1",
-          [command[0].seller_id]
-        );
-        let commandItems: commandDetailsItemsT[] = await db.select(
-          "SELECT * FROM command_items WHERE command_id = $1",
-          [id]
-        );
-        for await (const item of commandItems) {
-          let product: productT[] = await db.select(
-            "SELECT * FROM products WHERE id = $1",
-            [item.product_id]
-          );
-          commandItems[commandItems.indexOf(item)]["product"] = product[0];
-        }
-        this.command = {
-          ...command[0],
-          seller: seller[0],
-          commandItems,
-        };
+
+        const result = (await db.select(commandDetailsJoins, [id])) as any[];
+
+        this.command = JSON.parse(result[0].data);
       } catch (error) {
         console.log(error);
       }
