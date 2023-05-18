@@ -18,7 +18,7 @@ export const ClientCreate = defineComponent({
       name: String(),
       email: String(),
       phone: String(),
-      addresse: String(),
+      address: String(),
       image: String(),
     });
     const createNewClient = () => {
@@ -72,9 +72,9 @@ export const ClientCreate = defineComponent({
             PlaceHolder={globalTranslate("Clients.create.placeholders[2]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && Client["addresse"] == ""}
+            IsEmpty={isFlash.value && Client["address"] == ""}
             OnInputChange={(value) =>
-              (Client["addresse"] =
+              (Client["address"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
