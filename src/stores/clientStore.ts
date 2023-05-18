@@ -45,8 +45,8 @@ export const useClientStore = defineStore("ClientStore", {
           image = (await saveFile(imagePath, "Image")) ?? "";
         }
         await db.execute(
-          "INSERT INTO clients (name,email,phone,addresse,image) VALUES ($1,$2,$3,$4,$5)",
-          [Client.name, Client.email, Client.phone, Client.addresse, image]
+          "INSERT INTO clients (name,email,phone,address,image) VALUES ($1,$2,$3,$4,$5)",
+          [Client.name, Client.email, Client.phone, Client.address, image]
         );
         this.getAllClients();
       } catch (error) {
@@ -66,8 +66,8 @@ export const useClientStore = defineStore("ClientStore", {
       try {
         const { db } = await database();
         await db.execute(
-          "UPDATE clients SET name = $1,email = $2,phone = $3,addresse = $4 WHERE id = $5",
-          [Client.name, Client.email, Client.phone, Client.addresse, Client.id]
+          "UPDATE clients SET name = $1,email = $2,phone = $3,address = $4 WHERE id = $5",
+          [Client.name, Client.email, Client.phone, Client.address, Client.id]
         );
         this.getAllClients();
       } catch (error) {
