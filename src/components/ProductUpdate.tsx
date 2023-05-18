@@ -53,7 +53,15 @@ export const ProductUpdate = defineComponent({
             OnInputChange={(value) => (updateProduct["price"] = Number(value))}
             Type="number"
             PlaceHolder="Price"
-          />
+          >
+            {{
+              unite: () => (
+                <span class="h-full text-gray-400 rounded-md px-2  flex items-center justify-center">
+                  DH
+                </span>
+              ),
+            }}
+          </UiUpdateInput>
           <UiUpdateInput
             Value={ProductRow.value?.tva}
             OnInputChange={(value) => (updateProduct["tva"] = Number(value))}
@@ -67,7 +75,15 @@ export const ProductUpdate = defineComponent({
             }
             Type="number"
             PlaceHolder="Add Stock"
-          />
+          >
+            {{
+              unite: () => (
+                <span class="h-full text-gray-400 rounded-md px-2  flex items-center justify-center">
+                  Item
+                </span>
+              ),
+            }}
+          </UiUpdateInput>
           <UiUpdateInput
             Value={ProductRow.value?.description}
             OnInputChange={(value) =>
