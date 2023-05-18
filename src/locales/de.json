@@ -150,7 +150,7 @@
         "name": "Name",
         "phone": "Phoner -Nummer",
         "email": "Email",
-        "addresse": "Adressierung"
+        "address": "Adressierung"
       },
       "items": {
         "title": "Befehlselemente Details",
@@ -180,7 +180,7 @@
         "name": "Name",
         "phone": "Phoner -Nummer",
         "email": "Email",
-        "addresse": "Adressierung"
+        "address": "Adressierung"
       },
       "items": {
         "title": "Rechnungsartikel Details",
