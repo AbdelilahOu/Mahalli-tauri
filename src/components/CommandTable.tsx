@@ -87,7 +87,7 @@ export const CommandTable = defineComponent({
                           },
                         }}
                       >
-                        {Command.seller_name}
+                        {Command.seller.name}
                       </RouterLink>
                     </div>
                   </td>
