@@ -18,7 +18,7 @@ export const ClientUpdate = defineComponent({
       name: undefined,
       email: undefined,
       phone: undefined,
-      addresse: undefined,
+      address: undefined,
     };
     const updateClient = reactive<updateClientT>(
       ClientRow.value ? ClientRow.value : client
@@ -65,9 +65,9 @@ export const ClientUpdate = defineComponent({
             PlaceHolder={globalTranslate("Clients.create.placeholders[2]")}
           />
           <UiUpdateInput
-            Value={ClientRow.value?.addresse}
+            Value={ClientRow.value?.address}
             OnInputChange={(value) =>
-              (updateClient["addresse"] =
+              (updateClient["address"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
