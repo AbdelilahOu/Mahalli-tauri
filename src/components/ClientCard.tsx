@@ -24,6 +24,7 @@ export const ClientCard = defineComponent({
         clientImage.value = convertFileSrc(
           await join(await appDataDir(), "Images", props.client.image)
         );
+      console.log(await appDataDir());
     });
     return () => (
       // <UiIcon  name={"person"} />
@@ -35,13 +36,15 @@ export const ClientCard = defineComponent({
               src={clientImage.value}
             />
           ) : (
-            ""
+            <span class=" rounded-full w-20 h-20 m-2 object-fill animate-pulse bg-slate-300 duration-150" />
           )}
           <h1 class="flex whitespace-nowrap overflow-ellipsis">
             <span class="h-full flex items-center justify-center pt-1">
               <UiIcon name={"tag"} />
             </span>
-            {props.client?.id} - {props.client?.name}
+            <span class="flex whitespace-nowrap">
+              {props.client?.id} - {props.client?.name}
+            </span>
           </h1>
         </div>
         <div class="w-full h-fit px-2">
@@ -63,7 +66,7 @@ export const ClientCard = defineComponent({
           </div>
           <div class="flex fill-gray-700  gap-2 items-center">
             <UiIcon name={"location"} />
-            <span class="">{props.client?.addresse}</span>
+            <span class="">{props.client?.address}</span>
           </div>
         </div>
       </div>
