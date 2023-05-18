@@ -6,7 +6,7 @@
   "Clients": {
     "index": {
       "addButton": "Add new client",
-      "feilds": ["client name", "e-mail", "phone number", "addresse", "action"]
+      "feilds": ["client name", "e-mail", "phone number", "address", "action"]
     },
     "create": {
       "title": "create a client",
@@ -26,7 +26,7 @@
   "Sellers": {
     "index": {
       "addButton": "Add new seller",
-      "feilds": ["seller name", "e-mail", "phone number", "addresse", "action"]
+      "feilds": ["seller name", "e-mail", "phone number", "address", "action"]
     },
     "create": {
       "title": "create a seller",
@@ -140,7 +140,7 @@
         "name": "name",
         "phone": "phoner number",
         "email": "email",
-        "addresse": "addresse"
+        "address": "address"
       },
       "items": {
         "title": "command items details",
@@ -170,7 +170,7 @@
         "name": "name",
         "phone": "phoner number",
         "email": "email",
-        "addresse": "addresse"
+        "address": "address"
       },
       "items": {
         "title": "invoice items details",
