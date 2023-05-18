@@ -133,13 +133,13 @@ export const CommandDetails = defineComponent({
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
                       <span class="h-full w-full grid ">
                         {globalTranslate(
-                          "CommandDetails.details.seller.addresse"
+                          "CommandDetails.details.seller.address"
                         )}
                       </span>
                     </td>
                     <td class="p-2">
                       <span class="h-full w-full grid">
-                        {command.value?.seller.addresse}
+                        {command.value?.seller.address}
                       </span>
                     </td>
                   </tr>
