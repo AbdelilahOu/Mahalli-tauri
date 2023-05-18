@@ -1,7 +1,7 @@
 import database from "tauri-plugin-sql-api";
 
 export default async () => {
-  const db = await database.load("sqlite:db1.sqlite");
+  const db = await database.load("sqlite:db3.sqlite");
 
   const seedDatabase = async () => {
     console.log("run create tables");
@@ -11,7 +11,7 @@ export default async () => {
         name TEXT NOT NULL,
         phone TEXT DEFAULT '',
         email TEXT DEFAULT '',
-        addresse TEXT DEFAULT '',
+        address TEXT DEFAULT '',
         image TEXT DEFAULT ''
       );
 
@@ -29,13 +29,14 @@ export default async () => {
         name TEXT NOT NULL,
         phone TEXT DEFAULT '',
         email TEXT DEFAULT '',
-        addresse TEXT DEFAULT '',
+        address TEXT DEFAULT '',
         image TEXT DEFAULT ''
       );
 
       CREATE TABLE IF NOT EXISTS invoices (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         total REAL NOT NULL,
+        status TEXT NOT NULL,
         created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         client_id INTEGER NOT NULL,
         CONSTRAINT invoices_client_id_fkey FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE ON UPDATE CASCADE
