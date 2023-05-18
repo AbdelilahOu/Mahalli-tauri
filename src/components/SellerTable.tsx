@@ -86,7 +86,7 @@ export const SellerTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="text-left whitespace-nowrap overflow-ellipsis">
-                      {Seller.addresse ?? (
+                      {Seller.address ?? (
                         <span class="text-red-400">No address</span>
                       )}
                     </div>
