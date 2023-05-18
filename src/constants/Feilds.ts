@@ -1,6 +1,6 @@
-export const ClientFeilds = ["name", "email", "phone", "addresse"] as const;
+export const ClientFeilds = ["name", "email", "phone", "address"] as const;
 
-export const SellerFeilds = ["name", "email", "phone", "addresse"] as const;
+export const SellerFeilds = ["name", "email", "phone", "address"] as const;
 
 export const ProductFeilds = [
   "name",
