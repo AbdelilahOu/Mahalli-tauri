@@ -52,7 +52,10 @@ export interface commandT {
   created_at: string;
   status: string;
   seller_id: number;
-  seller_name: string;
+  seller: {
+    id: number;
+    name: string;
+  };
   commandItems: commandItemT[];
 }
 
@@ -79,6 +82,7 @@ export interface newCommandItemT
 
 export interface commandDetailsItemsT extends commandItemT {
   product: {
+    id: number;
     name: string;
     price: number;
     description?: string;
@@ -98,7 +102,10 @@ export type invoiceT = {
   total: number;
   created_at: string;
   client_id: number;
-  client_name: string;
+  client: {
+    id: number;
+    name: string;
+  };
   invoiceItems: invoiceItemT[];
 };
 
@@ -147,7 +154,7 @@ export interface clientT {
   id: number;
   name: string;
   phone?: string;
-  addresse?: string;
+  address?: string;
   email?: string;
   image?: string;
 }
