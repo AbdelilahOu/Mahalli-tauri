@@ -1,9 +1,9 @@
 import { defineComponent, ref, type PropType } from "vue";
-import type { stockMvmT } from "@/types";
-import { UiPagination } from "./ui/UiPagination";
-import { RouterLink } from "vue-router";
-import { formatDate } from "@/utils/formatDate";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { UiPagination } from "./ui/UiPagination";
+import { formatDate } from "@/utils/formatDate";
+import type { stockMvmT } from "@/types";
+import { RouterLink } from "vue-router";
 import UiIconVue from "./ui/UiIcon.vue";
 
 export const StockTable = defineComponent({
@@ -56,7 +56,9 @@ export const StockTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="text-left">
-                      {mvm.product?.price?.toFixed(2)}
+                      {mvm.commandItem?.price?.toFixed(2) ??
+                        mvm.product?.price?.toFixed(2)}{" "}
+                      DH
                     </div>
                   </td>
                   <td class="p-2">
