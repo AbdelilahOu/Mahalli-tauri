@@ -103,7 +103,7 @@ export const InvoiceTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="text-left font-medium flex justify-between uppercase whitespace-nowrap overflow-ellipsis">
-                      {Invoice.total.toFixed(2) ?? 0}{" "}
+                      {Invoice.total?.toFixed(2) ?? 0}{" "}
                       <span class="w-full text-center">DH</span>
                     </div>
                   </td>
