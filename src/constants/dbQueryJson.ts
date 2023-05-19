@@ -1,3 +1,28 @@
+export const stockJoins = `
+    SELECT json_object(
+        'id', sm.id,
+        'date', sm.date,
+        'model', sm.model,
+        'quantity', sm.quantity,
+        'commandItem', json_object(
+            'command_id', ci.command_id,
+            'price', ci.price
+        ),
+        'invoiceItem', json_object(
+            'invoice_id', ii.invoice_id
+        ),
+        'product_id', sm.product_id,
+        'product', json_object(
+            'name', p.name,
+            'price', p.price
+        )
+    ) AS data
+    FROM stock_mouvements sm
+    LEFT JOIN command_items ci ON sm.id = ci.stock_id
+    LEFT JOIN invoice_items ii ON sm.id = ii.stock_id
+    LEFT JOIN products p ON sm.product_id = p.id OR sm.product_id = p.id;
+`;
+
 export const commandsJoins = `
     SELECT json_object(
         'id', c.id,
