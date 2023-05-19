@@ -177,10 +177,18 @@ export interface stockMvmT {
   date: string;
   model: string;
   quantity: number;
+  commandItem?: {
+    command_id?: number;
+    price?: number;
+  };
+  invoiceItem?: {
+    invoice_id?: number;
+  };
   product_id: number;
-  product?: Pick<productT, "price" | "name">;
-  commandItem?: Pick<commandItemT, "command_id">;
-  invoiceItem?: Pick<invoiceItemT, "invoice_id">;
+  product: {
+    name: string;
+    price: number;
+  };
 }
 export interface stockT
   extends Omit<stockMvmT, "product" | "commandItem" | "invoiceItem"> {}
