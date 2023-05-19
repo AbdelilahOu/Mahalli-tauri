@@ -237,6 +237,7 @@
         "id",
         "product name",
         "product price",
+        "sold price",
         "quantity",
         "command id",
         "invoice id",
