@@ -31,7 +31,7 @@ export const StockTable = defineComponent({
           <thead class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
               <th class="p-2 rounded-l-md"></th>
-              {[1, 2, 3, 4, 5, 6, 7].map((index) => (
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
                 <th class="p-2 last:rounded-r-md">
                   <div class="font-semibold text-left ">
                     {globalTranslate(`Stocks.index.feilds[${index}]`)}
@@ -53,6 +53,11 @@ export const StockTable = defineComponent({
 
                   <td class="p-2">
                     <div class="text-left font-medium">{mvm.product?.name}</div>
+                  </td>
+                  <td class="p-2">
+                    <div class="text-left">
+                      {mvm.product?.price?.toFixed(2)} DH
+                    </div>
                   </td>
                   <td class="p-2">
                     <div class="text-left">
