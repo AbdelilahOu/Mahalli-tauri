@@ -10,6 +10,7 @@ import { ChartBar } from "@/components/ChartBart";
 import type { sellerT } from "@/types";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
+import { UiCard } from "@/components/ui/UiCard";
 
 export const SellerDetails = defineComponent({
   name: "SellerDetails",
@@ -33,13 +34,14 @@ export const SellerDetails = defineComponent({
       <main class="w-full h-full px-3 py-1">
         <div class="w-full h-full text-black grid gap-4 xl:grid-cols-[400px_2px_1fr] xl:grid-rows-1 grid-rows-[250px_2px_1fr] grid-cols-1 print:pr-12">
           <div class="w-full grid-cols-[400px_1fr] xl:grid-rows-[200px_1fr] xl:grid-cols-1 items-start justify-start gap-3 grid">
-            {/* <SellerCard
-              updateSeller={() => {
-                toggleThisSeller(Seller.value, "SellerUpdate");
+            <UiCard
+              title="Seller information"
+              updateItem={() => {
+                toggleThisSeller(seller.value, "SellerUpdate");
               }}
-              Seller={Seller.value}
+              item={seller.value}
             />
-            <SellerAdditional /> */}
+            {/* <SellerAdditional */}
           </div>
           <div class="xl:border-l-2 border-b-2"></div>
           <div class="w-full">
