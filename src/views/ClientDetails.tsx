@@ -2,7 +2,7 @@ import { ClientAdditional } from "@/components/ClientAdditional";
 import { useInvoiceStore } from "@/stores/invoiceStore";
 import { useClientStore } from "@/stores/clientStore";
 import { generateColor } from "@/utils/generateColor";
-import { ClientCard } from "@/components/ClientCard";
+import { UiCard } from "@/components/ui/UiCard";
 import { defineComponent, onBeforeMount } from "vue";
 import { useStatsStore } from "@/stores/statsStore";
 import { useModalStore } from "@/stores/modalStore";
@@ -33,11 +33,12 @@ export const ClientDetails = defineComponent({
       <main class="w-full h-full px-3 py-1">
         <div class="w-full h-full text-black grid gap-4 xl:grid-cols-[400px_2px_1fr] xl:grid-rows-1 grid-rows-[250px_2px_1fr] grid-cols-1 print:pr-12">
           <div class="w-full grid-cols-[400px_1fr] xl:grid-rows-[200px_1fr] xl:grid-cols-1 items-start justify-start gap-3 grid">
-            <ClientCard
-              updateClient={() => {
+            <UiCard
+              title="Client information"
+              updateItem={() => {
                 toggleThisClient(client.value, "ClientUpdate");
               }}
-              client={client.value}
+              item={client.value}
             />
             <ClientAdditional />
           </div>
