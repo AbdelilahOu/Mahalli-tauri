@@ -31,7 +31,7 @@ export const StockTable = defineComponent({
           <thead class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
               <th class="p-2 rounded-l-md"></th>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
+              {[1, 2, 3, 4, 5, 6, 7].map((index) => (
                 <th class="p-2 last:rounded-r-md">
                   <div class="font-semibold text-left ">
                     {globalTranslate(`Stocks.index.feilds[${index}]`)}
@@ -78,26 +78,28 @@ export const StockTable = defineComponent({
                             params: { id: mvm.commandItem?.command_id },
                           }}
                         >
-                          {mvm.commandItem?.command_id}
+                          <span
+                            class={`px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-green-300/60 text-green-800 `}
+                          >
+                            # {mvm.commandItem?.command_id} <span>command</span>
+                          </span>
                         </RouterLink>
-                      ) : (
-                        "-------"
-                      )}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left font-medium">
-                      {mvm.invoiceItem?.invoice_id ? (
+                      ) : mvm.invoiceItem?.invoice_id ? (
                         <RouterLink
+                          class="w-full"
                           to={{
                             name: "InvoiceDetails",
                             params: { id: mvm.invoiceItem?.invoice_id },
                           }}
                         >
-                          {mvm.invoiceItem?.invoice_id}
+                          <span
+                            class={`px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-green-300/60 text-green-800 `}
+                          >
+                            # {mvm.invoiceItem?.invoice_id} <span>invoice</span>
+                          </span>
                         </RouterLink>
                       ) : (
-                        "-------"
+                        "-"
                       )}
                     </div>
                   </td>
