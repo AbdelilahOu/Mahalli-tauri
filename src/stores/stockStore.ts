@@ -1,7 +1,7 @@
 import type { newStockMvmT, stockMvmT, stockState } from "@/types";
 import database from "@/database/db";
 import { defineStore } from "pinia";
-import { stockJoins } from "@/constants/dbQueryJson";
+import { stockJoins } from "@/database/dbQueryJson";
 
 export const useStockStore = defineStore("StockStore", {
   state: (): stockState => {
