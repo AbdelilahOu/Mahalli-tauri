@@ -1,5 +1,5 @@
 import type { commandState, newCommandT, updateCommandT } from "@/types";
-import { commandDetailsJoins, commandsJoins } from "@/constants/dbQueryJson";
+import { commandDetailsJoins, commandsJoins } from "@/database/dbQueryJson";
 import { defineStore } from "pinia";
 import database from "@/database/db";
 
