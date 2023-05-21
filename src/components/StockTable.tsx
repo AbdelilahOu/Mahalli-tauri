@@ -99,7 +99,7 @@ export const StockTable = defineComponent({
                           </span>
                         </RouterLink>
                       ) : (
-                        "-"
+                        ""
                       )}
                     </div>
                   </td>
