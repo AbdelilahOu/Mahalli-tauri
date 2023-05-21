@@ -33,9 +33,9 @@ export const SellerTable = defineComponent({
         : checkedSellers.value.splice(checkedSellers.value.indexOf(id), 1);
     };
     const toggleThisSeller = (Seller: sellerT, name: string) => {
-      modalStore.updateModal({ key: "show", value: true });
-      modalStore.updateModal({ key: "name", value: name });
       modalStore.updateSellerRow(Seller);
+      modalStore.updateModal({ key: "name", value: name });
+      modalStore.updateModal({ key: "show", value: true });
     };
 
     return () => (
