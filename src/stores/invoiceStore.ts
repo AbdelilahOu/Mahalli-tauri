@@ -1,15 +1,7 @@
-import type {
-  invoiceState,
-  invoiceT,
-  invoiceItemT,
-  updateInvoiceT,
-  newInvoiceT,
-  clientT,
-  invoiceDetailsItemT,
-} from "@/types";
-import { defineStore } from "pinia";
+import { invoiceDetailsJoins, invoicesJoins } from "@/database/dbQueryJson";
+import type { invoiceState, updateInvoiceT, newInvoiceT } from "@/types";
 import database from "@/database/db";
-import { invoiceDetailsJoins, invoicesJoins } from "@/constants/dbQueryJson";
+import { defineStore } from "pinia";
 
 export const useInvoiceStore = defineStore("InvoiceStore", {
   state: (): invoiceState => {
@@ -41,10 +33,10 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
     createOneInvoice: async function (invoice: newInvoiceT) {
       try {
         const { db } = await database();
-        const { client_id, invoiceItems } = invoice;
+        const { client_id, invoiceItems, status } = invoice;
         await db.execute(
-          "INSERT INTO invoices (client_id,total) VALUES ($1,$2)",
-          [client_id, 0]
+          "INSERT INTO invoices (client_id,total,status) VALUES ($1,$2,$3)",
+          [client_id, 0, status]
         );
         const id: { id: number }[] = await db.select(
           "SELECT max(id) as id FROM invoices"
