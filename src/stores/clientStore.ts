@@ -1,7 +1,8 @@
 import type { clientT, clientState, updateClientT, newClientT } from "@/types";
+import { saveFile } from "@/utils/fs";
 import database from "@/database/db";
 import { defineStore } from "pinia";
-import { saveFile } from "@/utils/fs";
+
 export const useClientStore = defineStore("ClientStore", {
   state: (): clientState => {
     return {
