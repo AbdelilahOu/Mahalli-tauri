@@ -25,9 +25,9 @@ export const CrediTable = defineComponent({
   setup(props) {
     const pagination = ref<number>(0);
     const toggleThisCredi = (credi: crediT, name: string) => {
-      useModalStore().updateModal({ key: "show", value: true });
-      useModalStore().updateModal({ key: "name", value: name });
       useModalStore().updateCrediRow(credi);
+      useModalStore().updateModal({ key: "name", value: name });
+      useModalStore().updateModal({ key: "show", value: true });
     };
     return () => (
       <div class="flex flex-col w-full h-fit">
