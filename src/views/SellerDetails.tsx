@@ -2,18 +2,18 @@
 import { useInvoiceStore } from "@/stores/invoiceStore";
 import { useSellerStore } from "@/stores/sellerStore";
 import { generateColor } from "@/utils/generateColor";
-// import { SellerCard } from "@/components/SellerCard";
 import { defineComponent, onBeforeMount } from "vue";
 import { useStatsStore } from "@/stores/statsStore";
 import { useModalStore } from "@/stores/modalStore";
 import { ChartBar } from "@/components/ChartBart";
+import { UiCard } from "@/components/ui/UiCard";
 import type { sellerT } from "@/types";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
-import { UiCard } from "@/components/ui/UiCard";
 
 export const SellerDetails = defineComponent({
   name: "SellerDetails",
+  components: { UiCard },
   setup() {
     const id = useRoute().params.id;
     const SellerStore = useSellerStore();
