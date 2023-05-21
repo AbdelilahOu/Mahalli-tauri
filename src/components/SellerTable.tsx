@@ -44,6 +44,7 @@ export const SellerTable = defineComponent({
           <thead class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr class="">
               <th class="rounded-l-md"></th>
+              <th class=""></th>
               {[0, 1, 2, 3, 4].map((index) => (
                 <th class="p-2 w-fit last:rounded-r-md">
                   <div class="font-semibold text-left">
@@ -66,6 +67,15 @@ export const SellerTable = defineComponent({
                         onCheck={(check) => checkThisUser(check, Seller.id)}
                       />
                     </span>
+                  </td>
+                  <td class="p-2">
+                    <div class="w-12 h-12 rounded-full overflow-hidden">
+                      <img
+                        class="object-fill w-full h-full"
+                        src="/public/clients.jpg"
+                        alt=""
+                      />
+                    </div>
                   </td>
                   <td class="p-2">
                     <div class="font-medium text-gray-800">{Seller.name}</div>
