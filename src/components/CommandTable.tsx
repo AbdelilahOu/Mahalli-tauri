@@ -38,9 +38,9 @@ export const CommandTable = defineComponent({
     };
 
     const toggleThisCommand = (Command: commandT, name: string) => {
-      modalStore.updateModal({ key: "show", value: true });
-      modalStore.updateModal({ key: "name", value: name });
       modalStore.updateCommandRow(Command);
+      modalStore.updateModal({ key: "name", value: name });
+      modalStore.updateModal({ key: "show", value: true });
     };
     //
 
