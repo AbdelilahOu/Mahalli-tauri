@@ -23,6 +23,7 @@ export const InvoiceCreate = defineComponent({
     const newInvoice = reactive<newInvoiceT>({
       client_id: 0,
       invoiceItems: [],
+      status: "",
     });
     const InvoiceItems = ref<newInvoiceItemT[]>([
       {
@@ -76,10 +77,44 @@ export const InvoiceCreate = defineComponent({
               {globalTranslate("Invoices.create.details.client.select")}
             </UiSelect>
           </div>
+          <h1 class="font-medium">
+            {globalTranslate("Invoices.create.details.invoice.title")}
+          </h1>
+          <div class="w-full  h-full flex flex-col mb-1 gap-1">
+            <div class="flex justify-between w-full">
+              <div class="h-full w-full flex flex-row flex-nowrap items-center gap-2">
+                <UiCheckBox
+                  onCheck={(check) =>
+                    check
+                      ? (newInvoice.status = "delivered")
+                      : (newInvoice.status = "")
+                  }
+                />
+                <span>{globalTranslate("Commands.status.delivered")}</span>
+              </div>
+              <div class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2">
+                <UiCheckBox
+                  onCheck={(check) =>
+                    check
+                      ? (newInvoice.status = "pending")
+                      : (newInvoice.status = "")
+                  }
+                />
+                <span>{globalTranslate("Commands.status.pending")}</span>
+              </div>
+              <div class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2">
+                <UiCheckBox
+                  onCheck={(check) =>
+                    check
+                      ? (newInvoice.status = "canceled")
+                      : (newInvoice.status = "")
+                  }
+                />
+                <span>{globalTranslate("Commands.status.canceled")}</span>
+              </div>
+            </div>
+          </div>
           <div class="w-full  h-full flex flex-col gap-1">
-            <h1 class="font-medium">
-              {globalTranslate("Invoices.create.details.invoice.title")}
-            </h1>
             <div
               onClick={withModifiers(
                 () => (IsClicked.value = !IsClicked.value),
