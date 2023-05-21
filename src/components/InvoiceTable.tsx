@@ -36,9 +36,9 @@ export const InvoiceTable = defineComponent({
     const pagination = ref(0);
 
     const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
-      modalStore.updateModal({ key: "show", value: true });
-      modalStore.updateModal({ key: "name", value: name });
       modalStore.updateInvoiceRow(Invoice);
+      modalStore.updateModal({ key: "name", value: name });
+      modalStore.updateModal({ key: "show", value: true });
     };
     return () => (
       <div class="flex flex-col w-full h-full">
