@@ -47,7 +47,7 @@ export const InvoiceTable = defineComponent({
             <tr>
               <th class="rounded-l-md"></th>
               <th class=""></th>
-              {[1, 2, 3, 4, 5].map((index) => (
+              {[1, 2, 3, 4, 5, 6].map((index) => (
                 <th class="p-2 w-fit last:rounded-r-md">
                   <div class="font-semibold text-left">
                     {globalTranslate(`Invoices.index.feilds[${index}]`)}
@@ -105,6 +105,27 @@ export const InvoiceTable = defineComponent({
                     <div class="text-left font-medium flex justify-between uppercase whitespace-nowrap overflow-ellipsis">
                       {Invoice.total?.toFixed(2) ?? 0}{" "}
                       <span class="w-full text-center">DH</span>
+                    </div>
+                  </td>
+                  <td class="p-2">
+                    <div class="text-left font-medium uppercase whitespace-nowrap overflow-ellipsis">
+                      {Invoice.status ? (
+                        <span
+                          class={`px-2 py-[1px] rounded-full ${
+                            Invoice.status == "pending"
+                              ? "bg-yellow-300/60 text-yellow-800"
+                              : Invoice.status == "delivered"
+                              ? "bg-green-300/60 text-green-800"
+                              : "bg-red-300/60 text-red-800"
+                          }`}
+                        >
+                          {globalTranslate(
+                            `Commands.status.${Invoice.status.toLowerCase()}`
+                          )}
+                        </span>
+                      ) : (
+                        <span class="text-red-400">No status</span>
+                      )}
                     </div>
                   </td>
                   <td class="p-2">

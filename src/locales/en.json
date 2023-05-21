@@ -191,7 +191,7 @@
   "Invoices": {
     "index": {
       "addButton": "Add new Invoice",
-      "feilds": ["id", "client", "items", "total", "Date", "action"]
+      "feilds": ["id", "client", "items", "total", "status", "Date", "action"]
     },
     "create": {
       "title": "create new invoice",
