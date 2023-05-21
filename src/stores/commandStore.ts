@@ -23,9 +23,7 @@ export const useCommandStore = defineStore("CommandStore", {
     getOneCommand: async function (id: number) {
       try {
         const { db } = await database();
-
         const result = (await db.select(commandDetailsJoins, [id])) as any[];
-
         this.command = JSON.parse(result[0].data);
       } catch (error) {
         console.log(error);
