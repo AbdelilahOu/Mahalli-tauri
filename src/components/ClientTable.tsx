@@ -36,9 +36,9 @@ export const ClientTable = defineComponent({
     };
 
     const toggleThisClient = (client: clientT, name: string) => {
-      modalStore.updateModal({ key: "show", value: true });
-      modalStore.updateModal({ key: "name", value: name });
       modalStore.updateClientRow(client);
+      modalStore.updateModal({ key: "name", value: name });
+      modalStore.updateModal({ key: "show", value: true });
     };
 
     return () => (
