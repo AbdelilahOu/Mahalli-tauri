@@ -29,9 +29,9 @@ export const ProductTable = defineComponent({
     const feilds: string[] = ["product name", "price", "stock", "action"];
     const pagination = ref<number>(0);
     const toggleThisProduct = (product: productT, name: string) => {
-      modalStore.updateModal({ key: "show", value: true });
-      modalStore.updateModal({ key: "name", value: name });
       modalStore.updateProductRow(product);
+      modalStore.updateModal({ key: "name", value: name });
+      modalStore.updateModal({ key: "show", value: true });
     };
     return () => (
       <div class="w-full flex flex-col">
