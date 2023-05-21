@@ -28,22 +28,26 @@ export const ClientTable = defineComponent({
     const modalStore = useModalStore();
     const checkedClients = ref<number[]>([]);
     const pagination = ref<number>(0);
+
     const checkThisUser = (IsInclude: boolean, id: number) => {
       IsInclude
         ? checkedClients.value.push(id)
         : checkedClients.value.splice(checkedClients.value.indexOf(id), 1);
     };
+
     const toggleThisClient = (client: clientT, name: string) => {
       modalStore.updateModal({ key: "show", value: true });
       modalStore.updateModal({ key: "name", value: name });
       modalStore.updateClientRow(client);
     };
+
     return () => (
       <div class="flex flex-col h-full w-full">
         <table class="w-full">
           <thead class="text-xs h-9 bg-gray-300 max-w-lg w-fit font-semibold uppercase text-[rgba(25,23,17,0.6)] ">
             <tr>
               <th class="rounded-l-md"></th>
+              <th class="p-2"></th>
               {[0, 1, 2, 3, 4].map((index) => (
                 <th class="p-2 w-fit last:rounded-r-md ">
                   <div class="font-semibold text-left">
@@ -66,6 +70,15 @@ export const ClientTable = defineComponent({
                         onCheck={(check) => checkThisUser(check, client.id)}
                       />
                     </span>
+                  </td>
+                  <td class="p-2">
+                    <div class="w-12 h-12 rounded-full overflow-hidden">
+                      <img
+                        class="object-fill w-full h-full"
+                        src="/public/clients.jpg"
+                        alt=""
+                      />
+                    </div>
                   </td>
                   <td class="p-2">
                     <div class="font-medium text-gray-800">{client.name}</div>
