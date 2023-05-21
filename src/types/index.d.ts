@@ -101,6 +101,7 @@ export type invoiceT = {
   id: number;
   total: number;
   created_at: string;
+  status: string;
   client_id: number;
   client: {
     id: number;
@@ -127,7 +128,7 @@ export interface updateInvoiceT
 }
 
 export interface newInvoiceT
-  extends Omit<invoiceT, "id" | "created_at" | "total"> {
+  extends Omit<invoiceT, "id" | "created_at" | "total" | "client"> {
   invoiceItems: newInvoiceItemT[];
 }
 
