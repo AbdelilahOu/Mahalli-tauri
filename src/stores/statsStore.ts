@@ -10,6 +10,7 @@ const getMonth = (i: number) =>
 
 type resultMVM = [result: FilteredStockData, months: [string, string, string]];
 type resultPRD = [{ [key: string]: number[] }, string[], string[]];
+
 const olderThanThreeMonths = (date: string): boolean =>
   new Date(date) >
   new Date(new Date().getTime() - 2 * 30 * 24 * 60 * 60 * 1000);
