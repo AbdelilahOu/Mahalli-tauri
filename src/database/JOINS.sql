@@ -27,9 +27,7 @@ SELECT json_object(
         WHERE ci.command_id = c.id
     )
 ) AS data
-FROM commands c
-INNER JOIN sellers s ON c.seller_id = s.id
-ORDER BY c.id DESC;
+FROM commands c INNER JOIN sellers s ON c.seller_id = s.id ORDER BY c.id DESC;
 
 
 SELECT json_object(
