@@ -79,7 +79,7 @@ export const StockTable = defineComponent({
                           }}
                         >
                           <span
-                            class={`px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-green-300/60 text-green-800 `}
+                            class={`px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-sky-300/60 text-sky-800 `}
                           >
                             # {mvm.commandItem?.command_id} <span>command</span>
                           </span>
@@ -93,7 +93,7 @@ export const StockTable = defineComponent({
                           }}
                         >
                           <span
-                            class={`px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-green-300/60 text-green-800 `}
+                            class={`px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-sky-300/60 text-sky-800 `}
                           >
                             # {mvm.invoiceItem?.invoice_id} <span>invoice</span>
                           </span>
