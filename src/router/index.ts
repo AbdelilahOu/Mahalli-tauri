@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { NotificationsView } from "@/views/NotificationsView";
-import { CommandDetails } from "@/views/CommandDetails";
+import { OrdersDetails } from "@/views/OrderDetails";
 import { InvoiceDetails } from "@/views/InvoiceDetails";
 import { ClientDetails } from "@/views/ClientDetails";
 import { SellerDetails } from "@/views/SellerDetails";
-import { CommandIndex } from "@/views/CommandIndex";
+import { OrdersIndex } from "@/views/OrderIndex";
 import { InvoiceIndex } from "@/views/InvoiceIndex";
 import { ProductView } from "@/views/ProductView";
-import { CommandView } from "@/views/CommandView";
+import { OrdersView } from "@/views/OrderView";
 import { InvoiceView } from "@/views/InvoiceView";
 import { ClientIndex } from "@/views/ClientIndex";
 import { SellerIndex } from "@/views/SellerIndex";
@@ -78,19 +78,19 @@ const router = createRouter({
           component: StockView,
         },
         {
-          path: "Commands/",
-          name: "Command",
-          component: CommandIndex,
+          path: "Orders/",
+          name: "Orders",
+          component: OrdersIndex,
           children: [
             {
               path: "all",
-              name: "Commands",
-              component: CommandView,
+              name: "Orders",
+              component: OrdersView,
             },
             {
-              path: "command/:id",
-              name: "CommandDetails",
-              component: CommandDetails,
+              path: "order/:id",
+              name: "OrdersDetails",
+              component: OrdersDetails,
             },
           ],
         },
