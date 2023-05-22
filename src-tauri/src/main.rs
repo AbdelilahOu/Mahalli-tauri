@@ -5,7 +5,7 @@
 
 // use csv::Error;
 
-// use tauri::order::private::SerializeKind;
+// use tauri::command::private::SerializeKind;
 
 // #[derive(Debug, serde::Deserialize, serde::Serialize)]
 // struct Record {
@@ -34,15 +34,15 @@
 //     }
 // }
 
-// #[tauri::order]
-// async fn order_name(csv_path: String) -> Result<Vec<Record>, csv::Error> {
+// #[tauri::command]
+// async fn command_name(csv_path: String) -> Result<Vec<Record>, csv::Error> {
 //     let records = get_csv_data(csv_path).await;
 //     return records;
 // }
 
 fn main() {
     tauri::Builder::default()
-        // .invoke_handler(tauri::generate_handler![order_name])
+        // .invoke_handler(tauri::generate_handler![command_name])
         .plugin(tauri_plugin_sql::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
