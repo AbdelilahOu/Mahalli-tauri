@@ -10,7 +10,7 @@ export const ProductFeilds = [
   "stock",
 ] as const;
 
-export const CommandFeilds = [
+export const OrdersFeilds = [
   "name",
   "description",
   "price",
