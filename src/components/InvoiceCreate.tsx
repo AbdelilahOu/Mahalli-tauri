@@ -90,7 +90,7 @@ export const InvoiceCreate = defineComponent({
                       : (newInvoice.status = "")
                   }
                 />
-                <span>{globalTranslate("Commands.status.delivered")}</span>
+                <span>{globalTranslate("Orders.status.delivered")}</span>
               </div>
               <div class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2">
                 <UiCheckBox
@@ -100,7 +100,7 @@ export const InvoiceCreate = defineComponent({
                       : (newInvoice.status = "")
                   }
                 />
-                <span>{globalTranslate("Commands.status.pending")}</span>
+                <span>{globalTranslate("Orders.status.pending")}</span>
               </div>
               <div class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2">
                 <UiCheckBox
@@ -110,7 +110,7 @@ export const InvoiceCreate = defineComponent({
                       : (newInvoice.status = "")
                   }
                 />
-                <span>{globalTranslate("Commands.status.canceled")}</span>
+                <span>{globalTranslate("Orders.status.canceled")}</span>
               </div>
             </div>
           </div>
