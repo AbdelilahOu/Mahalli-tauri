@@ -1,6 +1,6 @@
 import type {
   clientT,
-  commandT,
+  orderT,
   crediT,
   editModalArgsT,
   invoiceT,
@@ -20,7 +20,7 @@ export const useModalStore = defineStore("ModalStore", {
       client: null,
       product: null,
       seller: null,
-      command: null,
+      order: null,
       invoice: null,
       credi: null,
     };
@@ -41,8 +41,8 @@ export const useModalStore = defineStore("ModalStore", {
     updateSellerRow: function (value: sellerT | null) {
       this.seller = value;
     },
-    updateCommandRow: function (value: commandT | null) {
-      this.command = value;
+    updateOrdersRow: function (value: orderT | null) {
+      this.order = value;
     },
     updateInvoiceRow: function (value: invoiceT | null) {
       this.invoice = value;
