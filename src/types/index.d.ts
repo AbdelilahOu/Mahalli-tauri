@@ -9,7 +9,7 @@ export interface modalsState {
   theModal: { [key: string]: any; show: boolean; name: string };
   product: productT | null;
   client: clientT | null;
-  command: commandT | null;
+  order: orderT | null;
   seller: sellerT | null;
   invoice: invoiceT | null;
   credi: crediT | null;
@@ -19,9 +19,9 @@ export interface productState {
   products: productT[];
 }
 
-export interface commandState {
-  commands: commandT[];
-  command: commandDetailsT | null;
+export interface orderState {
+  orders: orderT[];
+  order: orderDetailsT | null;
 }
 
 export interface invoiceState {
@@ -46,7 +46,7 @@ export interface stockState {
 //////////// INTERFACES //////////
 /////////////////////////////////
 //////////// COMMAND INTERFACES//
-export interface commandT {
+export interface orderT {
   // [key: string]: any;
   id: number;
   created_at: string;
@@ -56,31 +56,30 @@ export interface commandT {
     id: number;
     name: string;
   };
-  commandItems: commandItemT[];
+  orderItems: orderItemT[];
 }
 
-export interface commandItemT {
+export interface orderItemT {
   id: number;
   product_id: number;
-  command_id: number;
+  order_id: number;
   price: number;
   quantity: number;
   stock_id: number;
 }
 
-export interface newCommandT extends Partial<Omit<commandT, "commandItems">> {
-  commandItems: Omit<commandItemT, "id" | "command_id" | "stock_id">[];
+export interface newOrdersT extends Partial<Omit<orderT, "orderItems">> {
+  orderItems: Omit<orderItemT, "id" | "order_id" | "stock_id">[];
 }
 
-export interface updateCommandT
-  extends Partial<Omit<commandT, "commmandItems">> {
-  commandItems: Partial<commandItemT>[];
+export interface updateOrdersT extends Partial<Omit<orderT, "commmandItems">> {
+  orderItems: Partial<orderItemT>[];
 }
 
-export interface newCommandItemT
-  extends Pick<commandItemT, "product_id" | "quantity" | "price"> {}
+export interface newOrdersItemT
+  extends Pick<orderItemT, "product_id" | "quantity" | "price"> {}
 
-export interface commandDetailsItemsT extends commandItemT {
+export interface orderDetailsItemsT extends orderItemT {
   product: {
     id: number;
     name: string;
@@ -89,8 +88,8 @@ export interface commandDetailsItemsT extends commandItemT {
   };
 }
 
-export interface commandDetailsT extends Omit<commandT, "commandItems"> {
-  commandItems: commandDetailsItemsT[];
+export interface orderDetailsT extends Omit<orderT, "orderItems"> {
+  orderItems: orderDetailsItemsT[];
   seller: sellerT;
 }
 // /////////////////////////////////
@@ -178,8 +177,8 @@ export interface stockMvmT {
   date: string;
   model: string;
   quantity: number;
-  commandItem?: {
-    command_id?: number;
+  orderItem?: {
+    order_id?: number;
     price?: number;
   };
   invoiceItem?: {
@@ -192,7 +191,7 @@ export interface stockMvmT {
   };
 }
 export interface stockT
-  extends Omit<stockMvmT, "product" | "commandItem" | "invoiceItem"> {}
+  extends Omit<stockMvmT, "product" | "orderItem" | "invoiceItem"> {}
 export interface newStockMvmT
   extends Pick<stockMvmT, "productId" | "quantity" | "model"> {}
 
