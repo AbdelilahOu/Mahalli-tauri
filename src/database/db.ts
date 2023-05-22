@@ -53,24 +53,24 @@ export default async () => {
         CONSTRAINT invoice_items_stock_id_fkey FOREIGN KEY (stock_id) REFERENCES stock_mouvements (id) ON DELETE NO ACTION ON UPDATE CASCADE
       );
 
-      CREATE TABLE IF NOT EXISTS commands (
+      CREATE TABLE IF NOT EXISTS orders (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         status TEXT NOT NULL,
         created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         seller_id INTEGER NOT NULL,
-        CONSTRAINT commands_seller_id_fkey FOREIGN KEY (seller_id) REFERENCES sellers (id) ON DELETE CASCADE ON UPDATE CASCADE
+        CONSTRAINT orders_seller_id_fkey FOREIGN KEY (seller_id) REFERENCES sellers (id) ON DELETE CASCADE ON UPDATE CASCADE
       );
 
-      CREATE TABLE IF NOT EXISTS command_items (
+      CREATE TABLE IF NOT EXISTS order_items (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         product_id INTEGER NOT NULL,
         price REAl,
-        command_id INTEGER NOT NULL,
+        order_id INTEGER NOT NULL,
         stock_id INTEGER NOT NULL,
         quantity BIGINT NOT NULL,
-        CONSTRAINT command_items_product_id_fkey FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE ON UPDATE CASCADE,
-        CONSTRAINT command_items_command_id_fkey FOREIGN KEY (command_id) REFERENCES commands (id) ON DELETE CASCADE ON UPDATE CASCADE,
-        CONSTRAINT command_items_stock_id_fkey FOREIGN KEY (stock_id) REFERENCES stock_mouvements (id) ON DELETE NO ACTION ON UPDATE CASCADE
+        CONSTRAINT order_items_product_id_fkey FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        CONSTRAINT order_items_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        CONSTRAINT order_items_stock_id_fkey FOREIGN KEY (stock_id) REFERENCES stock_mouvements (id) ON DELETE NO ACTION ON UPDATE CASCADE
       );
 
       CREATE TABLE IF NOT EXISTS stock_mouvements (
@@ -82,8 +82,8 @@ export default async () => {
         CONSTRAINT stock_mouvements_product_id_fkey FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE ON UPDATE CASCADE
       );
 
-      CREATE UNIQUE INDEX IF NOT EXISTS command_items_stock_id_key ON command_items (stock_id);
-      CREATE UNIQUE INDEX IF NOT EXISTS command_items_id_key ON command_items (id);
+      CREATE UNIQUE INDEX IF NOT EXISTS order_items_stock_id_key ON order_items (stock_id);
+      CREATE UNIQUE INDEX IF NOT EXISTS order_items_id_key ON order_items (id);
       CREATE UNIQUE INDEX IF NOT EXISTS invoice_items_stock_id_key ON invoice_items (stock_id);
       CREATE UNIQUE INDEX IF NOT EXISTS products_name_key ON products (name);
 
@@ -95,9 +95,9 @@ export default async () => {
     try {
       await db.execute("DROP TABLE IF EXISTS clients");
       await db.execute("DROP TABLE IF EXISTS sellers");
-      await db.execute("DROP TABLE IF EXISTS commands");
+      await db.execute("DROP TABLE IF EXISTS orders");
       await db.execute("DROP TABLE IF EXISTS invoices");
-      await db.execute("DROP TABLE IF EXISTS command_items");
+      await db.execute("DROP TABLE IF EXISTS order_items");
       await db.execute("DROP TABLE IF EXISTS invoice_items");
       await db.execute("DROP TABLE IF EXISTS products");
       await db.execute("DROP TABLE IF EXISTS stock_mouvements");
