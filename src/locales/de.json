@@ -82,7 +82,7 @@
       "no": "Stornieren"
     }
   },
-  "Commands": {
+  "Orders": {
     "index": {
       "addButton": "Neuen Befehl hinzufügen",
       "feilds": [
@@ -101,7 +101,7 @@
           "title": "Verkäuferdetails",
           "select": "Wählen Sie einen Verkäufer"
         },
-        "command": {
+        "order": {
           "title": "Befehlsdetails",
           "add": "Fügen Sie ein Produkt hinzu",
           "select": "Wähle ein Produkt",
@@ -117,7 +117,7 @@
           "title": "Verkäuferdetails",
           "select": "Wählen Sie einen Verkäufer"
         },
-        "command": {
+        "order": {
           "title": "Befehlsdetails",
           "select": "Wähle ein Produkt",
           "add": "Fügen Sie ein Produkt hinzu"
@@ -136,9 +136,9 @@
       "canceled": "Abgesagt"
     }
   },
-  "CommandDetails": {
+  "OrdersDetails": {
     "details": {
-      "command": {
+      "order": {
         "title": "Befehlsdetails",
         "id": "Ausweis",
         "date": "Datum",
@@ -293,7 +293,7 @@
       "Clients": "Kunden",
       "Sellers": "Verkäufer",
       "Products": "Produkte",
-      "Commands": "Befehle",
+      "Orders": "Befehle",
       "Invoices": "Rechnungen",
       "Stock": "Aktie",
       "Statistics": "Statistiken",
