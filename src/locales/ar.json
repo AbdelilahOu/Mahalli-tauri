@@ -82,7 +82,7 @@
       "no": "يلغي"
     }
   },
-  "Commands": {
+  "Orders": {
     "index": {
       "addButton": "أضف أمرًا جديدًا",
       "feilds": ["معرف الأمر", "معرف البائع", "أغراض", "حالة", "تاريخ", "فعل"]
@@ -91,7 +91,7 @@
       "title": "إنشاء أمر جديد",
       "details": {
         "seller": { "title": "تفاصيل البائع", "select": "حدد البائع" },
-        "command": {
+        "order": {
           "title": "تفاصيل الأمر",
           "add": "إضافة منتج",
           "select": "اختر المنتج",
@@ -104,7 +104,7 @@
       "title": "أمر التحديث",
       "details": {
         "seller": { "title": "تفاصيل البائع", "select": "حدد البائع" },
-        "command": {
+        "order": {
           "title": "تفاصيل الأمر",
           "select": "اختر المنتج",
           "add": "إضافة منتج"
@@ -123,9 +123,9 @@
       "canceled": "ألغيت"
     }
   },
-  "CommandDetails": {
+  "OrdersDetails": {
     "details": {
-      "command": {
+      "order": {
         "title": "تفاصيل الأمر",
         "id": "بطاقة تعريف",
         "date": "تاريخ",
@@ -284,7 +284,7 @@
       "Clients": "العملاء",
       "Sellers": "البائعون",
       "Products": "منتجات",
-      "Commands": "الأوامر",
+      "Orders": "الأوامر",
       "Invoices": "فواتير",
       "Stock": "مخزون",
       "Statistics": "إحصائيات",
