@@ -20,9 +20,9 @@ export const RouteLinks: RouteLinksTypeT[] = [
     display: true,
   },
   {
-    path: "/Commands/all",
-    component: "Commands",
-    name: "Commands",
+    path: "/Orders/all",
+    component: "Orders",
+    name: "Orders",
     display: true,
   },
   {
@@ -50,9 +50,9 @@ export const RouteLinks: RouteLinksTypeT[] = [
     display: true,
   },
   {
-    path: "/CommandDetails",
-    component: "CommandDetails",
-    name: "Commands",
+    path: "/OrdersDetails",
+    component: "OrdersDetails",
+    name: "Orders",
     display: false,
   },
   {
