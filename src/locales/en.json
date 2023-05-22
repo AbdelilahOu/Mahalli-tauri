@@ -79,44 +79,44 @@
       "no": "Cancel"
     }
   },
-  "Commands": {
+  "Orders": {
     "index": {
-      "addButton": "Add new Command",
+      "addButton": "Add new Orders",
       "feilds": ["id", "seller", "items", "STATUS", "Date", "action"]
     },
     "create": {
-      "title": "create new command",
+      "title": "create new order",
       "details": {
         "seller": {
           "title": "seller details",
           "select": "Select a seller"
         },
-        "command": {
-          "title": "command details",
+        "order": {
+          "title": "order details",
           "add": "add a product",
           "select": "Select a product",
           "placeholder": ["Product quantity", "New price"]
         }
       },
-      "button": "Create a Command"
+      "button": "Create a Orders"
     },
     "update": {
-      "title": "update command",
+      "title": "update order",
       "details": {
         "seller": {
           "title": "seller details",
           "select": "Select a seller"
         },
-        "command": {
-          "title": "command details",
+        "order": {
+          "title": "order details",
           "select": "Select a product",
           "add": "add a product"
         }
       },
-      "button": "Update Command"
+      "button": "Update Orders"
     },
     "delete": {
-      "title": "are you sure you wanna delete the command ",
+      "title": "are you sure you wanna delete the order ",
       "yes": "Confirme",
       "no": "Cancel"
     },
@@ -126,10 +126,10 @@
       "canceled": "Canceled"
     }
   },
-  "CommandDetails": {
+  "OrdersDetails": {
     "details": {
-      "command": {
-        "title": "command details",
+      "order": {
+        "title": "order details",
         "id": "id",
         "date": "date",
         "status": "status"
@@ -143,7 +143,7 @@
         "address": "address"
       },
       "items": {
-        "title": "command items details",
+        "title": "order items details",
         "fields": [
           "name",
           "id",
@@ -279,7 +279,7 @@
       "Clients": "Clients",
       "Sellers": "Sellers",
       "Products": "Products",
-      "Commands": "Commands",
+      "Orders": "Orders",
       "Invoices": "Invoices",
       "Stock": "Stock",
       "Statistics": "Statistics",
