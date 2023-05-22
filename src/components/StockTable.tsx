@@ -61,7 +61,7 @@ export const StockTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="text-left">
-                      {mvm.commandItem?.price?.toFixed(2) ??
+                      {mvm.orderItem?.price?.toFixed(2) ??
                         mvm.product?.price?.toFixed(2)}{" "}
                       DH
                     </div>
@@ -71,17 +71,17 @@ export const StockTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="text-left font-medium">
-                      {mvm.commandItem?.command_id ? (
+                      {mvm.orderItem?.order_id ? (
                         <RouterLink
                           to={{
-                            name: "CommandDetails",
-                            params: { id: mvm.commandItem?.command_id },
+                            name: "OrdersDetails",
+                            params: { id: mvm.orderItem?.order_id },
                           }}
                         >
                           <span
                             class={`px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-sky-300/60 text-sky-800 `}
                           >
-                            # {mvm.commandItem?.command_id} <span>command</span>
+                            # {mvm.orderItem?.order_id} <span>order</span>
                           </span>
                         </RouterLink>
                       ) : mvm.invoiceItem?.invoice_id ? (
