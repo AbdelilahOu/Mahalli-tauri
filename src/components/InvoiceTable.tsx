@@ -120,7 +120,7 @@ export const InvoiceTable = defineComponent({
                           }`}
                         >
                           {globalTranslate(
-                            `Commands.status.${Invoice.status.toLowerCase()}`
+                            `Orders.status.${Invoice.status.toLowerCase()}`
                           )}
                         </span>
                       ) : (
