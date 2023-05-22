@@ -25,9 +25,9 @@ export const HomeView = defineComponent({
         path: "/Sellers/all",
       },
       {
-        image: "/commands.jpg",
-        text: "Commands",
-        path: "/Commands/all",
+        image: "/orders.jpg",
+        text: "Orders",
+        path: "/Orders/all",
       },
       {
         image: "/invoices.jpg",
