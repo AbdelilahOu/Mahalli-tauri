@@ -2,9 +2,9 @@
 <!-- looking for better ways using defineAsyncComponent -->
 <script lang="ts">
 import { TranslationModal } from "./TranslationModal";
-import { CommandCreate } from "./CommandCreate";
-import { CommandDelete } from "./CommandDelete";
-import { CommandUpdate } from "./CommandUpdate";
+import { OrderCreate } from "./OrderCreate";
+import { OrderDelete } from "./OrderDelete";
+import { OrderUpdate } from "./OrderUpdate";
 import { ProductCreate } from "./ProductCreate";
 import { ProductDelete } from "./ProductDelete";
 import { ProductUpdate } from "./ProductUpdate";
@@ -23,9 +23,9 @@ import { CrediDelete } from "./CrediDelete";
 export default {
   components: {
     TranslationModal,
-    CommandCreate,
-    CommandDelete,
-    CommandUpdate,
+    OrderCreate,
+    OrderDelete,
+    OrderUpdate,
     ProductUpdate,
     ProductDelete,
     ProductCreate,
