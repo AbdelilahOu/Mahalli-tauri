@@ -85,11 +85,11 @@
       "no": "Annuler"
     }
   },
-  "Commands": {
+  "Orders": {
     "index": {
-      "addButton": "Ajouter une nouvelle commande",
+      "addButton": "Ajouter une nouvelle ordere",
       "feilds": [
-        "ID de commande",
+        "ID de ordere",
         "ID du fournisseur",
         "articles",
         "STATUT",
@@ -98,38 +98,38 @@
       ]
     },
     "create": {
-      "title": "Créer une nouvelle commande",
+      "title": "Créer une nouvelle ordere",
       "details": {
         "seller": {
           "title": "Détails du fournisseur",
           "select": "Sélectionnez un fournisseur"
         },
-        "command": {
-          "title": "Détails de commande",
+        "order": {
+          "title": "Détails de ordere",
           "add": "Ajouter un produit",
           "select": "choisissez un produit",
           "placeholder": "La quantité de produit"
         }
       },
-      "button": "Créer une commande"
+      "button": "Créer une ordere"
     },
     "update": {
-      "title": "Mettre à jour la commande",
+      "title": "Mettre à jour la ordere",
       "details": {
         "seller": {
           "title": "Détails du fournisseur",
           "select": "Sélectionnez un fournisseur"
         },
-        "command": {
-          "title": "Détails de commande",
+        "order": {
+          "title": "Détails de ordere",
           "select": "choisissez un produit",
           "add": "Ajouter un produit"
         }
       },
-      "button": "Mettre à jour la commande"
+      "button": "Mettre à jour la ordere"
     },
     "delete": {
-      "title": "Êtes-vous sûr de vouloir supprimer la commande",
+      "title": "Êtes-vous sûr de vouloir supprimer la ordere",
       "yes": "Confirmer",
       "no": "Annuler"
     },
@@ -139,10 +139,10 @@
       "canceled": "Annulé"
     }
   },
-  "CommandDetails": {
+  "OrdersDetails": {
     "details": {
-      "command": {
-        "title": "Détails de commande",
+      "order": {
+        "title": "Détails de ordere",
         "id": "identifiant",
         "date": "date",
         "status": "statut"
@@ -156,7 +156,7 @@
         "address": "adresse"
       },
       "items": {
-        "title": "Détails des éléments de commande",
+        "title": "Détails des éléments de ordere",
         "fields": [
           "nom",
           "identifiant",
@@ -255,7 +255,7 @@
         "nom de produit",
         "prix du produit",
         "quantité",
-        "ID de commande",
+        "ID de ordere",
         "ID de facture",
         "date",
         "-"
@@ -303,7 +303,7 @@
       "Clients": "Clientes",
       "Sellers": "Fournisseurs",
       "Products": "Produits",
-      "Commands": "Commandes",
+      "Orders": "Orderses",
       "Invoices": "Factures",
       "Stock": "Stock",
       "Statistics": "Statistiques",
