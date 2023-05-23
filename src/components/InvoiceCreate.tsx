@@ -1,4 +1,4 @@
-import { defineComponent, reactive, ref, withModifiers } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import type { newInvoiceT, newInvoiceItemT } from "@/types";
 import { useInvoiceStore } from "@/stores/invoiceStore";
 import { useProductStore } from "@/stores/productStore";
@@ -17,7 +17,6 @@ export const InvoiceCreate = defineComponent({
   components: { UiButton, UiCheckBox, UiIcon, UiInput, UiSelect },
   setup() {
     const isFlash = ref<boolean>(false);
-    const IsClicked = ref<boolean>(false);
     const { products } = storeToRefs(useProductStore());
     const { clients } = storeToRefs(useClientStore());
     const newInvoice = reactive<newInvoiceT>({
@@ -45,20 +44,8 @@ export const InvoiceCreate = defineComponent({
       }, 1000);
     };
     return () => (
-      <div
-        onClick={withModifiers(
-          () => (IsClicked.value = !IsClicked.value),
-          ["self"]
-        )}
-        class="w-5/6 lg:w-1/2 relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
-      >
-        <h1
-          onClick={withModifiers(
-            () => (IsClicked.value = !IsClicked.value),
-            ["self"]
-          )}
-          class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
-        >
+      <div class="w-5/6 lg:w-1/2 relative rounded-md h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+        <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Invoices.create.title")}
         </h1>
         <div class="h-full  w-full grid grid-cols-1 gap-2">
@@ -72,7 +59,6 @@ export const InvoiceCreate = defineComponent({
                 id: client.id,
               }))}
               onSelect={(id: number) => (newInvoice.client_id = id)}
-              IsClickedOuside={IsClicked.value}
             >
               {globalTranslate("Invoices.create.details.client.select")}
             </UiSelect>
@@ -115,13 +101,7 @@ export const InvoiceCreate = defineComponent({
             </div>
           </div>
           <div class="w-full  h-full flex flex-col gap-1">
-            <div
-              onClick={withModifiers(
-                () => (IsClicked.value = !IsClicked.value),
-                ["self"]
-              )}
-              class="w-full  h-full flex flex-col gap-1"
-            >
+            <div class="w-full  h-full flex flex-col gap-1">
               <UiButton
                 Click={() =>
                   InvoiceItems.value.push({ product_id: 0, quantity: 0 })
@@ -138,7 +118,6 @@ export const InvoiceCreate = defineComponent({
                         id: product.id,
                       }))}
                       onSelect={(id: number) => (item.product_id = id)}
-                      IsClickedOuside={IsClicked.value}
                     >
                       {globalTranslate(
                         "Invoices.create.details.invoice.select"
