@@ -136,12 +136,12 @@ export const OrdersTable = defineComponent({
                   <td class="p-2">
                     <div class="flex  justify-start gap-3">
                       <span
-                        onClick={() => toggleThisOrders(Orders, "OrdersDelete")}
+                        onClick={() => toggleThisOrders(Orders, "OrderDelete")}
                       >
                         <UiIcon name={"delete"} />
                       </span>
                       <span
-                        onClick={() => toggleThisOrders(Orders, "OrdersUpdate")}
+                        onClick={() => toggleThisOrders(Orders, "OrderUpdate")}
                       >
                         <UiIcon name={"edit"} />
                       </span>
