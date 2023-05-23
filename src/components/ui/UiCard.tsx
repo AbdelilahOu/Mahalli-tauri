@@ -1,6 +1,5 @@
 import { convertFileSrc } from "@tauri-apps/api/tauri";
-import { join, appDataDir } from "@tauri-apps/api/path";
-import { ref, defineComponent, onMounted, type PropType } from "vue";
+import { defineComponent, type PropType } from "vue";
 import UiIcon from "@/components/ui/UiIcon.vue";
 
 export const UiCard = defineComponent({
@@ -19,15 +18,6 @@ export const UiCard = defineComponent({
   },
 
   setup(props) {
-    const ItemImage = ref("");
-
-    onMounted(async () => {
-      if (props.item?.image)
-        ItemImage.value = convertFileSrc(
-          await join(await appDataDir(), "Images", props.item.image)
-        );
-      console.log(await appDataDir());
-    });
     return () => (
       // <UiIcon  name={"person"} />
       <div class="w-full flex xl:sticky shadow-md xl:top-[54px] z-20 pb-1 rounded-md gap-2 flex-col">
@@ -35,7 +25,7 @@ export const UiCard = defineComponent({
           {props.item?.image ? (
             <img
               class=" rounded-full w-20 h-20 m-2 object-fill"
-              src={ItemImage.value}
+              src={convertFileSrc(props.item.image)}
             />
           ) : (
             <span class=" rounded-full w-20 h-20 m-2 object-fill animate-pulse bg-slate-300 duration-150" />
