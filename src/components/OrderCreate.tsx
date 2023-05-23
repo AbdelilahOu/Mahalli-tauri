@@ -1,4 +1,4 @@
-import { defineComponent, reactive, ref, withModifiers } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import type { newOrdersT, newOrdersItemT } from "@/types";
 import { useOrdersStore } from "@/stores/orderStore";
 import { useProductStore } from "@/stores/productStore";
@@ -17,7 +17,6 @@ export const OrderCreate = defineComponent({
   components: { UiButton, UiCheckBox, UiIcon, UiInput, UiSelect },
   setup() {
     const isFlash = ref<boolean>(false);
-    const IsClicked = ref<boolean>(false);
     const { products } = storeToRefs(useProductStore());
     const { sellers } = storeToRefs(useSellerStore());
     const newOrders = reactive<newOrdersT>({
@@ -46,20 +45,8 @@ export const OrderCreate = defineComponent({
       }, 1000);
     };
     return () => (
-      <div
-        onClick={withModifiers(
-          () => (IsClicked.value = !IsClicked.value),
-          ["self"]
-        )}
-        class="w-5/6 lg:w-1/2 relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
-      >
-        <h1
-          onClick={withModifiers(
-            () => (IsClicked.value = !IsClicked.value),
-            ["self"]
-          )}
-          class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
-        >
+      <div class="w-5/6 lg:w-1/2 rounded-md relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+        <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Orders.create.title")}
         </h1>
         <div class="h-full  w-full grid grid-cols-1 gap-2">
@@ -73,7 +60,6 @@ export const OrderCreate = defineComponent({
                 id: seller.id,
               }))}
               onSelect={(id: number) => (newOrders.seller_id = id)}
-              IsClickedOuside={IsClicked.value}
             >
               {globalTranslate("Orders.create.details.seller.select")}
             </UiSelect>
@@ -117,13 +103,7 @@ export const OrderCreate = defineComponent({
                 </div>
               </div>
             </div>
-            <div
-              onClick={withModifiers(
-                () => (IsClicked.value = !IsClicked.value),
-                ["self"]
-              )}
-              class="w-full  h-full flex flex-col gap-1"
-            >
+            <div class="w-full  h-full flex flex-col gap-1">
               <UiButton
                 Click={() =>
                   orderItems.value.push({
@@ -144,7 +124,6 @@ export const OrderCreate = defineComponent({
                         id: product.id,
                       }))}
                       onSelect={(id: number) => (item.product_id = id)}
-                      IsClickedOuside={IsClicked.value}
                     >
                       {globalTranslate("Orders.create.details.order.select")}
                     </UiSelect>
