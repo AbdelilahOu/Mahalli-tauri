@@ -1,11 +1,11 @@
 import { defineComponent } from "vue";
 
-export const ClientCredi = defineComponent({
-  name: "ClientCredi",
+export const ClientPayment = defineComponent({
+  name: "ClientPayment",
   setup(props) {
     return () => (
       <div>
-        <h1>Credi</h1>
+        <h1>Payment</h1>
       </div>
     );
   },
