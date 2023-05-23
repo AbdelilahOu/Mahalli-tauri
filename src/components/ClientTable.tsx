@@ -1,5 +1,6 @@
 import { defineComponent, type PropType, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { useModalStore } from "@/stores/modalStore";
 import { UiPagination } from "./ui/UiPagination";
 import { UiCheckBox } from "./ui/UiCheckBox";
@@ -73,11 +74,14 @@ export const ClientTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="w-12 h-12 rounded-full overflow-hidden">
-                      <img
-                        class="object-fill w-full h-full"
-                        src="/public/clients.jpg"
-                        alt=""
-                      />
+                      {client.image && client.image !== "" ? (
+                        <img
+                          class=" border-2 rounded-full w-full h-full object-fill"
+                          src={convertFileSrc(client.image)}
+                        />
+                      ) : (
+                        <span class=" rounded-full w-full h-full object-fill animate-pulse bg-slate-300 duration-150" />
+                      )}
                     </div>
                   </td>
                   <td class="p-2">
