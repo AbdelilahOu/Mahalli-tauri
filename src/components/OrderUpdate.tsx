@@ -10,13 +10,7 @@ import { UiCheckBox } from "./ui/UiCheckBox";
 import { UiButton } from "./ui/UiButton";
 import UiIcon from "./ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
-import {
-  defineComponent,
-  reactive,
-  onBeforeUnmount,
-  ref,
-  withModifiers,
-} from "vue";
+import { defineComponent, reactive, onBeforeUnmount } from "vue";
 
 export const OrderUpdate = defineComponent({
   name: "OrderUpdate",
@@ -31,7 +25,6 @@ export const OrderUpdate = defineComponent({
 
     const { products } = storeToRefs(productStore);
     const { sellers } = storeToRefs(sellerStore);
-    const IsClicked = ref<boolean>(false);
     //
     const Orders: updateOrdersT = {
       id: undefined,
@@ -54,20 +47,8 @@ export const OrderUpdate = defineComponent({
     onBeforeUnmount(() => modalStore.updateOrdersRow(null));
 
     return () => (
-      <div
-        onClick={withModifiers(
-          () => (IsClicked.value = !IsClicked.value),
-          ["self"]
-        )}
-        class="w-5/6 lg:w-1/2 relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
-      >
-        <h1
-          onClick={withModifiers(
-            () => (IsClicked.value = !IsClicked.value),
-            ["self"]
-          )}
-          class="font-semibold  text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
-        >
+      <div class="w-5/6 lg:w-1/2 relative h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+        <h1 class="font-semibold  text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Orders.update.title")} N° {updateOrders.id}
         </h1>
         <div class="h-full  w-full grid grid-cols-1 gap-2">
@@ -85,7 +66,6 @@ export const OrderUpdate = defineComponent({
                 id: seller.id,
               }))}
               onSelect={(id: number) => (updateOrders.seller_id = id)}
-              IsClickedOuside={IsClicked.value}
             >
               {globalTranslate("Orders.update.details.seller.select")}
             </UiUpdateSelect>
@@ -128,13 +108,7 @@ export const OrderUpdate = defineComponent({
                 </div>
               </div>
             </div>
-            <div
-              onClick={withModifiers(
-                () => (IsClicked.value = !IsClicked.value),
-                ["self"]
-              )}
-              class="w-full  h-full flex flex-col gap-1"
-            >
+            <div class="w-full  h-full flex flex-col gap-1">
               <UiButton
                 Click={() =>
                   updateOrders.orderItems?.push({
@@ -158,7 +132,6 @@ export const OrderUpdate = defineComponent({
                         id: product.id,
                       }))}
                       onSelect={(id: number) => (item.product_id = id)}
-                      IsClickedOuside={IsClicked.value}
                     >
                       {globalTranslate("Orders.update.details.order.select")}
                     </UiUpdateSelect>
