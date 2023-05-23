@@ -1,11 +1,5 @@
-import {
-  defineComponent,
-  onUnmounted,
-  ref,
-  Transition,
-  watch,
-  type PropType,
-} from "vue";
+import { defineComponent, ref, Transition, type PropType } from "vue";
+import { onClickOutside } from "@vueuse/core";
 
 export const UiSelect = defineComponent({
   name: "UiSelect",
@@ -18,14 +12,11 @@ export const UiSelect = defineComponent({
       type: Function as PropType<(id: number) => void>,
       required: true,
     },
-    IsClickedOuside: {
-      type: Boolean,
-      required: true,
-    },
   },
   setup(props, { slots }) {
     const isOpen = ref<boolean>(false);
     const selectedItem = ref<string>("");
+    const selectComp = ref(null);
 
     const selectAnItem = ({ name, id }: { name: string; id: number }) => {
       isOpen.value = false;
@@ -33,15 +24,10 @@ export const UiSelect = defineComponent({
       props.onSelect(id);
     };
 
-    const unWatch = watch(
-      () => props.IsClickedOuside,
-      () => {
-        isOpen.value = false;
-      }
-    );
-    onUnmounted(() => unWatch());
+    onClickOutside(selectComp, () => (isOpen.value = false));
+
     return () => (
-      <div class="relative h-fit">
+      <div ref={selectComp} class="relative h-fit">
         <div
           class="h-9 z-10 px-4 py-2 font-semibold w-full disabled:cursor-default disabled:hover:bg-gray-50 disabled:hover:border-gray-200 hover:bg-gray-300  hover:border-gray-300 hover:text-black text-gray-600 transition-all duration-200 flex items-center whitespace-nowrap justify-center text-center bg-gray-50 rounded-md border"
           onClick={() => (isOpen.value = !isOpen.value)}
