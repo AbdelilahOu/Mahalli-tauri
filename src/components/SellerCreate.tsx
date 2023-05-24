@@ -5,12 +5,14 @@ import type { newSellerT } from "@/types";
 import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { UiUploader } from "./ui/UiUploader";
+import { ImagesFiles } from "@/constants/FileTypes";
 export const SellerCreate = defineComponent({
   name: "sellerCreate",
-  components: { UiButton, UiInput },
+  components: { UiButton, UiInput, UiUploader },
   setup() {
     const isFlash = ref<boolean>(false);
-    const newseller = reactive<newSellerT>({
+    const Seller = reactive<newSellerT>({
       name: "",
       email: "",
       phone: "",
@@ -18,8 +20,8 @@ export const SellerCreate = defineComponent({
     });
     const createNewseller = () => {
       isFlash.value = true;
-      if (newseller.name !== "") {
-        useSellerStore().createOneSeller(newseller);
+      if (Seller.name !== "") {
+        useSellerStore().createOneSeller(Seller);
         useModalStore().updateModal({ key: "show", value: false });
       }
       setTimeout(() => {
@@ -27,42 +29,49 @@ export const SellerCreate = defineComponent({
       }, 1000);
     };
     return () => (
-      <div class="w-1/2 h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+      <div class="w-1/2 h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Sellers.create.title")}
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
+          <div class="w-full h-fit flex justify-center">
+            <UiUploader
+              name="Image"
+              extensions={ImagesFiles}
+              onSave={(image) => (Seller.image = image)}
+            />
+          </div>
           <UiInput
-            IsEmpty={isFlash.value && newseller["name"] == ""}
+            IsEmpty={isFlash.value && Seller["name"] == ""}
             OnInputChange={(value) =>
-              (newseller["name"] =
+              (Seller["name"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Sellers.create.placeholders[0]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && newseller["email"] == ""}
+            IsEmpty={isFlash.value && Seller["email"] == ""}
             OnInputChange={(value) =>
-              (newseller["email"] =
+              (Seller["email"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Sellers.create.placeholders[1]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && newseller["phone"] == ""}
+            IsEmpty={isFlash.value && Seller["phone"] == ""}
             OnInputChange={(value) =>
-              (newseller["phone"] =
+              (Seller["phone"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Sellers.create.placeholders[2]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && newseller["address"] == ""}
+            IsEmpty={isFlash.value && Seller["address"] == ""}
             OnInputChange={(value) =>
-              (newseller["address"] =
+              (Seller["address"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
