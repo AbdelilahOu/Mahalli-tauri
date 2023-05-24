@@ -49,7 +49,8 @@ export const stockJoins = `
     FROM stock_mouvements sm
     LEFT JOIN order_items ci ON sm.id = ci.stock_id
     LEFT JOIN invoice_items ii ON sm.id = ii.stock_id
-    LEFT JOIN products p ON sm.product_id = p.id OR sm.product_id = p.id;
+    LEFT JOIN products p ON sm.product_id = p.id OR sm.product_id = p.id
+    ORDER BY sm.id DESC;
 `;
 
 export const ordersJoins = `
@@ -91,7 +92,7 @@ export const invoicesJoins = `
     SELECT json_object(
         'id', i.id,
         'total', (
-            SELECT SUM(ii.quantity * p.price)
+            SELECT SUM(ABS(ii.quantity) * p.price)
             FROM invoice_items ii
             INNER JOIN products p ON ii.product_id = p.id
             WHERE ii.invoice_id = i.id
