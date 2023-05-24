@@ -1,7 +1,7 @@
 import database from "tauri-plugin-sql-api";
 
 export default async () => {
-  const db = await database.load("sqlite:db3.sqlite");
+  const db = await database.load("sqlite:db.sqlite");
 
   const seedDatabase = async () => {
     console.log("run create tables");
@@ -18,10 +18,10 @@ export default async () => {
       CREATE TABLE IF NOT EXISTS products (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
+        image TEXT DEFAULT '',
         description TEXT DEFAULT '',
         price REAL NOT NULL,
-        tva REAL NOT NULL DEFAULT 0,
-        image TEXT DEFAULT ''
+        tva REAL NOT NULL DEFAULT 0
       );
 
       CREATE TABLE IF NOT EXISTS sellers (
