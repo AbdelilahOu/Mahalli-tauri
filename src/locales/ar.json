@@ -249,7 +249,7 @@
       "button": "يضيف"
     }
   },
-  "Credis": {
+  "Payments": {
     "index": {
       "addButton": "إضافة إلى الائتمان",
       "feilds": [
@@ -288,7 +288,7 @@
       "Invoices": "فواتير",
       "Stock": "مخزون",
       "Statistics": "إحصائيات",
-      "Credi": "ائتمان"
+      "Payment": "ائتمان"
     },
     "translationTitle": "تغيير اللغة"
   }
