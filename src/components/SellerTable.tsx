@@ -1,11 +1,13 @@
 import { defineComponent, type PropType, ref } from "vue";
+import { globalTranslate } from "@/utils/globalTranslate";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { useModalStore } from "@/stores/modalStore";
 import { UiPagination } from "./ui/UiPagination";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import type { sellerT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
-import { globalTranslate } from "@/utils/globalTranslate";
 import { RouterLink } from "vue-router";
+
 export const SellerTable = defineComponent({
   name: "SellerTable",
   props: {
@@ -70,11 +72,14 @@ export const SellerTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="w-12 h-12 rounded-full overflow-hidden">
-                      <img
-                        class="object-fill w-full h-full"
-                        src="/public/clients.jpg"
-                        alt=""
-                      />
+                      {Seller.image && Seller.image !== "" ? (
+                        <img
+                          class="rounded-full w-full h-full object-cover"
+                          src={convertFileSrc(Seller.image)}
+                        />
+                      ) : (
+                        <span class=" rounded-full w-full h-full object-fill animate-pulse bg-slate-300 duration-150" />
+                      )}
                     </div>
                   </td>
                   <td class="p-2">
