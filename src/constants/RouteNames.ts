@@ -44,9 +44,9 @@ export const RouteLinks: RouteLinksTypeT[] = [
     display: true,
   },
   {
-    path: "/Credi",
-    component: "Credi",
-    name: "Credi",
+    path: "/Payment",
+    component: "Payment",
+    name: "Payment",
     display: true,
   },
   {
