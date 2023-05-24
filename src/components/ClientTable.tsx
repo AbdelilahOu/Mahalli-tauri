@@ -76,7 +76,7 @@ export const ClientTable = defineComponent({
                     <div class="w-12 h-12 rounded-full overflow-hidden">
                       {client.image && client.image !== "" ? (
                         <img
-                          class=" border-2 rounded-full w-full h-full object-fill"
+                          class="rounded-full w-full h-full object-cover"
                           src={convertFileSrc(client.image)}
                         />
                       ) : (
