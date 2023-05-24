@@ -251,9 +251,9 @@
       "button": "Add"
     }
   },
-  "Credis": {
+  "Payments": {
     "index": {
-      "addButton": "Add to Credit",
+      "addButton": "Add to Paymentt",
       "feilds": ["id", "client name", "client id", "amount", "date", ""]
     },
     "create": {
@@ -283,7 +283,7 @@
       "Invoices": "Invoices",
       "Stock": "Stock",
       "Statistics": "Statistics",
-      "Credi": "Credit"
+      "Payment": "Paymentt"
     },
     "translationTitle": "Change Language"
   }
