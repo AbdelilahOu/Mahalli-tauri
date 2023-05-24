@@ -265,7 +265,7 @@
       "button": "Hinzufügen"
     }
   },
-  "Credis": {
+  "Payments": {
     "index": {
       "addButton": "Zu Kredit ergänzen",
       "feilds": ["Ausweis", "Kundenname", "Kunden ID", "Menge", "Datum", "- -"]
@@ -297,7 +297,7 @@
       "Invoices": "Rechnungen",
       "Stock": "Aktie",
       "Statistics": "Statistiken",
-      "Credi": "Kredit"
+      "Payment": "Kredit"
     },
     "translationTitle": "Sprache ändern"
   }
