@@ -268,7 +268,7 @@
       "button": "Ajouter"
     }
   },
-  "Credis": {
+  "Payments": {
     "index": {
       "addButton": "Ajouter au crédit",
       "feilds": [
@@ -307,7 +307,7 @@
       "Invoices": "Factures",
       "Stock": "Stock",
       "Statistics": "Statistiques",
-      "Credi": "Crédit"
+      "Payment": "Crédit"
     },
     "translationTitle": "Changer de langue"
   }
