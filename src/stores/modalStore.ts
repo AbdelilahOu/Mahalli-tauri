@@ -29,7 +29,7 @@ export const useModalStore = defineStore("ModalStore", {
     updateModal: function ({ key, value }: editModalArgsT) {
       this.theModal[key] = value;
     },
-    updateCrediRow: async function (value: crediT | null) {
+    updatePaymentRow: async function (value: crediT | null) {
       this.credi = value;
     },
     updateClientRow: function (value: clientT | null) {
