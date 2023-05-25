@@ -1,10 +1,10 @@
 import { fade, slide } from "./utils/directivesEffect";
 import messages from "@intlify/unplugin-vue-i18n/messages";
 import { createI18n } from "vue-i18n";
-import { createPinia } from "pinia";
 import { createApp } from "vue";
 import router from "./router";
 import App from "./App.vue";
+import pinia from "./pinia";
 import "./assets/main.css";
 
 const locale = localStorage.getItem("locale");
@@ -17,7 +17,7 @@ createApp(App)
       el.addEventListener("dragstart", (e: DragEventInit) => {});
     },
   })
-  .use(createPinia())
+  .use(pinia)
   .use(router)
   .use(
     createI18n({
