@@ -39,6 +39,7 @@ export const useProductStore = defineStore("ProductStore", {
       try {
         const { db } = await database();
         const { name, description, price, tva } = Product;
+
         await db.execute(
           "INSERT INTO products (name,description,price,tva) VALUES ($1,$2,$3,$4)",
           [name, description, price, tva]
@@ -46,6 +47,7 @@ export const useProductStore = defineStore("ProductStore", {
         const id: { id: number }[] = await db.select(
           "SELECT max(id) as id FROM products"
         );
+
         await db.execute(
           "INSERT INTO stock_mouvements (quantity,model,product_id) VALUES ($1,$2,$3)",
           [Product.quantity, "IN", id[0].id]
@@ -59,6 +61,7 @@ export const useProductStore = defineStore("ProductStore", {
       try {
         const { db } = await database();
         const { name, tva, price, description } = Product;
+
         await db.execute(
           "UPDATE products SET name = $1,tva = $2,price = $3,description = $4 WHERE id = $5",
           [name, tva, price, description, id]
@@ -77,6 +80,7 @@ export const useProductStore = defineStore("ProductStore", {
     deleteOneProduct: async function (id: number) {
       try {
         const { db } = await database();
+
         await db.execute("DELETE FROM products WHERE id = $1", [id]);
         this.getAllProducts();
       } catch (error) {
