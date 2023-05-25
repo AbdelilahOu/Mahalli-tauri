@@ -201,6 +201,7 @@ export interface newStockMvmT
 export interface productT {
   id: number;
   name: string;
+  image?: string;
   price: number;
   quantity: number;
   description?: string;
@@ -223,7 +224,7 @@ export interface crediT {
   };
 }
 
-export interface newCrediT
+export interface newPaymentT
   extends Omit<crediT, "id" | "createdAt" | "client"> {}
 
 ///////////////// OTHERS //////////
