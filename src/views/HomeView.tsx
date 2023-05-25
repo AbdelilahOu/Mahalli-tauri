@@ -46,8 +46,8 @@ export const HomeView = defineComponent({
       },
       {
         image: "/credi.webp",
-        text: "Credi",
-        path: "/Credi",
+        text: "Payment",
+        path: "/Payment",
       },
     ];
     return () => (
