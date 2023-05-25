@@ -1,6 +1,7 @@
 import type { sellerT, sellerState, updateSellerT, newSellerT } from "@/types";
 import database from "@/database/db";
 import { defineStore } from "pinia";
+import { saveFile } from "@/utils/fs";
 
 export const useSellerStore = defineStore("SellerStore", {
   state: (): sellerState => {
@@ -22,7 +23,8 @@ export const useSellerStore = defineStore("SellerStore", {
       }
     },
     getOneSeller: async function (id: number) {
-      this.seller = this.sellers.find((cli) => cli.id === id) ?? null;
+      this.seller =
+        this.sellers.find((sell: sellerT) => sell.id === id) ?? null;
       if (!this.seller) {
         try {
           const { db } = await database();
@@ -39,9 +41,11 @@ export const useSellerStore = defineStore("SellerStore", {
     createOneSeller: async function (seller: newSellerT) {
       try {
         const { db } = await database();
+        let image: string = await saveFile(seller.image as string, "Image");
+
         await db.execute(
-          "INSERT INTO sellers (name,email,phone,address) VALUES ($1,$2,$3,$4)",
-          [seller.name, seller.email, seller.phone, seller.address]
+          "INSERT INTO sellers (name,email,phone,address,image) VALUES ($1,$2,$3,$4,$5)",
+          [seller.name, seller.email, seller.phone, seller.address, image]
         );
         this.getAllSellers();
       } catch (error) {
@@ -51,6 +55,7 @@ export const useSellerStore = defineStore("SellerStore", {
     deleteOneSeller: async function (id: number) {
       try {
         const { db } = await database();
+
         await db.execute("DELETE FROM sellers WHERE id = $1", [id]);
         this.getAllSellers();
       } catch (error) {
@@ -60,6 +65,7 @@ export const useSellerStore = defineStore("SellerStore", {
     updateOneSeller: async function (id: number, seller: updateSellerT) {
       try {
         const { db } = await database();
+
         await db.execute(
           "UPDATE sellers SET name = $1,email = $2,phone = $3,address = $4 WHERE id = $5",
           [seller.name, seller.email, seller.phone, seller.address, seller.id]
