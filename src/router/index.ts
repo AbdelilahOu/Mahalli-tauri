@@ -4,18 +4,18 @@ import { OrdersDetails } from "@/views/OrderDetails";
 import { InvoiceDetails } from "@/views/InvoiceDetails";
 import { ClientDetails } from "@/views/ClientDetails";
 import { SellerDetails } from "@/views/SellerDetails";
-import { OrdersIndex } from "@/views/OrderIndex";
-import { InvoiceIndex } from "@/views/InvoiceIndex";
-import { ProductView } from "@/views/ProductView";
-import { OrdersView } from "@/views/OrderView";
-import { InvoiceView } from "@/views/InvoiceView";
-import { ClientIndex } from "@/views/ClientIndex";
-import { SellerIndex } from "@/views/SellerIndex";
-import { SellerView } from "@/views/SellerView";
-import { ClientView } from "@/views/ClientView";
-import { StockView } from "@/views/StockView";
+import { OrdersIndex } from "@/views/OrdersIndex";
+import { InvoicesIndex } from "@/views/InvoicesIndex";
+import { ProductsView } from "@/views/ProductsView";
+import { OrdersView } from "@/views/OrdersView";
+import { InvoicesView } from "@/views/InvoicesView";
+import { ClientsIndex } from "@/views/ClientsIndex";
+import { SellersIndex } from "@/views/SellersIndex";
+import { SellersView } from "@/views/SellersView";
+import { ClientsView } from "@/views/ClientsView";
+import { StocksView } from "@/views/StocksView";
 import { StatsView } from "@/views/StatsView";
-import { CrediView } from "@/views/CrediView";
+import { PaymentView } from "@/views/PaymentView";
 import { HomeView } from "@/views/HomeView";
 import { IndexView } from "@/views/IndexView";
 import { AuthView } from "@/views/AuthView";
@@ -31,7 +31,7 @@ const router = createRouter({
         {
           path: "Products",
           name: "Products",
-          component: ProductView,
+          component: ProductsView,
         },
         {
           path: "Home",
@@ -41,12 +41,12 @@ const router = createRouter({
         {
           path: "Clients",
           name: "Clients",
-          component: ClientIndex,
+          component: ClientsIndex,
           children: [
             {
               path: "all",
               name: "Clients",
-              component: ClientView,
+              component: ClientsView,
             },
             {
               path: "client/:id",
@@ -58,12 +58,12 @@ const router = createRouter({
         {
           path: "Sellers",
           name: "Sellers",
-          component: SellerIndex,
+          component: SellersIndex,
           children: [
             {
               path: "all",
               name: "Sellers",
-              component: SellerView,
+              component: SellersView,
             },
             {
               path: "seller/:id",
@@ -75,7 +75,7 @@ const router = createRouter({
         {
           path: "Stocks",
           name: "Stocks",
-          component: StockView,
+          component: StocksView,
         },
         {
           path: "Orders/",
@@ -102,12 +102,12 @@ const router = createRouter({
         {
           path: "Invoices/",
           name: "Invoice",
-          component: InvoiceIndex,
+          component: InvoicesIndex,
           children: [
             {
               path: "all",
               name: "Invoices",
-              component: InvoiceView,
+              component: InvoicesView,
             },
             {
               path: "invoice/:id",
@@ -122,9 +122,9 @@ const router = createRouter({
           component: NotificationsView,
         },
         {
-          path: "Credi",
-          name: "Credi",
-          component: CrediView,
+          path: "Payment",
+          name: "Payment",
+          component: PaymentView,
         },
       ],
     },
