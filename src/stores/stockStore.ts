@@ -25,6 +25,7 @@ export const useStockStore = defineStore("StockStore", {
     createStockMouvement: async function (stockmvm: newStockMvmT) {
       try {
         const { db } = await database();
+
         await db.execute(
           "INSERT INTO stock_mouvements (model,product_id,quantity) VALUES ($1,$2,$3)",
           ["IN", stockmvm.productId, stockmvm.quantity]
