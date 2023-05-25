@@ -1,7 +1,7 @@
 import type { clientT, clientState, updateClientT, newClientT } from "@/types";
 import { saveFile } from "@/utils/fs";
-import database from "@/database/db";
 import { defineStore } from "pinia";
+import database from "@/database/db";
 
 export const useClientStore = defineStore("ClientStore", {
   state: (): clientState => {
@@ -23,7 +23,7 @@ export const useClientStore = defineStore("ClientStore", {
       }
     },
     getOneClient: async function (id: number) {
-      this.client = this.clients.find((cli) => cli.id === id) ?? null;
+      this.client = this.clients.find((cli: clientT) => cli.id === id) ?? null;
       if (!this.client) {
         try {
           const { db } = await database();
@@ -39,12 +39,9 @@ export const useClientStore = defineStore("ClientStore", {
     },
     createOneClient: async function (Client: newClientT) {
       try {
-        const { image: imagePath } = Client;
         const { db } = await database();
-        let image: string = "";
-        if (imagePath) {
-          image = (await saveFile(imagePath, "Image")) ?? "";
-        }
+        let image: string = await saveFile(Client.image as string, "Image");
+
         await db.execute(
           "INSERT INTO clients (name,email,phone,address,image) VALUES ($1,$2,$3,$4,$5)",
           [Client.name, Client.email, Client.phone, Client.address, image]
@@ -57,6 +54,7 @@ export const useClientStore = defineStore("ClientStore", {
     deleteOneClient: async function (id: number) {
       try {
         const { db } = await database();
+
         await db.execute("DELETE FROM clients WHERE id = $1", [id]);
         this.getAllClients();
       } catch (error) {
@@ -66,6 +64,7 @@ export const useClientStore = defineStore("ClientStore", {
     updateOneClient: async function (id: number, Client: updateClientT) {
       try {
         const { db } = await database();
+
         await db.execute(
           "UPDATE clients SET name = $1,email = $2,phone = $3,address = $4 WHERE id = $5",
           [Client.name, Client.email, Client.phone, Client.address, Client.id]
