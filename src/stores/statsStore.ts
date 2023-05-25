@@ -1,5 +1,6 @@
 import type { invoiceT, FilteredStockData, stockMvmT } from "@/types";
 import { defineStore } from "pinia";
+import database from "@/database/db";
 
 const getMonth = (i: number) =>
   new Date(
@@ -106,9 +107,33 @@ export const useStatsStore = defineStore("StatsStore", {
       return [dataPerProduct, existingDates, existingProducts];
     },
     ////////////////// GET FROM DB /////////////
-    getPastThreeMonths: async function () {},
-    getBestThreeClients: async function () {},
-    getBestThreeVendors: async function () {},
-    getBestThreeProducts: async function () {},
+    getPastThreeMonths: async function () {
+      try {
+        const { db } = await database();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    getBestThreeClients: async function () {
+      try {
+        const { db } = await database();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    getBestThreeVendors: async function () {
+      try {
+        const { db } = await database();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    getBestThreeProducts: async function () {
+      try {
+        const { db } = await database();
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 });
