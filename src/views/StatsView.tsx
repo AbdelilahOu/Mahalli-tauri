@@ -14,9 +14,7 @@ export const StatsView = defineComponent({
     // no need to make an api call
     const { stockMouvements } = storeToRefs(useStockStore());
     // reformate the data
-    const [stockData, months] = useStatsStore().getStockMouvementStats(
-      stockMouvements.value
-    );
+    useStatsStore().getStockMouvementStats(stockMouvements.value);
 
     return () => (
       <main class="w-full h-full px-3 py-1">
@@ -25,7 +23,7 @@ export const StatsView = defineComponent({
             <h1 class="uppercase text-gray-600 font-semibold mb-1">
               {globalTranslate("Stats.Title")}
             </h1>
-            <ChartBar
+            {/* <ChartBar
               id="stock-mouvements-for-past-three-months"
               chartData={{
                 labels: months,
@@ -86,7 +84,7 @@ export const StatsView = defineComponent({
                   },
                 },
               }}
-            />
+            /> */}
           </div>
           {/* <ChartLine
             id="stock-mouvements-for"
