@@ -1,5 +1,4 @@
 import type { sellerT, sellerState, updateSellerT, newSellerT } from "@/types";
-import database from "@/database/db";
 import { defineStore } from "pinia";
 import { saveFile } from "@/utils/fs";
 
@@ -13,8 +12,7 @@ export const useSellerStore = defineStore("SellerStore", {
   actions: {
     getAllSellers: async function () {
       try {
-        const { db } = await database();
-        const allSellers: sellerT[] = await db.select(
+        const allSellers: sellerT[] = await this.db.select(
           "SELECT *  FROM sellers ORDER BY id DESC"
         );
         this.sellers = allSellers;
@@ -27,8 +25,7 @@ export const useSellerStore = defineStore("SellerStore", {
         this.sellers.find((sell: sellerT) => sell.id === id) ?? null;
       if (!this.seller) {
         try {
-          const { db } = await database();
-          const seller: sellerT = await db.select(
+          const seller: sellerT = await this.db.select(
             "SELECT * FROM sellers WHERE id = $1",
             [id]
           );
@@ -40,10 +37,9 @@ export const useSellerStore = defineStore("SellerStore", {
     },
     createOneSeller: async function (seller: newSellerT) {
       try {
-        const { db } = await database();
         let image: string = await saveFile(seller.image as string, "Image");
 
-        await db.execute(
+        await this.db.execute(
           "INSERT INTO sellers (name,email,phone,address,image) VALUES ($1,$2,$3,$4,$5)",
           [seller.name, seller.email, seller.phone, seller.address, image]
         );
@@ -54,9 +50,7 @@ export const useSellerStore = defineStore("SellerStore", {
     },
     deleteOneSeller: async function (id: number) {
       try {
-        const { db } = await database();
-
-        await db.execute("DELETE FROM sellers WHERE id = $1", [id]);
+        await this.db.execute("DELETE FROM sellers WHERE id = $1", [id]);
         this.getAllSellers();
       } catch (error) {
         console.log(error);
@@ -64,9 +58,7 @@ export const useSellerStore = defineStore("SellerStore", {
     },
     updateOneSeller: async function (id: number, seller: updateSellerT) {
       try {
-        const { db } = await database();
-
-        await db.execute(
+        await this.db.execute(
           "UPDATE sellers SET name = $1,email = $2,phone = $3,address = $4 WHERE id = $5",
           [seller.name, seller.email, seller.phone, seller.address, seller.id]
         );
