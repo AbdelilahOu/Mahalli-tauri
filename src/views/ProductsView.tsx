@@ -1,4 +1,5 @@
 import { defineComponent, onBeforeMount, ref, Transition } from "vue";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { ProductTable } from "@/components/ProductTable";
 import { useProductStore } from "@/stores/productStore";
 import { UiButton } from "@/components/ui/UiButton";
@@ -6,7 +7,6 @@ import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
-import { globalTranslate } from "@/utils/globalTranslate";
 
 export const ProductsView = defineComponent({
   name: "Products",

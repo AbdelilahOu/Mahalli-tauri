@@ -2,17 +2,18 @@ import { ClientAdditional } from "@/components/ClientAdditional";
 import { useInvoiceStore } from "@/stores/invoiceStore";
 import { useClientStore } from "@/stores/clientStore";
 import { generateColor } from "@/utils/generateColor";
-import { UiCard } from "@/components/ui/UiCard";
 import { defineComponent, onBeforeMount } from "vue";
 import { useStatsStore } from "@/stores/statsStore";
 import { useModalStore } from "@/stores/modalStore";
 import { ChartBar } from "@/components/ChartBart";
+import { UiCard } from "@/components/ui/UiCard";
 import type { clientT } from "@/types";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 
 export const ClientDetails = defineComponent({
   name: "ClientDetails",
+  components: { UiCard, ClientAdditional },
   setup() {
     const id = useRoute().params.id;
     const clientStore = useClientStore();
