@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model clients {
+  id       Int        @id @default(autoincrement())
+  name     String
+  phone    String?    @default("")
+  email    String?    @default("")
+  address  String?    @default("")
+  image    String?    @default("")
+  invoices invoices[]
+}
+
+model invoice_items {
+  id               Int              @id @default(autoincrement())
+  product_id       Int
+  invoice_id       Int
+  quantity         BigInt
+  stock_id         Int              @unique
+  stock_mouvements stock_mouvements @relation(fields: [stock_id], references: [id], onDelete: NoAction)
+  invoices         invoices         @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+  products         products         @relation(fields: [product_id], references: [id], onDelete: Cascade)
+}
+
+model invoices {
+  id            Int             @id @default(autoincrement())
+  total         Float
+  status        String
+  created_at    DateTime        @default(now())
+  client_id     Int
+  invoice_items invoice_items[]
+  clients       clients         @relation(fields: [client_id], references: [id], onDelete: Cascade)
+}
+
+model order_items {
+  id               Int              @id @unique @default(autoincrement())
+  product_id       Int
+  price            Float?
+  order_id         Int
+  stock_id         Int              @unique
+  quantity         BigInt
+  stock_mouvements stock_mouvements @relation(fields: [stock_id], references: [id], onDelete: NoAction)
+  orders           orders           @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  products         products         @relation(fields: [product_id], references: [id], onDelete: Cascade)
+}
+
+model orders {
+  id          Int           @id @default(autoincrement())
+  status      String
+  created_at  DateTime      @default(now())
+  seller_id   Int
+  order_items order_items[]
+  sellers     sellers       @relation(fields: [seller_id], references: [id], onDelete: Cascade)
+}
+
+model products {
+  id               Int                @id @default(autoincrement())
+  name             String             @unique
+  description      String?            @default("")
+  price            Float
+  tva              Float              @default(0)
+  image            String?            @default("")
+  invoice_items    invoice_items[]
+  order_items      order_items[]
+  stock_mouvements stock_mouvements[]
+}
+
+model sellers {
+  id      Int      @id @default(autoincrement())
+  name    String
+  phone   String?  @default("")
+  email   String?  @default("")
+  address String?  @default("")
+  image   String?  @default("")
+  orders  orders[]
+}
+
+model stock_mouvements {
+  id            Int            @id @default(autoincrement())
+  date          DateTime       @default(now())
+  model         String
+  quantity      BigInt
+  product_id    Int
+  invoice_items invoice_items?
+  order_items   order_items?
+  products      products       @relation(fields: [product_id], references: [id], onDelete: Cascade)
+}
