@@ -2,11 +2,12 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import { useInvoiceStore } from "@/stores/invoiceStore";
 import { defineComponent, onBeforeMount } from "vue";
 import { UiButton } from "@/components/ui/UiButton";
-import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
+import { storeToRefs } from "pinia";
 
 export const InvoiceDetails = defineComponent({
   name: "InvoiceDetails",
+  components: { UiButton },
   setup() {
     const id = useRoute().params.id;
     const InvoiceStore = useInvoiceStore();
@@ -205,13 +206,11 @@ export const InvoiceDetails = defineComponent({
                     </tr>
                   ))}
                   <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    {Array(7)
+                      .fill(0)
+                      .map(() => (
+                        <td></td>
+                      ))}
                     <td class="p-2 font-semibold">
                       {invoice.value?.invoiceItems
                         .reduce(
@@ -237,14 +236,11 @@ export const InvoiceDetails = defineComponent({
                     </td>
                   </tr>
                   <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    {Array(8)
+                      .fill(0)
+                      .map(() => (
+                        <td></td>
+                      ))}
                     <td class="p-2 font-semibold">
                       {(
                         (invoice.value?.invoiceItems.reduce(

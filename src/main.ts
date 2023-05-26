@@ -11,15 +11,16 @@ import "./assets/main.css";
 
 const locale = localStorage.getItem("locale");
 
-(async () => {
+const initiVueApp = async () => {
+  // sqlite connection
   const db = await database.load("sqlite:db.sqlite");
-
+  // pinia store
   const pinia = createPinia();
-
+  // pinia store plugin for database
   pinia.use(({ store }) => {
     store.db = db;
   });
-
+  // create app
   createApp(App)
     .directive("slide", {
       mounted: (el: HTMLElement, bin: DirectiveBinding) => {
@@ -71,7 +72,9 @@ const locale = localStorage.getItem("locale");
       })
     )
     .mount("#app");
-})();
+};
+
+initiVueApp();
 
 declare module "pinia" {
   export interface PiniaCustomProperties {

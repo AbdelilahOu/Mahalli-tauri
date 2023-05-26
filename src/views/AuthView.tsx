@@ -1,6 +1,6 @@
+import { globalTranslate } from "@/utils/globalTranslate";
 import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
-import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 
