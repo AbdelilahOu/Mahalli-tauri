@@ -1,7 +1,6 @@
-import type { newStockMvmT, stockMvmT, stockState } from "@/types";
-import database from "@/database/db";
-import { defineStore } from "pinia";
+import type { newStockMvmT, stockState } from "@/types";
 import { stockJoins } from "@/database/dbQueryJson";
+import { defineStore } from "pinia";
 
 export const useStockStore = defineStore("StockStore", {
   state: (): stockState => {
@@ -12,21 +11,17 @@ export const useStockStore = defineStore("StockStore", {
   actions: {
     getAllStockMouvements: async function () {
       try {
-        const { db } = await database();
-        const res = (await db.select(stockJoins)) as {
+        const res = (await this.db.select(stockJoins)) as {
           data: string;
         }[];
         this.stockMouvements = res.map((r) => JSON.parse(r.data));
-        console.log(this.stockMouvements);
       } catch (error) {
         console.log(error);
       }
     },
     createStockMouvement: async function (stockmvm: newStockMvmT) {
       try {
-        const { db } = await database();
-
-        await db.execute(
+        await this.db.execute(
           "INSERT INTO stock_mouvements (model,product_id,quantity) VALUES ($1,$2,$3)",
           ["IN", stockmvm.productId, stockmvm.quantity]
         );
