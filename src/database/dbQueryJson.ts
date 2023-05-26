@@ -15,7 +15,7 @@ SELECT
                 'quantity', SUM(CASE WHEN sm.model = 'sold' THEN sm.quantity ELSE 0 END)
             )
         )
-    ) AS json_data
+    ) AS data
 FROM
     stock_mouvements sm
 INNER JOIN
@@ -23,8 +23,19 @@ INNER JOIN
 WHERE
     sm.date >= DATE('now', '-3 months')
 GROUP BY
-    'mars';
+    sm.date;
 
+`;
+
+export const inOutStatsJoins = `
+SELECT json_object(group_date, json_group_object(model, total_quantity)) AS data
+FROM (
+    SELECT strftime('%Y-%m-%d', date) AS group_date, model, SUM(quantity) AS total_quantity
+    FROM stock_mouvements
+    WHERE date >= date('now', '-3 months')
+    GROUP BY group_date, model
+) AS subquery
+GROUP BY group_date;
 `;
 
 export const stockJoins = `
