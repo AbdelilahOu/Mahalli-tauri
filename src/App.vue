@@ -1,20 +1,10 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
 import { onBeforeMount, Transition } from "vue";
-import { useClientStore } from "./stores/clientStore";
-import { useSellerStore } from "./stores/sellerStore";
-import { useProductStore } from "./stores/productStore";
-import database from "@/database/db";
-const router = useRouter();
 
-onBeforeMount(async () => {
-  const { seedDatabase, drop } = await database();
-  useClientStore().getAllClients();
-  useSellerStore().getAllSellers();
-  useProductStore().getAllProducts();
-  await seedDatabase();
-  // await drop();
-  router.push("/Home");
+onBeforeMount(() => {
+  console.log("vue.app");
+  useRouter().push("/Home");
 });
 </script>
 
