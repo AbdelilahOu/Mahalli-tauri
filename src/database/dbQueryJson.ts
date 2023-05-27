@@ -1,41 +1,40 @@
 export const statsJoins = `
-SELECT
-    json_object(
-        'bought', json_group_array(
-            json_object(
-                'product_id', p.id,
-                'product_name', p.name,
-                'quantity', SUM(CASE WHEN sm.model = 'bought' THEN sm.quantity ELSE 0 END)
+    SELECT
+        json_object(
+            'bought', json_group_array(
+                json_object(
+                    'product_id', p.id,
+                    'product_name', p.name,
+                    'quantity', SUM(CASE WHEN sm.model = 'bought' THEN sm.quantity ELSE 0 END)
+                )
+            ),
+            'sold', json_group_array(
+                json_object(
+                    'product_id', p.id,
+                    'product_name', p.name,
+                    'quantity', SUM(CASE WHEN sm.model = 'sold' THEN sm.quantity ELSE 0 END)
+                )
             )
-        ),
-        'sold', json_group_array(
-            json_object(
-                'product_id', p.id,
-                'product_name', p.name,
-                'quantity', SUM(CASE WHEN sm.model = 'sold' THEN sm.quantity ELSE 0 END)
-            )
-        )
-    ) AS data
-FROM
-    stock_mouvements sm
-INNER JOIN
-    products p ON sm.product_id = p.id
-WHERE
-    sm.date >= DATE('now', '-3 months')
-GROUP BY
-    sm.date;
+        ) AS data
+    FROM
+        stock_mouvements sm
+    INNER JOIN
+        products p ON sm.product_id = p.id
+    WHERE
+        sm.date >= DATE('now', '-3 months')
+    GROUP BY
+        sm.date;
 
 `;
 
 export const inOutStatsJoins = `
-SELECT json_object(group_date, json_group_object(model, total_quantity)) AS data
-FROM (
-    SELECT strftime('%Y-%m-%d', date) AS group_date, model, SUM(quantity) AS total_quantity
+    SELECT strftime('%Y-%m', date) AS group_month,
+        SUM(CASE WHEN model = 'IN' THEN quantity ELSE 0 END) AS total_in,
+        SUM(CASE WHEN model = 'OUT' THEN quantity ELSE 0 END) AS total_out
     FROM stock_mouvements
-    WHERE date >= date('now', '-3 months')
-    GROUP BY group_date, model
-) AS subquery
-GROUP BY group_date;
+    GROUP BY group_month
+    ORDER BY id DESC
+    LIMIT 3;
 `;
 
 export const stockJoins = `

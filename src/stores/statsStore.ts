@@ -1,16 +1,24 @@
-import { inOutStatsJoins } from "@/database/dbQueryJson";
 import type { invoiceT, FilteredStockData, stockMvmT } from "@/types";
+import { inOutStatsJoins } from "@/database/dbQueryJson";
 import { defineStore } from "pinia";
 
-const getMonth = (i: number) =>
-  new Date(
-    new Date().getTime() - i * 30 * 24 * 60 * 60 * 1000
+const getMonth = (i: number) => {
+  const SplitedCurr = new Date().toLocaleDateString("us-us").split("/");
+  SplitedCurr[1] = "15";
+  return new Date(
+    new Date(SplitedCurr.join("/")).getTime() - i * 30 * 24 * 60 * 60 * 1000
   ).toLocaleDateString("fr-fr", {
     month: "long",
   });
+};
 
 type resultMVM = [result: FilteredStockData, months: [string, string, string]];
 type resultPRD = [{ [key: string]: number[] }, string[], string[]];
+type inOutReType = {
+  group_month: string;
+  total_in: number;
+  total_out: number;
+}[];
 
 const olderThanThreeMonths = (date: string): boolean =>
   new Date(date) >
@@ -21,65 +29,31 @@ export const useStatsStore = defineStore("StatsStore", {
     return {};
   },
   actions: {
-    getStockMouvementStats: async function (
-      stocks: stockMvmT[]
-    ): Promise<resultMVM> {
-      let result: FilteredStockData = {};
+    getStockMouvementStats: async function (stocks: stockMvmT[]) {
       const months: [string, string, string] = [
         getMonth(2),
         getMonth(1),
         getMonth(0),
       ];
-      // //group based on the month {january:[...]}
-      // let dataSet: { [key: string]: stockMvmT[] } = stocks
-      //   .filter(({ date }) => olderThanThreeMonths(date))
-      //   .map(({ date, quantity, model }) => ({
-      //     date: new Date(date).toLocaleDateString("fr-fr", {
-      //       month: "long",
-      //     }),
-      //     model,
-      //     quantity,
-      //   }))
-      //   .reduce((r, { date, quantity, model }) => {
-      //     r[date] = r[date] || [];
-      //     r[date].push({ date, quantity, model });
-      //     return r;
-      //   }, Object.create(null));
-      // // {
-      // //   mars: {
-      // //     IN: 4000;
-      // //     OUT: 200;
-      // //   }
-      // //   january: {
-      // //     IN: 30;
-      // //     OUT: 400;
-      // //   }
-      // // }
-      // // group based on the model of the stock mouvmenet {january:{IN:[...],OUT:[...]}}
-      // for (const month of months) {
-      //   if (dataSet[month]) {
-      //     result[month] = dataSet[month].reduce((r, { model, quantity }) => {
-      //       r[model] = r[model] || 0;
-      //       r[model] += Math.abs(Number(quantity));
-      //       return r;
-      //     }, Object.create(null));
-      //   }
-      // }
-      // try {
-      const data: { data: string }[] = await this.db.select(inOutStatsJoins);
-      let transformed = data
-        .map((a) => JSON.parse(a.data))
-        .map((a) => {
-          console.log(a);
-          return a;
+      //
+      const Rows: inOutReType = await this.db.select(inOutStatsJoins);
+      //
+      const results = new Map<string, { IN: number; OUT: number }>();
+      //
+      for (const { group_month, total_in, total_out } of Rows) {
+        const month = new Date(group_month).toLocaleDateString("fr-fr", {
+          month: "long",
         });
-      console.log(
-        Object.keys(transformed),
-        ...data.map((a) => JSON.parse(a.data)),
-        transformed
-      );
-      // } catch (error) {}
-      return [result, months];
+        results.set(month, {
+          IN: total_in,
+          OUT: Math.abs(total_out),
+        });
+      }
+      return {
+        // @ts-ignore
+        result: Object.fromEntries(results) as FilteredStockData,
+        months,
+      };
     },
     getOrderedProduct: (id: number, invoices: invoiceT[]): resultPRD => {
       const result: { [key: string]: { [key: string]: number } } = {};
