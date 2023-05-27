@@ -27,6 +27,17 @@ export const statsJoins = `
 
 `;
 
+export const clientDetailsJoins = `
+    SELECT p.name AS name, strftime('%Y-%m', i.created_at) AS month, COALESCE(SUM(ABS(ii.quantity)), 0) AS quantity
+    FROM clients c
+    JOIN invoices i ON c.id = i.client_id
+    JOIN invoice_items ii ON i.id = ii.invoice_id
+    JOIN products p ON ii.product_id = p.id
+    WHERE c.id = 1
+    GROUP BY p.name, month
+    ORDER BY month ASC;
+`;
+
 export const inOutStatsJoins = `
     SELECT strftime('%Y-%m', date) AS group_month,
         SUM(CASE WHEN model = 'IN' THEN quantity ELSE 0 END) AS total_in,

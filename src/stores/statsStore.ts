@@ -1,5 +1,5 @@
-import type { invoiceT, FilteredStockData } from "@/types";
-import { inOutStatsJoins } from "@/database/dbQueryJson";
+import type { FilteredStockData } from "@/types";
+import { clientDetailsJoins, inOutStatsJoins } from "@/database/dbQueryJson";
 import { defineStore } from "pinia";
 
 const getMonth = (i: number) => {
@@ -12,7 +12,6 @@ const getMonth = (i: number) => {
   });
 };
 
-type resultPRD = [{ [key: string]: number[] }, string[], string[]];
 type inOutReType = {
   group_month: string;
   total_in: number;
@@ -43,40 +42,25 @@ export const useStatsStore = defineStore("StatsStore", {
         months: Array.from(months),
       };
     },
-    getOrderedProduct: async function (id: number): Promise<resultPRD> {
-      const result: { [key: string]: { [key: string]: number } } = {};
-      const existingDates: string[] = [];
-      const existingProducts: string[] = [];
+    getOrderedProduct: async function (id: number) {
+      const existingDates = new Set<string>();
+      const existingProducts = new Set<string>();
 
-      const data: { data: string }[] = await this.db.select(
-        `
-        SELECT json_object(
-        'invoiceItems', (
-            SELECT json_group_array(
-                json_object(
-                    'product', json_object(
-                      'name', p.name,
-                      'quantity', ABS(ii.quantity)
-                    )
-                )
-            )
-            FROM invoice_items ii
-            INNER JOIN products p ON ii.product_id = p.id
-            WHERE ii.invoice_id = i.id
-        )
-    ) AS data
-    FROM invoices i
-    WHERE i.client_id = 1
-    ORDER BY i.id DESC
-    ;
-        `
-      );
-
-      console.log(data.map((a) => JSON.parse(a.data)));
-
+      const data: any[] = await this.db.select(clientDetailsJoins);
       let dataPerProduct: { [key: string]: number[] } = {};
 
-      return [dataPerProduct, existingDates, existingProducts];
+      for (const row of data) {
+        existingDates.add(row.month);
+        existingProducts.add(row.name);
+        if (!dataPerProduct[row.name]) dataPerProduct[row.name] = [];
+        dataPerProduct[row.name].push(row.quantity ?? 0);
+      }
+
+      return {
+        data: dataPerProduct,
+        dates: Array.from(existingDates),
+        products: Array.from(existingProducts),
+      };
     },
     ////////////////// GET FROM DB /////////////
     getPastThreeMonths: async function () {

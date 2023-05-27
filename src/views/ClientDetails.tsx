@@ -1,8 +1,7 @@
 import { ClientAdditional } from "@/components/ClientAdditional";
-import { useInvoiceStore } from "@/stores/invoiceStore";
 import { useClientStore } from "@/stores/clientStore";
 import { generateColor } from "@/utils/generateColor";
-import { defineComponent, onBeforeMount } from "vue";
+import { defineComponent, onBeforeMount, ref } from "vue";
 import { useStatsStore } from "@/stores/statsStore";
 import { useModalStore } from "@/stores/modalStore";
 import { ChartBar } from "@/components/ChartBart";
@@ -18,10 +17,17 @@ export const ClientDetails = defineComponent({
     const id = useRoute().params.id;
     const clientStore = useClientStore();
     const { client } = storeToRefs(clientStore);
-    const [data, dates, products] = useStatsStore().getOrderedProduct(
-      Number(id),
-      storeToRefs(useInvoiceStore()).invoices.value
-    );
+
+    const products = ref<string[]>([]);
+    const dates = ref<string[]>([]);
+    const data = ref<{ [key: string]: number[] }>({});
+
+    onBeforeMount(async () => {
+      const stats = await useStatsStore().getOrderedProduct(Number(id));
+      data.value = stats.data;
+      dates.value = stats.dates;
+      products.value = stats.products;
+    });
     const toggleThisClient = (client: clientT | null, name: string) => {
       useModalStore().updateModal({ key: "show", value: true });
       useModalStore().updateModal({ key: "name", value: name });
@@ -49,14 +55,14 @@ export const ClientDetails = defineComponent({
             <ChartBar
               id="stock-mouvements-for-past-three-months"
               chartData={{
-                labels: dates,
-                datasets: products.map((product) => {
+                labels: dates.value,
+                datasets: products.value.map((product) => {
                   const color = generateColor();
                   return {
                     label: product,
                     backgroundColor: color,
                     borderColor: color.replace("0.2", "0.5"),
-                    data: data[product],
+                    data: data.value[product],
                     borderWidth: 2,
                   };
                 }),
