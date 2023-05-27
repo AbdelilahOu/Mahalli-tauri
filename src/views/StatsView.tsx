@@ -1,10 +1,8 @@
+import { globalTranslate } from "@/utils/globalTranslate";
+import { defineComponent, onBeforeMount, ref } from "vue";
+import { useStatsStore } from "@/stores/statsStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBart";
-import { useStockStore } from "@/stores/stockStore";
-import { useStatsStore } from "@/stores/statsStore";
-import { defineComponent, onMounted, ref } from "vue";
-import { storeToRefs } from "pinia";
-import { globalTranslate } from "@/utils/globalTranslate";
 import type { FilteredStockData } from "@/types";
 
 export const StatsView = defineComponent({
@@ -14,12 +12,9 @@ export const StatsView = defineComponent({
     // we got all the stock mouvements already
     const months = ref<string[]>([]);
     const stockData = ref<FilteredStockData>({});
-    // no need to make an api call
-    const { stockMouvements } = storeToRefs(useStockStore());
-    // reformate the data
-    onMounted(async () => {
+    onBeforeMount(async () => {
       const { result, months: resultMonths } =
-        await useStatsStore().getStockMouvementStats(stockMouvements.value);
+        await useStatsStore().getStockMouvementStats();
       months.value = resultMonths;
       stockData.value = result;
     });

@@ -1,4 +1,4 @@
-import type { invoiceT, FilteredStockData, stockMvmT } from "@/types";
+import type { invoiceT, FilteredStockData } from "@/types";
 import { inOutStatsJoins } from "@/database/dbQueryJson";
 import { defineStore } from "pinia";
 
@@ -12,7 +12,6 @@ const getMonth = (i: number) => {
   });
 };
 
-type resultMVM = [result: FilteredStockData, months: [string, string, string]];
 type resultPRD = [{ [key: string]: number[] }, string[], string[]];
 type inOutReType = {
   group_month: string;
@@ -20,89 +19,62 @@ type inOutReType = {
   total_out: number;
 }[];
 
-const olderThanThreeMonths = (date: string): boolean =>
-  new Date(date) >
-  new Date(new Date().getTime() - 2 * 30 * 24 * 60 * 60 * 1000);
-
 export const useStatsStore = defineStore("StatsStore", {
   state: () => {
     return {};
   },
   actions: {
-    getStockMouvementStats: async function (stocks: stockMvmT[]) {
-      const months: string[] = [];
+    getStockMouvementStats: async function () {
+      const results = new Map<string, { IN: number; OUT: number }>();
+      const months = new Set<string>();
       //
       const Rows: inOutReType = await this.db.select(inOutStatsJoins);
       //
-      const results = new Map<string, { IN: number; OUT: number }>();
-      //
-      for (const { group_month, total_in, total_out } of Rows) {
+      for (const { group_month, total_in: IN, total_out: OUT } of Rows) {
         const month = new Date(group_month).toLocaleDateString("fr-fr", {
           month: "long",
         });
-        months.push(month);
-        results.set(month, {
-          IN: total_in,
-          OUT: Math.abs(total_out),
-        });
+        months.add(month);
+        results.set(month, { IN, OUT: Math.abs(OUT) });
       }
       return {
         // @ts-ignore
         result: Object.fromEntries(results) as FilteredStockData,
-        months,
+        months: Array.from(months),
       };
     },
-    getOrderedProduct: (id: number, invoices: invoiceT[]): resultPRD => {
+    getOrderedProduct: async function (id: number): Promise<resultPRD> {
       const result: { [key: string]: { [key: string]: number } } = {};
       const existingDates: string[] = [];
       const existingProducts: string[] = [];
 
-      let FiltredItems: {
-        [key: string]: { quantity: number; name: string }[];
-      } = invoices
-        .filter((invoice) => invoice.client_id == id)
-        .sort(
-          (a, b) =>
-            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      const data: { data: string }[] = await this.db.select(
+        `
+        SELECT json_object(
+        'invoiceItems', (
+            SELECT json_group_array(
+                json_object(
+                    'product', json_object(
+                      'name', p.name,
+                      'quantity', ABS(ii.quantity)
+                    )
+                )
+            )
+            FROM invoice_items ii
+            INNER JOIN products p ON ii.product_id = p.id
+            WHERE ii.invoice_id = i.id
         )
-        .map((item) => ({
-          date: new Date(item.created_at).toLocaleDateString("fr-fr", {
-            month: "long",
-          }),
-          items: item.invoiceItems.map(({ quantity, product: { name } }) => ({
-            quantity,
-            name,
-          })),
-        }))
-        .reduce((r, { date, items }) => {
-          !existingDates.includes(date)
-            ? existingDates.push(date)
-            : existingDates;
+    ) AS data
+    FROM invoices i
+    WHERE i.client_id = 1
+    ORDER BY i.id DESC
+    ;
+        `
+      );
 
-          r[date] = r[date] || [];
-          r[date].push(...items);
-          return r;
-        }, Object.create(null));
-
-      for (const date of existingDates) {
-        result[date] = FiltredItems[date].reduce((pre, cur) => {
-          !existingProducts.includes(cur.name)
-            ? existingProducts.push(cur.name)
-            : existingProducts;
-          pre[cur.name] = pre[cur.name] || 0;
-          pre[cur.name] += cur.quantity;
-          return pre;
-        }, Object.create(null));
-      }
+      console.log(data.map((a) => JSON.parse(a.data)));
 
       let dataPerProduct: { [key: string]: number[] } = {};
-
-      for (const product of existingProducts) {
-        dataPerProduct[product] = [];
-        for (const date of existingDates) {
-          dataPerProduct[product].push(result[date][product] ?? 0);
-        }
-      }
 
       return [dataPerProduct, existingDates, existingProducts];
     },
