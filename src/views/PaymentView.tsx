@@ -41,7 +41,7 @@ export const PaymentView = defineComponent({
                   OnInputChange={(value) =>
                     (searchQuery.value =
                       typeof value !== "string"
-                        ? JSON.stringify(value).toLocaleLowerCase()
+                        ? JSON.stringify(value)
                         : value.toLocaleLowerCase())
                   }
                   Type="text"

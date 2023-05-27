@@ -54,11 +54,6 @@ const initiVueApp = async () => {
         });
       },
     })
-    .directive("drop", {
-      mounted: (el: HTMLElement, bin) => {
-        el.addEventListener("dragstart", (e: DragEventInit) => {});
-      },
-    })
     .use(pinia)
     .use(router)
     .use(
