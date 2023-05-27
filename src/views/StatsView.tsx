@@ -12,8 +12,8 @@ export const StatsView = defineComponent({
   components: { ChartBar, ChartLine },
   setup() {
     // we got all the stock mouvements already
-    const months = ref<[string, string, string]>(["", "", ""]);
-    const stockData = ref<FilteredStockData>();
+    const months = ref<string[]>([]);
+    const stockData = ref<FilteredStockData>({});
     // no need to make an api call
     const { stockMouvements } = storeToRefs(useStockStore());
     // reformate the data
@@ -40,32 +40,16 @@ export const StatsView = defineComponent({
                     label: globalTranslate("Stats.Labels[0]"),
                     backgroundColor: "rgba(255, 200, 0, 0.2)",
                     borderColor: "rgba(255, 200, 0,0.5)",
-                    data: [
-                      stockData.value
-                        ? stockData.value[months.value[0]]?.IN
-                        : 0,
-                      stockData.value
-                        ? stockData.value[months.value[1]]?.IN
-                        : 0,
-                      stockData.value
-                        ? stockData.value[months.value[2]]?.IN
-                        : 0,
-                    ],
+                    data: months.value.map(
+                      (month) => stockData.value[month]?.IN ?? 0
+                    ),
                     borderWidth: 2,
                   },
                   {
                     label: globalTranslate("Stats.Labels[1]"),
-                    data: [
-                      stockData.value
-                        ? stockData.value[months.value[0]]?.OUT
-                        : 0,
-                      stockData.value
-                        ? stockData.value[months.value[1]]?.OUT
-                        : 0,
-                      stockData.value
-                        ? stockData.value[months.value[2]]?.OUT
-                        : 0,
-                    ],
+                    data: months.value.map(
+                      (month) => stockData.value[month]?.OUT ?? 0
+                    ),
                     backgroundColor: "rgba(255, 200, 0, 0.6)",
                     borderColor: "rgba(255, 200, 0,1)",
                     borderWidth: 2,

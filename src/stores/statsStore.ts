@@ -30,11 +30,7 @@ export const useStatsStore = defineStore("StatsStore", {
   },
   actions: {
     getStockMouvementStats: async function (stocks: stockMvmT[]) {
-      const months: [string, string, string] = [
-        getMonth(2),
-        getMonth(1),
-        getMonth(0),
-      ];
+      const months: string[] = [];
       //
       const Rows: inOutReType = await this.db.select(inOutStatsJoins);
       //
@@ -44,6 +40,7 @@ export const useStatsStore = defineStore("StatsStore", {
         const month = new Date(group_month).toLocaleDateString("fr-fr", {
           month: "long",
         });
+        months.push(month);
         results.set(month, {
           IN: total_in,
           OUT: Math.abs(total_out),
