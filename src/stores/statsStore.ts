@@ -1,5 +1,5 @@
-import type { FilteredStockData } from "@/types";
 import { clientDetailsJoins, inOutStatsJoins } from "@/database/dbQueryJson";
+import type { FilteredStockData } from "@/types";
 import { defineStore } from "pinia";
 
 const getMonth = (i: number) => {
@@ -45,19 +45,25 @@ export const useStatsStore = defineStore("StatsStore", {
     getOrderedProduct: async function (id: number) {
       const existingDates = new Set<string>();
       const existingProducts = new Set<string>();
+      const dataPerProduct = new Map<string, number[]>();
 
       const data: any[] = await this.db.select(clientDetailsJoins);
-      let dataPerProduct: { [key: string]: number[] } = {};
 
       for (const { name, month, quantity } of data) {
-        existingDates.add(month);
+        // key doesnt exist in the map
+        if (!dataPerProduct.has(name)) dataPerProduct.set(name, []);
+        // get the data in the map
+        const availableData = dataPerProduct.get(name) as number[];
+        availableData.push(quantity ?? 0);
+        // update the map
+        dataPerProduct.set(name, availableData);
+        // add to the set
         existingProducts.add(name);
-        if (!dataPerProduct[name]) dataPerProduct[name] = [];
-        dataPerProduct[name].push(quantity ?? 0);
+        existingDates.add(month);
       }
-
       return {
-        data: dataPerProduct,
+        // @ts-ignore
+        data: Object.fromEntries(dataPerProduct),
         dates: Array.from(existingDates),
         products: Array.from(existingProducts),
       };
