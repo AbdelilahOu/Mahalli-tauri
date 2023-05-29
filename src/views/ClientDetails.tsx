@@ -23,7 +23,7 @@ export const ClientDetails = defineComponent({
     const data = ref<{ [key: string]: number[] }>({});
 
     onBeforeMount(async () => {
-      const stats = await useStatsStore().getOrderedProduct(Number(id));
+      const stats = await useStatsStore().getProductPerMonth(Number(id));
       data.value = stats.data;
       dates.value = stats.dates;
       products.value = stats.products;
