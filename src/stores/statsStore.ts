@@ -1,4 +1,8 @@
-import { clientDetailsJoins, inOutStatsJoins } from "@/database/dbQueryJson";
+import {
+  clientDetailsJoins,
+  inOutStatsJoins,
+  sellerDetailsJoins,
+} from "@/database/dbQueryJson";
 import type { FilteredStockData } from "@/types";
 import { defineStore } from "pinia";
 
@@ -42,12 +46,15 @@ export const useStatsStore = defineStore("StatsStore", {
         months: Array.from(months),
       };
     },
-    getOrderedProduct: async function (id: number) {
+    getProductPerMonth: async function (id: number, isClient: boolean = true) {
       const existingDates = new Set<string>();
       const existingProducts = new Set<string>();
       const dataPerProduct = new Map<string, number[]>();
 
-      const data: any[] = await this.db.select(clientDetailsJoins, [id]);
+      const data: any[] = await this.db.select(
+        isClient ? clientDetailsJoins : sellerDetailsJoins,
+        [id]
+      );
 
       for (const { name, month, quantity } of data) {
         // key doesnt exist in the map
