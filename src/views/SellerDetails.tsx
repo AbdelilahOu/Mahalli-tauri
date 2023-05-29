@@ -1,13 +1,14 @@
 // import { SellerAdditional } from "@/components/SellerAdditional";
 import { useSellerStore } from "@/stores/sellerStore";
 import { generateColor } from "@/utils/generateColor";
-import { defineComponent, onBeforeMount } from "vue";
+import { defineComponent, onBeforeMount, ref } from "vue";
 import { useStatsStore } from "@/stores/statsStore";
 import { useModalStore } from "@/stores/modalStore";
 import { UiCard } from "@/components/ui/UiCard";
 import type { sellerT } from "@/types";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
+import { ChartBar } from "@/components/ChartBart";
 
 export const SellerDetails = defineComponent({
   name: "SellerDetails",
@@ -16,6 +17,18 @@ export const SellerDetails = defineComponent({
     const id = useRoute().params.id;
     const SellerStore = useSellerStore();
     const { seller } = storeToRefs(SellerStore);
+
+    const products = ref<string[]>([]);
+    const dates = ref<string[]>([]);
+    const data = ref<{ [key: string]: number[] }>({});
+
+    onBeforeMount(async () => {
+      const stats = await useStatsStore().getProductPerMonth(Number(id), false);
+      data.value = stats.data;
+      dates.value = stats.dates;
+      products.value = stats.products;
+    });
+
     const toggleThisSeller = (Seller: sellerT | null, name: string) => {
       useModalStore().updateModal({ key: "show", value: true });
       useModalStore().updateModal({ key: "name", value: name });
@@ -23,8 +36,6 @@ export const SellerDetails = defineComponent({
     };
 
     onBeforeMount(() => SellerStore.getOneSeller(Number(id)));
-
-    useStatsStore().getPastThreeMonths();
 
     return () => (
       <main class="w-full h-full px-3 py-1">
@@ -40,7 +51,53 @@ export const SellerDetails = defineComponent({
             {/* <SellerAdditional */}
           </div>
           <div class="xl:border-l-2 border-b-2"></div>
-          <div class="w-full"></div>
+          <div class="w-full">
+            <h1>Products baught last three months</h1>
+            <ChartBar
+              id="stock-mouvements-for-past-three-months"
+              chartData={{
+                labels: dates.value,
+                datasets: products.value.map((product) => {
+                  const color = generateColor();
+                  return {
+                    label: product,
+                    backgroundColor: color,
+                    borderColor: color.replace("0.2", "0.5"),
+                    data: data.value[product],
+                    borderWidth: 2,
+                  };
+                }),
+              }}
+              chartOptions={{
+                responsive: true,
+                scales: {
+                  x: {
+                    grid: {
+                      display: false,
+                    },
+                    ticks: {
+                      color: "rgba(25,23,17,0.9)",
+                    },
+                    border: {
+                      display: false,
+                    },
+                  },
+                  y: {
+                    grid: {
+                      lineWidth: 1,
+                      drawBorder: false,
+                    },
+                    border: {
+                      display: false,
+                    },
+                    ticks: {
+                      display: true,
+                    },
+                  },
+                },
+              }}
+            />
+          </div>
         </div>
       </main>
     );
