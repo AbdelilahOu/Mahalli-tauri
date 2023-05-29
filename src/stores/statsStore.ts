@@ -49,11 +49,11 @@ export const useStatsStore = defineStore("StatsStore", {
       const data: any[] = await this.db.select(clientDetailsJoins);
       let dataPerProduct: { [key: string]: number[] } = {};
 
-      for (const row of data) {
-        existingDates.add(row.month);
-        existingProducts.add(row.name);
-        if (!dataPerProduct[row.name]) dataPerProduct[row.name] = [];
-        dataPerProduct[row.name].push(row.quantity ?? 0);
+      for (const { name, month, quantity } of data) {
+        existingDates.add(month);
+        existingProducts.add(name);
+        if (!dataPerProduct[name]) dataPerProduct[name] = [];
+        dataPerProduct[name].push(quantity ?? 0);
       }
 
       return {
