@@ -33,7 +33,7 @@ export const clientDetailsJoins = `
     JOIN invoices i ON c.id = i.client_id
     JOIN invoice_items ii ON i.id = ii.invoice_id
     JOIN products p ON ii.product_id = p.id
-    WHERE c.id = 1
+    WHERE c.id = $1
     GROUP BY p.name, month
     ORDER BY month ASC;
 `;
