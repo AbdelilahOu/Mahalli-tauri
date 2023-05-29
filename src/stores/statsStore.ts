@@ -47,7 +47,7 @@ export const useStatsStore = defineStore("StatsStore", {
       const existingProducts = new Set<string>();
       const dataPerProduct = new Map<string, number[]>();
 
-      const data: any[] = await this.db.select(clientDetailsJoins);
+      const data: any[] = await this.db.select(clientDetailsJoins, [id]);
 
       for (const { name, month, quantity } of data) {
         // key doesnt exist in the map
