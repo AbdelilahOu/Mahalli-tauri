@@ -28,6 +28,7 @@
     "@intlify/unplugin-vue-i18n": "^0.8.1",
     "@rushstack/eslint-patch": "^1.1.4",
     "@tauri-apps/cli": "^1.2.3",
+    "@types/lodash": "^4.14.195",
     "@types/node": "^18.11.12",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",
