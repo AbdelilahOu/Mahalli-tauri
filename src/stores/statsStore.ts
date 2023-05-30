@@ -5,6 +5,7 @@ import {
 } from "@/database/dbQueryJson";
 import type { FilteredStockData } from "@/types";
 import { defineStore } from "pinia";
+import _ from "lodash";
 
 const getMonth = (i: number) => {
   const SplitedCurr = new Date().toLocaleDateString("us-us").split("/");
@@ -40,6 +41,7 @@ export const useStatsStore = defineStore("StatsStore", {
         months.add(month);
         results.set(month, { IN, OUT: Math.abs(OUT) });
       }
+
       return {
         // @ts-ignore
         result: Object.fromEntries(results) as FilteredStockData,

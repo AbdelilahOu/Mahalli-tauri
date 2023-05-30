@@ -1,34 +1,5 @@
-export const statsJoins = `
-    SELECT
-        json_object(
-            'bought', json_group_array(
-                json_object(
-                    'product_id', p.id,
-                    'product_name', p.name,
-                    'quantity', SUM(CASE WHEN sm.model = 'bought' THEN sm.quantity ELSE 0 END)
-                )
-            ),
-            'sold', json_group_array(
-                json_object(
-                    'product_id', p.id,
-                    'product_name', p.name,
-                    'quantity', SUM(CASE WHEN sm.model = 'sold' THEN sm.quantity ELSE 0 END)
-                )
-            )
-        ) AS data
-    FROM
-        stock_mouvements sm
-    INNER JOIN
-        products p ON sm.product_id = p.id
-    WHERE
-        sm.date >= DATE('now', '-3 months')
-    GROUP BY
-        sm.date;
-
-`;
-
 export const clientDetailsJoins = `
-    SELECT p.name AS name, strftime('%Y-%m', i.created_at) AS month, COALESCE(SUM(ABS(ii.quantity)), 0) AS quantity
+    SELECT p.name AS name, strftime('%Y-%m', i.created_at) AS month, ABS(COALESCE(SUM(ii.quantity), 0)) AS quantity
     FROM clients c
     JOIN invoices i ON c.id = i.client_id
     JOIN invoice_items ii ON i.id = ii.invoice_id
@@ -39,7 +10,7 @@ export const clientDetailsJoins = `
 `;
 
 export const sellerDetailsJoins = `
-    SELECT p.name AS name, strftime('%Y-%m', o.created_at) AS month, COALESCE(SUM(ABS(oi.quantity)), 0) AS quantity
+    SELECT p.name AS name, strftime('%Y-%m', o.created_at) AS month, ABS(COALESCE(SUM(oi.quantity), 0)) AS quantity
     FROM sellers s
     JOIN orders o ON s.id = o.seller_id
     JOIN order_items oi ON o.id = oi.order_id
@@ -51,8 +22,8 @@ export const sellerDetailsJoins = `
 
 export const inOutStatsJoins = `
     SELECT strftime('%Y-%m', date) AS group_month,
-        SUM(CASE WHEN model = 'IN' THEN quantity ELSE 0 END) AS total_in,
-        SUM(CASE WHEN model = 'OUT' THEN quantity ELSE 0 END) AS total_out
+        SUM(CASE WHEN model = 'IN' THEN ABS(quantity) ELSE 0 END) AS total_in,
+        SUM(CASE WHEN model = 'OUT' THEN ABS(quantity) ELSE 0 END) AS total_out
     FROM stock_mouvements
     GROUP BY group_month
     ORDER BY id DESC
