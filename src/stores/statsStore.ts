@@ -24,9 +24,6 @@ type inOutReType = {
 }[];
 
 export const useStatsStore = defineStore("StatsStore", {
-  state: () => {
-    return {};
-  },
   actions: {
     getStockMouvementStats: async function () {
       const results = new Map<string, { IN: number; OUT: number }>();
