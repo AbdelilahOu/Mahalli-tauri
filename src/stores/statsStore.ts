@@ -7,15 +7,15 @@ import type { FilteredStockData } from "@/types";
 import { defineStore } from "pinia";
 import _ from "lodash";
 
-const getMonth = (i: number) => {
-  const SplitedCurr = new Date().toLocaleDateString("us-us").split("/");
-  SplitedCurr[1] = "15";
-  return new Date(
-    new Date(SplitedCurr.join("/")).getTime() - i * 30 * 24 * 60 * 60 * 1000
-  ).toLocaleDateString("fr-fr", {
-    month: "long",
-  });
-};
+// const getMonth = (i: number) => {
+//   const SplitedCurr = new Date().toLocaleDateString("us-us").split("/");
+//   SplitedCurr[1] = "15";
+//   return new Date(
+//     new Date(SplitedCurr.join("/")).getTime() - i * 30 * 24 * 60 * 60 * 1000
+//   ).toLocaleDateString("fr-fr", {
+//     month: "long",
+//   });
+// };
 
 type inOutReType = {
   group_month: string;
