@@ -1,9 +1,5 @@
-import type {
-  productT,
-  productState,
-  newProductT,
-  updateProductT,
-} from "@/types";
+import { selectProductsWithQuantity } from "@/database/dbQueryJson";
+import type { productState, newProductT, updateProductT } from "@/types";
 import { defineStore } from "pinia";
 
 export const useProductStore = defineStore("ProductStore", {
@@ -15,13 +11,7 @@ export const useProductStore = defineStore("ProductStore", {
   actions: {
     getAllProducts: async function () {
       try {
-        const productsWithQuantity: productT[] = await this.db.select(
-          `SELECT products.*, COALESCE(SUM(sm.quantity), 0) AS quantity
-            FROM products LEFT JOIN stock_mouvements sm ON products.id = sm.product_id
-          GROUP BY products.id ORDER BY products.id DESC`
-        );
-
-        this.products = productsWithQuantity;
+        this.products = await this.db.select(selectProductsWithQuantity);
       } catch (error) {
         console.log(error);
       }
