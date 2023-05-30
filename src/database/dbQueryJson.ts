@@ -1,3 +1,9 @@
+export const selectProductsWithQuantity = `
+    SELECT products.*, COALESCE(SUM(sm.quantity), 0) AS quantity
+    FROM products LEFT JOIN stock_mouvements sm ON products.id = sm.product_id
+    GROUP BY products.id ORDER BY products.id DESC
+`;
+
 export const clientDetailsJoins = `
     SELECT p.name AS name, strftime('%Y-%m', i.created_at) AS month, ABS(COALESCE(SUM(ii.quantity), 0)) AS quantity
     FROM clients c
