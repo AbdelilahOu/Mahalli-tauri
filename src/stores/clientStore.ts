@@ -13,10 +13,9 @@ export const useClientStore = defineStore("ClientStore", {
   actions: {
     getAllClients: async function () {
       try {
-        const allClients: clientT[] = await this.db.select(
+        this.clients = await this.db.select(
           "SELECT * FROM clients ORDER BY id DESC"
         );
-        this.clients = allClients;
       } catch (error) {
         console.log(error);
       }
