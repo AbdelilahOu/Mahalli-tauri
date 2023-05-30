@@ -12,10 +12,9 @@ export const useSellerStore = defineStore("SellerStore", {
   actions: {
     getAllSellers: async function () {
       try {
-        const allSellers: sellerT[] = await this.db.select(
+        this.sellers = await this.db.select(
           "SELECT *  FROM sellers ORDER BY id DESC"
         );
-        this.sellers = allSellers;
       } catch (error) {
         console.log(error);
       }
