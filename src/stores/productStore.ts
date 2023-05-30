@@ -16,18 +16,18 @@ export const useProductStore = defineStore("ProductStore", {
     getAllProducts: async function () {
       try {
         const allProducts: productT[] = await this.db.select(
-          "SELECT products.* FROM products ORDER BY id DESC"
+          "SELECT * COALESCE(SUM(sm.quantity), 0) AS quantity FROM products p LEFT JOIN stock_mouvements sm ON p.id = sm.product_id ORDER BY id DESC"
         );
-        const productStock: { quantity: number; product_id: number }[] =
-          await this.db.select(
-            "SELECT stock_mouvements.quantity,stock_mouvements.product_id FROM stock_mouvements"
-          );
+        // const productStock: { quantity: number; product_id: number }[] =
+        //   await this.db.select(
+        //     "SELECT stock_mouvements.quantity,stock_mouvements.product_id FROM stock_mouvements"
+        //   );
 
         this.products = allProducts.map((product) => ({
           ...product,
-          quantity: productStock
-            .filter((stock) => stock.product_id == product.id)
-            .reduce((a, b) => a + b.quantity, 0),
+          // quantity: productStock
+          //   .filter((stock) => stock.product_id == product.id)
+          //   .reduce((a, b) => a + b.quantity, 0),
         }));
       } catch (error) {
         console.log(error);
