@@ -1,14 +1,14 @@
 import { defineComponent, onBeforeMount, ref, Transition } from "vue";
+import { globalTranslate } from "@/utils/globalTranslate";
+import { useProductStore } from "@/stores/productStore";
 import { OrdersTable } from "@/components/OrdersTable";
+import { useSellerStore } from "@/stores/sellerStore";
 import { useOrdersStore } from "@/stores/orderStore";
 import { UiButton } from "@/components/ui/UiButton";
 import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
-import { globalTranslate } from "@/utils/globalTranslate";
-import { useProductStore } from "@/stores/productStore";
-import { useSellerStore } from "@/stores/sellerStore";
 
 export const OrdersView = defineComponent({
   name: "Orders",
