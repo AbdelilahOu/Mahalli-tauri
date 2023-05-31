@@ -7,6 +7,8 @@ import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
+import { useProductStore } from "@/stores/productStore";
+import { useClientStore } from "@/stores/clientStore";
 
 export const InvoicesView = defineComponent({
   name: "Invoices",
@@ -26,6 +28,8 @@ export const InvoicesView = defineComponent({
     //
     onBeforeMount(() => {
       InvoiceStore.getAllInvoices();
+      useProductStore().getAllProducts();
+      useClientStore().getAllClients();
     });
     //
     const updateModal = (name: string) => {
