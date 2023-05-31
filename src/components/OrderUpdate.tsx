@@ -120,10 +120,7 @@ export const OrderUpdate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {updateOrders.orderItems?.map((item, index) => (
                     <UiUpdateSelect
-                      Value={
-                        products.value.find((pro) => pro.id == item.product_id)
-                          ?.name ?? ""
-                      }
+                      Value={item.product?.name ?? "select a product"}
                       items={products.value.map((product) => ({
                         name: product.name,
                         id: product.id,
