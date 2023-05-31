@@ -7,6 +7,8 @@ import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { useProductStore } from "@/stores/productStore";
+import { useSellerStore } from "@/stores/sellerStore";
 
 export const OrdersView = defineComponent({
   name: "Orders",
@@ -25,7 +27,11 @@ export const OrdersView = defineComponent({
     const searchQuery = ref<string>("");
     //
     onBeforeMount(() => {
-      if (!orders.value.length) OrdersStore.getAllOrders();
+      if (!orders.value.length) {
+        OrdersStore.getAllOrders();
+        useProductStore().getAllProducts();
+        useSellerStore().getAllSellers();
+      }
     });
     //
     const updateModal = (name: string) => {
