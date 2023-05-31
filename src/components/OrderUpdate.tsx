@@ -57,10 +57,7 @@ export const OrderUpdate = defineComponent({
               {globalTranslate("Orders.update.details.seller.title")}
             </h1>
             <UiUpdateSelect
-              Value={
-                sellers.value.find((cli) => updateOrders.seller_id === cli.id)
-                  ?.name ?? ""
-              }
+              Value={updateOrders.seller?.name ?? "Select a seller"}
               items={sellers.value.map((seller) => ({
                 name: seller.name,
                 id: seller.id,
