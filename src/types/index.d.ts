@@ -66,6 +66,11 @@ export interface orderItemT {
   price: number;
   quantity: number;
   stock_id: number;
+  product: {
+    id: number;
+    price: number;
+    name: string;
+  };
 }
 
 export interface newOrdersT extends Partial<Omit<orderT, "orderItems">> {
