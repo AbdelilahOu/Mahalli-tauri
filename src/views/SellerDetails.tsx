@@ -1,14 +1,14 @@
 // import { SellerAdditional } from "@/components/SellerAdditional";
+import { defineComponent, onBeforeMount, ref } from "vue";
 import { useSellerStore } from "@/stores/sellerStore";
 import { generateColor } from "@/utils/generateColor";
-import { defineComponent, onBeforeMount, ref } from "vue";
 import { useStatsStore } from "@/stores/statsStore";
 import { useModalStore } from "@/stores/modalStore";
+import { ChartBar } from "@/components/ChartBart";
 import { UiCard } from "@/components/ui/UiCard";
 import type { sellerT } from "@/types";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
-import { ChartBar } from "@/components/ChartBart";
 
 export const SellerDetails = defineComponent({
   name: "SellerDetails",
