@@ -1,7 +1,7 @@
 import { ClientAdditional } from "@/components/ClientAdditional";
+import { defineComponent, onBeforeMount, ref } from "vue";
 import { useClientStore } from "@/stores/clientStore";
 import { generateColor } from "@/utils/generateColor";
-import { defineComponent, onBeforeMount, ref } from "vue";
 import { useStatsStore } from "@/stores/statsStore";
 import { useModalStore } from "@/stores/modalStore";
 import { ChartBar } from "@/components/ChartBart";
