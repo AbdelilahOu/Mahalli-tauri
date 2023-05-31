@@ -1,14 +1,14 @@
 import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { InvoiceTable } from "@/components/InvoiceTable";
+import { useProductStore } from "@/stores/productStore";
 import { useInvoiceStore } from "@/stores/invoiceStore";
+import { useClientStore } from "@/stores/clientStore";
 import { UiButton } from "@/components/ui/UiButton";
 import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
-import { useProductStore } from "@/stores/productStore";
-import { useClientStore } from "@/stores/clientStore";
 
 export const InvoicesView = defineComponent({
   name: "Invoices",
