@@ -1,12 +1,12 @@
 import { defineComponent, onBeforeMount, ref, Transition } from "vue";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { StockTable } from "@/components/StockTable";
+import { useModalStore } from "@/stores/modalStore";
 import { useStockStore } from "@/stores/stockStore";
 import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
-import { useModalStore } from "@/stores/modalStore";
-import { globalTranslate } from "@/utils/globalTranslate";
 
 export const StocksView = defineComponent({
   name: "Stocks",
