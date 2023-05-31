@@ -57,11 +57,7 @@ export const InvoiceUpdate = defineComponent({
               {globalTranslate("Invoices.update.details.client.title")}
             </h1>
             <UiUpdateSelect
-              Value={
-                clients.value.find(
-                  (cli: any) => updateInvoice.client_id === cli.id
-                )?.name ?? ""
-              }
+              Value={updateInvoice.client?.name ?? "select a client"}
               items={clients.value.map((client: any) => ({
                 name: client.name,
                 id: client.id,
@@ -88,11 +84,7 @@ export const InvoiceUpdate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {updateInvoice.invoiceItems?.map((item, index) => (
                     <UiUpdateSelect
-                      Value={
-                        products.value.find(
-                          (pro: any) => pro.id == item.product_id
-                        )?.name ?? ""
-                      }
+                      Value={item.product?.name ?? "select a product"}
                       items={products.value.map((product: any) => ({
                         name: product.name,
                         id: product.id,
