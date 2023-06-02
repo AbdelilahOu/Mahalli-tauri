@@ -9,6 +9,7 @@ import { UiCard } from "@/components/ui/UiCard";
 import type { clientT } from "@/types";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
+import { chartOptions } from "@/constants/chartOptions";
 
 export const ClientDetails = defineComponent({
   name: "ClientDetails",
@@ -25,7 +26,7 @@ export const ClientDetails = defineComponent({
     onBeforeMount(async () => {
       const stats = await useStatsStore().getProductPerMonth(Number(id));
       data.value = stats.data;
-      dates.value = stats.dates;
+      dates.value = stats.dates.reverse();
       products.value = stats.products;
     });
     const toggleThisClient = (client: clientT | null, name: string) => {
@@ -67,34 +68,7 @@ export const ClientDetails = defineComponent({
                   };
                 }),
               }}
-              chartOptions={{
-                responsive: true,
-                scales: {
-                  x: {
-                    grid: {
-                      display: false,
-                    },
-                    ticks: {
-                      color: "rgba(25,23,17,0.9)",
-                    },
-                    border: {
-                      display: false,
-                    },
-                  },
-                  y: {
-                    grid: {
-                      lineWidth: 1,
-                      drawBorder: false,
-                    },
-                    border: {
-                      display: false,
-                    },
-                    ticks: {
-                      display: true,
-                    },
-                  },
-                },
-              }}
+              chartOptions={chartOptions}
             />
           </div>
         </div>
