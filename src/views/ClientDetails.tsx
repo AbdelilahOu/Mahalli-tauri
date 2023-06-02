@@ -1,5 +1,6 @@
 import { ClientAdditional } from "@/components/ClientAdditional";
 import { defineComponent, onBeforeMount, ref } from "vue";
+import { chartOptions } from "@/constants/chartOptions";
 import { useClientStore } from "@/stores/clientStore";
 import { generateColor } from "@/utils/generateColor";
 import { useStatsStore } from "@/stores/statsStore";
@@ -9,7 +10,6 @@ import { UiCard } from "@/components/ui/UiCard";
 import type { clientT } from "@/types";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
-import { chartOptions } from "@/constants/chartOptions";
 
 export const ClientDetails = defineComponent({
   name: "ClientDetails",
