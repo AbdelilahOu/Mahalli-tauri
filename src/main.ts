@@ -69,7 +69,7 @@ const initiVueApp = async () => {
     .mount("#app");
 };
 
-initiVueApp();
+initiVueApp().then(() => console.log("app mounted"));
 
 declare module "pinia" {
   export interface PiniaCustomProperties {
