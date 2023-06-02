@@ -2,10 +2,7 @@
 import { RouterView, useRouter } from "vue-router";
 import { onBeforeMount, Transition } from "vue";
 
-onBeforeMount(() => {
-  console.log("vue.app");
-  useRouter().push("/Home");
-});
+onBeforeMount(() => useRouter().push("/Home"));
 </script>
 
 <template>
