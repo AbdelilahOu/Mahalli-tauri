@@ -19,6 +19,7 @@ import { StatsView } from "@/views/StatsView";
 import { HomeView } from "@/views/HomeView";
 import { IndexView } from "@/views/IndexView";
 import { AuthView } from "@/views/AuthView";
+import { UpcomingsView } from "@/views/UpcomingsView";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -125,6 +126,11 @@ const router = createRouter({
           path: "Payment",
           name: "Payment",
           component: PaymentView,
+        },
+        {
+          path: "Upcomings",
+          name: "Upcomings",
+          component: UpcomingsView,
         },
       ],
     },
