@@ -1,10 +1,10 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, onBeforeMount, ref } from "vue";
+import { chartOptions } from "@/constants/chartOptions";
 import { useStatsStore } from "@/stores/statsStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBart";
 import type { FilteredStockData } from "@/types";
-import { chartOptions } from "@/constants/chartOptions";
 
 export const StatsView = defineComponent({
   name: "Stats",
