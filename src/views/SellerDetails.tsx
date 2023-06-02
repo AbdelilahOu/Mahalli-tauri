@@ -9,6 +9,7 @@ import { UiCard } from "@/components/ui/UiCard";
 import type { sellerT } from "@/types";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
+import { chartOptions } from "@/constants/chartOptions";
 
 export const SellerDetails = defineComponent({
   name: "SellerDetails",
@@ -25,7 +26,7 @@ export const SellerDetails = defineComponent({
     onBeforeMount(async () => {
       const stats = await useStatsStore().getProductPerMonth(Number(id), false);
       data.value = stats.data;
-      dates.value = stats.dates;
+      dates.value = stats.dates.reverse();
       products.value = stats.products;
     });
 
@@ -68,34 +69,7 @@ export const SellerDetails = defineComponent({
                   };
                 }),
               }}
-              chartOptions={{
-                responsive: true,
-                scales: {
-                  x: {
-                    grid: {
-                      display: false,
-                    },
-                    ticks: {
-                      color: "rgba(25,23,17,0.9)",
-                    },
-                    border: {
-                      display: false,
-                    },
-                  },
-                  y: {
-                    grid: {
-                      lineWidth: 1,
-                      drawBorder: false,
-                    },
-                    border: {
-                      display: false,
-                    },
-                    ticks: {
-                      display: true,
-                    },
-                  },
-                },
-              }}
+              chartOptions={chartOptions}
             />
           </div>
         </div>
