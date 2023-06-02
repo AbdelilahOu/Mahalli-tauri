@@ -1,6 +1,7 @@
-import { createRouter, createWebHistory } from "vue-router";
 import { NotificationsView } from "@/views/NotificationsView";
+import { createRouter, createWebHistory } from "vue-router";
 import { InvoiceDetails } from "@/views/InvoiceDetails";
+import { UpcomingsView } from "@/views/UpcomingsView";
 import { ClientDetails } from "@/views/ClientDetails";
 import { SellerDetails } from "@/views/SellerDetails";
 import { InvoicesIndex } from "@/views/InvoicesIndex";
@@ -19,7 +20,6 @@ import { StatsView } from "@/views/StatsView";
 import { HomeView } from "@/views/HomeView";
 import { IndexView } from "@/views/IndexView";
 import { AuthView } from "@/views/AuthView";
-import { UpcomingsView } from "@/views/UpcomingsView";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
