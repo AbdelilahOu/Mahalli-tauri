@@ -57,7 +57,6 @@ export const useStatsStore = defineStore("StatsStore", {
       );
 
       return {
-        // @ts-ignore
         data: dataPerProduct,
         dates: existingDates,
         products: existingProducts,
