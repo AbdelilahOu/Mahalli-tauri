@@ -235,7 +235,7 @@ export interface newPaymentT
 ///////////////// OTHERS //////////
 
 export interface FilteredStockData {
-  [key: string]: { IN: number; OUT: number };
+  [key: string]: Record<"IN" | "OUT", number>;
 }
 
 export interface editModalArgsT {
