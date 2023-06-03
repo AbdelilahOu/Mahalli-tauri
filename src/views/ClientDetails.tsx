@@ -1,5 +1,5 @@
 import { ClientAdditional } from "@/components/ClientAdditional";
-import { defineComponent, onBeforeMount, ref } from "vue";
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { chartOptions } from "@/constants/chartOptions";
 import { useClientStore } from "@/stores/clientStore";
 import { generateColor } from "@/utils/generateColor";
@@ -19,15 +19,17 @@ export const ClientDetails = defineComponent({
     const clientStore = useClientStore();
     const { client } = storeToRefs(clientStore);
 
-    const products = ref<string[]>([]);
-    const dates = ref<string[]>([]);
-    const data = ref<{ [key: string]: number[] }>({});
+    const ProductsStats = reactive({
+      products: [] as string[],
+      dates: [] as string[],
+      data: {} as { [key: string]: number[] },
+    });
 
     onBeforeMount(async () => {
       const stats = await useStatsStore().getProductPerMonth(Number(id));
-      data.value = stats.data;
-      dates.value = stats.dates.reverse();
-      products.value = stats.products;
+      ProductsStats.data = stats.data;
+      ProductsStats.dates = stats.dates.reverse();
+      ProductsStats.products = stats.products;
     });
     const toggleThisClient = (client: clientT | null, name: string) => {
       useModalStore().updateModal({ key: "show", value: true });
@@ -56,14 +58,14 @@ export const ClientDetails = defineComponent({
             <ChartBar
               id="stock-mouvements-for-past-three-months"
               chartData={{
-                labels: dates.value,
-                datasets: products.value.map((product) => {
+                labels: ProductsStats.dates,
+                datasets: ProductsStats.products.map((product) => {
                   const color = generateColor();
                   return {
                     label: product,
                     backgroundColor: color,
                     borderColor: color.replace("0.2", "0.5"),
-                    data: data.value[product],
+                    data: ProductsStats.data[product],
                     borderWidth: 2,
                   };
                 }),
