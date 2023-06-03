@@ -32,10 +32,9 @@ export const StatsView = defineComponent({
     });
 
     onBeforeMount(async () => {
-      const { result, months: resultMonths } =
-        await statsStore.getStockMouvementStats();
-      InsOuts.months = resultMonths.reverse();
-      InsOuts.data = result;
+      const InOutStats = await statsStore.getStockMouvementStats();
+      InsOuts.months = InOutStats.months.reverse();
+      InsOuts.data = InOutStats.result;
 
       const TopClients = await statsStore.getBestThree();
       const TopSellers = await statsStore.getBestThree(false);
