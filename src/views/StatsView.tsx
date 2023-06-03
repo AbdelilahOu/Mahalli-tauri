@@ -83,7 +83,7 @@ export const StatsView = defineComponent({
                   datasets: [
                     {
                       backgroundColor: BestThree.client.keys.map(() =>
-                        generateColor()
+                        generateColor().replace("0.2", "0.5")
                       ),
                       data: BestThree.client.data,
                     },
@@ -96,15 +96,13 @@ export const StatsView = defineComponent({
               <ChartDoughnut
                 id="doughnut"
                 chartData={{
-                  labels: ["EmberJs", "ReactJs", "AngularJs"],
+                  labels: BestThree.seller.keys,
                   datasets: [
                     {
-                      backgroundColor: [
-                        generateColor().replace("0.2", "0.4"),
-                        generateColor().replace("0.2", "0.4"),
-                        generateColor().replace("0.2", "0.4"),
-                      ],
-                      data: [20, 80, 10],
+                      backgroundColor: BestThree.seller.keys.map(() =>
+                        generateColor().replace("0.2", "0.5")
+                      ),
+                      data: BestThree.seller.data,
                     },
                   ],
                 }}
