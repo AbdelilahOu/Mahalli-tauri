@@ -1,113 +1,95 @@
 import { globalTranslate } from "@/utils/globalTranslate";
-import { defineComponent, onBeforeMount, ref } from "vue";
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { chartOptions } from "@/constants/chartOptions";
 import { useStatsStore } from "@/stores/statsStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBart";
 import type { FilteredStockData } from "@/types";
+import { generateColor } from "@/utils/generateColor";
+import { ChartDoughnut } from "@/components/ChartDoughnut";
 
 export const StatsView = defineComponent({
   name: "Stats",
   components: { ChartBar, ChartLine },
   setup() {
-    // we got all the stock mouvements already
-    const months = ref<string[]>([]);
-    const stockData = ref<FilteredStockData>({});
+    const InsOuts = reactive({
+      keys: ["IN", "OUT"] as const,
+      months: [] as string[],
+      data: {} as FilteredStockData,
+    });
+
     onBeforeMount(async () => {
       const { result, months: resultMonths } =
         await useStatsStore().getStockMouvementStats();
-      months.value = resultMonths.reverse();
-      stockData.value = result;
+      InsOuts.months = resultMonths.reverse();
+      InsOuts.data = result;
     });
 
     return () => (
       <main class="w-full h-full px-3 py-1">
-        <div class="w-full h-full grid grid-cols-1 grid-rows-1">
-          <div>
+        <div class="w-full h-full flex flex-col gap-4">
+          <div class="w-full h-fit ">
             <h1 class="uppercase text-gray-600 font-semibold mb-1">
               {globalTranslate("Stats.Title")}
             </h1>
             <ChartBar
               id="stock-mouvements-for-past-three-months"
               chartData={{
-                labels: months.value,
-                datasets: [
-                  {
+                labels: InsOuts.months,
+                datasets: InsOuts.keys.map((model) => {
+                  const color = generateColor();
+                  return {
                     label: globalTranslate("Stats.Labels[0]"),
-                    backgroundColor: "rgba(255, 200, 0, 0.2)",
-                    borderColor: "rgba(255, 200, 0,0.5)",
-                    data: months.value.map(
-                      (month) => stockData.value[month]?.IN ?? 0
+                    backgroundColor: color,
+                    borderColor: color.replace("0.2", "0.5"),
+                    data: InsOuts.months.map(
+                      (month) => InsOuts.data[month][model] ?? 0
                     ),
                     borderWidth: 2,
-                  },
-                  {
-                    label: globalTranslate("Stats.Labels[1]"),
-                    data: months.value.map(
-                      (month) => stockData.value[month]?.OUT ?? 0
-                    ),
-                    backgroundColor: "rgba(255, 200, 0, 0.6)",
-                    borderColor: "rgba(255, 200, 0,1)",
-                    borderWidth: 2,
-                  },
-                ],
+                  };
+                }),
               }}
               chartOptions={chartOptions}
             />
           </div>
-          {/* <ChartLine
-            id="stock-mouvements-for"
-            chartData={{
-              labels: ["January", "February", "March"],
-              datasets: [
-                {
-                  label: "",
-                  borderColor: "rgba(255, 200, 0,0.5)",
-                  data: [11, 89, 10],
-                  // borderWidth: 2,
-                  tention: 0.3,
-                },
-                {
-                  data: [13, 7, 97],
-                  borderColor: "rgba(255, 200, 0,1)",
-                  // borderWidth: 2,
-                  tention: 0.5,
-                },
-              ],
-            }}
-            chartOptions={{
-              responsive: true,
-              scales: {
-                x: {
-                  grid: {
-                    display: false,
+          <div class="w-full h-full flex">
+            <ChartDoughnut
+              id="doughnut"
+              chartData={{
+                labels: ["VueJs", "EmberJs", "ReactJs", "AngularJs"],
+                datasets: [
+                  {
+                    backgroundColor: [
+                      "#41B883",
+                      "#E46651",
+                      "#00D8FF",
+                      "#DD1B16",
+                    ],
+                    data: [40, 20, 80, 10],
                   },
-                  ticks: {
-                    color: "rgba(25,23,17,0.6)",
-                    textStrokeWidth: 10,
+                ],
+              }}
+              chartOptions={{ responsive: true, maintainAspectRatio: false }}
+            />
+            {/* <ChartDoughnut
+              id="doughnutsjkdlkfds"
+              chartData={{
+                labels: ["VueJs", "EmberJs", "ReactJs", "AngularJs"],
+                datasets: [
+                  {
+                    backgroundColor: [
+                      "#41B883",
+                      "#E46651",
+                      "#00D8FF",
+                      "#DD1B16",
+                    ],
+                    data: [40, 20, 80, 10],
                   },
-                  border: {
-                    display: false,
-                  },
-                },
-                y: {
-                  grid: {
-                    lineWidth: 1,
-                    drawBorder: false,
-                  },
-                  border: {
-                    display: false,
-                  },
-                  ticks: {
-                    color: "rgba(25,23,17,0.6)",
-                    min: 0,
-                    textStrokeWidth: 1,
-                    padding: 10,
-                  },
-                },
-              },
-            }}
-          /> */}
+                ],
+              }}
+              chartOptions={{ responsive: true, maintainAspectRatio: false }}
+            /> */}
+          </div>
         </div>
       </main>
     );
