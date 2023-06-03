@@ -56,20 +56,6 @@ export const useStatsStore = defineStore("StatsStore", {
         )
       );
 
-      console.log(dataPerProduct);
-
-      // for (const { name, month, quantity } of data) {
-      //   // key doesnt exist in the map
-      //   if (!dataPerProduct.has(name)) dataPerProduct.set(name, []);
-      //   // get the data in the map
-      //   const availableData = dataPerProduct.get(name) as number[];
-      //   availableData.push(quantity ?? 0);
-      //   // update the map
-      //   dataPerProduct.set(name, availableData);
-      //   // add to the set
-      //   existingProducts.add(name);
-      //   existingDates.add(month);
-      // }
       return {
         // @ts-ignore
         data: dataPerProduct,
