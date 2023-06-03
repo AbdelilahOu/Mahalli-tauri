@@ -1,3 +1,25 @@
+export const bestThreeClients = `
+    SELECT c.name AS name, SUM(p.price * ABS(ci.quantity)) AS amount
+    FROM clients c
+    JOIN invoices i ON c.id = i.client_id
+    JOIN invoice_items ci ON i.id = ci.invoice_id
+    JOIN products p ON ci.product_id = p.id
+    GROUP BY c.name
+    ORDER BY amount DESC
+    LIMIT 3;
+`;
+
+export const bestThreeSellers = `
+    SELECT s.name AS name, SUM(p.price * ABS(ci.quantity)) AS amount
+    FROM sellers s
+    JOIN orders i ON s.id = i.seller_id
+    JOIN order_items ci ON i.id = ci.order_id
+    JOIN products p ON ci.product_id = p.id
+    GROUP BY s.name
+    ORDER BY amount DESC
+    LIMIT 3;
+`;
+
 export const selectProductsWithQuantity = `
     SELECT products.*, COALESCE(SUM(sm.quantity), 0) AS quantity
     FROM products LEFT JOIN stock_mouvements sm ON products.id = sm.product_id
