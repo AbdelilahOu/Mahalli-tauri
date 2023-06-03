@@ -97,22 +97,27 @@ export const StatsView = defineComponent({
                 />
               </ChartHolder>
             </div>
-            <div class="w-1/2 h-full">
-              <ChartDoughnut
-                id="doughnut"
-                chartData={{
-                  labels: BestThree.seller.keys,
-                  datasets: [
-                    {
-                      backgroundColor: BestThree.seller.keys.map(() =>
-                        generateColor().replace("0.2", "0.5")
-                      ),
-                      data: BestThree.seller.data,
-                    },
-                  ],
-                }}
-                chartOptions={{ responsive: true, maintainAspectRatio: false }}
-              />
+            <div class=" w-1/2 h-full">
+              <ChartHolder title="best sellers">
+                <ChartDoughnut
+                  id="doughnut"
+                  chartData={{
+                    labels: BestThree.seller.keys,
+                    datasets: [
+                      {
+                        backgroundColor: BestThree.seller.keys.map(() =>
+                          generateColor().replace("0.2", "0.5")
+                        ),
+                        data: BestThree.seller.data,
+                      },
+                    ],
+                  }}
+                  chartOptions={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                  }}
+                />
+              </ChartHolder>
             </div>
           </div>
         </div>
