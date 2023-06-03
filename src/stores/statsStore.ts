@@ -1,4 +1,6 @@
 import {
+  bestThreeClients,
+  bestThreeSellers,
   clientDetailsJoins,
   inOutStatsJoins,
   sellerDetailsJoins,
@@ -6,16 +8,6 @@ import {
 import type { FilteredStockData } from "@/types";
 import { defineStore } from "pinia";
 import _ from "lodash";
-
-// const getMonth = (i: number) => {
-//   const SplitedCurr = new Date().toLocaleDateString("us-us").split("/");
-//   SplitedCurr[1] = "15";
-//   return new Date(
-//     new Date(SplitedCurr.join("/")).getTime() - i * 30 * 24 * 60 * 60 * 1000
-//   ).toLocaleDateString("fr-fr", {
-//     month: "long",
-//   });
-// };
 
 type inOutReType = {
   group_month: string;
@@ -38,7 +30,6 @@ export const useStatsStore = defineStore("StatsStore", {
         months.add(month);
         results.set(month, { IN, OUT: Math.abs(OUT) });
       }
-
       return {
         // @ts-ignore
         result: Object.fromEntries(results) as FilteredStockData,
@@ -74,12 +65,16 @@ export const useStatsStore = defineStore("StatsStore", {
         products: Array.from(existingProducts),
       };
     },
-    ////////////////// GET FROM DB /////////////
-    getPastThreeMonths: async function () {
-      try {
-      } catch (error) {
-        console.log(error);
-      }
+    getBestThree: async function (isClients = true) {
+      const data: { name: string; amount: number }[] = await this.db.select(
+        isClients ? bestThreeClients : bestThreeSellers
+      );
+      //
+      const result = _.mapValues(_.groupBy(data, "name"), (value) =>
+        _.reduce(value, (pr, cr) => (pr += cr.amount), 0)
+      );
+      //
+      return { names: _.keys(result), result };
     },
     getBestThreeClients: async function () {
       try {
