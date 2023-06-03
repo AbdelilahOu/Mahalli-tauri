@@ -1,12 +1,12 @@
+import { defineComponent, onBeforeMount, reactive } from "vue";
+import { ChartDoughnut } from "@/components/ChartDoughnut";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { chartOptions } from "@/constants/chartOptions";
+import { generateColor } from "@/utils/generateColor";
 import { useStatsStore } from "@/stores/statsStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBart";
 import type { FilteredStockData } from "@/types";
-import { generateColor } from "@/utils/generateColor";
-import { ChartDoughnut } from "@/components/ChartDoughnut";
 
 export const StatsView = defineComponent({
   name: "Stats",
@@ -52,7 +52,7 @@ export const StatsView = defineComponent({
               chartOptions={chartOptions}
             />
           </div>
-          <div class="w-full h-full flex">
+          <div class="w-full h-full">
             <ChartDoughnut
               id="doughnut"
               chartData={{
@@ -71,24 +71,6 @@ export const StatsView = defineComponent({
               }}
               chartOptions={{ responsive: true, maintainAspectRatio: false }}
             />
-            {/* <ChartDoughnut
-              id="doughnutsjkdlkfds"
-              chartData={{
-                labels: ["VueJs", "EmberJs", "ReactJs", "AngularJs"],
-                datasets: [
-                  {
-                    backgroundColor: [
-                      "#41B883",
-                      "#E46651",
-                      "#00D8FF",
-                      "#DD1B16",
-                    ],
-                    data: [40, 20, 80, 10],
-                  },
-                ],
-              }}
-              chartOptions={{ responsive: true, maintainAspectRatio: false }}
-            /> */}
           </div>
         </div>
       </main>
