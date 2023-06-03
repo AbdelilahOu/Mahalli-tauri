@@ -28,7 +28,7 @@ export const SellerDetails = defineComponent({
     onBeforeMount(async () => {
       const stats = await useStatsStore().getProductPerMonth(Number(id), false);
       ProductsStats.data = stats.data;
-      ProductsStats.dates = stats.dates.reverse();
+      ProductsStats.dates = stats.dates;
       ProductsStats.products = stats.products;
     });
 
