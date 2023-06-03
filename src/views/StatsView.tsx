@@ -12,17 +12,39 @@ export const StatsView = defineComponent({
   name: "Stats",
   components: { ChartBar, ChartLine },
   setup() {
+    const statsStore = useStatsStore();
+
     const InsOuts = reactive({
       keys: ["IN", "OUT"] as const,
       months: [] as string[],
       data: {} as FilteredStockData,
     });
 
+    const BestThree = reactive({
+      client: {
+        keys: [] as string[],
+        data: [] as number[],
+      },
+      seller: {
+        keys: [] as string[],
+        data: [] as number[],
+      },
+    });
+
     onBeforeMount(async () => {
       const { result, months: resultMonths } =
-        await useStatsStore().getStockMouvementStats();
+        await statsStore.getStockMouvementStats();
       InsOuts.months = resultMonths.reverse();
       InsOuts.data = result;
+
+      const TopClients = await statsStore.getBestThree();
+      const TopSellers = await statsStore.getBestThree(false);
+
+      BestThree.client.keys = TopClients.names;
+      BestThree.client.data = TopClients.result;
+
+      BestThree.seller.keys = TopSellers.names;
+      BestThree.seller.data = TopSellers.result;
     });
 
     return () => (
@@ -57,15 +79,13 @@ export const StatsView = defineComponent({
               <ChartDoughnut
                 id="doughnut"
                 chartData={{
-                  labels: ["EmberJs", "ReactJs", "AngularJs"],
+                  labels: BestThree.client.keys,
                   datasets: [
                     {
-                      backgroundColor: [
-                        generateColor().replace("0.2", "0.4"),
-                        generateColor().replace("0.2", "0.4"),
-                        generateColor().replace("0.2", "0.4"),
-                      ],
-                      data: [20, 80, 10],
+                      backgroundColor: BestThree.client.keys.map(() =>
+                        generateColor()
+                      ),
+                      data: BestThree.client.data,
                     },
                   ],
                 }}

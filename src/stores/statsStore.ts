@@ -74,7 +74,7 @@ export const useStatsStore = defineStore("StatsStore", {
         _.reduce(value, (pr, cr) => (pr += cr.amount), 0)
       );
       //
-      return { names: _.keys(result), result };
+      return { names: _.keys(result), result: _.values(result) };
     },
     getBestThreeClients: async function () {
       try {
