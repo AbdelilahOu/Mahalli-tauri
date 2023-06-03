@@ -37,32 +37,44 @@ export const useStatsStore = defineStore("StatsStore", {
       };
     },
     getProductPerMonth: async function (id: number, isClient: boolean = true) {
-      const existingDates = new Set<string>();
-      const existingProducts = new Set<string>();
-      const dataPerProduct = new Map<string, number[]>();
-
       const data: any[] = await this.db.select(
         isClient ? clientDetailsJoins : sellerDetailsJoins,
         [id]
       );
 
-      for (const { name, month, quantity } of data) {
-        // key doesnt exist in the map
-        if (!dataPerProduct.has(name)) dataPerProduct.set(name, []);
-        // get the data in the map
-        const availableData = dataPerProduct.get(name) as number[];
-        availableData.push(quantity ?? 0);
-        // update the map
-        dataPerProduct.set(name, availableData);
-        // add to the set
-        existingProducts.add(name);
-        existingDates.add(month);
-      }
+      const existingDates = _.keys(_.groupBy(data, "month"));
+      const existingProducts = _.keys(_.groupBy(data, "name"));
+      const dataPerProduct = _.mapValues(_.groupBy(data, "name"), (value) =>
+        _.reduce(
+          value,
+          (pr, cr) => {
+            if (!pr) pr = [];
+            pr.push(cr.quantity);
+            return pr;
+          },
+          [] as number[]
+        )
+      );
+
+      console.log(dataPerProduct);
+
+      // for (const { name, month, quantity } of data) {
+      //   // key doesnt exist in the map
+      //   if (!dataPerProduct.has(name)) dataPerProduct.set(name, []);
+      //   // get the data in the map
+      //   const availableData = dataPerProduct.get(name) as number[];
+      //   availableData.push(quantity ?? 0);
+      //   // update the map
+      //   dataPerProduct.set(name, availableData);
+      //   // add to the set
+      //   existingProducts.add(name);
+      //   existingDates.add(month);
+      // }
       return {
         // @ts-ignore
-        data: Object.fromEntries(dataPerProduct),
-        dates: Array.from(existingDates),
-        products: Array.from(existingProducts),
+        data: dataPerProduct,
+        dates: existingDates,
+        products: existingProducts,
       };
     },
     getBestThree: async function (isClients = true) {
