@@ -28,7 +28,7 @@ export const ClientDetails = defineComponent({
     onBeforeMount(async () => {
       const stats = await useStatsStore().getProductPerMonth(Number(id));
       ProductsStats.data = stats.data;
-      ProductsStats.dates = stats.dates.reverse();
+      ProductsStats.dates = stats.dates;
       ProductsStats.products = stats.products;
     });
     const toggleThisClient = (client: clientT | null, name: string) => {
