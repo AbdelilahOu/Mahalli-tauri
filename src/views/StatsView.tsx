@@ -52,25 +52,45 @@ export const StatsView = defineComponent({
               chartOptions={chartOptions}
             />
           </div>
-          <div class="w-full h-full">
-            <ChartDoughnut
-              id="doughnut"
-              chartData={{
-                labels: ["VueJs", "EmberJs", "ReactJs", "AngularJs"],
-                datasets: [
-                  {
-                    backgroundColor: [
-                      "#41B883",
-                      "#E46651",
-                      "#00D8FF",
-                      "#DD1B16",
-                    ],
-                    data: [40, 20, 80, 10],
-                  },
-                ],
-              }}
-              chartOptions={{ responsive: true, maintainAspectRatio: false }}
-            />
+          <div class="w-full flex gap-4 px-4 h-full">
+            <div class="w-1/2 h-full">
+              <ChartDoughnut
+                id="doughnut"
+                chartData={{
+                  labels: ["EmberJs", "ReactJs", "AngularJs"],
+                  datasets: [
+                    {
+                      backgroundColor: [
+                        generateColor().replace("0.2", "0.4"),
+                        generateColor().replace("0.2", "0.4"),
+                        generateColor().replace("0.2", "0.4"),
+                      ],
+                      data: [20, 80, 10],
+                    },
+                  ],
+                }}
+                chartOptions={{ responsive: true, maintainAspectRatio: false }}
+              />
+            </div>
+            <div class="w-1/2 h-full">
+              <ChartDoughnut
+                id="doughnut"
+                chartData={{
+                  labels: ["EmberJs", "ReactJs", "AngularJs"],
+                  datasets: [
+                    {
+                      backgroundColor: [
+                        generateColor().replace("0.2", "0.4"),
+                        generateColor().replace("0.2", "0.4"),
+                        generateColor().replace("0.2", "0.4"),
+                      ],
+                      data: [20, 80, 10],
+                    },
+                  ],
+                }}
+                chartOptions={{ responsive: true, maintainAspectRatio: false }}
+              />
+            </div>
           </div>
         </div>
       </main>
