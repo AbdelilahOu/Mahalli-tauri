@@ -7,6 +7,7 @@ import { useStatsStore } from "@/stores/statsStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBart";
 import type { FilteredStockData } from "@/types";
+import { ChartHolder } from "@/components/ChartHolder";
 
 export const StatsView = defineComponent({
   name: "Stats",
@@ -75,21 +76,26 @@ export const StatsView = defineComponent({
           </div>
           <div class="w-full flex gap-4 px-4 h-full">
             <div class="w-1/2 h-full">
-              <ChartDoughnut
-                id="doughnut"
-                chartData={{
-                  labels: BestThree.client.keys,
-                  datasets: [
-                    {
-                      backgroundColor: BestThree.client.keys.map(() =>
-                        generateColor().replace("0.2", "0.5")
-                      ),
-                      data: BestThree.client.data,
-                    },
-                  ],
-                }}
-                chartOptions={{ responsive: true, maintainAspectRatio: false }}
-              />
+              <ChartHolder title="best clients">
+                <ChartDoughnut
+                  id="doughnut"
+                  chartData={{
+                    labels: BestThree.client.keys,
+                    datasets: [
+                      {
+                        backgroundColor: BestThree.client.keys.map(() =>
+                          generateColor().replace("0.2", "0.5")
+                        ),
+                        data: BestThree.client.data,
+                      },
+                    ],
+                  }}
+                  chartOptions={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                  }}
+                />
+              </ChartHolder>
             </div>
             <div class="w-1/2 h-full">
               <ChartDoughnut
