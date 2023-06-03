@@ -73,23 +73,5 @@ export const useStatsStore = defineStore("StatsStore", {
       //
       return { names: _.keys(result), result: _.values(result) };
     },
-    getBestThreeClients: async function () {
-      try {
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    getBestThreeVendors: async function () {
-      try {
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    getBestThreeProducts: async function () {
-      try {
-      } catch (error) {
-        console.log(error);
-      }
-    },
   },
 });
