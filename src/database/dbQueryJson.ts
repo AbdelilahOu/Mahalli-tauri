@@ -230,6 +230,5 @@ export const invoiceDetailsJoins = `
     INNER JOIN clients c ON i.client_id = c.id
     INNER JOIN invoice_items ii ON i.id = ii.invoice_id
     INNER JOIN products p ON ii.product_id = p.id
-    WHERE i.id = [invoice_id];
-
+    WHERE i.id = $1;
 `;
