@@ -24,7 +24,7 @@ export const clientDailyExpenses = `
 
 export const sellerDailyExpenses = `
     SELECT strftime('%Y-%m-%d', o.created_at) AS day,
-        SUM(p.price * ABS(ci.quantity)) AS expense
+        SUM(p.price * ABS(oi.quantity)) AS expense
     FROM orders o
     JOIN order_items oi ON o.id = oi.order_id
     JOIN products p ON oi.product_id = p.id
