@@ -1,4 +1,3 @@
-import { ClientAdditional } from "@/components/ClientAdditional";
 import { defineComponent, onBeforeMount, reactive } from "vue";
 import { chartOptions, optionsWoTicks } from "@/constants/chartOptions";
 import { ChartHolder } from "@/components/ChartHolder";
@@ -6,16 +5,16 @@ import { useClientStore } from "@/stores/clientStore";
 import { generateColor } from "@/utils/generateColor";
 import { useStatsStore } from "@/stores/statsStore";
 import { useModalStore } from "@/stores/modalStore";
+import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
 import { UiCard } from "@/components/ui/UiCard";
 import type { clientT } from "@/types";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
-import { ChartLine } from "@/components/ChartLine";
 
 export const ClientDetails = defineComponent({
   name: "ClientDetails",
-  components: { UiCard, ClientAdditional, ChartHolder, ChartBar },
+  components: { UiCard, ChartHolder, ChartBar, ChartLine },
   setup() {
     const id = useRoute().params.id;
     const clientStore = useClientStore();
