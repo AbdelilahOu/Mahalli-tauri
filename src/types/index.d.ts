@@ -74,7 +74,7 @@ export interface orderItemT {
 }
 
 export interface newOrdersT extends Partial<Omit<orderT, "orderItems">> {
-  orderItems: Omit<orderItemT, "id" | "order_id" | "stock_id">[];
+  orderItems: Omit<orderItemT, "id" | "order_id" | "stock_id" | "product">[];
 }
 
 export interface updateOrdersT extends Partial<Omit<orderT, "commmandItems">> {
