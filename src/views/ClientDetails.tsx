@@ -5,7 +5,7 @@ import { useClientStore } from "@/stores/clientStore";
 import { generateColor } from "@/utils/generateColor";
 import { useStatsStore } from "@/stores/statsStore";
 import { useModalStore } from "@/stores/modalStore";
-import { ChartBar } from "@/components/ChartBart";
+import { ChartBar } from "@/components/ChartBar";
 import { UiCard } from "@/components/ui/UiCard";
 import type { clientT } from "@/types";
 import { useRoute } from "vue-router";
