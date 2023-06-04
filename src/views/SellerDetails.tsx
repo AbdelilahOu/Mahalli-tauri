@@ -1,4 +1,3 @@
-// import { SellerAdditional } from "@/components/SellerAdditional";
 import { defineComponent, onBeforeMount, reactive } from "vue";
 import { chartOptions, optionsWoTicks } from "@/constants/chartOptions";
 import { ChartHolder } from "@/components/ChartHolder";
@@ -6,12 +5,12 @@ import { useSellerStore } from "@/stores/sellerStore";
 import { generateColor } from "@/utils/generateColor";
 import { useStatsStore } from "@/stores/statsStore";
 import { useModalStore } from "@/stores/modalStore";
+import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
 import { UiCard } from "@/components/ui/UiCard";
 import type { sellerT } from "@/types";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
-import { ChartLine } from "@/components/ChartLine";
 
 export const SellerDetails = defineComponent({
   name: "SellerDetails",
