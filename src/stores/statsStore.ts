@@ -1,8 +1,10 @@
 import {
   bestThreeClients,
   bestThreeSellers,
+  clientDailyExpenses,
   clientDetailsJoins,
   inOutStatsJoins,
+  sellerDailyExpenses,
   sellerDetailsJoins,
 } from "@/database/dbQueryJson";
 import type { FilteredStockData } from "@/types";
@@ -72,6 +74,41 @@ export const useStatsStore = defineStore("StatsStore", {
       );
       //
       return { names: _.keys(result), result: _.values(result) };
+    },
+    getDailyExpenses: async function (id: number, isClient = true) {
+      const result: { day: string; expense: number }[] = await this.db.select(
+        isClient ? clientDailyExpenses : sellerDailyExpenses,
+        [id, new Date(new Date().setDate(new Date().getDate() - 7))]
+      );
+      const nextDay = new Date().getDay() == 6 ? 0 : new Date().getDay() + 1;
+
+      const resultMap = new Map<number, number>();
+
+      const weekDays = [0, 1, 2, 3, 4, 5, 6];
+
+      for (const index of weekDays) {
+        resultMap.set(index, 0);
+      }
+
+      for (const { day, expense } of result) {
+        resultMap.set(new Date(day).getDay(), expense);
+      }
+
+      // @ts-ignore
+      const keys = _.keys(Object.fromEntries(resultMap));
+      // @ts-ignore
+      const values = _.values(Object.fromEntries(resultMap));
+
+      const rearrangedKeys = keys.slice(nextDay).concat(keys.slice(0, nextDay));
+
+      const rearrangedValues = values
+        .slice(nextDay)
+        .concat(values.slice(0, nextDay));
+
+      return {
+        keys: rearrangedKeys,
+        values: rearrangedValues,
+      };
     },
   },
 });
