@@ -9,6 +9,32 @@ export const bestThreeClients = `
     LIMIT 3;
 `;
 
+export const clientDailyExpenses = `
+    SELECT strftime('%Y-%m-%d', i.created_at) AS day,
+        SUM(p.price * ABS(ci.quantity)) AS expense
+    FROM invoices i
+    JOIN invoice_items ci ON i.id = ci.invoice_id
+    JOIN products p ON ci.product_id = p.id
+    WHERE i.client_id = $1 
+    AND i.created_at > $2
+    GROUP BY day
+    ORDER BY day
+    LIMIT 7;
+`;
+
+export const sellerDailyExpenses = `
+    SELECT strftime('%Y-%m-%d', o.created_at) AS day,
+        SUM(p.price * ABS(ci.quantity)) AS expense
+    FROM orders o
+    JOIN order_items oi ON o.id = oi.order_id
+    JOIN products p ON oi.product_id = p.id
+    WHERE o.seller_id = $1 
+    AND o.created_at > $2
+    GROUP BY day
+    ORDER BY day
+    LIMIT 7;
+`;
+
 export const bestThreeSellers = `
     SELECT s.name AS name, SUM(p.price * ABS(ci.quantity)) AS amount
     FROM sellers s
