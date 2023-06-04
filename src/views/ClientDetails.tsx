@@ -65,7 +65,7 @@ export const ClientDetails = defineComponent({
               }}
               item={client.value}
             />
-            <div class="w-full flex items-end h-full">
+            <div class="w-full flex items-end xl:items-start h-full">
               <ChartLine
                 id="sjdlsdksd"
                 chartData={{
