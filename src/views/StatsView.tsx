@@ -6,7 +6,7 @@ import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
 import { useStatsStore } from "@/stores/statsStore";
 import { ChartLine } from "@/components/ChartLine";
-import { ChartBar } from "@/components/ChartBart";
+import { ChartBar } from "@/components/ChartBar";
 import type { FilteredStockData } from "@/types";
 
 export const StatsView = defineComponent({
