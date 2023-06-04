@@ -2,12 +2,12 @@ import { defineComponent, onBeforeMount, reactive } from "vue";
 import { ChartDoughnut } from "@/components/ChartDoughnut";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { chartOptions } from "@/constants/chartOptions";
+import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
 import { useStatsStore } from "@/stores/statsStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBart";
 import type { FilteredStockData } from "@/types";
-import { ChartHolder } from "@/components/ChartHolder";
 
 export const StatsView = defineComponent({
   name: "Stats",
@@ -51,72 +51,98 @@ export const StatsView = defineComponent({
       <main class="w-full h-full px-3 py-1">
         <div class="w-full h-full flex flex-col gap-4">
           <div class="w-full h-fit ">
-            <h1 class="uppercase text-gray-600 font-semibold mb-1">
-              {globalTranslate("Stats.Title")}
-            </h1>
-            <ChartBar
-              id="stock-mouvements-for-past-three-months"
-              chartData={{
-                labels: InsOuts.months,
-                datasets: InsOuts.keys.map((model) => {
-                  const color = generateColor();
-                  return {
-                    label: globalTranslate("Stats.Labels[0]"),
-                    backgroundColor: color,
-                    borderColor: color.replace("0.2", "0.5"),
-                    data: InsOuts.months.map(
-                      (month) => InsOuts.data[month][model] ?? 0
-                    ),
-                    borderWidth: 2,
-                  };
-                }),
+            <ChartHolder>
+              {{
+                default: () => (
+                  <ChartBar
+                    id="stock-mouvements-for-past-three-months"
+                    chartData={{
+                      labels: InsOuts.months,
+                      datasets: InsOuts.keys.map((model) => {
+                        const color = generateColor();
+                        return {
+                          label: globalTranslate("Stats.Labels[0]"),
+                          backgroundColor: color,
+                          borderColor: color.replace("0.2", "0.5"),
+                          data: InsOuts.months.map(
+                            (month) => InsOuts.data[month][model] ?? 0
+                          ),
+                          borderWidth: 2,
+                        };
+                      }),
+                    }}
+                    chartOptions={chartOptions}
+                  />
+                ),
+                title: () => (
+                  <h1 class="m-2 w-full text-center text-base font-medium">
+                    <i>{globalTranslate("Stats.Title")}</i>
+                  </h1>
+                ),
               }}
-              chartOptions={chartOptions}
-            />
+            </ChartHolder>
           </div>
-          <div class="w-full flex gap-4 px-4 h-full">
+          <div class="w-full flex gap-4 lg:justify-start justify-between h-full">
             <div class="w-1/2 h-full">
-              <ChartHolder title="best clients">
-                <ChartDoughnut
-                  id="doughnut"
-                  chartData={{
-                    labels: BestThree.client.keys,
-                    datasets: [
-                      {
-                        backgroundColor: BestThree.client.keys.map(() =>
-                          generateColor().replace("0.2", "0.5")
-                        ),
-                        data: BestThree.client.data,
-                      },
-                    ],
-                  }}
-                  chartOptions={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                  }}
-                />
+              <ChartHolder>
+                {{
+                  default: () => (
+                    <ChartDoughnut
+                      id="doughnut"
+                      chartData={{
+                        labels: BestThree.client.keys,
+                        datasets: [
+                          {
+                            backgroundColor: BestThree.client.keys.map(() =>
+                              generateColor().replace("0.2", "0.5")
+                            ),
+                            data: BestThree.client.data,
+                          },
+                        ],
+                      }}
+                      chartOptions={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                      }}
+                    />
+                  ),
+                  title: () => (
+                    <h1 class="m-2 w-full text-center text-base font-medium">
+                      <i>Best clients based on expenses</i>
+                    </h1>
+                  ),
+                }}
               </ChartHolder>
             </div>
             <div class=" w-1/2 h-full">
-              <ChartHolder title="best sellers">
-                <ChartDoughnut
-                  id="doughnut"
-                  chartData={{
-                    labels: BestThree.seller.keys,
-                    datasets: [
-                      {
-                        backgroundColor: BestThree.seller.keys.map(() =>
-                          generateColor().replace("0.2", "0.5")
-                        ),
-                        data: BestThree.seller.data,
-                      },
-                    ],
-                  }}
-                  chartOptions={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                  }}
-                />
+              <ChartHolder>
+                {{
+                  default: () => (
+                    <ChartDoughnut
+                      id="doughnut"
+                      chartData={{
+                        labels: BestThree.seller.keys,
+                        datasets: [
+                          {
+                            backgroundColor: BestThree.seller.keys.map(() =>
+                              generateColor().replace("0.2", "0.5")
+                            ),
+                            data: BestThree.seller.data,
+                          },
+                        ],
+                      }}
+                      chartOptions={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                      }}
+                    />
+                  ),
+                  title: () => (
+                    <h1 class="m-2 w-full text-center text-base font-medium">
+                      <i>Best sellers based on expenses</i>
+                    </h1>
+                  ),
+                }}
               </ChartHolder>
             </div>
           </div>
