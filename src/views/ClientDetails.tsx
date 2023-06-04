@@ -1,5 +1,5 @@
-import { defineComponent, onBeforeMount, reactive } from "vue";
 import { chartOptions, optionsWoTicks } from "@/constants/chartOptions";
+import { defineComponent, onBeforeMount, reactive } from "vue";
 import { ChartHolder } from "@/components/ChartHolder";
 import { useClientStore } from "@/stores/clientStore";
 import { generateColor } from "@/utils/generateColor";
