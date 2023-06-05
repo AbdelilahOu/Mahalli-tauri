@@ -25,9 +25,9 @@ export const ProductTable = defineComponent({
   },
   setup(props) {
     const modalStore = useModalStore();
-
-    const feilds: string[] = ["product name", "price", "stock", "action"];
+    //
     const pagination = ref<number>(0);
+    //
     const toggleThisProduct = (product: productT, name: string) => {
       modalStore.updateProductRow(product);
       modalStore.updateModal({ key: "name", value: name });
