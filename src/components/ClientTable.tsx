@@ -60,7 +60,10 @@ export const ClientTable = defineComponent({
           </thead>
           <tbody class="text-sm divide-y divide-gray-100">
             {props.Clients.filter((c) =>
-              JSON.stringify(c).toLocaleLowerCase().includes(props.FilterParam)
+              // @ts-ignore
+              JSON.stringify(Object.values(c))
+                .toLocaleLowerCase()
+                .includes(props.FilterParam)
             )
               .slice(pagination.value * 15, pagination.value * 15 + 15)
               .map((client, index) => (
