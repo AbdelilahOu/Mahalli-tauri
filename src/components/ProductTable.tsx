@@ -56,7 +56,7 @@ export const ProductTable = defineComponent({
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
             )
-              .slice(pagination.value * 15, pagination.value * 15 + 15)
+              .slice(pagination.value * 17, pagination.value * 17 + 17)
               .map((product, index) => (
                 <tr v-fade={index} key={product.id}>
                   <td class="p-2">
