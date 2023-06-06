@@ -8,8 +8,8 @@ import { RouterLink } from "vue-router";
 import type { clientT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
 
-export const ClientTable = defineComponent({
-  name: "ClientTable",
+export const ClientsTable = defineComponent({
+  name: "ClientsTable",
   props: {
     Clients: {
       type: Array as PropType<clientT[]>,
