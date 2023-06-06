@@ -38,7 +38,7 @@ export const useStatsStore = defineStore("StatsStore", {
         months: Array.from(months),
       };
     },
-    getProductPerMonth: async function (id: number, isClient: boolean = true) {
+    getProductPerMonth: async function (id: number, isClient = true) {
       const data: any[] = await this.db.select(
         isClient ? clientDetailsJoins : sellerDetailsJoins,
         [id]
