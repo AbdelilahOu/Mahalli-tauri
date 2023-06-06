@@ -1,6 +1,6 @@
 import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { ClientTable } from "@/components/ClientTable";
+import { ClientsTable } from "@/components/ClientsTable";
 import { useClientStore } from "@/stores/clientStore";
 import { UiButton } from "@/components/ui/UiButton";
 import { useModalStore } from "@/stores/modalStore";
@@ -10,7 +10,7 @@ import { storeToRefs } from "pinia";
 
 export const ClientsView = defineComponent({
   name: "Clients",
-  components: { ClientTable, UiButton, UiInput, UiIcon },
+  components: { ClientsTable, UiButton, UiInput, UiIcon },
   setup() {
     const modalStore = useModalStore();
     const clientStore = useClientStore();
@@ -67,7 +67,7 @@ export const ClientsView = defineComponent({
           </Transition>
 
           <Transition appear>
-            <ClientTable
+            <ClientsTable
               FilterParam={searchQuery.value}
               Clients={clients.value}
             />
