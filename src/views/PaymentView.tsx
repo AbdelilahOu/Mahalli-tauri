@@ -1,6 +1,6 @@
 import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { PaymentTable } from "@/components/PaymentTable";
+import { PaymentsTable } from "@/components/PaymentsTable";
 import { UiButton } from "@/components/ui/UiButton";
 import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
@@ -10,7 +10,7 @@ import { usePaymentStore } from "@/stores/paymentStore";
 
 export const PaymentView = defineComponent({
   name: "Payments",
-  components: { PaymentTable, UiButton, UiInput, UiIcon },
+  components: { PaymentsTable, UiButton, UiInput, UiIcon },
   setup() {
     const modalStore = useModalStore();
     const PaymentStore = usePaymentStore();
@@ -28,8 +28,6 @@ export const PaymentView = defineComponent({
       modalStore.updateModal({ key: "name", value: name });
     };
     //
-    const sortPaymentsBy = (by: string) => {};
-
     return () => (
       <main class="w-full h-full px-3">
         <div class="w-full h-full flex flex-col items-start justify-start">
@@ -69,9 +67,8 @@ export const PaymentView = defineComponent({
           </Transition>
 
           <Transition appear>
-            <PaymentTable
+            <PaymentsTable
               FilterParam={searchQuery.value}
-              sortBy={(by: string) => sortPaymentsBy(by)}
               Payment={Payments.value}
             />
           </Transition>
