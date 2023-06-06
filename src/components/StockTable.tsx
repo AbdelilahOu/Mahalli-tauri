@@ -13,9 +13,6 @@ export const StockTable = defineComponent({
       type: Array as PropType<stockMvmT[]>,
       required: true,
     },
-    sortBy: {
-      type: Function as PropType<(by: string) => void>,
-    },
     FilterParam: {
       type: String,
       required: true,
