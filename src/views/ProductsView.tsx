@@ -28,7 +28,6 @@ export const ProductsView = defineComponent({
       modalStore.updateModal({ key: "name", value: name });
     };
     //
-    const sortProductBy = (by: string) => "";
     //
     onBeforeMount(() => {
       productStore.getAllProducts();
@@ -73,7 +72,6 @@ export const ProductsView = defineComponent({
           <Transition appear>
             <ProductsTable
               FilterParam={searchQuery.value}
-              sortBy={(by: string) => sortProductBy(by)}
               Products={products.value}
             />
           </Transition>
