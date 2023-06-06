@@ -67,7 +67,7 @@ export const OrdersTable = defineComponent({
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
             )
-              .slice(pagination.value * 15, pagination.value * 15 + 15)
+              .slice(pagination.value * 17, pagination.value * 17 + 17)
               .map((Orders, index) => (
                 <tr v-fade={index} key={Orders.id}>
                   <td class="p-2">
