@@ -8,15 +8,12 @@ import type { sellerT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
 import { RouterLink } from "vue-router";
 
-export const SellerTable = defineComponent({
-  name: "SellerTable",
+export const SellersTable = defineComponent({
+  name: "SellersTable",
   props: {
     Sellers: {
       type: Array as PropType<sellerT[]>,
       required: true,
-    },
-    sortBy: {
-      type: Function as PropType<(by: string) => void>,
     },
     FilterParam: {
       type: String,
