@@ -1,6 +1,6 @@
 import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { ProductTable } from "@/components/ProductTable";
+import { ProductsTable } from "@/components/ProductsTable";
 import { useProductStore } from "@/stores/productStore";
 import { UiButton } from "@/components/ui/UiButton";
 import { useModalStore } from "@/stores/modalStore";
@@ -11,7 +11,7 @@ import { storeToRefs } from "pinia";
 export const ProductsView = defineComponent({
   name: "Products",
   components: {
-    ProductTable,
+    ProductsTable,
     UiButton,
     UiInput,
     UiIcon,
@@ -71,7 +71,7 @@ export const ProductsView = defineComponent({
             </div>
           </Transition>
           <Transition appear>
-            <ProductTable
+            <ProductsTable
               FilterParam={searchQuery.value}
               sortBy={(by: string) => sortProductBy(by)}
               Products={products.value}

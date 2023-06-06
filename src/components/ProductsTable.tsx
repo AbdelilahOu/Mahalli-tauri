@@ -6,8 +6,8 @@ import type { productT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 
-export const ProductTable = defineComponent({
-  name: "ProductTable",
+export const ProductsTable = defineComponent({
+  name: "ProductsTable",
   components: { UiCheckBox, UiIcon, UiPagination },
   props: {
     Products: {
