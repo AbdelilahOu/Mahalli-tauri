@@ -14,9 +14,6 @@ export const InvoicesTable = defineComponent({
       type: Array as PropType<invoiceT[]>,
       required: true,
     },
-    sortBy: {
-      type: Function as PropType<(by: string) => void>,
-    },
     FilterParam: {
       type: String,
       required: true,

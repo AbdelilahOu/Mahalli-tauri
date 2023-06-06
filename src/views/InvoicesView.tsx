@@ -1,6 +1,6 @@
 import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { InvoiceTable } from "@/components/InvoiceTable";
+import { InvoicesTable } from "@/components/InvoicesTable";
 import { useProductStore } from "@/stores/productStore";
 import { useInvoiceStore } from "@/stores/invoiceStore";
 import { useClientStore } from "@/stores/clientStore";
@@ -13,7 +13,7 @@ import { storeToRefs } from "pinia";
 export const InvoicesView = defineComponent({
   name: "Invoices",
   components: {
-    InvoiceTable,
+    InvoicesTable,
     UiButton,
     UiInput,
     UiIcon,
@@ -76,7 +76,7 @@ export const InvoicesView = defineComponent({
             </div>
           </Transition>
           <Transition appear>
-            <InvoiceTable
+            <InvoicesTable
               FilterParam={searchQuery.value}
               Invoices={invoices.value}
             />
