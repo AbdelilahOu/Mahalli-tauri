@@ -47,7 +47,7 @@ export const StockTable = defineComponent({
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
             )
-              .slice(pagination.value * 15, pagination.value * 15 + 15)
+              .slice(pagination.value * 17, pagination.value * 17 + 17)
               .map((mvm, index) => (
                 <tr v-fade={index} key={mvm.id}>
                   <td class="p-2">
