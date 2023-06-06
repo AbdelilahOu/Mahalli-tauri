@@ -15,9 +15,6 @@ export const ClientTable = defineComponent({
       type: Array as PropType<clientT[]>,
       required: true,
     },
-    sortBy: {
-      type: Function as PropType<(by: string) => void>,
-    },
     FilterParam: {
       type: String,
       required: true,
