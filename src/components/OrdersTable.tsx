@@ -15,9 +15,6 @@ export const OrdersTable = defineComponent({
       type: Array as PropType<orderT[]>,
       required: true,
     },
-    sortBy: {
-      type: Function as PropType<(by: string) => void>,
-    },
     FilterParam: {
       type: String,
       required: true,

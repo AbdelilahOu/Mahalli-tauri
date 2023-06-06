@@ -5,15 +5,12 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import type { crediT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
 import { useModalStore } from "@/stores/modalStore";
-export const PaymentTable = defineComponent({
-  name: "PaymentTable",
+export const PaymentsTable = defineComponent({
+  name: "PaymentsTable",
   props: {
     Payment: {
       type: Array as PropType<crediT[]>,
       required: true,
-    },
-    sortBy: {
-      type: Function as PropType<(by: string) => void>,
     },
     FilterParam: {
       type: String,
