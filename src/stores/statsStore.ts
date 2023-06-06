@@ -80,10 +80,9 @@ export const useStatsStore = defineStore("StatsStore", {
         isClient ? clientDailyExpenses : sellerDailyExpenses,
         [id, new Date(new Date().setDate(new Date().getDate() - 7))]
       );
+      // date related
       const nextDay = new Date().getDay() == 6 ? 0 : new Date().getDay() + 1;
-
       const resultMap = new Map<number, number>();
-
       const weekDays = [0, 1, 2, 3, 4, 5, 6];
 
       for (const index of weekDays) {
@@ -95,15 +94,11 @@ export const useStatsStore = defineStore("StatsStore", {
       }
 
       // @ts-ignore
-      const keys = _.keys(Object.fromEntries(resultMap));
+      const K = _.keys(Object.fromEntries(resultMap));
       // @ts-ignore
-      const values = _.values(Object.fromEntries(resultMap));
-
-      const rearrangedKeys = keys.slice(nextDay).concat(keys.slice(0, nextDay));
-
-      const rearrangedValues = values
-        .slice(nextDay)
-        .concat(values.slice(0, nextDay));
+      const V = _.values(Object.fromEntries(resultMap));
+      const rearrangedKeys = K.slice(nextDay).concat(K.slice(0, nextDay));
+      const rearrangedValues = V.slice(nextDay).concat(V.slice(0, nextDay));
 
       return {
         keys: rearrangedKeys,
