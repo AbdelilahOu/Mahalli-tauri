@@ -7,7 +7,8 @@ import { UiCheckBox } from "./ui/UiCheckBox";
 import UiIcon from "./ui/UiIcon.vue";
 import { UiPagination } from "./ui/UiPagination";
 
-export const InvoiceTable = defineComponent({
+export const InvoicesTable = defineComponent({
+  name: "InvoicesTable",
   props: {
     Invoices: {
       type: Array as PropType<invoiceT[]>,
