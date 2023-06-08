@@ -1,6 +1,6 @@
 import type { sellerT, sellerState, updateSellerT, newSellerT } from "@/types";
-import { defineStore } from "pinia";
 import { saveFile } from "@/utils/fs";
+import { defineStore } from "pinia";
 
 export const useSellerStore = defineStore("SellerStore", {
   state: (): sellerState => {
