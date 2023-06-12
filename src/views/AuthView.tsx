@@ -42,8 +42,8 @@ export const AuthView = defineComponent({
                 animationData={data}
               />
             </div>
-            <div class="w-full h-full flex bg-gray-50 flex-col justify-center items-center">
-              <div class="lg:w-1/2 w-full h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+            <div class="w-full h-full flex bg-gray-white flex-col justify-center items-center">
+              <div class="lg:w-1/2 w-full h-fit z-50 gap-3 flex flex-col bg-transparent p-2 min-w-[350px]">
                 <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
                   {globalTranslate("Auth.title")}
                 </h1>
