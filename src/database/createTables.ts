@@ -4,6 +4,14 @@ export const seedDatabase = async (db: Database) => {
   console.log("run create tables");
   try {
     await db.execute(`
+      CREATE TABLE IF NOT EXISTS users  (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        password TEXT NOT NULL,
+        email TEXT NOT NULL,
+        role TEXT NOT NULL DEFAULT 'user'
+      );
+
       CREATE TABLE IF NOT EXISTS clients (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,

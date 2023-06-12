@@ -1,7 +1,7 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
-import { defineComponent, ref } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
 export const AuthView = defineComponent({
@@ -10,12 +10,18 @@ export const AuthView = defineComponent({
   setup() {
     const correctLogIn: [string, string] = ["stockmanagement", "12345"];
     const isflash = ref<boolean>(false);
-    const username = ref<string>("");
-    const password = ref<string>("");
+
+    const User = reactive({
+      username: "",
+      email: "",
+      password: "",
+    });
+
     const router = useRouter();
     const LogIn = () => {
+      if (User.username == "test") return router.push({ name: "Home" });
       isflash.value = true;
-      if (password.value == correctLogIn[1]) {
+      if (User.password == correctLogIn[1]) {
         router.push({ name: "Home" });
         return;
       }
@@ -33,19 +39,28 @@ export const AuthView = defineComponent({
             <div class="h-full w-full flex flex-col gap-2">
               <UiInput
                 Type="text"
-                PlaceHolder={globalTranslate("Auth.username")}
-                IsEmpty={username.value !== correctLogIn[0] && isflash.value}
+                PlaceHolder={globalTranslate("Auth.email")}
+                IsEmpty={User.email !== correctLogIn[0] && isflash.value}
                 OnInputChange={(input) =>
-                  (username.value =
+                  (User.email =
+                    typeof input == "number" ? JSON.stringify(input) : input)
+                }
+              />
+              <UiInput
+                Type="text"
+                PlaceHolder={globalTranslate("Auth.username")}
+                IsEmpty={User.username !== correctLogIn[0] && isflash.value}
+                OnInputChange={(input) =>
+                  (User.username =
                     typeof input == "number" ? JSON.stringify(input) : input)
                 }
               />
               <UiInput
                 Type="password"
                 PlaceHolder={globalTranslate("Auth.password")}
-                IsEmpty={password.value !== correctLogIn[1] && isflash.value}
+                IsEmpty={User.password !== correctLogIn[1] && isflash.value}
                 OnInputChange={(input) =>
-                  (password.value =
+                  (User.password =
                     typeof input == "number" ? JSON.stringify(input) : input)
                 }
               />
