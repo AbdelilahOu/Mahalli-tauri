@@ -8,9 +8,9 @@ import { createPinia } from "pinia";
 import router from "./router";
 import App from "./App.vue";
 import "./assets/main.css";
+import "vue3-lottie/dist/style.css";
 
 const locale = localStorage.getItem("locale");
-
 const initiVueApp = async () => {
   // sqlite connection
   const db = await database.load("sqlite:db.sqlite");
