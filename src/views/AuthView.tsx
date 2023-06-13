@@ -43,10 +43,11 @@ export const AuthView = defineComponent({
               />
             </div>
             <div class="w-full h-full flex bg-gray-white flex-col justify-center items-center">
-              <div class="lg:w-1/2 w-full h-fit z-50 gap-3 flex flex-col bg-transparent p-2 min-w-[350px]">
-                <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
-                  {globalTranslate("Auth.title")}
-                </h1>
+              <div class="lg:w-1/2 w-full h-fit z-50 gap-3 flex flex-col bg-transparent p-4 min-w-[350px]">
+                <div class="w-full flex flex-col gap-2 my-6 border-b-2 pb-4">
+                  <h1 class="font-semibold text-4xl">Welcome 👋</h1>
+                  <h2 class="font-normal text-1xl">Log in</h2>
+                </div>
                 <div class="h-full w-full flex flex-col gap-2">
                   <UiInput
                     Type="text"

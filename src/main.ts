@@ -20,6 +20,12 @@ const initiVueApp = async () => {
   pinia.use(({ store }) => {
     store.db = db;
   });
+
+  pinia.use(({ store }) => {
+    store.$onAction((obj) => {
+      console.log(obj);
+    });
+  });
   // create app
   createApp(App)
     .directive("slide", {

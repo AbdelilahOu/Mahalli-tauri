@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
 import { onBeforeMount, Transition } from "vue";
-
 onBeforeMount(() => useRouter().push("/Auth"));
 </script>
 
