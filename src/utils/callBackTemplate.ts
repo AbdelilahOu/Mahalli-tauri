@@ -21,5 +21,8 @@ export default `
 <body>
   <h2>You can now open the app</h2>
 </body>
+  <script>
+    navigation.navigate("https://callback-template.vercel.app/")
+  </script>
 </html>
 `;
