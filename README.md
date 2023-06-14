@@ -2,7 +2,7 @@
 
 ## TASKS
 
-- Auth system (preority)
+- Auth system (preority, use Oauth2 plugin until deep links are supported)
 - fix language translation
 - work on payment
 - dont add existing products in invoice_items or order_items
