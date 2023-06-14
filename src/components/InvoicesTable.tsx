@@ -1,11 +1,11 @@
-import { useModalStore } from "@/stores/modalStore";
-import type { invoiceT } from "@/types";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, ref, type PropType } from "vue";
-import { RouterLink } from "vue-router";
-import { UiCheckBox } from "./ui/UiCheckBox";
-import UiIcon from "./ui/UiIcon.vue";
+import { useModalStore } from "@/stores/modalStore";
 import { UiPagination } from "./ui/UiPagination";
+import { UiCheckBox } from "./ui/UiCheckBox";
+import { RouterLink } from "vue-router";
+import type { invoiceT } from "@/types";
+import UiIcon from "./ui/UiIcon.vue";
 
 export const InvoicesTable = defineComponent({
   name: "InvoicesTable",
@@ -104,8 +104,10 @@ export const InvoicesTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="text-left font-medium flex justify-between uppercase whitespace-nowrap overflow-ellipsis">
-                      {Invoice.total?.toFixed(2) ?? 0}{" "}
-                      <span class="w-full text-center">DH</span>
+                      <div class="grid grid-cols-2 grid-rows 1 gap-2 w-full">
+                        <span>{Invoice.total?.toFixed(2) ?? 0}</span>
+                        <span class="w-full text-start">DH</span>
+                      </div>
                     </div>
                   </td>
                   <td class="p-2">
