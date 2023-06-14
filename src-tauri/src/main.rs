@@ -42,6 +42,7 @@
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_oauth::init())
         // .invoke_handler(tauri::generate_handler![command_name])
         .plugin(tauri_plugin_sql::Builder::default().build())
         .run(tauri::generate_context!())
