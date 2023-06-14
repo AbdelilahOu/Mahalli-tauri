@@ -5,9 +5,10 @@ import { defineComponent, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { Vue3Lottie } from "vue3-lottie";
 import data from "@/animations/66291-meditative-business-man.json";
+import UiIcon from "@/components/ui/UiIcon.vue";
 export const AuthView = defineComponent({
   name: "Auth",
-  components: { UiButton, UiInput, Vue3Lottie },
+  components: { UiButton, UiInput, Vue3Lottie, UiIcon },
   setup() {
     const correctLogIn: [string, string] = ["stockmanagement", "12345"];
     const isflash = ref<boolean>(false);
@@ -44,11 +45,24 @@ export const AuthView = defineComponent({
             </div>
             <div class="w-full h-full flex bg-gray-white flex-col justify-center items-center">
               <div class="lg:w-1/2 w-full h-fit z-50 gap-3 flex flex-col bg-transparent p-4 min-w-[350px]">
-                <div class="w-full flex flex-col gap-2 my-6 border-b-2 pb-4">
+                <div class="w-full flex flex-col gap-2 pb-4">
                   <h1 class="font-semibold text-4xl">Welcome 👋</h1>
                   <h2 class="font-normal text-1xl">Log in</h2>
                 </div>
-                <div class="h-full w-full flex flex-col gap-2">
+                <div class="w-full h-12">
+                  <button class="w-full h-12 flex gap-3 items-center justify-center rounded-md border-2">
+                    <UiIcon
+                      IsStyled={false}
+                      Class="h-fit w-fit flex items-center justify-center scale-[0.6]"
+                      name="Google"
+                    />
+                    Log in using google
+                  </button>
+                </div>
+                <div class="w-full flex items-center justify-center h-fit my-1 text-gray-400">
+                  or
+                </div>
+                <div class="h-full w-full grid grid-cols-1 grid-rows-[repeat(3,2.5rem)] gap-2">
                   <UiInput
                     Type="text"
                     PlaceHolder={globalTranslate("Auth.email")}
@@ -83,7 +97,7 @@ export const AuthView = defineComponent({
                     }
                   />
                 </div>
-                <div class="flex">
+                <div class="flex h-[2.5rem]">
                   <UiButton colorTheme="a" Click={() => LogIn()}>
                     {globalTranslate("Auth.title")}
                   </UiButton>
