@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
 import { onBeforeMount, Transition } from "vue";
-onBeforeMount(() => useRouter().push("/Auth"));
+onBeforeMount(() => {
+  useRouter().push({ path: "/Auth", query: { checkAuth: "true" } });
+});
 </script>
 
 <template>
