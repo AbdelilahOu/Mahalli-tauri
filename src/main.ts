@@ -9,8 +9,11 @@ import router from "./router";
 import App from "./App.vue";
 import "./assets/main.css";
 import "vue3-lottie/dist/style.css";
+import { VueFire, VueFireAuth } from "vuefire";
+import { FireApp } from "./utils/firebase";
 
 const locale = localStorage.getItem("locale");
+
 const initiVueApp = async () => {
   // sqlite connection
   const db = await database.load("sqlite:db.sqlite");
@@ -28,6 +31,10 @@ const initiVueApp = async () => {
   });
   // create app
   createApp(App)
+    .use(VueFire, {
+      firebaseApp: FireApp,
+      modules: [VueFireAuth()],
+    })
     .directive("slide", {
       mounted: (el: HTMLElement, bin: DirectiveBinding) => {
         useMotion(el, {

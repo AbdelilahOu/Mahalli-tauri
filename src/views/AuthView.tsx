@@ -1,16 +1,31 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { Vue3Lottie } from "vue3-lottie";
 import data from "@/animations/66291-meditative-business-man.json";
 import UiIcon from "@/components/ui/UiIcon.vue";
+import { getCurrentUser } from "vuefire";
 export const AuthView = defineComponent({
   name: "Auth",
   components: { UiButton, UiInput, Vue3Lottie, UiIcon },
   setup() {
-    const correctLogIn: [string, string] = ["stockmanagement", "12345"];
+    const checkForAuth = ref(
+      useRouter().currentRoute.value.query.checkAuth === "true"
+    );
+
+    const shouldLogIn = ref(false);
+
+    onBeforeMount(async () => {
+      const isAuthenticated = await getCurrentUser();
+      if (isAuthenticated) {
+        router.push({ name: "Home" });
+        return;
+      }
+      shouldLogIn.value = true;
+    });
+
     const isflash = ref<boolean>(false);
 
     const User = reactive({
@@ -20,21 +35,28 @@ export const AuthView = defineComponent({
     });
 
     const router = useRouter();
+
     const LogIn = () => {
       if (User.username == "test") return router.push({ name: "Home" });
-      isflash.value = true;
-      if (User.password == correctLogIn[1]) {
-        router.push({ name: "Home" });
-        return;
-      }
-      setTimeout(() => {
-        isflash.value = false;
-      }, 1000);
+      // isflash.value = true;
+      // if (User.password == correctLogIn[1]) {
+      //   router.push({ name: "Home" });
+      //   return;
+      // }
+      // setTimeout(() => {
+      //   isflash.value = false;
+      // }, 1000);
     };
     return () => (
       <main class="w-screen h-screen bg-white">
         <div class="w-full h-full flex justify-center items-center flex-col">
-          <div class="w-full h-full grid grid-cols-2 gap-4 grid-rows-1">
+          <div
+            style={{
+              gridTemplateColumns:
+                checkForAuth.value && !shouldLogIn.value ? "1fr" : "1fr 1fr",
+            }}
+            class="w-full h-full grid gap-4 grid-rows-1 transition-all duration-200"
+          >
             <div class="w-full h-full">
               <Vue3Lottie
                 class="fill-gray-100"
@@ -43,67 +65,71 @@ export const AuthView = defineComponent({
                 animationData={data}
               />
             </div>
-            <div class="w-full h-full flex bg-gray-white flex-col justify-center items-center">
-              <div class="lg:w-1/2 w-full h-fit z-50 gap-3 flex flex-col bg-transparent p-4 min-w-[350px]">
-                <div class="w-full flex flex-col gap-2 pb-4">
-                  <h1 class="font-semibold text-4xl">Welcome 👋</h1>
-                  <h2 class="font-normal text-1xl">Log in with</h2>
-                </div>
-                <div class="w-full h-12">
-                  <button class="w-full h-12 flex gap-1 items-center justify-center rounded-md border-2">
-                    <UiIcon
-                      IsStyled={false}
-                      Class="h-fit w-fit flex items-center justify-center scale-[0.6]"
-                      name="Google"
+            {shouldLogIn.value ? (
+              <div class="w-full h-full flex bg-gray-white flex-col justify-center items-center">
+                <div class="lg:w-1/2 w-full h-fit z-50 gap-3 flex flex-col bg-transparent p-4 min-w-[350px]">
+                  <div class="w-full flex flex-col gap-2 pb-4">
+                    <h1 class="font-semibold text-4xl">Welcome 👋</h1>
+                    <h2 class="font-normal text-1xl">Log in with</h2>
+                  </div>
+                  <div class="w-full h-12">
+                    <button class="w-full h-12 flex gap-1 items-center justify-center rounded-md border-2">
+                      <UiIcon
+                        IsStyled={false}
+                        Class="h-fit w-fit flex items-center justify-center scale-[0.6]"
+                        name="Google"
+                      />
+                      Google
+                    </button>
+                  </div>
+                  <div class="w-full flex items-center justify-center h-fit my-1 text-gray-400">
+                    or
+                  </div>
+                  <div class="h-full w-full grid grid-cols-1 grid-rows-[repeat(3,2.5rem)] gap-2">
+                    <UiInput
+                      Type="text"
+                      PlaceHolder={globalTranslate("Auth.email")}
+                      IsEmpty={User.email !== "" && isflash.value}
+                      OnInputChange={(input) =>
+                        (User.email =
+                          typeof input == "number"
+                            ? JSON.stringify(input)
+                            : input)
+                      }
                     />
-                    Google
-                  </button>
-                </div>
-                <div class="w-full flex items-center justify-center h-fit my-1 text-gray-400">
-                  or
-                </div>
-                <div class="h-full w-full grid grid-cols-1 grid-rows-[repeat(3,2.5rem)] gap-2">
-                  <UiInput
-                    Type="text"
-                    PlaceHolder={globalTranslate("Auth.email")}
-                    IsEmpty={User.email !== correctLogIn[0] && isflash.value}
-                    OnInputChange={(input) =>
-                      (User.email =
-                        typeof input == "number"
-                          ? JSON.stringify(input)
-                          : input)
-                    }
-                  />
-                  <UiInput
-                    Type="text"
-                    PlaceHolder={globalTranslate("Auth.username")}
-                    IsEmpty={User.username !== correctLogIn[0] && isflash.value}
-                    OnInputChange={(input) =>
-                      (User.username =
-                        typeof input == "number"
-                          ? JSON.stringify(input)
-                          : input)
-                    }
-                  />
-                  <UiInput
-                    Type="password"
-                    PlaceHolder={globalTranslate("Auth.password")}
-                    IsEmpty={User.password !== correctLogIn[1] && isflash.value}
-                    OnInputChange={(input) =>
-                      (User.password =
-                        typeof input == "number"
-                          ? JSON.stringify(input)
-                          : input)
-                    }
-                  />
-                </div>
-                <div class="flex h-[2.5rem]">
-                  <UiButton colorTheme="a" Click={() => LogIn()}>
-                    {globalTranslate("Auth.title")}
-                  </UiButton>
+                    <UiInput
+                      Type="text"
+                      PlaceHolder={globalTranslate("Auth.username")}
+                      IsEmpty={User.username !== "" && isflash.value}
+                      OnInputChange={(input) =>
+                        (User.username =
+                          typeof input == "number"
+                            ? JSON.stringify(input)
+                            : input)
+                      }
+                    />
+                    <UiInput
+                      Type="password"
+                      PlaceHolder={globalTranslate("Auth.password")}
+                      IsEmpty={User.password !== "" && isflash.value}
+                      OnInputChange={(input) =>
+                        (User.password =
+                          typeof input == "number"
+                            ? JSON.stringify(input)
+                            : input)
+                      }
+                    />
+                  </div>
+                  <div class="flex h-[2.5rem]">
+                    <UiButton colorTheme="a" Click={() => LogIn()}>
+                      {globalTranslate("Auth.title")}
+                    </UiButton>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </main>
