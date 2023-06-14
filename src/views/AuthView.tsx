@@ -47,16 +47,16 @@ export const AuthView = defineComponent({
               <div class="lg:w-1/2 w-full h-fit z-50 gap-3 flex flex-col bg-transparent p-4 min-w-[350px]">
                 <div class="w-full flex flex-col gap-2 pb-4">
                   <h1 class="font-semibold text-4xl">Welcome 👋</h1>
-                  <h2 class="font-normal text-1xl">Log in</h2>
+                  <h2 class="font-normal text-1xl">Log in with</h2>
                 </div>
                 <div class="w-full h-12">
-                  <button class="w-full h-12 flex gap-3 items-center justify-center rounded-md border-2">
+                  <button class="w-full h-12 flex gap-1 items-center justify-center rounded-md border-2">
                     <UiIcon
                       IsStyled={false}
                       Class="h-fit w-fit flex items-center justify-center scale-[0.6]"
                       name="Google"
                     />
-                    Log in using google
+                    Google
                   </button>
                 </div>
                 <div class="w-full flex items-center justify-center h-fit my-1 text-gray-400">

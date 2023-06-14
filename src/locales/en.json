@@ -271,6 +271,7 @@
   "Auth": {
     "title": "Log in",
     "username": "Username",
+    "email": "Email",
     "password": "Password"
   },
   "Global": {
