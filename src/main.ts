@@ -24,11 +24,6 @@ const initiVueApp = async () => {
     store.db = db;
   });
 
-  pinia.use(({ store }) => {
-    store.$onAction((obj) => {
-      console.log(obj);
-    });
-  });
   // create app
   createApp(App)
     .use(VueFire, {
