@@ -1,12 +1,15 @@
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
+import data from "@/animations/66291-meditative-business-man.json";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
-import { defineComponent, onBeforeMount, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
-import { Vue3Lottie } from "vue3-lottie";
-import data from "@/animations/66291-meditative-business-man.json";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { getCurrentUser } from "vuefire";
+import { Vue3Lottie } from "vue3-lottie";
+import { useRouter } from "vue-router";
+import { login } from "@/utils/Oauth";
+import { useUserStore } from "@/stores/userStore";
+
 export const AuthView = defineComponent({
   name: "Auth",
   components: { UiButton, UiInput, Vue3Lottie, UiIcon },
@@ -20,6 +23,7 @@ export const AuthView = defineComponent({
     onBeforeMount(async () => {
       const isAuthenticated = await getCurrentUser();
       if (isAuthenticated) {
+        useUserStore().setUser(isAuthenticated);
         router.push({ name: "Home" });
         return;
       }
@@ -55,7 +59,7 @@ export const AuthView = defineComponent({
               gridTemplateColumns:
                 checkForAuth.value && !shouldLogIn.value ? "1fr" : "1fr 1fr",
             }}
-            class="w-full h-full grid gap-4 grid-rows-1 transition-all duration-200"
+            class="w-full h-full grid gap-4 grid-rows-1 transition-all transform duration-200"
           >
             <div class="w-full h-full">
               <Vue3Lottie
@@ -66,14 +70,20 @@ export const AuthView = defineComponent({
               />
             </div>
             {shouldLogIn.value ? (
-              <div class="w-full h-full flex bg-gray-white flex-col justify-center items-center">
+              <div
+                v-fade={2}
+                class="w-full h-full flex bg-gray-white flex-col justify-center items-center"
+              >
                 <div class="lg:w-1/2 w-full h-fit z-50 gap-3 flex flex-col bg-transparent p-4 min-w-[350px]">
                   <div class="w-full flex flex-col gap-2 pb-4">
                     <h1 class="font-semibold text-4xl">Welcome 👋</h1>
                     <h2 class="font-normal text-1xl">Log in with</h2>
                   </div>
                   <div class="w-full h-12">
-                    <button class="w-full h-12 flex gap-1 items-center justify-center rounded-md border-2">
+                    <button
+                      onClick={login}
+                      class="w-full h-12 flex gap-1 items-center justify-center rounded-md border-2"
+                    >
                       <UiIcon
                         IsStyled={false}
                         Class="h-fit w-fit flex items-center justify-center scale-[0.6]"

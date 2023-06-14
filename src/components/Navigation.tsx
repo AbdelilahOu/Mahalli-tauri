@@ -3,6 +3,8 @@ import { defineComponent, onMounted, ref } from "vue";
 import { RouteLinks } from "@/constants/RouteNames";
 import { globalTranslate } from "@/utils/globalTranslate";
 import UiIcon from "./ui/UiIcon.vue";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/userStore";
 
 export const Navigation = defineComponent({
   name: "Navigation",
@@ -16,9 +18,12 @@ export const Navigation = defineComponent({
         (link) => link.component === route.name
       );
     });
+    const { User } = storeToRefs(useUserStore());
+
     onBeforeRouteUpdate((to) => {
       ActiveLink.value = RouteLinks.find((link) => link.component === to.name);
     });
+
     return () => (
       <header class="w-full h-full print:hidden pt-1 pr-1 sticky top-0 mb-2 z-50 overflow-hidden bg-slate-100">
         <div class="w-full h-full flex  items-center p-3 rounded-md  bg-white justify-between">
@@ -72,6 +77,14 @@ export const Navigation = defineComponent({
                 </span>
               )}
             </span>
+          </div>
+          <div class="flex items-center gap-2">
+            <img
+              class="rounded-full w-8 h-8"
+              src={User.value.photoURL}
+              alt=""
+            />
+            <span class="font-semibold">{User.value.displayName}</span>
           </div>
         </div>
       </header>

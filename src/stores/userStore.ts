@@ -3,10 +3,13 @@ import { defineStore } from "pinia";
 export const useUserStore = defineStore("UserStore", {
   state: () => {
     return {
-      user: null,
-    };
+      User: null,
+    } as { User: any | null };
   },
   actions: {
+    setUser: function (user: any) {
+      this.User = user;
+    },
     createUser: async function (User: User) {
       try {
         await this.db.execute(
