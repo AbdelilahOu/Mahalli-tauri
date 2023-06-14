@@ -41,13 +41,15 @@ export const googleSignIn = async (payload: string) => {
     return;
   }
 
+  console.log(url, access_token);
   const auth = getAuth();
 
-  const credential = GoogleAuthProvider.credential(access_token);
+  const credential = GoogleAuthProvider.credential(null, access_token);
   //   this doesnt work
   signInWithCredential(auth, credential)
     .then((user) => {
       useUserStore().setUser(user);
+      console.log(user);
       router.push("/Home");
     })
     .catch((error) => {
@@ -64,6 +66,7 @@ export const signOut = () => {
 export const login = () => {
   // Wait for callback from tauri oauth plugin
   listen("oauth://url", (data) => {
+    console.log("listened", data);
     googleSignIn(data.payload as string);
   });
 
