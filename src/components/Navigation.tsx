@@ -1,10 +1,10 @@
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, onMounted, ref } from "vue";
 import { RouteLinks } from "@/constants/RouteNames";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useUserStore } from "@/stores/userStore";
 import UiIcon from "./ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
-import { useUserStore } from "@/stores/userStore";
 
 export const Navigation = defineComponent({
   name: "Navigation",
