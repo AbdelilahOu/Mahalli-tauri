@@ -78,14 +78,18 @@ export const Navigation = defineComponent({
               )}
             </span>
           </div>
-          <div class="flex items-center gap-2">
-            <img
-              class="rounded-full w-8 h-8"
-              src={User.value.photoURL}
-              alt=""
-            />
-            <span class="font-semibold">{User.value.displayName}</span>
-          </div>
+          {User.value ? (
+            <div class="flex items-center gap-2">
+              <img
+                class="rounded-full w-8 h-8"
+                src={User.value.photoURL}
+                alt=""
+              />
+              <span class="font-semibold">{User.value.displayName}</span>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </header>
     );
