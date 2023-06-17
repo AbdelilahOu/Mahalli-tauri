@@ -1,16 +1,16 @@
 import messages from "@intlify/unplugin-vue-i18n/messages";
 import { createApp, type DirectiveBinding } from "vue";
 import type Database from "tauri-plugin-sql-api";
+import { VueFire, VueFireAuth } from "vuefire";
 import database from "tauri-plugin-sql-api";
 import { useMotion } from "@vueuse/motion";
+import { FireApp } from "./utils/firebase";
 import { createI18n } from "vue-i18n";
 import { createPinia } from "pinia";
+import "vue3-lottie/dist/style.css";
 import router from "./router";
 import App from "./App.vue";
 import "./assets/main.css";
-import "vue3-lottie/dist/style.css";
-import { VueFire, VueFireAuth } from "vuefire";
-import { FireApp } from "./utils/firebase";
 
 const locale = localStorage.getItem("locale");
 
