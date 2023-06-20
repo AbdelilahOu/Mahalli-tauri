@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "client",
-    "version": "0.1.0"
+    "version": "0.0.1"
   },
   "tauri": {
     "allowlist": {
@@ -73,12 +73,12 @@
     "updater": {
       "active": true,
       "endpoints": [
-        "https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}"
+        "https://gist.githubusercontent.com/AbdelilahOu/1f1b3ee8de5bce510ac90fc74572ff56/raw/00079f0cc1984e3b9b5d93fe5c78ebd12544c2c2/stocker-vue-updater.json"
       ],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEFEQzkxNDZFRjExNjhEQ0UKUldUT2pSYnhiaFRKclJRQm9qTDhIZThJU25NSjJ6NXJsWjhBWFVrcFhqdm01ZUpLZktUOE1aUzgK",
       "windows": {
-        "installMode": "passive"
+        "installMode": "quiet"
       }
     },
     "windows": [
