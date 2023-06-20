@@ -4,6 +4,10 @@ on:
     branches:
       - release
 
+env:
+  TAURI_PRIVATE_KEY: ${{ vars.TAURI_PRIVATE_KEY }}
+  TAURI_KEY_PASSWORD: ${{ vars.TAURI_KEY_PASSWORD }}
+
 jobs:
   publish-tauri:
     permissions:
@@ -29,9 +33,6 @@ jobs:
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
       - name: install frontend dependencies
         run: npm install # change this to npm or pnpm depending on which one you use
-        env:
-          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
-          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
