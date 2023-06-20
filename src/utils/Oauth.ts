@@ -50,7 +50,7 @@ export const googleSignIn = async (payload: string) => {
     .then((user) => {
       useUserStore().setUser(user);
       console.log(user);
-      router.push("/Home");
+      router.push({ path: "/Home" });
     })
     .catch((error) => {
       console.log(error);
