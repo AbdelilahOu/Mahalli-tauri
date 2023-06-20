@@ -68,7 +68,7 @@
       }
     },
     "security": {
-      "csp": "default-src 'self'; img-src 'self' asset: https://asset.localhost"
+      "csp": "default-src 'self' blob: data: filesystem: ws: wss: http: https: tauri: 'unsafe-eval' 'unsafe-inline'; script-src-elem 'self' https://accounts.google.com 'unsafe-eval' 'unsafe-hashes' 'unsafe-inline'; style-src 'self' https://accounts.google.com 'unsafe-eval' 'unsafe-hashes' 'unsafe-inline';"
     },
     "updater": {
       "active": true,
