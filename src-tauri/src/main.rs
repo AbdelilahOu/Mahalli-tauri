@@ -35,9 +35,9 @@
 // }
 
 #[tauri::command]
-fn command_name(csv_path: String) -> Vec<Record> {
-    let records = get_csv_data(csv_path);
-    return records;
+fn command_name(csv_path: String) {
+    // let records = get_csv_data(csv_path);
+    // return records;
 }
 
 fn main() {
