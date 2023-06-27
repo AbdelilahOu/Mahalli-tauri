@@ -57,12 +57,10 @@ export const googleSignIn = async (payload: string) => {
       return;
     });
 };
-
 export const signOut = () => {
   const auth = getAuth();
   return auth.signOut();
 };
-
 export const login = () => {
   listen("oauth://url", (data) => {
     console.log("listened", data);
