@@ -3,8 +3,6 @@ import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
 import { defineComponent, onMounted } from "vue";
 import { RouterLink } from "vue-router";
-import {invoke} from "@tauri-apps/api"
-import { open } from "@tauri-apps/api/dialog";
 
 export const HomeView = defineComponent({
   name: "Home",
@@ -52,23 +50,6 @@ export const HomeView = defineComponent({
         path: "/Payment",
       },
     ];
-
-
-    onMounted(async ()=>{
-
-      const a = await open({
-        multiple: false,
-      });
-
-    console.log(
-      await invoke("command_name", {
-        csvPath: String(
-          a
-        ),
-      })
-    );
-    })
-
 
     return () => (
       <main class="w-full h-full px-3">

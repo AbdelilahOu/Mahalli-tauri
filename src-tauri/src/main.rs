@@ -17,10 +17,6 @@ struct Record {
     // stock: i64,
 }
 
-// async fn get_csv_data(csv_path: String) ->  {
-
-// }
-
 #[tauri::command]
 fn command_name(csv_path: String) -> Result<Vec<Record>, String> {
     let mut records_array = Vec::<Record>::new();
