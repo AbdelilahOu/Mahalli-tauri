@@ -52,11 +52,6 @@ export const CsvUploader = defineComponent({
             </svg>
           </div>
         </div>
-        <div class="flex">
-          <UiButton colorTheme="a" Click={() => ""}>
-            Add
-          </UiButton>
-        </div>
       </div>
     );
   },
