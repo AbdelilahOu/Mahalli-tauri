@@ -1,7 +1,7 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
-import { defineComponent, onMounted } from "vue";
+import { defineComponent } from "vue";
 import { RouterLink } from "vue-router";
 
 export const HomeView = defineComponent({
