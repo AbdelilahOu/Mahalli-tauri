@@ -14,7 +14,7 @@ struct ProductRecord {
 }
 
 #[tauri::command]
-fn command_name(csv_path: String) -> Result<Vec<ProductRecord>, String> {
+fn get_csv_records(csv_path: String) -> Result<Vec<ProductRecord>, String> {
     let mut records_array = Vec::<ProductRecord>::new();
     let reader = csv::ReaderBuilder::new().from_path(csv_path);
 
@@ -46,7 +46,7 @@ fn command_name(csv_path: String) -> Result<Vec<ProductRecord>, String> {
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_oauth::init())
-        .invoke_handler(tauri::generate_handler![command_name])
+        .invoke_handler(tauri::generate_handler![get_csv_records])
         .plugin(tauri_plugin_sql::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
