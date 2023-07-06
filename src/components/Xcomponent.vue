@@ -20,6 +20,7 @@ import { ClientCreate } from "./ClientCreate";
 import { StockCreate } from "./StockCreate";
 import { PaymentCreate } from "./PaymentCreate";
 import { PaymentDelete } from "./PaymentDelete";
+import { CsvUploader } from "./CsvUploader";
 export default {
   components: {
     TranslationModal,
@@ -41,6 +42,7 @@ export default {
     StockCreate,
     PaymentCreate,
     PaymentDelete,
+    CsvUploader,
   },
   props: {
     name: {
