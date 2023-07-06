@@ -6,9 +6,26 @@ export const CsvUploader = defineComponent({
   name: "CsvUploader",
   setup() {
     const dropZone = ref<HTMLDivElement>();
-    const { isOverDropZone } = useDropZone(dropZone, () => {
-      console.log("dropped");
-    });
+
+    const filesData = ref<
+      { name: string; size: number; type: string; lastModified: number }[]
+    >([]);
+
+    function onDrop(files: File[] | null) {
+      filesData.value = [];
+      if (files) {
+        filesData.value = files
+          .filter((file) => file.name.includes(".csv"))
+          .map((file) => ({
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            lastModified: file.lastModified,
+          }));
+      }
+    }
+
+    const { isOverDropZone } = useDropZone(dropZone, onDrop);
     return () => (
       <div class="w-1/2 h-fit z-50 gap-3 rounded-md flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
@@ -17,7 +34,11 @@ export const CsvUploader = defineComponent({
         <div class="h-full w-full flex  flex-col gap-2">
           <div
             ref={dropZone}
-            class="w-full relative rounded-md z-50 fill-gray-400 border-gray-300 h-28 border-2 border-dashed border-spacing-4 flex items-center justify-center"
+            class={`w-full relative rounded-md transition-all duration-200 transform z-50 h-28 border-2 border-dashed border-spacing-4 flex items-center justify-center ${
+              isOverDropZone.value
+                ? "fill-sky-500 border-sky-500 bg-sky-200"
+                : "fill-gray-400 border-gray-300 bg-white"
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
