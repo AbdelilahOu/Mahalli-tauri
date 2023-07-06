@@ -14,8 +14,8 @@ export const useModalStore = defineStore("ModalStore", {
   state: (): modalsState => {
     return {
       theModal: {
-        show: false,
-        name: "",
+        show: true,
+        name: "CsvUploader",
       },
       client: null,
       product: null,
