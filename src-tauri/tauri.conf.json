@@ -87,7 +87,8 @@
         "height": 750,
         "resizable": true,
         "title": "stock manager",
-        "width": 1000
+        "width": 1000,
+        "fileDropEnabled": false
       }
     ]
   }
