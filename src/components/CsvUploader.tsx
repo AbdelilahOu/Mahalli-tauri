@@ -13,6 +13,8 @@ export const CsvUploader = defineComponent({
 
     function onDrop(files: File[] | null) {
       filesData.value = [];
+      // @ts-ignore
+      console.log(files[0]?.path);
       if (files) {
         filesData.value = files
           .filter((file) => file.name.includes(".csv"))
