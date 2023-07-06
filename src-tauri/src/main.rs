@@ -3,12 +3,8 @@
     windows_subsystem = "windows"
 )]
 
-// use csv::Error;
-
-// use tauri::command::private::SerializeKind;
-
 #[derive(Debug, serde::Deserialize, serde::Serialize)]
-struct Record {
+struct ProductRecord {
     id: i64,
     name: String,
     // price: f64,
@@ -18,9 +14,8 @@ struct Record {
 }
 
 #[tauri::command]
-fn command_name(csv_path: String) -> Result<Vec<Record>, String> {
-    let mut records_array = Vec::<Record>::new();
-    println!("{:?}", csv_path);
+fn command_name(csv_path: String) -> Result<Vec<ProductRecord>, String> {
+    let mut records_array = Vec::<ProductRecord>::new();
     let reader = csv::ReaderBuilder::new().from_path(csv_path);
 
     match reader {
