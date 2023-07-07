@@ -22,7 +22,6 @@ export const CsvUploader = defineComponent({
             lastModified: file.lastModified,
           }));
       }
-      console.log(files);
     }
 
     const { isOverDropZone } = useDropZone(dropZone, onDrop);
