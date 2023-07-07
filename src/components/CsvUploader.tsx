@@ -23,7 +23,6 @@ export const CsvUploader = defineComponent({
           }));
       }
     }
-
     const { isOverDropZone } = useDropZone(dropZone, onDrop);
     return () => (
       <div class="w-1/2 h-fit z-50 gap-3 rounded-md flex flex-col bg-white p-2 min-w-[350px]">
