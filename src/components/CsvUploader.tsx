@@ -14,7 +14,7 @@ export const CsvUploader = defineComponent({
       filesData.value = [];
       if (files) {
         filesData.value = files
-          .filter((file) => file.name.includes(".csv"))
+          .filter((file) => file.type === "text/csv")
           .map((file) => ({
             name: file.name,
             size: file.size,
@@ -22,6 +22,7 @@ export const CsvUploader = defineComponent({
             lastModified: file.lastModified,
           }));
       }
+      console.log(files);
     }
 
     const { isOverDropZone } = useDropZone(dropZone, onDrop);
@@ -51,7 +52,9 @@ export const CsvUploader = defineComponent({
         </div>
         <div class="w-full h-fit flex flex-col gap-2">
           {filesData.value.map((f) => (
-            <span>{f.name}</span>
+            <span>
+              {f.name} - {f.type}
+            </span>
           ))}
         </div>
       </div>
