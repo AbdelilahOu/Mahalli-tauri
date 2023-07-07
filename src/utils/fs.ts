@@ -1,4 +1,10 @@
-import { BaseDirectory, createDir, copyFile, exists } from "@tauri-apps/api/fs";
+import {
+  BaseDirectory,
+  createDir,
+  copyFile,
+  exists,
+  writeBinaryFile,
+} from "@tauri-apps/api/fs";
 import { appDataDir, sep, join } from "@tauri-apps/api/path";
 
 // C:\Users\abdel\AppData\Roaming\whatisthis
@@ -55,4 +61,32 @@ const checkIfExistsInFs = async (fileOrFolder: string) => {
     console.log("checing if exist error");
     console.log("err in exists");
   }
+};
+
+export const uploadCSVfiles = async ({ file }: { file: File }) => {
+  try {
+    await createFolder("csv");
+    const bytes = (await getBytesArray(file)) as ArrayBuffer;
+    const path = await join(await appDataDir(), "csv", file.name);
+    console.log(path);
+    await writeBinaryFile(path, bytes, {
+      dir: BaseDirectory.AppData,
+    });
+    return path;
+  } catch (error) {
+    console.log(error);
+    return "";
+  }
+};
+
+const getBytesArray = (file: File) => {
+  const fileData = new Blob([file]);
+  return new Promise((resolve) => {
+    let reader = new FileReader();
+    reader.readAsArrayBuffer(fileData);
+    reader.onload = () => {
+      let arrayBuffer = new Uint8Array(reader.result as ArrayBuffer);
+      resolve(arrayBuffer);
+    };
+  });
 };
