@@ -5,6 +5,9 @@ import UiIconVue from "./ui/UiIcon.vue";
 
 export const CsvUploader = defineComponent({
   name: "CsvUploader",
+  components: {
+    UiIconVue,
+  },
   setup() {
     const dropZone = ref<HTMLDivElement>();
 
