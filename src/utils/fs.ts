@@ -68,14 +68,12 @@ export const uploadCSVfiles = async ({ file }: { file: File }) => {
     await createFolder("csv");
     const bytes = (await getBytesArray(file)) as ArrayBuffer;
     const path = await join(await appDataDir(), "csv", file.name);
-    console.log(path);
     await writeBinaryFile(path, bytes, {
       dir: BaseDirectory.AppData,
     });
     return path;
   } catch (error) {
     console.log(error);
-    return "";
   }
 };
 
