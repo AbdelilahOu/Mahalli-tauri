@@ -3,10 +3,12 @@
     windows_subsystem = "windows"
 )]
 
+mod csv_thingy;
+
 use tauri::api::process::Command;
 use tauri::api::process::CommandEvent;
 
-// use Schema::ProductRecord;
+use crate::csv_thingy::schema::ProductRecord;
 
 #[tauri::command]
 fn get_csv_records(csv_path: String) -> Result<Vec<ProductRecord>, String> {
