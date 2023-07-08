@@ -1,5 +1,10 @@
 import { selectProductsWithQuantity } from "@/database/dbQueryJson";
-import type { productState, newProductT, updateProductT } from "@/types";
+import type {
+  productState,
+  newProductT,
+  updateProductT,
+  productT,
+} from "@/types";
 import { defineStore } from "pinia";
 
 export const useProductStore = defineStore("ProductStore", {
@@ -11,7 +16,9 @@ export const useProductStore = defineStore("ProductStore", {
   actions: {
     getAllProducts: async function () {
       try {
-        this.products = await this.db.select(selectProductsWithQuantity);
+        this.products = await this.db.select<productT[]>(
+          selectProductsWithQuantity
+        );
       } catch (error) {
         console.log(error);
       }
