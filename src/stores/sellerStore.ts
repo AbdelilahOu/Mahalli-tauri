@@ -12,7 +12,7 @@ export const useSellerStore = defineStore("SellerStore", {
   actions: {
     getAllSellers: async function () {
       try {
-        this.sellers = await this.db.select(
+        this.sellers = await this.db.select<sellerT[]>(
           "SELECT *  FROM sellers ORDER BY id DESC"
         );
       } catch (error) {
@@ -24,7 +24,7 @@ export const useSellerStore = defineStore("SellerStore", {
         this.sellers.find((sell: sellerT) => sell.id === id) ?? null;
       if (!this.seller) {
         try {
-          const seller: sellerT = await this.db.select(
+          const seller: sellerT = await this.db.select<sellerT>(
             "SELECT * FROM sellers WHERE id = $1",
             [id]
           );
