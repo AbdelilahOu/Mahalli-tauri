@@ -1,3 +1,4 @@
+import { exportAsCSV } from "@/database/exportAsCSV";
 import type { clientT, clientState, updateClientT, newClientT } from "@/types";
 import { saveFile } from "@/utils/fs";
 import { defineStore } from "pinia";
@@ -12,7 +13,8 @@ export const useClientStore = defineStore("ClientStore", {
   actions: {
     getAllClients: async function () {
       try {
-        this.clients = await this.db.select(
+        console.log(await this.db.select(exportAsCSV));
+        this.clients = await this.db.select<clientT[]>(
           "SELECT * FROM clients ORDER BY id DESC"
         );
       } catch (error) {
