@@ -3,6 +3,9 @@
     windows_subsystem = "windows"
 )]
 
+use tauri::api::process::Command;
+use tauri::api::process::CommandEvent;
+
 #[derive(Debug, serde::Deserialize, serde::Serialize)]
 struct ProductRecord {
     id: i64,
@@ -43,10 +46,24 @@ fn get_csv_records(csv_path: String) -> Result<Vec<ProductRecord>, String> {
     }
 }
 
+#[tauri::command]
+async fn export_db_csv() {
+    let (mut rx, mut child) = Command::new("sqlite3")
+        .args(["serve"])
+        .spawn()
+        .expect("Failed to spawn packaged node");
+
+    while let Some(event) = rx.recv().await {
+        if let CommandEvent::Stdout(_line) = event {
+            child.write("message from Rust\n".as_bytes()).unwrap();
+        }
+    }
+}
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_oauth::init())
-        .invoke_handler(tauri::generate_handler![get_csv_records])
+        .invoke_handler(tauri::generate_handler![get_csv_records, export_db_csv])
         .plugin(tauri_plugin_sql::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
