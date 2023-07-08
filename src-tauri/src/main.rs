@@ -6,15 +6,7 @@
 use tauri::api::process::Command;
 use tauri::api::process::CommandEvent;
 
-#[derive(Debug, serde::Deserialize, serde::Serialize)]
-struct ProductRecord {
-    id: i64,
-    name: String,
-    // price: f64,
-    // tva: f64,
-    // description: String,
-    // stock: i64,
-}
+// use Schema::ProductRecord;
 
 #[tauri::command]
 fn get_csv_records(csv_path: String) -> Result<Vec<ProductRecord>, String> {
