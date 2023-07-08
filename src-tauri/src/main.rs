@@ -54,7 +54,8 @@ async fn export_db_csv() {
         .expect("Failed to spawn packaged node");
 
     while let Some(event) = rx.recv().await {
-        if let CommandEvent::Stdout(_line) = event {
+        if let CommandEvent::Stdout(line) = event {
+            println!("{:?}", line);
             child.write("message from Rust\n".as_bytes()).unwrap();
         }
     }
