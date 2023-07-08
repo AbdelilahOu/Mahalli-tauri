@@ -25,7 +25,7 @@ export const useClientStore = defineStore("ClientStore", {
       this.client = this.clients.find((cli: clientT) => cli.id === id) ?? null;
       if (!this.client) {
         try {
-          const client: clientT = await this.db.select(
+          const client: clientT = await this.db.select<clientT>(
             "SELECT * FROM clients WHERE id = $1",
             [id]
           );
