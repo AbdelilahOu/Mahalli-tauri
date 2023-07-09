@@ -2,7 +2,8 @@
 import { RouterView, useRouter } from "vue-router";
 import { onBeforeMount, Transition } from "vue";
 onBeforeMount(() => {
-  useRouter().push({ path: "/Auth", query: { checkAuth: "true" } });
+  // useRouter().push({ path: "/Auth", query: { checkAuth: "true" } });
+  useRouter().push("/Home");
 });
 </script>
 
