@@ -2,11 +2,12 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
+// modes
+mod csv_thingy;
+use crate::csv_thingy::schema::ProductRecord;
 
 use tauri::api::process::Command;
 use tauri::api::process::CommandEvent;
-
-// use Schema::ProductRecord;
 
 #[tauri::command]
 fn get_csv_records(csv_path: String) -> Result<Vec<ProductRecord>, String> {
