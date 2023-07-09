@@ -2,6 +2,7 @@ import { defineComponent, ref } from "vue";
 import { useDropZone } from "@vueuse/core";
 import { uploadCSVfiles } from "@/utils/fs";
 import UiIconVue from "./ui/UiIcon.vue";
+import { invoke } from "@tauri-apps/api";
 
 export const CsvUploader = defineComponent({
   name: "CsvUploader",
@@ -15,7 +16,7 @@ export const CsvUploader = defineComponent({
       { name: string; size: number; type: string; lastModified: number }[]
     >([]);
 
-    function onDrop(files: File[] | null) {
+    async function onDrop(files: File[] | null) {
       filesData.value = [];
       if (files) {
         filesData.value = files
@@ -26,7 +27,11 @@ export const CsvUploader = defineComponent({
             type: file.type,
             lastModified: file.lastModified,
           }));
-        // uploadCSVfiles({ file: files[0] });
+
+        invoke("get_csv_records", {
+          csvPath: await uploadCSVfiles({ file: files[0] }),
+          table: "procts",
+        });
       }
     }
     const { isOverDropZone } = useDropZone(dropZone, onDrop);
