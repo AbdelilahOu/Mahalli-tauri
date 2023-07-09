@@ -1,18 +1,17 @@
-use tauri::api::process::{Command, CommandEvent};
-
+use super::schema::*;
 use std::fmt::Debug;
-
-#[warn(unused_imports)]
-use super::schema::{
-    ClientRecord, InvoiceItemRecord, InvoiceRecord, OrderItemRecord, OrderRecord, ProductRecord,
-    SellerRecord, StockMouvementRecord,
-};
+use tauri::api::process::{Command, CommandEvent};
 
 #[derive(Debug, serde::Deserialize, serde::Serialize)]
 pub enum TableRecord {
+    Order(Vec<OrderRecord>),
     Client(Vec<ClientRecord>),
+    Seller(Vec<SellerRecord>),
     Product(Vec<ProductRecord>),
     Invoice(Vec<InvoiceRecord>),
+    OrderItem(Vec<OrderItemRecord>),
+    InvoiceItem(Vec<InvoiceItemRecord>),
+    StockMouvement(Vec<StockMouvementRecord>),
 }
 
 #[tauri::command]
@@ -27,6 +26,13 @@ pub fn get_csv_records(csv_path: String, table: Option<String>) -> Result<TableR
                         return Err(e);
                     }
                 },
+                "sellers" => match read_csv::<SellerRecord>(csv_path) {
+                    Ok(r) => TableRecord::Seller(r),
+                    Err(e) => {
+                        println!("{:?}", e);
+                        return Err(e);
+                    }
+                },
                 "products" => match read_csv::<ProductRecord>(csv_path) {
                     Ok(r) => TableRecord::Product(r),
                     Err(e) => {
@@ -36,6 +42,27 @@ pub fn get_csv_records(csv_path: String, table: Option<String>) -> Result<TableR
                 },
                 "invoices" => match read_csv::<InvoiceRecord>(csv_path) {
                     Ok(r) => TableRecord::Invoice(r),
+                    Err(e) => {
+                        println!("{:?}", e);
+                        return Err(e);
+                    }
+                },
+                "orders" => match read_csv::<OrderRecord>(csv_path) {
+                    Ok(r) => TableRecord::Order(r),
+                    Err(e) => {
+                        println!("{:?}", e);
+                        return Err(e);
+                    }
+                },
+                "order_items" => match read_csv::<OrderItemRecord>(csv_path) {
+                    Ok(r) => TableRecord::OrderItem(r),
+                    Err(e) => {
+                        println!("{:?}", e);
+                        return Err(e);
+                    }
+                },
+                "invoice_items" => match read_csv::<InvoiceItemRecord>(csv_path) {
+                    Ok(r) => TableRecord::InvoiceItem(r),
                     Err(e) => {
                         println!("{:?}", e);
                         return Err(e);
