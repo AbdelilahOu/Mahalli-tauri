@@ -1,6 +1,5 @@
 use super::schema::*;
 use std::fmt::Debug;
-use tauri::api::process::{Command, CommandEvent};
 
 #[derive(Debug, serde::Deserialize, serde::Serialize)]
 pub enum TableRecord {
