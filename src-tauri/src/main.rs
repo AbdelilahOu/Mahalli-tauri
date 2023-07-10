@@ -4,7 +4,7 @@
 )]
 // modes
 mod csv_thingy;
-use crate::csv_thingy::exp_emp::*;
+use crate::csv_thingy::{export::*, import::*};
 
 fn main() {
     tauri::Builder::default()
