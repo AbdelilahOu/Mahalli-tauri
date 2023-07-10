@@ -93,7 +93,7 @@ fn read_csv<T: for<'de> serde::Deserialize<'de> + Debug>(
                     Err(e) => {
                         println!(
                             "{:?},{:?}",
-                            String::from("Theres an error with this record"),
+                            String::from("Theres an error with this row"),
                             e
                         );
                     }
@@ -103,7 +103,7 @@ fn read_csv<T: for<'de> serde::Deserialize<'de> + Debug>(
         }
         Err(e) => {
             println!("{:?}", e);
-            Err(String::from("hi theres an error"))
+            Err(String::from("sth wrong with this file"))
         }
     }
 }
