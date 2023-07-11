@@ -3,8 +3,8 @@
     windows_subsystem = "windows"
 )]
 // modes
-mod csv_thingy;
-use crate::csv_thingy::{export::*, import::*};
+mod csvparsing;
+use crate::csvparsing::{export::*, import::*};
 
 fn main() {
     tauri::Builder::default()
