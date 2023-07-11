@@ -11,11 +11,11 @@ pub struct ProductRecord {
 #[derive(Debug, serde::Deserialize, serde::Serialize)]
 pub struct ClientRecord {
     id: i64,
-    // name: String,
-    // phone: String,
-    // email: String,
-    // address: String,
-    // image: i64,
+    name: String,
+    phone: String,
+    email: String,
+    address: String,
+    image: i64,
 }
 
 #[derive(Debug, serde::Deserialize, serde::Serialize)]
