@@ -87,7 +87,7 @@ fn read_csv<T: for<'de> serde::Deserialize<'de> + Debug>(
             for record in r.deserialize() {
                 match record {
                     Ok(r) => {
-                        println!("{:?}", r);
+                        println!("{r:?}");
                         records_array.push(r);
                     }
                     Err(e) => {
