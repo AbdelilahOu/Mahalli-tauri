@@ -1,7 +1,8 @@
 use super::schema::*;
+use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
-#[derive(Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum TableRecord {
     Order(Vec<OrderRecord>),
     Client(Vec<ClientRecord>),
@@ -67,7 +68,6 @@ pub fn get_csv_records(csv_path: String, table: Option<String>) -> Result<TableR
                         return Err(e);
                     }
                 },
-                // Handle other table names and their corresponding record types
                 _ => return Err(String::from("This table doesn't exist")),
             };
             Ok(records)
@@ -76,9 +76,7 @@ pub fn get_csv_records(csv_path: String, table: Option<String>) -> Result<TableR
     }
 }
 
-fn read_csv<T: for<'de> serde::Deserialize<'de> + Debug>(
-    csv_path: String,
-) -> Result<Vec<T>, String> {
+fn read_csv<T: for<'de> Deserialize<'de> + Debug>(csv_path: String) -> Result<Vec<T>, String> {
     let mut records_array = Vec::new();
     let reader = csv::ReaderBuilder::new().from_path(csv_path);
 
