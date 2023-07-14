@@ -1,4 +1,6 @@
-#[derive(Debug, serde::Deserialize, serde::Serialize)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Deserialize, Serialize)]
 pub struct ProductRecord {
     id: i64,
     name: String,
@@ -8,7 +10,7 @@ pub struct ProductRecord {
     stock: i64,
 }
 
-#[derive(Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct ClientRecord {
     id: i64,
     name: String,
@@ -18,7 +20,7 @@ pub struct ClientRecord {
     image: i64,
 }
 
-#[derive(Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct SellerRecord {
     id: i64,
     name: String,
@@ -28,7 +30,7 @@ pub struct SellerRecord {
     image: i64,
 }
 
-#[derive(Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct InvoiceRecord {
     id: i64,
     total: i64,
@@ -37,7 +39,7 @@ pub struct InvoiceRecord {
     client_id: i64,
 }
 
-#[derive(Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct InvoiceItemRecord {
     id: i64,
     product_id: i64,
@@ -46,7 +48,7 @@ pub struct InvoiceItemRecord {
     stock_id: String,
 }
 
-#[derive(Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct OrderRecord {
     id: i64,
     status: String,
@@ -54,7 +56,7 @@ pub struct OrderRecord {
     seller_id: i64,
 }
 
-#[derive(Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct OrderItemRecord {
     id: i64,
     product_id: i64,
@@ -64,7 +66,7 @@ pub struct OrderItemRecord {
     stock_id: String,
 }
 
-#[derive(Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct StockMouvementRecord {
     id: i64,
     date: String,
