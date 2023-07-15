@@ -89,11 +89,7 @@ fn read_csv<T: for<'de> Deserialize<'de> + Debug>(csv_path: String) -> Result<Ve
                         records_array.push(r);
                     }
                     Err(e) => {
-                        println!(
-                            "{:?},{:?}",
-                            String::from("Theres an error with this row"),
-                            e
-                        );
+                        println!("{:?},{:?}", String::from("error in row"), e);
                     }
                 }
             }
@@ -101,7 +97,7 @@ fn read_csv<T: for<'de> Deserialize<'de> + Debug>(csv_path: String) -> Result<Ve
         }
         Err(e) => {
             println!("{:?}", e);
-            Err(String::from("sth wrong with this file"))
+            Err(String::from("error reading file"))
         }
     }
 }
