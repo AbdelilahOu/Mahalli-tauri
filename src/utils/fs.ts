@@ -22,9 +22,9 @@ export const saveFile = async (path: string, name: string) => {
   try {
     const fileName = path.split(sep)[path.split(sep).length - 1];
     await createFolder(RightFolder);
-
+    //
     const filePath = await join(await appDataDir(), RightFolder, fileName);
-
+    //
     await copyFile(path, filePath, {
       dir: BaseDirectory.AppData,
     });
