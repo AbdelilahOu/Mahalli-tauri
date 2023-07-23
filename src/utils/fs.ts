@@ -9,13 +9,6 @@ import { appDataDir, sep, join } from "@tauri-apps/api/path";
 
 // C:\Users\abdel\AppData\Roaming\whatisthis
 
-export const updateFile = async (path: string, name: string) => {
-  if (path.split(sep).length > 1) {
-    return await saveFile(path, name);
-  }
-  return path;
-};
-
 export const saveFile = async (path: string, name: string) => {
   if (!path) return "";
   const RightFolder = name === "Image" ? "Images" : "Docs";
