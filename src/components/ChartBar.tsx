@@ -38,7 +38,6 @@ export const ChartBar = defineComponent({
       CategoryScale,
       LinearScale
     );
-
     return () => <Bar options={props.chartOptions} data={props.chartData} />;
   },
 });
