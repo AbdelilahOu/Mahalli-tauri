@@ -12,14 +12,20 @@ extern crate dotenv;
 mod csvparsing;
 mod db;
 mod models;
-mod queries;
+mod reposotories;
 mod schema;
 
 use crate::csvparsing::{export::*, import::*};
+use reposotories::cmd::{get_product, get_products};
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![get_csv_records, export_db_csv])
+        .invoke_handler(tauri::generate_handler![
+            get_csv_records,
+            export_db_csv,
+            get_product,
+            get_products
+        ])
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
