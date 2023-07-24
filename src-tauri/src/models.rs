@@ -1,6 +1,6 @@
 use super::schema::products;
 use diesel::sql_types::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize)]
 pub struct Product {
@@ -18,7 +18,7 @@ pub struct Product {
     pub tva: f32,
 }
 
-#[derive(Debug, Insertable, Clone)]
+#[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
 #[diesel(table_name = products)]
 pub struct NewProduct {
     pub description: String,
