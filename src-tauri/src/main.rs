@@ -16,7 +16,7 @@ mod reposotories;
 mod schema;
 
 use crate::csvparsing::{export::*, import::*};
-use reposotories::cmd::{get_product, get_products};
+use reposotories::cmd::*;
 
 fn main() {
     tauri::Builder::default()
@@ -24,7 +24,10 @@ fn main() {
             get_csv_records,
             export_db_csv,
             get_product,
-            get_products
+            get_products,
+            create_product,
+            update_product,
+            delete_product
         ])
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())
