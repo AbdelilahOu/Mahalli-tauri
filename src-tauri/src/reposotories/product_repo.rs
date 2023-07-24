@@ -20,17 +20,7 @@ pub fn get_product(id: i32) -> Product {
 
     result
 }
-pub fn create_product() {}
-
-pub fn delete_product(id: i32) -> usize {
-    let mut connection = establish_connection();
-    let result = diesel::delete(products.find(&id))
-        .execute(&mut connection)
-        .expect("Expect delete channel");
-
-    result
-}
-pub fn update_product(new_product: NewProduct) -> usize {
+pub fn create_product(new_product: NewProduct) -> usize {
     let mut connection = establish_connection();
 
     let result = diesel::insert_into(products)
@@ -40,3 +30,13 @@ pub fn update_product(new_product: NewProduct) -> usize {
 
     result
 }
+
+pub fn delete_product(id: i32) -> usize {
+    let mut connection = establish_connection();
+    let result = diesel::delete(products.find(&id))
+        .execute(&mut connection)
+        .expect("Expect delete channel");
+
+    result
+}
+pub fn update_product() {}
