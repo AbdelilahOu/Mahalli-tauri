@@ -1,11 +1,9 @@
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
-use std::path;
-
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
-
 use dotenv::dotenv;
 use std::env;
+use std::path;
 
 pub fn establish_connection() -> SqliteConnection {
     dotenv().ok();
