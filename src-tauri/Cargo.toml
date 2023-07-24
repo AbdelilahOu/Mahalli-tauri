@@ -8,6 +8,7 @@ repository = ""
 default-run = "app"
 edition = "2021"
 rust-version = "1.59"
+build ="src/build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -20,11 +21,14 @@ serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.2.4", features = ["dialog-open", "fs-all", "notification-all", "path-all", "process-command-api", "protocol-all", "shell-open", "updater"] }
 csv = "1.1"
 tauri-plugin-oauth = { git = "https://github.com/FabianLars/tauri-plugin-oauth", branch = "main" }
+tokio = { version = "1", features = ["full"] }
+chrono = { version="0.4", features = ["serde"] }
+diesel = { version = "2.0.2", features = ["sqlite", "chrono", "uuid"] }
+diesel_migrations = { version = "2.0.0", features = ["sqlite"] }
+libsqlite3-sys = { version = "^0", features = ["bundled"] }
+dotenv = "0.15.0"
+uuid = { version = "1.2.1", features = [ "v4", "fast-rng", "macro-diagnostics" ] }
 
-[dependencies.tauri-plugin-sql]
-git = "https://github.com/tauri-apps/plugins-workspace"
-branch = "dev"
-features = ["sqlite"] # or "postgres", or "mysql"
 
 [features]
 # by default Tauri runs in production mode
