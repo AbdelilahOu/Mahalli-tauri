@@ -26,7 +26,7 @@ pub fn establish_connection() -> SqliteConnection {
     }
 }
 
-pub fn migrate_db() {
+fn migrate_db() {
     const MIGRATIONS: EmbeddedMigrations = embed_migrations!("./migrations");
     let mut connection = establish_connection();
     connection
