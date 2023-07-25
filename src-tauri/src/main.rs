@@ -15,19 +15,19 @@ mod models;
 mod reposotories;
 mod schema;
 
-use crate::csvparsing::{export::*, import::*};
-use reposotories::cmd::*;
+use crate::csvparsing::{export, import};
+use reposotories::cmd;
 
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            get_csv_records,
-            export_db_csv,
-            get_product,
-            get_products,
-            create_product,
-            update_product,
-            delete_product
+            import::get_csv_records,
+            export::export_db_csv,
+            cmd::get_product,
+            cmd::get_products,
+            cmd::create_product,
+            cmd::update_product,
+            cmd::delete_product
         ])
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())
