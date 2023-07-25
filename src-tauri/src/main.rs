@@ -9,20 +9,18 @@ extern crate diesel_migrations;
 extern crate dotenv;
 
 // modes
+mod cmd;
 mod csvparsing;
 mod db;
 mod models;
 mod reposotories;
 mod schema;
 
-use crate::csvparsing::{export, import};
-use reposotories::cmd;
-
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            import::get_csv_records,
-            export::export_db_csv,
+            cmd::export_db_csv,
+            cmd::get_csv_records,
             cmd::get_product,
             cmd::get_products,
             cmd::create_product,
