@@ -28,4 +28,7 @@ pub fn create_product(new_product: NewProduct) -> usize {
 }
 
 #[tauri::command]
-pub fn update_product() {}
+pub fn update_product(product: Product, id: i32) -> usize {
+    let result = product_repo::update_product(product, id);
+    result
+}
