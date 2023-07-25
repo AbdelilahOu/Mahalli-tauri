@@ -1,8 +1,6 @@
 import messages from "@intlify/unplugin-vue-i18n/messages";
 import { createApp, type DirectiveBinding } from "vue";
-import type Database from "tauri-plugin-sql-api";
 import { VueFire, VueFireAuth } from "vuefire";
-import database from "tauri-plugin-sql-api";
 import { useMotion } from "@vueuse/motion";
 import { FireApp } from "./utils/firebase";
 import { createI18n } from "vue-i18n";
@@ -16,12 +14,27 @@ const locale = localStorage.getItem("locale");
 
 const initiVueApp = async () => {
   // sqlite connection
-  const db = await database.load("sqlite:db.sqlite");
-  // pinia store
   const pinia = createPinia();
   // pinia store plugin for database
   pinia.use(({ store }) => {
-    store.db = db;
+    store.db = {
+      execute: async (query: string, args: any[]) => {
+        if (args.length) {
+          for (let i = 0; i < args.length; i++) {
+            query.replace("$".concat(i.toString()), args[i]);
+          }
+          console.log(query);
+        }
+      },
+      select: async (query: string, args: any[]) => {
+        if (args.length) {
+          for (let i = 0; i < args.length; i++) {
+            query.replace("$".concat(i.toString()), args[i]);
+          }
+          console.log(query);
+        }
+      },
+    };
   });
 
   // create app
@@ -81,6 +94,9 @@ initiVueApp().then(() => console.log("app mounted"));
 
 declare module "pinia" {
   export interface PiniaCustomProperties {
-    db: Database;
+    db: {
+      execute: (query: string, args: any[]) => Promise<void>;
+      select: (query: string, args: any[]) => Promise<void>;
+    };
   }
 }
