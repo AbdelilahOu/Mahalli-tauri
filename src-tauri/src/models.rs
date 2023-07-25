@@ -2,7 +2,7 @@ use super::schema::products;
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Queryable, QueryableByName, Clone, Serialize)]
+#[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
 pub struct Product {
     #[diesel(sql_type = Integer)]
     pub id: i32,
