@@ -2,15 +2,32 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
+
+#[macro_use]
+extern crate diesel;
+extern crate diesel_migrations;
+extern crate dotenv;
+
 // modes
+mod cmd;
 mod csvparsing;
-use crate::csvparsing::{export::*, import::*};
+mod db;
+mod models;
+mod reposotories;
+mod schema;
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![get_csv_records, export_db_csv])
+        .invoke_handler(tauri::generate_handler![
+            cmd::export_db_csv,
+            cmd::get_csv_records,
+            cmd::get_product,
+            cmd::get_products,
+            cmd::create_product,
+            cmd::update_product,
+            cmd::delete_product
+        ])
         .plugin(tauri_plugin_oauth::init())
-        .plugin(tauri_plugin_sql::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
