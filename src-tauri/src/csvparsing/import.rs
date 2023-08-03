@@ -1,4 +1,4 @@
-use super::schema::*;
+use super::records::*;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
@@ -14,7 +14,6 @@ pub enum TableRecord {
     StockMouvement(Vec<StockMouvementRecord>),
 }
 
-#[tauri::command]
 pub fn get_csv_records(csv_path: String, table: Option<String>) -> Result<TableRecord, String> {
     match table {
         Some(a) => {

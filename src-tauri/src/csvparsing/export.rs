@@ -1,6 +1,5 @@
 use tauri::api::process::{Command, CommandEvent};
 
-#[tauri::command]
 pub async fn export_db_csv() {
     let (mut rx, mut child) = Command::new("sqlite3")
         .args(["serve"])
