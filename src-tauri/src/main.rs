@@ -25,7 +25,12 @@ fn main() {
             cmd::get_products,
             cmd::create_product,
             cmd::update_product,
-            cmd::delete_product
+            cmd::delete_product,
+            cmd::get_client,
+            cmd::get_clients,
+            cmd::create_client,
+            cmd::update_client,
+            cmd::delete_client
         ])
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())
