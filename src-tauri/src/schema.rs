@@ -3,7 +3,7 @@
 diesel::table! {
     clients (id) {
         id -> Integer,
-        name -> Text,
+        fullname -> Text,
         phone -> Text,
         email -> Text,
         address -> Text,
