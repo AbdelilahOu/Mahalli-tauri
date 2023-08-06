@@ -1,8 +1,6 @@
-use crate::{
-    csvparsing::{export, import, import::TableRecord},
-    models::{Client, NewClient, NewProduct, NewUser, Product, User},
-    reposotories::{client_repo, product_repo, user_repo},
-};
+use crate::csvparsing::{export, import, import::TableRecord};
+use crate::models::*;
+use crate::reposotories::*;
 
 // csv stuff
 #[tauri::command]
