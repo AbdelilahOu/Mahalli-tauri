@@ -30,7 +30,11 @@ fn main() {
             cmd::get_clients,
             cmd::create_client,
             cmd::update_client,
-            cmd::delete_client
+            cmd::delete_client,
+            cmd::get_user,
+            cmd::create_user,
+            cmd::update_user,
+            cmd::delete_user
         ])
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())
