@@ -5,8 +5,8 @@ use crate::reposotories::*;
 // csv stuff
 #[tauri::command]
 pub async fn export_db_csv() {
-    let result = export::export_db_csv().await;
-    result
+    // let result = export::export_db_csv().await;
+    // result
 }
 
 #[tauri::command]
