@@ -1,7 +1,7 @@
 use crate::{
     csvparsing::{export, import, import::TableRecord},
-    models::{NewProduct, Product},
-    reposotories::product_repo,
+    models::{Client, NewClient, NewProduct, Product},
+    reposotories::{client_repo, product_repo},
 };
 
 // csv stuff
@@ -44,5 +44,35 @@ pub fn create_product(new_product: NewProduct) -> usize {
 #[tauri::command]
 pub fn update_product(product: Product, id: i32) -> usize {
     let result = product_repo::update_product(product, id);
+    result
+}
+
+#[tauri::command]
+pub fn get_clients() -> Vec<Client> {
+    let result = client_repo::get_clients();
+    result
+}
+
+#[tauri::command]
+pub fn get_client(id: i32) -> Client {
+    let result = client_repo::get_client(id);
+    result
+}
+
+#[tauri::command]
+pub fn delete_client(id: i32) -> usize {
+    let result = client_repo::delete_client(id);
+    result
+}
+
+#[tauri::command]
+pub fn create_client(new_client: NewClient) -> usize {
+    let result = client_repo::create_client(new_client);
+    result
+}
+
+#[tauri::command]
+pub fn update_client(client: Client, id: i32) -> usize {
+    let result = client_repo::update_client(client, id);
     result
 }
