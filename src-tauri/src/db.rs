@@ -26,10 +26,10 @@ pub fn establish_connection() -> SqliteConnection {
     }
 }
 
-fn migrate_db() {
+pub fn migrate_db() {
     const MIGRATIONS: EmbeddedMigrations = embed_migrations!("./migrations");
     let mut connection = establish_connection();
-    connection
+    let runed_migrations = connection
         .run_pending_migrations(MIGRATIONS)
         .expect("Error migrating");
 }

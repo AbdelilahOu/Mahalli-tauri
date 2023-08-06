@@ -18,6 +18,10 @@ mod schema;
 
 fn main() {
     tauri::Builder::default()
+        .setup(|_app| {
+            db::migrate_db();
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             cmd::export_db_csv,
             cmd::get_csv_records,
