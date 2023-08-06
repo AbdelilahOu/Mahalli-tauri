@@ -35,42 +35,52 @@ pub fn migrate_db() {
     connection
         .run_pending_migrations(MIGRATIONS)
         .expect("Error migrating");
+
+    seed_db()
 }
 
-pub fn seed_db() {
-    let mut table_names: Vec<String> = vec![
-        String::from("products"),
-        String::from("clients"),
-        String::from("sellers"),
-        String::from("invoices"),
-        String::from("orders"),
-        String::from("order_items"),
-        String::from("invoice_items"),
-        String::from("stock_mouvements"),
-    ];
+fn seed_db() {
+    dotenv().ok();
+    let _env = env::var("SEED_DB");
+    match _env {
+        Ok(_seed) => {
+            let mut table_names: Vec<String> = vec![
+                String::from("products"),
+                String::from("clients"),
+                String::from("sellers"),
+                String::from("invoices"),
+                String::from("orders"),
+                String::from("order_items"),
+                String::from("invoice_items"),
+                String::from("stock_mouvements"),
+            ];
 
-    let old_data_folder = path::Path::new(&tauri::api::path::home_dir().unwrap()).join("data");
-    let old_db_path = &old_data_folder.join("db.sqlite");
+            let old_data_folder =
+                path::Path::new(&tauri::api::path::home_dir().unwrap()).join("data");
+            let old_db_path = &old_data_folder.join("db.sqlite");
 
-    match old_db_path.to_str() {
-        Some(a) => {
-            for i in table_names.iter_mut() {
-                let mut output = Command::new("sqlite3")
-                    .args([
-                        "-header",
-                        "-csv",
-                        a,
-                        format!("select * from {};", i).as_str(),
-                        ">",
-                        &old_data_folder.join(format!("{}.csv", i)).to_str().unwrap(),
-                    ])
-                    .spawn()
-                    .expect("Failed to spawn packaged node");
-                println!("{:?}", output.stdout.take().unwrap())
+            match old_db_path.to_str() {
+                Some(a) => {
+                    for i in table_names.iter_mut() {
+                        let mut output = Command::new("sqlite3")
+                            .args([
+                                "-header",
+                                "-csv",
+                                a,
+                                format!("select * from {};", i).as_str(),
+                                ">",
+                                &old_data_folder.join(format!("{}.csv", i)).to_str().unwrap(),
+                            ])
+                            .spawn()
+                            .expect("Failed to spawn packaged node");
+                        println!("{:?}", output.stdout.take().unwrap())
+                    }
+                }
+                None => print!("coudnt find old db while seeding"),
             }
-        }
-        None => print!("coudnt find old db while seeding"),
-    }
 
-    // let result = get_csv_records("", table)
+            // let result = get_csv_records("", table)
+        }
+        Err(_r) => println!("seeding the db is desabled"),
+    }
 }
