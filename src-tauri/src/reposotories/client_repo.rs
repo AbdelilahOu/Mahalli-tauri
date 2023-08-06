@@ -1,54 +1,52 @@
 use crate::db::establish_connection;
 use crate::diesel::prelude::*;
-use crate::models::{NewProduct, Product};
-use crate::schema::{products::dsl::products, products::*};
+use crate::models::{Client, NewClient};
+use crate::schema;
 
-pub fn get_products() -> Vec<Product> {
+pub fn get_clients() -> Vec<Client> {
     let mut connection = establish_connection();
-    let result = products
-        .load::<Product>(&mut connection)
-        .expect("error get all products");
+    let result = schema::clients::dsl::clients
+        .load::<Client>(&mut connection)
+        .expect("error get all clients");
     result
 }
 
-pub fn get_product(product_id: i32) -> Product {
+pub fn get_client(product_id: i32) -> Client {
     let mut connection = establish_connection();
-    let result = products
+    let result = schema::clients::dsl::clients
         .find(&product_id)
-        .first::<Product>(&mut connection)
-        .expect("error get all products");
+        .first::<Client>(&mut connection)
+        .expect("error get all clients");
 
     result
 }
-pub fn create_product(new_product: NewProduct) -> usize {
+pub fn create_client(new_client: NewClient) -> usize {
     let mut connection = establish_connection();
-
-    let result = diesel::insert_into(products)
-        .values(new_product)
+    let result = diesel::insert_into(schema::clients::dsl::clients)
+        .values(new_client)
         .execute(&mut connection)
         .expect("Expect add articles");
 
     result
 }
 
-pub fn delete_product(product_id: i32) -> usize {
+pub fn delete_client(product_id: i32) -> usize {
     let mut connection = establish_connection();
-    let result = diesel::delete(products.find(&product_id))
+    let result = diesel::delete(schema::clients::dsl::clients.find(&product_id))
         .execute(&mut connection)
         .expect("Expect delete channel");
 
     result
 }
-pub fn update_product(to_be_updated: Product, product_id: i32) -> usize {
+pub fn update_client(to_be_updated: Client, product_id: i32) -> usize {
     let mut connection = establish_connection();
 
-    let result = diesel::update(products.find(&product_id))
+    let result = diesel::update(schema::clients::dsl::clients.find(&product_id))
         .set((
-            tva.eq(to_be_updated.tva),
-            name.eq(to_be_updated.name),
-            price.eq(to_be_updated.price),
-            image.eq(to_be_updated.image),
-            description.eq(to_be_updated.description),
+            schema::clients::fullname.eq(to_be_updated.fullname),
+            schema::clients::email.eq(to_be_updated.email),
+            schema::clients::address.eq(to_be_updated.address),
+            schema::clients::image.eq(to_be_updated.image),
         ))
         .execute(&mut connection)
         .expect("Expect add articles");
