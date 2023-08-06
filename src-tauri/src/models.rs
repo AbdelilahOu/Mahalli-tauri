@@ -1,6 +1,30 @@
-use super::schema::{clients, products};
+use super::schema::{clients, products, users};
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
+#[diesel(table_name = users)]
+pub struct User {
+    #[diesel(sql_type = Integer)]
+    pub id: i32,
+    #[diesel(sql_type = Text)]
+    pub username: String,
+    #[diesel(sql_type = Text)]
+    pub email: String,
+    #[diesel(sql_type = Text)]
+    pub password: String,
+    #[diesel(sql_type = Text)]
+    pub role: String,
+}
+
+#[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
+#[diesel(table_name = users)]
+pub struct NewUser {
+    pub username: String,
+    pub password: String,
+    pub email: String,
+    pub role: String,
+}
 
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
 #[diesel(table_name = clients)]
