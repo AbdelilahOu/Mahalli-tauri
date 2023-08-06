@@ -29,7 +29,7 @@ pub fn establish_connection() -> SqliteConnection {
 pub fn migrate_db() {
     const MIGRATIONS: EmbeddedMigrations = embed_migrations!("./migrations");
     let mut connection = establish_connection();
-    let runed_migrations = connection
+    connection
         .run_pending_migrations(MIGRATIONS)
         .expect("Error migrating");
 }
