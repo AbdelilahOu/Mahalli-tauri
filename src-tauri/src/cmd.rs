@@ -1,6 +1,6 @@
 use crate::csvparsing::{export, import, import::TableRecord};
-use crate::models::*;
 use crate::reposotories::*;
+use crate::{db, models::*};
 
 // csv stuff
 #[tauri::command]
