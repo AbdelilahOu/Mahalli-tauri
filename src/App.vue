@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
 import { onBeforeMount, Transition } from "vue";
-onBeforeMount(() => {
+import { invoke } from "@tauri-apps/api";
+onBeforeMount(async () => {
+  console.log(await invoke("export_db_csv"));
   // useRouter().push({ path: "/Auth", query: { checkAuth: "true" } });
-  useRouter().push("/Home");
+  // useRouter().push("/Home");
 });
 </script>
 
