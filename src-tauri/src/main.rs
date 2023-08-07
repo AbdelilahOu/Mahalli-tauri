@@ -34,8 +34,13 @@ fn main() {
             cmd::get_user,
             cmd::create_user,
             cmd::update_user,
-            cmd::delete_user
+            cmd::delete_user,
+            cmd::seed_db,
         ])
+        .setup(|_app| {
+            db::migrate_db();
+            Ok(())
+        })
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
