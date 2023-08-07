@@ -42,6 +42,7 @@ pub async fn seed_db() {
     let _env = env::var("SEED_DB");
     match _env {
         Ok(_seed) => {
+            // table names
             let mut table_names: Vec<String> = vec![
                 String::from("products"),
                 String::from("clients"),
@@ -52,17 +53,19 @@ pub async fn seed_db() {
                 String::from("invoice_items"),
                 String::from("stock_mouvements"),
             ];
-
+            // path to old db and wehere to store csvs
             let old_data_folder = path::Path::new("./data");
             let old_db_path = &old_data_folder.join("db.sqlite");
-
-            print!("{:?}", old_db_path);
-
+            //
             match old_db_path.to_str() {
+                // db path exists
                 Some(source_db_path) => {
+                    // loop over and get each table data
                     for i in table_names.iter_mut() {
+                        // checking if we already have the csvs
                         let out_put_file = old_data_folder.join(format!("{}.csv", i));
                         if out_put_file.exists() == false {
+                            // get data
                             export::export_db_csv(
                                 &source_db_path,
                                 &out_put_file.to_str().unwrap(),
