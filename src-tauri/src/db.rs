@@ -19,7 +19,7 @@ pub fn establish_connection() -> SqliteConnection {
         }
         Err(_) => {
             println!("Not dev");
-            let database_url = path::Path::new(&tauri::api::path::home_dir().unwrap())
+            let database_url = path::Path::new(&tauri::api::path::data_dir().unwrap())
                 .join(".stocker")
                 .join("stocker.db");
             let database_url = database_url.to_str().clone().unwrap();
