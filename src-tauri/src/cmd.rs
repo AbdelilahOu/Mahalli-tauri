@@ -1,12 +1,19 @@
 use crate::csvparsing::{export, import, import::TableRecord};
+use crate::db;
+use crate::models::*;
 use crate::reposotories::*;
-use crate::{db, models::*};
 
 // csv stuff
 #[tauri::command]
 pub async fn export_db_csv() {
+    // db::seed_db().await;
     // let result = export::export_db_csv().await;
     // result
+}
+
+#[tauri::command]
+pub async fn seed_db() {
+    db::seed_db().await
 }
 
 #[tauri::command]
@@ -14,7 +21,9 @@ pub fn get_csv_records(csv_path: String, table: Option<String>) -> Result<TableR
     let result = import::get_csv_records(csv_path, table);
     result
 }
+// database stuff
 
+// inteties
 #[tauri::command]
 pub fn get_products() -> Vec<Product> {
     let result = product_repo::get_products();
