@@ -1,3 +1,7 @@
+use dotenv::dotenv;
+use std::env;
+use std::path;
+
 use crate::csvparsing::{export, import, import::TableRecord};
 use crate::db;
 use crate::models::*;
@@ -5,9 +9,31 @@ use crate::reposotories::*;
 
 // csv stuff
 #[tauri::command]
-pub fn export_db_csv() {
-    // let result = export::export_db_csv().await;
+pub async fn export_db_csv(table: String) {
     // result
+    dotenv().ok();
+    let _env = env::var("DEV_ENV");
+    let database_url: String = if _env.is_ok() == false {
+        path::Path::new(&tauri::api::path::data_dir().unwrap())
+            .join(".stocker")
+            .join("stocker.db")
+            .to_str()
+            .expect("Failed to convert path to string")
+            .to_string()
+    } else {
+        env::var("DATABASE_URL").expect("DATABASE_URL not set")
+    };
+
+    let result = export::export_db_csv(
+        &database_url,
+        &path::Path::new(&tauri::api::path::data_dir().unwrap())
+            .to_str()
+            .unwrap(),
+        &table,
+    )
+    .await;
+
+    result
 }
 
 #[tauri::command]
