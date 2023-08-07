@@ -4,9 +4,9 @@ use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use dotenv::dotenv;
 use std::env;
 use std::path;
-use std::process::Command;
 
-use crate::cmd::get_csv_records;
+// use crate::cmd::get_csv_records;
+use crate::csvparsing::export;
 
 pub fn establish_connection() -> SqliteConnection {
     dotenv().ok();
@@ -35,51 +35,43 @@ pub fn migrate_db() {
     connection
         .run_pending_migrations(MIGRATIONS)
         .expect("Error migrating");
-
-    seed_db()
 }
 
-fn seed_db() {
+pub async fn seed_db() {
     dotenv().ok();
     let _env = env::var("SEED_DB");
     match _env {
         Ok(_seed) => {
             let mut table_names: Vec<String> = vec![
                 String::from("products"),
-                String::from("clients"),
-                String::from("sellers"),
-                String::from("invoices"),
-                String::from("orders"),
-                String::from("order_items"),
-                String::from("invoice_items"),
-                String::from("stock_mouvements"),
+                // String::from("clients"),
+                // String::from("sellers"),
+                // String::from("invoices"),
+                // String::from("orders"),
+                // String::from("order_items"),
+                // String::from("invoice_items"),
+                // String::from("stock_mouvements"),
             ];
 
             let old_data_folder =
-                path::Path::new(&tauri::api::path::home_dir().unwrap()).join("data");
+                path::Path::new(&tauri::api::path::data_dir().unwrap()).join("whatisthis");
             let old_db_path = &old_data_folder.join("db.sqlite");
+
+            print!("{:?}", old_db_path);
 
             match old_db_path.to_str() {
                 Some(a) => {
                     for i in table_names.iter_mut() {
-                        let mut output = Command::new("sqlite3")
-                            .args([
-                                "-header",
-                                "-csv",
-                                a,
-                                format!("select * from {};", i).as_str(),
-                                ">",
-                                &old_data_folder.join(format!("{}.csv", i)).to_str().unwrap(),
-                            ])
-                            .spawn()
-                            .expect("Failed to spawn packaged node");
-                        println!("{:?}", output.stdout.take().unwrap())
+                        export::export_db_csv(
+                            &a,
+                            &old_data_folder.join(format!("{}.csv", i)).to_str().unwrap(),
+                            &i,
+                        )
+                        .await
                     }
                 }
                 None => print!("coudnt find old db while seeding"),
             }
-
-            // let result = get_csv_records("", table)
         }
         Err(_r) => println!("seeding the db is desabled"),
     }
