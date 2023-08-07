@@ -53,21 +53,23 @@ pub async fn seed_db() {
                 String::from("stock_mouvements"),
             ];
 
-            let old_data_folder =
-                path::Path::new(&tauri::api::path::data_dir().unwrap()).join("whatisthis");
+            let old_data_folder = path::Path::new("./data");
             let old_db_path = &old_data_folder.join("db.sqlite");
 
             print!("{:?}", old_db_path);
 
             match old_db_path.to_str() {
-                Some(a) => {
+                Some(source_db_path) => {
                     for i in table_names.iter_mut() {
-                        export::export_db_csv(
-                            &a,
-                            &old_data_folder.join(format!("{}.csv", i)).to_str().unwrap(),
-                            &i,
-                        )
-                        .await
+                        let out_put_file = old_data_folder.join(format!("{}.csv", i));
+                        if out_put_file.exists() == false {
+                            export::export_db_csv(
+                                &source_db_path,
+                                &out_put_file.to_str().unwrap(),
+                                &i,
+                            )
+                            .await
+                        }
                     }
                 }
                 None => print!("coudnt find old db while seeding"),
