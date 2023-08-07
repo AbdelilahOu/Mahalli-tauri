@@ -11,16 +11,15 @@ pub fn export_db_csv() {
 }
 
 #[tauri::command]
-pub async fn seed_db() {
-    db::seed_db().await
-}
-
-#[tauri::command]
 pub fn get_csv_records(csv_path: String, table: Option<String>) -> Result<TableRecord, String> {
     let result = import::get_csv_records(csv_path, table);
     result
 }
 // database stuff
+#[tauri::command]
+pub async fn seed_db() {
+    db::seed_db().await
+}
 
 // inteties
 #[tauri::command]
