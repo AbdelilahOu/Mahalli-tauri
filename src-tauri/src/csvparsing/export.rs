@@ -1,10 +1,15 @@
 use std::fs::OpenOptions;
 use tauri::api::process::{Command, CommandEvent};
 
-pub async fn export_db_csv(source_path: &str, output_path: &str, _table: &String) {
+pub async fn export_db_csv(source_path: &str, output_path: &str, table: &String) {
     // get data from command line
     let (mut rx, _child) = Command::new("sqlite3")
-        .args(["-header", "-csv", source_path, "select * from products;"])
+        .args([
+            "-header",
+            "-csv",
+            source_path,
+            format!("select * from {};", table).as_str(),
+        ])
         .spawn()
         .expect("Failed to spawn packaged node");
     // specify file options
@@ -31,5 +36,10 @@ pub async fn export_db_csv(source_path: &str, output_path: &str, _table: &String
                 Err(e) => println!("{:?}", e),
             }
         }
+    }
+
+    match _child.kill() {
+        Ok(_) => println!("child process terminated"),
+        Err(_) => println!("error while killing the child"),
     }
 }
