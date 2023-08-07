@@ -12,7 +12,7 @@ import "./assets/main.css";
 
 const locale = localStorage.getItem("locale");
 
-const initiVueApp = async () => {
+const initiVueApp = () => {
   // sqlite connection
   const pinia = createPinia();
   // pinia store plugin for database
@@ -90,8 +90,7 @@ const initiVueApp = async () => {
     .mount("#app");
 };
 
-initiVueApp().then(() => console.log("app mounted"));
-
+initiVueApp();
 declare module "pinia" {
   export interface PiniaCustomProperties {
     db: {
