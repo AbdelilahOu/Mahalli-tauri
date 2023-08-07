@@ -44,13 +44,13 @@ pub async fn seed_db() {
         Ok(_seed) => {
             let mut table_names: Vec<String> = vec![
                 String::from("products"),
-                // String::from("clients"),
-                // String::from("sellers"),
-                // String::from("invoices"),
-                // String::from("orders"),
-                // String::from("order_items"),
-                // String::from("invoice_items"),
-                // String::from("stock_mouvements"),
+                String::from("clients"),
+                String::from("sellers"),
+                String::from("invoices"),
+                String::from("orders"),
+                String::from("order_items"),
+                String::from("invoice_items"),
+                String::from("stock_mouvements"),
             ];
 
             let old_data_folder =
