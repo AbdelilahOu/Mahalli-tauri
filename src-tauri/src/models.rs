@@ -52,13 +52,21 @@ pub struct NewClient {
     pub phone: String,
 }
 
+#[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
+#[diesel(table_name = sellers)]
 pub struct Seller {
+    #[diesel(sql_type = Integer)]
     id: i64,
+    #[diesel(sql_type = Text)]
     name: String,
+    #[diesel(sql_type = Text)]
     phone: String,
+    #[diesel(sql_type = Text)]
     email: String,
+    #[diesel(sql_type = Text)]
     address: String,
-    image: i64,
+    #[diesel(sql_type = Text)]
+    image: String,
 }
 
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
