@@ -52,6 +52,15 @@ pub struct NewClient {
     pub phone: String,
 }
 
+pub struct Seller {
+    id: i64,
+    name: String,
+    phone: String,
+    email: String,
+    address: String,
+    image: i64,
+}
+
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
 #[diesel(table_name = products)]
 pub struct Product {
