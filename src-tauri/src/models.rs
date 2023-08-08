@@ -111,8 +111,8 @@ pub struct NewProduct {
 pub struct Invoice {
     #[diesel(sql_type = Integer)]
     id: i64,
-    #[diesel(sql_type = Integer)]
-    total: i64,
+    #[diesel(sql_type = Float)]
+    total: f64,
     #[diesel(sql_type = String)]
     status: String,
     #[diesel(sql_type = String)]
@@ -121,10 +121,10 @@ pub struct Invoice {
     client_id: i64,
 }
 
-#[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
-#[diesel(table_name = invoices)]
-pub struct NewInvoice {
-    total: i64,
-    status: String,
-    client_id: i64,
-}
+// #[derive(Debug, Insertable,Associations ,Clone, Serialize, Deserialize)]
+// #[diesel(table_name = invoices)]
+// pub struct NewInvoice {
+//     total: f64,
+//     status: String,
+//     client_id: i64,
+// }
