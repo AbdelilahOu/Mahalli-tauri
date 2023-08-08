@@ -20,7 +20,7 @@ pub fn get_client(product_id: i32) -> Client {
 
     result
 }
-pub fn create_client(new_client: NewClient) -> usize {
+pub fn insert_client(new_client: NewClient) -> usize {
     let mut connection = establish_connection();
     let result = diesel::insert_into(schema::clients::dsl::clients)
         .values(new_client)
