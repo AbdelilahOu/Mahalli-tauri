@@ -1,4 +1,4 @@
-use crate::schema::stock_mouvements;
+use crate::schema::{invoice_items, stock_mouvements};
 
 use super::schema::{clients, invoices, products, sellers, users};
 use diesel::sql_types::*;
@@ -123,6 +123,21 @@ pub struct Invoice {
 }
 
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, Associations)]
+#[diesel(table_name = invoice_items, belongs_to(Product, foreign_key = product_id),belongs_to(Invoice, foreign_key = invoice_id),belongs_to(StockMouvement, foreign_key = stock_id))]
+pub struct InvoiceItem {
+    #[diesel(sql_type = Integer)]
+    id: i64,
+    #[diesel(sql_type = Integer)]
+    product_id: i64,
+    #[diesel(sql_type = Integer)]
+    invoice_id: i64,
+    #[diesel(sql_type = Integer)]
+    quantity: i64,
+    #[diesel(sql_type = Integer)]
+    stock_id: String,
+}
+
+#[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, Associations)]
 #[diesel(table_name = stock_mouvements, belongs_to(Product, foreign_key = product_id))]
 pub struct StockMouvement {
     #[diesel(sql_type = Integer)]
@@ -136,6 +151,15 @@ pub struct StockMouvement {
     #[diesel(sql_type = Integer)]
     product_id: i64,
 }
+
+// #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
+// #[diesel(table_name = stock_mouvements)]
+// pub struct NewStockMouvement {
+//     date: String,
+//     model: String,
+//     quantity: f64,
+//     product_id: i64,
+// }
 
 // #[derive(Debug, Insertable,Associations ,Clone, Serialize, Deserialize)]
 // #[diesel(table_name = invoices)]
