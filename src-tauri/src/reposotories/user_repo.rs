@@ -12,7 +12,7 @@ pub fn get_user(product_id: i32) -> User {
 
     result
 }
-pub fn create_user(new_user: NewUser) -> usize {
+pub fn insert_user(new_user: NewUser) -> usize {
     let mut connection = establish_connection();
     let result = diesel::insert_into(schema::users::dsl::users)
         .values(new_user)
