@@ -7,6 +7,7 @@ use std::path;
 
 // use crate::cmd::get_csv_records;
 use crate::csvparsing::export;
+use crate::csvparsing::import;
 
 pub fn establish_connection() -> SqliteConnection {
     dotenv().ok();
@@ -61,17 +62,29 @@ pub async fn seed_db() {
                 // db path exists
                 Some(source_db_path) => {
                     // loop over and get each table data
-                    for i in table_names.iter_mut() {
+                    for table in table_names.iter_mut() {
                         // checking if we already have the csvs
-                        let out_put_file = old_data_folder.join(format!("{}.csv", i));
+                        let out_put_file = old_data_folder.join(format!("{}.csv", table));
                         if out_put_file.exists() == false {
                             // get data
                             export::export_db_csv(
                                 &source_db_path,
                                 &out_put_file.to_str().unwrap(),
-                                &i,
+                                &table,
                             )
-                            .await
+                            .await;
+
+                            let result = import::get_csv_records(
+                                String::from(out_put_file.to_str().unwrap()),
+                                Option::from(table.clone()),
+                            );
+
+                            match result {
+                                Ok(csv_data) => {
+                                    println!("{:?}", csv_data)
+                                }
+                                Err(e) => println!("{:?}", e),
+                            }
                         }
                     }
                 }
