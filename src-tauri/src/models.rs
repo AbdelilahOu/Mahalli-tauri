@@ -1,3 +1,5 @@
+use crate::schema::stock_mouvements;
+
 use super::schema::{clients, invoices, products, sellers, users};
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
@@ -106,8 +108,7 @@ pub struct NewProduct {
 }
 
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, Associations)]
-#[diesel(belongs_to(Client, foreign_key = client_id))]
-#[diesel(table_name = invoices)]
+#[diesel(table_name = invoices, belongs_to(Client, foreign_key = client_id))]
 pub struct Invoice {
     #[diesel(sql_type = Integer)]
     id: i64,
@@ -119,6 +120,21 @@ pub struct Invoice {
     created_at: String,
     #[diesel(sql_type = Integer)]
     client_id: i64,
+}
+
+#[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, Associations)]
+#[diesel(table_name = stock_mouvements, belongs_to(Product, foreign_key = product_id))]
+pub struct StockMouvement {
+    #[diesel(sql_type = Integer)]
+    id: i64,
+    #[diesel(sql_type = Text)]
+    date: String,
+    #[diesel(sql_type = Text)]
+    model: String,
+    #[diesel(sql_type = Float)]
+    quantity: f64,
+    #[diesel(sql_type = Integer)]
+    product_id: i64,
 }
 
 // #[derive(Debug, Insertable,Associations ,Clone, Serialize, Deserialize)]
