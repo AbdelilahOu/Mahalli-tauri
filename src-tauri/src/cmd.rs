@@ -67,8 +67,8 @@ pub fn delete_product(id: i32) -> usize {
 }
 
 #[tauri::command]
-pub fn create_product(new_product: NewProduct) -> usize {
-    let result = product_repo::create_product(new_product);
+pub fn insert_product(new_product: NewProduct) -> usize {
+    let result = product_repo::insert_product(new_product);
     result
 }
 
@@ -97,8 +97,8 @@ pub fn delete_client(id: i32) -> usize {
 }
 
 #[tauri::command]
-pub fn create_client(new_client: NewClient) -> usize {
-    let result = client_repo::create_client(new_client);
+pub fn insert_client(new_client: NewClient) -> usize {
+    let result = client_repo::insert_client(new_client);
     result
 }
 
@@ -121,8 +121,8 @@ pub fn delete_user(id: i32) -> usize {
 }
 
 #[tauri::command]
-pub fn create_user(new_user: NewUser) -> usize {
-    let result = user_repo::create_user(new_user);
+pub fn insert_user(new_user: NewUser) -> usize {
+    let result = user_repo::insert_user(new_user);
     result
 }
 
