@@ -5,9 +5,13 @@ use dotenv::dotenv;
 use std::env;
 use std::path;
 
+use crate::csvparsing;
 // use crate::cmd::get_csv_records;
 use crate::csvparsing::export;
 use crate::csvparsing::import;
+use crate::csvparsing::import::TableRecord;
+use crate::models::NewClient;
+use crate::reposotories;
 
 pub fn establish_connection() -> SqliteConnection {
     dotenv().ok();
@@ -79,12 +83,23 @@ pub async fn seed_db() {
                                 Option::from(table.clone()),
                             );
 
-                            match result {
-                                Ok(csv_data) => {
-                                    println!("{:?}", csv_data)
-                                }
-                                Err(e) => println!("{:?}", e),
-                            }
+                            // match result {
+                            //     Ok(csv_data) => match csv_data {
+                            //         TableRecord::Client(client_records) => {
+                            //             for client in client_records {
+                            //                 let new_client = NewClient {
+                            //                     fullname:client,
+                            //                     image,
+                            //                     address,
+                            //                     phone,
+                            //                 };
+                            //                 reposotories::client_repo::insert_client(client);
+                            //             }
+                            //         }
+                            //         _ => {}
+                            //     },
+                            //     Err(e) => println!("{:?}", e),
+                            // }
                         }
                     }
                 }
