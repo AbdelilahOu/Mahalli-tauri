@@ -105,7 +105,8 @@ pub struct NewProduct {
     pub tva: f32,
 }
 
-#[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
+#[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, Associations)]
+#[diesel(belongs_to(Client, foreign_key = client_id))]
 #[diesel(table_name = invoices)]
 pub struct Invoice {
     #[diesel(sql_type = Integer)]
