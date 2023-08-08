@@ -1,4 +1,4 @@
-use super::schema::{clients, products, users};
+use super::schema::{clients, products, sellers, users};
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
 
@@ -67,6 +67,16 @@ pub struct Seller {
     address: String,
     #[diesel(sql_type = Text)]
     image: String,
+}
+
+#[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
+#[diesel(table_name = sellers)]
+pub struct NewSeller {
+    pub name: String,
+    pub image: String,
+    pub address: String,
+    pub email: String,
+    pub phone: String,
 }
 
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
