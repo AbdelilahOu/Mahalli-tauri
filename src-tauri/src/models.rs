@@ -1,4 +1,4 @@
-use super::schema::{clients, products, sellers, users};
+use super::schema::{clients, invoices, products, sellers, users};
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
 
@@ -103,4 +103,27 @@ pub struct NewProduct {
     pub name: String,
     pub price: f32,
     pub tva: f32,
+}
+
+#[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
+#[diesel(table_name = invoices)]
+pub struct Invoice {
+    #[diesel(sql_type = Integer)]
+    id: i64,
+    #[diesel(sql_type = Integer)]
+    total: i64,
+    #[diesel(sql_type = String)]
+    status: String,
+    #[diesel(sql_type = String)]
+    created_at: String,
+    #[diesel(sql_type = Integer)]
+    client_id: i64,
+}
+
+#[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
+#[diesel(table_name = invoices)]
+pub struct NewInvoice {
+    total: i64,
+    status: String,
+    client_id: i64,
 }
