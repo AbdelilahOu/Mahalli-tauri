@@ -20,7 +20,7 @@ pub fn get_product(product_id: i32) -> Product {
 
     result
 }
-pub fn create_product(new_product: NewProduct) -> usize {
+pub fn insert_product(new_product: NewProduct) -> usize {
     let mut connection = establish_connection();
 
     let result = diesel::insert_into(schema::products::dsl::products)
