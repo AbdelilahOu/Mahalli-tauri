@@ -8,7 +8,7 @@ use std::path;
 use crate::csvparsing::export;
 use crate::csvparsing::import;
 use crate::csvparsing::import::TableRecord;
-use crate::models::NewClient;
+use crate::models::{NewClient, NewInvoice, NewProduct, NewSeller};
 use crate::reposotories;
 
 pub fn establish_connection() -> SqliteConnection {
@@ -91,6 +91,22 @@ pub async fn seed_db() {
                                                 address: client.address,
                                                 phone: client.phone,
                                             });
+                                        }
+                                    }
+                                    TableRecord::Product(product_records) => {
+                                        for product in product_records {
+                                            reposotories::product_repo::insert_product(
+                                                /*
+                                                TODO
+                                                 -> need product image
+                                                */
+                                                NewProduct {
+                                                    name: product.name,
+                                                    price: product.price,
+                                                    description: product.description,
+                                                    tva: product.tva,
+                                                },
+                                            );
                                         }
                                     }
                                     _ => {}
