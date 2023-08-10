@@ -1,6 +1,4 @@
-use crate::schema::{invoice_items, stock_mouvements};
-
-use super::schema::{clients, invoices, products, sellers, users};
+use super::schema::{clients, invoice_items, invoices, products, sellers, stock_mouvements, users};
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
 
