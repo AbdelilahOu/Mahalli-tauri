@@ -127,7 +127,7 @@ pub struct NewProduct {
 /// ////////////////////////
 /// iNVOICE //////////////
 /// //////////////////////////
-#[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, Associations)]
+#[derive(Debug, Queryable, Clone, Serialize, Deserialize, Associations)]
 #[diesel(table_name = invoices, belongs_to(Client, foreign_key = client_id))]
 pub struct Invoice {
     #[diesel(sql_type = Integer)]
@@ -136,7 +136,7 @@ pub struct Invoice {
     total: f64,
     #[diesel(sql_type = String)]
     status: String,
-    #[diesel(sql_type = String)]
+    #[diesel(sql_type = Timestamp)]
     created_at: String,
     #[diesel(sql_type = Integer)]
     client_id: i64,
