@@ -161,10 +161,10 @@ pub struct NewStockMouvement {
     product_id: i32,
 }
 
-// #[derive(Debug, Insertable,Associations ,Clone, Serialize, Deserialize)]
-// #[diesel(table_name = invoices)]
-// pub struct NewInvoice {
-//     total: f64,
-//     status: String,
-//     client_id: i64,
-// }
+#[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
+#[diesel(table_name = invoices)]
+pub struct NewInvoice {
+    total: f32,
+    status: String,
+    client_id: i32,
+}
