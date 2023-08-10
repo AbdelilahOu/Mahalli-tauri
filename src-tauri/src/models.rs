@@ -1,5 +1,3 @@
-use std::ops::Bound;
-
 use super::schema::{clients, invoice_items, invoices, products, sellers, stock_mouvements, users};
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
