@@ -109,7 +109,18 @@ pub async fn seed_db() {
                                             );
                                         }
                                     }
-                                    _ => {}
+                                    // TableRecord::Invoice(product_records) => {
+                                    //     for invoice in product_records {
+                                    //         reposotories::invoice_repo::insert_invoice(NewInvoice {
+                                    //             total: invoice.total,
+                                    //             status: invoice.status,
+                                    //             client_id: invoice.client_id,
+                                    //         })
+                                    //     }
+                                    // }
+                                    _ => {
+                                        println!("not implemented yet");
+                                    }
                                 },
                                 Err(e) => println!("{:?}", e),
                             }
