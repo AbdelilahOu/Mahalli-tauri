@@ -1,3 +1,5 @@
+use std::ops::Bound;
+
 use super::schema::{clients, invoice_items, invoices, products, sellers, stock_mouvements, users};
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
@@ -150,14 +152,14 @@ pub struct StockMouvement {
     product_id: i64,
 }
 
-// #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
-// #[diesel(table_name = stock_mouvements)]
-// pub struct NewStockMouvement {
-//     date: String,
-//     model: String,
-//     quantity: f64,
-//     product_id: i64,
-// }
+#[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
+#[diesel(table_name = stock_mouvements)]
+pub struct NewStockMouvement {
+    date: String,
+    model: String,
+    quantity: i64,
+    product_id: i32,
+}
 
 // #[derive(Debug, Insertable,Associations ,Clone, Serialize, Deserialize)]
 // #[diesel(table_name = invoices)]
