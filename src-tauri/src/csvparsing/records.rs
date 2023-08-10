@@ -4,8 +4,8 @@ use serde::{Deserialize, Serialize};
 pub struct ProductRecord {
     id: i64,
     pub name: String,
-    pub price: f64,
-    pub tva: f64,
+    pub price: f32,
+    pub tva: f32,
     pub description: String,
     pub stock: i64,
 }
