@@ -171,6 +171,15 @@ pub struct InvoiceItem {
     stock_id: String,
 }
 
+#[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
+#[diesel(table_name = invoice_items)]
+pub struct NewInvoiceItem {
+    product_id: i32,
+    invoice_id: i32,
+    quantity: i64,
+    stock_id: i32,
+}
+
 ////////////////////////////
 /// STOCK MVM//////////
 /// ///////////////////////
