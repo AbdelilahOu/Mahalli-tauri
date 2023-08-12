@@ -3,10 +3,9 @@
     windows_subsystem = "windows"
 )]
 
-use std::sync::Mutex;
-
 use db::establish_connection;
 use diesel::SqliteConnection;
+use std::sync::Mutex;
 
 #[macro_use]
 extern crate diesel;
