@@ -69,17 +69,17 @@ pub struct NewClient {
 #[diesel(table_name = sellers)]
 pub struct Seller {
     #[diesel(sql_type = Integer)]
-    id: i64,
+    pub id: i64,
     #[diesel(sql_type = Text)]
-    name: String,
+    pub name: String,
     #[diesel(sql_type = Text)]
-    phone: String,
+    pub phone: String,
     #[diesel(sql_type = Text)]
-    email: String,
+    pub email: String,
     #[diesel(sql_type = Text)]
-    address: String,
+    pub address: String,
     #[diesel(sql_type = Text)]
-    image: String,
+    pub image: String,
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
@@ -131,7 +131,7 @@ pub struct NewProduct {
 #[diesel(table_name = invoices, belongs_to(Client, foreign_key = client_id))]
 pub struct Invoice {
     #[diesel(sql_type = Integer)]
-    id: i64,
+    id: i32,
     #[diesel(sql_type = Float)]
     total: f64,
     #[diesel(sql_type = String)]
@@ -139,7 +139,7 @@ pub struct Invoice {
     #[diesel(sql_type = Timestamp)]
     created_at: String,
     #[diesel(sql_type = Integer)]
-    client_id: i64,
+    client_id: i32,
 }
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
 #[diesel(table_name = invoices)]
