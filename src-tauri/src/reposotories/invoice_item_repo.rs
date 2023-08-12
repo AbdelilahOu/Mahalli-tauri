@@ -23,7 +23,7 @@ pub fn get_invoice_items() -> Vec<InvoiceItem> {
 
 pub fn insert_invoice_item(new_invoice_item: NewInvoiceItem) -> usize {
     let mut connection = establish_connection();
-    let result = diesel::insert_into(schema::invoices::dsl::invoices)
+    let result = diesel::insert_into(schema::invoice_items::dsl::invoice_items)
         .values(new_invoice_item)
         .execute(&mut connection)
         .expect("Error adding invoice");
@@ -43,12 +43,8 @@ pub fn delete_invoice_item(invoice_id: i32) -> usize {
 pub fn update_invoice_item(to_be_updated: InvoiceItem, invoice_id: i32) -> usize {
     let mut connection = establish_connection();
 
-    let result = diesel::update(schema::invoices::dsl::invoices.find(&invoice_id))
-        .set((
-            schema::invoices::total.eq(to_be_updated.total),
-            schema::invoices::status.eq(to_be_updated.status),
-            // Add other fields here if needed
-        ))
+    let result = diesel::update(schema::invoice_items::dsl::invoice_items.find(&invoice_id))
+        .set(schema::invoice_items::quantity.eq(to_be_updated.quantity))
         .execute(&mut connection)
         .expect("Error updating invoice");
 

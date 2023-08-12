@@ -45,7 +45,7 @@ pub struct InvoiceItemRecord {
     pub product_id: i32,
     pub invoice_id: i32,
     pub quantity: i64,
-    pub stock_id: String,
+    pub stock_id: i32,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
