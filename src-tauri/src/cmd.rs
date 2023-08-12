@@ -131,3 +131,33 @@ pub fn update_user(user: User, id: i32) -> usize {
     let result = user_repo::update_user(user, id);
     result
 }
+
+#[tauri::command]
+pub fn get_invoice(id: i32) -> Invoice {
+    let result = invoice_repo::get_invoice(id);
+    result
+}
+
+#[tauri::command]
+pub fn get_invoices() -> Vec<Invoice> {
+    let result = invoice_repo::get_invoices();
+    result
+}
+
+#[tauri::command]
+pub fn delete_invoice(id: i32) -> usize {
+    let result = invoice_repo::delete_invoice(id);
+    result
+}
+
+#[tauri::command]
+pub fn insert_invoice(new_invoice: NewInvoice) -> usize {
+    let result = invoice_repo::insert_invoice(new_invoice);
+    result
+}
+
+#[tauri::command]
+pub fn update_invoice(invoice: Invoice, id: i32) -> usize {
+    let result = invoice_repo::update_invoice(invoice, id);
+    result
+}
