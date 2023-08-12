@@ -27,12 +27,10 @@ struct AppState {
 }
 
 fn main() {
-    let state = AppState {
-        db_conn: establish_connection().into(),
-    };
-
     tauri::Builder::default()
-        .manage(state)
+        .manage(AppState {
+            db_conn: Mutex::new(establish_connection().into()),
+        })
         .invoke_handler(tauri::generate_handler![
             cmd::export_db_csv,
             cmd::get_csv_records,
@@ -50,6 +48,11 @@ fn main() {
             cmd::insert_user,
             cmd::update_user,
             cmd::delete_user,
+            cmd::get_invoice,
+            cmd::get_invoices,
+            cmd::insert_invoice,
+            cmd::update_invoice,
+            cmd::delete_invoice,
             cmd::seed_db,
         ])
         .setup(|_app| {

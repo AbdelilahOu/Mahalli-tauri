@@ -8,7 +8,7 @@ use std::path;
 use crate::csvparsing::export;
 use crate::csvparsing::import;
 use crate::csvparsing::import::TableRecord;
-use crate::models::{NewClient, NewInvoice, NewProduct, NewSeller};
+use crate::models::{NewClient, NewInvoice, NewProduct};
 use crate::reposotories;
 
 pub fn establish_connection() -> SqliteConnection {
