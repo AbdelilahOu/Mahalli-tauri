@@ -127,7 +127,7 @@ pub struct NewProduct {
 /// ////////////////////////
 /// iNVOICE //////////////
 /// //////////////////////////
-#[derive(Debug, Queryable, Selectable, Serialize, Associations, QueryableByName)]
+#[derive(Debug, Queryable, Deserialize, Selectable, Serialize, Associations, QueryableByName)]
 #[diesel(table_name = invoices, belongs_to(Client, foreign_key = client_id))]
 pub struct Invoice {
     #[diesel(sql_type = Integer)]
