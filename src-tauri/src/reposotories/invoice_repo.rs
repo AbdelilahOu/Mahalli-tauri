@@ -11,7 +11,7 @@ pub fn get_invoices() -> Vec<Invoice> {
     result
 }
 
-pub fn get_invoice(invoice_id: i64) -> Invoice {
+pub fn get_invoice(invoice_id: i32) -> Invoice {
     let mut connection = establish_connection();
     let result = schema::invoices::dsl::invoices
         .find(&invoice_id)
