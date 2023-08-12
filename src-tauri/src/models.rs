@@ -131,22 +131,22 @@ pub struct NewProduct {
 #[diesel(table_name = invoices, belongs_to(Client, foreign_key = client_id))]
 pub struct Invoice {
     #[diesel(sql_type = Integer)]
-    id: i32,
+    pub id: i32,
     #[diesel(sql_type = Float)]
-    total: f64,
+    pub total: f64,
     #[diesel(sql_type = String)]
-    status: String,
+    pub status: String,
     #[diesel(sql_type = Timestamp)]
-    created_at: String,
+    pub created_at: String,
     #[diesel(sql_type = Integer)]
-    client_id: i32,
+    pub client_id: i32,
 }
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
 #[diesel(table_name = invoices)]
 pub struct NewInvoice {
-    total: f32,
-    status: String,
-    client_id: i32,
+    pub total: f32,
+    pub status: String,
+    pub client_id: i32,
 }
 
 // ::::::::::::::::::::
@@ -158,24 +158,24 @@ pub struct NewInvoice {
 #[diesel(table_name = invoice_items, belongs_to(Product, foreign_key = product_id),belongs_to(Invoice, foreign_key = invoice_id),belongs_to(StockMouvement, foreign_key = stock_id))]
 pub struct InvoiceItem {
     #[diesel(sql_type = Integer)]
-    id: i64,
+    pub id: i64,
     #[diesel(sql_type = Integer)]
-    product_id: i64,
+    pub product_id: i64,
     #[diesel(sql_type = Integer)]
-    invoice_id: i64,
+    pub invoice_id: i64,
     #[diesel(sql_type = Integer)]
-    quantity: i64,
+    pub quantity: i64,
     #[diesel(sql_type = Integer)]
-    stock_id: String,
+    pub stock_id: String,
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
 #[diesel(table_name = invoice_items)]
 pub struct NewInvoiceItem {
-    product_id: i32,
-    invoice_id: i32,
-    quantity: i64,
-    stock_id: i32,
+    pub product_id: i32,
+    pub invoice_id: i32,
+    pub quantity: i64,
+    pub stock_id: i32,
 }
 
 ////////////////////////////
@@ -185,22 +185,22 @@ pub struct NewInvoiceItem {
 #[diesel(table_name = stock_mouvements, belongs_to(Product, foreign_key = product_id))]
 pub struct StockMouvement {
     #[diesel(sql_type = Integer)]
-    id: i64,
+    pub id: i64,
     #[diesel(sql_type = Text)]
-    date: String,
+    pub date: String,
     #[diesel(sql_type = Text)]
-    model: String,
+    pub model: String,
     #[diesel(sql_type = Float)]
-    quantity: f64,
+    pub quantity: f64,
     #[diesel(sql_type = Integer)]
-    product_id: i64,
+    pub product_id: i64,
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
 #[diesel(table_name = stock_mouvements)]
 pub struct NewStockMouvement {
-    date: String,
-    model: String,
-    quantity: i64,
-    product_id: i32,
+    pub date: String,
+    pub model: String,
+    pub quantity: i64,
+    pub product_id: i32,
 }
