@@ -21,14 +21,14 @@ mod reposotories;
 mod schema;
 // :::::::::::::
 
-struct AppState {
+pub struct AppState {
     db_conn: Mutex<SqliteConnection>,
 }
 
 fn main() {
     tauri::Builder::default()
         .manage(AppState {
-            db_conn: Mutex::new(establish_connection().into()),
+            db_conn: Mutex::new(establish_connection()),
         })
         .invoke_handler(tauri::generate_handler![
             cmd::export_db_csv,
