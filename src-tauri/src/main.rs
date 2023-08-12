@@ -3,6 +3,11 @@
     windows_subsystem = "windows"
 )]
 
+use std::sync::Mutex;
+
+use db::establish_connection;
+use diesel::SqliteConnection;
+
 #[macro_use]
 extern crate diesel;
 extern crate diesel_migrations;
@@ -15,9 +20,19 @@ mod db;
 mod models;
 mod reposotories;
 mod schema;
+// :::::::::::::
+
+struct AppState {
+    db_conn: Mutex<SqliteConnection>,
+}
 
 fn main() {
+    let state = AppState {
+        db_conn: establish_connection().into(),
+    };
+
     tauri::Builder::default()
+        .manage(state)
         .invoke_handler(tauri::generate_handler![
             cmd::export_db_csv,
             cmd::get_csv_records,
