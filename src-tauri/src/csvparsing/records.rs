@@ -50,27 +50,27 @@ pub struct InvoiceItemRecord {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct OrderRecord {
-    id: i64,
+    id: i32,
     pub status: String,
     pub created_at: String,
-    pub seller_id: i64,
+    pub seller_id: i32,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct OrderItemRecord {
-    id: i64,
-    pub product_id: i64,
+    id: i32,
+    pub product_id: i32,
     pub price: i64,
-    pub order_id: i64,
+    pub order_id: i32,
     pub quantity: i64,
-    pub stock_id: String,
+    pub stock_id: i32,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct StockMouvementRecord {
-    id: i64,
+    id: i32,
     pub date: String,
     pub model: String,
     pub quantity: String,
-    pub product_id: String,
+    pub product_id: i32,
 }
