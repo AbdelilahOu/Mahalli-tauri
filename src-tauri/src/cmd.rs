@@ -50,36 +50,6 @@ pub async fn seed_db() {
 
 // inteties
 #[tauri::command]
-pub fn get_products() -> Vec<Product> {
-    let result = product_repo::get_products();
-    result
-}
-
-#[tauri::command]
-pub fn get_product(id: i32) -> Product {
-    let result = product_repo::get_product(id);
-    result
-}
-
-#[tauri::command]
-pub fn delete_product(id: i32) -> usize {
-    let result = product_repo::delete_product(id);
-    result
-}
-
-#[tauri::command]
-pub fn insert_product(new_product: NewProduct) -> usize {
-    let result = product_repo::insert_product(new_product);
-    result
-}
-
-#[tauri::command]
-pub fn update_product(product: Product, id: i32) -> usize {
-    let result = product_repo::update_product(product, id);
-    result
-}
-
-#[tauri::command]
 pub fn get_clients(state: tauri::State<AppState>) -> Vec<Client> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
@@ -130,55 +100,85 @@ pub fn update_client(client: Client, id: i32, state: tauri::State<AppState>) -> 
 }
 
 #[tauri::command]
-pub fn get_user(id: i32) -> User {
+pub fn get_products(state: tauri::State<AppState>) -> Vec<Product> {
+    let result = product_repo::get_products();
+    result
+}
+
+#[tauri::command]
+pub fn get_product(id: i32, state: tauri::State<AppState>) -> Product {
+    let result = product_repo::get_product(id);
+    result
+}
+
+#[tauri::command]
+pub fn delete_product(id: i32, state: tauri::State<AppState>) -> usize {
+    let result = product_repo::delete_product(id);
+    result
+}
+
+#[tauri::command]
+pub fn insert_product(new_product: NewProduct, state: tauri::State<AppState>) -> usize {
+    let result = product_repo::insert_product(new_product);
+    result
+}
+
+#[tauri::command]
+pub fn update_product(product: Product, id: i32, state: tauri::State<AppState>) -> usize {
+    let result = product_repo::update_product(product, id);
+    result
+}
+
+#[tauri::command]
+pub fn get_user(id: i32, state: tauri::State<AppState>) -> User {
     let result = user_repo::get_user(id);
     result
 }
 
 #[tauri::command]
-pub fn delete_user(id: i32) -> usize {
+pub fn delete_user(id: i32, state: tauri::State<AppState>) -> usize {
     let result = user_repo::delete_user(id);
     result
 }
 
 #[tauri::command]
-pub fn insert_user(new_user: NewUser) -> usize {
+pub fn insert_user(new_user: NewUser, state: tauri::State<AppState>) -> usize {
     let result = user_repo::insert_user(new_user);
     result
 }
 
 #[tauri::command]
-pub fn update_user(user: User, id: i32) -> usize {
+pub fn update_user(user: User, id: i32, state: tauri::State<AppState>) -> usize {
     let result = user_repo::update_user(user, id);
     result
 }
 
 #[tauri::command]
-pub fn get_invoice(id: i32) -> Invoice {
+pub fn get_invoice(id: i32, state: tauri::State<AppState>) -> Invoice {
     let result = invoice_repo::get_invoice(id);
     result
 }
 
 #[tauri::command]
-pub fn get_invoices() -> Vec<Invoice> {
+pub fn get_invoices(state: tauri::State<AppState>) -> Vec<Invoice> {
     let result = invoice_repo::get_invoices();
     result
 }
 
 #[tauri::command]
-pub fn delete_invoice(id: i32) -> usize {
+pub fn delete_invoice(id: i32, state: tauri::State<AppState>) -> usize {
     let result = invoice_repo::delete_invoice(id);
     result
 }
 
 #[tauri::command]
-pub fn insert_invoice(new_invoice: NewInvoice) -> usize {
+pub fn insert_invoice(new_invoice: NewInvoice, state: tauri::State<AppState>) -> usize {
     let result = invoice_repo::insert_invoice(new_invoice);
     result
 }
 
 #[tauri::command]
-pub fn update_invoice(invoice: Invoice, id: i32) -> usize {
+pub fn update_invoice(invoice: Invoice, id: i32, state: tauri::State<AppState>) -> usize {
     let result = invoice_repo::update_invoice(invoice, id);
     result
 }
