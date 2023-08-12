@@ -154,7 +154,9 @@ pub struct NewInvoice {
 ///////////////////////////////
 /// INVOICE_ITEMS
 
-#[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, Associations)]
+#[derive(
+    Debug, Queryable, QueryableByName, Clone, AsChangeset, Serialize, Deserialize, Associations,
+)]
 #[diesel(table_name = invoice_items, belongs_to(Product, foreign_key = product_id),belongs_to(Invoice, foreign_key = invoice_id),belongs_to(StockMouvement, foreign_key = stock_id))]
 pub struct InvoiceItem {
     #[diesel(sql_type = Integer)]
@@ -166,7 +168,7 @@ pub struct InvoiceItem {
     #[diesel(sql_type = Integer)]
     pub quantity: i64,
     #[diesel(sql_type = Integer)]
-    pub stock_id: String,
+    pub stock_id: i32,
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
