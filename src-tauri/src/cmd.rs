@@ -6,6 +6,7 @@ use crate::csvparsing::{export, import, import::TableRecord};
 use crate::db;
 use crate::models::*;
 use crate::reposotories::*;
+use crate::AppState;
 
 // csv stuff
 #[tauri::command]
@@ -79,8 +80,12 @@ pub fn update_product(product: Product, id: i32) -> usize {
 }
 
 #[tauri::command]
-pub fn get_clients() -> Vec<Client> {
-    let result = client_repo::get_clients();
+pub fn get_clients(state: tauri::State<AppState>) -> Vec<Client> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    // get data
+    let result = client_repo::get_clients(conn);
     result
 }
 

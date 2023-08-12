@@ -3,10 +3,10 @@ use crate::diesel::prelude::*;
 use crate::models::{Client, NewClient};
 use crate::schema;
 
-pub fn get_clients() -> Vec<Client> {
-    let mut connection = establish_connection();
+pub fn get_clients(connection: &mut SqliteConnection) -> Vec<Client> {
+    // let mut connection = establish_connection();
     let result = schema::clients::dsl::clients
-        .load::<Client>(&mut connection)
+        .load::<Client>(connection)
         .expect("error get all clients");
     result
 }
