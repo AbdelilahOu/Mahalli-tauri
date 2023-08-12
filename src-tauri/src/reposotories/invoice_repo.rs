@@ -31,7 +31,7 @@ pub fn insert_invoice(new_invoice: NewInvoice) -> usize {
     result
 }
 
-pub fn delete_invoice(invoice_id: i64) -> usize {
+pub fn delete_invoice(invoice_id: i32) -> usize {
     let mut connection = establish_connection();
     let result = diesel::delete(schema::invoices::dsl::invoices.find(&invoice_id))
         .execute(&mut connection)
@@ -40,7 +40,7 @@ pub fn delete_invoice(invoice_id: i64) -> usize {
     result
 }
 
-pub fn update_invoice(to_be_updated: Invoice, invoice_id: i64) -> usize {
+pub fn update_invoice(to_be_updated: Invoice, invoice_id: i32) -> usize {
     let mut connection = establish_connection();
 
     let result = diesel::update(schema::invoices::dsl::invoices.find(&invoice_id))
