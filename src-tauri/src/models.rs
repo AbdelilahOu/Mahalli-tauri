@@ -158,11 +158,11 @@ pub struct NewInvoice {
 #[diesel(table_name = invoice_items, belongs_to(Product, foreign_key = product_id),belongs_to(Invoice, foreign_key = invoice_id),belongs_to(StockMouvement, foreign_key = stock_id))]
 pub struct InvoiceItem {
     #[diesel(sql_type = Integer)]
-    pub id: i64,
+    pub id: i32,
     #[diesel(sql_type = Integer)]
-    pub product_id: i64,
+    pub product_id: i32,
     #[diesel(sql_type = Integer)]
-    pub invoice_id: i64,
+    pub invoice_id: i32,
     #[diesel(sql_type = Integer)]
     pub quantity: i64,
     #[diesel(sql_type = Integer)]
