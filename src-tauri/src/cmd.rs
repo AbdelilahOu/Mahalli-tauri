@@ -90,26 +90,42 @@ pub fn get_clients(state: tauri::State<AppState>) -> Vec<Client> {
 }
 
 #[tauri::command]
-pub fn get_client(id: i32) -> Client {
-    let result = client_repo::get_client(id);
+pub fn get_client(id: i32, state: tauri::State<AppState>) -> Client {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    //
+    let result = client_repo::get_client(id, conn);
     result
 }
 
 #[tauri::command]
-pub fn delete_client(id: i32) -> usize {
-    let result = client_repo::delete_client(id);
+pub fn delete_client(id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    //
+    let result = client_repo::delete_client(id, conn);
     result
 }
 
 #[tauri::command]
-pub fn insert_client(new_client: NewClient) -> usize {
-    let result = client_repo::insert_client(new_client);
+pub fn insert_client(new_client: NewClient, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    //
+    let result = client_repo::insert_client(new_client, conn);
     result
 }
 
 #[tauri::command]
-pub fn update_client(client: Client, id: i32) -> usize {
-    let result = client_repo::update_client(client, id);
+pub fn update_client(client: Client, id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    //
+    let result = client_repo::update_client(client, id, conn);
     result
 }
 

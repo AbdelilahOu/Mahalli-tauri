@@ -60,6 +60,7 @@ pub async fn seed_db() {
             let old_data_folder = path::Path::new("./data");
             let old_db_path = &old_data_folder.join("db.sqlite");
             //
+            let mut conn = establish_connection();
             match old_db_path.to_str() {
                 // db path exists
                 Some(source_db_path) => {
@@ -85,12 +86,15 @@ pub async fn seed_db() {
                                 Ok(csv_data) => match csv_data {
                                     TableRecord::Client(client_records) => {
                                         for client in client_records {
-                                            reposotories::client_repo::insert_client(NewClient {
-                                                fullname: client.name,
-                                                image: client.image,
-                                                address: client.address,
-                                                phone: client.phone,
-                                            });
+                                            reposotories::client_repo::insert_client(
+                                                NewClient {
+                                                    fullname: client.name,
+                                                    image: client.image,
+                                                    address: client.address,
+                                                    phone: client.phone,
+                                                },
+                                                &mut conn,
+                                            );
                                         }
                                     }
                                     TableRecord::Product(product_records) => {
