@@ -1,4 +1,3 @@
-use crate::db::establish_connection;
 use crate::diesel::prelude::*;
 use crate::models::{NewUser, User};
 use crate::schema;
