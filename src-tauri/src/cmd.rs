@@ -52,12 +52,12 @@ pub async fn seed_db() {
 
 // inteties
 #[tauri::command]
-pub fn get_clients(state: tauri::State<AppState>) -> Vec<Client> {
+pub fn get_clients(page: i32, state: tauri::State<AppState>) -> Vec<Client> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     // get data
-    let result = client_repo::get_clients(conn);
+    let result = client_repo::get_clients(page, conn);
     result
 }
 
