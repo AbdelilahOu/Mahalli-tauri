@@ -1,4 +1,6 @@
-use super::schema::{clients, invoice_items, invoices, products, sellers, stock_mouvements, users};
+use super::schema::{
+    clients, inventory_mouvements, invoice_items, invoices, products, sellers, users,
+};
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
 
@@ -130,7 +132,7 @@ pub struct NewInvoice {
 #[derive(
     Debug, Queryable, QueryableByName, Clone, AsChangeset, Serialize, Deserialize, Associations,
 )]
-#[diesel(table_name = invoice_items, belongs_to(Product, foreign_key = product_id),belongs_to(Invoice, foreign_key = invoice_id),belongs_to(StockMouvement, foreign_key = stock_id))]
+#[diesel(table_name = invoice_items, belongs_to(Product, foreign_key = product_id),belongs_to(Invoice, foreign_key = invoice_id),belongs_to(InventoryMouvement, foreign_key = inventory_id))]
 pub struct InvoiceItem {
     #[diesel(sql_type = Integer)]
     pub id: i32,
@@ -141,7 +143,7 @@ pub struct InvoiceItem {
     #[diesel(sql_type = Integer)]
     pub quantity: i64,
     #[diesel(sql_type = Integer)]
-    pub stock_id: i32,
+    pub inventory_id: i32,
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
@@ -150,12 +152,12 @@ pub struct NewInvoiceItem {
     pub product_id: i32,
     pub invoice_id: i32,
     pub quantity: i64,
-    pub stock_id: i32,
+    pub inventory_id: i32,
 }
 
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, Associations)]
-#[diesel(table_name = stock_mouvements, belongs_to(Product, foreign_key = product_id))]
-pub struct StockMouvement {
+#[diesel(table_name = inventory_mouvements, belongs_to(Product, foreign_key = product_id))]
+pub struct InventoryMouvement {
     #[diesel(sql_type = Integer)]
     pub id: i64,
     #[diesel(sql_type = Text)]
@@ -169,8 +171,8 @@ pub struct StockMouvement {
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
-#[diesel(table_name = stock_mouvements)]
-pub struct NewStockMouvement {
+#[diesel(table_name = inventory_mouvements)]
+pub struct NewInventoryMouvement {
     pub date: String,
     pub model: String,
     pub quantity: i64,
