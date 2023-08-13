@@ -132,7 +132,7 @@ pub struct NewInvoice {
 #[derive(
     Debug, Queryable, QueryableByName, Clone, AsChangeset, Serialize, Deserialize, Associations,
 )]
-#[diesel(table_name = invoice_items, belongs_to(Product, foreign_key = product_id),belongs_to(Invoice, foreign_key = invoice_id),belongs_to(InventoryMouvement, foreign_key = inventory_id))]
+#[diesel(table_name = invoice_items, belongs_to(Product, foreign_key = product_id),belongs_to(Invoice, foreign_key = invoice_id),belongs_to(InventoryMvm, foreign_key = inventory_id))]
 pub struct InvoiceItem {
     #[diesel(sql_type = Integer)]
     pub id: i32,
@@ -157,22 +157,22 @@ pub struct NewInvoiceItem {
 
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, Associations)]
 #[diesel(table_name = inventory_mouvements, belongs_to(Product, foreign_key = product_id))]
-pub struct InventoryMouvement {
+pub struct InventoryMvm {
     #[diesel(sql_type = Integer)]
-    pub id: i64,
+    pub id: i32,
     #[diesel(sql_type = Text)]
     pub date: String,
     #[diesel(sql_type = Text)]
     pub model: String,
     #[diesel(sql_type = Float)]
-    pub quantity: f64,
+    pub quantity: i64,
     #[diesel(sql_type = Integer)]
-    pub product_id: i64,
+    pub product_id: i32,
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
 #[diesel(table_name = inventory_mouvements)]
-pub struct NewInventoryMouvement {
+pub struct NewInventoryMvm {
     pub date: String,
     pub model: String,
     pub quantity: i64,
