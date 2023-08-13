@@ -1,51 +1,49 @@
-use crate::db::establish_connection;
 use crate::diesel::prelude::*;
 use crate::models::{InvoiceItem, NewInvoiceItem};
 use crate::schema;
 
-pub fn get_invoice_items() -> Vec<InvoiceItem> {
-    let mut connection = establish_connection();
+pub fn get_invoice_items(connection: &mut SqliteConnection) -> Vec<InvoiceItem> {
     let result = schema::invoice_items::dsl::invoice_items
-        .load::<InvoiceItem>(&mut connection)
+        .load::<InvoiceItem>(connection)
         .expect("Error fetching all invoices");
     result
 }
 
-// pub fn get_invoice_item(invoice_id: i32) -> InvoiceItem {
-//     let mut connection = establish_connection();
+// pub fn get_invoice_item(invoice_id: i32,connection: &mut SqliteConnection) -> InvoiceItem {
+//
 //     let result = schema::invoices::dsl::invoices
 //         .find(&invoice_id)
-//         .first::<InvoiceItem>(&mut connection)
+//         .first::<InvoiceItem>( connection)
 //         .expect("Error fetching invoice");
 
 //     result
 // }
 
-pub fn insert_invoice_item(new_invoice_item: NewInvoiceItem) -> usize {
-    let mut connection = establish_connection();
+pub fn insert_invoice_item(new_ii: NewInvoiceItem, connection: &mut SqliteConnection) -> usize {
     let result = diesel::insert_into(schema::invoice_items::dsl::invoice_items)
-        .values(new_invoice_item)
-        .execute(&mut connection)
+        .values(new_ii)
+        .execute(connection)
         .expect("Error adding invoice");
 
     result
 }
 
-pub fn delete_invoice_item(invoice_id: i32) -> usize {
-    let mut connection = establish_connection();
+pub fn delete_invoice_item(invoice_id: i32, connection: &mut SqliteConnection) -> usize {
     let result = diesel::delete(schema::invoices::dsl::invoices.find(&invoice_id))
-        .execute(&mut connection)
+        .execute(connection)
         .expect("Error deleting invoice");
 
     result
 }
 
-pub fn update_invoice_item(to_be_updated: InvoiceItem, invoice_id: i32) -> usize {
-    let mut connection = establish_connection();
-
-    let result = diesel::update(schema::invoice_items::dsl::invoice_items.find(&invoice_id))
-        .set(schema::invoice_items::quantity.eq(to_be_updated.quantity))
-        .execute(&mut connection)
+pub fn update_invoice_item(
+    i_update: InvoiceItem,
+    i_id: i32,
+    connection: &mut SqliteConnection,
+) -> usize {
+    let result = diesel::update(schema::invoice_items::dsl::invoice_items.find(&i_id))
+        .set(schema::invoice_items::quantity.eq(i_update.quantity))
+        .execute(connection)
         .expect("Error updating invoice");
 
     result
