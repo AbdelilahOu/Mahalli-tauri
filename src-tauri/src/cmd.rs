@@ -102,6 +102,56 @@ pub fn update_client(client: Client, id: i32, state: tauri::State<AppState>) -> 
 }
 
 #[tauri::command]
+pub fn get_sellers(state: tauri::State<AppState>) -> Vec<Seller> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    // get data
+    let result = seller_repo::get_sellers(conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_seller(id: i32, state: tauri::State<AppState>) -> Seller {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    //
+    let result = seller_repo::get_seller(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn delete_seller(id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    //
+    let result = seller_repo::delete_seller(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn insert_seller(new_seller: NewSeller, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    //
+    let result = seller_repo::insert_seller(new_seller, conn);
+    result
+}
+
+#[tauri::command]
+pub fn update_seller(seller: Seller, id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    //
+    let result = seller_repo::update_seller(seller, id, conn);
+    result
+}
+
+#[tauri::command]
 pub fn get_products(state: tauri::State<AppState>) -> Vec<Product> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
