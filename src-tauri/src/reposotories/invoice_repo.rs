@@ -3,7 +3,7 @@ use crate::diesel::prelude::*;
 use crate::models::{Invoice, NewInvoice};
 use crate::schema;
 
-pub fn get_invoices() -> Vec<Invoice> {
+pub fn get_invoices(connection: &mut SqliteConnection) -> Vec<Invoice> {
     let mut connection = establish_connection();
     let result = schema::invoices::dsl::invoices
         .load::<Invoice>(&mut connection)
@@ -11,7 +11,7 @@ pub fn get_invoices() -> Vec<Invoice> {
     result
 }
 
-pub fn get_invoice(invoice_id: i32) -> Invoice {
+pub fn get_invoice(invoice_id: i32, connection: &mut SqliteConnection) -> Invoice {
     let mut connection = establish_connection();
     let result = schema::invoices::dsl::invoices
         .find(&invoice_id)
@@ -21,7 +21,7 @@ pub fn get_invoice(invoice_id: i32) -> Invoice {
     result
 }
 
-pub fn insert_invoice(new_invoice: NewInvoice) -> usize {
+pub fn insert_invoice(new_invoice: NewInvoice, connection: &mut SqliteConnection) -> usize {
     let mut connection = establish_connection();
     let result = diesel::insert_into(schema::invoices::dsl::invoices)
         .values(new_invoice)
@@ -31,7 +31,7 @@ pub fn insert_invoice(new_invoice: NewInvoice) -> usize {
     result
 }
 
-pub fn delete_invoice(invoice_id: i32) -> usize {
+pub fn delete_invoice(invoice_id: i32, connection: &mut SqliteConnection) -> usize {
     let mut connection = establish_connection();
     let result = diesel::delete(schema::invoices::dsl::invoices.find(&invoice_id))
         .execute(&mut connection)
@@ -40,7 +40,11 @@ pub fn delete_invoice(invoice_id: i32) -> usize {
     result
 }
 
-pub fn update_invoice(to_be_updated: Invoice, invoice_id: i32) -> usize {
+pub fn update_invoice(
+    to_be_updated: Invoice,
+    invoice_id: i32,
+    connection: &mut SqliteConnection,
+) -> usize {
     let mut connection = establish_connection();
 
     let result = diesel::update(schema::invoices::dsl::invoices.find(&invoice_id))
