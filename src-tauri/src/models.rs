@@ -58,7 +58,7 @@ pub struct NewClient {
 #[diesel(table_name = sellers)]
 pub struct Seller {
     #[diesel(sql_type = Integer)]
-    pub id: i64,
+    pub id: i32,
     #[diesel(sql_type = Text)]
     pub name: String,
     #[diesel(sql_type = Text)]
