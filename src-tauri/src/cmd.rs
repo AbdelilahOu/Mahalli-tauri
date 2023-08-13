@@ -18,8 +18,8 @@ pub async fn export_db_csv(table: String) {
     let _env = env::var("DEV_ENV");
     let database_url: String = if _env.is_ok() == false {
         path::Path::new(&tauri::api::path::data_dir().unwrap())
-            .join(".stocker")
-            .join("stocker.db")
+            .join(".inventoryer")
+            .join("inventoryer.db")
             .to_str()
             .expect("Failed to convert path to string")
             .to_string()
@@ -106,7 +106,7 @@ pub fn get_products(state: tauri::State<AppState>) -> Vec<Product> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = product_repo::get_products();
+    let result = product_repo::get_products(conn);
     result
 }
 
@@ -115,7 +115,7 @@ pub fn get_product(id: i32, state: tauri::State<AppState>) -> Product {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = product_repo::get_product(id);
+    let result = product_repo::get_product(id, conn);
     result
 }
 
@@ -124,7 +124,7 @@ pub fn delete_product(id: i32, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = product_repo::delete_product(id);
+    let result = product_repo::delete_product(id, conn);
     result
 }
 
@@ -133,7 +133,7 @@ pub fn insert_product(new_product: NewProduct, state: tauri::State<AppState>) ->
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = product_repo::insert_product(new_product);
+    let result = product_repo::insert_product(new_product, conn);
     result
 }
 
@@ -142,7 +142,7 @@ pub fn update_product(product: Product, id: i32, state: tauri::State<AppState>) 
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = product_repo::update_product(product, id);
+    let result = product_repo::update_product(product, id, conn);
     result
 }
 
