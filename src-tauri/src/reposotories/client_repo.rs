@@ -34,7 +34,7 @@ pub fn insert_client(new_c: NewClient, connection: &mut SqliteConnection) -> usi
     let result = diesel::insert_into(schema::clients::dsl::clients)
         .values(new_c)
         .execute(connection)
-        .expect("Expect add articles");
+        .expect("Expect add client");
 
     result
 }
@@ -42,7 +42,7 @@ pub fn insert_client(new_c: NewClient, connection: &mut SqliteConnection) -> usi
 pub fn delete_client(c_id: i32, connection: &mut SqliteConnection) -> usize {
     let result = diesel::delete(schema::clients::dsl::clients.find(&c_id))
         .execute(connection)
-        .expect("Expect delete channel");
+        .expect("Expect delete client");
 
     result
 }
@@ -56,7 +56,7 @@ pub fn update_client(c_update: Client, c_id: i32, connection: &mut SqliteConnect
             schema::clients::image.eq(c_update.image),
         ))
         .execute(connection)
-        .expect("Expect add articles");
+        .expect("Expect add client");
 
     result
 }
