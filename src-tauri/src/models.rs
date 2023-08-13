@@ -2,10 +2,6 @@ use super::schema::{clients, invoice_items, invoices, products, sellers, stock_m
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
 
-/////////////////////////////
-/// ////////////////////////
-/// USERS  ////////
-/// /////////////////////
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
 #[diesel(table_name = users)]
 pub struct User {
@@ -30,10 +26,6 @@ pub struct NewUser {
     pub role: String,
 }
 
-/////////////////////////
-/// CLIENTS ///////////
-/// ////////////////////
-/// ////////////////////
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
 #[diesel(table_name = clients)]
 pub struct Client {
@@ -59,11 +51,6 @@ pub struct NewClient {
     pub address: String,
     pub phone: String,
 }
-
-//////////////////////////////
-/// ////////////////////////
-/// SELLERS //////////////
-/// //////////////////////////
 
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
 #[diesel(table_name = sellers)]
@@ -92,11 +79,6 @@ pub struct NewSeller {
     pub phone: String,
 }
 
-//////////////////////////////
-/// ////////////////////////
-/// PRODUCTS //////////////
-/// //////////////////////////
-
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
 #[diesel(table_name = products)]
 pub struct Product {
@@ -123,10 +105,6 @@ pub struct NewProduct {
     pub tva: f32,
 }
 
-//////////////////////////////
-/// ////////////////////////
-/// iNVOICE //////////////
-/// //////////////////////////
 #[derive(Debug, Queryable, Deserialize, Selectable, Serialize, Associations, QueryableByName)]
 #[diesel(table_name = invoices, belongs_to(Client, foreign_key = client_id))]
 pub struct Invoice {
@@ -148,11 +126,6 @@ pub struct NewInvoice {
     pub status: String,
     pub client_id: i32,
 }
-
-// ::::::::::::::::::::
-// :::::::::::::::::::::::::::
-///////////////////////////////
-/// INVOICE_ITEMS
 
 #[derive(
     Debug, Queryable, QueryableByName, Clone, AsChangeset, Serialize, Deserialize, Associations,
@@ -180,9 +153,6 @@ pub struct NewInvoiceItem {
     pub stock_id: i32,
 }
 
-////////////////////////////
-/// STOCK MVM//////////
-/// ///////////////////////
 #[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, Associations)]
 #[diesel(table_name = stock_mouvements, belongs_to(Product, foreign_key = product_id))]
 pub struct StockMouvement {
