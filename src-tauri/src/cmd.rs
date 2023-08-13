@@ -151,7 +151,7 @@ pub fn get_user(id: i32, state: tauri::State<AppState>) -> User {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = user_repo::get_user(id);
+    let result = user_repo::get_user(id, conn);
     result
 }
 
@@ -160,7 +160,7 @@ pub fn delete_user(id: i32, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = user_repo::delete_user(id);
+    let result = user_repo::delete_user(id, conn);
     result
 }
 
@@ -169,7 +169,7 @@ pub fn insert_user(new_user: NewUser, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = user_repo::insert_user(new_user);
+    let result = user_repo::insert_user(new_user, conn);
     result
 }
 
@@ -178,7 +178,7 @@ pub fn update_user(user: User, id: i32, state: tauri::State<AppState>) -> usize 
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = user_repo::update_user(user, id);
+    let result = user_repo::update_user(user, id, conn);
     result
 }
 
