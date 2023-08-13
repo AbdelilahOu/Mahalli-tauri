@@ -187,7 +187,7 @@ pub fn get_invoice(id: i32, state: tauri::State<AppState>) -> Invoice {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_repo::get_invoice(id);
+    let result = invoice_repo::get_invoice(id, conn);
     result
 }
 
@@ -196,7 +196,7 @@ pub fn get_invoices(state: tauri::State<AppState>) -> Vec<Invoice> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_repo::get_invoices();
+    let result = invoice_repo::get_invoices(conn);
     result
 }
 
@@ -205,7 +205,7 @@ pub fn delete_invoice(id: i32, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_repo::delete_invoice(id);
+    let result = invoice_repo::delete_invoice(id, conn);
     result
 }
 
@@ -214,7 +214,7 @@ pub fn insert_invoice(new_invoice: NewInvoice, state: tauri::State<AppState>) ->
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_repo::insert_invoice(new_invoice);
+    let result = invoice_repo::insert_invoice(new_invoice, conn);
     result
 }
 
@@ -223,6 +223,6 @@ pub fn update_invoice(invoice: Invoice, id: i32, state: tauri::State<AppState>) 
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_repo::update_invoice(invoice, id);
+    let result = invoice_repo::update_invoice(invoice, id, conn);
     result
 }
