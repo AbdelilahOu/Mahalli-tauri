@@ -121,6 +121,7 @@ pub async fn seed_db() {
                                                     status: invoice.status,
                                                     client_id: invoice.client_id,
                                                 },
+                                                &mut conn,
                                             );
                                         }
                                     }
