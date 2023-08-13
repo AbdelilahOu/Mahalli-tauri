@@ -9,10 +9,10 @@ pub fn get_invoice_items(connection: &mut SqliteConnection) -> Vec<InvoiceItem> 
     result
 }
 
-// pub fn get_invoice_item(invoice_id: i32,connection: &mut SqliteConnection) -> InvoiceItem {
+// pub fn get_invoice_item(ii_id: i32,connection: &mut SqliteConnection) -> InvoiceItem {
 //
 //     let result = schema::invoices::dsl::invoices
-//         .find(&invoice_id)
+//         .find(&ii_id)
 //         .first::<InvoiceItem>( connection)
 //         .expect("Error fetching invoice");
 
@@ -28,8 +28,8 @@ pub fn insert_invoice_item(new_ii: NewInvoiceItem, connection: &mut SqliteConnec
     result
 }
 
-pub fn delete_invoice_item(invoice_id: i32, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::delete(schema::invoices::dsl::invoices.find(&invoice_id))
+pub fn delete_invoice_item(ii_id: i32, connection: &mut SqliteConnection) -> usize {
+    let result = diesel::delete(schema::invoices::dsl::invoices.find(&ii_id))
         .execute(connection)
         .expect("Error deleting invoice");
 
@@ -37,12 +37,12 @@ pub fn delete_invoice_item(invoice_id: i32, connection: &mut SqliteConnection) -
 }
 
 pub fn update_invoice_item(
-    i_update: InvoiceItem,
-    i_id: i32,
+    ii_update: InvoiceItem,
+    ii_id: i32,
     connection: &mut SqliteConnection,
 ) -> usize {
-    let result = diesel::update(schema::invoice_items::dsl::invoice_items.find(&i_id))
-        .set(schema::invoice_items::quantity.eq(i_update.quantity))
+    let result = diesel::update(schema::invoice_items::dsl::invoice_items.find(&ii_id))
+        .set(schema::invoice_items::quantity.eq(ii_update.quantity))
         .execute(connection)
         .expect("Error updating invoice");
 
