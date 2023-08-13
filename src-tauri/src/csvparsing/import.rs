@@ -11,7 +11,7 @@ pub enum TableRecord {
     Invoice(Vec<InvoiceRecord>),
     OrderItem(Vec<OrderItemRecord>),
     InvoiceItem(Vec<InvoiceItemRecord>),
-    StockMouvement(Vec<StockMouvementRecord>),
+    InventoryMouvement(Vec<InventoryMouvementRecord>),
 }
 
 pub fn get_csv_records(csv_path: String, table: Option<String>) -> Result<TableRecord, String> {

@@ -5,4 +5,5 @@ pub mod invoice_repo;
 pub mod order_item_repo;
 pub mod order_repo;
 pub mod product_repo;
+pub mod seller_repo;
 pub mod user_repo;

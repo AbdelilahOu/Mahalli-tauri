@@ -1,76 +1,77 @@
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
+use serde::Serialize;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ProductRecord {
     id: i64,
-    name: String,
-    price: f64,
-    tva: f64,
-    description: String,
-    stock: i64,
+    pub name: String,
+    pub price: f32,
+    pub tva: f32,
+    pub description: String,
+    pub inventory: i64,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ClientRecord {
     id: i64,
-    name: String,
-    phone: String,
-    email: String,
-    address: String,
-    image: i64,
+    pub name: String,
+    pub phone: String,
+    pub email: String,
+    pub address: String,
+    pub image: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct SellerRecord {
     id: i64,
-    name: String,
-    phone: String,
-    email: String,
-    address: String,
-    image: i64,
+    pub name: String,
+    pub phone: String,
+    pub email: String,
+    pub address: String,
+    pub image: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct InvoiceRecord {
     id: i64,
-    total: i64,
-    status: String,
-    created_at: String,
-    client_id: i64,
+    pub total: f32,
+    pub status: String,
+    pub created_at: String,
+    pub client_id: i32,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct InvoiceItemRecord {
-    id: i64,
-    product_id: i64,
-    invoice_id: i64,
-    quantity: i64,
-    stock_id: String,
+    id: i32,
+    pub product_id: i32,
+    pub invoice_id: i32,
+    pub quantity: i64,
+    pub inventory_id: i32,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct OrderRecord {
-    id: i64,
-    status: String,
-    created_at: String,
-    seller_id: i64,
+    id: i32,
+    pub status: String,
+    pub created_at: String,
+    pub seller_id: i32,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct OrderItemRecord {
-    id: i64,
-    product_id: i64,
-    price: i64,
-    order_id: i64,
-    quantity: i64,
-    stock_id: String,
+    id: i32,
+    pub product_id: i32,
+    pub price: i64,
+    pub order_id: i32,
+    pub quantity: i64,
+    pub inventory_id: i32,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct StockMouvementRecord {
-    id: i64,
-    date: String,
-    model: String,
-    quantity: String,
-    product_id: String,
+pub struct InventoryMouvementRecord {
+    id: i32,
+    pub date: String,
+    pub model: String,
+    pub quantity: String,
+    pub product_id: i32,
 }
