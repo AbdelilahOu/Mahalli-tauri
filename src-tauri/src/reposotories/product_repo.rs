@@ -1,56 +1,48 @@
-use crate::db::establish_connection;
 use crate::diesel::prelude::*;
 use crate::models::{NewProduct, Product};
 use crate::schema;
 
-pub fn get_products() -> Vec<Product> {
-    let mut connection = establish_connection();
+pub fn get_products(connection: &mut SqliteConnection) -> Vec<Product> {
     let result = schema::products::dsl::products
-        .load::<Product>(&mut connection)
+        .load::<Product>(connection)
         .expect("error get all products");
     result
 }
 
-pub fn get_product(product_id: i32) -> Product {
-    let mut connection = establish_connection();
+pub fn get_product(p_id: i32, connection: &mut SqliteConnection) -> Product {
     let result = schema::products::dsl::products
-        .find(&product_id)
-        .first::<Product>(&mut connection)
+        .find(&p_id)
+        .first::<Product>(connection)
         .expect("error get all products");
 
     result
 }
-pub fn insert_product(new_product: NewProduct) -> usize {
-    let mut connection = establish_connection();
-
+pub fn insert_product(new_p: NewProduct, connection: &mut SqliteConnection) -> usize {
     let result = diesel::insert_into(schema::products::dsl::products)
-        .values(new_product)
-        .execute(&mut connection)
+        .values(new_p)
+        .execute(connection)
         .expect("Expect add articles");
 
     result
 }
 
-pub fn delete_product(product_id: i32) -> usize {
-    let mut connection = establish_connection();
-    let result = diesel::delete(schema::products::dsl::products.find(&product_id))
-        .execute(&mut connection)
+pub fn delete_product(p_id: i32, connection: &mut SqliteConnection) -> usize {
+    let result = diesel::delete(schema::products::dsl::products.find(&p_id))
+        .execute(connection)
         .expect("Expect delete channel");
 
     result
 }
-pub fn update_product(to_be_updated: Product, product_id: i32) -> usize {
-    let mut connection = establish_connection();
-
-    let result = diesel::update(schema::products::dsl::products.find(&product_id))
+pub fn update_product(p_update: Product, p_id: i32, connection: &mut SqliteConnection) -> usize {
+    let result = diesel::update(schema::products::dsl::products.find(&p_id))
         .set((
-            schema::products::tva.eq(to_be_updated.tva),
-            schema::products::name.eq(to_be_updated.name),
-            schema::products::price.eq(to_be_updated.price),
-            schema::products::image.eq(to_be_updated.image),
-            schema::products::description.eq(to_be_updated.description),
+            schema::products::tva.eq(p_update.tva),
+            schema::products::name.eq(p_update.name),
+            schema::products::price.eq(p_update.price),
+            schema::products::image.eq(p_update.image),
+            schema::products::description.eq(p_update.description),
         ))
-        .execute(&mut connection)
+        .execute(connection)
         .expect("Expect add articles");
 
     result
