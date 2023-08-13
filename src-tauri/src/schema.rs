@@ -3,11 +3,21 @@
 diesel::table! {
     clients (id) {
         id -> Integer,
-        name -> Text,
+        fullname -> Text,
         phone -> Text,
         email -> Text,
         address -> Text,
         image -> Text,
+    }
+}
+
+diesel::table! {
+    inventory_mouvements (id) {
+        id -> Integer,
+        date -> Timestamp,
+        model -> Text,
+        quantity -> BigInt,
+        product_id -> Integer,
     }
 }
 
@@ -17,7 +27,7 @@ diesel::table! {
         product_id -> Integer,
         invoice_id -> Integer,
         quantity -> BigInt,
-        stock_id -> Integer,
+        inventory_id -> Integer,
     }
 }
 
@@ -37,7 +47,7 @@ diesel::table! {
         product_id -> Integer,
         price -> Nullable<Float>,
         order_id -> Integer,
-        stock_id -> Integer,
+        inventory_id -> Integer,
         quantity -> BigInt,
     }
 }
@@ -74,16 +84,6 @@ diesel::table! {
 }
 
 diesel::table! {
-    stock_mouvements (id) {
-        id -> Integer,
-        date -> Timestamp,
-        model -> Text,
-        quantity -> BigInt,
-        product_id -> Integer,
-    }
-}
-
-diesel::table! {
     users (id) {
         id -> Integer,
         username -> Text,
@@ -93,24 +93,24 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(inventory_mouvements -> products (product_id));
+diesel::joinable!(invoice_items -> inventory_mouvements (inventory_id));
 diesel::joinable!(invoice_items -> invoices (invoice_id));
 diesel::joinable!(invoice_items -> products (product_id));
-diesel::joinable!(invoice_items -> stock_mouvements (stock_id));
 diesel::joinable!(invoices -> clients (client_id));
+diesel::joinable!(order_items -> inventory_mouvements (inventory_id));
 diesel::joinable!(order_items -> orders (order_id));
 diesel::joinable!(order_items -> products (product_id));
-diesel::joinable!(order_items -> stock_mouvements (stock_id));
 diesel::joinable!(orders -> sellers (seller_id));
-diesel::joinable!(stock_mouvements -> products (product_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     clients,
+    inventory_mouvements,
     invoice_items,
     invoices,
     order_items,
     orders,
     products,
     sellers,
-    stock_mouvements,
     users,
 );
