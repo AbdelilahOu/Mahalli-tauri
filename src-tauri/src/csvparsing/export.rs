@@ -1,5 +1,6 @@
 use std::fs::OpenOptions;
-use tauri::api::process::{Command, CommandEvent};
+use tauri::api::process::Command;
+use tauri::api::process::CommandEvent;
 
 pub async fn export_db_csv(source_path: &str, output_path: &str, table: &String) {
     // get data from command line
