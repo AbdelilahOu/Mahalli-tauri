@@ -8,8 +8,12 @@ use std::path;
 use crate::csvparsing::export;
 use crate::csvparsing::import;
 use crate::csvparsing::import::TableRecord;
+use crate::models::NewClient;
+use crate::models::NewInvoice;
 use crate::models::NewInvoiceItem;
-use crate::models::{NewClient, NewInvoice, NewProduct};
+use crate::models::NewOrder;
+use crate::models::NewOrderItem;
+use crate::models::NewProduct;
 use crate::reposotories;
 
 pub fn establish_connection() -> SqliteConnection {
@@ -70,82 +74,20 @@ pub async fn seed_db() {
                         // checking if we already have the csvs
                         let out_put_file = old_data_folder.join(format!("{}.csv", table));
                         if out_put_file.exists() == false {
-                            // get data
+                            // get data as csv
                             export::export_db_csv(
                                 &source_db_path,
                                 &out_put_file.to_str().unwrap(),
                                 &table,
                             )
                             .await;
-
+                            // read csv
                             let result = import::get_csv_records(
                                 String::from(out_put_file.to_str().unwrap()),
                                 Option::from(table.clone()),
                             );
-
-                            match result {
-                                Ok(csv_data) => match csv_data {
-                                    TableRecord::Client(client_records) => {
-                                        for client in client_records {
-                                            reposotories::client_repo::insert_client(
-                                                NewClient {
-                                                    fullname: client.name,
-                                                    image: client.image,
-                                                    address: client.address,
-                                                    phone: client.phone,
-                                                },
-                                                &mut conn,
-                                            );
-                                        }
-                                    }
-                                    TableRecord::Product(product_records) => {
-                                        for product in product_records {
-                                            reposotories::product_repo::insert_product(
-                                                /*
-                                                TODO
-                                                 -> need product image
-                                                */
-                                                NewProduct {
-                                                    name: product.name,
-                                                    price: product.price,
-                                                    description: product.description,
-                                                    tva: product.tva,
-                                                },
-                                                &mut conn,
-                                            );
-                                        }
-                                    }
-                                    TableRecord::Invoice(product_records) => {
-                                        for invoice in product_records {
-                                            reposotories::invoice_repo::insert_invoice(
-                                                NewInvoice {
-                                                    total: invoice.total,
-                                                    status: invoice.status,
-                                                    client_id: invoice.client_id,
-                                                },
-                                                &mut conn,
-                                            );
-                                        }
-                                    }
-                                    TableRecord::InvoiceItem(product_records) => {
-                                        for invoice_item in product_records {
-                                            reposotories::invoice_item_repo::insert_invoice_item(
-                                                NewInvoiceItem {
-                                                    inventory_id: invoice_item.inventory_id,
-                                                    invoice_id: invoice_item.invoice_id,
-                                                    product_id: invoice_item.product_id,
-                                                    quantity: invoice_item.quantity,
-                                                },
-                                                &mut conn,
-                                            );
-                                        }
-                                    }
-                                    _ => {
-                                        println!("not implemented yet");
-                                    }
-                                },
-                                Err(e) => println!("{:?}", e),
-                            }
+                            // seed db
+                            insert_into_tables(result, &mut conn);
                         }
                     }
                 }
@@ -153,5 +95,98 @@ pub async fn seed_db() {
             }
         }
         Err(_r) => println!("seeding the db is desabled"),
+    }
+}
+
+fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConnection) {
+    match result {
+        Ok(csv_data) => {
+            match csv_data {
+                TableRecord::Client(client_records) => {
+                    for client in client_records {
+                        reposotories::client_repo::insert_client(
+                            NewClient {
+                                fullname: client.name,
+                                image: client.image,
+                                address: client.address,
+                                phone: client.phone,
+                            },
+                            conn,
+                        );
+                    }
+                }
+                TableRecord::Product(product_records) => {
+                    for product in product_records {
+                        reposotories::product_repo::insert_product(
+                            /*
+                            TODO
+                             -> need product image
+                            */
+                            NewProduct {
+                                name: product.name,
+                                price: product.price,
+                                description: product.description,
+                                tva: product.tva,
+                            },
+                            conn,
+                        );
+                    }
+                }
+                TableRecord::Invoice(invoice_records) => {
+                    for invoice in invoice_records {
+                        reposotories::invoice_repo::insert_invoice(
+                            NewInvoice {
+                                total: invoice.total,
+                                status: invoice.status,
+                                client_id: invoice.client_id,
+                            },
+                            conn,
+                        );
+                    }
+                }
+                TableRecord::InvoiceItem(invoice_items_records) => {
+                    for invoice_item in invoice_items_records {
+                        reposotories::invoice_item_repo::insert_invoice_item(
+                            NewInvoiceItem {
+                                inventory_id: invoice_item.inventory_id,
+                                invoice_id: invoice_item.invoice_id,
+                                product_id: invoice_item.product_id,
+                                quantity: invoice_item.quantity,
+                            },
+                            conn,
+                        );
+                    }
+                }
+                TableRecord::Order(order_records) => {
+                    for order in order_records {
+                        reposotories::order_repo::insert_order(
+                            NewOrder {
+                                status: order.status,
+                                seller_id: order.seller_id,
+                            },
+                            conn,
+                        );
+                    }
+                }
+                TableRecord::OrderItem(order_item_records) => {
+                    for order_item in order_item_records {
+                        reposotories::order_item_repo::insert_order_item(
+                            NewOrderItem {
+                                inventory_id: order_item.inventory_id,
+                                order_id: order_item.order_id,
+                                product_id: order_item.product_id,
+                                quantity: order_item.quantity,
+                                price: order_item.price,
+                            },
+                            conn,
+                        );
+                    }
+                }
+                _ => {
+                    println!("not implemented yet");
+                }
+            }
+        }
+        Err(e) => println!("{:?}", e),
     }
 }
