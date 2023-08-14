@@ -276,3 +276,48 @@ pub fn update_invoice(invoice: Invoice, id: i32, state: tauri::State<AppState>) 
     let result = invoice_repo::update_invoice(invoice, id, conn);
     result
 }
+
+#[tauri::command]
+pub fn get_order(id: i32, state: tauri::State<AppState>) -> Order {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_repo::get_order(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_orders(page: i32, state: tauri::State<AppState>) -> Vec<Order> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_repo::get_orders(page, conn);
+    result
+}
+
+#[tauri::command]
+pub fn delete_order(id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_repo::delete_order(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn insert_order(new_order: NewOrder, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_repo::insert_order(new_order, conn);
+    result
+}
+
+#[tauri::command]
+pub fn update_order(order: Order, id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_repo::update_order(order, id, conn);
+    result
+}
