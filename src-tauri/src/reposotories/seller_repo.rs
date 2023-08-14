@@ -2,10 +2,16 @@ use crate::diesel::prelude::*;
 use crate::models::{NewSeller, Seller};
 use crate::schema;
 
-pub fn get_sellers(connection: &mut SqliteConnection) -> Vec<Seller> {
+pub fn get_sellers(page: i32, connection: &mut SqliteConnection) -> Vec<Seller> {
+    let offset = (page - 1) * 17;
+
     let result = schema::sellers::dsl::sellers
+        .order(schema::sellers::id.desc())
+        .limit(17 as i64)
+        .offset(offset as i64)
         .load::<Seller>(connection)
         .expect("error get all sellers");
+
     result
 }
 
