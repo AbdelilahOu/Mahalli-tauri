@@ -72,6 +72,6 @@ pub struct InventoryMouvementRecord {
     id: i32,
     pub date: String,
     pub model: String,
-    pub quantity: String,
+    pub quantity: i64,
     pub product_id: i32,
 }
