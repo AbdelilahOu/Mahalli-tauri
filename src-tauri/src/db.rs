@@ -83,14 +83,14 @@ pub async fn seed_db() {
                                 &table,
                             )
                             .await;
-                            // read csv
-                            let result = import::get_csv_records(
-                                String::from(out_put_file.to_str().unwrap()),
-                                Option::from(table.clone()),
-                            );
-                            // seed db
-                            insert_into_tables(result, &mut conn);
                         }
+                        // read csv
+                        let result = import::get_csv_records(
+                            String::from(out_put_file.to_str().unwrap()),
+                            Option::from(table.clone()),
+                        );
+                        // seed db
+                        insert_into_tables(result, &mut conn);
                     }
                 }
                 None => print!("coudnt find old db while seeding"),
