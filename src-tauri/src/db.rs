@@ -8,6 +8,7 @@ use std::path;
 use crate::csvparsing::export;
 use crate::csvparsing::import;
 use crate::csvparsing::import::TableRecord;
+use crate::models::NewInvoiceItem;
 use crate::models::{NewClient, NewInvoice, NewProduct};
 use crate::reposotories;
 
@@ -121,6 +122,19 @@ pub async fn seed_db() {
                                                     total: invoice.total,
                                                     status: invoice.status,
                                                     client_id: invoice.client_id,
+                                                },
+                                                &mut conn,
+                                            );
+                                        }
+                                    }
+                                    TableRecord::InvoiceItem(product_records) => {
+                                        for invoice_item in product_records {
+                                            reposotories::invoice_item_repo::insert_invoice_item(
+                                                NewInvoiceItem {
+                                                    inventory_id: invoice_item.inventory_id,
+                                                    invoice_id: invoice_item.invoice_id,
+                                                    product_id: invoice_item.product_id,
+                                                    quantity: invoice_item.quantity,
                                                 },
                                                 &mut conn,
                                             );
