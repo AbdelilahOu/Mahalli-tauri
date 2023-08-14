@@ -11,11 +11,13 @@ use crate::csvparsing::export;
 use crate::csvparsing::import;
 use crate::csvparsing::import::TableRecord;
 use crate::models::NewClient;
+use crate::models::NewInventoryMvm;
 use crate::models::NewInvoice;
 use crate::models::NewInvoiceItem;
 use crate::models::NewOrder;
 use crate::models::NewOrderItem;
 use crate::models::NewProduct;
+use crate::models::NewSeller;
 use crate::reposotories;
 
 pub fn establish_connection() -> SqliteConnection {
@@ -117,6 +119,20 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                         );
                     }
                 }
+                TableRecord::Seller(seller_records) => {
+                    for seller in seller_records {
+                        reposotories::seller_repo::insert_seller(
+                            NewSeller {
+                                name: seller.name,
+                                image: seller.image,
+                                address: seller.address,
+                                email: seller.email,
+                                phone: seller.phone,
+                            },
+                            conn,
+                        );
+                    }
+                }
                 TableRecord::Product(product_records) => {
                     for product in product_records {
                         reposotories::product_repo::insert_product(
@@ -129,6 +145,23 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                                 price: product.price,
                                 description: product.description,
                                 tva: product.tva,
+                            },
+                            conn,
+                        );
+                    }
+                }
+                TableRecord::InventoryMouvement(inventory_records) => {
+                    for inventory in inventory_records {
+                        reposotories::inventory_mvm_repo::insert_inventory_mvm(
+                            /*
+                            TODO
+                             -> need inventory image
+                            */
+                            NewInventoryMvm {
+                                date: inventory.date,
+                                model: inventory.model,
+                                product_id: inventory.product_id,
+                                quantity: inventory.quantity,
                             },
                             conn,
                         );
@@ -183,9 +216,6 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                             conn,
                         );
                     }
-                }
-                _ => {
-                    println!("not implemented yet");
                 }
             }
         }
