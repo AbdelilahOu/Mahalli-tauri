@@ -102,12 +102,12 @@ pub fn update_client(client: Client, id: i32, state: tauri::State<AppState>) -> 
 }
 
 #[tauri::command]
-pub fn get_sellers(state: tauri::State<AppState>) -> Vec<Seller> {
+pub fn get_sellers(page: i32, state: tauri::State<AppState>) -> Vec<Seller> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     // get data
-    let result = seller_repo::get_sellers(conn);
+    let result = seller_repo::get_sellers(page, conn);
     result
 }
 
@@ -152,11 +152,11 @@ pub fn update_seller(seller: Seller, id: i32, state: tauri::State<AppState>) -> 
 }
 
 #[tauri::command]
-pub fn get_products(state: tauri::State<AppState>) -> Vec<Product> {
+pub fn get_products(page: i32, state: tauri::State<AppState>) -> Vec<Product> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = product_repo::get_products(conn);
+    let result = product_repo::get_products(page, conn);
     result
 }
 
@@ -242,11 +242,11 @@ pub fn get_invoice(id: i32, state: tauri::State<AppState>) -> Invoice {
 }
 
 #[tauri::command]
-pub fn get_invoices(state: tauri::State<AppState>) -> Vec<Invoice> {
+pub fn get_invoices(page: i32, state: tauri::State<AppState>) -> Vec<Invoice> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_repo::get_invoices(conn);
+    let result = invoice_repo::get_invoices(page, conn);
     result
 }
 
