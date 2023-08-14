@@ -321,3 +321,21 @@ pub fn update_order(order: Order, id: i32, state: tauri::State<AppState>) -> usi
     let result = order_repo::update_order(order, id, conn);
     result
 }
+
+#[tauri::command]
+pub fn get_inventory_mvm(page: i32, state: tauri::State<AppState>) -> Vec<InventoryMvm> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = inventory_mvm_repo::get_inventory(page, conn);
+    result
+}
+
+#[tauri::command]
+pub fn delete_inventory_mvm(id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = inventory_mvm_repo::delete_inventory_mvm(id, conn);
+    result
+}
