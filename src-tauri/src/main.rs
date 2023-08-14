@@ -63,6 +63,8 @@ fn main() {
             cmd::insert_order,
             cmd::update_order,
             cmd::delete_order,
+            cmd::get_inventory_mvm,
+            cmd::delete_inventory_mvm,
             cmd::seed_db,
         ])
         .setup(|_app| {
