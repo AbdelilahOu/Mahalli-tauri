@@ -61,7 +61,7 @@ pub struct OrderRecord {
 pub struct OrderItemRecord {
     id: i32,
     pub product_id: i32,
-    pub price: i64,
+    pub price: Option<f32>,
     pub order_id: i32,
     pub quantity: i64,
     pub inventory_id: i32,
