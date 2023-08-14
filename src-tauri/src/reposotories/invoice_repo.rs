@@ -11,6 +11,7 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Invoice
         .offset(offset as i64)
         .load::<Invoice>(connection)
         .expect("Error fetching all invoices");
+
     result
 }
 

@@ -8,7 +8,7 @@ pub struct ProductRecord {
     pub price: f32,
     pub tva: f32,
     pub description: String,
-    pub inventory: i64,
+    // pub inventory: i64,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
