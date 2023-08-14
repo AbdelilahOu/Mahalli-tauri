@@ -2,8 +2,13 @@ use crate::diesel::prelude::*;
 use crate::models::{InventoryMvm, NewInventoryMvm};
 use crate::schema;
 
-pub fn get_inventory(connection: &mut SqliteConnection) -> Vec<InventoryMvm> {
+pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<InventoryMvm> {
+    let offset = (page - 1) * 17;
+
     let result = schema::inventory_mouvements::dsl::inventory_mouvements
+        .order(schema::inventory_mouvements::id.desc())
+        .limit(17)
+        .offset(offset as i64)
         .load::<InventoryMvm>(connection)
         .expect("Error fetching all inventorys");
     result
