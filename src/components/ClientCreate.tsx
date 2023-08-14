@@ -15,7 +15,7 @@ export const ClientCreate = defineComponent({
     const modalStore = useModalStore();
     const isFlash = ref<boolean>(false);
     const Client = reactive<newClientT>({
-      name: String(),
+      fullname: String(),
       email: String(),
       phone: String(),
       address: String(),
@@ -23,7 +23,7 @@ export const ClientCreate = defineComponent({
     });
     const createNewClient = () => {
       isFlash.value = true;
-      if (Client.name !== "") {
+      if (Client.fullname !== "") {
         useClientStore().createOneClient(Client);
         modalStore.updateModal({ key: "show", value: false });
       }
@@ -45,9 +45,9 @@ export const ClientCreate = defineComponent({
             />
           </div>
           <UiInput
-            IsEmpty={isFlash.value && Client["name"] == ""}
+            IsEmpty={isFlash.value && Client["fullname"] == ""}
             OnInputChange={(value) =>
-              (Client["name"] =
+              (Client["fullname"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"

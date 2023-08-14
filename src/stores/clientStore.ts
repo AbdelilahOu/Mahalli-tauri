@@ -36,8 +36,8 @@ export const useClientStore = defineStore("ClientStore", {
       try {
         let image: string = await saveFile(Client.image as string, "Image");
         await this.db.execute(
-          "INSERT INTO clients (name,email,phone,address,image) VALUES ($1,$2,$3,$4,$5)",
-          [Client.name, Client.email, Client.phone, Client.address, image]
+          "INSERT INTO clients (fullname,email,phone,address,image) VALUES ($1,$2,$3,$4,$5)",
+          [Client.fullname, Client.email, Client.phone, Client.address, image]
         );
         this.getAllClients();
       } catch (error) {
