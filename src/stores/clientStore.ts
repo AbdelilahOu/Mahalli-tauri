@@ -1,6 +1,7 @@
 import type { clientT, clientState, updateClientT, newClientT } from "@/types";
 import { saveFile } from "@/utils/fs";
 import { defineStore } from "pinia";
+import { invoke } from "@tauri-apps/api";
 
 export const useClientStore = defineStore("ClientStore", {
   state: (): clientState => {
@@ -12,9 +13,7 @@ export const useClientStore = defineStore("ClientStore", {
   actions: {
     getAllClients: async function () {
       try {
-        this.clients = await this.db.select<clientT[]>(
-          "SELECT * FROM clients ORDER BY id DESC"
-        );
+        this.clients = await invoke("get_clients", { page: 1 });
       } catch (error) {
         console.log(error);
       }
