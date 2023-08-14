@@ -141,7 +141,7 @@ pub struct InvoiceItem {
     pub product_id: i32,
     #[diesel(sql_type = Integer)]
     pub invoice_id: i32,
-    #[diesel(sql_type = Integer)]
+    #[diesel(sql_type = BigInt)]
     pub quantity: i64,
     #[diesel(sql_type = Integer)]
     pub inventory_id: i32,
@@ -184,14 +184,14 @@ pub struct OrderItem {
     pub id: i32,
     #[diesel(sql_type = Integer)]
     pub product_id: i32,
+    #[diesel(sql_type = Nullable<Float>)]
+    pub price: Option<f32>,
     #[diesel(sql_type = Integer)]
     pub order_id: i32,
     #[diesel(sql_type = Integer)]
-    pub price: Option<f32>,
-    #[diesel(sql_type = Integer)]
-    pub quantity: i64,
-    #[diesel(sql_type = Integer)]
     pub inventory_id: i32,
+    #[diesel(sql_type = BigInt)]
+    pub quantity: i64,
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
