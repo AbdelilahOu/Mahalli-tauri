@@ -1,5 +1,6 @@
 use super::schema::{
-    clients, inventory_mouvements, invoice_items, invoices, products, sellers, users,
+    clients, inventory_mouvements, invoice_items, invoices, order_items, orders, products, sellers,
+    users,
 };
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
@@ -152,6 +153,54 @@ pub struct NewInvoiceItem {
     pub product_id: i32,
     pub invoice_id: i32,
     pub quantity: i64,
+    pub inventory_id: i32,
+}
+
+#[derive(Debug, Queryable, Deserialize, Selectable, Serialize, Associations, QueryableByName)]
+#[diesel(table_name = orders, belongs_to(Seller, foreign_key = seller_id))]
+pub struct Order {
+    #[diesel(sql_type = Integer)]
+    pub id: i32,
+    #[diesel(sql_type = Text)]
+    pub status: String,
+    #[diesel(sql_type = Text)]
+    pub created_at: String,
+    #[diesel(sql_type = Integer)]
+    pub seller_id: i32,
+}
+#[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
+#[diesel(table_name = orders)]
+pub struct NewOrder {
+    pub status: String,
+    pub seller_id: i32,
+}
+
+#[derive(
+    Debug, Queryable, QueryableByName, Clone, AsChangeset, Serialize, Deserialize, Associations,
+)]
+#[diesel(table_name = order_items, belongs_to(Product, foreign_key = product_id),belongs_to(Order, foreign_key = order_id),belongs_to(InventoryMvm, foreign_key = inventory_id))]
+pub struct OrderItem {
+    #[diesel(sql_type = Integer)]
+    pub id: i32,
+    #[diesel(sql_type = Integer)]
+    pub product_id: i32,
+    #[diesel(sql_type = Integer)]
+    pub order_id: i32,
+    #[diesel(sql_type = Integer)]
+    pub price: Option<f32>,
+    #[diesel(sql_type = Integer)]
+    pub quantity: i64,
+    #[diesel(sql_type = Integer)]
+    pub inventory_id: i32,
+}
+
+#[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
+#[diesel(table_name = order_items)]
+pub struct NewOrderItem {
+    pub product_id: i32,
+    pub order_id: i32,
+    pub quantity: i64,
+    pub price: Option<f32>,
     pub inventory_id: i32,
 }
 
