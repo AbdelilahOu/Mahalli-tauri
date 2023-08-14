@@ -2,8 +2,13 @@ use crate::diesel::prelude::*;
 use crate::models::{Invoice, NewInvoice};
 use crate::schema;
 
-pub fn get_invoices(connection: &mut SqliteConnection) -> Vec<Invoice> {
+pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Invoice> {
+    let offset = (page - 1) * 17;
+
     let result = schema::invoices::dsl::invoices
+        .order(schema::invoices::id.desc())
+        .limit(17)
+        .offset(offset as i64)
         .load::<Invoice>(connection)
         .expect("Error fetching all invoices");
     result
