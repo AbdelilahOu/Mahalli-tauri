@@ -2,19 +2,19 @@ use crate::diesel::prelude::*;
 use crate::models::{Client, NewClient};
 use crate::schema;
 
-pub fn get_all_clients(connection: &mut SqliteConnection) -> Vec<Client> {
-    let result = schema::clients::dsl::clients
-        .load::<Client>(connection)
-        .expect("error get all clients");
-    result
-}
+// pub fn get_all_clients(connection: &mut SqliteConnection) -> Vec<Client> {
+//     let result = schema::clients::dsl::clients
+//         .load::<Client>(connection)
+//         .expect("error get all clients");
+//     result
+// }
 
 pub fn get_clients(page: i32, connection: &mut SqliteConnection) -> Vec<Client> {
     let offset = (page - 1) * 17;
 
     let result = schema::clients::dsl::clients
         .order(schema::clients::id.desc())
-        .limit(17 as i64)
+        .limit(17)
         .offset(offset as i64)
         .load::<Client>(connection)
         .expect("error get all clients");
