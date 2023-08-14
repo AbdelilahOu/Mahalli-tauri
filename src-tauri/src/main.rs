@@ -58,6 +58,11 @@ fn main() {
             cmd::insert_invoice,
             cmd::update_invoice,
             cmd::delete_invoice,
+            cmd::get_order,
+            cmd::get_orders,
+            cmd::insert_order,
+            cmd::update_order,
+            cmd::delete_order,
             cmd::seed_db,
         ])
         .setup(|_app| {
