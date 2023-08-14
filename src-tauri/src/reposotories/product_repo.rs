@@ -2,8 +2,13 @@ use crate::diesel::prelude::*;
 use crate::models::{NewProduct, Product};
 use crate::schema;
 
-pub fn get_products(connection: &mut SqliteConnection) -> Vec<Product> {
+pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Vec<Product> {
+    let offset = (page - 1) * 17;
+
     let result = schema::products::dsl::products
+        .order(schema::products::id.desc())
+        .limit(17)
+        .offset(offset as i64)
         .load::<Product>(connection)
         .expect("error get all products");
     result
