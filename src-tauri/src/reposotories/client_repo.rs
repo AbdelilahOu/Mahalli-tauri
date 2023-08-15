@@ -30,11 +30,17 @@ pub fn get_client(c_id: i32, connection: &mut SqliteConnection) -> Client {
     result
 }
 
-pub fn insert_client(new_c: NewClient, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::insert_into(schema::clients::dsl::clients)
+pub fn insert_client(new_c: NewClient, connection: &mut SqliteConnection) -> Client {
+    // insert
+    diesel::insert_into(schema::clients::dsl::clients)
         .values(new_c)
         .execute(connection)
         .expect("Expect add client");
+    // select last inserted row
+    let result = schema::clients::dsl::clients
+        .order_by(schema::clients::id.desc())
+        .first::<Client>(connection)
+        .expect("error get all clients");
 
     result
 }
@@ -47,8 +53,8 @@ pub fn delete_client(c_id: i32, connection: &mut SqliteConnection) -> usize {
     result
 }
 
-pub fn update_client(c_update: Client, c_id: i32, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::update(schema::clients::dsl::clients.find(&c_id))
+pub fn update_client(c_update: Client, c_id: i32, connection: &mut SqliteConnection) -> Client {
+    diesel::update(schema::clients::dsl::clients.find(&c_id))
         .set((
             schema::clients::fullname.eq(c_update.fullname),
             schema::clients::email.eq(c_update.email),
@@ -57,6 +63,8 @@ pub fn update_client(c_update: Client, c_id: i32, connection: &mut SqliteConnect
         ))
         .execute(connection)
         .expect("Expect add client");
+
+    let result = get_client(c_id, connection);
 
     result
 }
