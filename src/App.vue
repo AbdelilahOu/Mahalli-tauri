@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
 import { onBeforeMount, Transition } from "vue";
-import { invoke } from "@tauri-apps/api";
-onBeforeMount(async () => {
-  // console.log(await invoke("seed_db"));
-  console.log(await invoke("get_clients", { page: 1 }));
-  // useRouter().push({ path: "/Auth", query: { checkAuth: "true" } });
-  // useRouter().push("/Home");
+onBeforeMount(() => {
+  useRouter().push("/Home");
 });
 </script>
 
