@@ -82,12 +82,12 @@ pub fn delete_client(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_client(new_client: NewClient, state: tauri::State<AppState>) -> Client {
+pub fn insert_client(client: NewClient, state: tauri::State<AppState>) -> Client {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     //
-    let result = client_repo::insert_client(new_client, conn);
+    let result = client_repo::insert_client(client, conn);
     result
 }
 
