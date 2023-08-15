@@ -339,3 +339,12 @@ pub fn delete_inventory_mvm(id: i32, state: tauri::State<AppState>) -> usize {
     let result = inventory_mvm_repo::delete_inventory_mvm(id, conn);
     result
 }
+
+#[tauri::command]
+pub fn update_inventory_mvm(mvm: InventoryMvm, id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = inventory_mvm_repo::update_inventory_mvm(mvm, id, conn);
+    result
+}
