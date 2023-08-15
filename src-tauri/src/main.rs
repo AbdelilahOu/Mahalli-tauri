@@ -65,6 +65,7 @@ fn main() {
             cmd::delete_order,
             cmd::get_inventory_mvm,
             cmd::delete_inventory_mvm,
+            cmd::update_inventory_mvm,
             cmd::seed_db,
         ])
         .setup(|_app| {
