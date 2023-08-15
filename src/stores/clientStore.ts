@@ -29,10 +29,10 @@ export const useClientStore = defineStore("ClientStore", {
         }
       }
     },
-    createOneClient: async function (Client: newClientT) {
+    createOneClient: async function (client: newClientT) {
       try {
-        let image: string = await saveFile(Client.image as string, "Image");
-        await invoke("insert_client", { new_client: Client });
+        let image: string = await saveFile(client.image as string, "Image");
+        await invoke("insert_client", { client });
         this.getAllClients();
       } catch (error) {
         console.log(error);
@@ -40,18 +40,17 @@ export const useClientStore = defineStore("ClientStore", {
     },
     deleteOneClient: async function (id: number) {
       try {
-        await this.db.execute("DELETE FROM clients WHERE id = $1", [id]);
+        await invoke("delete_client", { id });
+
         this.getAllClients();
       } catch (error) {
         console.log(error);
       }
     },
-    updateOneClient: async function (id: number, Client: updateClientT) {
+    updateOneClient: async function (id: number, client: updateClientT) {
       try {
-        await this.db.execute(
-          "UPDATE clients SET name = $1,email = $2,phone = $3,address = $4 WHERE id = $5",
-          [Client.name, Client.email, Client.phone, Client.address, Client.id]
-        );
+        await invoke("update_client", { client, id });
+
         this.getAllClients();
       } catch (error) {
         console.log(error);
