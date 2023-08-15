@@ -22,10 +22,7 @@ export const useClientStore = defineStore("ClientStore", {
       this.client = this.clients.find((cli: clientT) => cli.id === id) ?? null;
       if (!this.client) {
         try {
-          const client: clientT = await this.db.select<clientT>(
-            "SELECT * FROM clients WHERE id = $1",
-            [id]
-          );
+          const client: clientT = await invoke("get_client", { id });
           this.client = client;
         } catch (error) {
           console.log(error);
@@ -35,10 +32,7 @@ export const useClientStore = defineStore("ClientStore", {
     createOneClient: async function (Client: newClientT) {
       try {
         let image: string = await saveFile(Client.image as string, "Image");
-        await this.db.execute(
-          "INSERT INTO clients (fullname,email,phone,address,image) VALUES ($1,$2,$3,$4,$5)",
-          [Client.fullname, Client.email, Client.phone, Client.address, image]
-        );
+        await invoke("insert_client", { new_client: Client });
         this.getAllClients();
       } catch (error) {
         console.log(error);
