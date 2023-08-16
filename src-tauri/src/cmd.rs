@@ -152,7 +152,7 @@ pub fn update_seller(seller: Seller, id: i32, state: tauri::State<AppState>) -> 
 }
 
 #[tauri::command]
-pub fn get_products(page: i32, state: tauri::State<AppState>) -> Vec<Product> {
+pub fn get_products(page: i32, state: tauri::State<AppState>) -> Vec<ProductWithQuantity> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;

@@ -99,6 +99,24 @@ pub struct Product {
     pub tva: f32,
 }
 
+#[derive(QueryableByName, Queryable, Deserialize, Serialize)]
+pub struct ProductWithQuantity {
+    #[diesel(sql_type = Integer)]
+    pub id: i32,
+    #[diesel(sql_type = Text)]
+    pub name: String,
+    #[diesel(sql_type = Text)]
+    pub image: String,
+    #[diesel(sql_type = Text)]
+    pub description: String,
+    #[diesel(sql_type = Float)]
+    pub price: f32,
+    #[diesel(sql_type = Float)]
+    pub tva: f32,
+    #[diesel(sql_type = BigInt)]
+    pub quantity: i64,
+}
+
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
 #[diesel(table_name = products)]
 pub struct NewProduct {
