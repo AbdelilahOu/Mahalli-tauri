@@ -46,6 +46,7 @@ export const bestThreeSellers = `
     LIMIT 3;
 `;
 
+// done
 export const selectProductsWithQuantity = `
     SELECT products.*, COALESCE(SUM(sm.quantity), 0) AS quantity
     FROM products LEFT JOIN stock_mouvements sm ON products.id = sm.product_id
