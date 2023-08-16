@@ -55,7 +55,7 @@ pub struct NewClient {
     pub phone: String,
 }
 
-#[derive(Debug, Queryable, QueryableByName, Clone, Serialize, Deserialize, AsChangeset)]
+#[derive(Debug, Queryable, Clone, QueryableByName, Serialize, Deserialize, AsChangeset)]
 #[diesel(table_name = sellers)]
 pub struct Seller {
     #[diesel(sql_type = Integer)]
@@ -174,7 +174,9 @@ pub struct NewInvoiceItem {
     pub inventory_id: i32,
 }
 
-#[derive(Debug, Queryable, Deserialize, Selectable, Serialize, Associations, QueryableByName)]
+#[derive(
+    Debug, Queryable, Clone, Deserialize, Selectable, Serialize, Associations, QueryableByName,
+)]
 #[diesel(table_name = orders, belongs_to(Seller, foreign_key = seller_id))]
 pub struct Order {
     #[diesel(sql_type = Integer)]
