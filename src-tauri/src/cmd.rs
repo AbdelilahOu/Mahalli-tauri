@@ -279,7 +279,7 @@ pub fn update_invoice(invoice: Invoice, id: i32, state: tauri::State<AppState>) 
 }
 
 #[tauri::command]
-pub fn get_order(id: i32, state: tauri::State<AppState>) -> Order {
+pub fn get_order(id: i32, state: tauri::State<AppState>) -> Value {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
