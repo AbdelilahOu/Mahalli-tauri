@@ -64,13 +64,60 @@ pub fn get_orders(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
         .collect::<Vec<_>>()
 }
 
-pub fn get_order(o_id: i32, connection: &mut SqliteConnection) -> Order {
-    let result = schema::orders::dsl::orders
-        .find(&o_id)
-        .first::<Order>(connection)
-        .expect("Error fetching order");
+pub fn get_order(o_id: i32, connection: &mut SqliteConnection) -> Value {
+    let result = schema::orders::table
+        .inner_join(schema::sellers::table.on(schema::orders::seller_id.eq(schema::sellers::id)))
+        .inner_join(
+            schema::order_items::table.on(schema::orders::id.eq(schema::order_items::order_id)),
+        )
+        .inner_join(
+            schema::products::table.on(schema::order_items::product_id.eq(schema::products::id)),
+        )
+        .select((
+            schema::orders::all_columns,
+            schema::sellers::all_columns,
+            schema::order_items::all_columns,
+            schema::products::all_columns,
+        ))
+        .filter(schema::orders::id.eq(o_id))
+        .load::<(Order, Seller, OrderItem, Product)>(connection)
+        .expect("Error fetching order details");
 
-    result
+    let (order, seller, order_items, _) = result[0].clone();
+
+    let order_items_json = json!({
+        "orderItems": order_items.into_iter().map(|order_item| {
+            json!({
+                "id": order_item.id,
+                "price": order_item.price,
+                "quantity": order_item.quantity,
+                "product_id": order_item.product_id,
+                "product": {
+                    "id": order_item.product.id,
+                    "name": order_item.product.name,
+                    "description": order_item.product.description,
+                    "price": order_item.product.price,
+                    "tva": order_item.product.tva,
+                    "image": order_item.product.image
+                }
+            })
+        }).collect::<Vec<_>>()
+    });
+
+    json!({
+        "id": order.id,
+        "status": order.status,
+        "created_at": order.created_at,
+        "seller": {
+            "id": seller.id,
+            "name": seller.name,
+            "phone": seller.phone,
+            "email": seller.email,
+            "address": seller.address,
+            "image": seller.image
+        },
+        "orderItems": order_items_json["orderItems"]
+    })
 }
 
 pub fn insert_order(new_o: NewOrder, connection: &mut SqliteConnection) -> usize {
