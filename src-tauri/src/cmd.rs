@@ -1,4 +1,5 @@
 use dotenv::dotenv;
+use serde_json::Value;
 use std::env;
 use std::path;
 
@@ -242,7 +243,7 @@ pub fn get_invoice(id: i32, state: tauri::State<AppState>) -> Invoice {
 }
 
 #[tauri::command]
-pub fn get_invoices(page: i32, state: tauri::State<AppState>) -> Vec<Invoice> {
+pub fn get_invoices(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
@@ -287,7 +288,7 @@ pub fn get_order(id: i32, state: tauri::State<AppState>) -> Order {
 }
 
 #[tauri::command]
-pub fn get_orders(page: i32, state: tauri::State<AppState>) -> Vec<Order> {
+pub fn get_orders(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
