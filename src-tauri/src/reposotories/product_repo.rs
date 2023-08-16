@@ -1,16 +1,33 @@
 use crate::diesel::prelude::*;
-use crate::models::{NewProduct, Product};
+use crate::models::{NewProduct, Product, ProductWithQuantity};
 use crate::schema;
 
-pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Vec<Product> {
+pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Vec<ProductWithQuantity> {
     let offset = (page - 1) * 17;
 
-    let result = schema::products::dsl::products
+    let result = schema::products::table
+        .left_join(
+            schema::inventory_mouvements::table
+                .on(schema::products::id.eq(schema::inventory_mouvements::product_id)),
+        )
+        .select((
+            schema::products::id,
+            schema::products::name,
+            schema::products::image,
+            schema::products::description,
+            schema::products::price,
+            schema::products::tva,
+            diesel::dsl::sql::<diesel::sql_types::BigInt>(
+                "COALESCE(SUM(stock_mouvements.quantity), 0) AS quantity",
+            ),
+        ))
+        .group_by(schema::products::id)
         .order(schema::products::id.desc())
         .limit(17)
         .offset(offset as i64)
-        .load::<Product>(connection)
+        .load::<ProductWithQuantity>(connection)
         .expect("error get all products");
+
     result
 }
 
