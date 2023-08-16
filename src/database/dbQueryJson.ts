@@ -111,6 +111,7 @@ export const stockJoins = `
     ORDER BY sm.id DESC;
 `;
 
+// done
 export const ordersJoins = `
     SELECT json_object(
         'id', c.id,
@@ -146,6 +147,7 @@ export const ordersJoins = `
     ORDER BY c.id DESC;
 `;
 
+// done
 export const invoicesJoins = `
     SELECT json_object(
         'id', i.id,
