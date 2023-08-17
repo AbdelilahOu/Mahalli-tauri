@@ -234,7 +234,7 @@ pub fn update_user(user: User, id: i32, state: tauri::State<AppState>) -> usize 
 }
 
 #[tauri::command]
-pub fn get_invoice(id: i32, state: tauri::State<AppState>) -> Invoice {
+pub fn get_invoice(id: i32, state: tauri::State<AppState>) -> Value {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
