@@ -1,12 +1,12 @@
 use crate::diesel::prelude::*;
 use crate::models::{NewSeller, Seller};
-use crate::schema;
+use crate::schema::sellers;
 
 pub fn get_sellers(page: i32, connection: &mut SqliteConnection) -> Vec<Seller> {
     let offset = (page - 1) * 17;
 
-    let result = schema::sellers::dsl::sellers
-        .order(schema::sellers::id.desc())
+    let result = sellers::dsl::sellers
+        .order(sellers::id.desc())
         .limit(17 as i64)
         .offset(offset as i64)
         .load::<Seller>(connection)
@@ -16,7 +16,7 @@ pub fn get_sellers(page: i32, connection: &mut SqliteConnection) -> Vec<Seller> 
 }
 
 pub fn get_seller(s_id: i32, connection: &mut SqliteConnection) -> Seller {
-    let result = schema::sellers::dsl::sellers
+    let result = sellers::dsl::sellers
         .find(&s_id)
         .first::<Seller>(connection)
         .expect("error get all sellers");
@@ -25,7 +25,7 @@ pub fn get_seller(s_id: i32, connection: &mut SqliteConnection) -> Seller {
 }
 
 pub fn insert_seller(new_c: NewSeller, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::insert_into(schema::sellers::dsl::sellers)
+    let result = diesel::insert_into(sellers::dsl::sellers)
         .values(new_c)
         .execute(connection)
         .expect("Expect add seller");
@@ -34,7 +34,7 @@ pub fn insert_seller(new_c: NewSeller, connection: &mut SqliteConnection) -> usi
 }
 
 pub fn delete_seller(s_id: i32, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::delete(schema::sellers::dsl::sellers.find(&s_id))
+    let result = diesel::delete(sellers::dsl::sellers.find(&s_id))
         .execute(connection)
         .expect("Expect delete seller");
 
@@ -42,12 +42,12 @@ pub fn delete_seller(s_id: i32, connection: &mut SqliteConnection) -> usize {
 }
 
 pub fn update_seller(s_update: Seller, s_id: i32, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::update(schema::sellers::dsl::sellers.find(&s_id))
+    let result = diesel::update(sellers::dsl::sellers.find(&s_id))
         .set((
-            schema::sellers::name.eq(s_update.name),
-            schema::sellers::email.eq(s_update.email),
-            schema::sellers::address.eq(s_update.address),
-            schema::sellers::image.eq(s_update.image),
+            sellers::name.eq(s_update.name),
+            sellers::email.eq(s_update.email),
+            sellers::address.eq(s_update.address),
+            sellers::image.eq(s_update.image),
         ))
         .execute(connection)
         .expect("Expect update seller");
