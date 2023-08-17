@@ -230,25 +230,25 @@ pub struct NewInventoryMvm {
     pub product_id: i32,
 }
 
-pub struct B3Clients {
-    pub name: String,
-    pub amount: i64,
-}
+// pub struct B3Clients {
+//     pub name: String,
+//     pub amount: i64,
+// }
 
-pub struct B3Sellers {
-    pub name: String,
-    pub amount: i64,
-}
+// pub struct B3Sellers {
+//     pub name: String,
+//     pub amount: i64,
+// }
 
-pub struct CDExpenses {
-    pub day: String,
-    pub expense: i64,
-}
+// pub struct CDExpenses {
+//     pub day: String,
+//     pub expense: i64,
+// }
 
-pub struct SDexpenses {
-    pub day: String,
-    pub expense: i64,
-}
+// pub struct SDexpenses {
+//     pub day: String,
+//     pub expense: i64,
+// }
 
 #[derive(QueryableByName, Queryable, Deserialize, Serialize)]
 pub struct ProductWithQuantity {
@@ -267,6 +267,3 @@ pub struct ProductWithQuantity {
     #[diesel(sql_type = BigInt)]
     pub quantity: i64,
 }
-
-#[derive()]
-pub struct ClientDetails {}
