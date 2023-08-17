@@ -19,7 +19,6 @@ mod db;
 mod models;
 mod reposotories;
 mod schema;
-mod types;
 // :::::::::::::
 
 pub struct AppState {

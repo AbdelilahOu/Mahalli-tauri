@@ -85,6 +85,7 @@ export const inOutStatsJoins = `
     LIMIT 3;
 `;
 
+// done
 export const stockJoins = `
     SELECT json_object(
         'id', sm.id,
