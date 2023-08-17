@@ -400,7 +400,7 @@ pub fn update_invoice_items(invoice: InvoiceItem, id: i32, state: tauri::State<A
 }
 
 #[tauri::command]
-pub fn get_inventory_mvm(page: i32, state: tauri::State<AppState>) -> Vec<InventoryMvm> {
+pub fn get_inventory_mvm(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
