@@ -1,7 +1,7 @@
 use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
-use crate::schema::*;
+use crate::schema::{clients, invoice_items, invoices, order_items, orders, products, sellers};
 
 pub fn get_best_three_client(connection: &mut SqliteConnection) -> Vec<Value> {
     let invoice_client_join = invoices::table.on(clients::id.eq(invoices::client_id));
