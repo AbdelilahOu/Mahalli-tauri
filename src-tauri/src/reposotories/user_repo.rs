@@ -1,9 +1,9 @@
 use crate::diesel::prelude::*;
 use crate::models::{NewUser, User};
-use crate::schema;
+use crate::schema::users;
 
 pub fn get_user(u_id: i32, connection: &mut SqliteConnection) -> User {
-    let result = schema::users::dsl::users
+    let result = users::dsl::users
         .find(&u_id)
         .first::<User>(connection)
         .expect("error get all users");
@@ -11,7 +11,7 @@ pub fn get_user(u_id: i32, connection: &mut SqliteConnection) -> User {
     result
 }
 pub fn insert_user(new_user: NewUser, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::insert_into(schema::users::dsl::users)
+    let result = diesel::insert_into(users::dsl::users)
         .values(new_user)
         .execute(connection)
         .expect("Expect add articles");
@@ -20,7 +20,7 @@ pub fn insert_user(new_user: NewUser, connection: &mut SqliteConnection) -> usiz
 }
 
 pub fn delete_user(u_id: i32, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::delete(schema::users::dsl::users.find(&u_id))
+    let result = diesel::delete(users::dsl::users.find(&u_id))
         .execute(connection)
         .expect("Expect delete channel");
 
@@ -28,10 +28,10 @@ pub fn delete_user(u_id: i32, connection: &mut SqliteConnection) -> usize {
 }
 
 pub fn update_user(u_update: User, u_id: i32, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::update(schema::users::dsl::users.find(&u_id))
+    let result = diesel::update(users::dsl::users.find(&u_id))
         .set((
-            schema::users::username.eq(u_update.username),
-            schema::users::password.eq(u_update.password),
+            users::username.eq(u_update.username),
+            users::password.eq(u_update.password),
         ))
         .execute(connection)
         .expect("Expect add articles");
