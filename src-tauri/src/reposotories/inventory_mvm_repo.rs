@@ -2,21 +2,15 @@ use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
 use crate::models::{InventoryMvm, InvoiceItem, NewInventoryMvm, OrderItem, Product};
-use crate::schema;
+use crate::schema::{inventory_mouvements, invoice_items, order_items, products};
 
 pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
     let offset = (page - 1) * 17;
 
-    let result = schema::inventory_mouvements::table
-        .inner_join(
-            schema::products::table
-                .on(schema::inventory_mouvements::product_id.eq(schema::products::id)),
-        )
-        .select((
-            schema::inventory_mouvements::all_columns,
-            schema::products::all_columns,
-        ))
-        .order(schema::inventory_mouvements::id.desc())
+    let result = inventory_mouvements::table
+        .inner_join(products::table.on(inventory_mouvements::product_id.eq(products::id)))
+        .select((inventory_mouvements::all_columns, products::all_columns))
+        .order(inventory_mouvements::id.desc())
         .limit(17)
         .offset(offset as i64)
         .load::<(InventoryMvm, Product)>(connection)
@@ -25,13 +19,13 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value>
     result
         .into_iter()
         .map(|(mvm, product)| {
-            let invoice_items = schema::invoice_items::dsl::invoice_items
-                .filter(schema::invoice_items::inventory_id.eq(mvm.id))
+            let invoice_items = invoice_items::dsl::invoice_items
+                .filter(invoice_items::inventory_id.eq(mvm.id))
                 .load::<InvoiceItem>(connection)
                 .expect("Error fetching all invoices");
 
-            let order_items = schema::order_items::dsl::order_items
-                .filter(schema::order_items::inventory_id.eq(mvm.id))
+            let order_items = order_items::dsl::order_items
+                .filter(order_items::inventory_id.eq(mvm.id))
                 .load::<OrderItem>(connection)
                 .expect("Error fetching all orders");
 
@@ -86,7 +80,7 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value>
 
 // pub fn get_inventory_mvm(mvm_id: i32,connection: &mut SqliteConnection) -> InventoryMvm {
 //
-//     let result = schema::inventory_mouvements::dsl::inventory_mouvements
+//     let result = inventory_mouvements::dsl::inventory_mouvements
 //         .find(&mvm_id)
 //         .first::<InventoryMvm>( connection)
 //         .expect("Error fetching inventory");
@@ -95,7 +89,7 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value>
 // }
 
 pub fn insert_inventory_mvm(new_ii: NewInventoryMvm, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::insert_into(schema::inventory_mouvements::dsl::inventory_mouvements)
+    let result = diesel::insert_into(inventory_mouvements::dsl::inventory_mouvements)
         .values(new_ii)
         .execute(connection)
         .expect("Error adding inventory");
@@ -104,10 +98,9 @@ pub fn insert_inventory_mvm(new_ii: NewInventoryMvm, connection: &mut SqliteConn
 }
 
 pub fn delete_inventory_mvm(mvm_id: i32, connection: &mut SqliteConnection) -> usize {
-    let result =
-        diesel::delete(schema::inventory_mouvements::dsl::inventory_mouvements.find(&mvm_id))
-            .execute(connection)
-            .expect("Error deleting inventory");
+    let result = diesel::delete(inventory_mouvements::dsl::inventory_mouvements.find(&mvm_id))
+        .execute(connection)
+        .expect("Error deleting inventory");
 
     result
 }
@@ -117,11 +110,10 @@ pub fn update_inventory_mvm(
     mvm_id: i32,
     connection: &mut SqliteConnection,
 ) -> usize {
-    let result =
-        diesel::update(schema::inventory_mouvements::dsl::inventory_mouvements.find(&mvm_id))
-            .set(schema::inventory_mouvements::quantity.eq(mvm_update.quantity))
-            .execute(connection)
-            .expect("Error updating inventory");
+    let result = diesel::update(inventory_mouvements::dsl::inventory_mouvements.find(&mvm_id))
+        .set(inventory_mouvements::quantity.eq(mvm_update.quantity))
+        .execute(connection)
+        .expect("Error updating inventory");
 
     result
 }
