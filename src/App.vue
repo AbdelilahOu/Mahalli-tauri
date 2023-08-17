@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
 import { onBeforeMount, Transition } from "vue";
-onBeforeMount(() => {
-  useRouter().push("/Home");
+import { invoke } from "@tauri-apps/api";
+onBeforeMount(async () => {
+  console.log(await invoke("get_inventory_mvm", { page: 1 }));
+  // useRouter().push("/Home");
 });
 </script>
 
