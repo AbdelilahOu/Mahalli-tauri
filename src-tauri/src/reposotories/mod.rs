@@ -7,3 +7,4 @@ pub mod order_repo;
 pub mod product_repo;
 pub mod seller_repo;
 pub mod user_repo;
+pub mod stats_repo;
