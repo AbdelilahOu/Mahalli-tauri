@@ -18,16 +18,16 @@ const initiVueApp = () => {
   // pinia store plugin for database
   pinia.use(({ store }) => {
     store.db = {
-      execute: async (query: string, args: any[]) => {
-        if (args.length) {
+      execute: async (query: string, args?: any[]) => {
+        if (args?.length) {
           for (let i = 0; i < args.length; i++) {
             query.replace("$".concat(i.toString()), args[i]);
           }
           console.log(query);
         }
       },
-      select: async (query: string, args: any[]) => {
-        if (args.length) {
+      select: async (query: string, args?: any[]) => {
+        if (args?.length) {
           for (let i = 0; i < args.length; i++) {
             query.replace("$".concat(i.toString()), args[i]);
           }
@@ -94,8 +94,8 @@ initiVueApp();
 declare module "pinia" {
   export interface PiniaCustomProperties {
     db: {
-      execute: (query: string, args: any[]) => Promise<void>;
-      select: (query: string, args: any[]) => Promise<void>;
+      execute: <T>(query: string, args?: any[]) => Promise<any>;
+      select: <T>(query: string, args?: any[]) => Promise<any>;
     };
   }
 }

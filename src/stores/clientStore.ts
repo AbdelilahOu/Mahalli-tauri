@@ -1,6 +1,7 @@
 import type { clientT, clientState, updateClientT, newClientT } from "@/types";
 import { saveFile } from "@/utils/fs";
 import { defineStore } from "pinia";
+import { invoke } from "@tauri-apps/api";
 
 export const useClientStore = defineStore("ClientStore", {
   state: (): clientState => {
@@ -12,9 +13,7 @@ export const useClientStore = defineStore("ClientStore", {
   actions: {
     getAllClients: async function () {
       try {
-        this.clients = await this.db.select<clientT[]>(
-          "SELECT * FROM clients ORDER BY id DESC"
-        );
+        this.clients = await invoke("get_clients", { page: 1 });
       } catch (error) {
         console.log(error);
       }
@@ -23,23 +22,17 @@ export const useClientStore = defineStore("ClientStore", {
       this.client = this.clients.find((cli: clientT) => cli.id === id) ?? null;
       if (!this.client) {
         try {
-          const client: clientT = await this.db.select<clientT>(
-            "SELECT * FROM clients WHERE id = $1",
-            [id]
-          );
+          const client: clientT = await invoke("get_client", { id });
           this.client = client;
         } catch (error) {
           console.log(error);
         }
       }
     },
-    createOneClient: async function (Client: newClientT) {
+    createOneClient: async function (client: newClientT) {
       try {
-        let image: string = await saveFile(Client.image as string, "Image");
-        await this.db.execute(
-          "INSERT INTO clients (name,email,phone,address,image) VALUES ($1,$2,$3,$4,$5)",
-          [Client.name, Client.email, Client.phone, Client.address, image]
-        );
+        let image: string = await saveFile(client.image as string, "Image");
+        await invoke("insert_client", { client });
         this.getAllClients();
       } catch (error) {
         console.log(error);
@@ -47,18 +40,17 @@ export const useClientStore = defineStore("ClientStore", {
     },
     deleteOneClient: async function (id: number) {
       try {
-        await this.db.execute("DELETE FROM clients WHERE id = $1", [id]);
+        await invoke("delete_client", { id });
+
         this.getAllClients();
       } catch (error) {
         console.log(error);
       }
     },
-    updateOneClient: async function (id: number, Client: updateClientT) {
+    updateOneClient: async function (id: number, client: updateClientT) {
       try {
-        await this.db.execute(
-          "UPDATE clients SET name = $1,email = $2,phone = $3,address = $4 WHERE id = $5",
-          [Client.name, Client.email, Client.phone, Client.address, Client.id]
-        );
+        await invoke("update_client", { client, id });
+
         this.getAllClients();
       } catch (error) {
         console.log(error);

@@ -85,7 +85,9 @@ export const ClientsTable = defineComponent({
                     </div>
                   </td>
                   <td class="p-2">
-                    <div class="font-medium text-gray-800">{client.name}</div>
+                    <div class="font-medium text-gray-800">
+                      {client?.fullname}
+                    </div>
                   </td>
                   <td class="p-2">
                     <div class="text-left whitespace-nowrap overflow-ellipsis">

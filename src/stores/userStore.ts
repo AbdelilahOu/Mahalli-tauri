@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api";
 import { defineStore } from "pinia";
 
 export const useUserStore = defineStore("UserStore", {
@@ -10,22 +11,18 @@ export const useUserStore = defineStore("UserStore", {
     setUser: function (user: any) {
       this.User = user;
     },
-    createUser: async function (User: User) {
+    createUser: async function (user: User) {
       try {
-        await this.db.execute(
-          "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)",
-          [User.username, User.email, User.password]
-        );
+        await invoke("insert_user", {
+          user,
+        });
       } catch (error) {
         console.log(error);
       }
     },
     getUser: async function (email: string) {
       try {
-        const res = await this.db.execute(
-          "SELECT * FROM users WHERE email = $1",
-          [email]
-        );
+        const res = await invoke("get_user", { email });
         return res;
       } catch (error) {
         console.log(error);

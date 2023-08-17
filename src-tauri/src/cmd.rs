@@ -1,4 +1,5 @@
 use dotenv::dotenv;
+use serde_json::Value;
 use std::env;
 use std::path;
 
@@ -82,17 +83,17 @@ pub fn delete_client(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_client(new_client: NewClient, state: tauri::State<AppState>) -> usize {
+pub fn insert_client(client: NewClient, state: tauri::State<AppState>) -> Client {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     //
-    let result = client_repo::insert_client(new_client, conn);
+    let result = client_repo::insert_client(client, conn);
     result
 }
 
 #[tauri::command]
-pub fn update_client(client: Client, id: i32, state: tauri::State<AppState>) -> usize {
+pub fn update_client(client: Client, id: i32, state: tauri::State<AppState>) -> Client {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
@@ -102,12 +103,12 @@ pub fn update_client(client: Client, id: i32, state: tauri::State<AppState>) -> 
 }
 
 #[tauri::command]
-pub fn get_sellers(state: tauri::State<AppState>) -> Vec<Seller> {
+pub fn get_sellers(page: i32, state: tauri::State<AppState>) -> Vec<Seller> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     // get data
-    let result = seller_repo::get_sellers(conn);
+    let result = seller_repo::get_sellers(page, conn);
     result
 }
 
@@ -152,11 +153,11 @@ pub fn update_seller(seller: Seller, id: i32, state: tauri::State<AppState>) -> 
 }
 
 #[tauri::command]
-pub fn get_products(state: tauri::State<AppState>) -> Vec<Product> {
+pub fn get_products(page: i32, state: tauri::State<AppState>) -> Vec<ProductWithQuantity> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = product_repo::get_products(conn);
+    let result = product_repo::get_products(page, conn);
     result
 }
 
@@ -233,7 +234,7 @@ pub fn update_user(user: User, id: i32, state: tauri::State<AppState>) -> usize 
 }
 
 #[tauri::command]
-pub fn get_invoice(id: i32, state: tauri::State<AppState>) -> Invoice {
+pub fn get_invoice(id: i32, state: tauri::State<AppState>) -> Value {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
@@ -242,11 +243,11 @@ pub fn get_invoice(id: i32, state: tauri::State<AppState>) -> Invoice {
 }
 
 #[tauri::command]
-pub fn get_invoices(state: tauri::State<AppState>) -> Vec<Invoice> {
+pub fn get_invoices(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_repo::get_invoices(conn);
+    let result = invoice_repo::get_invoices(page, conn);
     result
 }
 
@@ -274,5 +275,153 @@ pub fn update_invoice(invoice: Invoice, id: i32, state: tauri::State<AppState>) 
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = invoice_repo::update_invoice(invoice, id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_order(id: i32, state: tauri::State<AppState>) -> Value {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_repo::get_order(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_orders(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_repo::get_orders(page, conn);
+    result
+}
+
+#[tauri::command]
+pub fn delete_order(id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_repo::delete_order(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn insert_order(new_order: NewOrder, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_repo::insert_order(new_order, conn);
+    result
+}
+
+#[tauri::command]
+pub fn update_order(order: Order, id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_repo::update_order(order, id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_order_items(id: i32, state: tauri::State<AppState>) -> Vec<OrderItem> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_item_repo::get_order_items(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn delete_order_items(id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_item_repo::delete_order_item(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn insert_order_items(new_order_items: NewOrderItem, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_item_repo::insert_order_item(new_order_items, conn);
+    result
+}
+
+#[tauri::command]
+pub fn update_order_items(order: OrderItem, id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = order_item_repo::update_order_item(order, id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_invoice_items(id: i32, state: tauri::State<AppState>) -> Vec<InvoiceItem> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = invoice_item_repo::get_invoice_items(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn delete_invoice_items(id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = invoice_item_repo::delete_invoice_item(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn insert_invoice_items(
+    new_invoice_items: NewInvoiceItem,
+    state: tauri::State<AppState>,
+) -> InvoiceItem {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = invoice_item_repo::insert_invoice_item(new_invoice_items, conn);
+
+    result
+}
+
+#[tauri::command]
+pub fn update_invoice_items(invoice: InvoiceItem, id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = invoice_item_repo::update_invoice_item(invoice, id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_inventory_mvm(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = inventory_mvm_repo::get_inventory(page, conn);
+    result
+}
+
+#[tauri::command]
+pub fn delete_inventory_mvm(id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = inventory_mvm_repo::delete_inventory_mvm(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn update_inventory_mvm(mvm: InventoryMvm, id: i32, state: tauri::State<AppState>) -> usize {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = inventory_mvm_repo::update_inventory_mvm(mvm, id, conn);
     result
 }
