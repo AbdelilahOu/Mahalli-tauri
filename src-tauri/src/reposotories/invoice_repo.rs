@@ -87,6 +87,7 @@ pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
                 .load::<(InvoiceItem, Product)>(connection)
                 .expect("Error fetching invoice items with products");
 
+            println!("{:?}", invoice_items);
             let invoice_items_json = json!({
                 "invoiceItems": invoice_items.into_iter().map(|(item, product)| {
                     json!({
