@@ -188,6 +188,7 @@ export const invoicesJoins = `
     ORDER BY i.id DESC;
 `;
 
+// done
 export const orderDetailsJoins = `
     SELECT json_object(
         'id', c.id,
@@ -225,6 +226,7 @@ export const orderDetailsJoins = `
     WHERE c.id = $1;
 `;
 
+// done
 export const invoiceDetailsJoins = `
     SELECT json_object(
         'id', i.id,
