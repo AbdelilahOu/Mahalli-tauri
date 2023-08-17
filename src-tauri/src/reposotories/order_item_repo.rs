@@ -15,16 +15,6 @@ pub fn get_order_items(page: i32, connection: &mut SqliteConnection) -> Vec<Orde
     result
 }
 
-// pub fn get_order_item(oi_id: i32,connection: &mut SqliteConnection) -> OrderItem {
-//
-//     let result = schema::orders::dsl::orders
-//         .find(&oi_id)
-//         .first::<OrderItem>( connection)
-//         .expect("Error fetching order");
-
-//     result
-// }
-
 pub fn insert_order_item(new_oi: NewOrderItem, connection: &mut SqliteConnection) -> usize {
     let result = diesel::insert_into(schema::order_items::dsl::order_items)
         .values(new_oi)
@@ -33,6 +23,14 @@ pub fn insert_order_item(new_oi: NewOrderItem, connection: &mut SqliteConnection
 
     result
 }
+
+// pub fn get_order_item_by_order_id(o_id: i32, connection: &mut SqliteConnection) -> OrderItem {
+//     let result = schema::order_items::dsl::order_items
+//         .load::<OrderItem>(connection)
+//         .expect("Error fetching all orders");
+
+//     result
+// }
 
 pub fn delete_order_item(oi_id: i32, connection: &mut SqliteConnection) -> usize {
     let result = diesel::delete(schema::orders::dsl::orders.find(&oi_id))
