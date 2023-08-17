@@ -19,7 +19,6 @@ mod db;
 mod models;
 mod reposotories;
 mod schema;
-mod types;
 // :::::::::::::
 
 pub struct AppState {
@@ -58,6 +57,22 @@ fn main() {
             cmd::insert_invoice,
             cmd::update_invoice,
             cmd::delete_invoice,
+            cmd::get_order,
+            cmd::get_orders,
+            cmd::insert_order,
+            cmd::update_order,
+            cmd::delete_order,
+            cmd::get_order_items,
+            cmd::insert_order_items,
+            cmd::update_order_items,
+            cmd::delete_order_items,
+            cmd::get_invoice_items,
+            cmd::insert_invoice_items,
+            cmd::update_invoice_items,
+            cmd::delete_invoice_items,
+            cmd::get_inventory_mvm,
+            cmd::delete_inventory_mvm,
+            cmd::update_inventory_mvm,
             cmd::seed_db,
         ])
         .setup(|_app| {

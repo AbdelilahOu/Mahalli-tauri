@@ -3,8 +3,7 @@ import { RouterView, useRouter } from "vue-router";
 import { onBeforeMount, Transition } from "vue";
 import { invoke } from "@tauri-apps/api";
 onBeforeMount(async () => {
-  console.log(await invoke("seed_db"));
-  // useRouter().push({ path: "/Auth", query: { checkAuth: "true" } });
+  console.log(await invoke("get_inventory_mvm", { page: 1 }));
   // useRouter().push("/Home");
 });
 </script>

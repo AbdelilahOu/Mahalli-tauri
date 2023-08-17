@@ -1,14 +1,3 @@
-export const bestThreeClients = `
-    SELECT c.name AS name, SUM(p.price * ABS(ci.quantity)) AS amount
-    FROM clients c
-    JOIN invoices i ON c.id = i.client_id
-    JOIN invoice_items ci ON i.id = ci.invoice_id
-    JOIN products p ON ci.product_id = p.id
-    GROUP BY c.name
-    ORDER BY amount DESC
-    LIMIT 3;
-`;
-
 export const clientDailyExpenses = `
     SELECT strftime('%Y-%m-%d', i.created_at) AS day,
         SUM(p.price * ABS(ci.quantity)) AS expense
@@ -33,23 +22,6 @@ export const sellerDailyExpenses = `
     GROUP BY day
     ORDER BY day
     LIMIT 7;
-`;
-
-export const bestThreeSellers = `
-    SELECT s.name AS name, SUM(p.price * ABS(ci.quantity)) AS amount
-    FROM sellers s
-    JOIN orders i ON s.id = i.seller_id
-    JOIN order_items ci ON i.id = ci.order_id
-    JOIN products p ON ci.product_id = p.id
-    GROUP BY s.name
-    ORDER BY amount DESC
-    LIMIT 3;
-`;
-
-export const selectProductsWithQuantity = `
-    SELECT products.*, COALESCE(SUM(sm.quantity), 0) AS quantity
-    FROM products LEFT JOIN stock_mouvements sm ON products.id = sm.product_id
-    GROUP BY products.id ORDER BY products.id DESC
 `;
 
 export const clientDetailsJoins = `
@@ -84,6 +56,38 @@ export const inOutStatsJoins = `
     LIMIT 3;
 `;
 
+// done : stats_repos/get_best_three_client
+export const bestThreeClients = `
+    SELECT c.name AS name, SUM(p.price * ABS(ci.quantity)) AS amount
+    FROM clients c
+    JOIN invoices i ON c.id = i.client_id
+    JOIN invoice_items ci ON i.id = ci.invoice_id
+    JOIN products p ON ci.product_id = p.id
+    GROUP BY c.name
+    ORDER BY amount DESC
+    LIMIT 3;
+`;
+
+// done : stats_repos/get_best_three_seller
+export const bestThreeSellers = `
+    SELECT s.name AS name, SUM(p.price * ABS(ci.quantity)) AS amount
+    FROM sellers s
+    JOIN orders i ON s.id = i.seller_id
+    JOIN order_items ci ON i.id = ci.order_id
+    JOIN products p ON ci.product_id = p.id
+    GROUP BY s.name
+    ORDER BY amount DESC
+    LIMIT 3;
+`;
+
+// done : product_repo/get_products
+export const selectProductsWithQuantity = `
+    SELECT products.*, COALESCE(SUM(sm.quantity), 0) AS quantity
+    FROM products LEFT JOIN stock_mouvements sm ON products.id = sm.product_id
+    GROUP BY products.id ORDER BY products.id DESC
+`;
+
+// done
 export const stockJoins = `
     SELECT json_object(
         'id', sm.id,
@@ -110,6 +114,7 @@ export const stockJoins = `
     ORDER BY sm.id DESC;
 `;
 
+// done
 export const ordersJoins = `
     SELECT json_object(
         'id', c.id,
@@ -145,6 +150,7 @@ export const ordersJoins = `
     ORDER BY c.id DESC;
 `;
 
+// done
 export const invoicesJoins = `
     SELECT json_object(
         'id', i.id,
@@ -185,6 +191,7 @@ export const invoicesJoins = `
     ORDER BY i.id DESC;
 `;
 
+// done
 export const orderDetailsJoins = `
     SELECT json_object(
         'id', c.id,
@@ -222,6 +229,7 @@ export const orderDetailsJoins = `
     WHERE c.id = $1;
 `;
 
+// done
 export const invoiceDetailsJoins = `
     SELECT json_object(
         'id', i.id,

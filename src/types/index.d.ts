@@ -157,7 +157,7 @@ export interface invoiceDetailsT extends Omit<invoiceT, "invoiceItems"> {
 ////////////////////////////////////
 export interface clientT {
   id: number;
-  name: string;
+  fullname: string;
   phone?: string;
   address?: string;
   email?: string;
