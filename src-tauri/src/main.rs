@@ -73,6 +73,8 @@ fn main() {
             cmd::get_inventory_mvm,
             cmd::delete_inventory_mvm,
             cmd::update_inventory_mvm,
+            cmd::get_b3_clients,
+            cmd::get_b3_sellers,
             cmd::seed_db,
         ])
         .setup(|_app| {

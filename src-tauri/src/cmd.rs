@@ -425,3 +425,21 @@ pub fn update_inventory_mvm(mvm: InventoryMvm, id: i32, state: tauri::State<AppS
     let result = inventory_mvm_repo::update_inventory_mvm(mvm, id, conn);
     result
 }
+
+#[tauri::command]
+pub fn get_b3_sellers(state: tauri::State<AppState>) -> Vec<Value> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = stats_repo::get_best_three_seller(conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_b3_clients(state: tauri::State<AppState>) -> Vec<Value> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = stats_repo::get_best_three_client(conn);
+    result
+}
