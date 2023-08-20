@@ -24,6 +24,7 @@ export const sellerDailyExpenses = `
     LIMIT 7;
 `;
 
+// done stats_repo/get_client_details
 export const clientDetailsJoins = `
     SELECT p.name AS name, strftime('%Y-%m', i.created_at) AS month, ABS(COALESCE(SUM(ii.quantity), 0)) AS quantity
     FROM clients c

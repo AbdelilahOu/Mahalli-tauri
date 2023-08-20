@@ -113,6 +113,7 @@ pub fn get_client_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
             sql::<Text>("strftime('%Y-%m', i.created_at) AS month"),
             sql::<BigInt>("ABS(COALESCE(SUM(ii.quantity), 0)) AS quantity"),
         ))
+        .filter(clients::id.eq(id))
         .load::<(String, String, i64)>(connection)
         .expect("Error fetching best three clients");
 
