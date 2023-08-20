@@ -479,3 +479,12 @@ pub fn get_s_product_month(id: i32, state: tauri::State<AppState>) -> Vec<Value>
     let result = stats_repo::get_seller_details(id, conn);
     result
 }
+
+#[tauri::command]
+pub fn get_inventory_stats(state: tauri::State<AppState>) -> Vec<Value> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = stats_repo::get_inventory_stats(conn);
+    result
+}

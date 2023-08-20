@@ -79,6 +79,7 @@ fn main() {
             cmd::get_s_week_expenses,
             cmd::get_c_product_month,
             cmd::get_s_product_month,
+            cmd::get_inventory_stats,
             cmd::seed_db,
         ])
         .setup(|_app| {
