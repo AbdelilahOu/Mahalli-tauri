@@ -130,3 +130,35 @@ pub fn get_client_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
 
     final_result
 }
+
+pub fn get_seller_details(id: i32, connection: &mut SqliteConnection) -> Vec<Value> {
+    let order_seller_join = orders::table.on(sellers::id.eq(orders::seller_id));
+    let orderitem_order_join = order_items::table.on(orders::id.eq(order_items::order_id));
+    let orderitem_product_join = products::table.on(order_items::product_id.eq(products::id));
+
+    let result = sellers::table
+        .inner_join(order_seller_join)
+        .inner_join(orderitem_order_join)
+        .inner_join(orderitem_product_join)
+        .select((
+            products::name,
+            sql::<Text>("strftime('%Y-%m', i.created_at) AS month"),
+            sql::<BigInt>("ABS(COALESCE(SUM(ii.quantity), 0)) AS quantity"),
+        ))
+        .filter(sellers::id.eq(id))
+        .load::<(String, String, i64)>(connection)
+        .expect("Error fetching best three sellers");
+
+    let mut final_result = Vec::<Value>::new();
+
+    result.iter().for_each(|(name, month, quantity)| {
+        // groups by month and sum the quantity
+        final_result.push(json!({
+            "name":name,
+            "month":month,
+            "quantity":quantity
+        }))
+    });
+
+    final_result
+}
