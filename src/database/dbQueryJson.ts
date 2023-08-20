@@ -46,6 +46,7 @@ export const sellerDetailsJoins = `
     ORDER BY month ASC;
 `;
 
+// done : stats_repo/get_inventory_stats
 export const inOutStatsJoins = `
     SELECT strftime('%Y-%m', date) AS group_month,
         SUM(CASE WHEN model = 'IN' THEN ABS(quantity) ELSE 0 END) AS total_in,
