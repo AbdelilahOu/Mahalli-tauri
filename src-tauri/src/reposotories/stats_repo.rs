@@ -103,7 +103,7 @@ pub fn get_client_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
         invoice_items::table.on(invoices::id.eq(invoice_items::invoice_id));
     let invoiceitem_product_join = products::table.on(invoice_items::product_id.eq(products::id));
 
-    let result = clients::table
+    let result: Vec<(String, String, i64)> = clients::table
         .inner_join(invoice_client_join)
         .inner_join(invoiceitem_invoice_join)
         .inner_join(invoiceitem_product_join)
@@ -135,7 +135,7 @@ pub fn get_seller_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
     let orderitem_order_join = order_items::table.on(orders::id.eq(order_items::order_id));
     let orderitem_product_join = products::table.on(order_items::product_id.eq(products::id));
 
-    let result = sellers::table
+    let result: Vec<(String, String, i64)> = sellers::table
         .inner_join(order_seller_join)
         .inner_join(orderitem_order_join)
         .inner_join(orderitem_product_join)
@@ -162,14 +162,14 @@ pub fn get_seller_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
     final_result
 }
 
-pub fn get_client_expenses(id: i32, connection: &mut SqliteConnection) {
+pub fn get_client_expenses(id: i32, connection: &mut SqliteConnection) -> Vec<Value> {
     let invoiceitem_invoice_join =
         invoice_items::table.on(invoices::id.eq(invoice_items::invoice_id));
     let invoiceitem_product_join = products::table.on(invoice_items::product_id.eq(products::id));
 
     let seven_days_ago = Utc::now().naive_utc() - Duration::days(7);
 
-    let result = invoices::table
+    let result: Vec<(String, i64)> = invoices::table
         .inner_join(invoiceitem_invoice_join)
         .inner_join(invoiceitem_product_join)
         .select((
@@ -178,5 +178,47 @@ pub fn get_client_expenses(id: i32, connection: &mut SqliteConnection) {
         ))
         .filter(invoices::created_at.ge(seven_days_ago))
         .filter(invoices::client_id.eq(id))
-        .load::<(String, i64)>(connection);
+        .load::<(String, i64)>(connection)
+        .expect("Error fetching client expenses");
+
+    let mut final_result = Vec::<Value>::new();
+
+    result.iter().for_each(|(day, expense)| {
+        final_result.push(json!({
+            "day":day,
+            "expense":expense
+        }))
+    });
+
+    final_result
+}
+
+pub fn get_seller_expenses(id: i32, connection: &mut SqliteConnection) -> Vec<Value> {
+    let orderitem_order_join = order_items::table.on(orders::id.eq(order_items::order_id));
+    let orderitem_product_join = products::table.on(order_items::product_id.eq(products::id));
+
+    let seven_days_ago = Utc::now().naive_utc() - Duration::days(7);
+
+    let result: Vec<(String, i64)> = orders::table
+        .inner_join(orderitem_order_join)
+        .inner_join(orderitem_product_join)
+        .select((
+            sql::<Text>("strftime('%Y-%m', orders.created_at) AS day"),
+            sql::<BigInt>("SUM(products.price * ABS(order_items.quantity)) AS expense"),
+        ))
+        .filter(orders::created_at.ge(seven_days_ago))
+        .filter(orders::seller_id.eq(id))
+        .load::<(String, i64)>(connection)
+        .expect("Error fetching seller expenses");
+
+    let mut final_result = Vec::<Value>::new();
+
+    result.iter().for_each(|(day, expense)| {
+        final_result.push(json!({
+            "day":day,
+            "expense":expense
+        }))
+    });
+
+    final_result
 }

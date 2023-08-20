@@ -75,6 +75,10 @@ fn main() {
             cmd::update_inventory_mvm,
             cmd::get_b3_clients,
             cmd::get_b3_sellers,
+            cmd::get_c_week_expenses,
+            cmd::get_s_week_expenses,
+            cmd::get_c_product_month,
+            cmd::get_s_product_month,
             cmd::seed_db,
         ])
         .setup(|_app| {
