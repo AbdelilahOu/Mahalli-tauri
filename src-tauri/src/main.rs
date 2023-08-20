@@ -12,14 +12,12 @@ extern crate diesel;
 extern crate diesel_migrations;
 extern crate dotenv;
 
-// modes
 mod cmd;
 mod csvparsing;
 mod db;
 mod models;
 mod reposotories;
 mod schema;
-// :::::::::::::
 
 pub struct AppState {
     db_conn: Mutex<SqliteConnection>,
@@ -83,7 +81,7 @@ fn main() {
             cmd::seed_db,
         ])
         .setup(|_app| {
-            db::migrate_db();
+            // db::migrate_db();
             Ok(())
         })
         .plugin(tauri_plugin_oauth::init())
