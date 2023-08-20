@@ -36,6 +36,7 @@ export const clientDetailsJoins = `
     ORDER BY month ASC;
 `;
 
+// seller details
 export const sellerDetailsJoins = `
     SELECT p.name AS name, strftime('%Y-%m', o.created_at) AS month, ABS(COALESCE(SUM(oi.quantity), 0)) AS quantity
     FROM sellers s
