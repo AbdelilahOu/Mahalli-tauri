@@ -12,6 +12,7 @@ export const clientDailyExpenses = `
     LIMIT 7;
 `;
 
+// done
 export const sellerDailyExpenses = `
     SELECT strftime('%Y-%m-%d', o.created_at) AS day,
         SUM(p.price * ABS(oi.quantity)) AS expense
