@@ -133,12 +133,12 @@ pub fn delete_seller(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_seller(new_seller: NewSeller, state: tauri::State<AppState>) -> usize {
+pub fn insert_seller(seller: NewSeller, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     //
-    let result = seller_repo::insert_seller(new_seller, conn);
+    let result = seller_repo::insert_seller(seller, conn);
     result
 }
 
@@ -180,11 +180,11 @@ pub fn delete_product(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_product(new_product: NewProduct, state: tauri::State<AppState>) -> usize {
+pub fn insert_product(product: NewProduct, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = product_repo::insert_product(new_product, conn);
+    let result = product_repo::insert_product(product, conn);
     result
 }
 
@@ -216,11 +216,11 @@ pub fn delete_user(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_user(new_user: NewUser, state: tauri::State<AppState>) -> usize {
+pub fn insert_user(user: NewUser, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = user_repo::insert_user(new_user, conn);
+    let result = user_repo::insert_user(user, conn);
     result
 }
 
@@ -261,11 +261,11 @@ pub fn delete_invoice(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_invoice(new_invoice: NewInvoice, state: tauri::State<AppState>) -> usize {
+pub fn insert_invoice(invoice: NewInvoice, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_repo::insert_invoice(new_invoice, conn);
+    let result = invoice_repo::insert_invoice(invoice, conn);
     result
 }
 
@@ -306,11 +306,11 @@ pub fn delete_order(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_order(new_order: NewOrder, state: tauri::State<AppState>) -> usize {
+pub fn insert_order(order: NewOrder, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = order_repo::insert_order(new_order, conn);
+    let result = order_repo::insert_order(order, conn);
     result
 }
 
@@ -342,11 +342,11 @@ pub fn delete_order_items(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_order_items(new_order_items: NewOrderItem, state: tauri::State<AppState>) -> usize {
+pub fn insert_order_items(order_items: NewOrderItem, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = order_item_repo::insert_order_item(new_order_items, conn);
+    let result = order_item_repo::insert_order_item(order_items, conn);
     result
 }
 
@@ -379,13 +379,13 @@ pub fn delete_invoice_items(id: i32, state: tauri::State<AppState>) -> usize {
 
 #[tauri::command]
 pub fn insert_invoice_items(
-    new_invoice_items: NewInvoiceItem,
+    invoice_items: NewInvoiceItem,
     state: tauri::State<AppState>,
 ) -> InvoiceItem {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_item_repo::insert_invoice_item(new_invoice_items, conn);
+    let result = invoice_item_repo::insert_invoice_item(invoice_items, conn);
 
     result
 }
