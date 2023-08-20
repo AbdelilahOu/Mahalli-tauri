@@ -1,11 +1,10 @@
+use chrono::{Duration, Utc};
 use serde_json::{json, Value};
 
 use crate::diesel::dsl::sql;
 use crate::diesel::prelude::*;
 use crate::diesel::sql_types::{BigInt, Text};
-use crate::schema::{
-    clients, inventory_mouvements, invoice_items, invoices, order_items, orders, products, sellers,
-};
+use crate::schema::*;
 
 pub fn get_best_three_client(connection: &mut SqliteConnection) -> Vec<Value> {
     let invoice_client_join = invoices::table.on(clients::id.eq(invoices::client_id));
@@ -110,8 +109,8 @@ pub fn get_client_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
         .inner_join(invoiceitem_product_join)
         .select((
             products::name,
-            sql::<Text>("strftime('%Y-%m', i.created_at) AS month"),
-            sql::<BigInt>("ABS(COALESCE(SUM(ii.quantity), 0)) AS quantity"),
+            sql::<Text>("strftime('%Y-%m', invoices.created_at) AS month"),
+            sql::<BigInt>("ABS(COALESCE(SUM(invoice_items.quantity), 0)) AS quantity"),
         ))
         .filter(clients::id.eq(id))
         .load::<(String, String, i64)>(connection)
@@ -142,8 +141,8 @@ pub fn get_seller_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
         .inner_join(orderitem_product_join)
         .select((
             products::name,
-            sql::<Text>("strftime('%Y-%m', i.created_at) AS month"),
-            sql::<BigInt>("ABS(COALESCE(SUM(ii.quantity), 0)) AS quantity"),
+            sql::<Text>("strftime('%Y-%m', orders.created_at) AS month"),
+            sql::<BigInt>("ABS(COALESCE(SUM(order_items.quantity), 0)) AS quantity"),
         ))
         .filter(sellers::id.eq(id))
         .load::<(String, String, i64)>(connection)
@@ -161,4 +160,23 @@ pub fn get_seller_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
     });
 
     final_result
+}
+
+pub fn get_client_expenses(id: i32, connection: &mut SqliteConnection) {
+    let invoiceitem_invoice_join =
+        invoice_items::table.on(invoices::id.eq(invoice_items::invoice_id));
+    let invoiceitem_product_join = products::table.on(invoice_items::product_id.eq(products::id));
+
+    let seven_days_ago = Utc::now().naive_utc() - Duration::days(7);
+
+    let result = invoices::table
+        .inner_join(invoiceitem_invoice_join)
+        .inner_join(invoiceitem_product_join)
+        .select((
+            sql::<Text>("strftime('%Y-%m', invoices.created_at) AS day"),
+            sql::<BigInt>("SUM(products.price * ABS(invoice_items.quantity)) AS expense"),
+        ))
+        .filter(invoices::created_at.ge(seven_days_ago))
+        .filter(invoices::client_id.eq(id))
+        .load::<(String, i64)>(connection);
 }

@@ -1,3 +1,4 @@
+// done repo_stats/get_client_exxpenses
 export const clientDailyExpenses = `
     SELECT strftime('%Y-%m-%d', i.created_at) AS day,
         SUM(p.price * ABS(ci.quantity)) AS expense
