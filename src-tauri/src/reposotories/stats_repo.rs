@@ -79,7 +79,7 @@ pub fn get_inventory_stats(connection: &mut SqliteConnection) -> Vec<Value> {
                 "SUM(CASE WHEN model = 'OUT' THEN ABS(quantity) ELSE 0 END) AS total_out",
             ),
         ))
-        .group_by(select_date)
+        .group_by(sql::<Text>("group_month"))
         .order_by(inventory_mouvements::id.desc())
         .limit(3)
         .load::<(String, i64, i64)>(connection)
@@ -92,6 +92,38 @@ pub fn get_inventory_stats(connection: &mut SqliteConnection) -> Vec<Value> {
             "group_month":date,
             "total_in":total_in,
             "total_out":total_out
+        }))
+    });
+
+    final_result
+}
+
+pub fn get_client_details(id: i32, connection: &mut SqliteConnection) -> Vec<Value> {
+    let invoice_client_join = invoices::table.on(clients::id.eq(invoices::client_id));
+    let invoiceitem_invoice_join =
+        invoice_items::table.on(invoices::id.eq(invoice_items::invoice_id));
+    let invoiceitem_product_join = products::table.on(invoice_items::product_id.eq(products::id));
+
+    let result = clients::table
+        .inner_join(invoice_client_join)
+        .inner_join(invoiceitem_invoice_join)
+        .inner_join(invoiceitem_product_join)
+        .select((
+            products::name,
+            sql::<Text>("strftime('%Y-%m', i.created_at) AS month"),
+            sql::<BigInt>("ABS(COALESCE(SUM(ii.quantity), 0)) AS quantity"),
+        ))
+        .load::<(String, String, i64)>(connection)
+        .expect("Error fetching best three clients");
+
+    let mut final_result = Vec::<Value>::new();
+
+    result.iter().for_each(|(name, month, quantity)| {
+        // groups by month and sum the quantity
+        final_result.push(json!({
+            "name":name,
+            "month":month,
+            "quantity":quantity
         }))
     });
 
