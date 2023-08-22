@@ -160,7 +160,6 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                     for invoice in invoice_records {
                         reposotories::invoice_repo::insert_invoice(
                             NewInvoice {
-                                total: invoice.total,
                                 status: invoice.status,
                                 client_id: invoice.client_id,
                             },
