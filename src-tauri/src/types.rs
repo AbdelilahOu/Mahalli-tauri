@@ -24,3 +24,28 @@ pub struct TNewInvoiceItem {
     pub invoice_id: i32,
     pub quantity: i64,
 }
+
+#[derive(Debug, Deserialize)]
+pub struct TUpdateOrder {
+    pub status: String,
+    pub seller_id: i32,
+    pub order_items: Vec<TUpdateOrderItem>,
+}
+#[derive(Debug, Deserialize)]
+pub struct TUpdateOrderItem {
+    pub product_id: i32,
+    pub quantity: i64,
+    pub price: Option<f32>,
+}
+#[derive(Debug, Deserialize)]
+pub struct TUpdateInvoice {
+    pub status: String,
+    pub client_id: i32,
+    pub invoice_items: Vec<TUpdateInvoiceItem>,
+}
+#[derive(Debug, Deserialize)]
+pub struct TUpdateInvoiceItem {
+    pub product_id: i32,
+    pub invoice_id: i32,
+    pub quantity: i64,
+}

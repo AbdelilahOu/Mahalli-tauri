@@ -80,7 +80,7 @@ export interface newOrdersT extends Partial<Omit<orderT, "orderItems">> {
   >[];
 }
 
-export interface updateOrdersT extends Partial<Omit<orderT, "commmandItems">> {
+export interface updateOrdersT extends Partial<Omit<orderT, "orderItems">> {
   orderItems: Partial<orderItemT>[];
 }
 
