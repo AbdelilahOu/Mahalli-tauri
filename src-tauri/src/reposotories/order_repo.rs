@@ -108,11 +108,17 @@ pub fn get_order(o_id: i32, connection: &mut SqliteConnection) -> Value {
         .collect::<Value>()
 }
 
-pub fn insert_order(new_o: NewOrder, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::insert_into(orders::dsl::orders)
+pub fn insert_order(new_o: NewOrder, connection: &mut SqliteConnection) -> i32 {
+    diesel::insert_into(orders::dsl::orders)
         .values(new_o)
         .execute(connection)
         .expect("Error adding order");
+
+    let result = orders::dsl::orders
+        .order_by(orders::id.desc())
+        .select(orders::id)
+        .first::<i32>(connection)
+        .expect("error get all orders");
 
     result
 }
