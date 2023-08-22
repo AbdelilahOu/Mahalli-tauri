@@ -44,13 +44,13 @@ export const useOrdersStore = defineStore("OrdersStore", {
             "INSERT INTO stock_mouvements (quantity,model,product_id) VALUES ($1,$2,$3)",
             [quantity, "IN", product_id]
           );
-          const stock_id: { id: number }[] = await this.db.select(
+          const inventory_id: { id: number }[] = await this.db.select(
             "SELECT max(id) as id FROM stock_mouvements"
           );
 
           await this.db.execute(
-            "INSERT INTO order_items (quantity,product_id,order_id,stock_id,price) VALUES ($1,$2,$3,$4,$5)",
-            [quantity, product_id, id[0].id, stock_id[0].id, price]
+            "INSERT INTO order_items (quantity,product_id,order_id,inventory_id,price) VALUES ($1,$2,$3,$4,$5)",
+            [quantity, product_id, id[0].id, inventory_id[0].id, price]
           );
         }
         this.getAllOrders();
@@ -75,7 +75,7 @@ export const useOrdersStore = defineStore("OrdersStore", {
 
             await this.db.execute(
               "UPDATE stock_mouvements SET quantity = $1 WHERE id = $2",
-              [item.quantity, item.stock_id]
+              [item.quantity, item.inventory_id]
             );
             continue;
           }
@@ -84,13 +84,13 @@ export const useOrdersStore = defineStore("OrdersStore", {
             "INSERT INTO stock_mouvements (quantity,model,product_id) VALUES ($1,$2,$3)",
             [item.quantity, "IN", item.product_id]
           );
-          const stock_id: { id: number }[] = await this.db.select(
+          const inventory_id: { id: number }[] = await this.db.select(
             "SELECT max(id) as id FROM stock_mouvements"
           );
 
           await this.db.execute(
-            "INSERT INTO order_items (quantity,product_id,order_id,stock_id,price) VALUES ($1,$2,$3,$4,$5)",
-            [item.quantity, item.product_id, id, stock_id[0].id, item.price]
+            "INSERT INTO order_items (quantity,product_id,order_id,inventory_id,price) VALUES ($1,$2,$3,$4,$5)",
+            [item.quantity, item.product_id, id, inventory_id[0].id, item.price]
           );
         }
         this.getAllOrders();

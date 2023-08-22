@@ -65,7 +65,7 @@ export interface orderItemT {
   order_id: number;
   price: number;
   quantity: number;
-  stock_id: number;
+  inventory_id: number;
   product: {
     id: number;
     price: number;
@@ -74,7 +74,10 @@ export interface orderItemT {
 }
 
 export interface newOrdersT extends Partial<Omit<orderT, "orderItems">> {
-  orderItems: Omit<orderItemT, "id" | "order_id" | "stock_id" | "product">[];
+  orderItems: Omit<
+    orderItemT,
+    "id" | "order_id" | "inventory_id" | "product"
+  >[];
 }
 
 export interface updateOrdersT extends Partial<Omit<orderT, "commmandItems">> {
@@ -119,7 +122,7 @@ export type invoiceItemT = {
   product_id: number;
   invoice_id: number;
   quantity: number;
-  stock_id: number;
+  inventory_id: number;
   product: {
     price: number;
     name: string;
@@ -137,7 +140,10 @@ export interface newInvoiceT
 }
 
 export interface newInvoiceItemT
-  extends Omit<invoiceItemT, "id" | "invoice_id" | "stock_id" | "product"> {}
+  extends Omit<
+    invoiceItemT,
+    "id" | "invoice_id" | "inventory_id" | "product"
+  > {}
 
 export interface invoiceDetailsItemT extends invoiceItemT {
   product: {
