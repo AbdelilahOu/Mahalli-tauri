@@ -221,7 +221,6 @@ pub struct InventoryMvm {
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
 #[diesel(table_name = inventory_mouvements)]
 pub struct NewInventoryMvm {
-    pub date: String,
     pub model: String,
     pub quantity: i64,
     pub product_id: i32,
