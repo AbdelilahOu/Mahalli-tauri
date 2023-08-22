@@ -9,6 +9,8 @@ use crate::csvparsing::import::TableRecord;
 use crate::db;
 use crate::models::*;
 use crate::reposotories::*;
+use crate::types::TNewInvoice;
+use crate::types::TNewOrder;
 use crate::AppState;
 
 // csv stuff
@@ -261,12 +263,29 @@ pub fn delete_invoice(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_invoice(invoice: NewInvoice, state: tauri::State<AppState>) -> usize {
+pub fn insert_invoice(invoice: TNewInvoice, state: tauri::State<AppState>) {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_repo::insert_invoice(invoice, conn);
-    result
+    let inserted_id = invoice_repo::insert_invoice(
+        NewInvoice {
+            status: invoice.status,
+            client_id: invoice.client_id,
+        },
+        conn,
+    );
+
+    for item in invoice.invoice_items.into_iter() {
+        invoice_item_repo::insert_invoice_item(
+            NewInvoiceItem {
+                product_id: item.product_id,
+                invoice_id: inserted_id.clone(),
+                quantity: item.quantity,
+                inventory_id: item.inventory_id,
+            },
+            conn,
+        );
+    }
 }
 
 #[tauri::command]
@@ -306,12 +325,30 @@ pub fn delete_order(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_order(order: NewOrder, state: tauri::State<AppState>) -> usize {
+pub fn insert_order(order: TNewOrder, state: tauri::State<AppState>) {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = order_repo::insert_order(order, conn);
-    result
+    let inserted_id = order_repo::insert_order(
+        NewOrder {
+            status: order.status,
+            seller_id: order.seller_id,
+        },
+        conn,
+    );
+
+    for item in order.order_items.into_iter() {
+        order_item_repo::insert_order_item(
+            NewOrderItem {
+                product_id: item.product_id,
+                order_id: inserted_id.clone(),
+                quantity: item.quantity,
+                price: item.price,
+                inventory_id: item.inventory_id,
+            },
+            conn,
+        );
+    }
 }
 
 #[tauri::command]
