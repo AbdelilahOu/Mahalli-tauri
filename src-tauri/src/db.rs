@@ -147,7 +147,6 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                              -> need inventory image
                             */
                             NewInventoryMvm {
-                                date: inventory.date,
                                 model: inventory.model,
                                 product_id: inventory.product_id,
                                 quantity: inventory.quantity,
