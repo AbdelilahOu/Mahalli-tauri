@@ -379,15 +379,6 @@ pub fn delete_order_items(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_order_items(order_items: NewOrderItem, state: tauri::State<AppState>) -> usize {
-    // get connection from state
-    let mut conn = state.db_conn.lock().unwrap();
-    let conn = &mut *conn;
-    let result = order_item_repo::insert_order_item(order_items, conn);
-    result
-}
-
-#[tauri::command]
 pub fn update_order_items(order: OrderItem, id: i32, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
