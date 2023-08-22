@@ -1,3 +1,4 @@
+use diesel::dsl::now;
 use dotenv::dotenv;
 use serde_json::Value;
 use std::env;
@@ -276,12 +277,21 @@ pub fn insert_invoice(invoice: TNewInvoice, state: tauri::State<AppState>) {
     );
 
     for item in invoice.invoice_items.into_iter() {
+        let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
+            NewInventoryMvm {
+                model: String::from("OUT"),
+                quantity: item.quantity,
+                product_id: item.product_id,
+            },
+            conn,
+        );
+
         invoice_item_repo::insert_invoice_item(
             NewInvoiceItem {
                 product_id: item.product_id,
                 invoice_id: inserted_id.clone(),
                 quantity: item.quantity,
-                inventory_id: item.inventory_id,
+                inventory_id: inserted_im_id,
             },
             conn,
         );
@@ -338,13 +348,22 @@ pub fn insert_order(order: TNewOrder, state: tauri::State<AppState>) {
     );
 
     for item in order.order_items.into_iter() {
+        let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
+            NewInventoryMvm {
+                model: String::from("IN"),
+                quantity: item.quantity,
+                product_id: item.product_id,
+            },
+            conn,
+        );
+
         order_item_repo::insert_order_item(
             NewOrderItem {
                 product_id: item.product_id,
                 order_id: inserted_id.clone(),
                 quantity: item.quantity,
                 price: item.price,
-                inventory_id: item.inventory_id,
+                inventory_id: inserted_im_id,
             },
             conn,
         );
