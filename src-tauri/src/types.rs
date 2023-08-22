@@ -9,10 +9,8 @@ pub struct TNewOrder {
 #[derive(Debug, Deserialize)]
 pub struct TNewOrderItem {
     pub product_id: i32,
-    pub order_id: i32,
     pub quantity: i64,
     pub price: Option<f32>,
-    pub inventory_id: i32,
 }
 #[derive(Debug, Deserialize)]
 pub struct TNewInvoice {
@@ -25,5 +23,4 @@ pub struct TNewInvoiceItem {
     pub product_id: i32,
     pub invoice_id: i32,
     pub quantity: i64,
-    pub inventory_id: i32,
 }
