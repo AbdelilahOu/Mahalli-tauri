@@ -1,4 +1,3 @@
-use diesel::dsl::now;
 use dotenv::dotenv;
 use serde_json::Value;
 use std::env;
