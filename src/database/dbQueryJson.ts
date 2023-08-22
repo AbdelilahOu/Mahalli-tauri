@@ -113,8 +113,8 @@ export const stockJoins = `
         )
     ) AS data
     FROM stock_mouvements sm
-    LEFT JOIN order_items ci ON sm.id = ci.stock_id
-    LEFT JOIN invoice_items ii ON sm.id = ii.stock_id
+    LEFT JOIN order_items ci ON sm.id = ci.inventory_id
+    LEFT JOIN invoice_items ii ON sm.id = ii.inventory_id
     LEFT JOIN products p ON sm.product_id = p.id OR sm.product_id = p.id
     ORDER BY sm.id DESC;
 `;
@@ -137,7 +137,7 @@ export const ordersJoins = `
                     'price', ci.price,
                     'quantity', ci.quantity,
                     'product_id', ci.product_id,
-                    'stock_id', ci.stock_id,
+                    'inventory_id', ci.inventory_id,
                     'product', json_object(
                         'id', p.id,
                         'name', p.name,
@@ -177,7 +177,7 @@ export const invoicesJoins = `
                 json_object(
                     'id', ii.id,
                     'quantity', ABS(ii.quantity),
-                    'stock_id', ii.stock_id,
+                    'inventory_id', ii.inventory_id,
                     'product_id', ii.product_id,
                     'product', json_object(
                         'id', p.id,
