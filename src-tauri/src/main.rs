@@ -65,7 +65,6 @@ fn main() {
             cmd::update_order_items,
             cmd::delete_order_items,
             cmd::get_invoice_items,
-            cmd::insert_invoice_items,
             cmd::update_invoice_items,
             cmd::delete_invoice_items,
             cmd::get_inventory_mvm,
