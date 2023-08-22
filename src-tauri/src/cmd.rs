@@ -406,19 +406,6 @@ pub fn delete_invoice_items(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_invoice_items(
-    invoice_items: NewInvoiceItem,
-    state: tauri::State<AppState>,
-) -> InvoiceItem {
-    // get connection from state
-    let mut conn = state.db_conn.lock().unwrap();
-    let conn = &mut *conn;
-    let result = invoice_item_repo::insert_invoice_item(invoice_items, conn);
-
-    result
-}
-
-#[tauri::command]
 pub fn update_invoice_items(invoice: InvoiceItem, id: i32, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
