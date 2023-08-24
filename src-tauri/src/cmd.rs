@@ -11,6 +11,7 @@ use crate::models::*;
 use crate::reposotories::*;
 use crate::types::TNewInvoice;
 use crate::types::TNewOrder;
+use crate::types::TUpdateInvoice;
 use crate::AppState;
 
 // csv stuff
@@ -298,11 +299,20 @@ pub fn insert_invoice(invoice: TNewInvoice, state: tauri::State<AppState>) {
 }
 
 #[tauri::command]
-pub fn update_invoice(invoice: Invoice, id: i32, state: tauri::State<AppState>) -> usize {
+pub fn update_invoice(invoice: TUpdateInvoice, id: i32, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_repo::update_invoice(invoice, id, conn);
+    let result = invoice_repo::update_invoice(
+        Invoice {
+            id: id,
+            status: invoice.status,
+            client_id: invoice.client_id,
+            created_at: invoice.created_at,
+        },
+        id,
+        conn,
+    );
     result
 }
 
