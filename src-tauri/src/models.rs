@@ -120,6 +120,13 @@ pub struct Invoice {
     #[diesel(sql_type = Integer)]
     pub client_id: i32,
 }
+
+#[derive(Debug, Deserialize, AsChangeset, Serialize)]
+#[diesel(table_name = invoices)]
+pub struct UpdateInvoice {
+    #[diesel(sql_type = Text)]
+    pub status: String,
+}
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
 #[diesel(table_name = invoices)]
 pub struct NewInvoice {
@@ -142,6 +149,13 @@ pub struct InvoiceItem {
     pub quantity: i64,
     #[diesel(sql_type = Integer)]
     pub inventory_id: i32,
+}
+
+#[derive(Debug, AsChangeset, Serialize, Deserialize)]
+#[diesel(table_name = invoice_items)]
+pub struct UpdateInvoiceItem {
+    #[diesel(sql_type = Integer)]
+    pub quantity: i64,
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
@@ -216,6 +230,13 @@ pub struct InventoryMvm {
     pub quantity: i64,
     #[diesel(sql_type = Integer)]
     pub product_id: i32,
+}
+
+#[derive(Debug, AsChangeset, Serialize, Deserialize)]
+#[diesel(table_name = inventory_mouvements)]
+pub struct UpdateInventoryMvm {
+    #[diesel(sql_type = Integer)]
+    pub quantity: i64,
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
