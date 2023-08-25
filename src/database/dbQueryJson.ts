@@ -1,3 +1,4 @@
+// done repo_stats/get_client_exxpenses
 export const clientDailyExpenses = `
     SELECT strftime('%Y-%m-%d', i.created_at) AS day,
         SUM(p.price * ABS(ci.quantity)) AS expense
@@ -11,6 +12,7 @@ export const clientDailyExpenses = `
     LIMIT 7;
 `;
 
+// done
 export const sellerDailyExpenses = `
     SELECT strftime('%Y-%m-%d', o.created_at) AS day,
         SUM(p.price * ABS(oi.quantity)) AS expense
@@ -24,6 +26,7 @@ export const sellerDailyExpenses = `
     LIMIT 7;
 `;
 
+// done stats_repo/get_client_details
 export const clientDetailsJoins = `
     SELECT p.name AS name, strftime('%Y-%m', i.created_at) AS month, ABS(COALESCE(SUM(ii.quantity), 0)) AS quantity
     FROM clients c
@@ -35,6 +38,7 @@ export const clientDetailsJoins = `
     ORDER BY month ASC;
 `;
 
+// seller details
 export const sellerDetailsJoins = `
     SELECT p.name AS name, strftime('%Y-%m', o.created_at) AS month, ABS(COALESCE(SUM(oi.quantity), 0)) AS quantity
     FROM sellers s
@@ -46,6 +50,7 @@ export const sellerDetailsJoins = `
     ORDER BY month ASC;
 `;
 
+// done : stats_repo/get_inventory_stats
 export const inOutStatsJoins = `
     SELECT strftime('%Y-%m', date) AS group_month,
         SUM(CASE WHEN model = 'IN' THEN ABS(quantity) ELSE 0 END) AS total_in,
@@ -108,8 +113,8 @@ export const stockJoins = `
         )
     ) AS data
     FROM stock_mouvements sm
-    LEFT JOIN order_items ci ON sm.id = ci.stock_id
-    LEFT JOIN invoice_items ii ON sm.id = ii.stock_id
+    LEFT JOIN order_items ci ON sm.id = ci.inventory_id
+    LEFT JOIN invoice_items ii ON sm.id = ii.inventory_id
     LEFT JOIN products p ON sm.product_id = p.id OR sm.product_id = p.id
     ORDER BY sm.id DESC;
 `;
@@ -132,7 +137,7 @@ export const ordersJoins = `
                     'price', ci.price,
                     'quantity', ci.quantity,
                     'product_id', ci.product_id,
-                    'stock_id', ci.stock_id,
+                    'inventory_id', ci.inventory_id,
                     'product', json_object(
                         'id', p.id,
                         'name', p.name,
@@ -172,7 +177,7 @@ export const invoicesJoins = `
                 json_object(
                     'id', ii.id,
                     'quantity', ABS(ii.quantity),
-                    'stock_id', ii.stock_id,
+                    'inventory_id', ii.inventory_id,
                     'product_id', ii.product_id,
                     'product', json_object(
                         'id', p.id,

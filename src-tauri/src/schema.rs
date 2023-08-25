@@ -34,7 +34,6 @@ diesel::table! {
 diesel::table! {
     invoices (id) {
         id -> Integer,
-        total -> Float,
         status -> Text,
         created_at -> Timestamp,
         client_id -> Integer,

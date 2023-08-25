@@ -1,5 +1,5 @@
 use crate::diesel::prelude::*;
-use crate::models::{NewOrderItem, OrderItem};
+use crate::models::{NewOrderItem, OrderItem, UpdateOrderItem};
 use crate::schema::{order_items, orders};
 
 pub fn get_order_items(page: i32, connection: &mut SqliteConnection) -> Vec<OrderItem> {
@@ -41,7 +41,7 @@ pub fn delete_order_item(oi_id: i32, connection: &mut SqliteConnection) -> usize
 }
 
 pub fn update_order_item(
-    oi_update: OrderItem,
+    oi_update: UpdateOrderItem,
     oi_id: i32,
     connection: &mut SqliteConnection,
 ) -> usize {

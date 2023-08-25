@@ -1,7 +1,7 @@
 use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
-use crate::models::{Client, Invoice, InvoiceItem, NewInvoice, Product};
+use crate::models::{Client, Invoice, InvoiceItem, NewInvoice, Product, UpdateInvoice};
 use crate::schema::{clients, invoice_items, invoices, products};
 
 pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
@@ -107,11 +107,17 @@ pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
         .collect::<Value>()
 }
 
-pub fn insert_invoice(new_i: NewInvoice, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::insert_into(invoices::dsl::invoices)
+pub fn insert_invoice(new_i: NewInvoice, connection: &mut SqliteConnection) -> i32 {
+    diesel::insert_into(invoices::dsl::invoices)
         .values(new_i)
         .execute(connection)
         .expect("Error adding invoice");
+
+    let result = invoices::dsl::invoices
+        .order_by(invoices::id.desc())
+        .select(invoices::id)
+        .first::<i32>(connection)
+        .expect("error get all invoices");
 
     result
 }
@@ -124,10 +130,13 @@ pub fn delete_invoice(i_id: i32, connection: &mut SqliteConnection) -> usize {
     result
 }
 
-pub fn update_invoice(i_update: Invoice, i_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn update_invoice(
+    i_update: UpdateInvoice,
+    i_id: i32,
+    connection: &mut SqliteConnection,
+) -> usize {
     let result = diesel::update(invoices::dsl::invoices.find(&i_id))
         .set((
-            invoices::total.eq(i_update.total),
             invoices::status.eq(i_update.status),
             // Add other fields here if needed
         ))
