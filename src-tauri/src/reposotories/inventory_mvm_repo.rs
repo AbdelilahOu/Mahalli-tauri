@@ -1,7 +1,9 @@
 use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
-use crate::models::{InventoryMvm, InvoiceItem, NewInventoryMvm, OrderItem, Product};
+use crate::models::{
+    InventoryMvm, InvoiceItem, NewInventoryMvm, OrderItem, Product, UpdateInventoryMvm,
+};
 use crate::schema::{inventory_mouvements, invoice_items, order_items, products};
 
 pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
@@ -112,7 +114,7 @@ pub fn delete_inventory_mvm(mvm_id: i32, connection: &mut SqliteConnection) -> u
 }
 
 pub fn update_inventory_mvm(
-    mvm_update: InventoryMvm,
+    mvm_update: UpdateInventoryMvm,
     mvm_id: i32,
     connection: &mut SqliteConnection,
 ) -> usize {
