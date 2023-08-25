@@ -62,7 +62,7 @@ fn main() {
             cmd::update_order,
             cmd::delete_order,
             cmd::get_order_items,
-            cmd::update_order_items,
+            // cmd::update_order_items,
             cmd::delete_order_items,
             cmd::get_invoice_items,
             // cmd::update_invoice_items,
