@@ -1,7 +1,7 @@
 use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
-use crate::models::{Client, Invoice, InvoiceItem, NewInvoice, Product};
+use crate::models::{Client, Invoice, InvoiceItem, NewInvoice, Product, UpdateInvoice};
 use crate::schema::{clients, invoice_items, invoices, products};
 
 pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
@@ -130,7 +130,11 @@ pub fn delete_invoice(i_id: i32, connection: &mut SqliteConnection) -> usize {
     result
 }
 
-pub fn update_invoice(i_update: Invoice, i_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn update_invoice(
+    i_update: UpdateInvoice,
+    i_id: i32,
+    connection: &mut SqliteConnection,
+) -> usize {
     let result = diesel::update(invoices::dsl::invoices.find(&i_id))
         .set((
             invoices::status.eq(i_update.status),
