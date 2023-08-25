@@ -49,7 +49,7 @@ pub struct TUpdateInvoice {
 pub struct TUpdateInvoiceItem {
     pub id: Option<i32>,
     pub product_id: i32,
-    pub invoice_id: Option<i32>,
+    pub invoice_id: i32,
     pub quantity: i64,
-    pub inventory_id: Option<i32>,
+    pub inventory_id: i32,
 }
