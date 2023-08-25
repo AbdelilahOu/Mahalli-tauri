@@ -12,14 +12,13 @@ extern crate diesel;
 extern crate diesel_migrations;
 extern crate dotenv;
 
-// modes
 mod cmd;
 mod csvparsing;
 mod db;
 mod models;
 mod reposotories;
 mod schema;
-// :::::::::::::
+mod types;
 
 pub struct AppState {
     db_conn: Mutex<SqliteConnection>,
@@ -63,20 +62,25 @@ fn main() {
             cmd::update_order,
             cmd::delete_order,
             cmd::get_order_items,
-            cmd::insert_order_items,
-            cmd::update_order_items,
+            // cmd::update_order_items,
             cmd::delete_order_items,
             cmd::get_invoice_items,
-            cmd::insert_invoice_items,
-            cmd::update_invoice_items,
+            // cmd::update_invoice_items,
             cmd::delete_invoice_items,
             cmd::get_inventory_mvm,
             cmd::delete_inventory_mvm,
-            cmd::update_inventory_mvm,
+            // cmd::update_inventory_mvm,
+            cmd::get_b3_clients,
+            cmd::get_b3_sellers,
+            cmd::get_c_week_expenses,
+            cmd::get_s_week_expenses,
+            cmd::get_c_product_month,
+            cmd::get_s_product_month,
+            cmd::get_inventory_stats,
             cmd::seed_db,
         ])
         .setup(|_app| {
-            db::migrate_db();
+            // db::migrate_db();
             Ok(())
         })
         .plugin(tauri_plugin_oauth::init())

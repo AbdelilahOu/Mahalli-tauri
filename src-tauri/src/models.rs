@@ -113,8 +113,6 @@ pub struct NewProduct {
 pub struct Invoice {
     #[diesel(sql_type = Integer)]
     pub id: i32,
-    #[diesel(sql_type = Float)]
-    pub total: f32,
     #[diesel(sql_type = Text)]
     pub status: String,
     #[diesel(sql_type = Text)]
@@ -122,10 +120,16 @@ pub struct Invoice {
     #[diesel(sql_type = Integer)]
     pub client_id: i32,
 }
+
+#[derive(Debug, Deserialize, AsChangeset, Serialize)]
+#[diesel(table_name = invoices)]
+pub struct UpdateInvoice {
+    #[diesel(sql_type = Text)]
+    pub status: String,
+}
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
 #[diesel(table_name = invoices)]
 pub struct NewInvoice {
-    pub total: f32,
     pub status: String,
     pub client_id: i32,
 }
@@ -145,6 +149,13 @@ pub struct InvoiceItem {
     pub quantity: i64,
     #[diesel(sql_type = Integer)]
     pub inventory_id: i32,
+}
+
+#[derive(Debug, AsChangeset, Serialize, Deserialize)]
+#[diesel(table_name = invoice_items)]
+pub struct UpdateInvoiceItem {
+    #[diesel(sql_type = Integer)]
+    pub quantity: i64,
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
@@ -170,6 +181,13 @@ pub struct Order {
     #[diesel(sql_type = Integer)]
     pub seller_id: i32,
 }
+
+#[derive(Debug, AsChangeset, Clone, Serialize)]
+#[diesel(table_name = orders)]
+pub struct UpdateOrder {
+    #[diesel(sql_type = Text)]
+    pub status: String,
+}
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
 #[diesel(table_name = orders)]
 pub struct NewOrder {
@@ -192,6 +210,15 @@ pub struct OrderItem {
     pub order_id: i32,
     #[diesel(sql_type = Integer)]
     pub inventory_id: i32,
+    #[diesel(sql_type = BigInt)]
+    pub quantity: i64,
+}
+
+#[derive(Debug, Clone, AsChangeset, Serialize, Deserialize)]
+#[diesel(table_name = order_items)]
+pub struct UpdateOrderItem {
+    #[diesel(sql_type = Nullable<Float>)]
+    pub price: Option<f32>,
     #[diesel(sql_type = BigInt)]
     pub quantity: i64,
 }
@@ -221,10 +248,16 @@ pub struct InventoryMvm {
     pub product_id: i32,
 }
 
+#[derive(Debug, AsChangeset, Serialize, Deserialize)]
+#[diesel(table_name = inventory_mouvements)]
+pub struct UpdateInventoryMvm {
+    #[diesel(sql_type = Integer)]
+    pub quantity: i64,
+}
+
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
 #[diesel(table_name = inventory_mouvements)]
 pub struct NewInventoryMvm {
-    pub date: String,
     pub model: String,
     pub quantity: i64,
     pub product_id: i32,

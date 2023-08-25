@@ -147,7 +147,6 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                              -> need inventory image
                             */
                             NewInventoryMvm {
-                                date: inventory.date,
                                 model: inventory.model,
                                 product_id: inventory.product_id,
                                 quantity: inventory.quantity,
@@ -160,7 +159,6 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                     for invoice in invoice_records {
                         reposotories::invoice_repo::insert_invoice(
                             NewInvoice {
-                                total: invoice.total,
                                 status: invoice.status,
                                 client_id: invoice.client_id,
                             },

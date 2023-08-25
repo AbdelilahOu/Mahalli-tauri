@@ -1,7 +1,9 @@
 use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
-use crate::models::{InventoryMvm, InvoiceItem, NewInventoryMvm, OrderItem, Product};
+use crate::models::{
+    InventoryMvm, InvoiceItem, NewInventoryMvm, OrderItem, Product, UpdateInventoryMvm,
+};
 use crate::schema::{inventory_mouvements, invoice_items, order_items, products};
 
 pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
@@ -88,11 +90,17 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value>
 //     result
 // }
 
-pub fn insert_inventory_mvm(new_ii: NewInventoryMvm, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::insert_into(inventory_mouvements::dsl::inventory_mouvements)
-        .values(new_ii)
+pub fn insert_inventory_mvm(new_im: NewInventoryMvm, connection: &mut SqliteConnection) -> i32 {
+    diesel::insert_into(inventory_mouvements::dsl::inventory_mouvements)
+        .values(new_im)
         .execute(connection)
         .expect("Error adding inventory");
+
+    let result = inventory_mouvements::dsl::inventory_mouvements
+        .order_by(inventory_mouvements::id.desc())
+        .select(inventory_mouvements::id)
+        .first::<i32>(connection)
+        .expect("error get all inventory_mouvements");
 
     result
 }
@@ -106,7 +114,7 @@ pub fn delete_inventory_mvm(mvm_id: i32, connection: &mut SqliteConnection) -> u
 }
 
 pub fn update_inventory_mvm(
-    mvm_update: InventoryMvm,
+    mvm_update: UpdateInventoryMvm,
     mvm_id: i32,
     connection: &mut SqliteConnection,
 ) -> usize {

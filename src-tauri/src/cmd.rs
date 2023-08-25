@@ -9,6 +9,10 @@ use crate::csvparsing::import::TableRecord;
 use crate::db;
 use crate::models::*;
 use crate::reposotories::*;
+use crate::types::TNewInvoice;
+use crate::types::TNewOrder;
+use crate::types::TUpdateInvoice;
+use crate::types::TUpdateOrder;
 use crate::AppState;
 
 // csv stuff
@@ -19,8 +23,8 @@ pub async fn export_db_csv(table: String) {
     let _env = env::var("DEV_ENV");
     let database_url: String = if _env.is_ok() == false {
         path::Path::new(&tauri::api::path::data_dir().unwrap())
-            .join(".inventoryer")
-            .join("inventoryer.db")
+            .join(".stocker")
+            .join("stocker.db")
             .to_str()
             .expect("Failed to convert path to string")
             .to_string()
@@ -133,12 +137,12 @@ pub fn delete_seller(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_seller(new_seller: NewSeller, state: tauri::State<AppState>) -> usize {
+pub fn insert_seller(seller: NewSeller, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     //
-    let result = seller_repo::insert_seller(new_seller, conn);
+    let result = seller_repo::insert_seller(seller, conn);
     result
 }
 
@@ -180,11 +184,11 @@ pub fn delete_product(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_product(new_product: NewProduct, state: tauri::State<AppState>) -> usize {
+pub fn insert_product(product: NewProduct, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = product_repo::insert_product(new_product, conn);
+    let result = product_repo::insert_product(product, conn);
     result
 }
 
@@ -216,11 +220,11 @@ pub fn delete_user(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_user(new_user: NewUser, state: tauri::State<AppState>) -> usize {
+pub fn insert_user(user: NewUser, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = user_repo::insert_user(new_user, conn);
+    let result = user_repo::insert_user(user, conn);
     result
 }
 
@@ -261,20 +265,95 @@ pub fn delete_invoice(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_invoice(new_invoice: NewInvoice, state: tauri::State<AppState>) -> usize {
+pub fn insert_invoice(invoice: TNewInvoice, state: tauri::State<AppState>) {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_repo::insert_invoice(new_invoice, conn);
-    result
+    let inserted_id = invoice_repo::insert_invoice(
+        NewInvoice {
+            status: invoice.status,
+            client_id: invoice.client_id,
+        },
+        conn,
+    );
+
+    for item in invoice.invoice_items.into_iter() {
+        let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
+            NewInventoryMvm {
+                model: String::from("OUT"),
+                quantity: item.quantity,
+                product_id: item.product_id,
+            },
+            conn,
+        );
+
+        invoice_item_repo::insert_invoice_item(
+            NewInvoiceItem {
+                product_id: item.product_id,
+                invoice_id: inserted_id.clone(),
+                quantity: item.quantity,
+                inventory_id: inserted_im_id,
+            },
+            conn,
+        );
+    }
 }
 
 #[tauri::command]
-pub fn update_invoice(invoice: Invoice, id: i32, state: tauri::State<AppState>) -> usize {
+pub fn update_invoice(invoice: TUpdateInvoice, id: i32, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_repo::update_invoice(invoice, id, conn);
+    let result = invoice_repo::update_invoice(
+        UpdateInvoice {
+            status: invoice.status,
+        },
+        id,
+        conn,
+    );
+
+    for item in invoice.invoice_items.into_iter() {
+        match item.id {
+            Some(ii_id) => {
+                invoice_item_repo::update_invoice_item(
+                    UpdateInvoiceItem {
+                        quantity: item.quantity,
+                    },
+                    ii_id,
+                    conn,
+                );
+
+                inventory_mvm_repo::update_inventory_mvm(
+                    UpdateInventoryMvm {
+                        quantity: item.quantity,
+                    },
+                    item.inventory_id,
+                    conn,
+                );
+            }
+
+            None => {
+                let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
+                    NewInventoryMvm {
+                        model: String::from("OUT"),
+                        quantity: item.quantity,
+                        product_id: item.product_id,
+                    },
+                    conn,
+                );
+
+                invoice_item_repo::insert_invoice_item(
+                    NewInvoiceItem {
+                        product_id: item.product_id,
+                        invoice_id: id,
+                        quantity: item.quantity,
+                        inventory_id: inserted_im_id,
+                    },
+                    conn,
+                );
+            }
+        }
+    }
     result
 }
 
@@ -306,20 +385,98 @@ pub fn delete_order(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_order(new_order: NewOrder, state: tauri::State<AppState>) -> usize {
+pub fn insert_order(order: TNewOrder, state: tauri::State<AppState>) {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = order_repo::insert_order(new_order, conn);
-    result
+    let inserted_id = order_repo::insert_order(
+        NewOrder {
+            status: order.status,
+            seller_id: order.seller_id,
+        },
+        conn,
+    );
+
+    for item in order.order_items.into_iter() {
+        let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
+            NewInventoryMvm {
+                model: String::from("IN"),
+                quantity: item.quantity,
+                product_id: item.product_id,
+            },
+            conn,
+        );
+
+        order_item_repo::insert_order_item(
+            NewOrderItem {
+                product_id: item.product_id,
+                order_id: inserted_id.clone(),
+                quantity: item.quantity,
+                price: item.price,
+                inventory_id: inserted_im_id,
+            },
+            conn,
+        );
+    }
 }
 
 #[tauri::command]
-pub fn update_order(order: Order, id: i32, state: tauri::State<AppState>) -> usize {
+pub fn update_order(order: TUpdateOrder, id: i32, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = order_repo::update_order(order, id, conn);
+    let result = order_repo::update_order(
+        UpdateOrder {
+            status: order.status,
+        },
+        id,
+        conn,
+    );
+
+    for item in order.order_items.into_iter() {
+        match item.id {
+            Some(ii_id) => {
+                order_item_repo::update_order_item(
+                    UpdateOrderItem {
+                        quantity: item.quantity,
+                        price: item.price,
+                    },
+                    ii_id,
+                    conn,
+                );
+
+                inventory_mvm_repo::update_inventory_mvm(
+                    UpdateInventoryMvm {
+                        quantity: item.quantity,
+                    },
+                    item.inventory_id,
+                    conn,
+                );
+            }
+
+            None => {
+                let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
+                    NewInventoryMvm {
+                        model: String::from("OUT"),
+                        quantity: item.quantity,
+                        product_id: item.product_id,
+                    },
+                    conn,
+                );
+
+                order_item_repo::insert_order_item(
+                    NewOrderItem {
+                        product_id: item.product_id,
+                        order_id: id,
+                        quantity: item.quantity,
+                        price: item.price,
+                        inventory_id: inserted_im_id,
+                    },
+                    conn,
+                );
+            }
+        }
+    }
     result
 }
 
@@ -341,23 +498,14 @@ pub fn delete_order_items(id: i32, state: tauri::State<AppState>) -> usize {
     result
 }
 
-#[tauri::command]
-pub fn insert_order_items(new_order_items: NewOrderItem, state: tauri::State<AppState>) -> usize {
-    // get connection from state
-    let mut conn = state.db_conn.lock().unwrap();
-    let conn = &mut *conn;
-    let result = order_item_repo::insert_order_item(new_order_items, conn);
-    result
-}
-
-#[tauri::command]
-pub fn update_order_items(order: OrderItem, id: i32, state: tauri::State<AppState>) -> usize {
-    // get connection from state
-    let mut conn = state.db_conn.lock().unwrap();
-    let conn = &mut *conn;
-    let result = order_item_repo::update_order_item(order, id, conn);
-    result
-}
+// #[tauri::command]
+// pub fn update_order_items(order: OrderItem, id: i32, state: tauri::State<AppState>) -> usize {
+//     // get connection from state
+//     let mut conn = state.db_conn.lock().unwrap();
+//     let conn = &mut *conn;
+//     let result = order_item_repo::update_order_item(order, id, conn);
+//     result
+// }
 
 #[tauri::command]
 pub fn get_invoice_items(id: i32, state: tauri::State<AppState>) -> Vec<InvoiceItem> {
@@ -377,27 +525,14 @@ pub fn delete_invoice_items(id: i32, state: tauri::State<AppState>) -> usize {
     result
 }
 
-#[tauri::command]
-pub fn insert_invoice_items(
-    new_invoice_items: NewInvoiceItem,
-    state: tauri::State<AppState>,
-) -> InvoiceItem {
-    // get connection from state
-    let mut conn = state.db_conn.lock().unwrap();
-    let conn = &mut *conn;
-    let result = invoice_item_repo::insert_invoice_item(new_invoice_items, conn);
-
-    result
-}
-
-#[tauri::command]
-pub fn update_invoice_items(invoice: InvoiceItem, id: i32, state: tauri::State<AppState>) -> usize {
-    // get connection from state
-    let mut conn = state.db_conn.lock().unwrap();
-    let conn = &mut *conn;
-    let result = invoice_item_repo::update_invoice_item(invoice, id, conn);
-    result
-}
+// #[tauri::command]
+// pub fn update_invoice_items(invoice: InvoiceItem, id: i32, state: tauri::State<AppState>) -> usize {
+//     // get connection from state
+//     let mut conn = state.db_conn.lock().unwrap();
+//     let conn = &mut *conn;
+//     let result = invoice_item_repo::update_invoice_item(invoice, id, conn);
+//     result
+// }
 
 #[tauri::command]
 pub fn get_inventory_mvm(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
@@ -417,11 +552,74 @@ pub fn delete_inventory_mvm(id: i32, state: tauri::State<AppState>) -> usize {
     result
 }
 
+// #[tauri::command]
+// pub fn update_inventory_mvm(mvm: InventoryMvm, id: i32, state: tauri::State<AppState>) -> usize {
+//     // get connection from state
+//     let mut conn = state.db_conn.lock().unwrap();
+//     let conn = &mut *conn;
+//     let result = inventory_mvm_repo::update_inventory_mvm(mvm, id, conn);
+//     result
+// }
+
 #[tauri::command]
-pub fn update_inventory_mvm(mvm: InventoryMvm, id: i32, state: tauri::State<AppState>) -> usize {
+pub fn get_b3_sellers(state: tauri::State<AppState>) -> Vec<Value> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = inventory_mvm_repo::update_inventory_mvm(mvm, id, conn);
+    let result = stats_repo::get_best_three_seller(conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_b3_clients(state: tauri::State<AppState>) -> Vec<Value> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = stats_repo::get_best_three_client(conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_c_week_expenses(id: i32, state: tauri::State<AppState>) -> Vec<Value> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = stats_repo::get_client_expenses(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_s_week_expenses(id: i32, state: tauri::State<AppState>) -> Vec<Value> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = stats_repo::get_seller_expenses(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_c_product_month(id: i32, state: tauri::State<AppState>) -> Vec<Value> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = stats_repo::get_client_details(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_s_product_month(id: i32, state: tauri::State<AppState>) -> Vec<Value> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = stats_repo::get_seller_details(id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_inventory_stats(state: tauri::State<AppState>) -> Vec<Value> {
+    // get connection from state
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = stats_repo::get_inventory_stats(conn);
     result
 }
