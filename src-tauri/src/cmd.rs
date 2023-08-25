@@ -12,6 +12,7 @@ use crate::reposotories::*;
 use crate::types::TNewInvoice;
 use crate::types::TNewOrder;
 use crate::types::TUpdateInvoice;
+use crate::types::TUpdateOrder;
 use crate::AppState;
 
 // csv stuff
@@ -420,11 +421,62 @@ pub fn insert_order(order: TNewOrder, state: tauri::State<AppState>) {
 }
 
 #[tauri::command]
-pub fn update_order(order: Order, id: i32, state: tauri::State<AppState>) -> usize {
+pub fn update_order(order: TUpdateOrder, id: i32, state: tauri::State<AppState>) -> usize {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = order_repo::update_order(order, id, conn);
+    let result = order_repo::update_order(
+        UpdateOrder {
+            status: order.status,
+        },
+        id,
+        conn,
+    );
+
+    for item in order.order_items.into_iter() {
+        match item.id {
+            Some(ii_id) => {
+                order_item_repo::update_order_item(
+                    UpdateOrderItem {
+                        quantity: item.quantity,
+                        price: item.price,
+                    },
+                    ii_id,
+                    conn,
+                );
+
+                inventory_mvm_repo::update_inventory_mvm(
+                    UpdateInventoryMvm {
+                        quantity: item.quantity,
+                    },
+                    item.inventory_id,
+                    conn,
+                );
+            }
+
+            None => {
+                let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
+                    NewInventoryMvm {
+                        model: String::from("OUT"),
+                        quantity: item.quantity,
+                        product_id: item.product_id,
+                    },
+                    conn,
+                );
+
+                order_item_repo::insert_order_item(
+                    NewOrderItem {
+                        product_id: item.product_id,
+                        order_id: id,
+                        quantity: item.quantity,
+                        price: item.price,
+                        inventory_id: inserted_im_id,
+                    },
+                    conn,
+                );
+            }
+        }
+    }
     result
 }
 
@@ -446,14 +498,14 @@ pub fn delete_order_items(id: i32, state: tauri::State<AppState>) -> usize {
     result
 }
 
-#[tauri::command]
-pub fn update_order_items(order: OrderItem, id: i32, state: tauri::State<AppState>) -> usize {
-    // get connection from state
-    let mut conn = state.db_conn.lock().unwrap();
-    let conn = &mut *conn;
-    let result = order_item_repo::update_order_item(order, id, conn);
-    result
-}
+// #[tauri::command]
+// pub fn update_order_items(order: OrderItem, id: i32, state: tauri::State<AppState>) -> usize {
+//     // get connection from state
+//     let mut conn = state.db_conn.lock().unwrap();
+//     let conn = &mut *conn;
+//     let result = order_item_repo::update_order_item(order, id, conn);
+//     result
+// }
 
 #[tauri::command]
 pub fn get_invoice_items(id: i32, state: tauri::State<AppState>) -> Vec<InvoiceItem> {
