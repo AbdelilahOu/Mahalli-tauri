@@ -1,5 +1,5 @@
 use crate::diesel::prelude::*;
-use crate::models::{InvoiceItem, NewInvoiceItem};
+use crate::models::{InvoiceItem, NewInvoiceItem, UpdateInvoiceItem};
 use crate::schema::{invoice_items, invoices};
 
 pub fn get_invoice_items(page: i32, connection: &mut SqliteConnection) -> Vec<InvoiceItem> {
@@ -40,7 +40,7 @@ pub fn delete_invoice_item(ii_id: i32, connection: &mut SqliteConnection) -> usi
 }
 
 pub fn update_invoice_item(
-    ii_update: InvoiceItem,
+    ii_update: UpdateInvoiceItem,
     ii_id: i32,
     connection: &mut SqliteConnection,
 ) -> usize {
