@@ -311,12 +311,12 @@ pub fn update_invoice(invoice: TUpdateInvoice, id: i32, state: tauri::State<AppS
         conn,
     );
 
-    for invoice_item in invoice.invoice_items.into_iter() {
-        match invoice_item.id {
+    for item in invoice.invoice_items.into_iter() {
+        match item.id {
             Some(ii_id) => {
                 invoice_item_repo::update_invoice_item(
                     UpdateInvoiceItem {
-                        quantity: invoice_item.quantity,
+                        quantity: item.quantity,
                     },
                     ii_id,
                     conn,
@@ -324,14 +324,33 @@ pub fn update_invoice(invoice: TUpdateInvoice, id: i32, state: tauri::State<AppS
 
                 inventory_mvm_repo::update_inventory_mvm(
                     UpdateInventoryMvm {
-                        quantity: invoice_item.quantity,
+                        quantity: item.quantity,
                     },
-                    invoice_item.inventory_id,
+                    item.inventory_id,
                     conn,
                 );
             }
 
-            None => (),
+            None => {
+                let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
+                    NewInventoryMvm {
+                        model: String::from("OUT"),
+                        quantity: item.quantity,
+                        product_id: item.product_id,
+                    },
+                    conn,
+                );
+
+                invoice_item_repo::insert_invoice_item(
+                    NewInvoiceItem {
+                        product_id: item.product_id,
+                        invoice_id: id,
+                        quantity: item.quantity,
+                        inventory_id: inserted_im_id,
+                    },
+                    conn,
+                );
+            }
         }
     }
     result
