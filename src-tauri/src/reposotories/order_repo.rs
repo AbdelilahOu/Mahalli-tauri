@@ -1,7 +1,7 @@
 use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
-use crate::models::{NewOrder, Order, OrderItem, Product, Seller};
+use crate::models::{NewOrder, Order, OrderItem, Product, Seller, UpdateOrder};
 use crate::schema::{order_items, orders, products, sellers};
 
 pub fn get_orders(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
@@ -131,7 +131,7 @@ pub fn delete_order(o_id: i32, connection: &mut SqliteConnection) -> usize {
     result
 }
 
-pub fn update_order(o_update: Order, o_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn update_order(o_update: UpdateOrder, o_id: i32, connection: &mut SqliteConnection) -> usize {
     let result = diesel::update(orders::dsl::orders.find(&o_id))
         .set(orders::status.eq(o_update.status))
         .execute(connection)
