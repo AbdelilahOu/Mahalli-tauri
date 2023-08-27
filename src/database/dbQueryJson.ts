@@ -55,7 +55,7 @@ export const inOutStatsJoins = `
     SELECT strftime('%Y-%m', date) AS group_month,
         SUM(CASE WHEN model = 'IN' THEN ABS(quantity) ELSE 0 END) AS total_in,
         SUM(CASE WHEN model = 'OUT' THEN ABS(quantity) ELSE 0 END) AS total_out
-    FROM stock_mouvements
+    FROM inventory_mouvements
     GROUP BY group_month
     ORDER BY id DESC
     LIMIT 3;
@@ -88,12 +88,12 @@ export const bestThreeSellers = `
 // done : product_repo/get_products
 export const selectProductsWithQuantity = `
     SELECT products.*, COALESCE(SUM(sm.quantity), 0) AS quantity
-    FROM products LEFT JOIN stock_mouvements sm ON products.id = sm.product_id
+    FROM products LEFT JOIN inventory_mouvements sm ON products.id = sm.product_id
     GROUP BY products.id ORDER BY products.id DESC
 `;
 
 // done
-export const stockJoins = `
+export const inventoryJoins = `
     SELECT json_object(
         'id', sm.id,
         'date', sm.date,
@@ -112,7 +112,7 @@ export const stockJoins = `
             'price', p.price
         )
     ) AS data
-    FROM stock_mouvements sm
+    FROM inventory_mouvements sm
     LEFT JOIN order_items ci ON sm.id = ci.inventory_id
     LEFT JOIN invoice_items ii ON sm.id = ii.inventory_id
     LEFT JOIN products p ON sm.product_id = p.id OR sm.product_id = p.id
