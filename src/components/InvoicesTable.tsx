@@ -84,7 +84,7 @@ export const InvoicesTable = defineComponent({
                           },
                         }}
                       >
-                        {Invoice.client.name}
+                        {Invoice.client.fullname}
                       </RouterLink>
                     </div>
                   </td>
