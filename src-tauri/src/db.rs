@@ -32,8 +32,8 @@ pub fn establish_connection() -> SqliteConnection {
         Err(_) => {
             println!("Not dev");
             let database_url = path::Path::new(&tauri::api::path::data_dir().unwrap())
-                .join(".inventoryer")
-                .join("inventoryer.db");
+                .join(".stocker")
+                .join("stocker.sqlite");
             let database_url = database_url.to_str().clone().unwrap();
             SqliteConnection::establish(&database_url)
                 .expect(&format!("Error connecting to {}", &database_url))
@@ -56,10 +56,10 @@ pub async fn seed_db() {
         String::from("clients"),
         String::from("sellers"),
         String::from("invoices"),
+        String::from("inventory_mouvements"),
         String::from("orders"),
         String::from("order_items"),
         String::from("invoice_items"),
-        String::from("inventory_mouvements"),
     ];
     // path to old db and wehere to store csvs
     let old_data_folder = path::Path::new("./data");
