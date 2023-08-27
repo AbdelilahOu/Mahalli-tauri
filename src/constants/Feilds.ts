@@ -7,7 +7,7 @@ export const ProductFeilds = [
   "description",
   "price",
   "tva",
-  "stock",
+  "inventory",
 ] as const;
 
 export const OrdersFeilds = [
@@ -15,5 +15,5 @@ export const OrdersFeilds = [
   "description",
   "price",
   "tva",
-  "stock",
+  "inventory",
 ] as const;

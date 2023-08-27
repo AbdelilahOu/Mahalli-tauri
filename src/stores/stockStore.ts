@@ -1,11 +1,11 @@
-import type { newStockMvmT, stockState } from "@/types";
-import { stockJoins } from "@/database/dbQueryJson";
+import type { newStockMvmT, inventoryState } from "@/types";
+import { inventoryJoins } from "@/database/dbQueryJson";
 import { defineStore } from "pinia";
 
 export const useStockStore = defineStore("StockStore", {
-  state: (): stockState => {
+  state: (): inventoryState => {
     return {
-      stockMouvements: [],
+      inventoryMouvements: [],
     };
   },
   actions: {
@@ -15,7 +15,7 @@ export const useStockStore = defineStore("StockStore", {
         console.log(error);
       }
     },
-    createStockMouvement: async function (stockmvm: newStockMvmT) {
+    createStockMouvement: async function (inventorymvm: newStockMvmT) {
       try {
       } catch (error) {
         console.log(error);

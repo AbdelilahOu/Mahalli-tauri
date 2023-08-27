@@ -39,8 +39,8 @@ export interface sellerState {
   seller: sellerT | null;
 }
 
-export interface stockState {
-  stockMouvements: stockMvmT[];
+export interface inventoryState {
+  inventoryMouvements: inventoryMvmT[];
 }
 ///////////////////////////////////
 //////////// INTERFACES //////////
@@ -183,7 +183,7 @@ export interface updateSellerT extends updateClientT {}
 ////////////////////////////////////////////////////
 //////////////// STOCKMOUVMENTS INTERFACES /////////
 ///////////////////////////////////////////////////
-export interface stockMvmT {
+export interface inventoryMvmT {
   id: number;
   date: string;
   model: string;
@@ -201,10 +201,10 @@ export interface stockMvmT {
     price: number;
   };
 }
-export interface stockT
-  extends Omit<stockMvmT, "product" | "orderItem" | "invoiceItem"> {}
+export interface inventoryT
+  extends Omit<inventoryMvmT, "product" | "orderItem" | "invoiceItem"> {}
 export interface newStockMvmT
-  extends Pick<stockMvmT, "productId" | "quantity" | "model"> {}
+  extends Pick<inventoryMvmT, "productId" | "quantity" | "model"> {}
 
 /////////////////////////////////////////////////
 /////////////// PRODUCT INTERFACES //////////////
@@ -219,8 +219,8 @@ export interface productT {
   tva: number;
 }
 export interface newProductT extends Omit<productT, "id"> {}
-export interface productTfromApiT extends Omit<productT, "stock"> {
-  stockMouvements: { quantity: number }[];
+export interface productTfromApiT extends Omit<productT, "inventory"> {
+  inventoryMouvements: { quantity: number }[];
 }
 export interface updateProductT extends Partial<productT> {}
 //////////////////////////////////////////////////
