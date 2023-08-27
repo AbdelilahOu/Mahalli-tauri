@@ -56,8 +56,8 @@ pub async fn seed_db() {
         String::from("clients"),
         String::from("sellers"),
         String::from("invoices"),
-        String::from("inventory_mouvements"),
         String::from("orders"),
+        String::from("inventory_mouvements"),
         String::from("order_items"),
         String::from("invoice_items"),
     ];
