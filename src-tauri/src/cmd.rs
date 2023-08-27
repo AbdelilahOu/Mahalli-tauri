@@ -454,24 +454,30 @@ pub fn update_order(order: TUpdateOrder, id: i32, state: tauri::State<AppState>)
 
     for item in order.order_items.into_iter() {
         match item.id {
-            Some(ii_id) => {
-                order_item_repo::update_order_item(
-                    UpdateOrderItem {
-                        quantity: item.quantity,
-                        price: item.price,
-                    },
-                    ii_id,
-                    conn,
-                );
+            Some(oi_id) => match item.inventory_id {
+                Some(im_id) => match item.order_id {
+                    Some(_o_id) => {
+                        order_item_repo::update_order_item(
+                            UpdateOrderItem {
+                                quantity: item.quantity,
+                                price: item.price,
+                            },
+                            oi_id,
+                            conn,
+                        );
 
-                inventory_mvm_repo::update_inventory_mvm(
-                    UpdateInventoryMvm {
-                        quantity: item.quantity,
-                    },
-                    item.inventory_id,
-                    conn,
-                );
-            }
+                        inventory_mvm_repo::update_inventory_mvm(
+                            UpdateInventoryMvm {
+                                quantity: item.quantity,
+                            },
+                            im_id,
+                            conn,
+                        );
+                    }
+                    None => println!("No order id"),
+                },
+                None => println!("No inventory id"),
+            },
 
             None => {
                 let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
