@@ -17,9 +17,8 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
   actions: {
     getAllInvoices: async function (page: number = 1) {
       try {
-        await invoke("seed_db");
-        console.log(await invoke("get_products", { page }));
         this.invoices = await invoke("get_invoices", { page });
+        console.log(await invoke("get_invoices", { page }));
       } catch (error) {
         console.log(error);
       }
