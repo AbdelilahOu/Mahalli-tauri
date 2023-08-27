@@ -80,7 +80,7 @@ fn main() {
             cmd::seed_db,
         ])
         .setup(|_app| {
-            // db::migrate_db();
+            db::migrate_db();
             Ok(())
         })
         .plugin(tauri_plugin_oauth::init())
