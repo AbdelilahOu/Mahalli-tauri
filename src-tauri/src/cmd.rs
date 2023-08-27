@@ -328,23 +328,29 @@ pub fn update_invoice(invoice: TUpdateInvoice, id: i32, state: tauri::State<AppS
     //
     for item in invoice.invoice_items.into_iter() {
         match item.id {
-            Some(ii_id) => {
-                invoice_item_repo::update_invoice_item(
-                    UpdateInvoiceItem {
-                        quantity: item.quantity,
-                    },
-                    ii_id,
-                    conn,
-                );
+            Some(ii_id) => match item.inventory_id {
+                Some(im_id) => match item.invoice_id {
+                    Some(_i_id) => {
+                        invoice_item_repo::update_invoice_item(
+                            UpdateInvoiceItem {
+                                quantity: item.quantity,
+                            },
+                            ii_id,
+                            conn,
+                        );
 
-                inventory_mvm_repo::update_inventory_mvm(
-                    UpdateInventoryMvm {
-                        quantity: item.quantity,
-                    },
-                    item.inventory_id,
-                    conn,
-                );
-            }
+                        inventory_mvm_repo::update_inventory_mvm(
+                            UpdateInventoryMvm {
+                                quantity: item.quantity,
+                            },
+                            im_id,
+                            conn,
+                        );
+                    }
+                    None => println!("No invoice id"),
+                },
+                None => println!("No inventory id"),
+            },
 
             None => {
                 let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
