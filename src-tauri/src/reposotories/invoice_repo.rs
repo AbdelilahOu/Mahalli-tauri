@@ -26,8 +26,11 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> 
                 .load::<(InvoiceItem, Product)>(connection)
                 .expect("Error fetching invoice items with products");
 
+            let mut total = 0;
+
             let invoice_items_json = json!({
                 "invoiceItems": invoice_items.into_iter().map(|(item, product)| {
+                    total += item.quantity * product.price as i64;
                     json!({
                         "id": item.id,
                         "quantity": item.quantity,
@@ -47,6 +50,7 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> 
                 "status": invoice.status,
                 "created_at": invoice.created_at,
                 "client_id": invoice.client_id,
+                "total": total,
                 "client": {
                     "id": client.id,
                     "fullname": client.fullname
