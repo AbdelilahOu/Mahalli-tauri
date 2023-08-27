@@ -112,7 +112,7 @@ export type invoiceT = {
   client_id: number;
   client: {
     id: number;
-    name: string;
+    fullname: string;
   };
   invoiceItems: invoiceItemT[];
 };
