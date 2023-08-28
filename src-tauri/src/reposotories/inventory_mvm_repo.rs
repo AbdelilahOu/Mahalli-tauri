@@ -9,21 +9,11 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value>
 
     let result = inventory_mouvements::table
         .inner_join(products::table.on(inventory_mouvements::product_id.eq(products::id)))
-        // .inner_join(order_items::table.on(inventory_mouvements::id.eq(order_items::inventory_id)))
-        // .inner_join(
-        //     invoice_items::table.on(inventory_mouvements::id.eq(invoice_items::inventory_id)),
-        // )
-        .select((
-            inventory_mouvements::all_columns,
-            products::all_columns,
-            // order_items::all_columns,
-            // invoice_items::all_columns,
-        ))
+        .select((inventory_mouvements::all_columns, products::all_columns))
         .order(inventory_mouvements::id.desc())
         .limit(17)
         .offset(offset as i64)
         .load::<(InventoryMvm, Product)>(connection)
-        // .load::<(InventoryMvm, Product, OrderItem, InvoiceItem)>(connection)
         .expect("Error fetching invoices with clients");
 
     result
@@ -66,16 +56,6 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value>
         })
         .collect::<Vec<Value>>()
 }
-
-// pub fn get_inventory_mvm(mvm_id: i32,connection: &mut SqliteConnection) -> InventoryMvm {
-//
-//     let result = inventory_mouvements::dsl::inventory_mouvements
-//         .find(&mvm_id)
-//         .first::<InventoryMvm>( connection)
-//         .expect("Error fetching inventory");
-
-//     result
-// }
 
 pub fn insert_inventory_mvm(new_im: NewInventoryMvm, connection: &mut SqliteConnection) -> i32 {
     diesel::insert_into(inventory_mouvements::dsl::inventory_mouvements)
