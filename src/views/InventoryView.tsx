@@ -1,8 +1,8 @@
 import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { StockTable } from "@/components/StockTable";
+import { InventoryTable } from "@/components/InventoryTable";
 import { useModalStore } from "@/stores/modalStore";
-import { useStockStore } from "@/stores/InventoryStore";
+import { useInventoryStore } from "@/stores/InventoryStore";
 import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
@@ -11,7 +11,7 @@ import { storeToRefs } from "pinia";
 export const InventoryView = defineComponent({
   name: "Inventory",
   components: {
-    StockTable,
+    InventoryTable,
     UiButton,
     UiInput,
     UiIcon,
@@ -19,13 +19,13 @@ export const InventoryView = defineComponent({
   setup() {
     //
     const modalStore = useModalStore();
-    const inventoryStore = useStockStore();
+    const inventoryStore = useInventoryStore();
     const { inventoryMouvements } = storeToRefs(inventoryStore);
 
     const searchQuery = ref<string>("");
 
     onBeforeMount(() => {
-      inventoryStore.getAllStockMouvements();
+      inventoryStore.getAllInventoryMouvements();
     });
 
     const updateModal = (name: string) => {
@@ -58,7 +58,7 @@ export const InventoryView = defineComponent({
               <div class="w-1/4 flex gap-2">
                 <UiButton
                   colorTheme="a"
-                  Click={() => updateModal("StockCreate")}
+                  Click={() => updateModal("InventoryCreate")}
                 >
                   <UiIcon
                     class=" fill-gray-900 cursor-default hover:bg-transparent"
@@ -71,9 +71,9 @@ export const InventoryView = defineComponent({
           </Transition>
 
           <Transition appear>
-            <StockTable
+            <InventoryTable
               FilterParam={searchQuery.value}
-              Stock={inventoryMouvements.value}
+              Inventory={inventoryMouvements.value}
             />
           </Transition>
         </div>

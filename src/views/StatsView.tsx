@@ -7,7 +7,7 @@ import { generateColor } from "@/utils/generateColor";
 import { useStatsStore } from "@/stores/statsStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
-import type { FilteredStockData } from "@/types";
+import type { FilteredInventoryData } from "@/types";
 
 export const StatsView = defineComponent({
   name: "Stats",
@@ -18,7 +18,7 @@ export const StatsView = defineComponent({
     const InsOuts = reactive({
       keys: ["IN", "OUT"] as const,
       months: [] as string[],
-      data: {} as FilteredStockData,
+      data: {} as FilteredInventoryData,
     });
 
     const BestThree = reactive({
@@ -33,7 +33,7 @@ export const StatsView = defineComponent({
     });
 
     onBeforeMount(async () => {
-      const InOutStats = await statsStore.getStockMouvementStats();
+      const InOutStats = await statsStore.getInventoryMouvementStats();
       InsOuts.months = InOutStats.months.reverse();
       InsOuts.data = InOutStats.result;
 

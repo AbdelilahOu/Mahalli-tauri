@@ -209,7 +209,7 @@ export interface inventoryMvmT {
 }
 export interface inventoryT
   extends Omit<inventoryMvmT, "product" | "orderItem" | "invoiceItem"> {}
-export interface newStockMvmT
+export interface newInventoryMvmT
   extends Pick<inventoryMvmT, "productId" | "quantity" | "model"> {}
 
 /////////////////////////////////////////////////
@@ -246,7 +246,7 @@ export interface newPaymentT
 
 ///////////////// OTHERS //////////
 
-export interface FilteredStockData {
+export interface FilteredInventoryData {
   [key: string]: Record<"IN" | "OUT", number>;
 }
 

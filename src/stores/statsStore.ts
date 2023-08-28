@@ -1,4 +1,4 @@
-import type { FilteredStockData } from "@/types";
+import type { FilteredInventoryData } from "@/types";
 import { defineStore } from "pinia";
 import _ from "lodash";
 import { invoke } from "@tauri-apps/api";
@@ -11,7 +11,7 @@ type inOutReType = {
 
 export const useStatsStore = defineStore("StatsStore", {
   actions: {
-    getStockMouvementStats: async function () {
+    getInventoryMouvementStats: async function () {
       const results = new Map<string, { IN: number; OUT: number }>();
       const months = new Set<string>();
       //
@@ -26,7 +26,7 @@ export const useStatsStore = defineStore("StatsStore", {
       }
       return {
         // @ts-ignore
-        result: Object.fromEntries(results) as FilteredStockData,
+        result: Object.fromEntries(results) as FilteredInventoryData,
         months: Array.from(months),
       };
     },
