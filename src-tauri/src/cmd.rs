@@ -23,8 +23,8 @@ pub async fn export_db_csv(table: String) {
     let _env = env::var("DEV_ENV");
     let database_url: String = if _env.is_ok() == false {
         path::Path::new(&tauri::api::path::data_dir().unwrap())
-            .join(".stocker")
-            .join("stocker.db")
+            .join(".inventoryer")
+            .join("inventoryer.db")
             .to_str()
             .expect("Failed to convert path to string")
             .to_string()
