@@ -229,7 +229,7 @@
   },
   "Inventory": {
     "index": {
-      "addButton": "Add to Stock",
+      "addButton": "Add to Inventory",
       "feilds": [
         "id",
         "product name",
@@ -279,7 +279,7 @@
       "Products": "Products",
       "Orders": "Orders",
       "Invoices": "Invoices",
-      "Stock": "Stock",
+      "Inventory": "Inventory",
       "Statistics": "Statistics",
       "Payment": "Paymentt"
     },

@@ -6,10 +6,10 @@ import type { inventoryMvmT } from "@/types";
 import { RouterLink } from "vue-router";
 import UiIconVue from "./ui/UiIcon.vue";
 
-export const StockTable = defineComponent({
-  name: "StockTable",
+export const InventoryTable = defineComponent({
+  name: "InventoryTable",
   props: {
-    Stock: {
+    Inventory: {
       type: Array as PropType<inventoryMvmT[]>,
       required: true,
     },
@@ -38,7 +38,7 @@ export const StockTable = defineComponent({
             </tr>
           </thead>
           <tbody class="text-sm divide-y divide-gray-100">
-            {props.Stock.filter((c) =>
+            {props.Inventory.filter((c) =>
               // @ts-ignore
               JSON.stringify(Object.values(c))
                 .toLocaleLowerCase()
@@ -61,8 +61,9 @@ export const StockTable = defineComponent({
                   </td>
                   <td class="p-2">
                     <div class="text-left">
-                      {mvm.orderItem?.price?.toFixed(2) ??
-                        mvm.product?.price?.toFixed(2)}{" "}
+                      {mvm.orderItem?.price && mvm.orderItem?.price > 0
+                        ? mvm.orderItem?.price?.toFixed(2)
+                        : mvm.product?.price?.toFixed(2)}{" "}
                       DH
                     </div>
                   </td>
@@ -123,7 +124,7 @@ export const StockTable = defineComponent({
           <UiPagination
             goBack={() => pagination.value--}
             goForward={() => pagination.value++}
-            itemsNumber={props.Stock.length}
+            itemsNumber={props.Inventory.length}
             page={pagination.value}
           />
         </div>

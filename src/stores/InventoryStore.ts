@@ -1,20 +1,23 @@
-import type { newStockMvmT, inventoryState } from "@/types";
+import type { newInventoryMvmT, inventoryState } from "@/types";
+import { invoke } from "@tauri-apps/api";
 import { defineStore } from "pinia";
 
-export const useStockStore = defineStore("StockStore", {
+export const useInventoryStore = defineStore("InventoryStore", {
   state: (): inventoryState => {
     return {
       inventoryMouvements: [],
     };
   },
   actions: {
-    getAllStockMouvements: async function () {
+    getAllInventoryMouvements: async function (page: number = 1) {
       try {
+        this.inventoryMouvements = await invoke("get_inventory_mvms", { page });
+        console.log(this.inventoryMouvements);
       } catch (error) {
         console.log(error);
       }
     },
-    createStockMouvement: async function (inventorymvm: newStockMvmT) {
+    createInventoryMouvement: async function (inventorymvm: newInventoryMvmT) {
       try {
       } catch (error) {
         console.log(error);

@@ -36,7 +36,7 @@ export const HomeView = defineComponent({
       },
       {
         image: "/inventory.jpg",
-        text: "Stock",
+        text: "Inventory",
         path: "/Inventory",
       },
       {

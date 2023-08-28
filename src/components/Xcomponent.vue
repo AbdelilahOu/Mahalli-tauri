@@ -17,7 +17,7 @@ import { SellerUpdate } from "./SellerUpdate";
 import { ClientDelete } from "./ClientDelete";
 import { ClientUpdate } from "./ClientUpdate";
 import { ClientCreate } from "./ClientCreate";
-import { StockCreate } from "./StockCreate";
+import { InventoryCreate } from "./InventoryCreate";
 import { PaymentCreate } from "./PaymentCreate";
 import { PaymentDelete } from "./PaymentDelete";
 import { CsvUploader } from "./CsvUploader";
@@ -39,7 +39,7 @@ export default {
     ClientDelete,
     ClientUpdate,
     ClientCreate,
-    StockCreate,
+    InventoryCreate,
     PaymentCreate,
     PaymentDelete,
     CsvUploader,

@@ -34,7 +34,7 @@ export const RouteLinks: RouteLinksTypeT[] = [
   {
     path: "/Inventory",
     component: "Inventory",
-    name: "Stock",
+    name: "Inventory",
     display: true,
   },
   {

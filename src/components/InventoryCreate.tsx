@@ -1,15 +1,15 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { useProductStore } from "@/stores/productStore";
 import { useModalStore } from "@/stores/modalStore";
-import { useStockStore } from "@/stores/InventoryStore";
+import { useInventoryStore } from "@/stores/InventoryStore";
 import { defineComponent, reactive } from "vue";
 import { UiButton } from "./ui/UiButton";
 import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import { storeToRefs } from "pinia";
 
-export const StockCreate = defineComponent({
-  name: "StockCreate",
+export const InventoryCreate = defineComponent({
+  name: "InventoryCreate",
   components: { UiButton, UiInput, UiSelect },
   setup() {
     const { products } = storeToRefs(useProductStore());
@@ -18,9 +18,9 @@ export const StockCreate = defineComponent({
       quantity: 0,
       model: "IN",
     });
-    const createNewStock = () => {
+    const createNewInventory = () => {
       if (inventoryMvm.productId !== 0 && inventoryMvm.quantity !== 0) {
-        useStockStore().createStockMouvement(inventoryMvm);
+        useInventoryStore().createInventoryMouvement(inventoryMvm);
         useModalStore().updateModal({ key: "show", value: false });
       }
     };
@@ -47,7 +47,7 @@ export const StockCreate = defineComponent({
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => createNewStock()}>
+          <UiButton colorTheme="a" Click={() => createNewInventory()}>
             {globalTranslate("Inventory.create.button")}
           </UiButton>
         </div>
