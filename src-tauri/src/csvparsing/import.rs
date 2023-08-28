@@ -67,6 +67,13 @@ pub fn get_csv_records(csv_path: String, table: Option<String>) -> Result<TableR
                         return Err(e);
                     }
                 },
+                "inventory_mouvements" => match read_csv::<InventoryMouvementRecord>(csv_path) {
+                    Ok(r) => TableRecord::InventoryMouvement(r),
+                    Err(e) => {
+                        println!("{:?}", e);
+                        return Err(e);
+                    }
+                },
                 _ => return Err(String::from("This table doesn't exist")),
             };
             Ok(records)

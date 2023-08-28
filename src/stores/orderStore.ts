@@ -1,8 +1,8 @@
-import { orderDetailsJoins, ordersJoins } from "@/database/dbQueryJson";
-import type { orderState, newOrdersT, updateOrdersT } from "@/types";
+import type { orderState, updateOrdersT, newOrdersT, orderT } from "@/types";
+import { invoke } from "@tauri-apps/api";
 import { defineStore } from "pinia";
 
-export const useOrdersStore = defineStore("OrdersStore", {
+export const useOrdersStore = defineStore("OrderStore", {
   state: (): orderState => {
     return {
       orders: [],
@@ -10,38 +10,48 @@ export const useOrdersStore = defineStore("OrdersStore", {
     };
   },
   actions: {
-    getAllOrders: async function () {
+    getAllOrders: async function (page: number = 1) {
       try {
+        this.orders = await invoke("get_orders", { page });
       } catch (error) {
         console.log(error);
       }
     },
-    getOneOrders: async function (id: number) {
+    getOneOrder: async function (id: number) {
       try {
+        this.order = await invoke("get_order", { id });
       } catch (error) {
         console.log(error);
       }
     },
-    createOneOrders: async function (Orders: newOrdersT) {
+    createOneOrder: async function (order: newOrdersT) {
       try {
+        const insertedOrder = await invoke<orderT>("insert_order", {
+          order,
+        });
+        this.orders.unshift(insertedOrder);
       } catch (error) {
         console.log(error);
       }
     },
-    updateOneOrders: async function (id: number, Orders: updateOrdersT) {
+    updateOneOrder: async function (id: number, order: updateOrdersT) {
       try {
+        await invoke("update_order", { order, id });
       } catch (error) {
         console.log(error);
       }
     },
-    deleteOneOrders: async function (id: number) {
+    deleteOneOrder: async function (id: number) {
       try {
+        await invoke("delete_order", { id });
+        this.orders = this.orders.filter((order) => order.id !== id);
       } catch (error) {
         console.log(error);
       }
     },
-    deleteOneOrdersItem: async function (id: number) {
+    deleteOneOrderItem: async function (id: number) {
       try {
+        await invoke("delete_order_items", { id });
       } catch (error) {
         console.log(error);
       }

@@ -86,7 +86,7 @@ export const InvoiceDetails = defineComponent({
                     </td>
                     <td class="p-2">
                       <span class="h-full w-full grid">
-                        {invoice.value?.client.name}
+                        {invoice.value?.client.fullname}
                       </span>
                     </td>
                   </tr>
@@ -139,7 +139,7 @@ export const InvoiceDetails = defineComponent({
                 <thead class="text-xs h-9 rounded-md font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
                   <tr>
                     <th></th>
-                    {[0, 1, 2, 3, 4, 5, 6, 7].map((index) => (
+                    {[0, 1, 2, 3, 4, 5, 6].map((index) => (
                       <th class="p-2">
                         <div class="font-semibold text-left">
                           {globalTranslate(
@@ -161,11 +161,6 @@ export const InvoiceDetails = defineComponent({
                         <span class="h-full w-full grid">
                           {item.product.name}
                         </span>
-                      </td>
-                      <td class="p-2">
-                        <div class="font-medium text-gray-800">
-                          {item.product_id}
-                        </div>
                       </td>
                       <td class="p-2">
                         <div class="font-medium text-gray-800 max-w-[120px] overflow-hidden">
@@ -206,7 +201,7 @@ export const InvoiceDetails = defineComponent({
                     </tr>
                   ))}
                   <tr>
-                    {Array(7)
+                    {Array(6)
                       .fill(0)
                       .map(() => (
                         <td></td>
@@ -236,7 +231,7 @@ export const InvoiceDetails = defineComponent({
                     </td>
                   </tr>
                   <tr>
-                    {Array(8)
+                    {Array(7)
                       .fill(0)
                       .map(() => (
                         <td></td>
