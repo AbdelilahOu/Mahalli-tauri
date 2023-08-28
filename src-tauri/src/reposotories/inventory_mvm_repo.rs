@@ -1,9 +1,7 @@
 use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
-use crate::models::{
-    InventoryMvm, InvoiceItem, NewInventoryMvm, OrderItem, Product, UpdateInventoryMvm,
-};
+use crate::models::{InventoryMvm, NewInventoryMvm, Product, UpdateInventoryMvm};
 use crate::schema::{inventory_mouvements, invoice_items, order_items, products};
 
 pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
@@ -11,71 +9,60 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value>
 
     let result = inventory_mouvements::table
         .inner_join(products::table.on(inventory_mouvements::product_id.eq(products::id)))
-        .select((inventory_mouvements::all_columns, products::all_columns))
+        // .inner_join(order_items::table.on(inventory_mouvements::id.eq(order_items::inventory_id)))
+        // .inner_join(
+        //     invoice_items::table.on(inventory_mouvements::id.eq(invoice_items::inventory_id)),
+        // )
+        .select((
+            inventory_mouvements::all_columns,
+            products::all_columns,
+            // order_items::all_columns,
+            // invoice_items::all_columns,
+        ))
         .order(inventory_mouvements::id.desc())
         .limit(17)
         .offset(offset as i64)
         .load::<(InventoryMvm, Product)>(connection)
+        // .load::<(InventoryMvm, Product, OrderItem, InvoiceItem)>(connection)
         .expect("Error fetching invoices with clients");
 
     result
         .into_iter()
+        // .map(|(mvm, product, oi, ii)| {
         .map(|(mvm, product)| {
-            let invoice_items = invoice_items::dsl::invoice_items
+            let invoice_items: Vec<i32> = invoice_items::dsl::invoice_items
                 .filter(invoice_items::inventory_id.eq(mvm.id))
-                .load::<InvoiceItem>(connection)
+                .select(invoice_items::invoice_id)
+                .load::<i32>(connection)
                 .expect("Error fetching all invoices");
 
-            let order_items = order_items::dsl::order_items
+            let order_items: Vec<(i32, Option<f32>)> = order_items::dsl::order_items
                 .filter(order_items::inventory_id.eq(mvm.id))
-                .load::<OrderItem>(connection)
+                .select((order_items::order_id, order_items::price))
+                .load::<(i32, Option<f32>)>(connection)
                 .expect("Error fetching all orders");
 
-            let mut final_result = Vec::<Value>::new();
+            let ii = invoice_items.first();
+            let oi = order_items.first();
 
-            for oi in order_items {
-                final_result.push(json!({
-                    "id": mvm.id,
-                    "date": mvm.date,
-                    "model": mvm.model,
-                    "quantity": mvm.quantity,
-                    "orderItem": json!({
-                        "order_id": oi.order_id,
-                        "price": oi.price
-                    }),
-                    "invoiceItem": json!({
-                        "invoice_id": 0
-                    }),
-                    "product_id": mvm.product_id,
-                    "product": json!({
-                        "name": product.name,
-                        "price": product.price
-                    })
-                }));
-            }
-
-            for ii in invoice_items {
-                final_result.push(json!({
-                    "id": mvm.id,
-                    "date": mvm.date,
-                    "model": mvm.model,
-                    "quantity": mvm.quantity,
-                    "orderItem": json!({
-                        "order_id": 0,
-                        "price": 0
-                    }),
-                    "invoiceItem": json!({
-                        "invoice_id": ii.invoice_id
-                    }),
-                    "product_id": mvm.product_id,
-                    "product": json!({
-                        "name": product.name,
-                        "price": product.price
-                    })
-                }));
-            }
-
-            final_result.into()
+            json!({
+                "id": mvm.id,
+                "date": mvm.date,
+                "model": mvm.model,
+                "quantity": mvm.quantity,
+                "orderItem": json!({
+                    "order_id": if oi.is_some() { oi.unwrap().0 } else { 0 },
+                    "price": if oi.is_some() { oi.unwrap().1.unwrap_or(0.0) } else { 0.0 }
+                }),
+                "invoiceItem": json!({
+                    "invoice_id": if ii.is_some() { ii.unwrap() } else { &0 },
+            }),
+                "product_id": mvm.product_id,
+                "product": json!({
+                    "name": product.name,
+                    "price": product.price
+                })
+            })
         })
         .collect::<Vec<Value>>()
 }
