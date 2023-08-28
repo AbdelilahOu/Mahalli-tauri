@@ -566,7 +566,7 @@ pub fn delete_invoice_items(id: i32, state: tauri::State<AppState>) -> usize {
 // }
 
 #[tauri::command]
-pub fn get_inventory_mvm(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
+pub fn get_inventory_mvms(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
     // get connection from state
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
