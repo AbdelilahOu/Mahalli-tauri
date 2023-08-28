@@ -228,7 +228,7 @@
       "no": "يلغي"
     }
   },
-  "Stocks": {
+  "Inventory": {
     "index": {
       "addButton": "إضافة إلى الأسهم",
       "feilds": [

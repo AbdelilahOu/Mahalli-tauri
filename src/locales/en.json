@@ -52,7 +52,7 @@
         "description",
         "price",
         "TVA",
-        "stock",
+        "inventory",
         "action"
       ],
       "types": ["Product", "Service"]
@@ -146,11 +146,9 @@
         "title": "order items details",
         "fields": [
           "name",
-          "id",
           "description",
           "quantity",
           "price",
-          "type",
           "total"
         ]
       },
@@ -176,7 +174,6 @@
         "title": "invoice items details",
         "fields": [
           "name",
-          "id",
           "description",
           "quantity",
           "price",
@@ -230,7 +227,7 @@
       "no": "Cancel"
     }
   },
-  "Stocks": {
+  "Inventory": {
     "index": {
       "addButton": "Add to Stock",
       "feilds": [
@@ -245,7 +242,7 @@
       ]
     },
     "create": {
-      "title": "add items to stock",
+      "title": "add items to inventory",
       "select": "Select a product",
       "placeholder": "Quantity",
       "button": "Add"
