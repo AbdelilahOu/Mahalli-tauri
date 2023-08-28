@@ -91,7 +91,7 @@ export const ClientDetails = defineComponent({
               {{
                 default: () => (
                   <ChartBar
-                    id="stock-mouvements-for-past-three-months"
+                    id="inventory-mouvements-for-past-three-months"
                     chartData={{
                       labels: ProductsStats.dates,
                       datasets: ProductsStats.products.map((product) => {
