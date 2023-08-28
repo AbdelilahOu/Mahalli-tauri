@@ -67,7 +67,7 @@ fn main() {
             cmd::get_invoice_items,
             // cmd::update_invoice_items,
             cmd::delete_invoice_items,
-            cmd::get_inventory_mvm,
+            cmd::get_inventory_mvms,
             cmd::delete_inventory_mvm,
             // cmd::update_inventory_mvm,
             cmd::get_b3_clients,
