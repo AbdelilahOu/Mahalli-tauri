@@ -74,7 +74,7 @@ export const ProductUpdate = defineComponent({
               (updateProduct["quantity"] = Number(value))
             }
             Type="number"
-            PlaceHolder="Add Stock"
+            PlaceHolder="Add Inventory"
           >
             {{
               unite: () => (

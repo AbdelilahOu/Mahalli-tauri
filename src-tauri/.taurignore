@@ -2,4 +2,4 @@ db.sqlite
 data
 data/
 /data/
-stocker.db
+stocker.sqlite

@@ -30,7 +30,7 @@ export const SideBar = defineComponent({
             >
               {!props.IsCollapse && (
                 <span class="whitespace-nowrap pl-2 text-gray-800 overflow-hidden">
-                  The Stocker
+                  The Inventoryer
                 </span>
               )}
               <span

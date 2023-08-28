@@ -1,15 +1,7 @@
-import {
-  clientDailyExpenses,
-  sellerDailyExpenses,
-  clientDetailsJoins,
-  sellerDetailsJoins,
-  bestThreeClients,
-  bestThreeSellers,
-  inOutStatsJoins,
-} from "@/database/dbQueryJson";
-import type { FilteredStockData } from "@/types";
+import type { FilteredInventoryData } from "@/types";
 import { defineStore } from "pinia";
 import _ from "lodash";
+import { invoke } from "@tauri-apps/api";
 
 type inOutReType = {
   group_month: string;
@@ -19,11 +11,11 @@ type inOutReType = {
 
 export const useStatsStore = defineStore("StatsStore", {
   actions: {
-    getStockMouvementStats: async function () {
+    getInventoryMouvementStats: async function () {
       const results = new Map<string, { IN: number; OUT: number }>();
       const months = new Set<string>();
       //
-      const Rows: inOutReType = await this.db.select(inOutStatsJoins);
+      const Rows: inOutReType = await invoke("get_inventory_stats");
       //
       for (const { group_month, total_in: IN, total_out: OUT } of Rows) {
         const month = new Date(group_month).toLocaleDateString("fr-fr", {
@@ -34,14 +26,14 @@ export const useStatsStore = defineStore("StatsStore", {
       }
       return {
         // @ts-ignore
-        result: Object.fromEntries(results) as FilteredStockData,
+        result: Object.fromEntries(results) as FilteredInventoryData,
         months: Array.from(months),
       };
     },
     getProductPerMonth: async function (id: number, isClient = true) {
-      const data: any[] = await this.db.select(
-        isClient ? clientDetailsJoins : sellerDetailsJoins,
-        [id]
+      const data: any[] = await invoke(
+        isClient ? "get_c_product_month" : "get_s_product_month",
+        { id }
       );
 
       const existingDates = _.keys(_.groupBy(data, "month"));
@@ -65,8 +57,8 @@ export const useStatsStore = defineStore("StatsStore", {
       };
     },
     getBestThree: async function (isClients = true) {
-      const data: { name: string; amount: number }[] = await this.db.select(
-        isClients ? bestThreeClients : bestThreeSellers
+      const data: { name: string; amount: number }[] = await invoke(
+        isClients ? "get_b3_clients" : "get_b3_sellers"
       );
       //
       const result = _.mapValues(_.groupBy(data, "name"), (value) =>
@@ -76,9 +68,8 @@ export const useStatsStore = defineStore("StatsStore", {
       return { names: _.keys(result), result: _.values(result) };
     },
     getDailyExpenses: async function (id: number, isClient = true) {
-      const result: { day: string; expense: number }[] = await this.db.select(
-        isClient ? clientDailyExpenses : sellerDailyExpenses,
-        [id, new Date(new Date().setDate(new Date().getDate() - 7))]
+      const result: { day: string; expense: number }[] = await invoke(
+        isClient ? "get_c_week_expenses" : "get_s_week_expenses"
       );
       // date related
       const nextDay = new Date().getDay() == 6 ? 0 : new Date().getDay() + 1;

@@ -17,7 +17,7 @@ pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Vec<Product
             products::price,
             products::tva,
             diesel::dsl::sql::<diesel::sql_types::BigInt>(
-                "COALESCE(SUM(stock_mouvements.quantity), 0) AS quantity",
+                "COALESCE(SUM(inventory_mouvements.quantity), 0) AS quantity",
             ),
         ))
         .group_by(products::id)

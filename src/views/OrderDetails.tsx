@@ -14,7 +14,7 @@ export const OrdersDetails = defineComponent({
 
     const { order } = storeToRefs(orderStore);
 
-    onBeforeMount(() => orderStore.getOneOrders(Number(id)));
+    onBeforeMount(() => orderStore.getOneOrder(Number(id)));
 
     return () => (
       <main class="w-full h-full px-3">
@@ -150,7 +150,7 @@ export const OrdersDetails = defineComponent({
                 <thead class="text-xs h-9 rounded-md font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
                   <tr>
                     <th></th>
-                    {[0, 1, 2, 3, 4, 6].map((index) => (
+                    {[0, 1, 2, 3, 4].map((index) => (
                       <th class="p-2">
                         <div class="font-semibold text-left">
                           {globalTranslate(
@@ -172,11 +172,6 @@ export const OrdersDetails = defineComponent({
                         <span class="h-full w-full grid">
                           {item.product.name}
                         </span>
-                      </td>
-                      <td class="p-2">
-                        <div class="font-medium text-gray-800">
-                          {item.product_id}
-                        </div>
                       </td>
                       <td class="p-2">
                         <div class="font-medium text-gray-800 max-w-[120px] overflow-hidden">
@@ -209,7 +204,6 @@ export const OrdersDetails = defineComponent({
                     </tr>
                   ))}
                   <tr>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

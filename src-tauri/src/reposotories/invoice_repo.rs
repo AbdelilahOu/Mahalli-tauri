@@ -26,8 +26,11 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> 
                 .load::<(InvoiceItem, Product)>(connection)
                 .expect("Error fetching invoice items with products");
 
+            let mut total = 0;
+
             let invoice_items_json = json!({
                 "invoiceItems": invoice_items.into_iter().map(|(item, product)| {
+                    total += item.quantity * product.price as i64;
                     json!({
                         "id": item.id,
                         "quantity": item.quantity,
@@ -47,6 +50,7 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> 
                 "status": invoice.status,
                 "created_at": invoice.created_at,
                 "client_id": invoice.client_id,
+                "total": total,
                 "client": {
                     "id": client.id,
                     "fullname": client.fullname
@@ -65,46 +69,35 @@ pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
         .load::<(Invoice, Client)>(connection)
         .expect("Error fetching invoices with clients");
 
-    result
-        .into_iter()
-        .map(|(invoice, client)| {
-            let invoice_items: Vec<(InvoiceItem, Product)> = invoice_items::table
-                .inner_join(products::table.on(invoice_items::product_id.eq(products::id)))
-                .select((invoice_items::all_columns, products::all_columns))
-                .filter(invoice_items::invoice_id.eq(invoice.id))
-                .load::<(InvoiceItem, Product)>(connection)
-                .expect("Error fetching invoice items with products");
+    let (invoice, client) = result.first().unwrap();
 
-            println!("{:?}", invoice_items);
-            let invoice_items_json = json!({
-                "invoiceItems": invoice_items.into_iter().map(|(item, product)| {
-                    json!({
-                        "id": item.id,
-                        "quantity": item.quantity,
-                        "product_id": item.product_id,
-                        "inventory_id": item.inventory_id,
-                        "product": {
-                            "id": product.id,
-                            "name": product.name,
-                            "price": product.price
-                        }
-                    })
-                }).collect::<Vec<_>>()
-            });
+    let invoice_items: Vec<(InvoiceItem, Product)> = invoice_items::table
+        .inner_join(products::table.on(invoice_items::product_id.eq(products::id)))
+        .select((invoice_items::all_columns, products::all_columns))
+        .filter(invoice_items::invoice_id.eq(invoice.id))
+        .load::<(InvoiceItem, Product)>(connection)
+        .expect("Error fetching invoice items with products");
 
+    let invoice_items_json = json!({
+        "invoiceItems": invoice_items.into_iter().map(|(item, product)| {
             json!({
-                "id": invoice.id,
-                "status": invoice.status,
-                "created_at": invoice.created_at,
-                "client_id": invoice.client_id,
-                "client": {
-                    "id": client.id,
-                    "fullname": client.fullname
-                },
-                "invoiceItems": invoice_items_json["invoiceItems"]
+                "id": item.id,
+                "quantity": item.quantity,
+                "product_id": item.product_id,
+                "inventory_id": item.inventory_id,
+                "product": product
             })
-        })
-        .collect::<Value>()
+        }).collect::<Vec<_>>()
+    });
+
+    json!({
+        "id": invoice.id,
+        "status": invoice.status,
+        "created_at": invoice.created_at,
+        "client_id": invoice.client_id,
+        "client": client,
+        "invoiceItems": invoice_items_json["invoiceItems"]
+    })
 }
 
 pub fn insert_invoice(new_i: NewInvoice, connection: &mut SqliteConnection) -> i32 {

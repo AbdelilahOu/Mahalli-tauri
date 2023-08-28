@@ -228,7 +228,7 @@
       "no": "يلغي"
     }
   },
-  "Stocks": {
+  "Inventory": {
     "index": {
       "addButton": "إضافة إلى الأسهم",
       "feilds": [
@@ -286,7 +286,7 @@
       "Products": "منتجات",
       "Orders": "الأوامر",
       "Invoices": "فواتير",
-      "Stock": "مخزون",
+      "Inventory": "مخزون",
       "Statistics": "إحصائيات",
       "Payment": "ائتمان"
     },
