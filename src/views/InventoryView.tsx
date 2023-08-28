@@ -2,14 +2,14 @@ import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { StockTable } from "@/components/StockTable";
 import { useModalStore } from "@/stores/modalStore";
-import { useStockStore } from "@/stores/stockStore";
+import { useStockStore } from "@/stores/InventoryStore";
 import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
 
-export const StocksView = defineComponent({
-  name: "Stocks",
+export const InventoryView = defineComponent({
+  name: "Inventory",
   components: {
     StockTable,
     UiButton,
@@ -19,13 +19,13 @@ export const StocksView = defineComponent({
   setup() {
     //
     const modalStore = useModalStore();
-    const stockStore = useStockStore();
-    const { stockMouvements } = storeToRefs(stockStore);
+    const inventoryStore = useStockStore();
+    const { inventoryMouvements } = storeToRefs(inventoryStore);
 
     const searchQuery = ref<string>("");
 
     onBeforeMount(() => {
-      stockStore.getAllStockMouvements();
+      inventoryStore.getAllStockMouvements();
     });
 
     const updateModal = (name: string) => {
@@ -64,7 +64,7 @@ export const StocksView = defineComponent({
                     class=" fill-gray-900 cursor-default hover:bg-transparent"
                     name="add"
                   />{" "}
-                  {globalTranslate("Stocks.index.addButton")}
+                  {globalTranslate("Inventory.index.addButton")}
                 </UiButton>
               </div>
             </div>
@@ -73,7 +73,7 @@ export const StocksView = defineComponent({
           <Transition appear>
             <StockTable
               FilterParam={searchQuery.value}
-              Stock={stockMouvements.value}
+              Stock={inventoryMouvements.value}
             />
           </Transition>
         </div>

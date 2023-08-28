@@ -55,7 +55,7 @@ export const StatsView = defineComponent({
               {{
                 default: () => (
                   <ChartBar
-                    id="stock-mouvements-for-past-three-months"
+                    id="inventory-mouvements-for-past-three-months"
                     chartData={{
                       labels: InsOuts.months,
                       datasets: InsOuts.keys.map((model) => {
