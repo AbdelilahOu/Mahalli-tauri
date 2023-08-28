@@ -61,7 +61,7 @@
         "description",
         "prix",
         "Tva",
-        "stock",
+        "inventory",
         "action"
       ],
       "types": ["Produit", "Service"]
@@ -247,9 +247,9 @@
       "no": "Annuler"
     }
   },
-  "Stocks": {
+  "Inventory": {
     "index": {
-      "addButton": "Ajouter au stock",
+      "addButton": "Ajouter au inventory",
       "feilds": [
         "identifiant",
         "nom de produit",
@@ -262,7 +262,7 @@
       ]
     },
     "create": {
-      "title": "Ajouter des articles au stock",
+      "title": "Ajouter des articles au inventory",
       "select": "choisissez un produit",
       "placeholder": "Quantité",
       "button": "Ajouter"
