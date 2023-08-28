@@ -15,7 +15,7 @@ import { SellersView } from "@/views/SellersView";
 import { ClientsView } from "@/views/ClientsView";
 import { PaymentView } from "@/views/PaymentView";
 import { OrdersView } from "@/views/OrdersView";
-import { StocksView } from "@/views/StocksView";
+import { InventoryView } from "@/views/InventoryView";
 import { StatsView } from "@/views/StatsView";
 import { HomeView } from "@/views/HomeView";
 import { IndexView } from "@/views/IndexView";
@@ -74,9 +74,9 @@ const router = createRouter({
           ],
         },
         {
-          path: "Stocks",
-          name: "Stocks",
-          component: StocksView,
+          path: "Inventory",
+          name: "Inventory",
+          component: InventoryView,
         },
         {
           path: "Orders/",

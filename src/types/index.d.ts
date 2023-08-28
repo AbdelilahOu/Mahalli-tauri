@@ -177,9 +177,15 @@ export interface updateClientT extends Partial<clientT> {
 /////////////////////////////////////////////////
 //////////////////// seller INTERFACES //////////
 ////////////////////////////////////////////////
-export interface sellerT extends clientT {}
-export interface newSellerT extends newClientT {}
-export interface updateSellerT extends updateClientT {}
+export interface sellerT extends Omit<clientT, "fullname"> {
+  name: string;
+}
+export interface newSellerT extends Omit<newClientT, "fullname"> {
+  name: string;
+}
+export interface updateSellerT extends Omit<updateClientT, "fullname"> {
+  name: string;
+}
 ////////////////////////////////////////////////////
 //////////////// STOCKMOUVMENTS INTERFACES /////////
 ///////////////////////////////////////////////////
