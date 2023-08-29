@@ -556,15 +556,6 @@ pub fn delete_invoice_items(id: i32, state: tauri::State<AppState>) -> usize {
     result
 }
 
-// #[tauri::command]
-// pub fn update_invoice_items(invoice: InvoiceItem, id: i32, state: tauri::State<AppState>) -> usize {
-//     // get connection from state
-//     let mut conn = state.db_conn.lock().unwrap();
-//     let conn = &mut *conn;
-//     let result = invoice_item_repo::update_invoice_item(invoice, id, conn);
-//     result
-// }
-
 #[tauri::command]
 pub fn get_inventory_mvms(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
     // get connection from state
@@ -583,14 +574,7 @@ pub fn delete_inventory_mvm(id: i32, state: tauri::State<AppState>) -> usize {
     result
 }
 
-// #[tauri::command]
-// pub fn update_inventory_mvm(mvm: InventoryMvm, id: i32, state: tauri::State<AppState>) -> usize {
-//     // get connection from state
-//     let mut conn = state.db_conn.lock().unwrap();
-//     let conn = &mut *conn;
-//     let result = inventory_mvm_repo::update_inventory_mvm(mvm, id, conn);
-//     result
-// }
+
 
 #[tauri::command]
 pub fn get_b3_sellers(state: tauri::State<AppState>) -> Vec<Value> {
