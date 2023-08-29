@@ -1,7 +1,4 @@
-use super::schema::{
-    clients, inventory_mouvements, invoice_items, invoices, order_items, orders, products, sellers,
-    users,
-};
+use super::schema::*;
 use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
 
