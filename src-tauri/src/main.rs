@@ -3,10 +3,6 @@
     windows_subsystem = "windows"
 )]
 
-use db::establish_connection;
-use diesel::SqliteConnection;
-use std::sync::Mutex;
-
 #[macro_use]
 extern crate diesel;
 extern crate diesel_migrations;
@@ -19,6 +15,10 @@ mod models;
 mod reposotories;
 mod schema;
 mod types;
+
+use db::establish_connection;
+use diesel::SqliteConnection;
+use std::sync::Mutex;
 
 pub struct AppState {
     db_conn: Mutex<SqliteConnection>,
