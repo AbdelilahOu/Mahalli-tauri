@@ -1,6 +1,9 @@
 use crate::diesel::prelude::*;
-use crate::models::{InvoiceItem, NewInvoiceItem, UpdateInvoiceItem};
-use crate::schema::{invoice_items, invoices};
+use crate::models:: UpdateInvoiceItem;
+use crate::models::NewInvoiceItem;
+use crate::models::InvoiceItem;
+use crate::schema::invoices;
+use crate::schema::invoice_items;
 
 pub fn get_invoice_items(page: i32, connection: &mut SqliteConnection) -> Vec<InvoiceItem> {
     let offset = (page - 1) * 17;

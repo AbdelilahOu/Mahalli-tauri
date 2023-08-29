@@ -1,8 +1,14 @@
 use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
-use crate::models::{InventoryMvm, NewInventoryMvm, Product, UpdateInventoryMvm};
-use crate::schema::{inventory_mouvements, invoice_items, order_items, products};
+use crate::models::InventoryMvm;
+use crate::models::NewInventoryMvm;
+use crate::models::Product;
+use crate::models::UpdateInventoryMvm;
+use crate::schema::inventory_mouvements;
+use crate::schema::invoice_items;
+use crate::schema::order_items;
+use crate::schema::products;
 
 pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
     let offset = (page - 1) * 17;
