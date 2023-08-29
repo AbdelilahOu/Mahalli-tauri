@@ -1,5 +1,6 @@
 use crate::diesel::prelude::*;
-use crate::models::{Client, NewClient};
+use crate::models::Client;
+use crate::models::NewClient;
 use crate::schema::clients;
 
 pub fn get_clients(page: i32, connection: &mut SqliteConnection) -> Vec<Client> {
