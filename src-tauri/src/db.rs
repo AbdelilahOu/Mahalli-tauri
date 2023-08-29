@@ -142,10 +142,6 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                 TableRecord::InventoryMouvement(inventory_records) => {
                     for inventory in inventory_records {
                         reposotories::inventory_mvm_repo::insert_inventory_mvm(
-                            /*
-                            TODO
-                             -> need inventory image
-                            */
                             NewInventoryMvm {
                                 model: inventory.model,
                                 product_id: inventory.product_id,
