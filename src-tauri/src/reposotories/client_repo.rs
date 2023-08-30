@@ -2,11 +2,7 @@ use crate::diesel::prelude::*;
 use crate::models::Client;
 use crate::models::NewClient;
 use crate::schema::clients;
-use crate::schema::clients::address;
-use crate::schema::clients::email;
-use crate::schema::clients::fullname;
-use crate::schema::clients::image;
-use crate::schema::clients::phone;
+use crate::schema::clients::*;
 
 pub fn get_clients(page: i32, connection: &mut SqliteConnection) -> Vec<Client> {
     let offset = (page - 1) * 17;
