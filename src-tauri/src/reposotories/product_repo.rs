@@ -1,5 +1,6 @@
 use crate::diesel::prelude::*;
 use crate::models::{NewProduct, Product, ProductWithQuantity};
+use crate::schema::products::{description, name, price, tva};
 use crate::schema::{inventory_mouvements, products};
 
 pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Vec<ProductWithQuantity> {
@@ -40,7 +41,12 @@ pub fn get_product(p_id: i32, connection: &mut SqliteConnection) -> Product {
 }
 pub fn insert_product(new_p: NewProduct, connection: &mut SqliteConnection) -> usize {
     let result = diesel::insert_into(products::dsl::products)
-        .values(new_p)
+        .values((
+            description.eq(new_p.description),
+            name.eq(new_p.name),
+            price.eq(new_p.price),
+            tva.eq(new_p.tva),
+        ))
         .execute(connection)
         .expect("Expect add articles");
 
