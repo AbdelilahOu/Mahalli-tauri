@@ -14,6 +14,7 @@ export const useClientStore = defineStore("ClientStore", {
     getAllClients: async function () {
       try {
         this.clients = await invoke("get_clients", { page: 1 });
+        console.log(this.clients);
       } catch (error) {
         console.log(error);
       }
