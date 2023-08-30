@@ -47,9 +47,10 @@ pub struct Client {
 #[diesel(table_name = clients)]
 pub struct NewClient {
     pub fullname: String,
-    pub image: String,
-    pub address: String,
+    pub email: String,
     pub phone: String,
+    pub address: String,
+    pub image: String,
 }
 
 #[derive(Debug, Queryable, Clone, QueryableByName, Serialize, Deserialize, AsChangeset)]
