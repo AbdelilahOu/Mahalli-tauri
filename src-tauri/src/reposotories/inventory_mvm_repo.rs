@@ -6,6 +6,9 @@ use crate::models::NewInventoryMvm;
 use crate::models::Product;
 use crate::models::UpdateInventoryMvm;
 use crate::schema::inventory_mouvements;
+use crate::schema::inventory_mouvements::model;
+use crate::schema::inventory_mouvements::product_id;
+use crate::schema::inventory_mouvements::quantity;
 use crate::schema::invoice_items;
 use crate::schema::order_items;
 use crate::schema::products;
@@ -65,7 +68,11 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Vec<Value>
 
 pub fn insert_inventory_mvm(new_im: NewInventoryMvm, connection: &mut SqliteConnection) -> i32 {
     diesel::insert_into(inventory_mouvements::dsl::inventory_mouvements)
-        .values(new_im)
+        .values((
+            model.eq(new_im.model),
+            quantity.eq(new_im.quantity),
+            product_id.eq(new_im.product_id),
+        ))
         .execute(connection)
         .expect("Error adding inventory");
 
