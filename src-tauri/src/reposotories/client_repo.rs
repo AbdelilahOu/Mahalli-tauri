@@ -2,6 +2,11 @@ use crate::diesel::prelude::*;
 use crate::models::Client;
 use crate::models::NewClient;
 use crate::schema::clients;
+use crate::schema::clients::address;
+use crate::schema::clients::email;
+use crate::schema::clients::fullname;
+use crate::schema::clients::image;
+use crate::schema::clients::phone;
 
 pub fn get_clients(page: i32, connection: &mut SqliteConnection) -> Vec<Client> {
     let offset = (page - 1) * 17;
@@ -27,7 +32,13 @@ pub fn get_client(c_id: i32, connection: &mut SqliteConnection) -> Client {
 pub fn insert_client(new_c: NewClient, connection: &mut SqliteConnection) -> Client {
     // insert
     diesel::insert_into(clients::dsl::clients)
-        .values(new_c)
+        .values((
+            fullname.eq(new_c.fullname),
+            phone.eq(new_c.phone),
+            email.eq(new_c.email),
+            address.eq(new_c.address),
+            image.eq(new_c.image),
+        ))
         .execute(connection)
         .expect("Expect add client");
     // select last inserted row
