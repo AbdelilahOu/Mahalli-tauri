@@ -1,6 +1,6 @@
 use crate::diesel::prelude::*;
 use crate::models::{NewSeller, Seller};
-use crate::schema::sellers;
+use crate::schema::sellers::{self, address, email, image, name, phone};
 
 pub fn get_sellers(page: i32, connection: &mut SqliteConnection) -> Vec<Seller> {
     let offset = (page - 1) * 17;
@@ -26,7 +26,13 @@ pub fn get_seller(s_id: i32, connection: &mut SqliteConnection) -> Seller {
 
 pub fn insert_seller(new_c: NewSeller, connection: &mut SqliteConnection) -> usize {
     let result = diesel::insert_into(sellers::dsl::sellers)
-        .values(new_c)
+        .values((
+            name.eq(new_c.name),
+            image.eq(new_c.image),
+            address.eq(new_c.address),
+            email.eq(new_c.email),
+            phone.eq(new_c.phone),
+        ))
         .execute(connection)
         .expect("Expect add seller");
 
