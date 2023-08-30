@@ -17,6 +17,7 @@ pub fn get_clients(page: i32, connection: &mut SqliteConnection) -> Vec<Client> 
         .offset(offset as i64)
         .load::<Client>(connection)
         .expect("error get all clients");
+
     result
 }
 
