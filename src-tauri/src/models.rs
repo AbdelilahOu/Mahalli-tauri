@@ -10,9 +10,9 @@ pub struct User {
     #[diesel(sql_type = Text)]
     pub username: String,
     #[diesel(sql_type = Text)]
-    pub email: String,
-    #[diesel(sql_type = Text)]
     pub password: String,
+    #[diesel(sql_type = Text)]
+    pub email: String,
     #[diesel(sql_type = Text)]
     pub role: String,
 }
@@ -34,13 +34,13 @@ pub struct Client {
     #[diesel(sql_type = Text)]
     pub fullname: String,
     #[diesel(sql_type = Text)]
-    pub email: String,
+    pub phone: String,
     #[diesel(sql_type = Text)]
-    pub image: String,
+    pub email: String,
     #[diesel(sql_type = Text)]
     pub address: String,
     #[diesel(sql_type = Text)]
-    pub phone: String,
+    pub image: String,
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]

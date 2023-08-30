@@ -462,7 +462,6 @@ pub fn delete_order_items(id: i32, state: tauri::State<AppState>) -> usize {
     result
 }
 
-
 #[tauri::command]
 pub fn get_invoice_items(id: i32, state: tauri::State<AppState>) -> Vec<InvoiceItem> {
     let mut conn = state.db_conn.lock().unwrap();
@@ -494,8 +493,6 @@ pub fn delete_inventory_mvm(id: i32, state: tauri::State<AppState>) -> usize {
     let result = inventory_mvm_repo::delete_inventory_mvm(id, conn);
     result
 }
-
-
 
 #[tauri::command]
 pub fn get_b3_sellers(state: tauri::State<AppState>) -> Vec<Value> {
