@@ -21,7 +21,7 @@ export const InvoiceCreate = defineComponent({
     const { clients } = storeToRefs(useClientStore());
     const newInvoice = reactive<newInvoiceT>({
       client_id: 0,
-      invoiceItems: [],
+      invoice_items: [],
       status: "",
     });
     const InvoiceItems = ref<newInvoiceItemT[]>([
@@ -32,10 +32,10 @@ export const InvoiceCreate = defineComponent({
     ]);
     const createNewInvoice = () => {
       isFlash.value = true;
-      newInvoice.invoiceItems = InvoiceItems.value.filter(
+      newInvoice.invoice_items = InvoiceItems.value.filter(
         (item) => item.product_id !== 0 && item.quantity !== 0
       );
-      if (newInvoice.client_id && newInvoice.invoiceItems.length !== 0) {
+      if (newInvoice.client_id && newInvoice.invoice_items.length !== 0) {
         useInvoiceStore().createOneInvoice(newInvoice);
         useModalStore().updateModal({ key: "show", value: false });
       }
@@ -55,7 +55,7 @@ export const InvoiceCreate = defineComponent({
             </h1>
             <UiSelect
               items={clients.value.map((client) => ({
-                name: client.name,
+                name: client.fullname,
                 id: client.id,
               }))}
               onSelect={(id: number) => (newInvoice.client_id = id)}

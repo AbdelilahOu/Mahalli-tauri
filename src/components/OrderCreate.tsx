@@ -22,7 +22,7 @@ export const OrderCreate = defineComponent({
     const newOrders = reactive<newOrdersT>({
       status: "",
       seller_id: undefined,
-      orderItems: [],
+      order_items: [],
     });
     const orderItems = ref<newOrdersItemT[]>([
       {
@@ -33,11 +33,11 @@ export const OrderCreate = defineComponent({
     ]);
     const createNewOrders = () => {
       isFlash.value = true;
-      newOrders.orderItems = orderItems.value.filter(
+      newOrders.order_items = orderItems.value.filter(
         (item) => item.product_id !== 0 && item.quantity !== 0
       );
-      if (newOrders.seller_id && newOrders.orderItems.length !== 0) {
-        useOrdersStore().createOneOrders(newOrders);
+      if (newOrders.seller_id && newOrders.order_items.length !== 0) {
+        useOrdersStore().createOneOrder(newOrders);
         useModalStore().updateModal({ key: "show", value: false });
       }
       setTimeout(() => {
