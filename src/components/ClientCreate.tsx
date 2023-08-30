@@ -16,8 +16,8 @@ export const ClientCreate = defineComponent({
     const isFlash = ref<boolean>(false);
     const Client = reactive<newClientT>({
       fullname: String(),
-      email: String(),
       phone: String(),
+      email: String(),
       address: String(),
       image: String(),
     });
