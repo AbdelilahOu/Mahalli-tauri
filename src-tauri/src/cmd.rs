@@ -9,10 +9,7 @@ use crate::csvparsing::import::TableRecord;
 use crate::db;
 use crate::models::*;
 use crate::reposotories::*;
-use crate::types::TNewInvoice;
-use crate::types::TNewOrder;
-use crate::types::TUpdateInvoice;
-use crate::types::TUpdateOrder;
+use crate::types::*;
 use crate::AppState;
 
 #[tauri::command]
