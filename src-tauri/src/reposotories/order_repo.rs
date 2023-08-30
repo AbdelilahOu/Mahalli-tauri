@@ -2,6 +2,7 @@ use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
 use crate::models::{NewOrder, Order, OrderItem, Product, Seller, UpdateOrder};
+use crate::schema::orders::{seller_id, status};
 use crate::schema::{order_items, orders, products, sellers};
 
 pub fn get_orders(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
@@ -100,7 +101,7 @@ pub fn get_order(o_id: i32, connection: &mut SqliteConnection) -> Value {
 
 pub fn insert_order(new_o: NewOrder, connection: &mut SqliteConnection) -> i32 {
     diesel::insert_into(orders::dsl::orders)
-        .values(new_o)
+        .values((status.eq(new_o.status), seller_id.eq(new_o.seller_id)))
         .execute(connection)
         .expect("Error adding order");
 
