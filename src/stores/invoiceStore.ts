@@ -18,7 +18,6 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
     getAllInvoices: async function (page: number = 1) {
       try {
         this.invoices = await invoke("get_invoices", { page });
-        console.log(await invoke("get_invoices", { page }));
       } catch (error) {
         console.log(error);
       }
@@ -32,10 +31,10 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
     },
     createOneInvoice: async function (invoice: newInvoiceT) {
       try {
-        const insertedInvoice = await invoke<invoiceT>("insert_invoice", {
+        await invoke<invoiceT>("insert_invoice", {
           invoice,
         });
-        this.invoices.unshift(insertedInvoice);
+        this.getAllInvoices();
       } catch (error) {
         console.log(error);
       }
