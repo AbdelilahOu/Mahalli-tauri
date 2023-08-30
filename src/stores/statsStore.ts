@@ -31,6 +31,7 @@ export const useStatsStore = defineStore("StatsStore", {
       };
     },
     getProductPerMonth: async function (id: number, isClient = true) {
+      console.log(id);
       const data: any[] = await invoke(
         isClient ? "get_c_product_month" : "get_s_product_month",
         { id }
@@ -69,7 +70,8 @@ export const useStatsStore = defineStore("StatsStore", {
     },
     getDailyExpenses: async function (id: number, isClient = true) {
       const result: { day: string; expense: number }[] = await invoke(
-        isClient ? "get_c_week_expenses" : "get_s_week_expenses"
+        isClient ? "get_c_week_expenses" : "get_s_week_expenses",
+        { id }
       );
       // date related
       const nextDay = new Date().getDay() == 6 ? 0 : new Date().getDay() + 1;
