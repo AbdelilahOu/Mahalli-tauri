@@ -26,10 +26,10 @@ export const useOrdersStore = defineStore("OrderStore", {
     },
     createOneOrder: async function (order: newOrdersT) {
       try {
-        const insertedOrder = await invoke<orderT>("insert_order", {
+        await invoke<orderT>("insert_order", {
           order,
         });
-        this.orders.unshift(insertedOrder);
+        this.getAllOrders();
       } catch (error) {
         console.log(error);
       }
