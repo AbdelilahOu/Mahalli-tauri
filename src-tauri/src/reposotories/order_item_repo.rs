@@ -1,5 +1,6 @@
 use crate::diesel::prelude::*;
 use crate::models::{NewOrderItem, OrderItem, UpdateOrderItem};
+use crate::schema::order_items::{inventory_id, order_id, price, product_id, quantity};
 use crate::schema::{order_items, orders};
 
 pub fn get_order_items(page: i32, connection: &mut SqliteConnection) -> Vec<OrderItem> {
@@ -17,7 +18,13 @@ pub fn get_order_items(page: i32, connection: &mut SqliteConnection) -> Vec<Orde
 
 pub fn insert_order_item(new_oi: NewOrderItem, connection: &mut SqliteConnection) -> usize {
     let result = diesel::insert_into(order_items::dsl::order_items)
-        .values(new_oi)
+        .values((
+            product_id.eq(new_oi.product_id),
+            order_id.eq(new_oi.order_id),
+            quantity.eq(new_oi.quantity),
+            price.eq(new_oi.price),
+            inventory_id.eq(new_oi.inventory_id),
+        ))
         .execute(connection)
         .expect("Error adding order");
 
