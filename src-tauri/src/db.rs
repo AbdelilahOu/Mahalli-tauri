@@ -100,6 +100,7 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                         reposotories::client_repo::insert_client(
                             NewClient {
                                 fullname: client.name,
+                                email: client.email,
                                 image: client.image,
                                 address: client.address,
                                 phone: client.phone,
