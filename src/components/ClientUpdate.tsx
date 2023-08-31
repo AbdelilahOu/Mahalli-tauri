@@ -38,7 +38,7 @@ export const ClientUpdate = defineComponent({
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
           <UiUpdateInput
-            Value={ClientRow.value?.["name"]}
+            Value={ClientRow.value?.["fullname"]}
             OnInputChange={(value) =>
               (updateClient["name"] =
                 typeof value == "string" ? value : JSON.stringify(value))
