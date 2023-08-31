@@ -36,7 +36,7 @@ export const UiSelect = defineComponent({
         </div>
         {isOpen.value ? (
           <Transition appear>
-            <div class="flex rounded-md scrollbar-thin bg-white scrollbar-thumb-transparent flex-col max-h-[105px] overflow-auto gap-[2px] w-full absolute z-50  mt-1">
+            <div class="flex rounded-md scrollbar-thin bg-white scrollbar-thumb-transparent flex-col max-h-[105px] overflow-auto gap-[2px] w-full absolute z-[999]  mt-1">
               {props.items.map((item) => (
                 <div
                   class="px-2 z-50 py-1 last:mb-1 hover:bg-gray-300 bg-gray-200"
