@@ -9,6 +9,11 @@ type inOutReType = {
   total_out: number;
 }[];
 
+const getWeekDay = (i: number) =>
+  new Date(2023, 4, i).toLocaleDateString("en-us", {
+    weekday: "short",
+  });
+
 export const useStatsStore = defineStore("StatsStore", {
   actions: {
     getInventoryMouvementStats: async function () {
@@ -18,7 +23,7 @@ export const useStatsStore = defineStore("StatsStore", {
       const Rows: inOutReType = await invoke("get_inventory_stats");
       //
       for (const { group_month, total_in: IN, total_out: OUT } of Rows) {
-        const month = new Date(group_month).toLocaleDateString("fr-fr", {
+        const month = new Date(group_month).toLocaleDateString("en-us", {
           month: "long",
         });
         months.add(month);
@@ -31,7 +36,6 @@ export const useStatsStore = defineStore("StatsStore", {
       };
     },
     getProductPerMonth: async function (id: number, isClient = true) {
-      console.log(id);
       const data: any[] = await invoke(
         isClient ? "get_c_product_month" : "get_s_product_month",
         { id }
@@ -73,17 +77,34 @@ export const useStatsStore = defineStore("StatsStore", {
         isClient ? "get_c_week_expenses" : "get_s_week_expenses",
         { id }
       );
+
+      console.log(
+        result,
+        isClient,
+        isClient ? "get_c_week_expenses" : "get_s_week_expenses"
+      );
       // date related
       const nextDay = new Date().getDay() == 6 ? 0 : new Date().getDay() + 1;
-      const resultMap = new Map<number, number>();
+      const resultMap = new Map<string, number>();
       const weekDays = [0, 1, 2, 3, 4, 5, 6];
 
       for (const index of weekDays) {
-        resultMap.set(index, 0);
+        resultMap.set(getWeekDay(index), 0);
       }
 
       for (const { day, expense } of result) {
-        resultMap.set(new Date(day).getDay(), expense);
+        console.log(
+          day,
+          new Date(day).toLocaleDateString("en-us", {
+            weekday: "short",
+          })
+        );
+        resultMap.set(
+          new Date(day).toLocaleDateString("en-us", {
+            weekday: "short",
+          }),
+          expense
+        );
       }
 
       // @ts-ignore
