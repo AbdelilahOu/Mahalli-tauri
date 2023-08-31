@@ -4,10 +4,10 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import { chartOptions } from "@/constants/chartOptions";
 import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
+import type { FilteredInventoryData } from "@/types";
 import { useStatsStore } from "@/stores/statsStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
-import type { FilteredInventoryData } from "@/types";
 
 export const StatsView = defineComponent({
   name: "Stats",
@@ -58,10 +58,10 @@ export const StatsView = defineComponent({
                     id="inventory-mouvements-for-past-three-months"
                     chartData={{
                       labels: InsOuts.months,
-                      datasets: InsOuts.keys.map((model) => {
+                      datasets: InsOuts.keys.map((model, index) => {
                         const color = generateColor();
                         return {
-                          label: globalTranslate("Stats.Labels[0]"),
+                          label: globalTranslate(`Stats.Labels[${index}]`),
                           backgroundColor: color,
                           borderColor: color.replace("0.2", "0.5"),
                           data: InsOuts.months.map(
