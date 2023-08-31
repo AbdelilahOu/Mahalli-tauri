@@ -47,7 +47,7 @@ export const InvoiceDetails = defineComponent({
                       <span class="h-full w-full grid">
                         {new Date(
                           invoice.value?.created_at ?? new Date()
-                        ).toLocaleDateString("fr-fr", {
+                        ).toLocaleDateString("en-us", {
                           month: "2-digit",
                           year: "2-digit",
                           day: "2-digit",
