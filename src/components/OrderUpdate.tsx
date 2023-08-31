@@ -40,7 +40,7 @@ export const OrderUpdate = defineComponent({
     const updateTheOrders = () => {
       if (updateOrders.id) {
         console.log(updateOrders);
-        useOrdersStore().updateOneOrders(updateOrders.id, updateOrders);
+        useOrdersStore().updateOneOrder(updateOrders.id, updateOrders);
         modalStore.updateModal({ key: "show", value: false });
       }
     };
@@ -188,7 +188,7 @@ export const OrderUpdate = defineComponent({
                       onClick={() => {
                         updateOrders.orderItems?.splice(index, 1);
                         if (item.id)
-                          useOrdersStore().deleteOneOrdersItem(item.id);
+                          useOrdersStore().deleteOneOrderItem(item.id);
                       }}
                       class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
                     >
