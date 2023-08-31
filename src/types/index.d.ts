@@ -187,7 +187,7 @@ export interface newSellerT extends Omit<newClientT, "fullname"> {
   name: string;
 }
 export interface updateSellerT extends Omit<updateClientT, "fullname"> {
-  name: string;
+  name: string | undefined;
 }
 ////////////////////////////////////////////////////
 //////////////// STOCKMOUVMENTS INTERFACES /////////
