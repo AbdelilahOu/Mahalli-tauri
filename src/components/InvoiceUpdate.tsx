@@ -57,7 +57,7 @@ export const InvoiceUpdate = defineComponent({
               {globalTranslate("Invoices.update.details.client.title")}
             </h1>
             <UiUpdateSelect
-              Value={updateInvoice.client?.name ?? "select a client"}
+              Value={updateInvoice.client?.fullname ?? "select a client"}
               items={clients.value.map((client: any) => ({
                 name: client.name,
                 id: client.id,
