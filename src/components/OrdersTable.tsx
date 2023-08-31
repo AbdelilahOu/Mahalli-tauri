@@ -47,7 +47,6 @@ export const OrdersTable = defineComponent({
           <thead class="text-xs h-9  font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
               <th class="rounded-l-md"></th>
-              <th class=""></th>
               {[1, 2, 3, 4, 5].map((index) => (
                 <th class="p-2 w-fit last:rounded-r-md ">
                   <div class="font-semibold text-left">
@@ -74,9 +73,7 @@ export const OrdersTable = defineComponent({
                       />
                     </span>
                   </td>
-                  <td class="p-2">
-                    <div class="font-medium text-gray-800">{Orders.id}</div>
-                  </td>
+
                   <td class="p-2">
                     <div class="text-left whitespace-nowrap overflow-ellipsis">
                       <RouterLink
