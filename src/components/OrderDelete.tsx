@@ -15,7 +15,7 @@ export const OrderDelete = defineComponent({
     //
     const deleteTheOrders = () => {
       if (order.value?.id) {
-        useOrdersStore().deleteOneOrders(order.value?.id);
+        useOrdersStore().deleteOneOrder(order.value?.id);
         modalStore.updateModal({ key: "show", value: false });
       }
     };
