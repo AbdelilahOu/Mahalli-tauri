@@ -19,6 +19,7 @@ export const SellerUpdate = defineComponent({
       email: undefined,
       phone: undefined,
       address: undefined,
+      image: undefined,
     };
     const updateSeller = reactive<updateSellerT>(
       SellerRow.value ? SellerRow.value : Seller
