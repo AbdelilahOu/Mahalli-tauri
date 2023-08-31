@@ -109,7 +109,7 @@ pub fn get_client_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
         .inner_join(invoiceitem_product_join)
         .select((
             products::name,
-            sql::<Text>("strftime('%Y-%m', invoices.created_at) AS month"),
+            sql::<Text>("strftime('%Y-%m-%d', invoices.created_at) AS month"),
             sql::<BigInt>("ABS(COALESCE(SUM(invoice_items.quantity), 0)) AS quantity"),
         ))
         .filter(clients::id.eq(id))
@@ -141,7 +141,7 @@ pub fn get_seller_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
         .inner_join(orderitem_product_join)
         .select((
             products::name,
-            sql::<Text>("strftime('%Y-%m', orders.created_at) AS month"),
+            sql::<Text>("strftime('%Y-%m-%d', orders.created_at) AS month"),
             sql::<BigInt>("ABS(COALESCE(SUM(order_items.quantity), 0)) AS quantity"),
         ))
         .filter(sellers::id.eq(id))
@@ -173,7 +173,7 @@ pub fn get_client_expenses(id: i32, connection: &mut SqliteConnection) -> Vec<Va
         .inner_join(invoiceitem_invoice_join)
         .inner_join(invoiceitem_product_join)
         .select((
-            sql::<Text>("strftime('%Y-%m', invoices.created_at) AS day"),
+            sql::<Text>("strftime('%Y-%m-%d', invoices.created_at) AS day"),
             sql::<BigInt>("SUM(products.price * ABS(invoice_items.quantity)) AS expense"),
         ))
         .filter(invoices::created_at.ge(seven_days_ago))
@@ -203,7 +203,7 @@ pub fn get_seller_expenses(id: i32, connection: &mut SqliteConnection) -> Vec<Va
         .inner_join(orderitem_order_join)
         .inner_join(orderitem_product_join)
         .select((
-            sql::<Text>("strftime('%Y-%m', orders.created_at) AS day"),
+            sql::<Text>("strftime('%Y-%m-%d', orders.created_at) AS day"),
             sql::<BigInt>("SUM(products.price * ABS(order_items.quantity)) AS expense"),
         ))
         .filter(orders::created_at.ge(seven_days_ago))
