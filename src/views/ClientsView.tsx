@@ -1,25 +1,28 @@
 import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { ClientsTable } from "@/components/ClientsTable";
-import { useClientStore } from "@/stores/clientStore";
 import { UiButton } from "@/components/ui/UiButton";
 import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
-import { storeToRefs } from "pinia";
+import type { clientT } from "@/types";
+import { invoke } from "@tauri-apps/api";
 
 export const ClientsView = defineComponent({
   name: "Clients",
   components: { ClientsTable, UiButton, UiInput, UiIcon },
   setup() {
     const modalStore = useModalStore();
-    const clientStore = useClientStore();
-    const { clients } = storeToRefs(clientStore);
     //
+    const clients = ref<clientT[]>([]);
     const searchQuery = ref<string>("");
     //
-    onBeforeMount(() => {
-      if (!clients.value.length) clientStore.getAllClients();
+    onBeforeMount(async () => {
+      try {
+        clients.value = await invoke("get_clients", { page: 1 });
+      } catch (error) {
+        console.log(error);
+      }
     });
     //
     const updateModal = (name: string) => {
