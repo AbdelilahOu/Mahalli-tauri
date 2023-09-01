@@ -11,14 +11,7 @@ export const useClientStore = defineStore("ClientStore", {
     };
   },
   actions: {
-    getAllClients: async function () {
-      try {
-        this.clients = await invoke("get_clients", { page: 1 });
-        console.log(this.clients);
-      } catch (error) {
-        console.log(error);
-      }
-    },
+    getAllClients: async function () {},
     getOneClient: async function (id: number) {
       this.client = this.clients.find((cli: clientT) => cli.id === id) ?? null;
       if (!this.client) {
