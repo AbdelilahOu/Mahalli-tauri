@@ -19,7 +19,11 @@ export const ClientsView = defineComponent({
     //
     onBeforeMount(async () => {
       try {
-        clients.value = await invoke("get_clients", { page: 1 });
+        const res = await invoke("get_clients", { page: 1 });
+        if (typeof res === "object") {
+          clients.value = res as clientT[];
+          return;
+        }
       } catch (error) {
         console.log(error);
       }
