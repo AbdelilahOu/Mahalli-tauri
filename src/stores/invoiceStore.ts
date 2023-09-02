@@ -22,13 +22,7 @@ export const useInvoiceStore = defineStore("InvoiceStore", {
         console.log(error);
       }
     },
-    getOneInvoice: async function (id: number) {
-      try {
-        this.invoice = await invoke("get_invoice", { id });
-      } catch (error) {
-        console.log(error);
-      }
-    },
+    getOneInvoice: async function (id: number) {},
     createOneInvoice: async function (invoice: newInvoiceT) {
       try {
         await invoke<invoiceT>("insert_invoice", {
