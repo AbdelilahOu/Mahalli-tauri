@@ -10,7 +10,7 @@ export const InvoiceDetails = defineComponent({
   components: { UiButton },
   setup() {
     const id = useRoute().params.id;
-    const invoice = ref<invoiceDetailsT>();
+    const invoice = ref<invoiceDetailsT | null>(null);
 
     onBeforeMount(async () => {
       try {
