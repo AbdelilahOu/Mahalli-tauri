@@ -1,9 +1,9 @@
-import { defineComponent, onBeforeUnmount, type PropType } from "vue";
-import { useClientStore } from "@/stores/clientStore";
+import { defineComponent, onBeforeUnmount } from "vue";
 import { useModalStore } from "@/stores/modalStore";
 import { storeToRefs } from "pinia";
 import { UiButton } from "./ui/UiButton";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { invoke } from "@tauri-apps/api";
 
 export const ClientDelete = defineComponent({
   name: "ClientDelete",
@@ -11,10 +11,16 @@ export const ClientDelete = defineComponent({
   setup() {
     const modalStore = useModalStore();
     const { client } = storeToRefs(modalStore);
-    const deleteTheClient = () => {
-      if (client.value?.id) {
-        useClientStore().deleteOneClient(client.value?.id);
-        modalStore.updateModal({ key: "show", value: false });
+    const deleteTheClient = async () => {
+      const id = client.value?.id;
+      if (id) {
+        try {
+          await invoke("delete_client", { id });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          modalStore.updateModal({ key: "show", value: false });
+        }
       }
     };
     onBeforeUnmount(() => modalStore.updateClientRow(null));
