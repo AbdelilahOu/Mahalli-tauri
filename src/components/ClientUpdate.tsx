@@ -1,11 +1,11 @@
 import { defineComponent, reactive, onBeforeUnmount } from "vue";
-import { useClientStore } from "@/stores/clientStore";
 import { useModalStore } from "@/stores/modalStore";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
 import type { updateClientT } from "@/types";
 import { UiButton } from "./ui/UiButton";
 import { storeToRefs } from "pinia";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { invoke } from "@tauri-apps/api";
 
 export const ClientUpdate = defineComponent({
   name: "ClientUpdate",
@@ -23,10 +23,18 @@ export const ClientUpdate = defineComponent({
     const updateClient = reactive<updateClientT>(
       ClientRow.value ? ClientRow.value : client
     );
-    const updateTheClient = () => {
+    const updateTheClient = async () => {
       if (updateClient.id) {
-        useClientStore().updateOneClient(updateClient.id, updateClient);
-        modalStore.updateModal({ key: "show", value: false });
+        try {
+          await invoke("update_client", {
+            client: updateClient,
+            id: updateClient.id,
+          });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          modalStore.updateModal({ key: "show", value: false });
+        }
       }
     };
     onBeforeUnmount(() => modalStore.updateClientRow(null));
