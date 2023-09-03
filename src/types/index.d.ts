@@ -266,3 +266,9 @@ export interface RouteLinksTypeT {
 }
 
 export type FileNames = "Image" | "Doc";
+
+export type inOutReType = {
+  group_month: string;
+  total_in: number;
+  total_out: number;
+}[];
