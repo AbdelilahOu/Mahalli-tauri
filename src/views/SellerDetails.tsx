@@ -1,16 +1,17 @@
 import { chartOptions, optionsWoTicks } from "@/constants/chartOptions";
-import { defineComponent, onBeforeMount, reactive } from "vue";
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { ChartHolder } from "@/components/ChartHolder";
 import { useSellerStore } from "@/stores/sellerStore";
 import { generateColor } from "@/utils/generateColor";
-import { useStatsStore } from "@/stores/statsStore";
 import { useModalStore } from "@/stores/modalStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
 import { UiCard } from "@/components/ui/UiCard";
 import type { sellerT } from "@/types";
 import { useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
+import { getWeekDay } from "@/utils/formatDate";
+import _ from "lodash";
+import { invoke } from "@tauri-apps/api";
 
 export const SellerDetails = defineComponent({
   name: "SellerDetails",
@@ -18,8 +19,7 @@ export const SellerDetails = defineComponent({
   setup() {
     const id = useRoute().params.id;
     const SellerStore = useSellerStore();
-    const statsStore = useStatsStore();
-    const { seller } = storeToRefs(SellerStore);
+    const seller = ref<sellerT | null>(null);
 
     const ProductsStats = reactive({
       products: [] as string[],
@@ -32,17 +32,78 @@ export const SellerDetails = defineComponent({
       keys: [] as string[],
     });
 
-    onBeforeMount(async () => {
-      const productStats = await statsStore.getProductPerMonth(
-        Number(id),
-        false
+    async function getProductPerMonth(id: number) {
+      const data: any[] = await invoke("get_s_product_month", { id });
+
+      const existingDates = _.keys(_.groupBy(data, "month"));
+      const existingProducts = _.keys(_.groupBy(data, "name"));
+      const dataPerProduct = _.mapValues(_.groupBy(data, "name"), (value) =>
+        _.reduce(
+          value,
+          (pr, cr) => {
+            if (!pr) pr = [];
+            pr.push(cr.quantity);
+            return pr;
+          },
+          [] as number[]
+        )
       );
-      const dailyStats = await statsStore.getDailyExpenses(Number(id), false);
+
+      return {
+        data: dataPerProduct,
+        dates: existingDates,
+        products: existingProducts,
+      };
+    }
+
+    async function getDailyExpenses(id: number) {
+      const result: { day: string; expense: number }[] = await invoke(
+        "get_s_week_expenses",
+        { id }
+      );
+      // date related
+      const nextDay = new Date().getDay() == 6 ? 0 : new Date().getDay() + 1;
+      const resultMap = new Map<string, number>();
+      const weekDays = [0, 1, 2, 3, 4, 5, 6];
+
+      for (const index of weekDays) {
+        resultMap.set(getWeekDay(index), 0);
+      }
+
+      for (const { day, expense } of result) {
+        console.log(
+          day,
+          new Date(day).toLocaleDateString("en-us", {
+            weekday: "short",
+          })
+        );
+        resultMap.set(
+          new Date(day).toLocaleDateString("en-us", {
+            weekday: "short",
+          }),
+          expense
+        );
+      }
+
+      // @ts-ignore
+      const K = _.keys(Object.fromEntries(resultMap));
+      // @ts-ignore
+      const V = _.values(Object.fromEntries(resultMap));
+      const rearrangedKeys = K.slice(nextDay).concat(K.slice(0, nextDay));
+      const rearrangedValues = V.slice(nextDay).concat(V.slice(0, nextDay));
+
+      return {
+        keys: rearrangedKeys,
+        values: rearrangedValues,
+      };
+    }
+
+    onBeforeMount(async () => {
+      const productStats = await getProductPerMonth(Number(id));
+      const dailyStats = await getDailyExpenses(Number(id));
 
       DailyStats.keys = dailyStats.keys;
       DailyStats.data = dailyStats.values;
-
-      console.log(dailyStats);
 
       ProductsStats.data = productStats.data;
       ProductsStats.dates = productStats.dates;
@@ -54,8 +115,16 @@ export const SellerDetails = defineComponent({
       useModalStore().updateSellerRow(seller);
     };
 
-    onBeforeMount(() => SellerStore.getOneSeller(Number(id)));
-
+    onBeforeMount(async () => {
+      try {
+        const res = await invoke<sellerT>("get_seller", { id: Number(id) });
+        if (res.id) {
+          seller.value = res;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
     return () => (
       <main class="w-full h-full px-3 py-1">
         <div class="w-full h-full text-black grid gap-4 xl:grid-cols-[400px_2px_1fr] xl:grid-rows-1 grid-rows-[260px_2px_1fr] grid-cols-1 print:pr-12">
