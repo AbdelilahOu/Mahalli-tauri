@@ -8,7 +8,8 @@ import { UiButton } from "@/components/ui/UiButton";
 import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
-import { storeToRefs } from "pinia";
+import { invoke } from "@tauri-apps/api";
+import type { orderT } from "@/types";
 
 export const OrdersView = defineComponent({
   name: "Orders",
@@ -21,16 +22,18 @@ export const OrdersView = defineComponent({
   setup() {
     //
     const modalStore = useModalStore();
-    const OrdersStore = useOrdersStore();
-    const { orders } = storeToRefs(OrdersStore);
-    //
+    const orders = ref<orderT[]>([]);
     const searchQuery = ref<string>("");
     //
-    onBeforeMount(() => {
-      if (!orders.value.length) {
-        OrdersStore.getAllOrders();
-        useProductStore().getAllProducts();
-        useSellerStore().getAllSellers();
+    onBeforeMount(async () => {
+      try {
+        const res = await invoke<orderT[]>("get_orders", { page: 1 });
+        if (res) {
+          orders.value = res;
+          return;
+        }
+      } catch (error) {
+        console.log(error);
       }
     });
     //
