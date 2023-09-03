@@ -2,7 +2,6 @@ import { chartOptions, optionsWoTicks } from "@/constants/chartOptions";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
-import { useStatsStore } from "@/stores/statsStore";
 import { useModalStore } from "@/stores/modalStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
@@ -18,7 +17,6 @@ export const ClientDetails = defineComponent({
   components: { UiCard, ChartHolder, ChartBar, ChartLine },
   setup() {
     const id = useRoute().params.id;
-    const statsStore = useStatsStore();
 
     const client = ref<clientT | null>(null);
 
