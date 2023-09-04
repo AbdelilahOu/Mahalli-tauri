@@ -1,5 +1,4 @@
 import { defineComponent, onBeforeUnmount, type PropType } from "vue";
-import { usePaymentStore } from "@/stores/paymentStore";
 import { useModalStore } from "@/stores/modalStore";
 import { storeToRefs } from "pinia";
 import { UiButton } from "./ui/UiButton";
@@ -13,7 +12,8 @@ export const PaymentDelete = defineComponent({
     const { credi } = storeToRefs(modalStore);
     const deleteThePayment = () => {
       if (credi.value?.id) {
-        usePaymentStore().deleteOnePayment(credi.value?.id);
+        try {
+        } catch (error) {}
         modalStore.updateModal({ key: "show", value: false });
       }
     };
