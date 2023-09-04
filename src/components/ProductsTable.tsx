@@ -52,58 +52,57 @@ export const ProductsTable = defineComponent({
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
             )
-              .slice(pagination.value * 17, pagination.value * 17 + 17)
-              .map((product, index) => (
-                <tr v-fade={index} key={product.id}>
-                  <td class="p-2">
-                    <span class="h-full w-full grid">
-                      <UiCheckBox
-                        onCheck={(check) =>
-                          console.log(
-                            product.name,
-                            check ? "is checked" : "is unchecked"
-                          )
-                        }
-                      />
+            .map((product, index) => (
+              <tr v-fade={index} key={product.id}>
+                <td class="p-2">
+                  <span class="h-full w-full grid">
+                    <UiCheckBox
+                      onCheck={(check) =>
+                        console.log(
+                          product.name,
+                          check ? "is checked" : "is unchecked"
+                        )
+                      }
+                    />
+                  </span>
+                </td>
+                <td class="p-2">
+                  <div class="font-medium text-gray-800">{product.name}</div>
+                </td>
+                <td class="p-2">
+                  <div class="font-medium text-gray-800">
+                    {product.description}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left">{product.price.toFixed(2)} DH</div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left">{product.tva.toFixed(2)} %</div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left">{product?.quantity} item</div>
+                </td>
+                <td class="p-2">
+                  <div class="flex  justify-start gap-3">
+                    <span
+                      onClick={() =>
+                        toggleThisProduct(product, "ProductDelete")
+                      }
+                    >
+                      <UiIcon name={"delete"} />
                     </span>
-                  </td>
-                  <td class="p-2">
-                    <div class="font-medium text-gray-800">{product.name}</div>
-                  </td>
-                  <td class="p-2">
-                    <div class="font-medium text-gray-800">
-                      {product.description}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left">{product.price.toFixed(2)} DH</div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left">{product.tva.toFixed(2)} %</div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left">{product?.quantity} item</div>
-                  </td>
-                  <td class="p-2">
-                    <div class="flex  justify-start gap-3">
-                      <span
-                        onClick={() =>
-                          toggleThisProduct(product, "ProductDelete")
-                        }
-                      >
-                        <UiIcon name={"delete"} />
-                      </span>
-                      <span
-                        onClick={() =>
-                          toggleThisProduct(product, "ProductUpdate")
-                        }
-                      >
-                        <UiIcon name={"edit"} />
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    <span
+                      onClick={() =>
+                        toggleThisProduct(product, "ProductUpdate")
+                      }
+                    >
+                      <UiIcon name={"edit"} />
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         <div>
