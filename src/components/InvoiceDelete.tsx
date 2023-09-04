@@ -4,6 +4,7 @@ import { useModalStore } from "@/stores/modalStore";
 import { storeToRefs } from "pinia";
 import { UiButton } from "./ui/UiButton";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { invoke } from "@tauri-apps/api";
 
 export const InvoiceDelete = defineComponent({
   name: "InvoiceDelete",
@@ -13,10 +14,16 @@ export const InvoiceDelete = defineComponent({
     const modalStore = useModalStore();
     const { invoice } = storeToRefs(modalStore);
     //
-    const deleteTheInvoice = () => {
-      if (invoice.value?.id) {
-        useInvoiceStore().deleteOneInvoice(invoice.value?.id);
-        modalStore.updateModal({ key: "show", value: false });
+    const deleteTheInvoice = async () => {
+      const id = invoice.value?.id;
+      if (id) {
+        try {
+          await invoke("delete_invoice", { id });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          modalStore.updateModal({ key: "show", value: false });
+        }
       }
     };
     //
