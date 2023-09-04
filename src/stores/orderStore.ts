@@ -24,16 +24,7 @@ export const useOrdersStore = defineStore("OrderStore", {
         console.log(error);
       }
     },
-    createOneOrder: async function (order: newOrdersT) {
-      try {
-        await invoke<orderT>("insert_order", {
-          order,
-        });
-        this.getAllOrders();
-      } catch (error) {
-        console.log(error);
-      }
-    },
+    createOneOrder: async function (order: newOrdersT) {},
     updateOneOrder: async function (id: number, order: updateOrdersT) {
       try {
         await invoke("update_order", { order, id });
