@@ -45,6 +45,7 @@ fn main() {
             cmd::update_client,
             cmd::delete_client,
             cmd::get_seller,
+            cmd::get_all_sellers,
             cmd::get_sellers,
             cmd::insert_seller,
             cmd::update_seller,
