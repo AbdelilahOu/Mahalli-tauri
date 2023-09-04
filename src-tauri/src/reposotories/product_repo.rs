@@ -1,3 +1,5 @@
+use serde_json::{json, Value};
+
 use crate::diesel::prelude::*;
 use crate::models::{NewProduct, Product, ProductWithQuantity};
 use crate::schema::products::{description, name, price, tva};
@@ -27,6 +29,25 @@ pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Vec<Product
         .offset(offset as i64)
         .load::<ProductWithQuantity>(connection)
         .expect("error get all products");
+
+    result
+}
+
+pub fn get_all_products(connection: &mut SqliteConnection) -> Vec<Value> {
+    let response = products::dsl::products
+        .order(products::id.desc())
+        .select((products::name, products::id))
+        .load::<(String, i32)>(connection)
+        .expect("error get all products");
+
+    let mut result: Vec<Value> = Vec::new();
+
+    response.into_iter().for_each(|(pname, p_id)| {
+        result.push(json!({
+            "name":pname,
+            "id":p_id
+        }))
+    });
 
     result
 }
