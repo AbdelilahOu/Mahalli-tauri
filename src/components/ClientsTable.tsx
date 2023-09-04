@@ -62,78 +62,73 @@ export const ClientsTable = defineComponent({
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
             )
-              .slice(pagination.value * 17, pagination.value * 17 + 17)
-              .map((client, index) => (
-                <tr v-fade={index} key={client.id}>
-                  <td class="p-2">
-                    <span class="h-full w-full grid">
-                      <UiCheckBox
-                        onCheck={(check) => checkThisUser(check, client.id)}
+            .map((client, index) => (
+              <tr v-fade={index} key={client.id}>
+                <td class="p-2">
+                  <span class="h-full w-full grid">
+                    <UiCheckBox
+                      onCheck={(check) => checkThisUser(check, client.id)}
+                    />
+                  </span>
+                </td>
+                <td class="p-2">
+                  <div class="w-12 h-12 rounded-full overflow-hidden">
+                    {client.image && client.image !== "" ? (
+                      <img
+                        class="rounded-full w-full h-full object-cover"
+                        src={convertFileSrc(client.image)}
                       />
+                    ) : (
+                      <span class=" rounded-full w-full h-full object-fill animate-pulse bg-slate-300 duration-150" />
+                    )}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="font-medium text-gray-800">
+                    {client?.fullname}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left whitespace-nowrap overflow-ellipsis">
+                    {client.email ?? <span class="text-red-400">No email</span>}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left whitespace-nowrap overflow-ellipsis">
+                    {client.phone ?? <span class="text-red-400">No phone</span>}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left whitespace-nowrap overflow-ellipsis">
+                    {client.address ?? (
+                      <span class="text-red-400">No address</span>
+                    )}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="flex  justify-start gap-3">
+                    <span
+                      onClick={() => toggleThisClient(client, "ClientDelete")}
+                    >
+                      <UiIcon name={"delete"} />
                     </span>
-                  </td>
-                  <td class="p-2">
-                    <div class="w-12 h-12 rounded-full overflow-hidden">
-                      {client.image && client.image !== "" ? (
-                        <img
-                          class="rounded-full w-full h-full object-cover"
-                          src={convertFileSrc(client.image)}
-                        />
-                      ) : (
-                        <span class=" rounded-full w-full h-full object-fill animate-pulse bg-slate-300 duration-150" />
-                      )}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="font-medium text-gray-800">
-                      {client?.fullname}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left whitespace-nowrap overflow-ellipsis">
-                      {client.email ?? (
-                        <span class="text-red-400">No email</span>
-                      )}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left whitespace-nowrap overflow-ellipsis">
-                      {client.phone ?? (
-                        <span class="text-red-400">No phone</span>
-                      )}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left whitespace-nowrap overflow-ellipsis">
-                      {client.address ?? (
-                        <span class="text-red-400">No address</span>
-                      )}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="flex  justify-start gap-3">
-                      <span
-                        onClick={() => toggleThisClient(client, "ClientDelete")}
-                      >
-                        <UiIcon name={"delete"} />
-                      </span>
-                      <span
-                        onClick={() => toggleThisClient(client, "ClientUpdate")}
-                      >
-                        <UiIcon name={"edit"} />
-                      </span>
-                      <RouterLink
-                        to={{
-                          name: "ClientDetails",
-                          params: { id: client.id },
-                        }}
-                      >
-                        <UiIcon name={"more"} />
-                      </RouterLink>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    <span
+                      onClick={() => toggleThisClient(client, "ClientUpdate")}
+                    >
+                      <UiIcon name={"edit"} />
+                    </span>
+                    <RouterLink
+                      to={{
+                        name: "ClientDetails",
+                        params: { id: client.id },
+                      }}
+                    >
+                      <UiIcon name={"more"} />
+                    </RouterLink>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         <div>
