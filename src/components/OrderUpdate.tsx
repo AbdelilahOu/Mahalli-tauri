@@ -10,22 +10,28 @@ import { UiCheckBox } from "./ui/UiCheckBox";
 import { UiButton } from "./ui/UiButton";
 import UiIcon from "./ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
-import { defineComponent, reactive, onBeforeUnmount } from "vue";
+import {
+  defineComponent,
+  reactive,
+  onBeforeUnmount,
+  ref,
+  onBeforeMount,
+} from "vue";
+import { invoke } from "@tauri-apps/api";
 
 export const OrderUpdate = defineComponent({
   name: "OrderUpdate",
   components: { UiButton, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
   setup() {
     //
-    const productStore = useProductStore();
-    const sellerStore = useSellerStore();
     const modalStore = useModalStore();
     //
     const { order: OrdersRow } = storeToRefs(modalStore);
 
-    const { products } = storeToRefs(productStore);
-    const { sellers } = storeToRefs(sellerStore);
+    const sellers = ref<{ name: string; id: number }[]>([]);
+    const products = ref<{ name: string; id: number }[]>([]);
     //
+
     const Orders: updateOrdersT = {
       id: undefined,
       status: undefined,
@@ -33,15 +39,35 @@ export const OrderUpdate = defineComponent({
       orderItems: [],
     };
     //
-    const updateOrders = reactive<updateOrdersT>(
+    const updateOrder = reactive<updateOrdersT>(
       OrdersRow.value ? OrdersRow.value : Orders
     );
     //
-    const updateTheOrders = () => {
-      if (updateOrders.id) {
-        console.log(updateOrders);
-        useOrdersStore().updateOneOrder(updateOrders.id, updateOrders);
-        modalStore.updateModal({ key: "show", value: false });
+
+    onBeforeMount(async () => {
+      const res = await Promise.allSettled([
+        invoke<{ name: string; id: number }[]>("get_all_sellers"),
+        invoke<{ name: string; id: number }[]>("get_all_products"),
+      ]);
+
+      // @ts-ignore
+      if ((res[0].status = "fulfilled")) sellers.value = res[0].value;
+      // @ts-ignore
+      if ((res[1].status = "fulfilled")) products.value = res[1].value;
+    });
+
+    const updateTheOrders = async () => {
+      if (updateOrder.id) {
+        try {
+          await invoke("update_order", {
+            order: updateOrder,
+            id: updateOrder.id,
+          });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          modalStore.updateModal({ key: "show", value: false });
+        }
       }
     };
     onBeforeUnmount(() => modalStore.updateOrdersRow(null));
@@ -49,7 +75,7 @@ export const OrderUpdate = defineComponent({
     return () => (
       <div class="w-5/6 lg:w-1/2 relative h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold  text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
-          {globalTranslate("Orders.update.title")} N° {updateOrders.id}
+          {globalTranslate("Orders.update.title")} N° {updateOrder.id}
         </h1>
         <div class="h-full  w-full grid grid-cols-1 gap-2">
           <div class="w-full  h-full flex flex-col gap-1">
@@ -57,12 +83,12 @@ export const OrderUpdate = defineComponent({
               {globalTranslate("Orders.update.details.seller.title")}
             </h1>
             <UiUpdateSelect
-              Value={updateOrders.seller?.name ?? "Select a seller"}
+              Value={updateOrder.seller?.name ?? "Select a seller"}
               items={sellers.value.map((seller) => ({
                 name: seller.name,
                 id: seller.id,
               }))}
-              onSelect={(id: number) => (updateOrders.seller_id = id)}
+              onSelect={(id: number) => (updateOrder.seller_id = id)}
             >
               {globalTranslate("Orders.update.details.seller.select")}
             </UiUpdateSelect>
@@ -77,8 +103,8 @@ export const OrderUpdate = defineComponent({
                   <UiCheckBox
                     onCheck={(check) =>
                       check
-                        ? (updateOrders.status = "delivered")
-                        : (updateOrders.status = "")
+                        ? (updateOrder.status = "delivered")
+                        : (updateOrder.status = "")
                     }
                   />
                   <span>{globalTranslate("Orders.status.delivered")}</span>
@@ -87,8 +113,8 @@ export const OrderUpdate = defineComponent({
                   <UiCheckBox
                     onCheck={(check) =>
                       check
-                        ? (updateOrders.status = "pending")
-                        : (updateOrders.status = "")
+                        ? (updateOrder.status = "pending")
+                        : (updateOrder.status = "")
                     }
                   />
                   <span>{globalTranslate("Orders.status.pending")}</span>
@@ -97,8 +123,8 @@ export const OrderUpdate = defineComponent({
                   <UiCheckBox
                     onCheck={(check) =>
                       check
-                        ? (updateOrders.status = "canceled")
-                        : (updateOrders.status = "")
+                        ? (updateOrder.status = "canceled")
+                        : (updateOrder.status = "")
                     }
                   />
                   <span>{globalTranslate("Orders.status.canceled")}</span>
@@ -108,7 +134,7 @@ export const OrderUpdate = defineComponent({
             <div class="w-full  h-full flex flex-col gap-1">
               <UiButton
                 Click={() =>
-                  updateOrders.orderItems?.push({
+                  updateOrder.orderItems?.push({
                     product_id: 0,
                     quantity: 0,
                   })
@@ -118,7 +144,7 @@ export const OrderUpdate = defineComponent({
               </UiButton>
               <div class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
-                  {updateOrders.orderItems?.map((item, index) => (
+                  {updateOrder.orderItems?.map((item, index) => (
                     <UiUpdateSelect
                       Value={item.product?.name ?? "select a product"}
                       items={products.value.map((product) => ({
@@ -132,7 +158,7 @@ export const OrderUpdate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateOrders.orderItems?.map((item, index) => (
+                  {updateOrder.orderItems?.map((item, index) => (
                     <div class="h-full flex w-full items-center relative">
                       <UiUpdateInput
                         class="border-r-0"
@@ -142,7 +168,7 @@ export const OrderUpdate = defineComponent({
                         )}
                         Type="number"
                         OnInputChange={(value) =>
-                          (updateOrders.orderItems[index].quantity =
+                          (updateOrder.orderItems[index].quantity =
                             Number(value))
                         }
                       >
@@ -158,7 +184,7 @@ export const OrderUpdate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateOrders.orderItems?.map((item, index) => (
+                  {updateOrder.orderItems?.map((item, index) => (
                     <div class="h-full flex w-full items-center relative">
                       <UiUpdateInput
                         class="border-r-0 "
@@ -168,7 +194,7 @@ export const OrderUpdate = defineComponent({
                         )}
                         Type="number"
                         OnInputChange={(value) =>
-                          (updateOrders.orderItems[index].price = Number(value))
+                          (updateOrder.orderItems[index].price = Number(value))
                         }
                       >
                         {{
@@ -183,10 +209,10 @@ export const OrderUpdate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateOrders.orderItems?.map((item, index) => (
+                  {updateOrder.orderItems?.map((item, index) => (
                     <div
                       onClick={() => {
-                        updateOrders.orderItems?.splice(index, 1);
+                        updateOrder.orderItems?.splice(index, 1);
                         if (item.id)
                           useOrdersStore().deleteOneOrderItem(item.id);
                       }}
