@@ -43,76 +43,75 @@ export const InventoryTable = defineComponent({
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
             )
-              .slice(pagination.value * 17, pagination.value * 17 + 17)
-              .map((mvm, index) => (
-                <tr v-fade={index} key={mvm.id}>
-                  <td class="p-2">
-                    <div class="text-left font-medium">{mvm.product?.name}</div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left">
-                      {mvm.product?.price?.toFixed(2)} DH
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left">
-                      {mvm.orderItem?.price && mvm.orderItem?.price > 0
-                        ? mvm.orderItem?.price?.toFixed(2)
-                        : mvm.product?.price?.toFixed(2)}{" "}
-                      DH
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left">{Math.abs(mvm.quantity)}</div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left font-medium">
-                      {mvm.orderItem?.order_id ? (
-                        <RouterLink
-                          to={{
-                            name: "OrdersDetails",
-                            params: { id: mvm.orderItem?.order_id },
-                          }}
+            .map((mvm, index) => (
+              <tr v-fade={index} key={mvm.id}>
+                <td class="p-2">
+                  <div class="text-left font-medium">{mvm.product?.name}</div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left">
+                    {mvm.product?.price?.toFixed(2)} DH
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left">
+                    {mvm.orderItem?.price && mvm.orderItem?.price > 0
+                      ? mvm.orderItem?.price?.toFixed(2)
+                      : mvm.product?.price?.toFixed(2)}{" "}
+                    DH
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left">{Math.abs(mvm.quantity)}</div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left font-medium">
+                    {mvm.orderItem?.order_id ? (
+                      <RouterLink
+                        to={{
+                          name: "OrdersDetails",
+                          params: { id: mvm.orderItem?.order_id },
+                        }}
+                      >
+                        <span
+                          class={`px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-sky-300/60 text-sky-800 `}
                         >
-                          <span
-                            class={`px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-sky-300/60 text-sky-800 `}
-                          >
-                            # {mvm.orderItem?.order_id} <span>order</span>
-                          </span>
-                        </RouterLink>
-                      ) : mvm.invoiceItem?.invoice_id ? (
-                        <RouterLink
-                          class="w-full"
-                          to={{
-                            name: "InvoiceDetails",
-                            params: { id: mvm.invoiceItem?.invoice_id },
-                          }}
+                          # {mvm.orderItem?.order_id} <span>order</span>
+                        </span>
+                      </RouterLink>
+                    ) : mvm.invoiceItem?.invoice_id ? (
+                      <RouterLink
+                        class="w-full"
+                        to={{
+                          name: "InvoiceDetails",
+                          params: { id: mvm.invoiceItem?.invoice_id },
+                        }}
+                      >
+                        <span
+                          class={`px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-sky-300/60 text-sky-800 `}
                         >
-                          <span
-                            class={`px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-sky-300/60 text-sky-800 `}
-                          >
-                            # {mvm.invoiceItem?.invoice_id} <span>invoice</span>
-                          </span>
-                        </RouterLink>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left">{formatDate(mvm.date)}</div>
-                  </td>
-                  <td class="p-2">
-                    <div class="flex  justify-start gap-3 font-bold text-xl h-8 p-1">
-                      {mvm.model == "IN" ? (
-                        <UiIconVue name="chartUp" />
-                      ) : (
-                        <UiIconVue name="chartDown" />
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                          # {mvm.invoiceItem?.invoice_id} <span>invoice</span>
+                        </span>
+                      </RouterLink>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left">{formatDate(mvm.date)}</div>
+                </td>
+                <td class="p-2">
+                  <div class="flex  justify-start gap-3 font-bold text-xl h-8 p-1">
+                    {mvm.model == "IN" ? (
+                      <UiIconVue name="chartUp" />
+                    ) : (
+                      <UiIconVue name="chartDown" />
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         <div>
