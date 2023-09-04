@@ -62,98 +62,96 @@ export const OrdersTable = defineComponent({
               JSON.stringify(Object.values(c))
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
-            )
-              .slice(pagination.value * 17, pagination.value * 17 + 17)
-              .map((Orders, index) => (
-                <tr v-fade={index} key={Orders.id}>
-                  <td class="p-2">
-                    <span class="h-full w-full grid">
-                      <UiCheckBox
-                        onCheck={(check) => checkThisOrders(check, Orders.id)}
-                      />
-                    </span>
-                  </td>
+            ).map((Orders, index) => (
+              <tr v-fade={index} key={Orders.id}>
+                <td class="p-2">
+                  <span class="h-full w-full grid">
+                    <UiCheckBox
+                      onCheck={(check) => checkThisOrders(check, Orders.id)}
+                    />
+                  </span>
+                </td>
 
-                  <td class="p-2">
-                    <div class="text-left whitespace-nowrap overflow-ellipsis">
-                      <RouterLink
-                        to={{
-                          name: "SellerDetails",
-                          params: {
-                            id: Orders.seller_id,
-                          },
-                        }}
-                      >
-                        {Orders.seller.name}
-                      </RouterLink>
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left whitespace-nowrap overflow-ellipsis">
-                      {Orders.orderItems?.length ? (
-                        <span>
-                          {Orders.orderItems?.length}{" "}
-                          {Orders.orderItems?.length == 1
-                            ? " Product"
-                            : " Products"}
-                        </span>
-                      ) : (
-                        <span class="text-red-400">No products</span>
-                      )}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left font-medium uppercase whitespace-nowrap overflow-ellipsis">
-                      {Orders.status ? (
-                        <span
-                          class={`px-2 py-[1px] rounded-full ${
-                            Orders.status == "pending"
-                              ? "bg-yellow-300/60 text-yellow-800"
-                              : Orders.status == "delivered"
-                              ? "bg-green-300/60 text-green-800"
-                              : "bg-red-300/60 text-red-800"
-                          }`}
-                        >
-                          {globalTranslate(
-                            `Orders.status.${Orders.status.toLowerCase()}`
-                          )}
-                        </span>
-                      ) : (
-                        <span class="text-red-400">No status</span>
-                      )}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left whitespace-nowrap overflow-ellipsis">
-                      {Orders.created_at ?? (
-                        <span class="text-red-400">No date</span>
-                      )}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="flex  justify-start gap-3">
-                      <span
-                        onClick={() => toggleThisOrders(Orders, "OrderDelete")}
-                      >
-                        <UiIcon name={"delete"} />
+                <td class="p-2">
+                  <div class="text-left whitespace-nowrap overflow-ellipsis">
+                    <RouterLink
+                      to={{
+                        name: "SellerDetails",
+                        params: {
+                          id: Orders.seller_id,
+                        },
+                      }}
+                    >
+                      {Orders.seller.name}
+                    </RouterLink>
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left whitespace-nowrap overflow-ellipsis">
+                    {Orders.orderItems?.length ? (
+                      <span>
+                        {Orders.orderItems?.length}{" "}
+                        {Orders.orderItems?.length == 1
+                          ? " Product"
+                          : " Products"}
                       </span>
+                    ) : (
+                      <span class="text-red-400">No products</span>
+                    )}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left font-medium uppercase whitespace-nowrap overflow-ellipsis">
+                    {Orders.status ? (
                       <span
-                        onClick={() => toggleThisOrders(Orders, "OrderUpdate")}
+                        class={`px-2 py-[1px] rounded-full ${
+                          Orders.status == "pending"
+                            ? "bg-yellow-300/60 text-yellow-800"
+                            : Orders.status == "delivered"
+                            ? "bg-green-300/60 text-green-800"
+                            : "bg-red-300/60 text-red-800"
+                        }`}
                       >
-                        <UiIcon name={"edit"} />
+                        {globalTranslate(
+                          `Orders.status.${Orders.status.toLowerCase()}`
+                        )}
                       </span>
-                      <RouterLink
-                        to={{
-                          name: "OrdersDetails",
-                          params: { id: Orders.id },
-                        }}
-                      >
-                        <UiIcon name={"print"} />
-                      </RouterLink>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    ) : (
+                      <span class="text-red-400">No status</span>
+                    )}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left whitespace-nowrap overflow-ellipsis">
+                    {Orders.created_at ?? (
+                      <span class="text-red-400">No date</span>
+                    )}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="flex  justify-start gap-3">
+                    <span
+                      onClick={() => toggleThisOrders(Orders, "OrderDelete")}
+                    >
+                      <UiIcon name={"delete"} />
+                    </span>
+                    <span
+                      onClick={() => toggleThisOrders(Orders, "OrderUpdate")}
+                    >
+                      <UiIcon name={"edit"} />
+                    </span>
+                    <RouterLink
+                      to={{
+                        name: "OrdersDetails",
+                        params: { id: Orders.id },
+                      }}
+                    >
+                      <UiIcon name={"print"} />
+                    </RouterLink>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         <div>
