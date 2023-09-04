@@ -1,3 +1,6 @@
+use serde_json::json;
+use serde_json::Value;
+
 use crate::diesel::prelude::*;
 use crate::models::Client;
 use crate::models::NewClient;
@@ -13,6 +16,25 @@ pub fn get_clients(page: i32, connection: &mut SqliteConnection) -> Vec<Client> 
         .offset(offset as i64)
         .load::<Client>(connection)
         .expect("error get all clients");
+
+    result
+}
+
+pub fn get_all_clients(connection: &mut SqliteConnection) -> Vec<Value> {
+    let response = clients::dsl::clients
+        .order(clients::id.desc())
+        .select((clients::fullname, clients::id))
+        .load::<(String, i32)>(connection)
+        .expect("error get all clients");
+
+    let mut result: Vec<Value> = Vec::new();
+
+    response.into_iter().for_each(|(fname, c_id)| {
+        result.push(json!({
+            "name":fname,
+            "id":c_id
+        }))
+    });
 
     result
 }
