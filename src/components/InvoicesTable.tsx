@@ -60,109 +60,108 @@ export const InvoicesTable = defineComponent({
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
             )
-              .slice(pagination.value * 17, pagination.value * 17 + 17)
-              .map((Invoice, index) => (
-                <tr v-fade={index} key={Invoice.id}>
-                  <td class="p-2">
-                    <span class="h-full w-full grid">
-                      <UiCheckBox
-                        onCheck={(check) => checkThisInvoice(check, Invoice.id)}
-                      />
-                    </span>
-                  </td>
+            .map((Invoice, index) => (
+              <tr v-fade={index} key={Invoice.id}>
+                <td class="p-2">
+                  <span class="h-full w-full grid">
+                    <UiCheckBox
+                      onCheck={(check) => checkThisInvoice(check, Invoice.id)}
+                    />
+                  </span>
+                </td>
 
-                  <td class="p-2">
-                    <div class="text-left whitespace-nowrap overflow-ellipsis">
-                      <RouterLink
-                        to={{
-                          name: "ClientDetails",
-                          params: {
-                            id: Invoice.client_id,
-                          },
-                        }}
-                      >
-                        {Invoice.client.fullname}
-                      </RouterLink>
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left whitespace-nowrap overflow-ellipsis">
-                      {Invoice.invoiceItems?.length ? (
-                        <span>
-                          {Invoice.invoiceItems?.length}{" "}
-                          {Invoice.invoiceItems?.length == 1
-                            ? " Product"
-                            : " Products"}
-                        </span>
-                      ) : (
-                        <span class="text-red-400">No products</span>
-                      )}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left font-medium flex justify-between uppercase whitespace-nowrap overflow-ellipsis">
-                      <div class="grid grid-cols-2 grid-rows 1 gap-2 w-full">
-                        <span>{Invoice.total?.toFixed(2) ?? 0}</span>
-                        <span class="w-full text-start">DH</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left font-medium uppercase whitespace-nowrap overflow-ellipsis">
-                      {Invoice.status ? (
-                        <span
-                          class={`px-2 py-[1px] rounded-full ${
-                            Invoice.status == "pending"
-                              ? "bg-yellow-300/60 text-yellow-800"
-                              : Invoice.status == "delivered"
-                              ? "bg-green-300/60 text-green-800"
-                              : "bg-red-300/60 text-red-800"
-                          }`}
-                        >
-                          {globalTranslate(
-                            `Orders.status.${Invoice.status.toLowerCase()}`
-                          )}
-                        </span>
-                      ) : (
-                        <span class="text-red-400">No status</span>
-                      )}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left whitespace-nowrap overflow-ellipsis">
-                      {Invoice.created_at ?? (
-                        <span class="text-red-400">No date</span>
-                      )}
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="flex  justify-start gap-3">
-                      <span
-                        onClick={() =>
-                          toggleThisInvoice(Invoice, "InvoiceDelete")
-                        }
-                      >
-                        <UiIcon name={"delete"} />
+                <td class="p-2">
+                  <div class="text-left whitespace-nowrap overflow-ellipsis">
+                    <RouterLink
+                      to={{
+                        name: "ClientDetails",
+                        params: {
+                          id: Invoice.client_id,
+                        },
+                      }}
+                    >
+                      {Invoice.client.fullname}
+                    </RouterLink>
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left whitespace-nowrap overflow-ellipsis">
+                    {Invoice.invoiceItems?.length ? (
+                      <span>
+                        {Invoice.invoiceItems?.length}{" "}
+                        {Invoice.invoiceItems?.length == 1
+                          ? " Product"
+                          : " Products"}
                       </span>
-                      <span
-                        onClick={() =>
-                          toggleThisInvoice(Invoice, "InvoiceUpdate")
-                        }
-                      >
-                        <UiIcon name={"edit"} />
-                      </span>
-                      <RouterLink
-                        to={{
-                          name: "InvoiceDetails",
-                          params: { id: Invoice.id },
-                        }}
-                      >
-                        <UiIcon name={"print"} />
-                      </RouterLink>
+                    ) : (
+                      <span class="text-red-400">No products</span>
+                    )}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left font-medium flex justify-between uppercase whitespace-nowrap overflow-ellipsis">
+                    <div class="grid grid-cols-2 grid-rows 1 gap-2 w-full">
+                      <span>{Invoice.total?.toFixed(2) ?? 0}</span>
+                      <span class="w-full text-start">DH</span>
                     </div>
-                  </td>
-                </tr>
-              ))}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left font-medium uppercase whitespace-nowrap overflow-ellipsis">
+                    {Invoice.status ? (
+                      <span
+                        class={`px-2 py-[1px] rounded-full ${
+                          Invoice.status == "pending"
+                            ? "bg-yellow-300/60 text-yellow-800"
+                            : Invoice.status == "delivered"
+                            ? "bg-green-300/60 text-green-800"
+                            : "bg-red-300/60 text-red-800"
+                        }`}
+                      >
+                        {globalTranslate(
+                          `Orders.status.${Invoice.status.toLowerCase()}`
+                        )}
+                      </span>
+                    ) : (
+                      <span class="text-red-400">No status</span>
+                    )}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left whitespace-nowrap overflow-ellipsis">
+                    {Invoice.created_at ?? (
+                      <span class="text-red-400">No date</span>
+                    )}
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="flex  justify-start gap-3">
+                    <span
+                      onClick={() =>
+                        toggleThisInvoice(Invoice, "InvoiceDelete")
+                      }
+                    >
+                      <UiIcon name={"delete"} />
+                    </span>
+                    <span
+                      onClick={() =>
+                        toggleThisInvoice(Invoice, "InvoiceUpdate")
+                      }
+                    >
+                      <UiIcon name={"edit"} />
+                    </span>
+                    <RouterLink
+                      to={{
+                        name: "InvoiceDetails",
+                        params: { id: Invoice.id },
+                      }}
+                    >
+                      <UiIcon name={"print"} />
+                    </RouterLink>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         <div>
