@@ -4,6 +4,7 @@ import { useOrdersStore } from "@/stores/orderStore";
 import { useModalStore } from "@/stores/modalStore";
 import { storeToRefs } from "pinia";
 import { UiButton } from "./ui/UiButton";
+import { invoke } from "@tauri-apps/api";
 
 export const OrderDelete = defineComponent({
   name: "OrderDelete",
@@ -13,10 +14,16 @@ export const OrderDelete = defineComponent({
     const modalStore = useModalStore();
     const { order } = storeToRefs(modalStore);
     //
-    const deleteTheOrders = () => {
-      if (order.value?.id) {
-        useOrdersStore().deleteOneOrder(order.value?.id);
-        modalStore.updateModal({ key: "show", value: false });
+    const deleteTheOrders = async () => {
+      const id = order.value?.id;
+      if (id) {
+        try {
+          await invoke("delete_order", { id });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          modalStore.updateModal({ key: "show", value: false });
+        }
       }
     };
     //
