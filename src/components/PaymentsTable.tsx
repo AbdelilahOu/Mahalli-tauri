@@ -48,37 +48,36 @@ export const PaymentsTable = defineComponent({
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
             )
-              .slice(pagination.value * 17, pagination.value * 17 + 17)
-              .map((credi, index) => (
-                <tr v-fade={index} key={credi.id}>
-                  <td class="p-2">
-                    <div class="font-medium text-gray-800">{credi.id}</div>
-                  </td>
+            .map((credi, index) => (
+              <tr v-fade={index} key={credi.id}>
+                <td class="p-2">
+                  <div class="font-medium text-gray-800">{credi.id}</div>
+                </td>
 
-                  <td class="p-2">
-                    <div class="text-left font-medium">{credi.client.name}</div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left font-medium">{credi.clientId}</div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left">
-                      {Math.abs(credi.price).toFixed(2)} DH
-                    </div>
-                  </td>
-                  <td class="p-2">
-                    <div class="text-left">{formatDate(credi.createdAt)}</div>
-                  </td>
-                  <td class="p-2">
-                    <div
-                      onClick={() => toggleThisPayment(credi, "PaymentDelete")}
-                      class="flex  justify-start gap-3"
-                    >
-                      <UiIcon name={"delete"} />
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                <td class="p-2">
+                  <div class="text-left font-medium">{credi.client.name}</div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left font-medium">{credi.clientId}</div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left">
+                    {Math.abs(credi.price).toFixed(2)} DH
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="text-left">{formatDate(credi.createdAt)}</div>
+                </td>
+                <td class="p-2">
+                  <div
+                    onClick={() => toggleThisPayment(credi, "PaymentDelete")}
+                    class="flex  justify-start gap-3"
+                  >
+                    <UiIcon name={"delete"} />
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         <div>
