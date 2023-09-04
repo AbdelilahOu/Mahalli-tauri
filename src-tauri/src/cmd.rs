@@ -58,6 +58,14 @@ pub fn get_clients(page: i32, state: tauri::State<AppState>) -> Vec<Client> {
 }
 
 #[tauri::command]
+pub fn get_all_clients(state: tauri::State<AppState>) -> Vec<Value> {
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = client_repo::get_all_clients(conn);
+    result
+}
+
+#[tauri::command]
 pub fn get_client(id: i32, state: tauri::State<AppState>) -> Client {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
@@ -134,6 +142,14 @@ pub fn get_products(page: i32, state: tauri::State<AppState>) -> Vec<ProductWith
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = product_repo::get_products(page, conn);
+    result
+}
+
+#[tauri::command]
+pub fn get_all_products(state: tauri::State<AppState>) -> Vec<Value> {
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = product_repo::get_all_products(conn);
     result
 }
 
