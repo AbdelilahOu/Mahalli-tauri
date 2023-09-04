@@ -1,3 +1,5 @@
+use serde_json::{json, Value};
+
 use crate::diesel::prelude::*;
 use crate::models::{NewSeller, Seller};
 use crate::schema::sellers::{self, address, email, image, name, phone};
@@ -11,6 +13,25 @@ pub fn get_sellers(page: i32, connection: &mut SqliteConnection) -> Vec<Seller> 
         .offset(offset as i64)
         .load::<Seller>(connection)
         .expect("error get all sellers");
+
+    result
+}
+
+pub fn get_all_sellers(connection: &mut SqliteConnection) -> Vec<Value> {
+    let response = sellers::dsl::sellers
+        .order(sellers::id.desc())
+        .select((sellers::name, sellers::id))
+        .load::<(String, i32)>(connection)
+        .expect("error get all sellers");
+
+    let mut result: Vec<Value> = Vec::new();
+
+    response.into_iter().for_each(|(fname, c_id)| {
+        result.push(json!({
+            "name":fname,
+            "id":c_id
+        }))
+    });
 
     result
 }
