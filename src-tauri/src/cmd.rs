@@ -106,6 +106,14 @@ pub fn get_sellers(page: i32, state: tauri::State<AppState>) -> Vec<Seller> {
 }
 
 #[tauri::command]
+pub fn get_all_sellers(state: tauri::State<AppState>) -> Vec<Value> {
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = seller_repo::get_all_sellers(conn);
+    result
+}
+
+#[tauri::command]
 pub fn get_seller(id: i32, state: tauri::State<AppState>) -> Seller {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
