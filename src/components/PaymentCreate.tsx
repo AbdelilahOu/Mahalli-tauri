@@ -1,6 +1,5 @@
 import { defineComponent, reactive, ref } from "vue";
 import { useModalStore } from "@/stores/modalStore";
-import { usePaymentStore } from "@/stores/paymentStore";
 import { UiButton } from "./ui/UiButton";
 import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
@@ -13,9 +12,6 @@ export const PaymentCreate = defineComponent({
   name: "PaymentCreate",
   components: { UiButton, UiInput, UiSelect },
   setup() {
-    // const { clients } = storeToRefs(useClientStore());
-    const Paymentstore = usePaymentStore();
-
     const clients = ref<clientT[]>([]);
 
     const Payment = reactive<newPaymentT>({
@@ -25,7 +21,9 @@ export const PaymentCreate = defineComponent({
     const createNewPayment = () => {
       console.log(Payment);
       if (Payment.clientId !== 0 && Payment.price !== 0) {
-        Paymentstore.createPayment(Payment);
+        //
+        try {
+        } catch (error) {}
         useModalStore().updateModal({ key: "show", value: false });
       }
     };
