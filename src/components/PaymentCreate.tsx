@@ -1,4 +1,4 @@
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import { useModalStore } from "@/stores/modalStore";
 import { usePaymentStore } from "@/stores/paymentStore";
 import { UiButton } from "./ui/UiButton";
@@ -6,15 +6,18 @@ import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import { storeToRefs } from "pinia";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useClientStore } from "@/stores/clientStore";
-import type { newPaymentT } from "@/types";
+// import { useClientStore } from "@/stores/clientStore";
+import type { clientT, newPaymentT } from "@/types";
 
 export const PaymentCreate = defineComponent({
   name: "PaymentCreate",
   components: { UiButton, UiInput, UiSelect },
   setup() {
-    const { clients } = storeToRefs(useClientStore());
+    // const { clients } = storeToRefs(useClientStore());
     const Paymentstore = usePaymentStore();
+
+    const clients = ref<clientT[]>([]);
+
     const Payment = reactive<newPaymentT>({
       clientId: 0,
       price: 0,
