@@ -1,8 +1,12 @@
-import { defineComponent, reactive, onBeforeUnmount } from "vue";
+import {
+  defineComponent,
+  reactive,
+  onBeforeUnmount,
+  ref,
+  onBeforeMount,
+} from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { useInvoiceStore } from "@/stores/invoiceStore";
-import { useProductStore } from "@/stores/productStore";
-import { useClientStore } from "@/stores/clientStore";
 import { UiUpdateSelect } from "./ui/UiUpdateSelect";
 import { useModalStore } from "@/stores/modalStore";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
@@ -11,36 +15,53 @@ import { UiCheckBox } from "./ui/UiCheckBox";
 import { UiButton } from "./ui/UiButton";
 import { storeToRefs } from "pinia";
 import UiIcon from "./ui/UiIcon.vue";
+import { invoke } from "@tauri-apps/api";
 
 export const InvoiceUpdate = defineComponent({
   name: "InvoiceUpdate",
   components: { UiButton, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
   setup() {
-    //
-    const productStore = useProductStore();
-    const clientStore = useClientStore();
     const modalStore = useModalStore();
-    //
+    const clients = ref<{ name: string; id: number }[]>([]);
+    const products = ref<{ name: string; id: number }[]>([]);
     const { invoice: invoiceRow } = storeToRefs(modalStore);
 
-    const { products } = storeToRefs(productStore);
-    const { clients } = storeToRefs(clientStore);
-    //
     const invoice: updateInvoiceT = {
       id: undefined,
       total: undefined,
       client_id: undefined,
       invoiceItems: [],
     };
+
+    onBeforeMount(async () => {
+      const res = await Promise.allSettled([
+        invoke<{ name: string; id: number }[]>("get_all_clients"),
+        invoke<{ name: string; id: number }[]>("get_all_products"),
+      ]);
+
+      // @ts-ignore
+      if ((res[0].status = "fulfilled")) clients.value = res[0].value;
+      // @ts-ignore
+      if ((res[1].status = "fulfilled")) products.value = res[1].value;
+    });
+
     //
     const updateInvoice = reactive<updateInvoiceT>(
       invoiceRow.value ? invoiceRow.value : invoice
     );
     //
-    const updateTheInvoice = () => {
+    const updateTheInvoice = async () => {
       if (updateInvoice.id) {
-        useInvoiceStore().updateOneInvoice(updateInvoice.id, updateInvoice);
-        modalStore.updateModal({ key: "show", value: false });
+        try {
+          await invoke("update_invoice", {
+            invoice: updateInvoice,
+            id: updateInvoice.id,
+          });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          modalStore.updateModal({ key: "show", value: false });
+        }
       }
     };
     onBeforeUnmount(() => modalStore.updateInvoiceRow(null));
