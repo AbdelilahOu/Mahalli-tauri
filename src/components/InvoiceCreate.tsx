@@ -1,9 +1,14 @@
-import type { newInvoiceT, newInvoiceItemT } from "@/types";
+import type {
+  newInvoiceT,
+  newInvoiceItemT,
+  clientT,
+  productT,
+  invoiceT,
+} from "@/types";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { useInvoiceStore } from "@/stores/invoiceStore";
 import { useProductStore } from "@/stores/productStore";
-import { useClientStore } from "@/stores/clientStore";
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { useModalStore } from "@/stores/modalStore";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { UiButton } from "./ui/UiButton";
@@ -11,33 +16,57 @@ import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import UiIcon from "./ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
+import { invoke } from "@tauri-apps/api";
 
 export const InvoiceCreate = defineComponent({
   name: "InvoiceCreate",
   components: { UiButton, UiCheckBox, UiIcon, UiInput, UiSelect },
   setup() {
     const isFlash = ref<boolean>(false);
-    const { products } = storeToRefs(useProductStore());
-    const { clients } = storeToRefs(useClientStore());
+    // const { products } = storeToRefs(useProductStore());
+    const clients = ref<{ name: string; id: number }[]>([]);
+    const products = ref<{ name: string; id: number }[]>([]);
+
     const newInvoice = reactive<newInvoiceT>({
       client_id: 0,
       invoice_items: [],
       status: "",
     });
+
     const InvoiceItems = ref<newInvoiceItemT[]>([
       {
         product_id: 0,
         quantity: 0,
       },
     ]);
-    const createNewInvoice = () => {
+
+    onBeforeMount(async () => {
+      const res = await Promise.allSettled([
+        invoke<{ name: string; id: number }[]>("get_all_clients"),
+        invoke<{ name: string; id: number }[]>("get_all_products"),
+      ]);
+
+      // @ts-ignore
+      if ((res[0].status = "fulfilled")) clients.value = res[0].value;
+      // @ts-ignore
+      if ((res[1].status = "fulfilled")) products.value = res[1].value;
+    });
+
+    const createNewInvoice = async () => {
       isFlash.value = true;
       newInvoice.invoice_items = InvoiceItems.value.filter(
         (item) => item.product_id !== 0 && item.quantity !== 0
       );
       if (newInvoice.client_id && newInvoice.invoice_items.length !== 0) {
-        useInvoiceStore().createOneInvoice(newInvoice);
-        useModalStore().updateModal({ key: "show", value: false });
+        try {
+          await invoke<invoiceT>("insert_invoice", {
+            invoice: newInvoice,
+          });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          useModalStore().updateModal({ key: "show", value: false });
+        }
       }
       setTimeout(() => {
         isFlash.value = false;
@@ -54,10 +83,7 @@ export const InvoiceCreate = defineComponent({
               {globalTranslate("Invoices.create.details.client.title")}
             </h1>
             <UiSelect
-              items={clients.value.map((client) => ({
-                name: client.fullname,
-                id: client.id,
-              }))}
+              items={clients.value}
               onSelect={(id: number) => (newInvoice.client_id = id)}
             >
               {globalTranslate("Invoices.create.details.client.select")}
@@ -113,10 +139,7 @@ export const InvoiceCreate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {InvoiceItems.value.map((item, _index) => (
                     <UiSelect
-                      items={products.value.map((product) => ({
-                        name: product.name,
-                        id: product.id,
-                      }))}
+                      items={products.value}
                       onSelect={(id: number) => (item.product_id = id)}
                     >
                       {globalTranslate(
