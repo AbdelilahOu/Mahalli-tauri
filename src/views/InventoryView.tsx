@@ -7,6 +7,8 @@ import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
+import type { inventoryMvmT } from "@/types";
+import { invoke } from "@tauri-apps/api";
 
 export const InventoryView = defineComponent({
   name: "Inventory",
@@ -19,13 +21,17 @@ export const InventoryView = defineComponent({
   setup() {
     //
     const modalStore = useModalStore();
-    const inventoryStore = useInventoryStore();
-    const { inventoryMouvements } = storeToRefs(inventoryStore);
-
+    const inventoryMouvements = ref<inventoryMvmT[]>([]);
     const searchQuery = ref<string>("");
 
-    onBeforeMount(() => {
-      inventoryStore.getAllInventoryMouvements();
+    onBeforeMount(async () => {
+      try {
+        inventoryMouvements.value = await invoke("get_inventory_mvms", {
+          page: 1,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     });
 
     const updateModal = (name: string) => {
