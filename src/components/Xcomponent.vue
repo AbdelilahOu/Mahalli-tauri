@@ -18,8 +18,8 @@ import { ClientDelete } from "./ClientDelete";
 import { ClientUpdate } from "./ClientUpdate";
 import { ClientCreate } from "./ClientCreate";
 import { InventoryCreate } from "./InventoryCreate";
-import { PaymentCreate } from "./PaymentCreate";
-import { PaymentDelete } from "./PaymentDelete";
+// import { PaymentCreate } from "./PaymentCreate";
+// import { PaymentDelete } from "./PaymentDelete";
 import { CsvUploader } from "./CsvUploader";
 export default {
   components: {
@@ -40,8 +40,8 @@ export default {
     ClientUpdate,
     ClientCreate,
     InventoryCreate,
-    PaymentCreate,
-    PaymentDelete,
+    // PaymentCreate,
+    // PaymentDelete,
     CsvUploader,
   },
   props: {
