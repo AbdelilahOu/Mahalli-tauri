@@ -41,7 +41,7 @@ export const ClientCreate = defineComponent({
         try {
           let image: string = await saveFile(client.image as string, "Image");
           await invoke("insert_client", { client });
-          updateQueryParams({ refresh: true });
+          updateQueryParams({ refresh: "refresh-create" });
         } catch (error) {
           console.log(error);
         } finally {

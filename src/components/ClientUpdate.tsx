@@ -6,6 +6,7 @@ import { UiButton } from "./ui/UiButton";
 import { storeToRefs } from "pinia";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { invoke } from "@tauri-apps/api";
+import { useRoute, useRouter } from "vue-router";
 
 export const ClientUpdate = defineComponent({
   name: "ClientUpdate",
@@ -13,6 +14,9 @@ export const ClientUpdate = defineComponent({
   setup() {
     const modalStore = useModalStore();
     const { client: ClientRow } = storeToRefs(modalStore);
+    const route = useRoute();
+    const router = useRouter();
+
     const client = {
       id: undefined,
       name: undefined,
@@ -20,9 +24,19 @@ export const ClientUpdate = defineComponent({
       phone: undefined,
       address: undefined,
     };
+
     const updateClient = reactive<updateClientT>(
       ClientRow.value ? ClientRow.value : client
     );
+
+    const updateQueryParams = (query: Record<any, any>) => {
+      router.push({
+        path: route.path,
+        params: { ...route.params },
+        query: { ...route.query, ...query },
+      });
+    };
+
     const updateTheClient = async () => {
       if (updateClient.id) {
         try {
@@ -30,6 +44,7 @@ export const ClientUpdate = defineComponent({
             client: updateClient,
             id: updateClient.id,
           });
+          updateQueryParams({ refresh: "refresh-update" });
         } catch (error) {
           console.log(error);
         } finally {
