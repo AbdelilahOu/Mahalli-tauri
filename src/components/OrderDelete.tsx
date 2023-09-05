@@ -1,6 +1,5 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, onBeforeUnmount } from "vue";
-import { useOrdersStore } from "@/stores/orderStore";
 import { useModalStore } from "@/stores/modalStore";
 import { storeToRefs } from "pinia";
 import { UiButton } from "./ui/UiButton";
