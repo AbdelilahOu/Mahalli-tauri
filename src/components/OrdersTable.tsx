@@ -25,7 +25,6 @@ export const OrdersTable = defineComponent({
   setup(props) {
     const modalStore = useModalStore();
 
-    const pagination = ref<number>(0);
     const checkedOrders = ref<number[]>([]);
 
     const checkThisOrders = (IsIncluded: boolean, id: number) => {
@@ -155,12 +154,7 @@ export const OrdersTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination
-            goBack={() => pagination.value--}
-            goForward={() => pagination.value++}
-            itemsNumber={props.Orders.length}
-            page={pagination.value}
-          />
+          <UiPagination itemsNumber={props.Orders.length} />
         </div>
       </div>
     );
