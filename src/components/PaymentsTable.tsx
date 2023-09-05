@@ -20,7 +20,6 @@ export const PaymentsTable = defineComponent({
   },
   components: { UiPagination, UiIcon },
   setup(props) {
-    const pagination = ref<number>(0);
     const toggleThisPayment = (credi: crediT, name: string) => {
       useModalStore().updatePaymentRow(credi);
       useModalStore().updateModal({ key: "name", value: name });
@@ -47,8 +46,7 @@ export const PaymentsTable = defineComponent({
               JSON.stringify(Object.values(c))
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
-            )
-            .map((credi, index) => (
+            ).map((credi, index) => (
               <tr v-fade={index} key={credi.id}>
                 <td class="p-2">
                   <div class="font-medium text-gray-800">{credi.id}</div>
@@ -81,12 +79,7 @@ export const PaymentsTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination
-            goBack={() => pagination.value--}
-            goForward={() => pagination.value++}
-            itemsNumber={props.Payment.length}
-            page={pagination.value}
-          />
+          <UiPagination itemsNumber={props.Payment.length} />
         </div>
       </div>
     );
