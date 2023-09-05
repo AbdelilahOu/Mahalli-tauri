@@ -59,8 +59,7 @@ export const InvoicesTable = defineComponent({
               JSON.stringify(Object.values(c))
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
-            )
-            .map((Invoice, index) => (
+            ).map((Invoice, index) => (
               <tr v-fade={index} key={Invoice.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
@@ -165,12 +164,7 @@ export const InvoicesTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination
-            goBack={() => pagination.value--}
-            goForward={() => pagination.value++}
-            itemsNumber={props.Invoices.length}
-            page={pagination.value}
-          />
+          <UiPagination itemsNumber={props.Invoices.length} />
         </div>
       </div>
     );
