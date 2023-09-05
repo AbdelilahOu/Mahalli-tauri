@@ -508,6 +508,22 @@ pub fn get_inventory_mvms(page: i32, state: tauri::State<AppState>) -> Vec<Value
 }
 
 #[tauri::command]
+pub fn insert_inventory_mvm(inventory: TNewInventory, state: tauri::State<AppState>) -> i32 {
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = inventory_mvm_repo::insert_inventory_mvm(
+        NewInventoryMvm {
+            model: inventory.model,
+            quantity: inventory.quantity,
+            product_id: inventory.product_id,
+        },
+        conn,
+    );
+
+    result
+}
+
+#[tauri::command]
 pub fn delete_inventory_mvm(id: i32, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;

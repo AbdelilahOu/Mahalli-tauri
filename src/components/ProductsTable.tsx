@@ -23,7 +23,7 @@ export const ProductsTable = defineComponent({
   setup(props) {
     const modalStore = useModalStore();
     //
-    const pagination = ref<number>(0);
+
     //
     const toggleThisProduct = (product: productT, name: string) => {
       modalStore.updateProductRow(product);
@@ -51,8 +51,7 @@ export const ProductsTable = defineComponent({
               JSON.stringify(Object.values(c))
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
-            )
-            .map((product, index) => (
+            ).map((product, index) => (
               <tr v-fade={index} key={product.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
@@ -106,12 +105,7 @@ export const ProductsTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination
-            goBack={() => pagination.value--}
-            goForward={() => pagination.value++}
-            itemsNumber={props.Products.length}
-            page={pagination.value}
-          />
+          <UiPagination itemsNumber={props.Products.length} />
         </div>
       </div>
     );

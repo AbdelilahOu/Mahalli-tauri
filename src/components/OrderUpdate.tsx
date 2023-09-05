@@ -1,7 +1,4 @@
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useOrdersStore } from "@/stores/orderStore";
-import { useProductStore } from "@/stores/productStore";
-import { useSellerStore } from "@/stores/sellerStore";
 import { UiUpdateSelect } from "./ui/UiUpdateSelect";
 import { useModalStore } from "@/stores/modalStore";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
@@ -70,6 +67,15 @@ export const OrderUpdate = defineComponent({
         }
       }
     };
+
+    async function deleteOneOrderItem(id: number) {
+      try {
+        await invoke("delete_order_items", { id });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     onBeforeUnmount(() => modalStore.updateOrdersRow(null));
 
     return () => (
@@ -213,8 +219,7 @@ export const OrderUpdate = defineComponent({
                     <div
                       onClick={() => {
                         updateOrder.orderItems?.splice(index, 1);
-                        if (item.id)
-                          useOrdersStore().deleteOneOrderItem(item.id);
+                        if (item.id) deleteOneOrderItem(item.id);
                       }}
                       class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
                     >

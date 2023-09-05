@@ -1,11 +1,10 @@
 import { defineComponent, reactive, onBeforeUnmount } from "vue";
-import { useProductStore } from "@/stores/productStore";
 import { useModalStore } from "@/stores/modalStore";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
 import { UiButton } from "./ui/UiButton";
 import type { updateProductT } from "@/types";
 import { storeToRefs } from "pinia";
-import { UiUpdateSelect } from "./ui/UiUpdateSelect";
+import { invoke } from "@tauri-apps/api";
 
 export const ProductUpdate = defineComponent({
   name: "ProductUpdate",
@@ -25,10 +24,18 @@ export const ProductUpdate = defineComponent({
       ...(ProductRow.value ? ProductRow.value : Product),
       quantity: 0,
     });
-    const updateTheProduct = () => {
+    const updateTheProduct = async () => {
       if (updateProduct.id) {
-        useProductStore().updateOneProduct(updateProduct.id, updateProduct);
-        modalStore.updateModal({ key: "show", value: false });
+        try {
+          await invoke("update_product", {
+            product: updateProduct,
+            id: updateProduct.id,
+          });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          modalStore.updateModal({ key: "show", value: false });
+        }
       }
     };
     onBeforeUnmount(() => modalStore.updateProductRow(null));

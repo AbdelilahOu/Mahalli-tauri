@@ -1,21 +1,28 @@
 import { defineComponent, onBeforeUnmount, type PropType } from "vue";
-import { useProductStore } from "@/stores/productStore";
 import { useModalStore } from "@/stores/modalStore";
 import { storeToRefs } from "pinia";
 import { UiButton } from "./ui/UiButton";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { invoke } from "@tauri-apps/api";
 
 export const ProductDelete = defineComponent({
   name: "ProductDelete",
   components: { UiButton },
   setup() {
     const modalStore = useModalStore();
+
     const { product } = storeToRefs(modalStore);
-    console.log(product);
-    const deleteTheProduct = () => {
-      if (product.value?.id) {
-        useProductStore().deleteOneProduct(product.value?.id);
-        modalStore.updateModal({ key: "show", value: false });
+
+    const deleteTheProduct = async () => {
+      let id = product.value?.id;
+      if (id) {
+        try {
+          await invoke("delete_product", { id });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          modalStore.updateModal({ key: "show", value: false });
+        }
       }
     };
     onBeforeUnmount(() => modalStore.updateProductRow(null));

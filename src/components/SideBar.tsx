@@ -53,7 +53,7 @@ export const SideBar = defineComponent({
               {RouteLinks.map((link, index) => {
                 return (
                   link.display && (
-                    <RouterLink to={link.path}>
+                    <RouterLink to={{ path: link.path, query: { page: 1 } }}>
                       <UiSideLink
                         // v-fade={0}
                         IsText={!props.IsCollapse}

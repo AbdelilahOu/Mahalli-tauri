@@ -1,34 +1,34 @@
-import { defineComponent, type PropType } from "vue";
+import { computed, defineComponent, type PropType } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 export const UiPagination = defineComponent({
   name: "UiPagination",
   props: {
-    page: {
-      type: Number,
-      required: true,
-    },
     itemsNumber: {
       type: Number,
       required: true,
     },
-    goBack: {
-      type: Function as PropType<() => void>,
-      required: true,
-    },
-    goForward: {
-      type: Function as PropType<() => void>,
-      required: true,
-    },
   },
   setup(props) {
+    const router = useRouter();
+    const route = useRoute();
+
+    const page = computed(() => Number(router.currentRoute.value.query.page));
+
     const goBack = () => {
-      if (props.page > 0) {
-        props.goBack();
+      if (page.value > 1) {
+        router.push({
+          path: route.path,
+          query: { page: page.value - 1 },
+        });
       }
     };
     const goForward = () => {
-      if (props.page + 1 < Math.ceil(props.itemsNumber / 17)) {
-        props.goForward();
+      if (page.value < Math.ceil(props.itemsNumber / 17)) {
+        router.push({
+          path: route.path,
+          query: { page: page.value + 1 },
+        });
       }
     };
     return () => (
@@ -42,13 +42,13 @@ export const UiPagination = defineComponent({
           </span>
           <div class="flex w-full h-full items-center">
             <span class="px-1 text-base text-gray-400">
-              {props.page === 0 ? "" : props.page}
+              {page.value === 1 ? "" : page.value}
             </span>
-            <span class="px-1">{props.page + 1}</span>
+            <span class="px-1">{page.value}</span>
             <span class="px-1 text-base text-gray-400">
-              {props.page + 1 === Math.ceil(props.itemsNumber / 17)
+              {page.value + 1 === Math.ceil(props.itemsNumber / 17)
                 ? ""
-                : props.page + 2}
+                : page.value + 1}
             </span>
           </div>
           <span
