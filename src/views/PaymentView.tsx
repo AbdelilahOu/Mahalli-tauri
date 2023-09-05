@@ -6,21 +6,21 @@ import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
-import { usePaymentStore } from "@/stores/paymentStore";
 
 export const PaymentView = defineComponent({
   name: "Payments",
   components: { PaymentsTable, UiButton, UiInput, UiIcon },
   setup() {
     const modalStore = useModalStore();
-    const PaymentStore = usePaymentStore();
-    const { Payments } = storeToRefs(PaymentStore);
+    // const { Payments } = storeToRefs(PaymentStore);
     //
+    const Payments = ref([]);
     const searchQuery = ref<string>("");
 
+    function getAllPayments() {}
     //
     onBeforeMount(() => {
-      if (!Payments.value.length) PaymentStore.getAllPayments();
+      if (!Payments.value.length) getAllPayments();
     });
     //
     const updateModal = (name: string) => {
