@@ -25,7 +25,7 @@ export const SellersTable = defineComponent({
   setup(props) {
     const modalStore = useModalStore();
     const checkedSellers = ref<number[]>([]);
-    const pagination = ref<number>(0);
+
     const checkThisUser = (IsInclude: boolean, id: number) => {
       IsInclude
         ? checkedSellers.value.push(id)
@@ -59,8 +59,7 @@ export const SellersTable = defineComponent({
               JSON.stringify(Object.values(c))
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
-            )
-            .map((Seller, index) => (
+            ).map((Seller, index) => (
               <tr v-fade={index} key={Seller.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
@@ -128,12 +127,7 @@ export const SellersTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination
-            goBack={() => pagination.value--}
-            goForward={() => pagination.value++}
-            itemsNumber={props.Sellers.length}
-            page={pagination.value}
-          />
+          <UiPagination itemsNumber={props.Sellers.length} />
         </div>
       </div>
     );

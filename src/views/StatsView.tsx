@@ -1,14 +1,14 @@
+import { groupBy, reduce, keys, values, mapValues } from "lodash";
+import type { FilteredInventoryData, inOutReType } from "@/types";
 import { defineComponent, onBeforeMount, reactive } from "vue";
 import { ChartDoughnut } from "@/components/ChartDoughnut";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { chartOptions } from "@/constants/chartOptions";
 import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
-import type { FilteredInventoryData, inOutReType } from "@/types";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
 import { invoke } from "@tauri-apps/api";
-import _ from "lodash";
 import { getWeekDay } from "@/utils/formatDate";
 
 export const StatsView = defineComponent({
@@ -57,10 +57,10 @@ export const StatsView = defineComponent({
         { id }
       );
 
-      const existingDates = _.keys(_.groupBy(data, "month"));
-      const existingProducts = _.keys(_.groupBy(data, "name"));
-      const dataPerProduct = _.mapValues(_.groupBy(data, "name"), (value) =>
-        _.reduce(
+      const existingDates = keys(groupBy(data, "month"));
+      const existingProducts = keys(groupBy(data, "name"));
+      const dataPerProduct = mapValues(groupBy(data, "name"), (value) =>
+        reduce(
           value,
           (pr, cr) => {
             if (!pr) pr = [];
@@ -82,11 +82,11 @@ export const StatsView = defineComponent({
         isClients ? "get_b3_clients" : "get_b3_sellers"
       );
       //
-      const result = _.mapValues(_.groupBy(data, "name"), (value) =>
-        _.reduce(value, (pr, cr) => (pr += cr.amount), 0)
+      const result = mapValues(groupBy(data, "name"), (value) =>
+        reduce(value, (pr, cr) => (pr += cr.amount), 0)
       );
       //
-      return { names: _.keys(result), result: _.values(result) };
+      return { names: keys(result), result: values(result) };
     }
     async function getDailyExpenses(id: number, isClient = true) {
       const result: { day: string; expense: number }[] = await invoke(
@@ -124,9 +124,9 @@ export const StatsView = defineComponent({
       }
 
       // @ts-ignore
-      const K = _.keys(Object.fromEntries(resultMap));
+      const K = keys(Object.fromEntries(resultMap));
       // @ts-ignore
-      const V = _.values(Object.fromEntries(resultMap));
+      const V = values(Object.fromEntries(resultMap));
       const rearrangedKeys = K.slice(nextDay).concat(K.slice(0, nextDay));
       const rearrangedValues = V.slice(nextDay).concat(V.slice(0, nextDay));
 

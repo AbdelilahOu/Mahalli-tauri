@@ -1,9 +1,9 @@
 import { defineComponent, onBeforeUnmount } from "vue";
-import { useSellerStore } from "@/stores/sellerStore";
 import { useModalStore } from "@/stores/modalStore";
 import { UiButton } from "./ui/UiButton";
 import { storeToRefs } from "pinia";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { invoke } from "@tauri-apps/api";
 
 export const SellerDelete = defineComponent({
   name: "SellerDelete",
@@ -11,10 +11,16 @@ export const SellerDelete = defineComponent({
   setup(props) {
     const modalStore = useModalStore();
     const { seller } = storeToRefs(modalStore);
-    const deleteTheSeller = () => {
-      if (seller.value?.id) {
-        useSellerStore().deleteOneSeller(seller.value?.id);
-        modalStore.updateModal({ key: "show", value: false });
+    const deleteTheSeller = async () => {
+      let id = seller.value?.id;
+      if (id) {
+        try {
+          await invoke("delete_seller", { id });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          modalStore.updateModal({ key: "show", value: false });
+        }
       }
     };
     onBeforeUnmount(() => modalStore.updateSellerRow(null));

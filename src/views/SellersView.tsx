@@ -18,6 +18,9 @@ export const SellersView = defineComponent({
     onBeforeMount(async () => {
       try {
         const res = await invoke<sellerT[]>("get_sellers", { page: 1 });
+        if (res.length) {
+          sellers.value = res;
+        }
       } catch (error) {
         console.log(error);
       }

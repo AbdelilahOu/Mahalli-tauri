@@ -2,11 +2,9 @@ import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { InventoryTable } from "@/components/InventoryTable";
 import { useModalStore } from "@/stores/modalStore";
-import { useInventoryStore } from "@/stores/InventoryStore";
 import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
-import { storeToRefs } from "pinia";
 import type { inventoryMvmT } from "@/types";
 import { invoke } from "@tauri-apps/api";
 

@@ -58,7 +58,7 @@ export const HomeView = defineComponent({
             <div class="md:h-[700px] w-full h-full p-3 gap-3 grid-cols-3 grid-rows-3 grid">
               {Pages.map((page, index) => (
                 <div v-fade={index + 1} class="w-full h-full">
-                  <RouterLink to={page.path}>
+                  <RouterLink to={{ path: page.path, query: { page: 1 } }}>
                     <div class="w-full h-full overflow-hidden cursor-pointer relative hover:-translate-y-1 group transition-all duration-250 flex justify-center rounded-md items-center bg-gray-400">
                       <img
                         class="absolute top-0 left-0 w-full opacity-20 group-hover:opacity-60 h-full transition-all duration-250"

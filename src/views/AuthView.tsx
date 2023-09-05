@@ -8,7 +8,7 @@ import { getCurrentUser } from "vuefire";
 import { Vue3Lottie } from "vue3-lottie";
 import { useRouter } from "vue-router";
 import { login } from "@/utils/Oauth";
-import { useUserStore } from "@/stores/userStore";
+// import { useUserStore } from "@/stores/userStore";
 
 export const AuthView = defineComponent({
   name: "Auth",
@@ -23,7 +23,7 @@ export const AuthView = defineComponent({
     onBeforeMount(async () => {
       const isAuthenticated = await getCurrentUser();
       if (isAuthenticated) {
-        useUserStore().setUser(isAuthenticated);
+        // useUserStore().setUser(isAuthenticated);
         router.push({ name: "Home" });
         return;
       }

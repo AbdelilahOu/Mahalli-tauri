@@ -1,6 +1,13 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
+pub struct TNewInventory {
+    pub model: String,
+    pub quantity: i64,
+    pub product_id: i32,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct TNewOrder {
     pub status: String,
     pub seller_id: i32,
