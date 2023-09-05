@@ -1,5 +1,4 @@
 import { defineComponent, onBeforeUnmount } from "vue";
-import { useInvoiceStore } from "@/stores/invoiceStore";
 import { useModalStore } from "@/stores/modalStore";
 import { storeToRefs } from "pinia";
 import { UiButton } from "./ui/UiButton";
