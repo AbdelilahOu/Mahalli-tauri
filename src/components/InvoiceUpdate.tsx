@@ -6,7 +6,6 @@ import {
   onBeforeMount,
 } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useInvoiceStore } from "@/stores/invoiceStore";
 import { UiUpdateSelect } from "./ui/UiUpdateSelect";
 import { useModalStore } from "@/stores/modalStore";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
@@ -64,6 +63,15 @@ export const InvoiceUpdate = defineComponent({
         }
       }
     };
+
+    async function deleteOneinvoiceItem(id: number) {
+      try {
+        await invoke("delete_invoice_items", { id });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     onBeforeUnmount(() => modalStore.updateInvoiceRow(null));
 
     return () => (
@@ -145,8 +153,7 @@ export const InvoiceUpdate = defineComponent({
                     <div
                       onClick={() => {
                         updateInvoice.invoiceItems?.splice(index, 1);
-                        if (item.id)
-                          useInvoiceStore().deleteOneinvoiceItem(item.id);
+                        if (item.id) deleteOneinvoiceItem(item.id);
                       }}
                       class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
                     >
