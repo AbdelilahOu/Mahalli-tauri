@@ -1,27 +1,41 @@
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useProductStore } from "@/stores/productStore";
 import { useModalStore } from "@/stores/modalStore";
-import { useInventoryStore } from "@/stores/InventoryStore";
-import { defineComponent, reactive } from "vue";
 import { UiButton } from "./ui/UiButton";
 import { UiSelect } from "./ui/UiSelect";
+import { invoke } from "@tauri-apps/api";
 import { UiInput } from "./ui/UiInput";
-import { storeToRefs } from "pinia";
 
 export const InventoryCreate = defineComponent({
   name: "InventoryCreate",
   components: { UiButton, UiInput, UiSelect },
   setup() {
-    const { products } = storeToRefs(useProductStore());
+    // const { products } = storeToRefs(useProductStore());
     const inventoryMvm = reactive({
       productId: 0,
       quantity: 0,
       model: "IN",
     });
-    const createNewInventory = () => {
+
+    const products = ref<{ name: string; id: number }[]>([]);
+
+    onBeforeMount(async () => {
+      const res = await Promise.allSettled([
+        invoke<{ name: string; id: number }[]>("get_all_products"),
+      ]);
+      // @ts-ignore
+      if ((res[0].status = "fulfilled")) products.value = res[0].value;
+    });
+
+    const createNewInventory = async () => {
       if (inventoryMvm.productId !== 0 && inventoryMvm.quantity !== 0) {
-        useInventoryStore().createInventoryMouvement(inventoryMvm);
-        useModalStore().updateModal({ key: "show", value: false });
+        try {
+          await invoke("insert_inventory_mvm", { inventory: inventoryMvm });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          useModalStore().updateModal({ key: "show", value: false });
+        }
       }
     };
     return () => (
@@ -31,10 +45,7 @@ export const InventoryCreate = defineComponent({
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
           <UiSelect
-            items={products.value.map((product) => ({
-              name: product.name,
-              id: product.id,
-            }))}
+            items={products.value}
             onSelect={(id: number) => (inventoryMvm.productId = id)}
           >
             {globalTranslate("Inventory.create.select")}
