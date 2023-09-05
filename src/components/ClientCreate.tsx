@@ -8,6 +8,7 @@ import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
 import { invoke } from "@tauri-apps/api";
+import { useRoute, useRouter } from "vue-router";
 
 export const ClientCreate = defineComponent({
   name: "ClientCreate",
@@ -15,6 +16,9 @@ export const ClientCreate = defineComponent({
   setup() {
     const modalStore = useModalStore();
     const isFlash = ref<boolean>(false);
+    const route = useRoute();
+    const router = useRouter();
+
     const client = reactive<newClientT>({
       fullname: String(),
       phone: String(),
@@ -22,12 +26,22 @@ export const ClientCreate = defineComponent({
       address: String(),
       image: String(),
     });
+
+    const updateQueryParams = (query: Record<any, any>) => {
+      router.push({
+        path: route.path,
+        params: { ...route.params },
+        query: { ...route.query, ...query },
+      });
+    };
+
     const createNewClient = async () => {
       isFlash.value = true;
       if (client.fullname !== "") {
         try {
           let image: string = await saveFile(client.image as string, "Image");
           await invoke("insert_client", { client });
+          updateQueryParams({ refresh: true });
         } catch (error) {
           console.log(error);
         } finally {
