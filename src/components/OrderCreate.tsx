@@ -1,14 +1,10 @@
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import type { newOrdersT, newOrdersItemT } from "@/types";
-import { useOrdersStore } from "@/stores/orderStore";
-import { useProductStore } from "@/stores/productStore";
-import { useSellerStore } from "@/stores/sellerStore";
 import { useModalStore } from "@/stores/modalStore";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { UiButton } from "./ui/UiButton";
 import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
-import { storeToRefs } from "pinia";
 import UiIcon from "./ui/UiIcon.vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { invoke } from "@tauri-apps/api";
