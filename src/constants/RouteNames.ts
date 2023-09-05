@@ -43,12 +43,12 @@ export const RouteLinks: RouteLinksTypeT[] = [
     name: "Statistics",
     display: true,
   },
-  {
-    path: "/Payment",
-    component: "Payment",
-    name: "Payment",
-    display: true,
-  },
+  // {
+  //   path: "/Payment",
+  //   component: "Payment",
+  //   name: "Payment",
+  //   display: true,
+  // },
   {
     path: "/OrdersDetails",
     component: "OrdersDetails",
