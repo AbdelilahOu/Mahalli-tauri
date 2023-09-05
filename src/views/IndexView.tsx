@@ -45,7 +45,7 @@ export const IndexView = defineComponent({
                 <Xcomponent name={modalStore.theModal.name} />
               </div>
             )}
-            <div class="w-full bg-white rounded-md h-full">
+            <div class="w-full bg-white p-2 rounded-md h-full">
               <RouterView></RouterView>
             </div>
           </div>
