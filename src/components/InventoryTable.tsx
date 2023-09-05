@@ -21,7 +21,6 @@ export const InventoryTable = defineComponent({
   },
   components: { UiPagination },
   setup(props) {
-    const pagination = ref<number>(0);
     return () => (
       <div class="flex flex-col w-full h-fit">
         <table class="table-auto  w-full">
@@ -42,8 +41,7 @@ export const InventoryTable = defineComponent({
               JSON.stringify(Object.values(c))
                 .toLocaleLowerCase()
                 .includes(props.FilterParam)
-            )
-            .map((mvm, index) => (
+            ).map((mvm, index) => (
               <tr v-fade={index} key={mvm.id}>
                 <td class="p-2">
                   <div class="text-left font-medium">{mvm.product?.name}</div>
@@ -115,12 +113,7 @@ export const InventoryTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination
-            goBack={() => pagination.value--}
-            goForward={() => pagination.value++}
-            itemsNumber={props.Inventory.length}
-            page={pagination.value}
-          />
+          <UiPagination itemsNumber={props.Inventory.length} />
         </div>
       </div>
     );
