@@ -3,8 +3,8 @@ import { useModalStore } from "@/stores/modalStore";
 import { storeToRefs } from "pinia";
 import { UiButton } from "./ui/UiButton";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { invoke } from "@tauri-apps/api";
 import { useRoute, useRouter } from "vue-router";
+import { invoke } from "@tauri-apps/api";
 
 export const ClientDelete = defineComponent({
   name: "ClientDelete",
