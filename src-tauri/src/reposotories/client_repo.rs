@@ -84,6 +84,7 @@ pub fn update_client(c_update: Client, c_id: i32, connection: &mut SqliteConnect
             clients::email.eq(c_update.email),
             clients::address.eq(c_update.address),
             clients::image.eq(c_update.image),
+            clients::phone.eq(c_update.phone),
         ))
         .execute(connection)
         .expect("Expect add client");
