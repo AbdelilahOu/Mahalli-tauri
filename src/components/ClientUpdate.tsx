@@ -1,12 +1,12 @@
 import { defineComponent, reactive, onBeforeUnmount } from "vue";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { useModalStore } from "@/stores/modalStore";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
+import { useRoute, useRouter } from "vue-router";
 import type { updateClientT } from "@/types";
 import { UiButton } from "./ui/UiButton";
 import { storeToRefs } from "pinia";
-import { globalTranslate } from "@/utils/globalTranslate";
 import { invoke } from "@tauri-apps/api";
-import { useRoute, useRouter } from "vue-router";
 
 export const ClientUpdate = defineComponent({
   name: "ClientUpdate",
@@ -52,6 +52,7 @@ export const ClientUpdate = defineComponent({
         }
       }
     };
+
     onBeforeUnmount(() => modalStore.updateClientRow(null));
 
     return () => (
