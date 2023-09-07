@@ -1,9 +1,9 @@
+import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, onBeforeUnmount } from "vue";
 import { useModalStore } from "@/stores/modalStore";
-import { storeToRefs } from "pinia";
-import { UiButton } from "./ui/UiButton";
-import { globalTranslate } from "@/utils/globalTranslate";
 import { invoke } from "@tauri-apps/api";
+import { UiButton } from "./ui/UiButton";
+import { storeToRefs } from "pinia";
 
 export const InvoiceDelete = defineComponent({
   name: "InvoiceDelete",
