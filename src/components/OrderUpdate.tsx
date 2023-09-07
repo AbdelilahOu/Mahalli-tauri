@@ -4,6 +4,7 @@ import { useModalStore } from "@/stores/modalStore";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
 import type { updateOrdersT } from "@/types";
 import { UiCheckBox } from "./ui/UiCheckBox";
+import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import UiIcon from "./ui/UiIcon.vue";
 import { storeToRefs } from "pinia";
@@ -14,7 +15,6 @@ import {
   ref,
   onBeforeMount,
 } from "vue";
-import { invoke } from "@tauri-apps/api";
 
 export const OrderUpdate = defineComponent({
   name: "OrderUpdate",
