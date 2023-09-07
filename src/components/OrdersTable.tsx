@@ -1,12 +1,11 @@
-/*tslint:disable:no-string-literal*/
 import { defineComponent, type PropType, ref } from "vue";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { useModalStore } from "@/stores/modalStore";
 import { UiPagination } from "./ui/UiPagination";
 import { UiCheckBox } from "./ui/UiCheckBox";
+import { RouterLink } from "vue-router";
 import type { orderT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
-import { RouterLink } from "vue-router";
-import { globalTranslate } from "@/utils/globalTranslate";
 
 export const OrdersTable = defineComponent({
   name: "OrdersTable",
