@@ -2,13 +2,13 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, reactive, ref } from "vue";
 import { useModalStore } from "@/stores/modalStore";
 import { ImagesFiles } from "@/constants/FileTypes";
+import { useRoute, useRouter } from "vue-router";
 import { UiUploader } from "./ui/UiUploader";
 import type { newClientT } from "@/types";
+import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
-import { invoke } from "@tauri-apps/api";
-import { useRoute, useRouter } from "vue-router";
 
 export const ClientCreate = defineComponent({
   name: "ClientCreate",
