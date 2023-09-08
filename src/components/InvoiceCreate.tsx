@@ -8,11 +8,14 @@ import { UiButton } from "./ui/UiButton";
 import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import UiIcon from "./ui/UiIcon.vue";
+import { useRoute, useRouter } from "vue-router";
 
 export const InvoiceCreate = defineComponent({
   name: "InvoiceCreate",
   components: { UiButton, UiCheckBox, UiIcon, UiInput, UiSelect },
   setup() {
+    const route = useRoute();
+    const router = useRouter();
     const isFlash = ref<boolean>(false);
     // const { products } = storeToRefs(useProductStore());
     const clients = ref<{ name: string; id: number }[]>([]);
@@ -43,6 +46,14 @@ export const InvoiceCreate = defineComponent({
       if ((res[1].status = "fulfilled")) products.value = res[1].value;
     });
 
+    const updateQueryParams = (query: Record<any, any>) => {
+      router.push({
+        path: route.path,
+        params: { ...route.params },
+        query: { ...route.query, ...query },
+      });
+    };
+
     const createNewInvoice = async () => {
       isFlash.value = true;
       newInvoice.invoice_items = InvoiceItems.value.filter(
@@ -53,6 +64,7 @@ export const InvoiceCreate = defineComponent({
           await invoke<invoiceT>("insert_invoice", {
             invoice: newInvoice,
           });
+          updateQueryParams({ refresh: "refresh-create" });
         } catch (error) {
           console.log(error);
         } finally {
