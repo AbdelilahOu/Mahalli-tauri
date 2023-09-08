@@ -5,12 +5,16 @@ import { UiButton } from "./ui/UiButton";
 import { UiSelect } from "./ui/UiSelect";
 import { invoke } from "@tauri-apps/api";
 import { UiInput } from "./ui/UiInput";
+import { useRoute, useRouter } from "vue-router";
 
 export const InventoryCreate = defineComponent({
   name: "InventoryCreate",
   components: { UiButton, UiInput, UiSelect },
   setup() {
     // const { products } = storeToRefs(useProductStore());
+    const route = useRoute();
+    const router = useRouter();
+
     const inventoryMvm = reactive({
       productId: 0,
       quantity: 0,
@@ -27,10 +31,19 @@ export const InventoryCreate = defineComponent({
       if ((res[0].status = "fulfilled")) products.value = res[0].value;
     });
 
+    const updateQueryParams = (query: Record<any, any>) => {
+      router.push({
+        path: route.path,
+        params: { ...route.params },
+        query: { ...route.query, ...query },
+      });
+    };
+
     const createNewInventory = async () => {
       if (inventoryMvm.productId !== 0 && inventoryMvm.quantity !== 0) {
         try {
           await invoke("insert_inventory_mvm", { inventory: inventoryMvm });
+          updateQueryParams({ refresh: "refresh-create" });
         } catch (error) {
           console.log(error);
         } finally {
