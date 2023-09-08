@@ -4,20 +4,32 @@ import { useModalStore } from "@/stores/modalStore";
 import { UiButton } from "./ui/UiButton";
 import { invoke } from "@tauri-apps/api";
 import { storeToRefs } from "pinia";
+import { useRoute, useRouter } from "vue-router";
 
 export const OrderDelete = defineComponent({
   name: "OrderDelete",
   components: { UiButton },
   setup() {
+    const route = useRoute();
+    const router = useRouter();
     //
     const modalStore = useModalStore();
     const { order } = storeToRefs(modalStore);
     //
+    const updateQueryParams = (query: Record<any, any>) => {
+      router.push({
+        path: route.path,
+        params: { ...route.params },
+        query: { ...route.query, ...query },
+      });
+    };
+
     const deleteTheOrders = async () => {
       const id = order.value?.id;
       if (id) {
         try {
           await invoke("delete_order", { id });
+          updateQueryParams({ refresh: "refresh-delete" });
         } catch (error) {
           console.log(error);
         } finally {
