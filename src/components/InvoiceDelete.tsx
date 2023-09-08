@@ -4,6 +4,7 @@ import { useModalStore } from "@/stores/modalStore";
 import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import { storeToRefs } from "pinia";
+import { useRoute, useRouter } from "vue-router";
 
 export const InvoiceDelete = defineComponent({
   name: "InvoiceDelete",
@@ -12,12 +13,24 @@ export const InvoiceDelete = defineComponent({
     //
     const modalStore = useModalStore();
     const { invoice } = storeToRefs(modalStore);
+    const route = useRoute();
+    const router = useRouter();
     //
+
+    const updateQueryParams = (query: Record<any, any>) => {
+      router.push({
+        path: route.path,
+        params: { ...route.params },
+        query: { ...route.query, ...query },
+      });
+    };
+
     const deleteTheInvoice = async () => {
       const id = invoice.value?.id;
       if (id) {
         try {
           await invoke("delete_invoice", { id });
+          updateQueryParams({ refresh: "refresh-delete" });
         } catch (error) {
           console.log(error);
         } finally {
