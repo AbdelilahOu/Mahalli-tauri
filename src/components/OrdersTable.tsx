@@ -86,10 +86,10 @@ export const OrdersTable = defineComponent({
                 </td>
                 <td class="p-2">
                   <div class="text-left whitespace-nowrap overflow-ellipsis">
-                    {Orders.orderItems?.length ? (
+                    {Orders.order_items?.length ? (
                       <span>
-                        {Orders.orderItems?.length}{" "}
-                        {Orders.orderItems?.length == 1
+                        {Orders.order_items?.length}{" "}
+                        {Orders.order_items?.length == 1
                           ? " Product"
                           : " Products"}
                       </span>
