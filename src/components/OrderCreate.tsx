@@ -8,11 +8,14 @@ import { invoke } from "@tauri-apps/api";
 import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import UiIcon from "./ui/UiIcon.vue";
+import { useRoute, useRouter } from "vue-router";
 
 export const OrderCreate = defineComponent({
   name: "OrderCreate",
   components: { UiButton, UiCheckBox, UiIcon, UiInput, UiSelect },
   setup() {
+    const route = useRoute();
+    const router = useRouter();
     const isFlash = ref<boolean>(false);
     // const { products } = storeToRefs(useProductStore());
     // const { sellers } = storeToRefs(useSellerStore());
@@ -26,7 +29,7 @@ export const OrderCreate = defineComponent({
       order_items: [],
     });
 
-    const orderItems = ref<newOrdersItemT[]>([
+    const order_items = ref<newOrdersItemT[]>([
       {
         product_id: 0,
         quantity: 0,
@@ -45,10 +48,18 @@ export const OrderCreate = defineComponent({
       // @ts-ignore
       if ((res[1].status = "fulfilled")) products.value = res[1].value;
     });
+    //
+    const updateQueryParams = (query: Record<any, any>) => {
+      router.push({
+        path: route.path,
+        params: { ...route.params },
+        query: { ...route.query, ...query },
+      });
+    };
 
     const createNewOrders = async () => {
       isFlash.value = true;
-      newOrder.order_items = orderItems.value.filter(
+      newOrder.order_items = order_items.value.filter(
         (item) => item.product_id !== 0 && item.quantity !== 0
       );
       if (newOrder.seller_id && newOrder.order_items.length !== 0) {
@@ -56,6 +67,7 @@ export const OrderCreate = defineComponent({
           await invoke("insert_order", {
             order: newOrder,
           });
+          updateQueryParams({ refresh: "refresh-create" });
         } catch (error) {
           console.log(error);
         } finally {
@@ -125,7 +137,7 @@ export const OrderCreate = defineComponent({
             <div class="w-full  h-full flex flex-col gap-1">
               <UiButton
                 Click={() =>
-                  orderItems.value.push({
+                  order_items.value.push({
                     product_id: 0,
                     quantity: 0,
                     price: 0,
@@ -136,7 +148,7 @@ export const OrderCreate = defineComponent({
               </UiButton>
               <div class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
-                  {orderItems.value.map((item, index) => (
+                  {order_items.value.map((item, index) => (
                     <UiSelect
                       items={products.value}
                       onSelect={(id: number) => (item.product_id = id)}
@@ -146,7 +158,7 @@ export const OrderCreate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {orderItems.value.map((item, index) => (
+                  {order_items.value.map((item, index) => (
                     <div class="h-full w-full flex items-center relative">
                       <UiInput
                         class="border-r-0"
@@ -171,7 +183,7 @@ export const OrderCreate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {orderItems.value.map((item, index) => (
+                  {order_items.value.map((item, index) => (
                     <div class="h-full w-full flex items-center relative">
                       <UiInput
                         class="border-r-0"
@@ -195,9 +207,9 @@ export const OrderCreate = defineComponent({
                 </div>
 
                 <div class="flex flex-col gap-2">
-                  {orderItems.value.map((item, index) => (
+                  {order_items.value.map((item, index) => (
                     <div
-                      onClick={() => orderItems.value.splice(index, 1)}
+                      onClick={() => order_items.value.splice(index, 1)}
                       class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
                     >
                       <UiIcon name="delete" />
