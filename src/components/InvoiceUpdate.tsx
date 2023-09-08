@@ -15,12 +15,16 @@ import {
   ref,
   onBeforeMount,
 } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 export const InvoiceUpdate = defineComponent({
   name: "InvoiceUpdate",
   components: { UiButton, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
   setup() {
     const modalStore = useModalStore();
+    const route = useRoute();
+    const router = useRouter();
+
     const clients = ref<{ name: string; id: number }[]>([]);
     const products = ref<{ name: string; id: number }[]>([]);
     const { invoice: invoiceRow } = storeToRefs(modalStore);
@@ -29,7 +33,7 @@ export const InvoiceUpdate = defineComponent({
       id: undefined,
       total: undefined,
       client_id: undefined,
-      invoiceItems: [],
+      invoice_items: [],
     };
 
     onBeforeMount(async () => {
@@ -49,13 +53,23 @@ export const InvoiceUpdate = defineComponent({
       invoiceRow.value ? invoiceRow.value : invoice
     );
     //
+    const updateQueryParams = (query: Record<any, any>) => {
+      router.push({
+        path: route.path,
+        params: { ...route.params },
+        query: { ...route.query, ...query },
+      });
+    };
+    //
     const updateTheInvoice = async () => {
       if (updateInvoice.id) {
         try {
+          console.log(updateInvoice);
           await invoke("update_invoice", {
             invoice: updateInvoice,
             id: updateInvoice.id,
           });
+          updateQueryParams({ refresh: "refresh-update" });
         } catch (error) {
           console.log(error);
         } finally {
@@ -101,7 +115,7 @@ export const InvoiceUpdate = defineComponent({
             <div class="w-full  h-full flex flex-col gap-1">
               <UiButton
                 Click={() =>
-                  updateInvoice.invoiceItems?.push({
+                  updateInvoice.invoice_items?.push({
                     product_id: 0,
                     quantity: 0,
                   })
@@ -111,7 +125,7 @@ export const InvoiceUpdate = defineComponent({
               </UiButton>
               <div class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
-                  {updateInvoice.invoiceItems?.map((item, index) => (
+                  {updateInvoice.invoice_items?.map((item, index) => (
                     <UiUpdateSelect
                       Value={item.product?.name ?? "select a product"}
                       items={products.value.map((product: any) => ({
@@ -127,7 +141,7 @@ export const InvoiceUpdate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateInvoice.invoiceItems?.map((item, index) => (
+                  {updateInvoice.invoice_items?.map((item, index) => (
                     <div class="h-full w-full items-center relative">
                       <UiUpdateInput
                         Value={item.quantity}
@@ -149,10 +163,10 @@ export const InvoiceUpdate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateInvoice.invoiceItems?.map((item, index) => (
+                  {updateInvoice.invoice_items?.map((item, index) => (
                     <div
                       onClick={() => {
-                        updateInvoice.invoiceItems?.splice(index, 1);
+                        updateInvoice.invoice_items?.splice(index, 1);
                         if (item.id) deleteOneinvoiceItem(item.id);
                       }}
                       class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
