@@ -1,8 +1,8 @@
+import { uploadCSVfiles } from "@/utils/fs";
 import { defineComponent, ref } from "vue";
 import { useDropZone } from "@vueuse/core";
-import { uploadCSVfiles } from "@/utils/fs";
-import UiIconVue from "./ui/UiIcon.vue";
 import { invoke } from "@tauri-apps/api";
+import UiIconVue from "./ui/UiIcon.vue";
 
 export const CsvUploader = defineComponent({
   name: "CsvUploader",
@@ -30,7 +30,7 @@ export const CsvUploader = defineComponent({
 
         invoke("get_csv_records", {
           csvPath: await uploadCSVfiles({ file: files[0] }),
-          table: "procts",
+          table: "products",
         });
       }
     }

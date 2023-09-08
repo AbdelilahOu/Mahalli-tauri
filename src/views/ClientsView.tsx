@@ -1,25 +1,64 @@
-import { defineComponent, onBeforeMount, ref, Transition } from "vue";
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+  Transition,
+  watch,
+  type WatchStopHandle,
+} from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { ClientsTable } from "@/components/ClientsTable";
-import { useClientStore } from "@/stores/clientStore";
 import { UiButton } from "@/components/ui/UiButton";
 import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
-import { storeToRefs } from "pinia";
+import type { clientT } from "@/types";
+import { invoke } from "@tauri-apps/api";
+import { useRouter } from "vue-router";
 
 export const ClientsView = defineComponent({
   name: "Clients",
   components: { ClientsTable, UiButton, UiInput, UiIcon },
   setup() {
     const modalStore = useModalStore();
-    const clientStore = useClientStore();
-    const { clients } = storeToRefs(clientStore);
+    const router = useRouter();
     //
+    const clients = ref<clientT[]>([]);
     const searchQuery = ref<string>("");
-    //
-    onBeforeMount(() => {
-      if (!clients.value.length) clientStore.getAllClients();
+
+    let unwatch: WatchStopHandle | null = null;
+
+    const page = computed(() => Number(router.currentRoute.value.query.page));
+
+    const refresh = computed(() => router.currentRoute.value.query.refresh);
+
+    onBeforeMount(() => getClients(page.value));
+
+    const getClients = async (page: number = 1) => {
+      try {
+        const res = await invoke<clientT[]>("get_clients", {
+          page,
+        });
+        if (res?.length) {
+          clients.value = res;
+          return;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    onMounted(() => {
+      unwatch = watch([page, refresh], ([p]) => {
+        getClients(p);
+      });
+    });
+
+    onUnmounted(() => {
+      if (unwatch) unwatch();
     });
     //
     const updateModal = (name: string) => {
@@ -29,7 +68,7 @@ export const ClientsView = defineComponent({
     //
 
     return () => (
-      <main class="w-full h-full px-3">
+      <main class="w-full h-full">
         <div class="w-full h-full flex flex-col items-start justify-start">
           <Transition appear>
             <div class="flex justify-between w-full gap-9 my-1">

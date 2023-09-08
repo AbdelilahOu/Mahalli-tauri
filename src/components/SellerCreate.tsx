@@ -1,5 +1,4 @@
 import { defineComponent, reactive, ref } from "vue";
-import { useSellerStore } from "@/stores/sellerStore";
 import { useModalStore } from "@/stores/modalStore";
 import type { newSellerT } from "@/types";
 import { UiButton } from "./ui/UiButton";
@@ -7,22 +6,32 @@ import { UiInput } from "./ui/UiInput";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiUploader } from "./ui/UiUploader";
 import { ImagesFiles } from "@/constants/FileTypes";
+import { invoke } from "@tauri-apps/api";
+import { saveFile } from "@/utils/fs";
 export const SellerCreate = defineComponent({
   name: "sellerCreate",
   components: { UiButton, UiInput, UiUploader },
   setup() {
     const isFlash = ref<boolean>(false);
-    const Seller = reactive<newSellerT>({
+
+    const seller = reactive<newSellerT>({
       name: "",
       email: "",
       phone: "",
       address: "",
     });
-    const createNewseller = () => {
+
+    const createNewseller = async () => {
       isFlash.value = true;
-      if (Seller.name !== "") {
-        useSellerStore().createOneSeller(Seller);
-        useModalStore().updateModal({ key: "show", value: false });
+      if (seller.name !== "") {
+        try {
+          let image: string = await saveFile(seller.image as string, "Image");
+          await invoke("insert_seller", { seller });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          useModalStore().updateModal({ key: "show", value: false });
+        }
       }
       setTimeout(() => {
         isFlash.value = false;
@@ -38,40 +47,40 @@ export const SellerCreate = defineComponent({
             <UiUploader
               name="Image"
               extensions={ImagesFiles}
-              onSave={(image) => (Seller.image = image)}
+              onSave={(image) => (seller.image = image)}
             />
           </div>
           <UiInput
-            IsEmpty={isFlash.value && Seller["name"] == ""}
+            IsEmpty={isFlash.value && seller["name"] == ""}
             OnInputChange={(value) =>
-              (Seller["name"] =
+              (seller["name"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Sellers.create.placeholders[0]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && Seller["email"] == ""}
+            IsEmpty={isFlash.value && seller["email"] == ""}
             OnInputChange={(value) =>
-              (Seller["email"] =
+              (seller["email"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Sellers.create.placeholders[1]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && Seller["phone"] == ""}
+            IsEmpty={isFlash.value && seller["phone"] == ""}
             OnInputChange={(value) =>
-              (Seller["phone"] =
+              (seller["phone"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Sellers.create.placeholders[2]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && Seller["address"] == ""}
+            IsEmpty={isFlash.value && seller["address"] == ""}
             OnInputChange={(value) =>
-              (Seller["address"] =
+              (seller["address"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"

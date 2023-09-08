@@ -103,28 +103,36 @@ pub fn get_client_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
         invoice_items::table.on(invoices::id.eq(invoice_items::invoice_id));
     let invoiceitem_product_join = products::table.on(invoice_items::product_id.eq(products::id));
 
-    let result: Vec<(String, String, i64)> = clients::table
+    let result: Vec<Option<(String, String, i64)>> = clients::table
         .inner_join(invoice_client_join)
         .inner_join(invoiceitem_invoice_join)
         .inner_join(invoiceitem_product_join)
-        .select((
-            products::name,
-            sql::<Text>("strftime('%Y-%m', invoices.created_at) AS month"),
-            sql::<BigInt>("ABS(COALESCE(SUM(invoice_items.quantity), 0)) AS quantity"),
-        ))
+        .select(
+            (
+                products::name,
+                sql::<Text>("strftime('%Y-%m-%d', invoices.created_at) AS month"),
+                sql::<BigInt>("ABS(COALESCE(SUM(invoice_items.quantity), 0)) AS quantity"),
+            )
+                .nullable(),
+        )
         .filter(clients::id.eq(id))
-        .load::<(String, String, i64)>(connection)
+        .load::<Option<(String, String, i64)>>(connection)
         .expect("Error fetching best three clients");
 
     let mut final_result = Vec::<Value>::new();
 
-    result.iter().for_each(|(name, month, quantity)| {
-        // groups by month and sum the quantity
-        final_result.push(json!({
-            "name":name,
-            "month":month,
-            "quantity":quantity
-        }))
+    result.iter().for_each(|res_tuple| {
+        match res_tuple {
+            Some((name, month, quantity)) => {
+                // groups by month and sum the quantity
+                final_result.push(json!({
+                    "name":name,
+                    "month":month,
+                    "quantity":quantity
+                }))
+            }
+            None => println!("{}", "no details data"),
+        }
     });
 
     final_result
@@ -135,28 +143,36 @@ pub fn get_seller_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
     let orderitem_order_join = order_items::table.on(orders::id.eq(order_items::order_id));
     let orderitem_product_join = products::table.on(order_items::product_id.eq(products::id));
 
-    let result: Vec<(String, String, i64)> = sellers::table
+    let result: Vec<Option<(String, String, i64)>> = sellers::table
         .inner_join(order_seller_join)
         .inner_join(orderitem_order_join)
         .inner_join(orderitem_product_join)
-        .select((
-            products::name,
-            sql::<Text>("strftime('%Y-%m', orders.created_at) AS month"),
-            sql::<BigInt>("ABS(COALESCE(SUM(order_items.quantity), 0)) AS quantity"),
-        ))
+        .select(
+            (
+                products::name,
+                sql::<Text>("strftime('%Y-%m-%d', orders.created_at) AS month"),
+                sql::<BigInt>("ABS(COALESCE(SUM(order_items.quantity), 0)) AS quantity"),
+            )
+                .nullable(),
+        )
         .filter(sellers::id.eq(id))
-        .load::<(String, String, i64)>(connection)
+        .load::<Option<(String, String, i64)>>(connection)
         .expect("Error fetching best three sellers");
 
     let mut final_result = Vec::<Value>::new();
 
-    result.iter().for_each(|(name, month, quantity)| {
-        // groups by month and sum the quantity
-        final_result.push(json!({
-            "name":name,
-            "month":month,
-            "quantity":quantity
-        }))
+    result.iter().for_each(|res_tuple| {
+        match res_tuple {
+            Some((name, month, quantity)) => {
+                // groups by month and sum the quantity
+                final_result.push(json!({
+                    "name":name,
+                    "month":month,
+                    "quantity":quantity
+                }))
+            }
+            None => println!("{}", "no details data"),
+        }
     });
 
     final_result
@@ -169,25 +185,31 @@ pub fn get_client_expenses(id: i32, connection: &mut SqliteConnection) -> Vec<Va
 
     let seven_days_ago = Utc::now().naive_utc() - Duration::days(7);
 
-    let result: Vec<(String, i64)> = invoices::table
+    println!("{:?}", id);
+
+    let result: Vec<Option<(String, i64)>> = invoices::table
         .inner_join(invoiceitem_invoice_join)
         .inner_join(invoiceitem_product_join)
-        .select((
-            sql::<Text>("strftime('%Y-%m', invoices.created_at) AS day"),
-            sql::<BigInt>("SUM(products.price * ABS(invoice_items.quantity)) AS expense"),
-        ))
-        .filter(invoices::created_at.ge(seven_days_ago))
+        .select(
+            (
+                sql::<Text>("strftime('%Y-%m-%d', invoices.created_at) AS day"),
+                sql::<BigInt>("SUM(products.price * ABS(invoice_items.quantity)) AS expense"),
+            )
+                .nullable(),
+        )
         .filter(invoices::client_id.eq(id))
-        .load::<(String, i64)>(connection)
+        .filter(invoices::created_at.ge(seven_days_ago))
+        .load::<Option<(String, i64)>>(connection)
         .expect("Error fetching client expenses");
 
     let mut final_result = Vec::<Value>::new();
 
-    result.iter().for_each(|(day, expense)| {
-        final_result.push(json!({
+    result.iter().for_each(|res_tuple| match res_tuple {
+        Some((day, expense)) => final_result.push(json!({
             "day":day,
             "expense":expense
-        }))
+        })),
+        None => println!("{}", "no expenses data"),
     });
 
     final_result
@@ -199,25 +221,29 @@ pub fn get_seller_expenses(id: i32, connection: &mut SqliteConnection) -> Vec<Va
 
     let seven_days_ago = Utc::now().naive_utc() - Duration::days(7);
 
-    let result: Vec<(String, i64)> = orders::table
+    let result: Vec<Option<(String, i64)>> = orders::table
         .inner_join(orderitem_order_join)
         .inner_join(orderitem_product_join)
-        .select((
-            sql::<Text>("strftime('%Y-%m', orders.created_at) AS day"),
-            sql::<BigInt>("SUM(products.price * ABS(order_items.quantity)) AS expense"),
-        ))
-        .filter(orders::created_at.ge(seven_days_ago))
+        .select(
+            (
+                sql::<Text>("strftime('%Y-%m-%d', orders.created_at) AS day"),
+                sql::<BigInt>("SUM(products.price * ABS(order_items.quantity)) AS expense"),
+            )
+                .nullable(),
+        )
         .filter(orders::seller_id.eq(id))
-        .load::<(String, i64)>(connection)
+        .filter(orders::created_at.ge(seven_days_ago))
+        .load::<Option<(String, i64)>>(connection)
         .expect("Error fetching seller expenses");
 
     let mut final_result = Vec::<Value>::new();
 
-    result.iter().for_each(|(day, expense)| {
-        final_result.push(json!({
+    result.iter().for_each(|res_tuple| match res_tuple {
+        Some((day, expense)) => final_result.push(json!({
             "day":day,
             "expense":expense
-        }))
+        })),
+        None => println!("{}", "no expenses data"),
     });
 
     final_result

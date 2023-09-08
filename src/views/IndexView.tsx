@@ -22,7 +22,7 @@ export const IndexView = defineComponent({
         class={`w-screen h-screen relative overflow-y-auto bg-white scrollbar-thin scrollbar-thumb-transparent  flex `}
       >
         <div
-          class={`transition-all sticky top-1 border-r-2 border-slate-100 z-50 flex justify-center duration-200 transform ${
+          class={`transition-all sticky top-0 border-r-2 border-slate-100 z-50 flex justify-center duration-200 transform ${
             IsCollapse.value ? "w-12 min-w-[48px]" : "w-52 min-w-[12rem]"
           }`}
         >
@@ -45,7 +45,7 @@ export const IndexView = defineComponent({
                 <Xcomponent name={modalStore.theModal.name} />
               </div>
             )}
-            <div class="w-full bg-white rounded-md h-full">
+            <div class="w-full bg-white p-2 rounded-md h-full">
               <RouterView></RouterView>
             </div>
           </div>

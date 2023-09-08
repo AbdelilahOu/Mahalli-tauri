@@ -1,20 +1,26 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { useOrdersStore } from "@/stores/orderStore";
-import { defineComponent, onBeforeMount } from "vue";
+import { defineComponent, onBeforeMount, ref } from "vue";
 import { UiButton } from "@/components/ui/UiButton";
 import { useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
+import type { orderDetailsT } from "@/types";
+import { invoke } from "@tauri-apps/api";
 
 export const OrdersDetails = defineComponent({
   name: "OrdersDetails",
   setup() {
     const id = useRoute().params.id;
-
-    const orderStore = useOrdersStore();
-
-    const { order } = storeToRefs(orderStore);
-
-    onBeforeMount(() => orderStore.getOneOrder(Number(id)));
+    const order = ref<orderDetailsT | null>(null);
+    onBeforeMount(async () => {
+      try {
+        const res = await invoke<orderDetailsT | null>("get_order", { id });
+        if (res?.id) {
+          order.value = res;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
 
     return () => (
       <main class="w-full h-full px-3">
@@ -46,7 +52,7 @@ export const OrdersDetails = defineComponent({
                       <span class="h-full w-full grid">
                         {new Date(
                           order.value?.created_at ?? new Date()
-                        ).toLocaleDateString("fr-fr", {
+                        ).toLocaleDateString("en-us", {
                           month: "2-digit",
                           year: "2-digit",
                           day: "2-digit",

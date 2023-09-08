@@ -1,12 +1,12 @@
 import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { ProductsTable } from "@/components/ProductsTable";
-import { useProductStore } from "@/stores/productStore";
 import { UiButton } from "@/components/ui/UiButton";
 import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
-import { storeToRefs } from "pinia";
+import type { productT } from "@/types";
+import { invoke } from "@tauri-apps/api";
 
 export const ProductsView = defineComponent({
   name: "Products",
@@ -18,9 +18,8 @@ export const ProductsView = defineComponent({
   },
   setup() {
     const modalStore = useModalStore();
-    const productStore = useProductStore();
-    const { products } = storeToRefs(productStore);
     //
+    let products = ref<productT[]>([]);
     const searchQuery = ref<string>("");
     //
     const updateModal = (name: string) => {
@@ -29,8 +28,15 @@ export const ProductsView = defineComponent({
     };
     //
     //
-    onBeforeMount(() => {
-      productStore.getAllProducts();
+    onBeforeMount(async () => {
+      try {
+        let res = await invoke<productT[]>("get_products", { page: 1 });
+        if (res.length) {
+          products.value = res;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     });
     return () => (
       <main class="w-full h-full px-3">

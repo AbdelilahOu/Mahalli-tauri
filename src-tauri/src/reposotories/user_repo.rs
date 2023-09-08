@@ -1,6 +1,6 @@
 use crate::diesel::prelude::*;
 use crate::models::{NewUser, User};
-use crate::schema::users;
+use crate::schema::users::{self, email, password, role, username};
 
 pub fn get_user(u_id: i32, connection: &mut SqliteConnection) -> User {
     let result = users::dsl::users
@@ -12,7 +12,12 @@ pub fn get_user(u_id: i32, connection: &mut SqliteConnection) -> User {
 }
 pub fn insert_user(new_user: NewUser, connection: &mut SqliteConnection) -> usize {
     let result = diesel::insert_into(users::dsl::users)
-        .values(new_user)
+        .values((
+            username.eq(new_user.username),
+            password.eq(new_user.password),
+            email.eq(new_user.email),
+            role.eq(new_user.role),
+        ))
         .execute(connection)
         .expect("Expect add articles");
 

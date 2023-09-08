@@ -1,5 +1,4 @@
 import { defineComponent, reactive, ref } from "vue";
-import { useProductStore } from "@/stores/productStore";
 import type { newProductT } from "@/types";
 import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
@@ -7,6 +6,8 @@ import { useModalStore } from "@/stores/modalStore";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiUploader } from "./ui/UiUploader";
 import { ImagesFiles } from "@/constants/FileTypes";
+import { saveFile } from "@/utils/fs";
+import { invoke } from "@tauri-apps/api";
 
 export const ProductCreate = defineComponent({
   name: "ProductCreate",
@@ -17,14 +18,20 @@ export const ProductCreate = defineComponent({
       name: "",
       price: 0,
       quantity: 0,
-      description: "aaaaaaaaa",
+      description: "",
       tva: 0,
     });
-    const createNewProduct = () => {
+    const createNewProduct = async () => {
       isFlash.value = true;
       if (Product.name !== "") {
-        useProductStore().createOneProduct(Product);
-        useModalStore().updateModal({ key: "show", value: false });
+        try {
+          let image: string = await saveFile(Product.image as string, "Image");
+          await invoke("insert_product", { product: Product });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          useModalStore().updateModal({ key: "show", value: false });
+        }
       }
       setTimeout(() => {
         isFlash.value = false;

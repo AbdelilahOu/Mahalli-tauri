@@ -1,11 +1,12 @@
 import { defineComponent, reactive, onBeforeUnmount } from "vue";
-import { useClientStore } from "@/stores/clientStore";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { useModalStore } from "@/stores/modalStore";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
+import { useRoute, useRouter } from "vue-router";
 import type { updateClientT } from "@/types";
 import { UiButton } from "./ui/UiButton";
 import { storeToRefs } from "pinia";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { invoke } from "@tauri-apps/api";
 
 export const ClientUpdate = defineComponent({
   name: "ClientUpdate",
@@ -13,6 +14,9 @@ export const ClientUpdate = defineComponent({
   setup() {
     const modalStore = useModalStore();
     const { client: ClientRow } = storeToRefs(modalStore);
+    const route = useRoute();
+    const router = useRouter();
+
     const client = {
       id: undefined,
       name: undefined,
@@ -20,15 +24,35 @@ export const ClientUpdate = defineComponent({
       phone: undefined,
       address: undefined,
     };
+
     const updateClient = reactive<updateClientT>(
       ClientRow.value ? ClientRow.value : client
     );
-    const updateTheClient = () => {
+
+    const updateQueryParams = (query: Record<any, any>) => {
+      router.push({
+        path: route.path,
+        params: { ...route.params },
+        query: { ...route.query, ...query },
+      });
+    };
+
+    const updateTheClient = async () => {
       if (updateClient.id) {
-        useClientStore().updateOneClient(updateClient.id, updateClient);
-        modalStore.updateModal({ key: "show", value: false });
+        try {
+          await invoke("update_client", {
+            client: updateClient,
+            id: updateClient.id,
+          });
+          updateQueryParams({ refresh: "refresh-update" });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          modalStore.updateModal({ key: "show", value: false });
+        }
       }
     };
+
     onBeforeUnmount(() => modalStore.updateClientRow(null));
 
     return () => (
@@ -38,7 +62,7 @@ export const ClientUpdate = defineComponent({
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
           <UiUpdateInput
-            Value={ClientRow.value?.["name"]}
+            Value={ClientRow.value?.["fullname"]}
             OnInputChange={(value) =>
               (updateClient["name"] =
                 typeof value == "string" ? value : JSON.stringify(value))

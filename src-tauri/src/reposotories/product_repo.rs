@@ -1,5 +1,8 @@
+use serde_json::{json, Value};
+
 use crate::diesel::prelude::*;
 use crate::models::{NewProduct, Product, ProductWithQuantity};
+use crate::schema::products::{description, name, price, tva};
 use crate::schema::{inventory_mouvements, products};
 
 pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Vec<ProductWithQuantity> {
@@ -30,6 +33,25 @@ pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Vec<Product
     result
 }
 
+pub fn get_all_products(connection: &mut SqliteConnection) -> Vec<Value> {
+    let response = products::dsl::products
+        .order(products::id.desc())
+        .select((products::name, products::id))
+        .load::<(String, i32)>(connection)
+        .expect("error get all products");
+
+    let mut result: Vec<Value> = Vec::new();
+
+    response.into_iter().for_each(|(pname, p_id)| {
+        result.push(json!({
+            "name":pname,
+            "id":p_id
+        }))
+    });
+
+    result
+}
+
 pub fn get_product(p_id: i32, connection: &mut SqliteConnection) -> Product {
     let result = products::dsl::products
         .find(&p_id)
@@ -40,7 +62,12 @@ pub fn get_product(p_id: i32, connection: &mut SqliteConnection) -> Product {
 }
 pub fn insert_product(new_p: NewProduct, connection: &mut SqliteConnection) -> usize {
     let result = diesel::insert_into(products::dsl::products)
-        .values(new_p)
+        .values((
+            description.eq(new_p.description),
+            name.eq(new_p.name),
+            price.eq(new_p.price),
+            tva.eq(new_p.tva),
+        ))
         .execute(connection)
         .expect("Expect add articles");
 
