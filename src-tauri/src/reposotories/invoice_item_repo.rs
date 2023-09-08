@@ -1,6 +1,13 @@
 use crate::diesel::prelude::*;
-use crate::models::{InvoiceItem, NewInvoiceItem, UpdateInvoiceItem};
-use crate::schema::{invoice_items, invoices};
+use crate::models::InvoiceItem;
+use crate::models::NewInvoiceItem;
+use crate::models::UpdateInvoiceItem;
+use crate::schema::invoice_items;
+use crate::schema::invoice_items::inventory_id;
+use crate::schema::invoice_items::invoice_id;
+use crate::schema::invoice_items::product_id;
+use crate::schema::invoice_items::quantity;
+use crate::schema::invoices;
 
 pub fn get_invoice_items(page: i32, connection: &mut SqliteConnection) -> Vec<InvoiceItem> {
     let offset = (page - 1) * 17;
@@ -19,7 +26,12 @@ pub fn insert_invoice_item(
     connection: &mut SqliteConnection,
 ) -> InvoiceItem {
     diesel::insert_into(invoice_items::dsl::invoice_items)
-        .values(new_ii)
+        .values((
+            product_id.eq(new_ii.product_id),
+            invoice_id.eq(new_ii.invoice_id),
+            quantity.eq(new_ii.quantity),
+            inventory_id.eq(new_ii.inventory_id),
+        ))
         .execute(connection)
         .expect("Error adding invoice items");
 

@@ -1,29 +1,31 @@
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import type { newOrdersT, newOrdersItemT } from "@/types";
-import { useOrdersStore } from "@/stores/orderStore";
-import { useProductStore } from "@/stores/productStore";
-import { useSellerStore } from "@/stores/sellerStore";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { useModalStore } from "@/stores/modalStore";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { UiButton } from "./ui/UiButton";
+import { invoke } from "@tauri-apps/api";
 import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
-import { storeToRefs } from "pinia";
 import UiIcon from "./ui/UiIcon.vue";
-import { globalTranslate } from "@/utils/globalTranslate";
 
 export const OrderCreate = defineComponent({
   name: "OrderCreate",
   components: { UiButton, UiCheckBox, UiIcon, UiInput, UiSelect },
   setup() {
     const isFlash = ref<boolean>(false);
-    const { products } = storeToRefs(useProductStore());
-    const { sellers } = storeToRefs(useSellerStore());
-    const newOrders = reactive<newOrdersT>({
+    // const { products } = storeToRefs(useProductStore());
+    // const { sellers } = storeToRefs(useSellerStore());
+
+    const sellers = ref<{ name: string; id: number }[]>([]);
+    const products = ref<{ name: string; id: number }[]>([]);
+
+    const newOrder = reactive<newOrdersT>({
       status: "",
       seller_id: undefined,
-      orderItems: [],
+      order_items: [],
     });
+
     const orderItems = ref<newOrdersItemT[]>([
       {
         product_id: 0,
@@ -31,14 +33,34 @@ export const OrderCreate = defineComponent({
         price: 0,
       },
     ]);
-    const createNewOrders = () => {
+
+    onBeforeMount(async () => {
+      const res = await Promise.allSettled([
+        invoke<{ name: string; id: number }[]>("get_all_sellers"),
+        invoke<{ name: string; id: number }[]>("get_all_products"),
+      ]);
+
+      // @ts-ignore
+      if ((res[0].status = "fulfilled")) sellers.value = res[0].value;
+      // @ts-ignore
+      if ((res[1].status = "fulfilled")) products.value = res[1].value;
+    });
+
+    const createNewOrders = async () => {
       isFlash.value = true;
-      newOrders.orderItems = orderItems.value.filter(
+      newOrder.order_items = orderItems.value.filter(
         (item) => item.product_id !== 0 && item.quantity !== 0
       );
-      if (newOrders.seller_id && newOrders.orderItems.length !== 0) {
-        useOrdersStore().createOneOrders(newOrders);
-        useModalStore().updateModal({ key: "show", value: false });
+      if (newOrder.seller_id && newOrder.order_items.length !== 0) {
+        try {
+          await invoke("insert_order", {
+            order: newOrder,
+          });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          useModalStore().updateModal({ key: "show", value: false });
+        }
       }
       setTimeout(() => {
         isFlash.value = false;
@@ -55,11 +77,8 @@ export const OrderCreate = defineComponent({
               {globalTranslate("Orders.create.details.seller.title")}
             </h1>
             <UiSelect
-              items={sellers.value.map((seller) => ({
-                name: seller.name,
-                id: seller.id,
-              }))}
-              onSelect={(id: number) => (newOrders.seller_id = id)}
+              items={sellers.value}
+              onSelect={(id: number) => (newOrder.seller_id = id)}
             >
               {globalTranslate("Orders.create.details.seller.select")}
             </UiSelect>
@@ -75,8 +94,8 @@ export const OrderCreate = defineComponent({
                   <UiCheckBox
                     onCheck={(check) =>
                       check
-                        ? (newOrders.status = "delivered")
-                        : (newOrders.status = "")
+                        ? (newOrder.status = "delivered")
+                        : (newOrder.status = "")
                     }
                   />
                   <span>{globalTranslate("Orders.status.delivered")}</span>
@@ -85,8 +104,8 @@ export const OrderCreate = defineComponent({
                   <UiCheckBox
                     onCheck={(check) =>
                       check
-                        ? (newOrders.status = "pending")
-                        : (newOrders.status = "")
+                        ? (newOrder.status = "pending")
+                        : (newOrder.status = "")
                     }
                   />
                   <span>{globalTranslate("Orders.status.pending")}</span>
@@ -95,8 +114,8 @@ export const OrderCreate = defineComponent({
                   <UiCheckBox
                     onCheck={(check) =>
                       check
-                        ? (newOrders.status = "canceled")
-                        : (newOrders.status = "")
+                        ? (newOrder.status = "canceled")
+                        : (newOrder.status = "")
                     }
                   />
                   <span>{globalTranslate("Orders.status.canceled")}</span>
@@ -119,10 +138,7 @@ export const OrderCreate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {orderItems.value.map((item, index) => (
                     <UiSelect
-                      items={products.value.map((product) => ({
-                        name: product.name,
-                        id: product.id,
-                      }))}
+                      items={products.value}
                       onSelect={(id: number) => (item.product_id = id)}
                     >
                       {globalTranslate("Orders.create.details.order.select")}

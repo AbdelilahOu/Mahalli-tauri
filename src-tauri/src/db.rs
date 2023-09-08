@@ -100,6 +100,7 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                         reposotories::client_repo::insert_client(
                             NewClient {
                                 fullname: client.name,
+                                email: client.email,
                                 image: client.image,
                                 address: client.address,
                                 phone: client.phone,
@@ -142,10 +143,6 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                 TableRecord::InventoryMouvement(inventory_records) => {
                     for inventory in inventory_records {
                         reposotories::inventory_mvm_repo::insert_inventory_mvm(
-                            /*
-                            TODO
-                             -> need inventory image
-                            */
                             NewInventoryMvm {
                                 model: inventory.model,
                                 product_id: inventory.product_id,

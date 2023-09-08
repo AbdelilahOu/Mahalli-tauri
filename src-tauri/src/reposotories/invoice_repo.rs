@@ -2,6 +2,7 @@ use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
 use crate::models::{Client, Invoice, InvoiceItem, NewInvoice, Product, UpdateInvoice};
+use crate::schema::invoices::{client_id, status};
 use crate::schema::{clients, invoice_items, invoices, products};
 
 pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
@@ -102,7 +103,7 @@ pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
 
 pub fn insert_invoice(new_i: NewInvoice, connection: &mut SqliteConnection) -> i32 {
     diesel::insert_into(invoices::dsl::invoices)
-        .values(new_i)
+        .values((status.eq(new_i.status), client_id.eq(new_i.client_id)))
         .execute(connection)
         .expect("Error adding invoice");
 

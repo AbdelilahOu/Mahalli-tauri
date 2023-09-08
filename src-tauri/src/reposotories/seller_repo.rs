@@ -1,6 +1,8 @@
+use serde_json::{json, Value};
+
 use crate::diesel::prelude::*;
 use crate::models::{NewSeller, Seller};
-use crate::schema::sellers;
+use crate::schema::sellers::{self, address, email, image, name, phone};
 
 pub fn get_sellers(page: i32, connection: &mut SqliteConnection) -> Vec<Seller> {
     let offset = (page - 1) * 17;
@@ -11,6 +13,25 @@ pub fn get_sellers(page: i32, connection: &mut SqliteConnection) -> Vec<Seller> 
         .offset(offset as i64)
         .load::<Seller>(connection)
         .expect("error get all sellers");
+
+    result
+}
+
+pub fn get_all_sellers(connection: &mut SqliteConnection) -> Vec<Value> {
+    let response = sellers::dsl::sellers
+        .order(sellers::id.desc())
+        .select((sellers::name, sellers::id))
+        .load::<(String, i32)>(connection)
+        .expect("error get all sellers");
+
+    let mut result: Vec<Value> = Vec::new();
+
+    response.into_iter().for_each(|(fname, c_id)| {
+        result.push(json!({
+            "name":fname,
+            "id":c_id
+        }))
+    });
 
     result
 }
@@ -26,7 +47,13 @@ pub fn get_seller(s_id: i32, connection: &mut SqliteConnection) -> Seller {
 
 pub fn insert_seller(new_c: NewSeller, connection: &mut SqliteConnection) -> usize {
     let result = diesel::insert_into(sellers::dsl::sellers)
-        .values(new_c)
+        .values((
+            name.eq(new_c.name),
+            image.eq(new_c.image),
+            address.eq(new_c.address),
+            email.eq(new_c.email),
+            phone.eq(new_c.phone),
+        ))
         .execute(connection)
         .expect("Expect add seller");
 

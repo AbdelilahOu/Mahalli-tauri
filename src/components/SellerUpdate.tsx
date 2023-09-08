@@ -1,11 +1,11 @@
 import { defineComponent, reactive, onBeforeUnmount } from "vue";
-import { useSellerStore } from "@/stores/sellerStore";
 import { useModalStore } from "@/stores/modalStore";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
 import type { updateSellerT } from "@/types";
 import { UiButton } from "./ui/UiButton";
 import { storeToRefs } from "pinia";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { invoke } from "@tauri-apps/api";
 
 export const SellerUpdate = defineComponent({
   name: "SellerUpdate",
@@ -19,16 +19,26 @@ export const SellerUpdate = defineComponent({
       email: undefined,
       phone: undefined,
       address: undefined,
+      image: undefined,
     };
     const updateSeller = reactive<updateSellerT>(
       SellerRow.value ? SellerRow.value : Seller
     );
-    const updateTheSeller = () => {
+    const updateTheSeller = async () => {
       if (updateSeller?.id) {
-        useSellerStore().updateOneSeller(updateSeller.id, updateSeller);
-        modalStore.updateModal({ key: "show", value: false });
+        try {
+          await invoke("update_seller", {
+            seller: updateSeller,
+            id: updateSeller.id,
+          });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          modalStore.updateModal({ key: "show", value: false });
+        }
       }
     };
+
     onBeforeUnmount(() => modalStore.updateSellerRow(null));
 
     return () => (

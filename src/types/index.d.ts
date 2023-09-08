@@ -74,7 +74,7 @@ export interface orderItemT {
 }
 
 export interface newOrdersT extends Partial<Omit<orderT, "orderItems">> {
-  orderItems: Omit<
+  order_items: Omit<
     orderItemT,
     "id" | "order_id" | "inventory_id" | "product"
   >[];
@@ -135,8 +135,11 @@ export interface updateInvoiceT
 }
 
 export interface newInvoiceT
-  extends Omit<invoiceT, "id" | "created_at" | "total" | "client"> {
-  invoiceItems: newInvoiceItemT[];
+  extends Omit<
+    invoiceT,
+    "id" | "created_at" | "total" | "client" | "invoiceItems"
+  > {
+  invoice_items: newInvoiceItemT[];
 }
 
 export interface newInvoiceItemT
@@ -184,7 +187,7 @@ export interface newSellerT extends Omit<newClientT, "fullname"> {
   name: string;
 }
 export interface updateSellerT extends Omit<updateClientT, "fullname"> {
-  name: string;
+  name: string | undefined;
 }
 ////////////////////////////////////////////////////
 //////////////// STOCKMOUVMENTS INTERFACES /////////
@@ -263,3 +266,9 @@ export interface RouteLinksTypeT {
 }
 
 export type FileNames = "Image" | "Doc";
+
+export type inOutReType = {
+  group_month: string;
+  total_in: number;
+  total_out: number;
+}[];

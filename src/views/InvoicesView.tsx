@@ -1,14 +1,12 @@
 import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { InvoicesTable } from "@/components/InvoicesTable";
-import { useProductStore } from "@/stores/productStore";
-import { useInvoiceStore } from "@/stores/invoiceStore";
-import { useClientStore } from "@/stores/clientStore";
 import { UiButton } from "@/components/ui/UiButton";
 import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
-import { storeToRefs } from "pinia";
+import type { invoiceT } from "@/types";
+import { invoke } from "@tauri-apps/api";
 
 export const InvoicesView = defineComponent({
   name: "Invoices",
@@ -21,15 +19,19 @@ export const InvoicesView = defineComponent({
   setup() {
     //
     const modalStore = useModalStore();
-    const InvoiceStore = useInvoiceStore();
-    const { invoices } = storeToRefs(InvoiceStore);
-    //
+    const invoices = ref<invoiceT[]>([]);
     const searchQuery = ref<string>("");
     //
-    onBeforeMount(() => {
-      InvoiceStore.getAllInvoices();
-      useProductStore().getAllProducts();
-      useClientStore().getAllClients();
+    onBeforeMount(async () => {
+      try {
+        const res = await invoke<invoiceT[]>("get_invoices", { page: 1 });
+        if (res) {
+          invoices.value = res;
+          return;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     });
     //
     const updateModal = (name: string) => {

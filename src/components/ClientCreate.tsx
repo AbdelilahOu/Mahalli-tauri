@@ -1,12 +1,14 @@
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useClientStore } from "@/stores/clientStore";
 import { defineComponent, reactive, ref } from "vue";
 import { useModalStore } from "@/stores/modalStore";
 import { ImagesFiles } from "@/constants/FileTypes";
+import { useRoute, useRouter } from "vue-router";
 import { UiUploader } from "./ui/UiUploader";
 import type { newClientT } from "@/types";
+import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
+import { saveFile } from "@/utils/fs";
 
 export const ClientCreate = defineComponent({
   name: "ClientCreate",
@@ -14,18 +16,37 @@ export const ClientCreate = defineComponent({
   setup() {
     const modalStore = useModalStore();
     const isFlash = ref<boolean>(false);
-    const Client = reactive<newClientT>({
+    const route = useRoute();
+    const router = useRouter();
+
+    const client = reactive<newClientT>({
       fullname: String(),
-      email: String(),
       phone: String(),
+      email: String(),
       address: String(),
       image: String(),
     });
-    const createNewClient = () => {
+
+    const updateQueryParams = (query: Record<any, any>) => {
+      router.push({
+        path: route.path,
+        params: { ...route.params },
+        query: { ...route.query, ...query },
+      });
+    };
+
+    const createNewClient = async () => {
       isFlash.value = true;
-      if (Client.fullname !== "") {
-        useClientStore().createOneClient(Client);
-        modalStore.updateModal({ key: "show", value: false });
+      if (client.fullname !== "") {
+        try {
+          let image: string = await saveFile(client.image as string, "Image");
+          await invoke("insert_client", { client });
+          updateQueryParams({ refresh: "refresh-create" });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          modalStore.updateModal({ key: "show", value: false });
+        }
       }
       setTimeout(() => {
         isFlash.value = false;
@@ -41,40 +62,40 @@ export const ClientCreate = defineComponent({
             <UiUploader
               name="Image"
               extensions={ImagesFiles}
-              onSave={(image) => (Client.image = image)}
+              onSave={(image) => (client.image = image)}
             />
           </div>
           <UiInput
-            IsEmpty={isFlash.value && Client["fullname"] == ""}
+            IsEmpty={isFlash.value && client["fullname"] == ""}
             OnInputChange={(value) =>
-              (Client["fullname"] =
+              (client["fullname"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Clients.create.placeholders[0]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && Client["email"] == ""}
+            IsEmpty={isFlash.value && client["email"] == ""}
             OnInputChange={(value) =>
-              (Client["email"] =
+              (client["email"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Clients.create.placeholders[1]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && Client["phone"] == ""}
+            IsEmpty={isFlash.value && client["phone"] == ""}
             OnInputChange={(value) =>
-              (Client["phone"] =
+              (client["phone"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Clients.create.placeholders[2]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && Client["address"] == ""}
+            IsEmpty={isFlash.value && client["address"] == ""}
             OnInputChange={(value) =>
-              (Client["address"] =
+              (client["address"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
