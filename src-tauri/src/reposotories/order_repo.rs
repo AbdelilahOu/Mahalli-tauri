@@ -28,7 +28,7 @@ pub fn get_orders(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
                 .expect("Error fetching order items with products");
 
             let order_items_json = json!({
-                "orderItems": order_items.into_iter().map(|(item, product)| {
+                "order_items": order_items.into_iter().map(|(item, product)| {
                     json!({
                         "id": item.id,
                         "price": item.price,
@@ -53,7 +53,7 @@ pub fn get_orders(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
                     "id": seller.id,
                     "name": seller.name
                 },
-                "orderItems": order_items_json["orderItems"]
+                "order_items": order_items_json["order_items"]
             })
         })
         .collect::<Vec<_>>()
@@ -77,11 +77,12 @@ pub fn get_order(o_id: i32, connection: &mut SqliteConnection) -> Value {
         .expect("Error fetching order items with products");
 
     let order_items_json = json!({
-        "orderItems": order_items.into_iter().map(|(item, product)| {
+        "order_items": order_items.into_iter().map(|(item, product)| {
             json!({
                 "id": item.id,
                 "price": item.price,
                 "quantity": item.quantity,
+                "order_id": item.order_id,
                 "product_id": item.product_id,
                 "inventory_id": item.inventory_id,
                 "product": product
@@ -95,7 +96,7 @@ pub fn get_order(o_id: i32, connection: &mut SqliteConnection) -> Value {
         "created_at": order.created_at,
         "seller_id": order.seller_id,
         "seller": seller,
-        "orderItems": order_items_json["orderItems"]
+        "order_items": order_items_json["order_items"]
     })
 }
 

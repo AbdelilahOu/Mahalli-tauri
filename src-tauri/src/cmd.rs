@@ -294,28 +294,26 @@ pub fn update_invoice(invoice: TUpdateInvoice, id: i32, state: tauri::State<AppS
         conn,
     );
     for item in invoice.invoice_items.into_iter() {
+        println!("{:?}", item);
         match item.id {
             Some(ii_id) => match item.inventory_id {
-                Some(im_id) => match item.invoice_id {
-                    Some(_i_id) => {
-                        invoice_item_repo::update_invoice_item(
-                            UpdateInvoiceItem {
-                                quantity: item.quantity,
-                            },
-                            ii_id,
-                            conn,
-                        );
+                Some(im_id) => {
+                    invoice_item_repo::update_invoice_item(
+                        UpdateInvoiceItem {
+                            quantity: item.quantity,
+                        },
+                        ii_id,
+                        conn,
+                    );
 
-                        inventory_mvm_repo::update_inventory_mvm(
-                            UpdateInventoryMvm {
-                                quantity: item.quantity,
-                            },
-                            im_id,
-                            conn,
-                        );
-                    }
-                    None => println!("No invoice id"),
-                },
+                    inventory_mvm_repo::update_inventory_mvm(
+                        UpdateInventoryMvm {
+                            quantity: item.quantity,
+                        },
+                        im_id,
+                        conn,
+                    );
+                }
                 None => println!("No inventory id"),
             },
 
@@ -417,27 +415,24 @@ pub fn update_order(order: TUpdateOrder, id: i32, state: tauri::State<AppState>)
     for item in order.order_items.into_iter() {
         match item.id {
             Some(oi_id) => match item.inventory_id {
-                Some(im_id) => match item.order_id {
-                    Some(_o_id) => {
-                        order_item_repo::update_order_item(
-                            UpdateOrderItem {
-                                quantity: item.quantity,
-                                price: item.price,
-                            },
-                            oi_id,
-                            conn,
-                        );
+                Some(im_id) => {
+                    order_item_repo::update_order_item(
+                        UpdateOrderItem {
+                            quantity: item.quantity,
+                            price: item.price,
+                        },
+                        oi_id,
+                        conn,
+                    );
 
-                        inventory_mvm_repo::update_inventory_mvm(
-                            UpdateInventoryMvm {
-                                quantity: item.quantity,
-                            },
-                            im_id,
-                            conn,
-                        );
-                    }
-                    None => println!("No order id"),
-                },
+                    inventory_mvm_repo::update_inventory_mvm(
+                        UpdateInventoryMvm {
+                            quantity: item.quantity,
+                        },
+                        im_id,
+                        conn,
+                    );
+                }
                 None => println!("No inventory id"),
             },
 
