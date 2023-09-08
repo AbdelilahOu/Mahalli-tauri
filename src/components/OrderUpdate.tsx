@@ -15,11 +15,14 @@ import {
   ref,
   onBeforeMount,
 } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 export const OrderUpdate = defineComponent({
   name: "OrderUpdate",
   components: { UiButton, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
   setup() {
+    const route = useRoute();
+    const router = useRouter();
     //
     const modalStore = useModalStore();
     //
@@ -33,7 +36,7 @@ export const OrderUpdate = defineComponent({
       id: undefined,
       status: undefined,
       seller_id: undefined,
-      orderItems: [],
+      order_items: [],
     };
     //
     const updateOrder = reactive<updateOrdersT>(
@@ -52,6 +55,14 @@ export const OrderUpdate = defineComponent({
       // @ts-ignore
       if ((res[1].status = "fulfilled")) products.value = res[1].value;
     });
+    //
+    const updateQueryParams = (query: Record<any, any>) => {
+      router.push({
+        path: route.path,
+        params: { ...route.params },
+        query: { ...route.query, ...query },
+      });
+    };
 
     const updateTheOrders = async () => {
       if (updateOrder.id) {
@@ -60,6 +71,7 @@ export const OrderUpdate = defineComponent({
             order: updateOrder,
             id: updateOrder.id,
           });
+          updateQueryParams({ refresh: "refresh-update" });
         } catch (error) {
           console.log(error);
         } finally {
@@ -140,7 +152,7 @@ export const OrderUpdate = defineComponent({
             <div class="w-full  h-full flex flex-col gap-1">
               <UiButton
                 Click={() =>
-                  updateOrder.orderItems?.push({
+                  updateOrder.order_items?.push({
                     product_id: 0,
                     quantity: 0,
                   })
@@ -150,7 +162,7 @@ export const OrderUpdate = defineComponent({
               </UiButton>
               <div class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
-                  {updateOrder.orderItems?.map((item, index) => (
+                  {updateOrder.order_items?.map((item, index) => (
                     <UiUpdateSelect
                       Value={item.product?.name ?? "select a product"}
                       items={products.value.map((product) => ({
@@ -164,7 +176,7 @@ export const OrderUpdate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateOrder.orderItems?.map((item, index) => (
+                  {updateOrder.order_items?.map((item, index) => (
                     <div class="h-full flex w-full items-center relative">
                       <UiUpdateInput
                         class="border-r-0"
@@ -174,7 +186,7 @@ export const OrderUpdate = defineComponent({
                         )}
                         Type="number"
                         OnInputChange={(value) =>
-                          (updateOrder.orderItems[index].quantity =
+                          (updateOrder.order_items[index].quantity =
                             Number(value))
                         }
                       >
@@ -190,7 +202,7 @@ export const OrderUpdate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateOrder.orderItems?.map((item, index) => (
+                  {updateOrder.order_items?.map((item, index) => (
                     <div class="h-full flex w-full items-center relative">
                       <UiUpdateInput
                         class="border-r-0 "
@@ -200,7 +212,7 @@ export const OrderUpdate = defineComponent({
                         )}
                         Type="number"
                         OnInputChange={(value) =>
-                          (updateOrder.orderItems[index].price = Number(value))
+                          (updateOrder.order_items[index].price = Number(value))
                         }
                       >
                         {{
@@ -215,10 +227,10 @@ export const OrderUpdate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateOrder.orderItems?.map((item, index) => (
+                  {updateOrder.order_items?.map((item, index) => (
                     <div
                       onClick={() => {
-                        updateOrder.orderItems?.splice(index, 1);
+                        updateOrder.order_items?.splice(index, 1);
                         if (item.id) deleteOneOrderItem(item.id);
                       }}
                       class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
