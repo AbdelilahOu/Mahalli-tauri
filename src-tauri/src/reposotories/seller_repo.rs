@@ -4,7 +4,7 @@ use crate::diesel::prelude::*;
 use crate::models::{NewSeller, Seller};
 use crate::schema::sellers::{self, address, email, image, name, phone};
 
-pub fn get_sellers(page: i32, connection: &mut SqliteConnection) -> Vec<Seller> {
+pub fn get_sellers(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
 
     let result = sellers::dsl::sellers
@@ -14,7 +14,15 @@ pub fn get_sellers(page: i32, connection: &mut SqliteConnection) -> Vec<Seller> 
         .load::<Seller>(connection)
         .expect("error get all sellers");
 
-    result
+    let count: Vec<i64> = sellers::table
+        .count()
+        .get_results(connection)
+        .expect("coudnt get the count");
+
+    json!({
+        "count": count[0],
+        "data": result
+    })
 }
 
 pub fn get_all_sellers(connection: &mut SqliteConnection) -> Vec<Value> {
