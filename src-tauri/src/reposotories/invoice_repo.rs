@@ -5,7 +5,7 @@ use crate::models::{Client, Invoice, InvoiceItem, NewInvoice, Product, UpdateInv
 use crate::schema::invoices::{client_id, status};
 use crate::schema::{clients, invoice_items, invoices, products};
 
-pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
+pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
 
     let result = invoices::table
@@ -17,7 +17,14 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> 
         .load::<(Invoice, Client)>(connection)
         .expect("Error fetching invoices with clients");
 
-    result
+    let count: Vec<i64> = invoices::table
+        .count()
+        .get_results(connection)
+        .expect("coudnt get the count");
+
+    json!({
+        "count": count[0],
+        "data": result
         .into_iter()
         .map(|(invoice, client)| {
             let invoice_items: Vec<(InvoiceItem, Product)> = invoice_items::table
@@ -60,6 +67,7 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> 
             })
         })
         .collect::<Vec<_>>()
+    })
 }
 
 pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
