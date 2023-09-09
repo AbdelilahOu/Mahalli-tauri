@@ -13,11 +13,6 @@ export const InventoryTable = defineComponent({
       type: Array as PropType<inventoryMvmT[]>,
       required: true,
     },
-    FilterParam: {
-      type: String,
-      required: true,
-      default: "",
-    },
   },
   components: { UiPagination },
   setup(props) {
@@ -36,12 +31,7 @@ export const InventoryTable = defineComponent({
             </tr>
           </thead>
           <tbody class="text-sm divide-y divide-gray-100">
-            {props.Inventory.filter((c) =>
-              // @ts-ignore
-              JSON.stringify(Object.values(c))
-                .toLocaleLowerCase()
-                .includes(props.FilterParam)
-            ).map((mvm, index) => (
+            {props.Inventory.map((mvm, index) => (
               <tr v-fade={index} key={mvm.id}>
                 <td class="p-2">
                   <div class="text-left font-medium">{mvm.product?.name}</div>
@@ -113,7 +103,7 @@ export const InventoryTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination itemsNumber={props.Inventory.length} />
+          <UiPagination />
         </div>
       </div>
     );
