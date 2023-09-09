@@ -18,7 +18,6 @@
     "chart.js": "^4.2.0",
     "firebase": "^9.22.2",
     "lodash": "^4.17.21",
-    "pinia": "^2.0.28",
     "vite-svg-loader": "^4.0.0",
     "vue": "^3.2.45",
     "vue-chartjs": "^5.2.0",
