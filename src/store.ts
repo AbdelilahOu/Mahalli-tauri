@@ -44,6 +44,7 @@ export const store = {
     getModalName: () => store.state.name,
     getCurrentLocale: () => store.state.currentLocale,
     getLocales: () => store.state.availableLocals,
+    getUser: () => store.state.user,
   },
   setters: {
     updateStore: function ({ key, value }: Args) {
