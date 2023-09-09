@@ -15,11 +15,6 @@ export const ClientsTable = defineComponent({
       type: Array as PropType<clientT[]>,
       required: true,
     },
-    FilterParam: {
-      type: String,
-      required: true,
-      default: "",
-    },
   },
   components: { UiCheckBox, UiIcon, UiPagination },
   setup(props) {
@@ -55,12 +50,7 @@ export const ClientsTable = defineComponent({
             </tr>
           </thead>
           <tbody class="text-sm divide-y divide-gray-100">
-            {props.Clients.filter((c) =>
-              // @ts-ignore
-              JSON.stringify(Object.values(c))
-                .toLocaleLowerCase()
-                .includes(props.FilterParam)
-            ).map((client, index) => (
+            {props.Clients.map((client, index) => (
               <tr v-fade={index} key={client.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
@@ -130,7 +120,7 @@ export const ClientsTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination itemsNumber={props.Clients.length} />
+          <UiPagination />
         </div>
       </div>
     );
