@@ -5,7 +5,7 @@ use crate::models::{NewProduct, Product, ProductWithQuantity};
 use crate::schema::products::{description, name, price, tva};
 use crate::schema::{inventory_mouvements, products};
 
-pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Vec<ProductWithQuantity> {
+pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
 
     let result = products::table
@@ -30,7 +30,15 @@ pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Vec<Product
         .load::<ProductWithQuantity>(connection)
         .expect("error get all products");
 
-    result
+    let count: Vec<i64> = products::table
+        .count()
+        .get_results(connection)
+        .expect("coudnt get the count");
+
+    json!({
+        "count": count[0],
+        "data": result
+    })
 }
 
 pub fn get_all_products(connection: &mut SqliteConnection) -> Vec<Value> {
