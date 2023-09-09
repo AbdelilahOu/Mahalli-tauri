@@ -14,11 +14,6 @@ export const OrdersTable = defineComponent({
       type: Array as PropType<orderT[]>,
       required: true,
     },
-    FilterParam: {
-      type: String,
-      required: true,
-      default: "",
-    },
   },
   components: { UiCheckBox, UiIcon, UiPagination },
   setup(props) {
@@ -55,12 +50,7 @@ export const OrdersTable = defineComponent({
             </tr>
           </thead>
           <tbody class="text-sm divide-y divide-gray-100">
-            {props.Orders.filter((c) =>
-              // @ts-ignore
-              JSON.stringify(Object.values(c))
-                .toLocaleLowerCase()
-                .includes(props.FilterParam)
-            ).map((Orders, index) => (
+            {props.Orders.map((Orders, index) => (
               <tr v-fade={index} key={Orders.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
@@ -153,7 +143,7 @@ export const OrdersTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination itemsNumber={props.Orders.length} />
+          <UiPagination />
         </div>
       </div>
     );
