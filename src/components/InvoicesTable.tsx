@@ -14,11 +14,6 @@ export const InvoicesTable = defineComponent({
       type: Array as PropType<invoiceT[]>,
       required: true,
     },
-    FilterParam: {
-      type: String,
-      required: true,
-      default: "",
-    },
   },
   components: { UiIcon, UiCheckBox, UiPagination },
   setup(props) {
@@ -54,12 +49,7 @@ export const InvoicesTable = defineComponent({
             </tr>
           </thead>
           <tbody class="text-sm divide-y divide-gray-100">
-            {props.Invoices.filter((c) =>
-              // @ts-ignore
-              JSON.stringify(Object.values(c))
-                .toLocaleLowerCase()
-                .includes(props.FilterParam)
-            ).map((Invoice, index) => (
+            {props.Invoices.map((Invoice, index) => (
               <tr v-fade={index} key={Invoice.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
@@ -164,7 +154,7 @@ export const InvoicesTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination itemsNumber={props.Invoices.length} />
+          <UiPagination />
         </div>
       </div>
     );
