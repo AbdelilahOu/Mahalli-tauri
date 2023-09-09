@@ -1,10 +1,10 @@
 import { defineComponent, ref, type PropType } from "vue";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { useModalStore } from "@/stores/modalStore";
 import { UiPagination } from "./ui/UiPagination";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import type { productT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
-import { globalTranslate } from "@/utils/globalTranslate";
 
 export const ProductsTable = defineComponent({
   name: "ProductsTable",
@@ -13,11 +13,6 @@ export const ProductsTable = defineComponent({
     Products: {
       type: Array as PropType<productT[]>,
       required: true,
-    },
-    FilterParam: {
-      type: String,
-      required: true,
-      default: "",
     },
   },
   setup(props) {
@@ -46,12 +41,7 @@ export const ProductsTable = defineComponent({
             </tr>
           </thead>
           <tbody class="text-sm divide-y divide-gray-100">
-            {props.Products.filter((c) =>
-              // @ts-ignore
-              JSON.stringify(Object.values(c))
-                .toLocaleLowerCase()
-                .includes(props.FilterParam)
-            ).map((product, index) => (
+            {props.Products.map((product, index) => (
               <tr v-fade={index} key={product.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
@@ -105,7 +95,7 @@ export const ProductsTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination itemsNumber={props.Products.length} />
+          <UiPagination />
         </div>
       </div>
     );
