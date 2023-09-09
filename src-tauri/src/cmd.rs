@@ -50,7 +50,7 @@ pub async fn seed_db() {
 }
 
 #[tauri::command]
-pub fn get_clients(page: i32, state: tauri::State<AppState>) -> Vec<Client> {
+pub fn get_clients(page: i32, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = client_repo::get_clients(page, conn);
@@ -98,7 +98,7 @@ pub fn update_client(client: Client, id: i32, state: tauri::State<AppState>) -> 
 }
 
 #[tauri::command]
-pub fn get_sellers(page: i32, state: tauri::State<AppState>) -> Vec<Seller> {
+pub fn get_sellers(page: i32, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = seller_repo::get_sellers(page, conn);
@@ -146,7 +146,7 @@ pub fn update_seller(seller: Seller, id: i32, state: tauri::State<AppState>) -> 
 }
 
 #[tauri::command]
-pub fn get_products(page: i32, state: tauri::State<AppState>) -> Vec<ProductWithQuantity> {
+pub fn get_products(page: i32, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = product_repo::get_products(page, conn);
@@ -194,7 +194,7 @@ pub fn update_product(product: Product, id: i32, state: tauri::State<AppState>) 
 }
 
 #[tauri::command]
-pub fn get_user(id: i32, state: tauri::State<AppState>) -> User {
+pub fn get_user(id: i32, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = user_repo::get_user(id, conn);
@@ -234,7 +234,7 @@ pub fn get_invoice(id: i32, state: tauri::State<AppState>) -> Value {
 }
 
 #[tauri::command]
-pub fn get_invoices(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
+pub fn get_invoices(page: i32, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = invoice_repo::get_invoices(page, conn);
@@ -351,7 +351,7 @@ pub fn get_order(id: i32, state: tauri::State<AppState>) -> Value {
 }
 
 #[tauri::command]
-pub fn get_orders(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
+pub fn get_orders(page: i32, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = order_repo::get_orders(page, conn);
@@ -463,7 +463,7 @@ pub fn update_order(order: TUpdateOrder, id: i32, state: tauri::State<AppState>)
 }
 
 #[tauri::command]
-pub fn get_order_items(id: i32, state: tauri::State<AppState>) -> Vec<OrderItem> {
+pub fn get_order_items(id: i32, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = order_item_repo::get_order_items(id, conn);
@@ -479,7 +479,7 @@ pub fn delete_order_items(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn get_invoice_items(id: i32, state: tauri::State<AppState>) -> Vec<InvoiceItem> {
+pub fn get_invoice_items(id: i32, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = invoice_item_repo::get_invoice_items(id, conn);
@@ -495,7 +495,7 @@ pub fn delete_invoice_items(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn get_inventory_mvms(page: i32, state: tauri::State<AppState>) -> Vec<Value> {
+pub fn get_inventory_mvms(page: i32, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = inventory_mvm_repo::get_inventory(page, conn);
