@@ -1,19 +1,19 @@
-import { defineComponent, reactive, onBeforeUnmount } from "vue";
+import { defineComponent, reactive, onBeforeUnmount, computed } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useModalStore } from "@/stores/modalStore";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
 import { useRoute, useRouter } from "vue-router";
-import type { updateClientT } from "@/types";
+import type { clientT, updateClientT } from "@/types";
 import { UiButton } from "./ui/UiButton";
-import { storeToRefs } from "pinia";
+
 import { invoke } from "@tauri-apps/api";
+import { store } from "@/store";
 
 export const ClientUpdate = defineComponent({
   name: "ClientUpdate",
   components: { UiButton, UiUpdateInput },
   setup() {
-    const modalStore = useModalStore();
-    const { client: ClientRow } = storeToRefs(modalStore);
+    const ClientRow = computed(() => store.getters.getSelectedRow<clientT>());
+
     const route = useRoute();
     const router = useRouter();
 
@@ -44,16 +44,21 @@ export const ClientUpdate = defineComponent({
             client: updateClient,
             id: updateClient.id,
           });
-          updateQueryParams({ refresh: "refresh-update" });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-update-" + Math.random() * 9999,
+          });
         } catch (error) {
           console.log(error);
         } finally {
-          modalStore.updateModal({ key: "show", value: false });
+          store.setters.updateStore({ key: "show", value: false });
         }
       }
     };
 
-    onBeforeUnmount(() => modalStore.updateClientRow(null));
+    onBeforeUnmount(() =>
+      store.setters.updateStore({ key: "row", value: null })
+    );
 
     return () => (
       <div class="w-1/2 h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
