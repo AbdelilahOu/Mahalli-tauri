@@ -1,6 +1,6 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, ref, type PropType } from "vue";
-import { useModalStore } from "@/stores/modalStore";
+import { store } from "@/store";
 import { UiPagination } from "./ui/UiPagination";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { RouterLink } from "vue-router";
@@ -17,8 +17,6 @@ export const InvoicesTable = defineComponent({
   },
   components: { UiIcon, UiCheckBox, UiPagination },
   setup(props) {
-    const modalStore = useModalStore();
-
     const checkedInvoices = ref<number[]>([]);
 
     const checkThisInvoice = (IsIncluded: boolean, id: number) => {
@@ -29,9 +27,9 @@ export const InvoicesTable = defineComponent({
     const pagination = ref(0);
 
     const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
-      modalStore.updateInvoiceRow(Invoice);
-      modalStore.updateModal({ key: "name", value: name });
-      modalStore.updateModal({ key: "show", value: true });
+      store.setters.updateStore({ key: "row", value: Invoice });
+      store.setters.updateStore({ key: "name", value: name });
+      store.setters.updateStore({ key: "show", value: true });
     };
     return () => (
       <div class="flex flex-col w-full h-full">
