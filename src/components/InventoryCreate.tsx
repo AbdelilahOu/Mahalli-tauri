@@ -1,6 +1,6 @@
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useModalStore } from "@/stores/modalStore";
+import { store } from "@/store";
 import { UiButton } from "./ui/UiButton";
 import { UiSelect } from "./ui/UiSelect";
 import { invoke } from "@tauri-apps/api";
@@ -11,7 +11,6 @@ export const InventoryCreate = defineComponent({
   name: "InventoryCreate",
   components: { UiButton, UiInput, UiSelect },
   setup() {
-    // const { products } = storeToRefs(useProductStore());
     const route = useRoute();
     const router = useRouter();
 
@@ -43,11 +42,14 @@ export const InventoryCreate = defineComponent({
       if (inventoryMvm.productId !== 0 && inventoryMvm.quantity !== 0) {
         try {
           await invoke("insert_inventory_mvm", { inventory: inventoryMvm });
-          updateQueryParams({ refresh: "refresh-create" });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-create-" + Math.random() * 9999,
+          });
         } catch (error) {
           console.log(error);
         } finally {
-          useModalStore().updateModal({ key: "show", value: false });
+          store.setters.updateStore({ key: "show", value: false });
         }
       }
     };
