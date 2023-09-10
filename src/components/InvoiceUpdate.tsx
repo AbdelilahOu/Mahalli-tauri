@@ -1,12 +1,11 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiUpdateSelect } from "./ui/UiUpdateSelect";
-import { useModalStore } from "@/stores/modalStore";
+import { store } from "@/store";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
-import type { updateInvoiceT } from "@/types";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
-import { storeToRefs } from "pinia";
+
 import UiIcon from "./ui/UiIcon.vue";
 import {
   defineComponent,
@@ -14,20 +13,21 @@ import {
   onBeforeUnmount,
   ref,
   onBeforeMount,
+  computed,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import type { invoiceT, updateInvoiceT } from "@/types";
 
 export const InvoiceUpdate = defineComponent({
   name: "InvoiceUpdate",
   components: { UiButton, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
   setup() {
-    const modalStore = useModalStore();
     const route = useRoute();
     const router = useRouter();
 
     const clients = ref<{ name: string; id: number }[]>([]);
     const products = ref<{ name: string; id: number }[]>([]);
-    const { invoice: invoiceRow } = storeToRefs(modalStore);
+    const invoiceRow = computed(() => store.getters.getSelectedRow<invoiceT>());
 
     const invoice: updateInvoiceT = {
       id: undefined,
@@ -69,11 +69,14 @@ export const InvoiceUpdate = defineComponent({
             invoice: updateInvoice,
             id: updateInvoice.id,
           });
-          updateQueryParams({ refresh: "refresh-update" });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-update-" + Math.random() * 9999,
+          });
         } catch (error) {
           console.log(error);
         } finally {
-          modalStore.updateModal({ key: "show", value: false });
+          store.setters.updateStore({ key: "show", value: false });
         }
       }
     };
@@ -86,7 +89,9 @@ export const InvoiceUpdate = defineComponent({
       }
     }
 
-    onBeforeUnmount(() => modalStore.updateInvoiceRow(null));
+    onBeforeUnmount(() =>
+      store.setters.updateStore({ key: "row", value: null })
+    );
 
     return () => (
       <div class="w-5/6 lg:w-1/2 rounded-md relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
@@ -112,6 +117,40 @@ export const InvoiceUpdate = defineComponent({
           </div>
           <div class="w-full  h-full flex flex-col gap-1">
             <h1 class="font-medium">invoice details</h1>
+            <div class="w-full  h-full flex flex-col mb-1 gap-1">
+              <div class="flex justify-between w-full">
+                <div class="h-full w-full flex flex-row flex-nowrap items-center gap-2">
+                  <UiCheckBox
+                    onCheck={(check) =>
+                      check
+                        ? (updateInvoice.status = "delivered")
+                        : (updateInvoice.status = "")
+                    }
+                  />
+                  <span>{globalTranslate("Invoices.status.delivered")}</span>
+                </div>
+                <div class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2">
+                  <UiCheckBox
+                    onCheck={(check) =>
+                      check
+                        ? (updateInvoice.status = "pending")
+                        : (updateInvoice.status = "")
+                    }
+                  />
+                  <span>{globalTranslate("Invoices.status.pending")}</span>
+                </div>
+                <div class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2">
+                  <UiCheckBox
+                    onCheck={(check) =>
+                      check
+                        ? (updateInvoice.status = "canceled")
+                        : (updateInvoice.status = "")
+                    }
+                  />
+                  <span>{globalTranslate("Invoices.status.canceled")}</span>
+                </div>
+              </div>
+            </div>
             <div class="w-full  h-full flex flex-col gap-1">
               <UiButton
                 Click={() =>
@@ -153,7 +192,7 @@ export const InvoiceUpdate = defineComponent({
                       >
                         {{
                           unite: () => (
-                            <span class="h-full text-gray-400 rounded-md px-2  flex items-center justify-center">
+                            <span class="h-full text-gray-400 rounded-md px-2 flex items-center justify-center">
                               Item
                             </span>
                           ),
