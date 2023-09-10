@@ -1,19 +1,20 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiUpdateSelect } from "./ui/UiUpdateSelect";
-import { useModalStore } from "@/stores/modalStore";
+import { store } from "@/store";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
-import type { updateOrdersT } from "@/types";
+import type { orderT, updateOrdersT } from "@/types";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import UiIcon from "./ui/UiIcon.vue";
-import { storeToRefs } from "pinia";
+
 import {
   defineComponent,
   reactive,
   onBeforeUnmount,
   ref,
   onBeforeMount,
+  computed,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -24,9 +25,9 @@ export const OrderUpdate = defineComponent({
     const route = useRoute();
     const router = useRouter();
     //
-    const modalStore = useModalStore();
+
     //
-    const { order: OrdersRow } = storeToRefs(modalStore);
+    const OrdersRow = computed(() => store.getters.getSelectedRow<orderT>());
 
     const sellers = ref<{ name: string; id: number }[]>([]);
     const products = ref<{ name: string; id: number }[]>([]);
@@ -71,11 +72,14 @@ export const OrderUpdate = defineComponent({
             order: updateOrder,
             id: updateOrder.id,
           });
-          updateQueryParams({ refresh: "refresh-update" });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-update-" + Math.random() * 9999,
+          });
         } catch (error) {
           console.log(error);
         } finally {
-          modalStore.updateModal({ key: "show", value: false });
+          store.setters.updateStore({ key: "show", value: false });
         }
       }
     };
@@ -88,7 +92,9 @@ export const OrderUpdate = defineComponent({
       }
     }
 
-    onBeforeUnmount(() => modalStore.updateOrdersRow(null));
+    onBeforeUnmount(() =>
+      store.setters.updateStore({ key: "row", value: null })
+    );
 
     return () => (
       <div class="w-5/6 lg:w-1/2 relative h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
