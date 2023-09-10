@@ -1,6 +1,6 @@
 import { defineComponent, type PropType, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useModalStore } from "@/stores/modalStore";
+import { store } from "@/store";
 import { UiPagination } from "./ui/UiPagination";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { RouterLink } from "vue-router";
@@ -17,8 +17,6 @@ export const OrdersTable = defineComponent({
   },
   components: { UiCheckBox, UiIcon, UiPagination },
   setup(props) {
-    const modalStore = useModalStore();
-
     const checkedOrders = ref<number[]>([]);
 
     const checkThisOrders = (IsIncluded: boolean, id: number) => {
@@ -27,10 +25,10 @@ export const OrdersTable = defineComponent({
         : checkedOrders.value.splice(checkedOrders.value.indexOf(id), 1);
     };
 
-    const toggleThisOrders = (Orders: orderT, name: string) => {
-      modalStore.updateOrdersRow(Orders);
-      modalStore.updateModal({ key: "name", value: name });
-      modalStore.updateModal({ key: "show", value: true });
+    const toggleThisOrders = (Order: orderT, name: string) => {
+      store.setters.updateStore({ key: "row", value: Order });
+      store.setters.updateStore({ key: "name", value: name });
+      store.setters.updateStore({ key: "show", value: true });
     };
     //
 
