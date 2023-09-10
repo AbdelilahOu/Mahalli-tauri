@@ -81,7 +81,7 @@
   },
   "Orders": {
     "index": {
-      "addButton": "Add new Orders",
+      "addButton": "Add new order",
       "feilds": ["id", "seller", "items", "STATUS", "Date", "action"]
     },
     "create": {
@@ -93,7 +93,7 @@
         },
         "order": {
           "title": "order details",
-          "add": "add a product",
+          "add": "Add a product",
           "select": "Select a product",
           "placeholder": ["Product quantity", "New price"]
         }
@@ -110,7 +110,7 @@
         "order": {
           "title": "order details",
           "select": "Select a product",
-          "add": "add a product"
+          "add": "Add a product"
         }
       },
       "button": "Update Orders"
@@ -144,13 +144,7 @@
       },
       "items": {
         "title": "order items details",
-        "fields": [
-          "name",
-          "description",
-          "quantity",
-          "price",
-          "total"
-        ]
+        "fields": ["name", "description", "quantity", "price", "total"]
       },
       "button": "print"
     }
@@ -187,7 +181,7 @@
   },
   "Invoices": {
     "index": {
-      "addButton": "Add new Invoice",
+      "addButton": "Add new invoice",
       "feilds": ["id", "client", "items", "total", "status", "Date", "action"]
     },
     "create": {
@@ -199,7 +193,7 @@
         },
         "invoice": {
           "title": "invoice details",
-          "add": "add a product",
+          "add": "Add a product",
           "select": "Select a product",
           "placeholder": ["Product quantity", "New Price"]
         }
@@ -215,7 +209,7 @@
         },
         "invoice": {
           "title": "invoice details",
-          "add": "add a product",
+          "add": "Add a product",
           "select": ""
         }
       },
@@ -225,6 +219,11 @@
       "title": "are you sure you wanna delete the invoice ",
       "yes": "Confirme",
       "no": "Cancel"
+    },
+    "status": {
+      "delivered": "Delivered",
+      "pending": "Pending",
+      "canceled": "Canceled"
     }
   },
   "Inventory": {
