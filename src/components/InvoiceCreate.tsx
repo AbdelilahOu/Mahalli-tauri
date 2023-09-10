@@ -1,7 +1,7 @@
 import type { newInvoiceT, newInvoiceItemT, invoiceT } from "@/types";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useModalStore } from "@/stores/modalStore";
+import { store } from "@/store";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
@@ -17,7 +17,7 @@ export const InvoiceCreate = defineComponent({
     const route = useRoute();
     const router = useRouter();
     const isFlash = ref<boolean>(false);
-    // const { products } = storeToRefs(useProductStore());
+
     const clients = ref<{ name: string; id: number }[]>([]);
     const products = ref<{ name: string; id: number }[]>([]);
 
@@ -64,11 +64,14 @@ export const InvoiceCreate = defineComponent({
           await invoke<invoiceT>("insert_invoice", {
             invoice: newInvoice,
           });
-          updateQueryParams({ refresh: "refresh-create" });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-create-" + Math.random() * 9999,
+          });
         } catch (error) {
           console.log(error);
         } finally {
-          useModalStore().updateModal({ key: "show", value: false });
+          store.setters.updateStore({ key: "show", value: false });
         }
       }
       setTimeout(() => {
