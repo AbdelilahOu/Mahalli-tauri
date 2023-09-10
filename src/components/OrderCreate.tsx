@@ -1,7 +1,7 @@
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import type { newOrdersT, newOrdersItemT } from "@/types";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useModalStore } from "@/stores/modalStore";
+import { store } from "@/store";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { UiButton } from "./ui/UiButton";
 import { invoke } from "@tauri-apps/api";
@@ -17,8 +17,6 @@ export const OrderCreate = defineComponent({
     const route = useRoute();
     const router = useRouter();
     const isFlash = ref<boolean>(false);
-    // const { products } = storeToRefs(useProductStore());
-    // const { sellers } = storeToRefs(useSellerStore());
 
     const sellers = ref<{ name: string; id: number }[]>([]);
     const products = ref<{ name: string; id: number }[]>([]);
@@ -67,11 +65,14 @@ export const OrderCreate = defineComponent({
           await invoke("insert_order", {
             order: newOrder,
           });
-          updateQueryParams({ refresh: "refresh-create" });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-create-" + Math.random() * 9999,
+          });
         } catch (error) {
           console.log(error);
         } finally {
-          useModalStore().updateModal({ key: "show", value: false });
+          store.setters.updateStore({ key: "show", value: false });
         }
       }
       setTimeout(() => {
