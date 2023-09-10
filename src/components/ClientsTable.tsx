@@ -1,12 +1,12 @@
 import { defineComponent, type PropType, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
-import { useModalStore } from "@/stores/modalStore";
 import { UiPagination } from "./ui/UiPagination";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { RouterLink } from "vue-router";
 import type { clientT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
+import { store } from "@/store";
 
 export const ClientsTable = defineComponent({
   name: "ClientsTable",
@@ -18,7 +18,6 @@ export const ClientsTable = defineComponent({
   },
   components: { UiCheckBox, UiIcon, UiPagination },
   setup(props) {
-    const modalStore = useModalStore();
     const checkedClients = ref<number[]>([]);
 
     const checkThisUser = (IsInclude: boolean, id: number) => {
@@ -28,9 +27,9 @@ export const ClientsTable = defineComponent({
     };
 
     const toggleThisClient = (client: clientT, name: string) => {
-      modalStore.updateClientRow(client);
-      modalStore.updateModal({ key: "name", value: name });
-      modalStore.updateModal({ key: "show", value: true });
+      store.setters.updateStore({ key: "row", value: client });
+      store.setters.updateStore({ key: "name", value: name });
+      store.setters.updateStore({ key: "show", value: true });
     };
 
     return () => (
