@@ -1,6 +1,5 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, reactive, ref } from "vue";
-import { useModalStore } from "@/stores/modalStore";
 import { ImagesFiles } from "@/constants/FileTypes";
 import { useRoute, useRouter } from "vue-router";
 import { UiUploader } from "./ui/UiUploader";
@@ -9,12 +8,12 @@ import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
+import { store } from "@/store";
 
 export const ClientCreate = defineComponent({
   name: "ClientCreate",
   components: { UiButton, UiInput },
   setup() {
-    const modalStore = useModalStore();
     const isFlash = ref<boolean>(false);
     const route = useRoute();
     const router = useRouter();
@@ -40,12 +39,15 @@ export const ClientCreate = defineComponent({
       if (client.fullname !== "") {
         try {
           let image: string = await saveFile(client.image as string, "Image");
-          await invoke("insert_client", { client });
-          updateQueryParams({ refresh: "refresh-create" });
+          await invoke("insert_client", { client: { ...client, image } });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-create-" + Math.random() * 9999,
+          });
         } catch (error) {
           console.log(error);
         } finally {
-          modalStore.updateModal({ key: "show", value: false });
+          store.setters.updateStore({ key: "show", value: false });
         }
       }
       setTimeout(() => {
