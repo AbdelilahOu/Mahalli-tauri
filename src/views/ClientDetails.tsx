@@ -2,14 +2,14 @@ import { chartOptions, optionsWoTicks } from "@/constants/chartOptions";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
-import { useModalStore } from "@/stores/modalStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
 import { UiCard } from "@/components/ui/UiCard";
+import { getWeekDay } from "@/utils/formatDate";
+import { invoke } from "@tauri-apps/api";
 import type { clientT } from "@/types";
 import { useRoute } from "vue-router";
-import { invoke } from "@tauri-apps/api";
-import { getWeekDay } from "@/utils/formatDate";
+import { store } from "@/store";
 import _ from "lodash";
 
 export const ClientDetails = defineComponent({
@@ -104,7 +104,7 @@ export const ClientDetails = defineComponent({
       DailyStats.keys = dailyStats.keys;
       DailyStats.data = dailyStats.values;
 
-      console.log(dailyStats);
+      // console.log(dailyStats);
 
       ProductsStats.data = productStats.data;
       ProductsStats.dates = productStats.dates;
@@ -112,9 +112,9 @@ export const ClientDetails = defineComponent({
     });
 
     const toggleThisClient = (client: clientT | null, name: string) => {
-      useModalStore().updateModal({ key: "show", value: true });
-      useModalStore().updateModal({ key: "name", value: name });
-      useModalStore().updateClientRow(client);
+      store.setters.updateStore({ key: "show", value: true });
+      store.setters.updateStore({ key: "name", value: name });
+      store.setters.updateStore({ key: "row", value: client });
     };
 
     onBeforeMount(async () => {
