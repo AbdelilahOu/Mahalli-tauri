@@ -178,11 +178,28 @@ pub fn delete_product(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_product(product: NewProduct, state: tauri::State<AppState>) -> usize {
+pub fn insert_product(product: TNewProduct, state: tauri::State<AppState>) {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = product_repo::insert_product(product, conn);
-    result
+    let id = product_repo::insert_product(
+        NewProduct {
+            description: product.description,
+            name: product.name,
+            price: product.price,
+            tva: product.tva,
+            image: product.image,
+        },
+        conn,
+    );
+
+    inventory_mvm_repo::insert_inventory_mvm(
+        NewInventoryMvm {
+            model: String::from("IN"),
+            quantity: product.quantity,
+            product_id: id,
+        },
+        conn,
+    );
 }
 
 #[tauri::command]
