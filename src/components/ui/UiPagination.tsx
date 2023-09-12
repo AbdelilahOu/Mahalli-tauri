@@ -1,19 +1,14 @@
-import { computed, defineComponent, type PropType } from "vue";
+import { computed, defineComponent, inject, type Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 export const UiPagination = defineComponent({
   name: "UiPagination",
-  props: {
-    itemsNumber: {
-      type: Number,
-      required: true,
-    },
-  },
-  setup(props) {
+  setup() {
     const router = useRouter();
     const route = useRoute();
-
     const page = computed(() => Number(router.currentRoute.value.query.page));
+
+    const rowsCount = inject<Ref<number>>("count");
 
     const goBack = () => {
       if (page.value > 1) {
@@ -23,8 +18,9 @@ export const UiPagination = defineComponent({
         });
       }
     };
+
     const goForward = () => {
-      if (page.value < Math.ceil(props.itemsNumber / 17)) {
+      if (page.value < Math.ceil((rowsCount?.value ?? 1) / 17)) {
         router.push({
           path: route.path,
           query: { page: page.value + 1 },
@@ -42,11 +38,15 @@ export const UiPagination = defineComponent({
           </span>
           <div class="flex w-full h-full items-center">
             <span class="px-1 text-base text-gray-400">
-              {page.value === 1 ? "" : page.value}
+              {page.value > 1
+                ? page.value - 1
+                : page.value == 1
+                ? ""
+                : page.value}
             </span>
             <span class="px-1">{page.value}</span>
             <span class="px-1 text-base text-gray-400">
-              {page.value + 1 === Math.ceil(props.itemsNumber / 17)
+              {page.value === Math.ceil((rowsCount?.value ?? 1) / 17)
                 ? ""
                 : page.value + 1}
             </span>
