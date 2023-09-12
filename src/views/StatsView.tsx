@@ -152,7 +152,7 @@ export const StatsView = defineComponent({
     });
 
     return () => (
-      <main class="w-full h-full px-3 py-1">
+      <main class="w-full h-full">
         <div class="w-full h-full flex flex-col gap-4">
           <div class="w-full h-fit ">
             <ChartHolder>
