@@ -12,9 +12,9 @@ const currentLocale = locale
 export const store = {
   state: reactive<storeState>({
     // related to modals
+    name: String(),
     show: false,
     row: null,
-    name: String(),
     // i18n
     currentLocale,
     availableLocals: [
