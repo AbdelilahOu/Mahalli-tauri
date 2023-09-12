@@ -2,7 +2,7 @@ import { chartOptions, optionsWoTicks } from "@/constants/chartOptions";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
-import { useModalStore } from "@/stores/modalStore";
+import { store } from "@/store";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
 import { UiCard } from "@/components/ui/UiCard";
@@ -108,8 +108,8 @@ export const SellerDetails = defineComponent({
       ProductsStats.products = productStats.products;
     });
     const toggleThisSeller = (seller: sellerT | null, name: string) => {
-      useModalStore().updateModal({ key: "show", value: true });
-      useModalStore().updateModal({ key: "name", value: name });
+      store.setters.updateStore({ key: "show", value: true });
+      store.setters.updateStore({ key: "name", value: name });
       useModalStore().updateSellerRow(seller);
     };
 
