@@ -1,5 +1,6 @@
 import { chartOptions, optionsWoTicks } from "@/constants/chartOptions";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
+import { groupBy, keys, mapValues, values } from "@/utils/native_";
 import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
 import { ChartLine } from "@/components/ChartLine";
@@ -10,7 +11,6 @@ import { invoke } from "@tauri-apps/api";
 import type { clientT } from "@/types";
 import { useRoute } from "vue-router";
 import { store } from "@/store";
-import _ from "lodash";
 
 export const ClientDetails = defineComponent({
   name: "ClientDetails",
@@ -35,18 +35,14 @@ export const ClientDetails = defineComponent({
     async function getProductPerMonth(id: number) {
       const data: any[] = await invoke("get_c_product_month", { id });
 
-      const existingDates = _.keys(_.groupBy(data, "month"));
-      const existingProducts = _.keys(_.groupBy(data, "name"));
-      const dataPerProduct = _.mapValues(_.groupBy(data, "name"), (value) =>
-        _.reduce(
-          value,
-          (pr, cr) => {
-            if (!pr) pr = [];
-            pr.push(cr.quantity);
-            return pr;
-          },
-          [] as number[]
-        )
+      const existingDates = keys(groupBy(data, "month"));
+      const existingProducts = keys(groupBy(data, "name"));
+      const dataPerProduct = mapValues(groupBy(data, "name"), (value: any[]) =>
+        value.reduce((pr, cr) => {
+          if (!pr) pr = [];
+          pr.push(cr.quantity);
+          return pr;
+        }, [] as number[])
       );
 
       return {
@@ -80,9 +76,9 @@ export const ClientDetails = defineComponent({
       }
 
       // @ts-ignore
-      const K = _.keys(Object.fromEntries(resultMap));
+      const K = keys(Object.fromEntries(resultMap));
       // @ts-ignore
-      const V = _.values(Object.fromEntries(resultMap));
+      const V = values(Object.fromEntries(resultMap));
       const rearrangedKeys = K.slice(nextDay).concat(K.slice(0, nextDay));
       const rearrangedValues = V.slice(nextDay).concat(V.slice(0, nextDay));
 

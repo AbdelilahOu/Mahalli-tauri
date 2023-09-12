@@ -8,8 +8,8 @@ import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
-import { invoke } from "@tauri-apps/api";
 import { getWeekDay } from "@/utils/formatDate";
+import { invoke } from "@tauri-apps/api";
 
 export const StatsView = defineComponent({
   name: "Stats",
