@@ -29,6 +29,7 @@ export const ClientDetails = defineComponent({
     const DailyStats = reactive({
       data: [] as number[],
       keys: [] as string[],
+      color: generateColor(),
     });
 
     async function getProductPerMonth(id: number) {
@@ -141,8 +142,8 @@ export const ClientDetails = defineComponent({
                   datasets: [
                     {
                       label: "daily expenses",
-                      backgroundColor: generateColor(),
-                      borderColor: generateColor().replace("0.2", "0.5"),
+                      backgroundColor: DailyStats.color,
+                      borderColor: DailyStats.color.replace("0.2", "0.5"),
                       data: DailyStats.data,
                       borderWidth: 2,
                       lineTension: 0.4,
