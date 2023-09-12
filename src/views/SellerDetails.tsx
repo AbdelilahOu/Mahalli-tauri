@@ -28,6 +28,7 @@ export const SellerDetails = defineComponent({
     const DailyStats = reactive({
       data: [] as number[],
       keys: [] as string[],
+      color: generateColor(),
     });
 
     async function getProductPerMonth(id: number) {
@@ -104,7 +105,7 @@ export const SellerDetails = defineComponent({
     const toggleThisSeller = (seller: sellerT | null, name: string) => {
       store.setters.updateStore({ key: "show", value: true });
       store.setters.updateStore({ key: "name", value: name });
-      useModalStore().updateSellerRow(seller);
+      store.setters.updateStore({ key: "row", value: seller });
     };
 
     onBeforeMount(async () => {
@@ -136,8 +137,8 @@ export const SellerDetails = defineComponent({
                   datasets: [
                     {
                       label: "daily expenses",
-                      backgroundColor: generateColor(),
-                      borderColor: generateColor().replace("0.2", "0.5"),
+                      backgroundColor: DailyStats.color,
+                      borderColor: DailyStats.color.replace("0.2", "0.5"),
                       data: DailyStats.data,
                       borderWidth: 2,
                       lineTension: 0.4,
