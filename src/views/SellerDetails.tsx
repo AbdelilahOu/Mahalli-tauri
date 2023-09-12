@@ -69,12 +69,6 @@ export const SellerDetails = defineComponent({
       }
 
       for (const { day, expense } of result) {
-        console.log(
-          day,
-          new Date(day).toLocaleDateString("en-us", {
-            weekday: "short",
-          })
-        );
         resultMap.set(
           new Date(day).toLocaleDateString("en-us", {
             weekday: "short",
