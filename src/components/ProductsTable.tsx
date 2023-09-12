@@ -1,10 +1,11 @@
 import { defineComponent, ref, type PropType } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useModalStore } from "@/stores/modalStore";
+import { store } from "@/store";
 import { UiPagination } from "./ui/UiPagination";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import type { productT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
 
 export const ProductsTable = defineComponent({
   name: "ProductsTable",
@@ -16,14 +17,13 @@ export const ProductsTable = defineComponent({
     },
   },
   setup(props) {
-    const modalStore = useModalStore();
     //
 
     //
     const toggleThisProduct = (product: productT, name: string) => {
-      modalStore.updateProductRow(product);
-      modalStore.updateModal({ key: "name", value: name });
-      modalStore.updateModal({ key: "show", value: true });
+      store.setters.updateStore({ key: "row", value: product });
+      store.setters.updateStore({ key: "name", value: name });
+      store.setters.updateStore({ key: "show", value: true });
     };
     return () => (
       <div class="w-full flex flex-col">
@@ -31,6 +31,7 @@ export const ProductsTable = defineComponent({
           <thead class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
               <th class="rounded-l-md"></th>
+              <th class="p-2 w-fit"></th>
               {[1, 2, 3, 4, 5, 6].map((index) => (
                 <th class="p-2 w-fit last:rounded-r-md">
                   <div class="font-semibold  text-left">
@@ -54,6 +55,18 @@ export const ProductsTable = defineComponent({
                       }
                     />
                   </span>
+                </td>
+                <td class="p-2">
+                  <div class="w-12 h-12 rounded-full overflow-hidden">
+                    {product.image && product.image !== "" ? (
+                      <img
+                        class="rounded-full w-full h-full object-cover"
+                        src={convertFileSrc(product.image)}
+                      />
+                    ) : (
+                      <span class=" rounded-full w-full h-full object-fill animate-pulse bg-slate-300 duration-150" />
+                    )}
+                  </div>
                 </td>
                 <td class="p-2">
                   <div class="font-medium text-gray-800">{product.name}</div>
