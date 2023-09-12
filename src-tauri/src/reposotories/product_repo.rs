@@ -2,7 +2,7 @@ use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
 use crate::models::{NewProduct, Product, ProductWithQuantity};
-use crate::schema::products::{description, name, price, tva};
+use crate::schema::products::{description, image, name, price, tva};
 use crate::schema::{inventory_mouvements, products};
 
 pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Value {
@@ -68,16 +68,24 @@ pub fn get_product(p_id: i32, connection: &mut SqliteConnection) -> Product {
 
     result
 }
-pub fn insert_product(new_p: NewProduct, connection: &mut SqliteConnection) -> usize {
-    let result = diesel::insert_into(products::dsl::products)
+pub fn insert_product(new_p: NewProduct, connection: &mut SqliteConnection) -> i32 {
+    diesel::insert_into(products::dsl::products)
         .values((
             description.eq(new_p.description),
             name.eq(new_p.name),
             price.eq(new_p.price),
             tva.eq(new_p.tva),
+            image.eq(new_p.image),
         ))
         .execute(connection)
         .expect("Expect add articles");
+
+    // select last inserted row
+    let result = products::dsl::products
+        .order_by(products::id.desc())
+        .select(products::id)
+        .first::<i32>(connection)
+        .expect("error get all products");
 
     result
 }
