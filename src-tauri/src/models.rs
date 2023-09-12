@@ -104,6 +104,7 @@ pub struct NewProduct {
     pub name: String,
     pub price: f32,
     pub tva: f32,
+    pub image: String,
 }
 
 #[derive(Debug, Queryable, Deserialize, Selectable, Serialize, Associations, QueryableByName)]
