@@ -1,0 +1,4 @@
+id,status,created_at,client_id
+1,canceled,2023-09-12 20:06:37,1
+2,delivered,2023-09-12 20:06:49,2
+3,delivered,2023-09-12 20:21:59,2
