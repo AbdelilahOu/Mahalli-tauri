@@ -70,6 +70,7 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Value {
                     })
                 })
             })
+            // .filter(|el| el["orderItem"]["order_id"] > 0 || el["invoiceItem"]["invoice_id"] > 0)
             .collect::<Vec<Value>>()
     })
 }
