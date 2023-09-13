@@ -14,7 +14,7 @@ pub struct ProductRecord {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ClientRecord {
     id: i64,
-    pub name: String,
+    pub fullname: String,
     pub phone: String,
     pub email: String,
     pub address: String,
@@ -34,7 +34,6 @@ pub struct SellerRecord {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct InvoiceRecord {
     id: i64,
-    pub total: f32,
     pub status: String,
     pub created_at: String,
     pub client_id: i32,
