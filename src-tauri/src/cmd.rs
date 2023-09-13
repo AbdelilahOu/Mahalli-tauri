@@ -13,13 +13,13 @@ use crate::types::*;
 use crate::AppState;
 
 #[tauri::command]
-pub async fn export_db_csv(table: String) {
+pub async fn export_db_csv() -> String {
     dotenv().ok();
     let _env = env::var("DEV_ENV");
     let database_url: String = if _env.is_ok() == false {
         path::Path::new(&tauri::api::path::data_dir().unwrap())
-            .join(".inventoryer")
-            .join("inventoryer.db")
+            .join(".stocker")
+            .join("stocker.db")
             .to_str()
             .expect("Failed to convert path to string")
             .to_string()
@@ -27,16 +27,32 @@ pub async fn export_db_csv(table: String) {
         env::var("DATABASE_URL").expect("DATABASE_URL not set")
     };
 
-    let result = export::export_db_csv(
-        &database_url,
-        &path::Path::new(&tauri::api::path::data_dir().unwrap())
-            .to_str()
-            .unwrap(),
-        &table,
-    )
-    .await;
+    // table names
+    let mut table_names: Vec<String> = vec![
+        String::from("products"),
+        String::from("clients"),
+        String::from("sellers"),
+        String::from("invoices"),
+        String::from("orders"),
+        String::from("inventory_mouvements"),
+        String::from("order_items"),
+        String::from("invoice_items"),
+    ];
+    // output path
+    let documents_path = tauri::api::path::document_dir().unwrap();
+    let output_path = path::Path::new(&documents_path);
 
-    result
+    //
+    for table in table_names.iter_mut() {
+        // checking if we already have the csvs
+        let out_put_file = output_path.join(format!("{}.csv", table));
+        if out_put_file.exists() == false {
+            // get data as csv
+            export::table_to_csv(&database_url, &out_put_file.to_str().unwrap(), &table).await;
+        }
+    }
+
+    String::from("OK")
 }
 
 #[tauri::command]
