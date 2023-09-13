@@ -18,6 +18,7 @@ diesel::table! {
         model -> Text,
         quantity -> BigInt,
         product_id -> Integer,
+        item_is_deleted -> Integer,
     }
 }
 
