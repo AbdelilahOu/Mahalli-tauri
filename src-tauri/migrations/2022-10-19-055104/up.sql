@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS inventory_mouvements (
   model TEXT NOT NULL,
   quantity BIGINT NOT NULL,
   product_id INTEGER NOT NULL,
+  item_is_deleted INTEGER NOT NULL DEFAULT 0,
   CONSTRAINT inventory_mouvements_product_id_fkey FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
