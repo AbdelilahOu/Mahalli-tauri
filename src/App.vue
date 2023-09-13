@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
 import { onBeforeMount, Transition } from "vue";
-onBeforeMount(() => {
-  // console.log(await invoke("get_inventory_mvm", { page: 1 }));
-  useRouter().push("/Home");
-});
+onBeforeMount(() => useRouter().push("/Home"));
 </script>
 
 <template>
