@@ -7,7 +7,7 @@ export const ChartHolder = defineComponent({
       <div
         class={`${
           slots.title ? "grid-rows-[50px_1fr]" : "grid-rows-1"
-        } w-full h-fit grid overflow-hidden gap-1 grid-cols-1  rounded-md shadow-md`}
+        } w-full h-fit grid overflow-hidden gap-1 grid-cols-1  rounded-[4px] shadow-sm`}
       >
         {slots.title && (
           <div class="w-full h-full flex items-center bg-slate-100">

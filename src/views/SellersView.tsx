@@ -1,40 +1,82 @@
-import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { SellersTable } from "@/components/SellersTable";
 import { UiButton } from "@/components/ui/UiButton";
-import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
+import type { sellerT, withCount } from "@/types";
 import UiIcon from "@/components/ui/UiIcon.vue";
+import { store } from "@/store";
 import { invoke } from "@tauri-apps/api";
-import type { sellerT } from "@/types";
+import { useRouter } from "vue-router";
+import {
+  type WatchStopHandle,
+  defineComponent,
+  onBeforeMount,
+  onUnmounted,
+  onMounted,
+  computed,
+  Transition,
+  provide,
+  watch,
+  ref,
+} from "vue";
 
 export const SellersView = defineComponent({
   name: "Sellers",
   components: { SellersTable, UiButton, UiInput, UiIcon },
   setup() {
-    const modalStore = useModalStore();
+    const router = useRouter();
+    //
     const sellers = ref<sellerT[]>([]);
     const searchQuery = ref<string>("");
-    onBeforeMount(async () => {
+    const totalRows = ref<number>(0);
+
+    //
+    const page = computed(() => Number(router.currentRoute.value.query.page));
+    const refresh = computed(() => router.currentRoute.value.query.refresh);
+    //
+    let unwatch: WatchStopHandle | null = null;
+    //
+    provide("count", totalRows);
+
+    //
+
+    onBeforeMount(() => getSellers(page.value));
+    //
+    onMounted(() => {
+      unwatch = watch([page, refresh], ([p]) => {
+        if (p && p > 0) getSellers(p);
+      });
+    });
+    //
+    onUnmounted(() => {
+      if (unwatch) unwatch();
+    });
+    //
+    async function getSellers(page: number = 1) {
       try {
-        const res = await invoke<sellerT[]>("get_sellers", { page: 1 });
-        if (res.length) {
-          sellers.value = res;
+        const res = await invoke<withCount<sellerT[]>>("get_sellers", {
+          page,
+        });
+        if (res.data.length) {
+          sellers.value = res.data;
+          totalRows.value = res.count;
+          return;
         }
       } catch (error) {
         console.log(error);
       }
-    });
-    const updateModal = (name: string) => {
-      modalStore.updateModal({ key: "show", value: true });
-      modalStore.updateModal({ key: "name", value: name });
-    };
+    }
 
+    //
+    const updateModal = (name: string) => {
+      store.setters.updateStore({ key: "show", value: true });
+      store.setters.updateStore({ key: "name", value: name });
+    };
     return () => (
-      <main class="w-full h-full px-3">
+      <main class="w-full h-full">
         <div class="w-full h-full flex flex-col items-start justify-start">
           <Transition appear>
-            <div class="flex justify-between w-full gap-9 my-1">
+            <div class="flex justify-between w-full gap-9 mb-1">
               <div class="w-1/3">
                 <UiInput
                   IsEmpty={false}
@@ -68,10 +110,7 @@ export const SellersView = defineComponent({
             </div>
           </Transition>
           <Transition appear>
-            <SellersTable
-              FilterParam={searchQuery.value}
-              Sellers={sellers.value}
-            />
+            <SellersTable Sellers={sellers.value} />
           </Transition>
         </div>
       </main>

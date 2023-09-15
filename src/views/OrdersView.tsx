@@ -1,15 +1,24 @@
-import { defineComponent, onBeforeMount, ref, Transition } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useProductStore } from "@/stores/productStore";
 import { OrdersTable } from "@/components/OrdersTable";
-import { useSellerStore } from "@/stores/sellerStore";
-import { useOrdersStore } from "@/stores/orderStore";
 import { UiButton } from "@/components/ui/UiButton";
-import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
+import type { orderT, withCount } from "@/types";
 import UiIcon from "@/components/ui/UiIcon.vue";
+import { store } from "@/store";
 import { invoke } from "@tauri-apps/api";
-import type { orderT } from "@/types";
+import { useRouter } from "vue-router";
+import {
+  type WatchStopHandle,
+  defineComponent,
+  onBeforeMount,
+  onUnmounted,
+  Transition,
+  onMounted,
+  computed,
+  watch,
+  ref,
+  provide,
+} from "vue";
 
 export const OrdersView = defineComponent({
   name: "Orders",
@@ -20,34 +29,58 @@ export const OrdersView = defineComponent({
     UiIcon,
   },
   setup() {
-    //
-    const modalStore = useModalStore();
+    const router = useRouter();
+
     const orders = ref<orderT[]>([]);
     const searchQuery = ref<string>("");
+    const page = computed(() => Number(router.currentRoute.value.query.page));
+    const refresh = computed(() => router.currentRoute.value.query.refresh);
+    const totalRows = ref<number>(0);
+
+    let unwatch: WatchStopHandle | null = null;
     //
-    onBeforeMount(async () => {
+
+    provide("count", totalRows);
+
+    onBeforeMount(() => getOrders(page.value));
+
+    onMounted(() => {
+      unwatch = watch([page, refresh], ([p]) => {
+        if (p && p > 0) getOrders(p);
+      });
+    });
+
+    onUnmounted(() => {
+      if (unwatch) unwatch();
+    });
+
+    async function getOrders(page: number = 1) {
       try {
-        const res = await invoke<orderT[]>("get_orders", { page: 1 });
-        if (res) {
-          orders.value = res;
+        const res = await invoke<withCount<orderT[]>>("get_orders", {
+          page,
+        });
+        if (res.data.length) {
+          orders.value = res.data;
+          totalRows.value = res.count;
           return;
         }
       } catch (error) {
         console.log(error);
       }
-    });
+    }
+
     //
     const updateModal = (name: string) => {
-      modalStore.updateModal({ key: "show", value: true });
-      modalStore.updateModal({ key: "name", value: name });
+      store.setters.updateStore({ key: "show", value: true });
+      store.setters.updateStore({ key: "name", value: name });
     };
     //
 
     return () => (
-      <main class="w-full h-full px-3">
+      <main class="w-full h-full">
         <div class="w-full h-full flex flex-col items-start justify-start">
           <Transition appear>
-            <div class="flex justify-between w-full gap-9 my-1">
+            <div class="flex justify-between w-full gap-9 mb-1">
               <div class="w-1/3">
                 <UiInput
                   IsEmpty={false}
@@ -81,10 +114,7 @@ export const OrdersView = defineComponent({
             </div>
           </Transition>
           <Transition appear>
-            <OrdersTable
-              FilterParam={searchQuery.value}
-              Orders={orders.value}
-            />
+            <OrdersTable Orders={orders.value} />
           </Transition>
         </div>
       </main>

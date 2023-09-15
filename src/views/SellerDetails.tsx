@@ -1,6 +1,6 @@
 import { chartOptions, optionsWoTicks } from "@/constants/chartOptions";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
-import { groupBy, keys, mapValues, values } from "@/utils/native_";
+import { groupBy, keys, mapValues, values } from "@/utils/lightLodash";
 import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
 import { ChartLine } from "@/components/ChartLine";

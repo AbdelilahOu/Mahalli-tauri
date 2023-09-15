@@ -1,49 +1,62 @@
-import {
-  computed,
-  defineComponent,
-  onBeforeMount,
-  onMounted,
-  onUnmounted,
-  ref,
-  Transition,
-  watch,
-  type WatchStopHandle,
-} from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { ClientsTable } from "@/components/ClientsTable";
 import { UiButton } from "@/components/ui/UiButton";
-import { useModalStore } from "@/stores/modalStore";
 import { UiInput } from "@/components/ui/UiInput";
+import type { clientT, withCount } from "@/types";
 import UiIcon from "@/components/ui/UiIcon.vue";
-import type { clientT } from "@/types";
+import { store } from "@/store";
 import { invoke } from "@tauri-apps/api";
 import { useRouter } from "vue-router";
+import {
+  type WatchStopHandle,
+  defineComponent,
+  onBeforeMount,
+  onUnmounted,
+  Transition,
+  onMounted,
+  computed,
+  provide,
+  watch,
+  ref,
+} from "vue";
 
 export const ClientsView = defineComponent({
   name: "Clients",
   components: { ClientsTable, UiButton, UiInput, UiIcon },
   setup() {
-    const modalStore = useModalStore();
     const router = useRouter();
     //
     const clients = ref<clientT[]>([]);
     const searchQuery = ref<string>("");
+    const page = computed(() => Number(router.currentRoute.value.query.page));
+    const refresh = computed(() => router.currentRoute.value.query.refresh);
+
+    const totalRows = ref<number>(0);
 
     let unwatch: WatchStopHandle | null = null;
 
-    const page = computed(() => Number(router.currentRoute.value.query.page));
-
-    const refresh = computed(() => router.currentRoute.value.query.refresh);
+    provide("count", totalRows);
 
     onBeforeMount(() => getClients(page.value));
 
+    onMounted(() => {
+      unwatch = watch([page, refresh], ([p]) => {
+        if (p && p > 0) getClients(p);
+      });
+    });
+
+    onUnmounted(() => {
+      if (unwatch) unwatch();
+    });
+
     const getClients = async (page: number = 1) => {
       try {
-        const res = await invoke<clientT[]>("get_clients", {
+        const res = await invoke<withCount<clientT[]>>("get_clients", {
           page,
         });
-        if (res?.length) {
-          clients.value = res;
+        if (res?.data.length) {
+          clients.value = res.data;
+          totalRows.value = res.count;
           return;
         }
       } catch (error) {
@@ -51,19 +64,10 @@ export const ClientsView = defineComponent({
       }
     };
 
-    onMounted(() => {
-      unwatch = watch([page, refresh], ([p]) => {
-        getClients(p);
-      });
-    });
-
-    onUnmounted(() => {
-      if (unwatch) unwatch();
-    });
     //
     const updateModal = (name: string) => {
-      modalStore.updateModal({ key: "show", value: true });
-      modalStore.updateModal({ key: "name", value: name });
+      store.setters.updateStore({ key: "show", value: true });
+      store.setters.updateStore({ key: "name", value: name });
     };
     //
 
@@ -71,7 +75,7 @@ export const ClientsView = defineComponent({
       <main class="w-full h-full">
         <div class="w-full h-full flex flex-col items-start justify-start">
           <Transition appear>
-            <div class="flex justify-between w-full gap-9 my-1">
+            <div class="flex justify-between w-full gap-9 mb-1">
               <div class="w-1/3">
                 <UiInput
                   IsEmpty={false}
@@ -106,10 +110,7 @@ export const ClientsView = defineComponent({
           </Transition>
 
           <Transition appear>
-            <ClientsTable
-              FilterParam={searchQuery.value}
-              Clients={clients.value}
-            />
+            <ClientsTable Clients={clients.value} />
           </Transition>
         </div>
       </main>

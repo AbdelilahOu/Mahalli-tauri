@@ -37,9 +37,9 @@ export const OrdersTable = defineComponent({
         <table class="table-auto  w-full">
           <thead class="text-xs h-9  font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
-              <th class="rounded-l-md"></th>
+              <th class="rounded-l-[4px]"></th>
               {[1, 2, 3, 4, 5].map((index) => (
-                <th class="p-2 w-fit last:rounded-r-md ">
+                <th class="p-2 w-fit last:rounded-r-[4px] ">
                   <div class="font-semibold text-left">
                     {globalTranslate(`Orders.index.feilds[${index}]`)}
                   </div>

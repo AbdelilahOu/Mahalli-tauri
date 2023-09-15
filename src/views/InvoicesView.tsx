@@ -1,12 +1,24 @@
-import { defineComponent, onBeforeMount, ref, Transition } from "vue";
-import { globalTranslate } from "@/utils/globalTranslate";
 import { InvoicesTable } from "@/components/InvoicesTable";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { UiButton } from "@/components/ui/UiButton";
-import { useModalStore } from "@/stores/modalStore";
+import type { invoiceT, withCount } from "@/types";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
-import type { invoiceT } from "@/types";
+import { store } from "@/store";
 import { invoke } from "@tauri-apps/api";
+import { useRouter } from "vue-router";
+import {
+  type WatchStopHandle,
+  defineComponent,
+  onBeforeMount,
+  onUnmounted,
+  Transition,
+  onMounted,
+  computed,
+  provide,
+  watch,
+  ref,
+} from "vue";
 
 export const InvoicesView = defineComponent({
   name: "Invoices",
@@ -18,33 +30,58 @@ export const InvoicesView = defineComponent({
   },
   setup() {
     //
-    const modalStore = useModalStore();
+
+    const router = useRouter();
+
     const invoices = ref<invoiceT[]>([]);
     const searchQuery = ref<string>("");
+    const page = computed(() => Number(router.currentRoute.value.query.page));
+    const refresh = computed(() => router.currentRoute.value.query.refresh);
+
+    const totalRows = ref<number>(0);
+
+    let unwatch: WatchStopHandle | null = null;
     //
-    onBeforeMount(async () => {
+    provide("count", totalRows);
+
+    onBeforeMount(() => getInvoices(page.value));
+
+    onMounted(() => {
+      unwatch = watch([page, refresh], ([p]) => {
+        if (p && p > 0) getInvoices(p);
+      });
+    });
+
+    onUnmounted(() => {
+      if (unwatch) unwatch();
+    });
+
+    async function getInvoices(page: number = 1) {
       try {
-        const res = await invoke<invoiceT[]>("get_invoices", { page: 1 });
-        if (res) {
-          invoices.value = res;
-          return;
+        const res = await invoke<withCount<invoiceT[]>>("get_invoices", {
+          page,
+        });
+        if (res.data.length) {
+          invoices.value = res.data;
+          totalRows.value = res.count;
         }
       } catch (error) {
         console.log(error);
       }
-    });
+    }
+
     //
     const updateModal = (name: string) => {
-      modalStore.updateModal({ key: "show", value: true });
-      modalStore.updateModal({ key: "name", value: name });
+      store.setters.updateStore({ key: "show", value: true });
+      store.setters.updateStore({ key: "name", value: name });
     };
     //
 
     return () => (
-      <main class="w-full h-full px-3">
+      <main class="w-full h-full">
         <div class="w-full h-full flex flex-col items-start justify-start">
           <Transition appear>
-            <div class="flex justify-between w-full gap-9 my-1">
+            <div class="flex justify-between w-full gap-9 mb-1">
               <div class="w-1/3">
                 <UiInput
                   IsEmpty={false}
@@ -78,10 +115,7 @@ export const InvoicesView = defineComponent({
             </div>
           </Transition>
           <Transition appear>
-            <InvoicesTable
-              FilterParam={searchQuery.value}
-              Invoices={invoices.value}
-            />
+            <InvoicesTable Invoices={invoices.value} />
           </Transition>
         </div>
       </main>

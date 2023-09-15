@@ -1,14 +1,14 @@
 import type { newInvoiceT, newInvoiceItemT, invoiceT } from "@/types";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { store } from "@/store";
+import { useRoute, useRouter } from "vue-router";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import UiIcon from "./ui/UiIcon.vue";
-import { useRoute, useRouter } from "vue-router";
+import { store } from "@/store";
 
 export const InvoiceCreate = defineComponent({
   name: "InvoiceCreate",
@@ -79,7 +79,7 @@ export const InvoiceCreate = defineComponent({
       }, 1000);
     };
     return () => (
-      <div class="w-5/6 lg:w-1/2 relative rounded-md h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+      <div class="w-5/6 lg:w-1/2 relative rounded-[4px] h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Invoices.create.title")}
         </h1>
@@ -169,7 +169,7 @@ export const InvoiceCreate = defineComponent({
                       >
                         {{
                           unite: () => (
-                            <span class="h-full text-gray-400 rounded-md px-2  flex items-center justify-center">
+                            <span class="h-full text-gray-400 rounded-[4px] px-2  flex items-center justify-center">
                               Item
                             </span>
                           ),
@@ -182,7 +182,7 @@ export const InvoiceCreate = defineComponent({
                   {InvoiceItems.value.map((_item, index) => (
                     <div
                       onClick={() => InvoiceItems.value.splice(index, 1)}
-                      class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
+                      class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-[4px] items-center w-full h-full"
                     >
                       <UiIcon name="delete" />
                     </div>

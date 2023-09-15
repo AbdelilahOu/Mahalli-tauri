@@ -44,11 +44,6 @@ export const HomeView = defineComponent({
         text: "Statistics",
         path: "/Stats",
       },
-      // {
-      //   image: "/credi.webp",
-      //   text: "Payment",
-      //   path: "/Payment",
-      // },
     ];
 
     return () => (
@@ -59,13 +54,13 @@ export const HomeView = defineComponent({
               {Pages.map((page, index) => (
                 <div v-fade={index + 1} class="w-full h-full">
                   <RouterLink to={{ path: page.path, query: { page: 1 } }}>
-                    <div class="w-full h-full overflow-hidden cursor-pointer relative hover:-translate-y-1 group transition-all duration-250 flex justify-center rounded-md items-center bg-gray-400">
+                    <div class="w-full h-full overflow-hidden cursor-pointer relative hover:-translate-y-1 group transition-all duration-250 flex justify-center rounded-[4px] items-center bg-gray-400">
                       <img
                         class="absolute top-0 left-0 w-full opacity-20 group-hover:opacity-60 h-full transition-all duration-250"
                         src={page.image}
                         alt=""
                       />
-                      <span class="text-center text-xl text-gray-900 font-bold bg-white rounded-md px-4 z-20 py-2 flex justify-center items-center transition-all duration-250">
+                      <span class="text-center text-xl text-gray-900 font-bold bg-white rounded-[4px] px-4 z-20 py-2 flex justify-center items-center transition-all duration-250">
                         {globalTranslate(`Global.routes.${page.text}`)}
                       </span>
                     </div>
