@@ -82,7 +82,7 @@ export const AuthView = defineComponent({
                   <div class="w-full h-12">
                     <button
                       onClick={() => login()}
-                      class="w-full h-12 flex gap-1 items-center justify-center rounded-md border-2"
+                      class="w-full h-12 flex gap-1 items-center justify-center rounded-[4px] border-2"
                     >
                       <UiIcon
                         IsStyled={false}

@@ -22,7 +22,7 @@ export const UiSideLink = defineComponent({
   setup(props) {
     return () => (
       <span
-        class={`w-full flex h-9 rounded-md items-center py-1 px-2 hover:bg-white group transition-all duration-300 ${
+        class={`w-full flex h-9 rounded-[4px] items-center py-1 px-2 hover:bg-white group transition-all duration-300 ${
           props.IsText ? "justify-start" : "justify-center"
         }`}
       >

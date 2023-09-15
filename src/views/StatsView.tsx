@@ -1,4 +1,4 @@
-import { groupBy, reduce, keys, values, mapValues } from "lodash";
+import { groupBy, keys, values, mapValues } from "@/utils/lightLodash";
 import type { FilteredInventoryData, inOutReType } from "@/types";
 import { defineComponent, onBeforeMount, reactive } from "vue";
 import { ChartDoughnut } from "@/components/ChartDoughnut";
@@ -59,16 +59,12 @@ export const StatsView = defineComponent({
 
       const existingDates = keys(groupBy(data, "month"));
       const existingProducts = keys(groupBy(data, "name"));
-      const dataPerProduct = mapValues(groupBy(data, "name"), (value) =>
-        reduce(
-          value,
-          (pr, cr) => {
-            if (!pr) pr = [];
-            pr.push(cr.quantity);
-            return pr;
-          },
-          [] as number[]
-        )
+      const dataPerProduct = mapValues(groupBy(data, "name"), (value: any[]) =>
+        value.reduce((pr, cr) => {
+          if (!pr) pr = [];
+          pr.push(cr.quantity);
+          return pr;
+        }, [] as number[])
       );
 
       return {
@@ -82,8 +78,8 @@ export const StatsView = defineComponent({
         isClients ? "get_b3_clients" : "get_b3_sellers"
       );
       //
-      const result = mapValues(groupBy(data, "name"), (value) =>
-        reduce(value, (pr, cr) => (pr += cr.amount), 0)
+      const result = mapValues(groupBy(data, "name"), (value: any[]) =>
+        value.reduce((pr, cr) => (pr += cr.amount), 0)
       );
       //
       return { names: keys(result), result: values(result) };

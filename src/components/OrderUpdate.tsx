@@ -97,7 +97,7 @@ export const OrderUpdate = defineComponent({
     );
 
     return () => (
-      <div class="w-5/6 lg:w-1/2 relative h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+      <div class="w-5/6 lg:w-1/2 relative h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold  text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Orders.update.title")} N° {updateOrder.id}
         </h1>
@@ -198,7 +198,7 @@ export const OrderUpdate = defineComponent({
                       >
                         {{
                           unite: () => (
-                            <span class="h-full text-gray-400 rounded-md px-2 border-r-2  flex items-center justify-center">
+                            <span class="h-full text-gray-400 rounded-[4px] px-2 border-r-2  flex items-center justify-center">
                               Item
                             </span>
                           ),
@@ -223,7 +223,7 @@ export const OrderUpdate = defineComponent({
                       >
                         {{
                           unite: () => (
-                            <span class="h-full text-gray-400 rounded-md px-2 border-r-2  flex items-center justify-center">
+                            <span class="h-full text-gray-400 rounded-[4px] px-2 border-r-2  flex items-center justify-center">
                               DH
                             </span>
                           ),
@@ -239,7 +239,7 @@ export const OrderUpdate = defineComponent({
                         updateOrder.order_items?.splice(index, 1);
                         if (item.id) deleteOneOrderItem(item.id);
                       }}
-                      class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
+                      class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-[4px] items-center w-full h-full"
                     >
                       <UiIcon name="delete" />
                     </div>

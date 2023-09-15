@@ -49,10 +49,10 @@ export const UiUploader = defineComponent({
     const getpath = (src: string) => new URL(src, import.meta.url).toString();
 
     return () => (
-      <div class="w-36 relative h-36 bg-gray-300 rounded-md overflow-hidden flex text-black justify-center items-center">
+      <div class="w-36 relative h-36 bg-gray-300 rounded-[4px] overflow-hidden flex text-black justify-center items-center">
         {name === "Image" ? (
           <img
-            class="absolute top-0 rounded-md object-cover w-full h-full"
+            class="absolute top-0 rounded-[4px] object-cover w-full h-full"
             src={selectedFile.value ?? "/clients.jpg"}
           />
         ) : (

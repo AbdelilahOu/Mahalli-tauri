@@ -1,12 +1,24 @@
-import { defineComponent, onBeforeMount, ref, Transition } from "vue";
-import { globalTranslate } from "@/utils/globalTranslate";
 import { ProductsTable } from "@/components/ProductsTable";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { UiButton } from "@/components/ui/UiButton";
-import { useModalStore } from "@/stores/modalStore";
+import type { productT, withCount } from "@/types";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
-import type { productT } from "@/types";
+import { store } from "@/store";
 import { invoke } from "@tauri-apps/api";
+import { useRouter } from "vue-router";
+import {
+  type WatchStopHandle,
+  defineComponent,
+  onBeforeMount,
+  onUnmounted,
+  Transition,
+  onMounted,
+  computed,
+  provide,
+  watch,
+  ref,
+} from "vue";
 
 export const ProductsView = defineComponent({
   name: "Products",
@@ -17,32 +29,57 @@ export const ProductsView = defineComponent({
     UiIcon,
   },
   setup() {
-    const modalStore = useModalStore();
+    const router = useRouter();
     //
-    let products = ref<productT[]>([]);
+    const products = ref<productT[]>([]);
     const searchQuery = ref<string>("");
+    const totalRows = ref<number>(0);
     //
-    const updateModal = (name: string) => {
-      modalStore.updateModal({ key: "show", value: true });
-      modalStore.updateModal({ key: "name", value: name });
-    };
+    const page = computed(() => Number(router.currentRoute.value.query.page));
+    const refresh = computed(() => router.currentRoute.value.query.refresh);
     //
+    let unwatch: WatchStopHandle | null = null;
     //
-    onBeforeMount(async () => {
+    provide("count", totalRows);
+
+    //
+    onBeforeMount(() => getProducts(page.value));
+    //
+    onMounted(() => {
+      unwatch = watch([page, refresh], ([p]) => {
+        console.log(p, refresh);
+        if (p && p > 0) getProducts(p);
+      });
+    });
+    //
+    onUnmounted(() => {
+      if (unwatch) unwatch();
+    });
+    //
+    async function getProducts(page: number = 1) {
       try {
-        let res = await invoke<productT[]>("get_products", { page: 1 });
-        if (res.length) {
-          products.value = res;
+        const res = await invoke<withCount<productT[]>>("get_products", {
+          page,
+        });
+        if (res.data.length) {
+          products.value = res.data;
+          totalRows.value = res.count;
+          return;
         }
       } catch (error) {
         console.log(error);
       }
-    });
+    }
+    //
+    const updateModal = (name: string) => {
+      store.setters.updateStore({ key: "show", value: true });
+      store.setters.updateStore({ key: "name", value: name });
+    };
     return () => (
-      <main class="w-full h-full px-3">
+      <main class="w-full h-full">
         <div class="w-full h-full flex flex-col items-start justify-start">
           <Transition appear>
-            <div class="flex justify-between w-full gap-9 my-1">
+            <div class="flex justify-between w-full gap-9 mb-1">
               <div class="w-1/3">
                 <UiInput
                   IsEmpty={false}
@@ -76,10 +113,7 @@ export const ProductsView = defineComponent({
             </div>
           </Transition>
           <Transition appear>
-            <ProductsTable
-              FilterParam={searchQuery.value}
-              Products={products.value}
-            />
+            <ProductsTable Products={products.value} />
           </Transition>
         </div>
       </main>
