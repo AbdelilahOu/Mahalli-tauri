@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS invoice_items (
   inventory_id INTEGER NOT NULL,
   CONSTRAINT invoice_items_product_id_fkey FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT invoice_items_invoice_id_fkey FOREIGN KEY (invoice_id) REFERENCES invoices (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT invoice_items_inventory_id_fkey FOREIGN KEY (inventory_id) REFERENCES inventory_mouvements (id) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT invoice_items_inventory_id_fkey FOREIGN KEY (inventory_id) REFERENCES inventory_mouvements (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS orders (
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS order_items (
   quantity BIGINT NOT NULL,
   CONSTRAINT order_items_product_id_fkey FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT order_items_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT order_items_inventory_id_fkey FOREIGN KEY (inventory_id) REFERENCES inventory_mouvements (id) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT order_items_inventory_id_fkey FOREIGN KEY (inventory_id) REFERENCES inventory_mouvements (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS inventory_mouvements (
@@ -78,7 +78,6 @@ CREATE TABLE IF NOT EXISTS inventory_mouvements (
   model TEXT NOT NULL,
   quantity BIGINT NOT NULL,
   product_id INTEGER NOT NULL,
-  item_is_deleted INTEGER NOT NULL DEFAULT 0,
   CONSTRAINT inventory_mouvements_product_id_fkey FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
