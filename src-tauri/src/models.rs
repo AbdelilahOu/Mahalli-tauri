@@ -245,8 +245,6 @@ pub struct InventoryMvm {
     pub quantity: i64,
     #[diesel(sql_type = Integer)]
     pub product_id: i32,
-    #[diesel(sql_type = Integer)]
-    pub item_is_deleted: i32,
 }
 
 #[derive(Debug, AsChangeset, Serialize, Deserialize)]
@@ -263,26 +261,6 @@ pub struct NewInventoryMvm {
     pub quantity: i64,
     pub product_id: i32,
 }
-
-// pub struct B3Clients {
-//     pub name: String,
-//     pub amount: i64,
-// }
-
-// pub struct B3Sellers {
-//     pub name: String,
-//     pub amount: i64,
-// }
-
-// pub struct CDExpenses {
-//     pub day: String,
-//     pub expense: i64,
-// }
-
-// pub struct SDexpenses {
-//     pub day: String,
-//     pub expense: i64,
-// }
 
 #[derive(QueryableByName, Queryable, Deserialize, Serialize)]
 pub struct ProductWithQuantity {
