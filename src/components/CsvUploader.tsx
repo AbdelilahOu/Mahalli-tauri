@@ -4,7 +4,8 @@ import { useDropZone } from "@vueuse/core";
 import { invoke } from "@tauri-apps/api";
 import UiIconVue from "./ui/UiIcon.vue";
 import { UiButton } from "./ui/UiButton";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { store } from "@/store";
 
 export const CsvUploader = defineComponent({
   name: "CsvUploader",
@@ -13,6 +14,8 @@ export const CsvUploader = defineComponent({
   },
   setup() {
     const route = useRoute();
+    const router = useRouter();
+
     const dropZone = ref<HTMLDivElement>();
 
     const filesData = ref<File[]>([]);
@@ -26,9 +29,26 @@ export const CsvUploader = defineComponent({
     const { isOverDropZone } = useDropZone(dropZone, onDrop);
 
     const upload = async () => {
-      invoke("upload_csv_to_db", {
-        csvPath: await uploadCSVfiles({ file: filesData.value[0] }),
-        table: route.query.table,
+      try {
+        await invoke("upload_csv_to_db", {
+          csvPath: await uploadCSVfiles({ file: filesData.value[0] }),
+          table: route.query.table,
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        updateQueryParams({
+          refresh: "refresh-upload-" + Math.random() * 9999,
+        });
+        store.setters.updateStore({ key: "show", value: false });
+      }
+    };
+
+    const updateQueryParams = (query: Record<any, any>) => {
+      router.push({
+        path: route.path,
+        params: { ...route.params },
+        query: { ...route.query, ...query },
       });
     };
 
