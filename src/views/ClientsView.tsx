@@ -3,9 +3,9 @@ import { ClientsTable } from "@/components/ClientsTable";
 import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
 import type { clientT, withCount } from "@/types";
+import { useRoute, useRouter } from "vue-router";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { invoke } from "@tauri-apps/api";
-import { useRoute, useRouter } from "vue-router";
 import { store } from "@/store";
 import {
   type WatchStopHandle,
@@ -31,9 +31,8 @@ export const ClientsView = defineComponent({
     const searchQuery = ref<string>("");
     const page = computed(() => Number(router.currentRoute.value.query.page));
     const refresh = computed(() => router.currentRoute.value.query.refresh);
-
+    //
     const totalRows = ref<number>(0);
-
     let unwatch: WatchStopHandle | null = null;
 
     provide("count", totalRows);
@@ -107,7 +106,7 @@ export const ClientsView = defineComponent({
                   />
                 </UiInput>
               </div>
-              <div class="w-1/3 grid grid-cols-[60px_1fr] gap-2">
+              <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
                 <UiButton colorTheme="primary" Click={() => uploadCSV()}>
                   <span
                     class={
