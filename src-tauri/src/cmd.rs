@@ -60,6 +60,16 @@ pub fn get_csv_records(csv_path: String, table: Option<String>) -> Result<TableR
     let result = import::get_csv_records(csv_path, table);
     result
 }
+
+#[tauri::command]
+pub fn upload_csv_to_db(csv_path: String, table: String, state: tauri::State<AppState>) {
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let records = get_csv_records(csv_path, Option::from(table));
+    let result = db::insert_into_tables(records, conn);
+    result
+}
+
 #[tauri::command]
 pub async fn seed_db() {
     db::seed_db().await
