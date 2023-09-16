@@ -79,7 +79,7 @@ pub async fn seed_db() {
     }
 }
 
-fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConnection) {
+pub fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConnection) {
     match result {
         Ok(csv_data) => {
             match csv_data {
