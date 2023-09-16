@@ -17,7 +17,10 @@ export const IndexView = defineComponent({
       store.setters.updateStore({ key: "show", value: false });
     };
 
-    onBeforeRouteUpdate(hideModal);
+    onBeforeRouteUpdate((to, from) => {
+      if (to.path !== from.path) hideModal();
+    });
+
     return () => (
       <main
         class={`w-screen h-screen relative overflow-y-auto bg-white scrollbar-thin scrollbar-thumb-transparent  flex `}
