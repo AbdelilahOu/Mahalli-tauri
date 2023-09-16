@@ -24,6 +24,14 @@ export const CsvUploader = defineComponent({
       }
     }
     const { isOverDropZone } = useDropZone(dropZone, onDrop);
+
+    const upload = async () => {
+      invoke("upload_csv_to_db", {
+        csvPath: await uploadCSVfiles({ file: filesData.value[0] }),
+        table: route.query.table,
+      });
+    };
+
     return () => (
       <div class="w-1/2 h-fit z-50 gap-3 rounded-[4px] flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
@@ -67,15 +75,7 @@ export const CsvUploader = defineComponent({
             </div>
           ))}
           {filesData.value.length ? (
-            <UiButton
-              colorTheme=""
-              Click={async () => {
-                invoke("get_csv_records", {
-                  csvPath: await uploadCSVfiles({ file: filesData.value[0] }),
-                  table: route.query.table,
-                });
-              }}
-            >
+            <UiButton colorTheme="" Click={upload}>
               Upload to {route.query.table}
             </UiButton>
           ) : (
