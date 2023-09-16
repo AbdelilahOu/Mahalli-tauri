@@ -30,6 +30,7 @@ fn main() {
             db_conn: Mutex::new(establish_connection()),
         })
         .invoke_handler(tauri::generate_handler![
+            cmd::upload_csv_to_db,
             cmd::export_db_csv,
             cmd::get_csv_records,
             cmd::get_product,
