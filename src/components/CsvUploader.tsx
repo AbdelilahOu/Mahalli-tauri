@@ -3,6 +3,8 @@ import { defineComponent, ref } from "vue";
 import { useDropZone } from "@vueuse/core";
 import { invoke } from "@tauri-apps/api";
 import UiIconVue from "./ui/UiIcon.vue";
+import { UiButton } from "./ui/UiButton";
+import { useRoute } from "vue-router";
 
 export const CsvUploader = defineComponent({
   name: "CsvUploader",
@@ -10,28 +12,15 @@ export const CsvUploader = defineComponent({
     UiIconVue,
   },
   setup() {
+    const route = useRoute();
     const dropZone = ref<HTMLDivElement>();
 
-    const filesData = ref<
-      { name: string; size: number; type: string; lastModified: number }[]
-    >([]);
+    const filesData = ref<File[]>([]);
 
     async function onDrop(files: File[] | null) {
       filesData.value = [];
       if (files) {
-        filesData.value = files
-          .filter((file) => file.type === "text/csv")
-          .map((file) => ({
-            name: file.name,
-            size: file.size,
-            type: file.type,
-            lastModified: file.lastModified,
-          }));
-
-        invoke("get_csv_records", {
-          csvPath: await uploadCSVfiles({ file: files[0] }),
-          table: "products",
-        });
+        filesData.value = files.filter((file) => file.type === "text/csv");
       }
     }
     const { isOverDropZone } = useDropZone(dropZone, onDrop);
@@ -61,7 +50,7 @@ export const CsvUploader = defineComponent({
         </div>
         <div class="w-full h-fit flex flex-col gap-2">
           {filesData.value.map((f, i) => (
-            <div class="grid grid-cols-[30px_1fr_60px_30px] w-full gap-3 h-10 items-center px-1 rounded-[4px] bg-sky-100 text-black fill-black border-sky-300 border-2">
+            <div class="grid grid-cols-[30px_1fr_80px_30px] w-full gap-3 h-10 items-center px-1 rounded-[4px] bg-sky-100 text-black fill-black border-sky-300 border-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="32"
@@ -77,6 +66,21 @@ export const CsvUploader = defineComponent({
               </span>
             </div>
           ))}
+          {filesData.value.length ? (
+            <UiButton
+              colorTheme=""
+              Click={async () => {
+                invoke("get_csv_records", {
+                  csvPath: await uploadCSVfiles({ file: filesData.value[0] }),
+                  table: route.query.table,
+                });
+              }}
+            >
+              Upload to {route.query.table}
+            </UiButton>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     );
