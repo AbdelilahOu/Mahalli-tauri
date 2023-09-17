@@ -21,7 +21,7 @@ export const SideBar = defineComponent({
     const locale = computed(() => store.getters.getCurrentLocale());
     return () => (
       <aside class="w-full rounded-[4px] h-full overflow-hidden sticky top-0 z-50 bg-white ">
-        <div class="w-full h-screen print:hidden sticky top-0 bg-white z-50 grid grid-rows-[50px_1fr] gap-1">
+        <div class="w-full h-screen print:hidden sticky top-0 bg-white z-50 grid grid-rows-[50px_1fr] gap-[2px]">
           <div class="w-full h-full px-1 grid grid-cols-1 items-center justify-start">
             <span
               class={`font-medium  text-black flex items-center px-1 ${
