@@ -1,21 +1,21 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import type { newOrdersT, newOrdersItemT } from "@/types";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { store } from "@/store";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { UiButton } from "./ui/UiButton";
 import { invoke } from "@tauri-apps/api";
 import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import UiIcon from "./ui/UiIcon.vue";
-import { useRoute, useRouter } from "vue-router";
+import { store } from "@/store";
 
 export const OrderCreate = defineComponent({
   name: "OrderCreate",
   components: { UiButton, UiCheckBox, UiIcon, UiInput, UiSelect },
   setup() {
-    const route = useRoute();
-    const router = useRouter();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
+
     const isFlash = ref<boolean>(false);
 
     const sellers = ref<{ name: string; id: number }[]>([]);
@@ -47,13 +47,6 @@ export const OrderCreate = defineComponent({
       if ((res[1].status = "fulfilled")) products.value = res[1].value;
     });
     //
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
 
     const createNewOrders = async () => {
       isFlash.value = true;
