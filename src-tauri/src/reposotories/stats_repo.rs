@@ -182,8 +182,6 @@ pub fn get_client_expenses(id: i32, connection: &mut SqliteConnection) -> Vec<Va
 
     let seven_days_ago = Utc::now().naive_utc() - Duration::days(7);
 
-    println!("{:?}", id);
-
     let result: Vec<Option<(String, i64)>> = invoices::table
         .inner_join(invoiceitem_invoice_join)
         .inner_join(invoiceitem_product_join)

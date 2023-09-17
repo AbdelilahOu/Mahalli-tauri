@@ -337,7 +337,6 @@ pub fn update_invoice(invoice: TUpdateInvoice, id: i32, state: tauri::State<AppS
         conn,
     );
     for item in invoice.invoice_items.into_iter() {
-        println!("{:?}", item);
         match item.id {
             Some(ii_id) => match item.inventory_id {
                 Some(im_id) => {
