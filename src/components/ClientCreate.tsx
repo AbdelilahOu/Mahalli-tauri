@@ -1,7 +1,7 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, reactive, ref } from "vue";
 import { ImagesFiles } from "@/constants/FileTypes";
-import { useRoute, useRouter } from "vue-router";
 import { UiUploader } from "./ui/UiUploader";
 import type { newClientT } from "@/types";
 import { invoke } from "@tauri-apps/api";
@@ -14,9 +14,8 @@ export const ClientCreate = defineComponent({
   name: "ClientCreate",
   components: { UiButton, UiInput },
   setup() {
+    const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
-    const route = useRoute();
-    const router = useRouter();
 
     const client = reactive<newClientT>({
       fullname: String(),
@@ -25,14 +24,6 @@ export const ClientCreate = defineComponent({
       address: String(),
       image: String(),
     });
-
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
 
     const createNewClient = async () => {
       isFlash.value = true;
