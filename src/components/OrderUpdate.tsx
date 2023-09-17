@@ -1,31 +1,27 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiUpdateSelect } from "./ui/UiUpdateSelect";
-import { store } from "@/store";
-import { UiUpdateInput } from "./ui/UiUpdateInput";
 import type { orderT, updateOrdersT } from "@/types";
+import { UiUpdateInput } from "./ui/UiUpdateInput";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import UiIcon from "./ui/UiIcon.vue";
-
+import { store } from "@/store";
 import {
   defineComponent,
-  reactive,
   onBeforeUnmount,
-  ref,
   onBeforeMount,
+  reactive,
   computed,
+  ref,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
 
 export const OrderUpdate = defineComponent({
   name: "OrderUpdate",
   components: { UiButton, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
   setup() {
-    const route = useRoute();
-    const router = useRouter();
-    //
-
+    const { updateQueryParams } = useUpdateRouteQueryParams();
     //
     const OrdersRow = computed(() => store.getters.getSelectedRow<orderT>());
 
@@ -57,13 +53,6 @@ export const OrderUpdate = defineComponent({
       if ((res[1].status = "fulfilled")) products.value = res[1].value;
     });
     //
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
 
     const updateTheOrders = async () => {
       if (updateOrder.id) {
