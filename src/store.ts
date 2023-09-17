@@ -9,35 +9,37 @@ const currentLocale = locale
       text: "English",
     };
 
+const defaultStore = {
+  // related to modals
+  name: String(),
+  show: false,
+  row: null,
+  // i18n
+  currentLocale,
+  availableLocals: [
+    {
+      key: "fr",
+      text: "Francais",
+    },
+    {
+      key: "en",
+      text: "English",
+    },
+    {
+      key: "ar",
+      text: "Arabic",
+    },
+    {
+      key: "de",
+      text: "German",
+    },
+  ],
+  // auth,
+  user: {},
+};
+
 export const store = {
-  state: reactive<storeState>({
-    // related to modals
-    name: String(),
-    show: false,
-    row: null,
-    // i18n
-    currentLocale,
-    availableLocals: [
-      {
-        key: "fr",
-        text: "Francais",
-      },
-      {
-        key: "en",
-        text: "English",
-      },
-      {
-        key: "ar",
-        text: "Arabic",
-      },
-      {
-        key: "de",
-        text: "German",
-      },
-    ],
-    // auth,
-    user: {},
-  }),
+  state: reactive<storeState>(defaultStore),
   getters: {
     getModalVisibility: () => store.state.show,
     getSelectedRow: <T>() => store.state.row as T,

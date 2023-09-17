@@ -16,6 +16,7 @@ import {
   computed,
   ref,
 } from "vue";
+import { ORDER_UPDATE } from "@/constants/defaultValues";
 
 export const OrderUpdate = defineComponent({
   name: "OrderUpdate",
@@ -29,15 +30,8 @@ export const OrderUpdate = defineComponent({
     const products = ref<{ name: string; id: number }[]>([]);
     //
 
-    const Orders: updateOrdersT = {
-      id: undefined,
-      status: undefined,
-      seller_id: undefined,
-      order_items: [],
-    };
-    //
     const updateOrder = reactive<updateOrdersT>(
-      OrdersRow.value ? OrdersRow.value : Orders
+      OrdersRow.value ? OrdersRow.value : ORDER_UPDATE
     );
     //
 

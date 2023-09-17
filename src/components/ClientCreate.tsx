@@ -9,6 +9,7 @@ import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
+import { CLIENT_CREATE } from "@/constants/defaultValues";
 
 export const ClientCreate = defineComponent({
   name: "ClientCreate",
@@ -17,13 +18,7 @@ export const ClientCreate = defineComponent({
     const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
 
-    const client = reactive<newClientT>({
-      fullname: String(),
-      phone: String(),
-      email: String(),
-      address: String(),
-      image: String(),
-    });
+    const client = reactive<newClientT>(CLIENT_CREATE);
 
     const createNewClient = async () => {
       isFlash.value = true;

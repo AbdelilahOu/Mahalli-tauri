@@ -6,6 +6,7 @@ import { UiUpdateInput } from "./ui/UiUpdateInput";
 import { UiButton } from "./ui/UiButton";
 import { invoke } from "@tauri-apps/api";
 import { store } from "@/store";
+import { SELLER_UPDATE } from "@/constants/defaultValues";
 
 export const SellerUpdate = defineComponent({
   name: "SellerUpdate",
@@ -15,17 +16,8 @@ export const SellerUpdate = defineComponent({
 
     const SellerRow = computed(() => store.getters.getSelectedRow<sellerT>());
 
-    const Seller = {
-      id: undefined,
-      name: undefined,
-      email: undefined,
-      phone: undefined,
-      address: undefined,
-      image: undefined,
-    };
-
     const updateSeller = reactive<updateSellerT>(
-      SellerRow.value ? SellerRow.value : Seller
+      SellerRow.value ? SellerRow.value : SELLER_UPDATE
     );
 
     const updateTheSeller = async () => {

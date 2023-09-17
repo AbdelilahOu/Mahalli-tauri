@@ -9,6 +9,7 @@ import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
+import { ORDER_CREATE } from "@/constants/defaultValues";
 
 export const OrderCreate = defineComponent({
   name: "OrderCreate",
@@ -21,11 +22,7 @@ export const OrderCreate = defineComponent({
     const sellers = ref<{ name: string; id: number }[]>([]);
     const products = ref<{ name: string; id: number }[]>([]);
 
-    const newOrder = reactive<newOrdersT>({
-      status: "",
-      seller_id: undefined,
-      order_items: [],
-    });
+    const newOrder = reactive<newOrdersT>(ORDER_CREATE);
 
     const order_items = ref<newOrdersItemT[]>([
       {
