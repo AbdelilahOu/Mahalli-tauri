@@ -1,15 +1,15 @@
-import { groupBy, reduce, keys, values, mapValues } from "lodash";
+import { groupBy, keys, values, mapValues } from "@/utils/lightLodash";
 import type { FilteredInventoryData, inOutReType } from "@/types";
 import { defineComponent, onBeforeMount, reactive } from "vue";
 import { ChartDoughnut } from "@/components/ChartDoughnut";
+import { CHART_OPTIONS } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { chartOptions } from "@/constants/chartOptions";
 import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
-import { invoke } from "@tauri-apps/api";
 import { getWeekDay } from "@/utils/formatDate";
+import { invoke } from "@tauri-apps/api";
 
 export const StatsView = defineComponent({
   name: "Stats",
@@ -51,89 +51,17 @@ export const StatsView = defineComponent({
         months: Array.from(months),
       };
     }
-    async function getProductPerMonth(id: number, isClient = true) {
-      const data: any[] = await invoke(
-        isClient ? "get_c_product_month" : "get_s_product_month",
-        { id }
-      );
 
-      const existingDates = keys(groupBy(data, "month"));
-      const existingProducts = keys(groupBy(data, "name"));
-      const dataPerProduct = mapValues(groupBy(data, "name"), (value) =>
-        reduce(
-          value,
-          (pr, cr) => {
-            if (!pr) pr = [];
-            pr.push(cr.quantity);
-            return pr;
-          },
-          [] as number[]
-        )
-      );
-
-      return {
-        data: dataPerProduct,
-        dates: existingDates,
-        products: existingProducts,
-      };
-    }
     async function getBestThree(isClients = true) {
       const data: { name: string; amount: number }[] = await invoke(
         isClients ? "get_b3_clients" : "get_b3_sellers"
       );
       //
-      const result = mapValues(groupBy(data, "name"), (value) =>
-        reduce(value, (pr, cr) => (pr += cr.amount), 0)
+      const result = mapValues(groupBy(data, "name"), (value: any[]) =>
+        value.reduce((pr, cr) => (pr += cr.amount), 0)
       );
       //
       return { names: keys(result), result: values(result) };
-    }
-    async function getDailyExpenses(id: number, isClient = true) {
-      const result: { day: string; expense: number }[] = await invoke(
-        isClient ? "get_c_week_expenses" : "get_s_week_expenses",
-        { id }
-      );
-
-      console.log(
-        result,
-        isClient,
-        isClient ? "get_c_week_expenses" : "get_s_week_expenses"
-      );
-      // date related
-      const nextDay = new Date().getDay() == 6 ? 0 : new Date().getDay() + 1;
-      const resultMap = new Map<string, number>();
-      const weekDays = [0, 1, 2, 3, 4, 5, 6];
-
-      for (const index of weekDays) {
-        resultMap.set(getWeekDay(index), 0);
-      }
-
-      for (const { day, expense } of result) {
-        console.log(
-          day,
-          new Date(day).toLocaleDateString("en-us", {
-            weekday: "short",
-          })
-        );
-        resultMap.set(
-          new Date(day).toLocaleDateString("en-us", {
-            weekday: "short",
-          }),
-          expense
-        );
-      }
-
-      // @ts-ignore
-      const K = keys(Object.fromEntries(resultMap));
-      // @ts-ignore
-      const V = values(Object.fromEntries(resultMap));
-      const rearrangedKeys = K.slice(nextDay).concat(K.slice(0, nextDay));
-      const rearrangedValues = V.slice(nextDay).concat(V.slice(0, nextDay));
-
-      return {
-        keys: rearrangedKeys,
-        values: rearrangedValues,
-      };
     }
 
     onBeforeMount(async () => {
@@ -152,7 +80,7 @@ export const StatsView = defineComponent({
     });
 
     return () => (
-      <main class="w-full h-full px-3 py-1">
+      <main class="w-full h-full">
         <div class="w-full h-full flex flex-col gap-4">
           <div class="w-full h-fit ">
             <ChartHolder>
@@ -175,7 +103,7 @@ export const StatsView = defineComponent({
                         };
                       }),
                     }}
-                    chartOptions={chartOptions}
+                    chartOptions={CHART_OPTIONS}
                   />
                 ),
                 title: () => (

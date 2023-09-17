@@ -104,6 +104,7 @@ pub struct NewProduct {
     pub name: String,
     pub price: f32,
     pub tva: f32,
+    pub image: String,
 }
 
 #[derive(Debug, Queryable, Deserialize, Selectable, Serialize, Associations, QueryableByName)]
@@ -260,26 +261,6 @@ pub struct NewInventoryMvm {
     pub quantity: i64,
     pub product_id: i32,
 }
-
-// pub struct B3Clients {
-//     pub name: String,
-//     pub amount: i64,
-// }
-
-// pub struct B3Sellers {
-//     pub name: String,
-//     pub amount: i64,
-// }
-
-// pub struct CDExpenses {
-//     pub day: String,
-//     pub expense: i64,
-// }
-
-// pub struct SDexpenses {
-//     pub day: String,
-//     pub expense: i64,
-// }
 
 #[derive(QueryableByName, Queryable, Deserialize, Serialize)]
 pub struct ProductWithQuantity {

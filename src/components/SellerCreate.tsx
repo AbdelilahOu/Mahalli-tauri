@@ -1,36 +1,39 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, reactive, ref } from "vue";
-import { useModalStore } from "@/stores/modalStore";
+import { ImagesFiles } from "@/constants/FileTypes";
+import { UiUploader } from "./ui/UiUploader";
 import type { newSellerT } from "@/types";
 import { UiButton } from "./ui/UiButton";
-import { UiInput } from "./ui/UiInput";
-import { globalTranslate } from "@/utils/globalTranslate";
-import { UiUploader } from "./ui/UiUploader";
-import { ImagesFiles } from "@/constants/FileTypes";
 import { invoke } from "@tauri-apps/api";
+import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
+import { store } from "@/store";
+import { SELLER_CREATE } from "@/constants/defaultValues";
+
 export const SellerCreate = defineComponent({
   name: "sellerCreate",
   components: { UiButton, UiInput, UiUploader },
   setup() {
+    const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
 
-    const seller = reactive<newSellerT>({
-      name: "",
-      email: "",
-      phone: "",
-      address: "",
-    });
+    const seller = reactive<newSellerT>(SELLER_CREATE);
 
     const createNewseller = async () => {
       isFlash.value = true;
       if (seller.name !== "") {
         try {
           let image: string = await saveFile(seller.image as string, "Image");
-          await invoke("insert_seller", { seller });
+          await invoke("insert_seller", { seller: { ...seller, image } });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-create-" + Math.random() * 9999,
+          });
         } catch (error) {
           console.log(error);
         } finally {
-          useModalStore().updateModal({ key: "show", value: false });
+          store.setters.updateStore({ key: "show", value: false });
         }
       }
       setTimeout(() => {
@@ -38,7 +41,7 @@ export const SellerCreate = defineComponent({
       }, 1000);
     };
     return () => (
-      <div class="w-1/2 h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+      <div class="w-1/2 h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Sellers.create.title")}
         </h1>

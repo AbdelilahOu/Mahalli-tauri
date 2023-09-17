@@ -1,10 +1,9 @@
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import { RouteLinks } from "@/constants/RouteNames";
-import { useUserStore } from "@/stores/userStore";
 import UiIcon from "./ui/UiIcon.vue";
-import { storeToRefs } from "pinia";
+import { store } from "@/store";
 
 export const Navigation = defineComponent({
   name: "Navigation",
@@ -18,7 +17,8 @@ export const Navigation = defineComponent({
         (link) => link.component === route.name
       );
     });
-    const { User } = storeToRefs(useUserStore());
+
+    const User = computed(() => store.getters.getUser());
 
     onBeforeRouteUpdate((to) => {
       ActiveLink.value = RouteLinks.find((link) => link.component === to.name);

@@ -7,7 +7,7 @@ use crate::models::NewClient;
 use crate::schema::clients;
 use crate::schema::clients::*;
 
-pub fn get_clients(page: i32, connection: &mut SqliteConnection) -> Vec<Client> {
+pub fn get_clients(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
 
     let result = clients::dsl::clients
@@ -17,7 +17,15 @@ pub fn get_clients(page: i32, connection: &mut SqliteConnection) -> Vec<Client> 
         .load::<Client>(connection)
         .expect("error get all clients");
 
-    result
+    let count: Vec<i64> = clients::table
+        .count()
+        .get_results(connection)
+        .expect("coudnt get the count");
+
+    json!({
+        "count": count[0],
+        "data": result
+    })
 }
 
 pub fn get_all_clients(connection: &mut SqliteConnection) -> Vec<Value> {

@@ -1,36 +1,39 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, reactive, ref } from "vue";
+import { ImagesFiles } from "@/constants/FileTypes";
+import { UiUploader } from "./ui/UiUploader";
 import type { newProductT } from "@/types";
+import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
-import { useModalStore } from "@/stores/modalStore";
-import { globalTranslate } from "@/utils/globalTranslate";
-import { UiUploader } from "./ui/UiUploader";
-import { ImagesFiles } from "@/constants/FileTypes";
 import { saveFile } from "@/utils/fs";
-import { invoke } from "@tauri-apps/api";
+import { store } from "@/store";
+import { PRODUCT_CREATE } from "@/constants/defaultValues";
 
 export const ProductCreate = defineComponent({
   name: "ProductCreate",
   components: { UiButton, UiInput },
   setup() {
+    const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
-    const Product = reactive<newProductT>({
-      name: "",
-      price: 0,
-      quantity: 0,
-      description: "",
-      tva: 0,
-    });
+
+    const product = reactive<newProductT>(PRODUCT_CREATE);
+
     const createNewProduct = async () => {
       isFlash.value = true;
-      if (Product.name !== "") {
+      if (product.name !== "") {
         try {
-          let image: string = await saveFile(Product.image as string, "Image");
-          await invoke("insert_product", { product: Product });
+          let image: string = await saveFile(product.image as string, "Image");
+          await invoke("insert_product", { product: { ...product, image } });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-create-" + Math.random() * 9999,
+          });
         } catch (error) {
           console.log(error);
         } finally {
-          useModalStore().updateModal({ key: "show", value: false });
+          store.setters.updateStore({ key: "show", value: false });
         }
       }
       setTimeout(() => {
@@ -38,7 +41,7 @@ export const ProductCreate = defineComponent({
       }, 1000);
     };
     return () => (
-      <div class="w-1/2 h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+      <div class="w-1/2 h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Products.create.title")}
         </h1>
@@ -47,40 +50,40 @@ export const ProductCreate = defineComponent({
             <UiUploader
               name="Image"
               extensions={ImagesFiles}
-              onSave={(image) => (Product.image = image)}
+              onSave={(image) => (product.image = image)}
             />
           </div>
           <UiInput
-            IsEmpty={isFlash.value && Product["name"] == ""}
+            IsEmpty={isFlash.value && product["name"] == ""}
             OnInputChange={(value) =>
-              (Product["name"] =
+              (product["name"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
             PlaceHolder={globalTranslate("Products.create.placeholders[0]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && Product["price"] == 0}
-            OnInputChange={(value) => (Product["price"] = Number(value))}
+            IsEmpty={isFlash.value && product["price"] == 0}
+            OnInputChange={(value) => (product["price"] = Number(value))}
             Type="Number"
             PlaceHolder={globalTranslate("Products.create.placeholders[2]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && Product["tva"] == 0}
-            OnInputChange={(value) => (Product["tva"] = Number(value))}
+            IsEmpty={isFlash.value && product["tva"] == 0}
+            OnInputChange={(value) => (product["tva"] = Number(value))}
             Type="Number"
             PlaceHolder={globalTranslate("Products.create.placeholders[3]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && Product["quantity"] == 0}
-            OnInputChange={(value) => (Product["quantity"] = Number(value))}
+            IsEmpty={isFlash.value && product["quantity"] == 0}
+            OnInputChange={(value) => (product["quantity"] = Number(value))}
             Type="Number"
             PlaceHolder={globalTranslate("Products.create.placeholders[4]")}
           />
           <UiInput
-            IsEmpty={isFlash.value && Product["description"] == ""}
+            IsEmpty={isFlash.value && product["description"] == ""}
             OnInputChange={(value) =>
-              (Product["description"] =
+              (product["description"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="textarea"

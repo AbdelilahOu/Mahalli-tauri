@@ -1,16 +1,16 @@
-import { chartOptions, optionsWoTicks } from "@/constants/chartOptions";
+import { CHART_OPTIONS, CHART_WO_TICKS } from "@/constants/defaultValues";
+import { groupBy, keys, mapValues, values } from "@/utils/lightLodash";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
-import { useModalStore } from "@/stores/modalStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
 import { UiCard } from "@/components/ui/UiCard";
+import { getWeekDay } from "@/utils/formatDate";
+import { invoke } from "@tauri-apps/api";
 import type { sellerT } from "@/types";
 import { useRoute } from "vue-router";
-import { getWeekDay } from "@/utils/formatDate";
-import _ from "lodash";
-import { invoke } from "@tauri-apps/api";
+import { store } from "@/store";
 
 export const SellerDetails = defineComponent({
   name: "SellerDetails",
@@ -28,23 +28,20 @@ export const SellerDetails = defineComponent({
     const DailyStats = reactive({
       data: [] as number[],
       keys: [] as string[],
+      color: generateColor(),
     });
 
     async function getProductPerMonth(id: number) {
       const data: any[] = await invoke("get_s_product_month", { id });
 
-      const existingDates = _.keys(_.groupBy(data, "month"));
-      const existingProducts = _.keys(_.groupBy(data, "name"));
-      const dataPerProduct = _.mapValues(_.groupBy(data, "name"), (value) =>
-        _.reduce(
-          value,
-          (pr, cr) => {
-            if (!pr) pr = [];
-            pr.push(cr.quantity);
-            return pr;
-          },
-          [] as number[]
-        )
+      const existingDates = keys(groupBy(data, "month"));
+      const existingProducts = keys(groupBy(data, "name"));
+      const dataPerProduct = mapValues(groupBy(data, "name"), (value: any[]) =>
+        value.reduce((pr, cr) => {
+          if (!pr) pr = [];
+          pr.push(cr.quantity);
+          return pr;
+        }, [] as number[])
       );
 
       return {
@@ -69,12 +66,6 @@ export const SellerDetails = defineComponent({
       }
 
       for (const { day, expense } of result) {
-        console.log(
-          day,
-          new Date(day).toLocaleDateString("en-us", {
-            weekday: "short",
-          })
-        );
         resultMap.set(
           new Date(day).toLocaleDateString("en-us", {
             weekday: "short",
@@ -84,9 +75,9 @@ export const SellerDetails = defineComponent({
       }
 
       // @ts-ignore
-      const K = _.keys(Object.fromEntries(resultMap));
+      const K = keys(Object.fromEntries(resultMap));
       // @ts-ignore
-      const V = _.values(Object.fromEntries(resultMap));
+      const V = values(Object.fromEntries(resultMap));
       const rearrangedKeys = K.slice(nextDay).concat(K.slice(0, nextDay));
       const rearrangedValues = V.slice(nextDay).concat(V.slice(0, nextDay));
 
@@ -108,9 +99,9 @@ export const SellerDetails = defineComponent({
       ProductsStats.products = productStats.products;
     });
     const toggleThisSeller = (seller: sellerT | null, name: string) => {
-      useModalStore().updateModal({ key: "show", value: true });
-      useModalStore().updateModal({ key: "name", value: name });
-      useModalStore().updateSellerRow(seller);
+      store.setters.updateStore({ key: "show", value: true });
+      store.setters.updateStore({ key: "name", value: name });
+      store.setters.updateStore({ key: "row", value: seller });
     };
 
     onBeforeMount(async () => {
@@ -142,8 +133,8 @@ export const SellerDetails = defineComponent({
                   datasets: [
                     {
                       label: "daily expenses",
-                      backgroundColor: generateColor(),
-                      borderColor: generateColor().replace("0.2", "0.5"),
+                      backgroundColor: DailyStats.color,
+                      borderColor: DailyStats.color.replace("0.2", "0.5"),
                       data: DailyStats.data,
                       borderWidth: 2,
                       lineTension: 0.4,
@@ -151,7 +142,7 @@ export const SellerDetails = defineComponent({
                     },
                   ],
                 }}
-                chartOptions={optionsWoTicks}
+                chartOptions={CHART_WO_TICKS}
               />
             </div>
           </div>
@@ -175,7 +166,7 @@ export const SellerDetails = defineComponent({
                         };
                       }),
                     }}
-                    chartOptions={chartOptions}
+                    chartOptions={CHART_OPTIONS}
                   />
                 ),
                 title: () => (

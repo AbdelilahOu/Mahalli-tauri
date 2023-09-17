@@ -2,15 +2,13 @@ import { open } from "@tauri-apps/api/shell";
 import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
 import callbackTemplate from "./callBackTemplate";
-
 import {
   getAuth,
   GoogleAuthProvider,
   signInWithCredential,
 } from "firebase/auth";
-
 import router from "@/router";
-import { useUserStore } from "@/stores/userStore";
+import { store } from "@/store";
 
 const openBrowserToConsent = (port: string) => {
   return open(
@@ -48,7 +46,7 @@ export const googleSignIn = async (payload: string) => {
   //   this doesnt work
   signInWithCredential(auth, credential)
     .then((user) => {
-      useUserStore().setUser(user);
+      store.setters.updateStore({ key: "user", value: user });
       console.log(user);
       router.push({ path: "/Home" });
     })

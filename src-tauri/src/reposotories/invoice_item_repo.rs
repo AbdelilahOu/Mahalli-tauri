@@ -1,3 +1,6 @@
+use serde_json::json;
+use serde_json::Value;
+
 use crate::diesel::prelude::*;
 use crate::models::InvoiceItem;
 use crate::models::NewInvoiceItem;
@@ -9,7 +12,7 @@ use crate::schema::invoice_items::product_id;
 use crate::schema::invoice_items::quantity;
 use crate::schema::invoices;
 
-pub fn get_invoice_items(page: i32, connection: &mut SqliteConnection) -> Vec<InvoiceItem> {
+pub fn get_invoice_items(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
 
     let result = invoice_items::dsl::invoice_items
@@ -18,7 +21,16 @@ pub fn get_invoice_items(page: i32, connection: &mut SqliteConnection) -> Vec<In
         .offset(offset as i64)
         .load::<InvoiceItem>(connection)
         .expect("Error fetching all invoices item");
-    result
+
+    let count: Vec<i64> = invoice_items::table
+        .count()
+        .get_results(connection)
+        .expect("coudnt get the count");
+
+    json!({
+        "count": count[0],
+        "data": result
+    })
 }
 
 pub fn insert_invoice_item(

@@ -36,7 +36,7 @@
 }
 
 .router-link-active {
-  @apply bg-white transition-colors bg-primary/10 rounded-md transform duration-200;
+  @apply bg-white transition-colors bg-primary/10 rounded-[4px] transform duration-200;
 }
 
 .router-link-active > span > span,
@@ -45,11 +45,11 @@
 }
 
 .defaultInput {
-  @apply rounded-md  px-2 py-1  focus:outline-0 transition-all duration-200 focus:placeholder-primary w-full h-full;
+  @apply rounded-[4px]  px-2 py-1  focus:outline-0 transition-all duration-200 focus:placeholder-primary w-full h-full;
 }
 
 .defaultButton {
-  @apply h-9 px-4 print:hidden w-full font-semibold disabled:cursor-default py-1 active:ring-1 active:ring-gray-500 transition-all duration-200 flex items-center whitespace-nowrap justify-center text-center rounded-md border;
+  @apply h-9 px-4 print:hidden w-full font-semibold disabled:cursor-default py-1 active:ring-1 active:ring-gray-500 transition-all duration-200 flex items-center whitespace-nowrap justify-center text-center rounded-[4px] border;
 }
 
 * {

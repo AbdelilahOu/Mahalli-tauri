@@ -14,7 +14,9 @@ export const InvoiceDetails = defineComponent({
 
     onBeforeMount(async () => {
       try {
-        const res = await invoke<invoiceDetailsT>("get_invoice", { id });
+        const res = await invoke<invoiceDetailsT>("get_invoice", {
+          id: Number(id),
+        });
         if (res.id) {
           invoice.value = res;
         }
@@ -24,14 +26,14 @@ export const InvoiceDetails = defineComponent({
     });
 
     return () => (
-      <main class="w-full h-full px-3">
+      <main class="w-full h-full">
         <div class="w-full h-full flex justify-center text-black print:pr-12">
           <div class="w-full h-full max-w-4xl grid-rows-[230px_1fr] grid grid-cols-2">
             <div class="w-full h-full flex-col flex">
               <h1 class="uppercase font-semibold mb-1">
                 {globalTranslate("InvoiceDetails.details.invoice.title")}
               </h1>
-              <table class="table-auto rounded-md overflow-hidden w-full">
+              <table class="table-auto rounded-[4px] overflow-hidden w-full">
                 <tbody class="text-sm divide-y divide-gray-100">
                   <tr>
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
@@ -72,7 +74,7 @@ export const InvoiceDetails = defineComponent({
               <h1 class="uppercase font-semibold mb-1">
                 {globalTranslate("InvoiceDetails.details.client.title")}
               </h1>
-              <table class="table-auto rounded-md overflow-hidden w-full">
+              <table class="table-auto rounded-[4px] overflow-hidden w-full">
                 <tbody class="text-sm divide-y divide-gray-100">
                   <tr>
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
@@ -143,8 +145,8 @@ export const InvoiceDetails = defineComponent({
               <h1 class="uppercase font-semibold mb-1">
                 {globalTranslate("InvoiceDetails.details.items.title")}
               </h1>
-              <table class="table-auto rounded-md overflow-hidden w-full">
-                <thead class="text-xs h-9 rounded-md font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
+              <table class="table-auto rounded-[4px] overflow-hidden w-full">
+                <thead class="text-xs h-9 rounded-[4px] font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
                   <tr>
                     <th></th>
                     {[0, 1, 2, 3, 4, 5, 6].map((index) => (
@@ -160,7 +162,7 @@ export const InvoiceDetails = defineComponent({
                   </tr>
                 </thead>
                 <tbody class="text-sm divide-y divide-gray-100">
-                  {invoice.value?.invoiceItems.map((item) => (
+                  {invoice.value?.invoice_items.map((item) => (
                     <tr>
                       <td class="p-2">
                         <span class="h-full w-full grid"></span>
@@ -215,7 +217,7 @@ export const InvoiceDetails = defineComponent({
                         <td></td>
                       ))}
                     <td class="p-2 font-semibold">
-                      {invoice.value?.invoiceItems
+                      {invoice.value?.invoice_items
                         .reduce(
                           (acc, curr) =>
                             (acc +=
@@ -228,7 +230,7 @@ export const InvoiceDetails = defineComponent({
                       DH
                     </td>
                     <td class="p-2 font-semibold">
-                      {invoice.value?.invoiceItems
+                      {invoice.value?.invoice_items
                         .reduce(
                           (acc, curr) =>
                             (acc += curr.quantity * curr.product.price),
@@ -246,7 +248,7 @@ export const InvoiceDetails = defineComponent({
                       ))}
                     <td class="p-2 font-semibold">
                       {(
-                        (invoice.value?.invoiceItems.reduce(
+                        (invoice.value?.invoice_items.reduce(
                           (acc, curr) =>
                             (acc +=
                               curr.quantity *
@@ -254,7 +256,7 @@ export const InvoiceDetails = defineComponent({
                               (curr.product.tva / 100)),
                           0
                         ) ?? 0) +
-                        (invoice.value?.invoiceItems.reduce(
+                        (invoice.value?.invoice_items.reduce(
                           (acc, curr) =>
                             (acc += curr.quantity * curr.product.price),
                           0
