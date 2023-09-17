@@ -1,29 +1,27 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
+import type { invoiceT, updateInvoiceT } from "@/types";
 import { UiUpdateSelect } from "./ui/UiUpdateSelect";
-import { store } from "@/store";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
-
 import UiIcon from "./ui/UiIcon.vue";
+import { store } from "@/store";
 import {
   defineComponent,
-  reactive,
   onBeforeUnmount,
-  ref,
   onBeforeMount,
   computed,
+  reactive,
+  ref,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import type { invoiceT, updateInvoiceT } from "@/types";
 
 export const InvoiceUpdate = defineComponent({
   name: "InvoiceUpdate",
   components: { UiButton, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
   setup() {
-    const route = useRoute();
-    const router = useRouter();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
 
     const clients = ref<{ name: string; id: number }[]>([]);
     const products = ref<{ name: string; id: number }[]>([]);
@@ -53,13 +51,7 @@ export const InvoiceUpdate = defineComponent({
       invoiceRow.value ? invoiceRow.value : invoice
     );
     //
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
+
     //
     const updateTheInvoice = async () => {
       if (updateInvoice.id) {
