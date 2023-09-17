@@ -1,19 +1,17 @@
 import { defineComponent, reactive, onBeforeUnmount, computed } from "vue";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { store } from "@/store";
-import { UiUpdateInput } from "./ui/UiUpdateInput";
 import type { sellerT, updateSellerT } from "@/types";
+import { UiUpdateInput } from "./ui/UiUpdateInput";
 import { UiButton } from "./ui/UiButton";
 import { invoke } from "@tauri-apps/api";
-
-import { useRoute, useRouter } from "vue-router";
+import { store } from "@/store";
 
 export const SellerUpdate = defineComponent({
   name: "SellerUpdate",
   components: { UiButton, UiUpdateInput },
   setup() {
-    const route = useRoute();
-    const router = useRouter();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
 
     const SellerRow = computed(() => store.getters.getSelectedRow<sellerT>());
 
@@ -29,14 +27,6 @@ export const SellerUpdate = defineComponent({
     const updateSeller = reactive<updateSellerT>(
       SellerRow.value ? SellerRow.value : Seller
     );
-
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
 
     const updateTheSeller = async () => {
       if (updateSeller?.id) {
