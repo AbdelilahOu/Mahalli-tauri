@@ -1,6 +1,6 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, reactive, ref } from "vue";
-import { store } from "@/store";
 import { ImagesFiles } from "@/constants/FileTypes";
 import { UiUploader } from "./ui/UiUploader";
 import type { newSellerT } from "@/types";
@@ -8,14 +8,13 @@ import { UiButton } from "./ui/UiButton";
 import { invoke } from "@tauri-apps/api";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
-import { useRoute, useRouter } from "vue-router";
+import { store } from "@/store";
 
 export const SellerCreate = defineComponent({
   name: "sellerCreate",
   components: { UiButton, UiInput, UiUploader },
   setup() {
-    const route = useRoute();
-    const router = useRouter();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
 
     const seller = reactive<newSellerT>({
@@ -24,14 +23,6 @@ export const SellerCreate = defineComponent({
       phone: "",
       address: "",
     });
-
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
 
     const createNewseller = async () => {
       isFlash.value = true;
