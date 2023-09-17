@@ -1,10 +1,11 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { uploadCSVfiles } from "@/utils/fs";
 import { defineComponent, ref } from "vue";
 import { useDropZone } from "@vueuse/core";
 import { invoke } from "@tauri-apps/api";
 import UiIconVue from "./ui/UiIcon.vue";
 import { UiButton } from "./ui/UiButton";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { store } from "@/store";
 
 export const CsvUploader = defineComponent({
@@ -14,7 +15,7 @@ export const CsvUploader = defineComponent({
   },
   setup() {
     const route = useRoute();
-    const router = useRouter();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
 
     const dropZone = ref<HTMLDivElement>();
 
@@ -42,14 +43,6 @@ export const CsvUploader = defineComponent({
         });
         store.setters.updateStore({ key: "show", value: false });
       }
-    };
-
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
     };
 
     return () => (
