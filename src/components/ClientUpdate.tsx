@@ -1,5 +1,6 @@
-import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { defineComponent, reactive, onBeforeUnmount, computed } from "vue";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { CLIENT_UPDATE } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
 import type { clientT, updateClientT } from "@/types";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
@@ -14,16 +15,8 @@ export const ClientUpdate = defineComponent({
     const ClientRow = computed(() => store.getters.getSelectedRow<clientT>());
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
-    const client = {
-      id: undefined,
-      fullname: undefined,
-      email: undefined,
-      phone: undefined,
-      address: undefined,
-    };
-
     const updateClient = reactive<updateClientT>(
-      ClientRow.value ? ClientRow.value : client
+      ClientRow.value ? ClientRow.value : CLIENT_UPDATE
     );
 
     const updateTheClient = async () => {

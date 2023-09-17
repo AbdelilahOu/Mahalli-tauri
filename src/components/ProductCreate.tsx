@@ -9,6 +9,7 @@ import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
+import { PRODUCT_CREATE } from "@/constants/defaultValues";
 
 export const ProductCreate = defineComponent({
   name: "ProductCreate",
@@ -17,14 +18,7 @@ export const ProductCreate = defineComponent({
     const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
 
-    const product = reactive<newProductT>({
-      name: "",
-      price: 0,
-      quantity: 0,
-      description: "",
-      tva: 0,
-      image: "",
-    });
+    const product = reactive<newProductT>(PRODUCT_CREATE);
 
     const createNewProduct = async () => {
       isFlash.value = true;

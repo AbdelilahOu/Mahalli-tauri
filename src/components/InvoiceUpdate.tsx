@@ -16,6 +16,7 @@ import {
   reactive,
   ref,
 } from "vue";
+import { INVOICE_UPDATE } from "@/constants/defaultValues";
 
 export const InvoiceUpdate = defineComponent({
   name: "InvoiceUpdate",
@@ -26,13 +27,6 @@ export const InvoiceUpdate = defineComponent({
     const clients = ref<{ name: string; id: number }[]>([]);
     const products = ref<{ name: string; id: number }[]>([]);
     const invoiceRow = computed(() => store.getters.getSelectedRow<invoiceT>());
-
-    const invoice: updateInvoiceT = {
-      id: undefined,
-      total: undefined,
-      client_id: undefined,
-      invoice_items: [],
-    };
 
     onBeforeMount(async () => {
       const res = await Promise.allSettled([
@@ -48,7 +42,7 @@ export const InvoiceUpdate = defineComponent({
 
     //
     const updateInvoice = reactive<updateInvoiceT>(
-      invoiceRow.value ? invoiceRow.value : invoice
+      invoiceRow.value ? invoiceRow.value : INVOICE_UPDATE
     );
     //
 

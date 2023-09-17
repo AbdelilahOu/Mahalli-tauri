@@ -9,6 +9,7 @@ import { invoke } from "@tauri-apps/api";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
+import { SELLER_CREATE } from "@/constants/defaultValues";
 
 export const SellerCreate = defineComponent({
   name: "sellerCreate",
@@ -17,19 +18,14 @@ export const SellerCreate = defineComponent({
     const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
 
-    const seller = reactive<newSellerT>({
-      name: "",
-      email: "",
-      phone: "",
-      address: "",
-    });
+    const seller = reactive<newSellerT>(SELLER_CREATE);
 
     const createNewseller = async () => {
       isFlash.value = true;
       if (seller.name !== "") {
         try {
           let image: string = await saveFile(seller.image as string, "Image");
-          await invoke("insert_seller", { seller });
+          await invoke("insert_seller", { seller: { ...seller, image } });
           // toggle refresh
           updateQueryParams({
             refresh: "refresh-create-" + Math.random() * 9999,

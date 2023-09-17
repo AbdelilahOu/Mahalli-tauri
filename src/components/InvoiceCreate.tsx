@@ -9,6 +9,7 @@ import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
+import { INVOICE_CREATE } from "@/constants/defaultValues";
 
 export const InvoiceCreate = defineComponent({
   name: "InvoiceCreate",
@@ -21,11 +22,7 @@ export const InvoiceCreate = defineComponent({
     const clients = ref<{ name: string; id: number }[]>([]);
     const products = ref<{ name: string; id: number }[]>([]);
 
-    const newInvoice = reactive<newInvoiceT>({
-      client_id: 0,
-      invoice_items: [],
-      status: "",
-    });
+    const newInvoice = reactive<newInvoiceT>(INVOICE_CREATE);
 
     const InvoiceItems = ref<newInvoiceItemT[]>([
       {

@@ -6,6 +6,7 @@ import { UiSelect } from "./ui/UiSelect";
 import { invoke } from "@tauri-apps/api";
 import { UiInput } from "./ui/UiInput";
 import { store } from "@/store";
+import { INVENTORY_CREATE } from "@/constants/defaultValues";
 
 export const InventoryCreate = defineComponent({
   name: "InventoryCreate",
@@ -13,11 +14,7 @@ export const InventoryCreate = defineComponent({
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
-    const inventoryMvm = reactive({
-      productId: 0,
-      quantity: 0,
-      model: "IN",
-    });
+    const inventoryMvm = reactive(INVENTORY_CREATE);
 
     const products = ref<{ name: string; id: number }[]>([]);
 

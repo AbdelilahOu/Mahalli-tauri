@@ -5,6 +5,7 @@ import { UiUpdateInput } from "./ui/UiUpdateInput";
 import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import { store } from "@/store";
+import { PRODUCT_UPDATE } from "@/constants/defaultValues";
 
 export const ProductUpdate = defineComponent({
   name: "ProductUpdate",
@@ -13,16 +14,9 @@ export const ProductUpdate = defineComponent({
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
     const ProductRow = computed(() => store.getters.getSelectedRow<productT>());
-    const Product = {
-      id: undefined,
-      name: undefined,
-      price: undefined,
-      quantity: undefined,
-      description: undefined,
-      tva: undefined,
-    };
+
     const updateProduct = reactive<updateProductT>({
-      ...(ProductRow.value ? ProductRow.value : Product),
+      ...(ProductRow.value ? ProductRow.value : PRODUCT_UPDATE),
       quantity: 0,
     });
 
