@@ -1,7 +1,7 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import type { newInvoiceT, newInvoiceItemT, invoiceT } from "@/types";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useRoute, useRouter } from "vue-router";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
@@ -14,8 +14,8 @@ export const InvoiceCreate = defineComponent({
   name: "InvoiceCreate",
   components: { UiButton, UiCheckBox, UiIcon, UiInput, UiSelect },
   setup() {
-    const route = useRoute();
-    const router = useRouter();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
+
     const isFlash = ref<boolean>(false);
 
     const clients = ref<{ name: string; id: number }[]>([]);
@@ -45,14 +45,6 @@ export const InvoiceCreate = defineComponent({
       // @ts-ignore
       if ((res[1].status = "fulfilled")) products.value = res[1].value;
     });
-
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
 
     const createNewInvoice = async () => {
       isFlash.value = true;
