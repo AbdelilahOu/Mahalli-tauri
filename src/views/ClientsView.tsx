@@ -1,11 +1,12 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { ClientsTable } from "@/components/ClientsTable";
 import { UiButton } from "@/components/ui/UiButton";
 import { UiInput } from "@/components/ui/UiInput";
 import type { clientT, withCount } from "@/types";
-import { useRoute, useRouter } from "vue-router";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { invoke } from "@tauri-apps/api";
+import { useRouter } from "vue-router";
 import { store } from "@/store";
 import {
   type WatchStopHandle,
@@ -25,7 +26,7 @@ export const ClientsView = defineComponent({
   components: { ClientsTable, UiButton, UiInput, UiIcon },
   setup() {
     const router = useRouter();
-    const route = useRoute();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
     //
     const clients = ref<clientT[]>([]);
     const searchQuery = ref<string>("");
@@ -62,14 +63,6 @@ export const ClientsView = defineComponent({
       } catch (error) {
         console.log(error);
       }
-    };
-
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
     };
 
     const uploadCSV = () => {
