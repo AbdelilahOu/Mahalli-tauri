@@ -1,26 +1,17 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { computed, defineComponent, onBeforeUnmount } from "vue";
-import { UiButton } from "./ui/UiButton";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useRoute, useRouter } from "vue-router";
+import { UiButton } from "./ui/UiButton";
 import { invoke } from "@tauri-apps/api";
-import { store } from "@/store";
 import type { clientT } from "@/types";
+import { store } from "@/store";
 
 export const ClientDelete = defineComponent({
   name: "ClientDelete",
   components: { UiButton },
   setup() {
+    const { updateQueryParams } = useUpdateRouteQueryParams();
     const client = computed(() => store.getters.getSelectedRow<clientT>());
-    const route = useRoute();
-    const router = useRouter();
-
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
 
     const deleteTheClient = async () => {
       const id = client.value?.id;
