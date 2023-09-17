@@ -1,18 +1,17 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { store } from "@/store";
 import { UiButton } from "./ui/UiButton";
 import { UiSelect } from "./ui/UiSelect";
 import { invoke } from "@tauri-apps/api";
 import { UiInput } from "./ui/UiInput";
-import { useRoute, useRouter } from "vue-router";
+import { store } from "@/store";
 
 export const InventoryCreate = defineComponent({
   name: "InventoryCreate",
   components: { UiButton, UiInput, UiSelect },
   setup() {
-    const route = useRoute();
-    const router = useRouter();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
 
     const inventoryMvm = reactive({
       productId: 0,
@@ -29,14 +28,6 @@ export const InventoryCreate = defineComponent({
       // @ts-ignore
       if ((res[0].status = "fulfilled")) products.value = res[0].value;
     });
-
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
 
     const createNewInventory = async () => {
       if (inventoryMvm.productId !== 0 && inventoryMvm.quantity !== 0) {
