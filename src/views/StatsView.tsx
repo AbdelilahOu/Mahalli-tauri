@@ -2,8 +2,8 @@ import { groupBy, keys, values, mapValues } from "@/utils/lightLodash";
 import type { FilteredInventoryData, inOutReType } from "@/types";
 import { defineComponent, onBeforeMount, reactive } from "vue";
 import { ChartDoughnut } from "@/components/ChartDoughnut";
+import { CHART_OPTIONS } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { chartOptions } from "@/constants/chartOptions";
 import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
 import { ChartLine } from "@/components/ChartLine";
@@ -103,7 +103,7 @@ export const StatsView = defineComponent({
                         };
                       }),
                     }}
-                    chartOptions={chartOptions}
+                    chartOptions={CHART_OPTIONS}
                   />
                 ),
                 title: () => (

@@ -1,6 +1,6 @@
-import { chartOptions, optionsWoTicks } from "@/constants/chartOptions";
-import { defineComponent, onBeforeMount, reactive, ref } from "vue";
+import { CHART_OPTIONS, CHART_WO_TICKS } from "@/constants/defaultValues";
 import { groupBy, keys, mapValues, values } from "@/utils/lightLodash";
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { ChartHolder } from "@/components/ChartHolder";
 import { generateColor } from "@/utils/generateColor";
 import { ChartLine } from "@/components/ChartLine";
@@ -142,7 +142,7 @@ export const SellerDetails = defineComponent({
                     },
                   ],
                 }}
-                chartOptions={optionsWoTicks}
+                chartOptions={CHART_WO_TICKS}
               />
             </div>
           </div>
@@ -166,7 +166,7 @@ export const SellerDetails = defineComponent({
                         };
                       }),
                     }}
-                    chartOptions={chartOptions}
+                    chartOptions={CHART_OPTIONS}
                   />
                 ),
                 title: () => (
