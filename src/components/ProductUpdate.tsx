@@ -1,18 +1,16 @@
 import { defineComponent, reactive, onBeforeUnmount, computed } from "vue";
-import { store } from "@/store";
-import { UiUpdateInput } from "./ui/UiUpdateInput";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import type { productT, updateProductT } from "@/types";
+import { UiUpdateInput } from "./ui/UiUpdateInput";
 import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
-
-import { useRoute, useRouter } from "vue-router";
+import { store } from "@/store";
 
 export const ProductUpdate = defineComponent({
   name: "ProductUpdate",
   components: { UiButton, UiUpdateInput },
   setup() {
-    const route = useRoute();
-    const router = useRouter();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
 
     const ProductRow = computed(() => store.getters.getSelectedRow<productT>());
     const Product = {
@@ -27,14 +25,6 @@ export const ProductUpdate = defineComponent({
       ...(ProductRow.value ? ProductRow.value : Product),
       quantity: 0,
     });
-
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
 
     const updateTheProduct = async () => {
       if (updateProduct.id) {
