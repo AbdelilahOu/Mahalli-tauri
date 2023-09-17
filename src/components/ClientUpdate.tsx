@@ -1,10 +1,9 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { defineComponent, reactive, onBeforeUnmount, computed } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { UiUpdateInput } from "./ui/UiUpdateInput";
-import { useRoute, useRouter } from "vue-router";
 import type { clientT, updateClientT } from "@/types";
+import { UiUpdateInput } from "./ui/UiUpdateInput";
 import { UiButton } from "./ui/UiButton";
-
 import { invoke } from "@tauri-apps/api";
 import { store } from "@/store";
 
@@ -13,9 +12,7 @@ export const ClientUpdate = defineComponent({
   components: { UiButton, UiUpdateInput },
   setup() {
     const ClientRow = computed(() => store.getters.getSelectedRow<clientT>());
-
-    const route = useRoute();
-    const router = useRouter();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
 
     const client = {
       id: undefined,
@@ -28,14 +25,6 @@ export const ClientUpdate = defineComponent({
     const updateClient = reactive<updateClientT>(
       ClientRow.value ? ClientRow.value : client
     );
-
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
 
     const updateTheClient = async () => {
       if (updateClient.id) {
