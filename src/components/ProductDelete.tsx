@@ -1,28 +1,18 @@
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { computed, defineComponent, onBeforeUnmount } from "vue";
-import { store } from "@/store";
+import { globalTranslate } from "@/utils/globalTranslate";
 import { UiButton } from "./ui/UiButton";
 import { invoke } from "@tauri-apps/api";
-
-import { useRoute, useRouter } from "vue-router";
 import type { productT } from "@/types";
+import { store } from "@/store";
 
 export const ProductDelete = defineComponent({
   name: "ProductDelete",
   components: { UiButton },
   setup() {
-    const route = useRoute();
-    const router = useRouter();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
 
     const product = computed(() => store.getters.getSelectedRow<productT>());
-
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
 
     const deleteTheProduct = async () => {
       let id = product.value?.id;
