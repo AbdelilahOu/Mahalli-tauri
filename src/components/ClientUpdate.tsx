@@ -16,7 +16,7 @@ export const ClientUpdate = defineComponent({
 
     const client = {
       id: undefined,
-      name: undefined,
+      fullname: undefined,
       email: undefined,
       phone: undefined,
       address: undefined,
@@ -58,7 +58,7 @@ export const ClientUpdate = defineComponent({
           <UiUpdateInput
             Value={ClientRow.value?.["fullname"]}
             OnInputChange={(value) =>
-              (updateClient["name"] =
+              (updateClient["fullname"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
             Type="text"
