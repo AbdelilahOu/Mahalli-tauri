@@ -1,6 +1,6 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, reactive, ref } from "vue";
-import { store } from "@/store";
 import { ImagesFiles } from "@/constants/FileTypes";
 import { UiUploader } from "./ui/UiUploader";
 import type { newProductT } from "@/types";
@@ -8,14 +8,13 @@ import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
-import { useRoute, useRouter } from "vue-router";
+import { store } from "@/store";
 
 export const ProductCreate = defineComponent({
   name: "ProductCreate",
   components: { UiButton, UiInput },
   setup() {
-    const route = useRoute();
-    const router = useRouter();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
 
     const product = reactive<newProductT>({
@@ -27,13 +26,6 @@ export const ProductCreate = defineComponent({
       image: "",
     });
 
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
     const createNewProduct = async () => {
       isFlash.value = true;
       if (product.name !== "") {
