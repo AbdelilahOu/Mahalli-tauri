@@ -85,4 +85,6 @@ CREATE UNIQUE INDEX IF NOT EXISTS order_items_inventory_id_key ON order_items (i
 CREATE UNIQUE INDEX IF NOT EXISTS order_items_id_key ON order_items (id);
 CREATE UNIQUE INDEX IF NOT EXISTS invoice_items_inventory_id_key ON invoice_items (inventory_id);
 CREATE UNIQUE INDEX IF NOT EXISTS products_name_key ON products (name);
+CREATE UNIQUE INDEX IF NOT EXISTS clients_fullname_key ON clients (fullname);
+CREATE UNIQUE INDEX IF NOT EXISTS sellers_name_key ON sellers (name);
   
