@@ -86,7 +86,6 @@ pub fn delete_client(c_id: i32, connection: &mut SqliteConnection) -> usize {
 }
 
 pub fn update_client(c_update: Client, c_id: i32, connection: &mut SqliteConnection) -> Client {
-    println!("{:?}", c_update);
     diesel::update(clients::dsl::clients.find(&c_id))
         .set((
             clients::fullname.eq(c_update.fullname),
