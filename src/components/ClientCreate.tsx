@@ -1,51 +1,39 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, reactive, ref } from "vue";
-import { useModalStore } from "@/stores/modalStore";
 import { ImagesFiles } from "@/constants/FileTypes";
-import { useRoute, useRouter } from "vue-router";
 import { UiUploader } from "./ui/UiUploader";
 import type { newClientT } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
+import { store } from "@/store";
+import { CLIENT_CREATE } from "@/constants/defaultValues";
 
 export const ClientCreate = defineComponent({
   name: "ClientCreate",
   components: { UiButton, UiInput },
   setup() {
-    const modalStore = useModalStore();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
-    const route = useRoute();
-    const router = useRouter();
 
-    const client = reactive<newClientT>({
-      fullname: String(),
-      phone: String(),
-      email: String(),
-      address: String(),
-      image: String(),
-    });
-
-    const updateQueryParams = (query: Record<any, any>) => {
-      router.push({
-        path: route.path,
-        params: { ...route.params },
-        query: { ...route.query, ...query },
-      });
-    };
+    const client = reactive<newClientT>(CLIENT_CREATE);
 
     const createNewClient = async () => {
       isFlash.value = true;
       if (client.fullname !== "") {
         try {
           let image: string = await saveFile(client.image as string, "Image");
-          await invoke("insert_client", { client });
-          updateQueryParams({ refresh: "refresh-create" });
+          await invoke("insert_client", { client: { ...client, image } });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-create-" + Math.random() * 9999,
+          });
         } catch (error) {
           console.log(error);
         } finally {
-          modalStore.updateModal({ key: "show", value: false });
+          store.setters.updateStore({ key: "show", value: false });
         }
       }
       setTimeout(() => {
@@ -53,7 +41,7 @@ export const ClientCreate = defineComponent({
       }, 1000);
     };
     return () => (
-      <div class="w-1/2 h-fit z-50 gap-3 rounded-md flex flex-col bg-white p-2 min-w-[350px]">
+      <div class="w-1/2 h-fit z-50 gap-3 rounded-[4px] flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Clients.create.title")}
         </h1>

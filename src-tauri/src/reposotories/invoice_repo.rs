@@ -5,7 +5,7 @@ use crate::models::{Client, Invoice, InvoiceItem, NewInvoice, Product, UpdateInv
 use crate::schema::invoices::{client_id, status};
 use crate::schema::{clients, invoice_items, invoices, products};
 
-pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
+pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
 
     let result = invoices::table
@@ -17,7 +17,14 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> 
         .load::<(Invoice, Client)>(connection)
         .expect("Error fetching invoices with clients");
 
-    result
+    let count: Vec<i64> = invoices::table
+        .count()
+        .get_results(connection)
+        .expect("coudnt get the count");
+
+    json!({
+        "count": count[0],
+        "data": result
         .into_iter()
         .map(|(invoice, client)| {
             let invoice_items: Vec<(InvoiceItem, Product)> = invoice_items::table
@@ -30,7 +37,7 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> 
             let mut total = 0;
 
             let invoice_items_json = json!({
-                "invoiceItems": invoice_items.into_iter().map(|(item, product)| {
+                "invoice_items": invoice_items.into_iter().map(|(item, product)| {
                     total += item.quantity * product.price as i64;
                     json!({
                         "id": item.id,
@@ -56,10 +63,11 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> 
                     "id": client.id,
                     "fullname": client.fullname
                 },
-                "invoiceItems": invoice_items_json["invoiceItems"]
+                "invoice_items": invoice_items_json["invoice_items"]
             })
         })
         .collect::<Vec<_>>()
+    })
 }
 
 pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
@@ -80,11 +88,12 @@ pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
         .expect("Error fetching invoice items with products");
 
     let invoice_items_json = json!({
-        "invoiceItems": invoice_items.into_iter().map(|(item, product)| {
+        "invoice_items": invoice_items.into_iter().map(|(item, product)| {
             json!({
                 "id": item.id,
                 "quantity": item.quantity,
                 "product_id": item.product_id,
+                "invoice_id": item.invoice_id,
                 "inventory_id": item.inventory_id,
                 "product": product
             })
@@ -97,7 +106,7 @@ pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
         "created_at": invoice.created_at,
         "client_id": invoice.client_id,
         "client": client,
-        "invoiceItems": invoice_items_json["invoiceItems"]
+        "invoice_items": invoice_items_json["invoice_items"]
     })
 }
 

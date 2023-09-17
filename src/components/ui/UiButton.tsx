@@ -22,7 +22,7 @@ export const UiButton = defineComponent({
       <button
         onClick={() => props.Click()}
         disabled={props.Disable}
-        class={`defaultButton disabled:hover:border-sky-200 hover:bg-sky-300/40 hover:border-sky-300 hover:text-black ${
+        class={`defaultButton group disabled:hover:border-sky-200 hover:bg-sky-300/40 hover:border-sky-300 hover:text-black ${
           props.colorTheme == "primary"
             ? " disabled:hover:bg-sky-50 text-sky-600 bg-sky-50"
             : " disabled:hover:bg-sky-500 text-black bg-sky-400 border-sky-400"

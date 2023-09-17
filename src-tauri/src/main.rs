@@ -30,6 +30,7 @@ fn main() {
             db_conn: Mutex::new(establish_connection()),
         })
         .invoke_handler(tauri::generate_handler![
+            cmd::upload_csv_to_db,
             cmd::export_db_csv,
             cmd::get_csv_records,
             cmd::get_product,
@@ -65,15 +66,12 @@ fn main() {
             cmd::update_order,
             cmd::delete_order,
             cmd::get_order_items,
-            // cmd::update_order_items,
             cmd::delete_order_items,
             cmd::get_invoice_items,
-            // cmd::update_invoice_items,
             cmd::delete_invoice_items,
             cmd::get_inventory_mvms,
             cmd::delete_inventory_mvm,
             cmd::insert_inventory_mvm,
-            // cmd::update_inventory_mvm,
             cmd::get_b3_clients,
             cmd::get_b3_sellers,
             cmd::get_c_week_expenses,

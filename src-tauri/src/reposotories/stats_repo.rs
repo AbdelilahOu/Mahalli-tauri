@@ -98,15 +98,12 @@ pub fn get_inventory_stats(connection: &mut SqliteConnection) -> Vec<Value> {
 }
 
 pub fn get_client_details(id: i32, connection: &mut SqliteConnection) -> Vec<Value> {
-    let invoice_client_join = invoices::table.on(clients::id.eq(invoices::client_id));
-    let invoiceitem_invoice_join =
-        invoice_items::table.on(invoices::id.eq(invoice_items::invoice_id));
-    let invoiceitem_product_join = products::table.on(invoice_items::product_id.eq(products::id));
+    let iitem_invoice_join = invoice_items::table.on(invoices::id.eq(invoice_items::invoice_id));
+    let iitem_product_join = products::table.on(invoice_items::product_id.eq(products::id));
 
-    let result: Vec<Option<(String, String, i64)>> = clients::table
-        .inner_join(invoice_client_join)
-        .inner_join(invoiceitem_invoice_join)
-        .inner_join(invoiceitem_product_join)
+    let result: Vec<Option<(String, String, i64)>> = invoices::table
+        .inner_join(iitem_invoice_join)
+        .inner_join(iitem_product_join)
         .select(
             (
                 products::name,
@@ -115,7 +112,8 @@ pub fn get_client_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
             )
                 .nullable(),
         )
-        .filter(clients::id.eq(id))
+        .group_by(products::name)
+        .filter(invoices::client_id.eq(id))
         .load::<Option<(String, String, i64)>>(connection)
         .expect("Error fetching best three clients");
 
@@ -139,14 +137,12 @@ pub fn get_client_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
 }
 
 pub fn get_seller_details(id: i32, connection: &mut SqliteConnection) -> Vec<Value> {
-    let order_seller_join = orders::table.on(sellers::id.eq(orders::seller_id));
-    let orderitem_order_join = order_items::table.on(orders::id.eq(order_items::order_id));
-    let orderitem_product_join = products::table.on(order_items::product_id.eq(products::id));
+    let oitem_order_join = order_items::table.on(orders::id.eq(order_items::order_id));
+    let oitem_product_join = products::table.on(order_items::product_id.eq(products::id));
 
-    let result: Vec<Option<(String, String, i64)>> = sellers::table
-        .inner_join(order_seller_join)
-        .inner_join(orderitem_order_join)
-        .inner_join(orderitem_product_join)
+    let result: Vec<Option<(String, String, i64)>> = orders::table
+        .inner_join(oitem_order_join)
+        .inner_join(oitem_product_join)
         .select(
             (
                 products::name,
@@ -155,7 +151,8 @@ pub fn get_seller_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
             )
                 .nullable(),
         )
-        .filter(sellers::id.eq(id))
+        .group_by(products::name)
+        .filter(orders::seller_id.eq(id))
         .load::<Option<(String, String, i64)>>(connection)
         .expect("Error fetching best three sellers");
 
@@ -184,8 +181,6 @@ pub fn get_client_expenses(id: i32, connection: &mut SqliteConnection) -> Vec<Va
     let invoiceitem_product_join = products::table.on(invoice_items::product_id.eq(products::id));
 
     let seven_days_ago = Utc::now().naive_utc() - Duration::days(7);
-
-    println!("{:?}", id);
 
     let result: Vec<Option<(String, i64)>> = invoices::table
         .inner_join(invoiceitem_invoice_join)

@@ -1,6 +1,6 @@
 import { defineComponent, type PropType, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useModalStore } from "@/stores/modalStore";
+import { store } from "@/store";
 import { UiPagination } from "./ui/UiPagination";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { RouterLink } from "vue-router";
@@ -14,16 +14,9 @@ export const OrdersTable = defineComponent({
       type: Array as PropType<orderT[]>,
       required: true,
     },
-    FilterParam: {
-      type: String,
-      required: true,
-      default: "",
-    },
   },
   components: { UiCheckBox, UiIcon, UiPagination },
   setup(props) {
-    const modalStore = useModalStore();
-
     const checkedOrders = ref<number[]>([]);
 
     const checkThisOrders = (IsIncluded: boolean, id: number) => {
@@ -32,10 +25,10 @@ export const OrdersTable = defineComponent({
         : checkedOrders.value.splice(checkedOrders.value.indexOf(id), 1);
     };
 
-    const toggleThisOrders = (Orders: orderT, name: string) => {
-      modalStore.updateOrdersRow(Orders);
-      modalStore.updateModal({ key: "name", value: name });
-      modalStore.updateModal({ key: "show", value: true });
+    const toggleThisOrders = (Order: orderT, name: string) => {
+      store.setters.updateStore({ key: "row", value: Order });
+      store.setters.updateStore({ key: "name", value: name });
+      store.setters.updateStore({ key: "show", value: true });
     };
     //
 
@@ -44,9 +37,9 @@ export const OrdersTable = defineComponent({
         <table class="table-auto  w-full">
           <thead class="text-xs h-9  font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
-              <th class="rounded-l-md"></th>
+              <th class="rounded-l-[4px]"></th>
               {[1, 2, 3, 4, 5].map((index) => (
-                <th class="p-2 w-fit last:rounded-r-md ">
+                <th class="p-2 w-fit last:rounded-r-[4px] ">
                   <div class="font-semibold text-left">
                     {globalTranslate(`Orders.index.feilds[${index}]`)}
                   </div>
@@ -55,12 +48,7 @@ export const OrdersTable = defineComponent({
             </tr>
           </thead>
           <tbody class="text-sm divide-y divide-gray-100">
-            {props.Orders.filter((c) =>
-              // @ts-ignore
-              JSON.stringify(Object.values(c))
-                .toLocaleLowerCase()
-                .includes(props.FilterParam)
-            ).map((Orders, index) => (
+            {props.Orders.map((Orders, index) => (
               <tr v-fade={index} key={Orders.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
@@ -86,10 +74,10 @@ export const OrdersTable = defineComponent({
                 </td>
                 <td class="p-2">
                   <div class="text-left whitespace-nowrap overflow-ellipsis">
-                    {Orders.orderItems?.length ? (
+                    {Orders.order_items?.length ? (
                       <span>
-                        {Orders.orderItems?.length}{" "}
-                        {Orders.orderItems?.length == 1
+                        {Orders.order_items?.length}{" "}
+                        {Orders.order_items?.length == 1
                           ? " Product"
                           : " Products"}
                       </span>
@@ -153,7 +141,7 @@ export const OrdersTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination itemsNumber={props.Orders.length} />
+          <UiPagination />
         </div>
       </div>
     );

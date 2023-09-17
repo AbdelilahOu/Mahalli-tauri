@@ -1,12 +1,12 @@
 import { defineComponent, type PropType, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
-import { useModalStore } from "@/stores/modalStore";
+import { store } from "@/store";
 import { UiPagination } from "./ui/UiPagination";
 import { UiCheckBox } from "./ui/UiCheckBox";
+import { RouterLink } from "vue-router";
 import type { sellerT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
-import { RouterLink } from "vue-router";
 
 export const SellersTable = defineComponent({
   name: "SellersTable",
@@ -15,15 +15,9 @@ export const SellersTable = defineComponent({
       type: Array as PropType<sellerT[]>,
       required: true,
     },
-    FilterParam: {
-      type: String,
-      required: true,
-      default: "",
-    },
   },
   components: { UiCheckBox, UiIcon, UiPagination },
   setup(props) {
-    const modalStore = useModalStore();
     const checkedSellers = ref<number[]>([]);
 
     const checkThisUser = (IsInclude: boolean, id: number) => {
@@ -32,9 +26,9 @@ export const SellersTable = defineComponent({
         : checkedSellers.value.splice(checkedSellers.value.indexOf(id), 1);
     };
     const toggleThisSeller = (Seller: sellerT, name: string) => {
-      modalStore.updateSellerRow(Seller);
-      modalStore.updateModal({ key: "name", value: name });
-      modalStore.updateModal({ key: "show", value: true });
+      store.setters.updateStore({ key: "row", value: Seller });
+      store.setters.updateStore({ key: "name", value: name });
+      store.setters.updateStore({ key: "show", value: true });
     };
 
     return () => (
@@ -42,10 +36,10 @@ export const SellersTable = defineComponent({
         <table class="table-auto w-full">
           <thead class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr class="">
-              <th class="rounded-l-md"></th>
+              <th class="rounded-l-[4px]"></th>
               <th class=""></th>
               {[0, 1, 2, 3, 4].map((index) => (
-                <th class="p-2 w-fit last:rounded-r-md">
+                <th class="p-2 w-fit last:rounded-r-[4px]">
                   <div class="font-semibold text-left">
                     {globalTranslate(`Sellers.index.feilds[${index}]`)}
                   </div>
@@ -54,12 +48,7 @@ export const SellersTable = defineComponent({
             </tr>
           </thead>
           <tbody class="text-sm divide-y divide-gray-100">
-            {props.Sellers.filter((c) =>
-              // @ts-ignore
-              JSON.stringify(Object.values(c))
-                .toLocaleLowerCase()
-                .includes(props.FilterParam)
-            ).map((Seller, index) => (
+            {props.Sellers.map((Seller, index) => (
               <tr v-fade={index} key={Seller.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
@@ -127,7 +116,7 @@ export const SellersTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination itemsNumber={props.Sellers.length} />
+          <UiPagination />
         </div>
       </div>
     );

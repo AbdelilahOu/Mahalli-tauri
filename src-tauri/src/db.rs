@@ -7,7 +7,6 @@ use dotenv::dotenv;
 use std::env;
 use std::path;
 
-use crate::csvparsing::export;
 use crate::csvparsing::import;
 use crate::csvparsing::import::TableRecord;
 use crate::models::NewClient;
@@ -63,35 +62,24 @@ pub async fn seed_db() {
     ];
     // path to old db and wehere to store csvs
     let old_data_folder = path::Path::new("./data");
-    let old_db_path = &old_data_folder.join("db.sqlite");
     //
     let mut conn = establish_connection();
-    match old_db_path.to_str() {
-        // db path exists
-        Some(source_db_path) => {
-            // loop over and get each table data
-            for table in table_names.iter_mut() {
-                // checking if we already have the csvs
-                let out_put_file = old_data_folder.join(format!("{}.csv", table));
-                if out_put_file.exists() == false {
-                    // get data as csv
-                    export::export_db_csv(&source_db_path, &out_put_file.to_str().unwrap(), &table)
-                        .await;
-                }
-                // read csv
-                let result = import::get_csv_records(
-                    String::from(out_put_file.to_str().unwrap()),
-                    Option::from(table.clone()),
-                );
-                // seed db
-                insert_into_tables(result, &mut conn);
-            }
-        }
-        None => print!("coudnt find old db while seeding"),
+
+    for table in table_names.iter_mut() {
+        // checking if we already have the csvs
+        let out_put_file = old_data_folder.join(format!("{}.csv", table));
+
+        // read csv
+        let result = import::get_csv_records(
+            String::from(out_put_file.to_str().unwrap()),
+            Option::from(table.clone()),
+        );
+        // seed db
+        insert_into_tables(result, &mut conn);
     }
 }
 
-fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConnection) {
+pub fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConnection) {
     match result {
         Ok(csv_data) => {
             match csv_data {
@@ -99,7 +87,7 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                     for client in client_records {
                         reposotories::client_repo::insert_client(
                             NewClient {
-                                fullname: client.name,
+                                fullname: client.fullname,
                                 email: client.email,
                                 image: client.image,
                                 address: client.address,
@@ -135,6 +123,7 @@ fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut SqliteConn
                                 price: product.price,
                                 description: product.description,
                                 tva: product.tva,
+                                image: product.image,
                             },
                             conn,
                         );

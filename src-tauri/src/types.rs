@@ -62,3 +62,13 @@ pub struct TUpdateInvoiceItem {
     pub quantity: i64,
     pub inventory_id: Option<i32>,
 }
+
+#[derive(Debug, Deserialize)]
+pub struct TNewProduct {
+    pub description: String,
+    pub name: String,
+    pub price: f32,
+    pub tva: f32,
+    pub quantity: i64,
+    pub image: String,
+}

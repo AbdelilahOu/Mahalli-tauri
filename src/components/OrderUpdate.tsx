@@ -1,43 +1,37 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiUpdateSelect } from "./ui/UiUpdateSelect";
-import { useModalStore } from "@/stores/modalStore";
+import type { orderT, updateOrdersT } from "@/types";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
-import type { updateOrdersT } from "@/types";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import UiIcon from "./ui/UiIcon.vue";
-import { storeToRefs } from "pinia";
+import { store } from "@/store";
 import {
   defineComponent,
-  reactive,
   onBeforeUnmount,
-  ref,
   onBeforeMount,
+  reactive,
+  computed,
+  ref,
 } from "vue";
+import { ORDER_UPDATE } from "@/constants/defaultValues";
 
 export const OrderUpdate = defineComponent({
   name: "OrderUpdate",
   components: { UiButton, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
   setup() {
+    const { updateQueryParams } = useUpdateRouteQueryParams();
     //
-    const modalStore = useModalStore();
-    //
-    const { order: OrdersRow } = storeToRefs(modalStore);
+    const OrdersRow = computed(() => store.getters.getSelectedRow<orderT>());
 
     const sellers = ref<{ name: string; id: number }[]>([]);
     const products = ref<{ name: string; id: number }[]>([]);
     //
 
-    const Orders: updateOrdersT = {
-      id: undefined,
-      status: undefined,
-      seller_id: undefined,
-      orderItems: [],
-    };
-    //
     const updateOrder = reactive<updateOrdersT>(
-      OrdersRow.value ? OrdersRow.value : Orders
+      OrdersRow.value ? OrdersRow.value : ORDER_UPDATE
     );
     //
 
@@ -52,6 +46,7 @@ export const OrderUpdate = defineComponent({
       // @ts-ignore
       if ((res[1].status = "fulfilled")) products.value = res[1].value;
     });
+    //
 
     const updateTheOrders = async () => {
       if (updateOrder.id) {
@@ -60,10 +55,14 @@ export const OrderUpdate = defineComponent({
             order: updateOrder,
             id: updateOrder.id,
           });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-update-" + Math.random() * 9999,
+          });
         } catch (error) {
           console.log(error);
         } finally {
-          modalStore.updateModal({ key: "show", value: false });
+          store.setters.updateStore({ key: "show", value: false });
         }
       }
     };
@@ -76,10 +75,12 @@ export const OrderUpdate = defineComponent({
       }
     }
 
-    onBeforeUnmount(() => modalStore.updateOrdersRow(null));
+    onBeforeUnmount(() =>
+      store.setters.updateStore({ key: "row", value: null })
+    );
 
     return () => (
-      <div class="w-5/6 lg:w-1/2 relative h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+      <div class="w-5/6 lg:w-1/2 relative h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold  text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Orders.update.title")} N° {updateOrder.id}
         </h1>
@@ -140,7 +141,7 @@ export const OrderUpdate = defineComponent({
             <div class="w-full  h-full flex flex-col gap-1">
               <UiButton
                 Click={() =>
-                  updateOrder.orderItems?.push({
+                  updateOrder.order_items?.push({
                     product_id: 0,
                     quantity: 0,
                   })
@@ -150,7 +151,7 @@ export const OrderUpdate = defineComponent({
               </UiButton>
               <div class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
-                  {updateOrder.orderItems?.map((item, index) => (
+                  {updateOrder.order_items?.map((item, index) => (
                     <UiUpdateSelect
                       Value={item.product?.name ?? "select a product"}
                       items={products.value.map((product) => ({
@@ -164,7 +165,7 @@ export const OrderUpdate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateOrder.orderItems?.map((item, index) => (
+                  {updateOrder.order_items?.map((item, index) => (
                     <div class="h-full flex w-full items-center relative">
                       <UiUpdateInput
                         class="border-r-0"
@@ -174,13 +175,13 @@ export const OrderUpdate = defineComponent({
                         )}
                         Type="number"
                         OnInputChange={(value) =>
-                          (updateOrder.orderItems[index].quantity =
+                          (updateOrder.order_items[index].quantity =
                             Number(value))
                         }
                       >
                         {{
                           unite: () => (
-                            <span class="h-full text-gray-400 rounded-md px-2 border-r-2  flex items-center justify-center">
+                            <span class="h-full text-gray-400 rounded-[4px] px-2 border-r-2  flex items-center justify-center">
                               Item
                             </span>
                           ),
@@ -190,7 +191,7 @@ export const OrderUpdate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateOrder.orderItems?.map((item, index) => (
+                  {updateOrder.order_items?.map((item, index) => (
                     <div class="h-full flex w-full items-center relative">
                       <UiUpdateInput
                         class="border-r-0 "
@@ -200,12 +201,12 @@ export const OrderUpdate = defineComponent({
                         )}
                         Type="number"
                         OnInputChange={(value) =>
-                          (updateOrder.orderItems[index].price = Number(value))
+                          (updateOrder.order_items[index].price = Number(value))
                         }
                       >
                         {{
                           unite: () => (
-                            <span class="h-full text-gray-400 rounded-md px-2 border-r-2  flex items-center justify-center">
+                            <span class="h-full text-gray-400 rounded-[4px] px-2 border-r-2  flex items-center justify-center">
                               DH
                             </span>
                           ),
@@ -215,13 +216,13 @@ export const OrderUpdate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateOrder.orderItems?.map((item, index) => (
+                  {updateOrder.order_items?.map((item, index) => (
                     <div
                       onClick={() => {
-                        updateOrder.orderItems?.splice(index, 1);
+                        updateOrder.order_items?.splice(index, 1);
                         if (item.id) deleteOneOrderItem(item.id);
                       }}
-                      class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
+                      class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-[4px] items-center w-full h-full"
                     >
                       <UiIcon name="delete" />
                     </div>

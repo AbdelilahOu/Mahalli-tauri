@@ -1,6 +1,6 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, ref, type PropType } from "vue";
-import { useModalStore } from "@/stores/modalStore";
+import { store } from "@/store";
 import { UiPagination } from "./ui/UiPagination";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { RouterLink } from "vue-router";
@@ -14,16 +14,9 @@ export const InvoicesTable = defineComponent({
       type: Array as PropType<invoiceT[]>,
       required: true,
     },
-    FilterParam: {
-      type: String,
-      required: true,
-      default: "",
-    },
   },
   components: { UiIcon, UiCheckBox, UiPagination },
   setup(props) {
-    const modalStore = useModalStore();
-
     const checkedInvoices = ref<number[]>([]);
 
     const checkThisInvoice = (IsIncluded: boolean, id: number) => {
@@ -34,18 +27,18 @@ export const InvoicesTable = defineComponent({
     const pagination = ref(0);
 
     const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
-      modalStore.updateInvoiceRow(Invoice);
-      modalStore.updateModal({ key: "name", value: name });
-      modalStore.updateModal({ key: "show", value: true });
+      store.setters.updateStore({ key: "row", value: Invoice });
+      store.setters.updateStore({ key: "name", value: name });
+      store.setters.updateStore({ key: "show", value: true });
     };
     return () => (
       <div class="flex flex-col w-full h-full">
         <table class="table-auto  w-full">
           <thead class="text-xs h-9  font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
             <tr>
-              <th class="rounded-l-md"></th>
+              <th class="rounded-l-[4px]"></th>
               {[1, 2, 3, 4, 5, 6].map((index) => (
-                <th class="p-2 w-fit last:rounded-r-md">
+                <th class="p-2 w-fit last:rounded-r-[4px]">
                   <div class="font-semibold text-left">
                     {globalTranslate(`Invoices.index.feilds[${index}]`)}
                   </div>
@@ -54,12 +47,7 @@ export const InvoicesTable = defineComponent({
             </tr>
           </thead>
           <tbody class="text-sm divide-y divide-gray-100">
-            {props.Invoices.filter((c) =>
-              // @ts-ignore
-              JSON.stringify(Object.values(c))
-                .toLocaleLowerCase()
-                .includes(props.FilterParam)
-            ).map((Invoice, index) => (
+            {props.Invoices.map((Invoice, index) => (
               <tr v-fade={index} key={Invoice.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
@@ -85,10 +73,10 @@ export const InvoicesTable = defineComponent({
                 </td>
                 <td class="p-2">
                   <div class="text-left whitespace-nowrap overflow-ellipsis">
-                    {Invoice.invoiceItems?.length ? (
+                    {Invoice.invoice_items?.length ? (
                       <span>
-                        {Invoice.invoiceItems?.length}{" "}
-                        {Invoice.invoiceItems?.length == 1
+                        {Invoice.invoice_items?.length}{" "}
+                        {Invoice.invoice_items?.length == 1
                           ? " Product"
                           : " Products"}
                       </span>
@@ -164,7 +152,7 @@ export const InvoicesTable = defineComponent({
           </tbody>
         </table>
         <div>
-          <UiPagination itemsNumber={props.Invoices.length} />
+          <UiPagination />
         </div>
       </div>
     );
