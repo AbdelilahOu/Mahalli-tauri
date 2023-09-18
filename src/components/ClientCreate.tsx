@@ -1,4 +1,5 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { CLIENT_CREATE } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, reactive, ref } from "vue";
 import { ImagesFiles } from "@/constants/FileTypes";
@@ -9,16 +10,15 @@ import { UiButton } from "./ui/UiButton";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
-import { CLIENT_CREATE } from "@/constants/defaultValues";
 
 export const ClientCreate = defineComponent({
   name: "ClientCreate",
   components: { UiButton, UiInput },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
-    const isFlash = ref<boolean>(false);
 
     const client = reactive<newClientT>(CLIENT_CREATE);
+    const isFlash = ref<boolean>(false);
 
     const createNewClient = async () => {
       isFlash.value = true;
@@ -34,12 +34,14 @@ export const ClientCreate = defineComponent({
           console.log(error);
         } finally {
           store.setters.updateStore({ key: "show", value: false });
+          return;
         }
       }
       setTimeout(() => {
         isFlash.value = false;
       }, 1000);
     };
+
     return () => (
       <div class="w-1/2 h-fit z-50 gap-3 rounded-[4px] flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">

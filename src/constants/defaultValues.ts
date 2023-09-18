@@ -80,6 +80,21 @@ export const SELLER_UPDATE = {
   image: undefined,
 };
 
+export const INVOICE_ITEM_CREATE = [
+  {
+    product_id: 0,
+    quantity: 0,
+  },
+];
+
+export const ORDER_ITEM_CREATE = [
+  {
+    product_id: 0,
+    quantity: 0,
+    price: 0,
+  },
+];
+
 export const CHART_OPTIONS = {
   responsive: true,
   scales: {
