@@ -34,6 +34,7 @@ export const ProductCreate = defineComponent({
           console.log(error);
         } finally {
           store.setters.updateStore({ key: "show", value: false });
+          return;
         }
       }
       setTimeout(() => {

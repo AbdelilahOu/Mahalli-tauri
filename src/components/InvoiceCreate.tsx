@@ -1,3 +1,4 @@
+import { INVOICE_CREATE, INVOICE_ITEM_CREATE } from "@/constants/defaultValues";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import type { newInvoiceT, newInvoiceItemT, invoiceT } from "@/types";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
@@ -9,7 +10,6 @@ import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
-import { INVOICE_CREATE } from "@/constants/defaultValues";
 
 export const InvoiceCreate = defineComponent({
   name: "InvoiceCreate",
@@ -24,12 +24,7 @@ export const InvoiceCreate = defineComponent({
 
     const newInvoice = reactive<newInvoiceT>(INVOICE_CREATE);
 
-    const InvoiceItems = ref<newInvoiceItemT[]>([
-      {
-        product_id: 0,
-        quantity: 0,
-      },
-    ]);
+    const InvoiceItems = ref<newInvoiceItemT[]>(INVOICE_ITEM_CREATE);
 
     onBeforeMount(async () => {
       const res = await Promise.allSettled([

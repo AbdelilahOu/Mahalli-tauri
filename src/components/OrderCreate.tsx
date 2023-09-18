@@ -1,3 +1,4 @@
+import { ORDER_CREATE, ORDER_ITEM_CREATE } from "@/constants/defaultValues";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import type { newOrdersT, newOrdersItemT } from "@/types";
@@ -9,7 +10,6 @@ import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
-import { ORDER_CREATE } from "@/constants/defaultValues";
 
 export const OrderCreate = defineComponent({
   name: "OrderCreate",
@@ -17,20 +17,11 @@ export const OrderCreate = defineComponent({
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
-    const isFlash = ref<boolean>(false);
-
+    const order_items = ref<newOrdersItemT[]>(ORDER_ITEM_CREATE);
+    const newOrder = reactive<newOrdersT>(ORDER_CREATE);
     const sellers = ref<{ name: string; id: number }[]>([]);
     const products = ref<{ name: string; id: number }[]>([]);
-
-    const newOrder = reactive<newOrdersT>(ORDER_CREATE);
-
-    const order_items = ref<newOrdersItemT[]>([
-      {
-        product_id: 0,
-        quantity: 0,
-        price: 0,
-      },
-    ]);
+    const isFlash = ref<boolean>(false);
 
     onBeforeMount(async () => {
       const res = await Promise.allSettled([
@@ -63,6 +54,7 @@ export const OrderCreate = defineComponent({
           console.log(error);
         } finally {
           store.setters.updateStore({ key: "show", value: false });
+          return;
         }
       }
       setTimeout(() => {
