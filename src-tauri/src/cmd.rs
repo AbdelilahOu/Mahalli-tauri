@@ -52,6 +52,9 @@ pub async fn export_db_csv() -> String {
         }
     }
 
+    // open file explorer to the path wehere the asssets are
+    // using cmd for windows
+
     String::from("OK")
 }
 
