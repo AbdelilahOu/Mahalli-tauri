@@ -1,4 +1,5 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { SELLER_CREATE } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, reactive, ref } from "vue";
 import { ImagesFiles } from "@/constants/FileTypes";
@@ -9,7 +10,6 @@ import { invoke } from "@tauri-apps/api";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
-import { SELLER_CREATE } from "@/constants/defaultValues";
 
 export const SellerCreate = defineComponent({
   name: "sellerCreate",
