@@ -19,12 +19,11 @@ import { OrderCreate } from "./OrderCreate";
 import { OrderDelete } from "./OrderDelete";
 import { OrderUpdate } from "./OrderUpdate";
 import { CsvUploader } from "./CsvUploader";
+import { Sittings } from "./Sittings";
 export default {
   components: {
     TranslationModal,
-    OrderCreate,
-    OrderDelete,
-    OrderUpdate,
+    InventoryCreate,
     ProductUpdate,
     ProductDelete,
     ProductCreate,
@@ -37,10 +36,11 @@ export default {
     ClientDelete,
     ClientUpdate,
     ClientCreate,
-    InventoryCreate,
-    // PaymentCreate,
-    // PaymentDelete,
+    OrderCreate,
+    OrderDelete,
+    OrderUpdate,
     CsvUploader,
+    Sittings,
   },
   props: {
     name: {

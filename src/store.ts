@@ -66,7 +66,27 @@ interface args1 {
 
 interface args2 {
   key: "name";
-  value: string;
+  value:
+    | "TranslationModal"
+    | "InventoryCreate"
+    | "ProductUpdate"
+    | "ProductDelete"
+    | "ProductCreate"
+    | "InvoiceCreate"
+    | "InvoiceUpdate"
+    | "InvoiceDelete"
+    | "SellerCreate"
+    | "SellerDelete"
+    | "SellerUpdate"
+    | "ClientDelete"
+    | "ClientUpdate"
+    | "ClientCreate"
+    | "OrderCreate"
+    | "OrderDelete"
+    | "OrderUpdate"
+    | "CsvUploader"
+    | "Sittings"
+    | string;
 }
 
 interface args4 {
