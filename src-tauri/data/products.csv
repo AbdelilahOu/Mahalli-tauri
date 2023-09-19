@@ -1,3 +1,5 @@
 id,name,image,description,price,tva
 1,Docker,C:\Users\abdel\AppData\Roaming\whatisthis\Images\EGH_NodeDocker_1000.webp,docker containers,200.0,5.0
 2,Git,C:\Users\abdel\AppData\Roaming\whatisthis\Images\GitMistakes_1000.webp,git version control,300.0,7.0
+3,Prisma,C:\Users\abdel\AppData\Roaming\whatisthis\Images\Prisma_TS.webp,prisma orm,111.0,10.0
+4,Npm,C:\Users\abdel\AppData\Roaming\whatisthis\Images\EGH_NPM_Build_Final.webp,npm platform,230.0,20.0
