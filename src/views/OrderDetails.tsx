@@ -33,7 +33,7 @@ export const OrdersDetails = defineComponent({
               </h1>
               <table class="table-auto rounded-[4px] overflow-hidden w-full">
                 <tbody class="text-sm divide-y divide-gray-100">
-                  <tr>
+                  {/* <tr>
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
                       <span class="h-full w-full grid ">
                         {globalTranslate("OrdersDetails.details.order.id")}
@@ -42,7 +42,7 @@ export const OrdersDetails = defineComponent({
                     <td class="p-2">
                       <span class="h-full w-full grid">{order.value?.id}</span>
                     </td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
                       <span class="h-full w-full grid ">
@@ -84,7 +84,7 @@ export const OrdersDetails = defineComponent({
               </h1>
               <table class="table-auto rounded-[4px] overflow-hidden w-full">
                 <tbody class="text-sm divide-y divide-gray-100">
-                  <tr>
+                  {/* <tr>
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
                       <span class="h-full w-full grid ">
                         {globalTranslate("OrdersDetails.details.seller.id")}
@@ -95,7 +95,7 @@ export const OrdersDetails = defineComponent({
                         {order.value?.seller.id}
                       </span>
                     </td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
                       <span class="h-full w-full grid ">
