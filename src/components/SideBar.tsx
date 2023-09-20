@@ -92,6 +92,24 @@ export const SideBar = defineComponent({
                 LinkText={locale.value.text}
               />
             </div>
+            <div
+              class="w-full cursor-pointer"
+              // v-fade={10}
+              onClick={() => {
+                store.setters.updateStore({ key: "show", value: true });
+                store.setters.updateStore({
+                  key: "name",
+                  value: "Sittings",
+                });
+              }}
+            >
+              <UiSideLink
+                // v-fade={10}
+                Icon="sittings"
+                IsText={!props.IsCollapse}
+                LinkText={"Sittings"}
+              />
+            </div>
           </div>
         </div>
       </aside>
