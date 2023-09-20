@@ -4,9 +4,9 @@ import { onBeforeMount, Transition } from "vue";
 // import { invoke } from "@tauri-apps/api";
 onBeforeMount(() => useRouter().push("/Home"));
 
-// (async ()=>{
-//   await invoke("seed_db")
-// })()
+// (async () => {
+//   await invoke("export_db_csv");
+// })();
 </script>
 
 <template>

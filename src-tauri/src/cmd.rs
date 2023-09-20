@@ -2,6 +2,7 @@ use dotenv::dotenv;
 use serde_json::Value;
 use std::env;
 use std::path;
+use tauri::api::process::Command;
 
 use crate::csvparsing::export;
 use crate::csvparsing::import;
@@ -54,6 +55,18 @@ pub async fn export_db_csv() -> String {
 
     // open file explorer to the path wehere the asssets are
     // using cmd for windows
+
+    #[cfg(target_os = "windows")]
+    let (mut _rx, _child) = Command::new("explorer")
+        .args([output_path.to_str().unwrap()])
+        .spawn()
+        .expect("Failed to spawn packaged node");
+
+    #[cfg(target_os = "macos")]
+    let (mut _rx, _child) = Command::new("open")
+        .args([output_path.to_str().unwrap()])
+        .spawn()
+        .expect("Failed to spawn packaged node");
 
     String::from("OK")
 }
