@@ -1,32 +1,39 @@
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useOrdersStore } from "@/stores/orderStore";
-import { defineComponent, onBeforeMount } from "vue";
+import { defineComponent, onBeforeMount, ref } from "vue";
 import { UiButton } from "@/components/ui/UiButton";
+import type { orderDetailsT } from "@/types";
+import { invoke } from "@tauri-apps/api";
 import { useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
 
 export const OrdersDetails = defineComponent({
   name: "OrdersDetails",
   setup() {
     const id = useRoute().params.id;
-
-    const orderStore = useOrdersStore();
-
-    const { order } = storeToRefs(orderStore);
-
-    onBeforeMount(() => orderStore.getOneOrders(Number(id)));
+    const order = ref<orderDetailsT | null>(null);
+    onBeforeMount(async () => {
+      try {
+        const res = await invoke<orderDetailsT>("get_order", {
+          id: Number(id),
+        });
+        if (res?.id) {
+          order.value = res;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
 
     return () => (
-      <main class="w-full h-full px-3">
+      <main class="w-full h-full">
         <div class="w-full h-full text-black flex justify-center print:pr-12">
           <div class="w-full h-full max-w-4xl grid-rows-[230px_1fr] grid grid-cols-2">
             <div class="w-full h-full flex-col flex">
               <h1 class="uppercase font-semibold mb-1">
                 {globalTranslate("OrdersDetails.details.order.title")}
               </h1>
-              <table class="table-auto rounded-md overflow-hidden w-full">
+              <table class="table-auto rounded-[4px] overflow-hidden w-full">
                 <tbody class="text-sm divide-y divide-gray-100">
-                  <tr>
+                  {/* <tr>
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
                       <span class="h-full w-full grid ">
                         {globalTranslate("OrdersDetails.details.order.id")}
@@ -35,7 +42,7 @@ export const OrdersDetails = defineComponent({
                     <td class="p-2">
                       <span class="h-full w-full grid">{order.value?.id}</span>
                     </td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
                       <span class="h-full w-full grid ">
@@ -46,7 +53,7 @@ export const OrdersDetails = defineComponent({
                       <span class="h-full w-full grid">
                         {new Date(
                           order.value?.created_at ?? new Date()
-                        ).toLocaleDateString("fr-fr", {
+                        ).toLocaleDateString("en-us", {
                           month: "2-digit",
                           year: "2-digit",
                           day: "2-digit",
@@ -75,9 +82,9 @@ export const OrdersDetails = defineComponent({
               <h1 class="uppercase font-semibold mb-1">
                 {globalTranslate("OrdersDetails.details.seller.title")}
               </h1>
-              <table class="table-auto rounded-md overflow-hidden w-full">
+              <table class="table-auto rounded-[4px] overflow-hidden w-full">
                 <tbody class="text-sm divide-y divide-gray-100">
-                  <tr>
+                  {/* <tr>
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
                       <span class="h-full w-full grid ">
                         {globalTranslate("OrdersDetails.details.seller.id")}
@@ -88,7 +95,7 @@ export const OrdersDetails = defineComponent({
                         {order.value?.seller.id}
                       </span>
                     </td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <td class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]">
                       <span class="h-full w-full grid ">
@@ -146,11 +153,11 @@ export const OrdersDetails = defineComponent({
               <h1 class="uppercase font-semibold mb-1">
                 {globalTranslate("OrdersDetails.details.items.title")}
               </h1>
-              <table class="table-auto rounded-md overflow-hidden w-full">
-                <thead class="text-xs h-9 rounded-md font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
+              <table class="table-auto rounded-[4px] overflow-hidden w-full">
+                <thead class="text-xs h-9 rounded-[4px] font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300">
                   <tr>
                     <th></th>
-                    {[0, 1, 2, 3, 4, 6].map((index) => (
+                    {[0, 1, 2, 3, 4].map((index) => (
                       <th class="p-2">
                         <div class="font-semibold text-left">
                           {globalTranslate(
@@ -163,7 +170,7 @@ export const OrdersDetails = defineComponent({
                   </tr>
                 </thead>
                 <tbody class="text-sm divide-y divide-gray-100">
-                  {order.value?.orderItems.map((item) => (
+                  {order.value?.order_items.map((item) => (
                     <tr>
                       <td class="p-2">
                         <span class="h-full w-full grid"></span>
@@ -172,11 +179,6 @@ export const OrdersDetails = defineComponent({
                         <span class="h-full w-full grid">
                           {item.product.name}
                         </span>
-                      </td>
-                      <td class="p-2">
-                        <div class="font-medium text-gray-800">
-                          {item.product_id}
-                        </div>
                       </td>
                       <td class="p-2">
                         <div class="font-medium text-gray-800 max-w-[120px] overflow-hidden">
@@ -214,9 +216,8 @@ export const OrdersDetails = defineComponent({
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
                     <td class="p-2 font-semibold">
-                      {order.value?.orderItems
+                      {order.value?.order_items
                         .reduce(
                           (acc, curr) =>
                             (acc +=

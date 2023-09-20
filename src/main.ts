@@ -4,7 +4,6 @@ import { VueFire, VueFireAuth } from "vuefire";
 import { useMotion } from "@vueuse/motion";
 import { FireApp } from "./utils/firebase";
 import { createI18n } from "vue-i18n";
-import { createPinia } from "pinia";
 import "vue3-lottie/dist/style.css";
 import router from "./router";
 import App from "./App.vue";
@@ -13,30 +12,6 @@ import "./assets/main.css";
 const locale = localStorage.getItem("locale");
 
 const initiVueApp = () => {
-  // sqlite connection
-  const pinia = createPinia();
-  // pinia store plugin for database
-  pinia.use(({ store }) => {
-    store.db = {
-      execute: async (query: string, args?: any[]) => {
-        if (args?.length) {
-          for (let i = 0; i < args.length; i++) {
-            query.replace("$".concat(i.toString()), args[i]);
-          }
-          console.log(query);
-        }
-      },
-      select: async (query: string, args?: any[]) => {
-        if (args?.length) {
-          for (let i = 0; i < args.length; i++) {
-            query.replace("$".concat(i.toString()), args[i]);
-          }
-          console.log(query);
-        }
-      },
-    };
-  });
-
   // create app
   createApp(App)
     .use(VueFire, {
@@ -75,7 +50,6 @@ const initiVueApp = () => {
         });
       },
     })
-    .use(pinia)
     .use(router)
     .use(
       createI18n({
@@ -91,11 +65,3 @@ const initiVueApp = () => {
 };
 
 initiVueApp();
-declare module "pinia" {
-  export interface PiniaCustomProperties {
-    db: {
-      execute: <T>(query: string, args?: any[]) => Promise<any>;
-      select: <T>(query: string, args?: any[]) => Promise<any>;
-    };
-  }
-}

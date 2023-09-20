@@ -2,9 +2,10 @@ use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
 use crate::models::{Client, Invoice, InvoiceItem, NewInvoice, Product, UpdateInvoice};
+use crate::schema::invoices::{client_id, status};
 use crate::schema::{clients, invoice_items, invoices, products};
 
-pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
+pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
 
     let result = invoices::table
@@ -16,7 +17,14 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> 
         .load::<(Invoice, Client)>(connection)
         .expect("Error fetching invoices with clients");
 
-    result
+    let count: Vec<i64> = invoices::table
+        .count()
+        .get_results(connection)
+        .expect("coudnt get the count");
+
+    json!({
+        "count": count[0],
+        "data": result
         .into_iter()
         .map(|(invoice, client)| {
             let invoice_items: Vec<(InvoiceItem, Product)> = invoice_items::table
@@ -26,8 +34,11 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> 
                 .load::<(InvoiceItem, Product)>(connection)
                 .expect("Error fetching invoice items with products");
 
+            let mut total = 0;
+
             let invoice_items_json = json!({
-                "invoiceItems": invoice_items.into_iter().map(|(item, product)| {
+                "invoice_items": invoice_items.into_iter().map(|(item, product)| {
+                    total += item.quantity * product.price as i64;
                     json!({
                         "id": item.id,
                         "quantity": item.quantity,
@@ -47,14 +58,16 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Vec<Value> 
                 "status": invoice.status,
                 "created_at": invoice.created_at,
                 "client_id": invoice.client_id,
+                "total": total,
                 "client": {
                     "id": client.id,
                     "fullname": client.fullname
                 },
-                "invoiceItems": invoice_items_json["invoiceItems"]
+                "invoice_items": invoice_items_json["invoice_items"]
             })
         })
         .collect::<Vec<_>>()
+    })
 }
 
 pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
@@ -65,51 +78,41 @@ pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
         .load::<(Invoice, Client)>(connection)
         .expect("Error fetching invoices with clients");
 
-    result
-        .into_iter()
-        .map(|(invoice, client)| {
-            let invoice_items: Vec<(InvoiceItem, Product)> = invoice_items::table
-                .inner_join(products::table.on(invoice_items::product_id.eq(products::id)))
-                .select((invoice_items::all_columns, products::all_columns))
-                .filter(invoice_items::invoice_id.eq(invoice.id))
-                .load::<(InvoiceItem, Product)>(connection)
-                .expect("Error fetching invoice items with products");
+    let (invoice, client) = result.first().unwrap();
 
-            println!("{:?}", invoice_items);
-            let invoice_items_json = json!({
-                "invoiceItems": invoice_items.into_iter().map(|(item, product)| {
-                    json!({
-                        "id": item.id,
-                        "quantity": item.quantity,
-                        "product_id": item.product_id,
-                        "inventory_id": item.inventory_id,
-                        "product": {
-                            "id": product.id,
-                            "name": product.name,
-                            "price": product.price
-                        }
-                    })
-                }).collect::<Vec<_>>()
-            });
+    let invoice_items: Vec<(InvoiceItem, Product)> = invoice_items::table
+        .inner_join(products::table.on(invoice_items::product_id.eq(products::id)))
+        .select((invoice_items::all_columns, products::all_columns))
+        .filter(invoice_items::invoice_id.eq(invoice.id))
+        .load::<(InvoiceItem, Product)>(connection)
+        .expect("Error fetching invoice items with products");
 
+    let invoice_items_json = json!({
+        "invoice_items": invoice_items.into_iter().map(|(item, product)| {
             json!({
-                "id": invoice.id,
-                "status": invoice.status,
-                "created_at": invoice.created_at,
-                "client_id": invoice.client_id,
-                "client": {
-                    "id": client.id,
-                    "fullname": client.fullname
-                },
-                "invoiceItems": invoice_items_json["invoiceItems"]
+                "id": item.id,
+                "quantity": item.quantity,
+                "product_id": item.product_id,
+                "invoice_id": item.invoice_id,
+                "inventory_id": item.inventory_id,
+                "product": product
             })
-        })
-        .collect::<Value>()
+        }).collect::<Vec<_>>()
+    });
+
+    json!({
+        "id": invoice.id,
+        "status": invoice.status,
+        "created_at": invoice.created_at,
+        "client_id": invoice.client_id,
+        "client": client,
+        "invoice_items": invoice_items_json["invoice_items"]
+    })
 }
 
 pub fn insert_invoice(new_i: NewInvoice, connection: &mut SqliteConnection) -> i32 {
     diesel::insert_into(invoices::dsl::invoices)
-        .values(new_i)
+        .values((status.eq(new_i.status), client_id.eq(new_i.client_id)))
         .execute(connection)
         .expect("Error adding invoice");
 

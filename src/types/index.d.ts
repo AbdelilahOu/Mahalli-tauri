@@ -1,10 +1,6 @@
 //////////////////////////////////////
 /////////////// PINIA STORE STATES///
 ////////////////////////////////////
-export interface toastState {
-  ToastQueue: { text: string; id: number }[];
-}
-
 export interface modalsState {
   theModal: { [key: string]: any; show: boolean; name: string };
   product: productT | null;
@@ -15,33 +11,6 @@ export interface modalsState {
   credi: crediT | null;
 }
 
-export interface productState {
-  products: productT[];
-}
-
-export interface orderState {
-  orders: orderT[];
-  order: orderDetailsT | null;
-}
-
-export interface invoiceState {
-  invoices: invoiceT[];
-  invoice: invoiceDetailsT | null;
-}
-
-export interface clientState {
-  clients: clientT[];
-  client: clientT | null;
-}
-
-export interface sellerState {
-  sellers: sellerT[];
-  seller: sellerT | null;
-}
-
-export interface stockState {
-  stockMouvements: stockMvmT[];
-}
 ///////////////////////////////////
 //////////// INTERFACES //////////
 /////////////////////////////////
@@ -56,7 +25,7 @@ export interface orderT {
     id: number;
     name: string;
   };
-  orderItems: orderItemT[];
+  order_items: orderItemT[];
 }
 
 export interface orderItemT {
@@ -73,15 +42,15 @@ export interface orderItemT {
   };
 }
 
-export interface newOrdersT extends Partial<Omit<orderT, "orderItems">> {
-  orderItems: Omit<
+export interface newOrdersT extends Partial<Omit<orderT, "order_items">> {
+  order_items: Omit<
     orderItemT,
     "id" | "order_id" | "inventory_id" | "product"
   >[];
 }
 
-export interface updateOrdersT extends Partial<Omit<orderT, "orderItems">> {
-  orderItems: Partial<orderItemT>[];
+export interface updateOrdersT extends Partial<Omit<orderT, "order_items">> {
+  order_items: Partial<orderItemT>[];
 }
 
 export interface newOrdersItemT
@@ -96,8 +65,8 @@ export interface orderDetailsItemsT extends orderItemT {
   };
 }
 
-export interface orderDetailsT extends Omit<orderT, "orderItems"> {
-  orderItems: orderDetailsItemsT[];
+export interface orderDetailsT extends Omit<orderT, "order_items"> {
+  order_items: orderDetailsItemsT[];
   seller: sellerT;
 }
 // /////////////////////////////////
@@ -112,9 +81,9 @@ export type invoiceT = {
   client_id: number;
   client: {
     id: number;
-    name: string;
+    fullname: string;
   };
-  invoiceItems: invoiceItemT[];
+  invoice_items: invoiceItemT[];
 };
 
 export type invoiceItemT = {
@@ -130,13 +99,16 @@ export type invoiceItemT = {
 };
 
 export interface updateInvoiceT
-  extends Partial<Omit<invoiceT, "invoiceItems">> {
-  invoiceItems: Partial<invoiceItemT>[];
+  extends Partial<Omit<invoiceT, "invoice_items">> {
+  invoice_items: Partial<invoiceItemT>[];
 }
 
 export interface newInvoiceT
-  extends Omit<invoiceT, "id" | "created_at" | "total" | "client"> {
-  invoiceItems: newInvoiceItemT[];
+  extends Omit<
+    invoiceT,
+    "id" | "created_at" | "total" | "client" | "invoice_items"
+  > {
+  invoice_items: newInvoiceItemT[];
 }
 
 export interface newInvoiceItemT
@@ -154,8 +126,8 @@ export interface invoiceDetailsItemT extends invoiceItemT {
   };
 }
 
-export interface invoiceDetailsT extends Omit<invoiceT, "invoiceItems"> {
-  invoiceItems: invoiceDetailsItemT[];
+export interface invoiceDetailsT extends Omit<invoiceT, "invoice_items"> {
+  invoice_items: invoiceDetailsItemT[];
   client: clientT;
 }
 ////////////////////////////////////
@@ -177,13 +149,19 @@ export interface updateClientT extends Partial<clientT> {
 /////////////////////////////////////////////////
 //////////////////// seller INTERFACES //////////
 ////////////////////////////////////////////////
-export interface sellerT extends clientT {}
-export interface newSellerT extends newClientT {}
-export interface updateSellerT extends updateClientT {}
+export interface sellerT extends Omit<clientT, "fullname"> {
+  name: string;
+}
+export interface newSellerT extends Omit<newClientT, "fullname"> {
+  name: string;
+}
+export interface updateSellerT extends Omit<updateClientT, "fullname"> {
+  name: string | undefined;
+}
 ////////////////////////////////////////////////////
 //////////////// STOCKMOUVMENTS INTERFACES /////////
 ///////////////////////////////////////////////////
-export interface stockMvmT {
+export interface inventoryMvmT {
   id: number;
   date: string;
   model: string;
@@ -201,10 +179,10 @@ export interface stockMvmT {
     price: number;
   };
 }
-export interface stockT
-  extends Omit<stockMvmT, "product" | "orderItem" | "invoiceItem"> {}
-export interface newStockMvmT
-  extends Pick<stockMvmT, "productId" | "quantity" | "model"> {}
+export interface inventoryT
+  extends Omit<inventoryMvmT, "product" | "orderItem" | "invoiceItem"> {}
+export interface newInventoryMvmT
+  extends Pick<inventoryMvmT, "productId" | "quantity" | "model"> {}
 
 /////////////////////////////////////////////////
 /////////////// PRODUCT INTERFACES //////////////
@@ -219,8 +197,8 @@ export interface productT {
   tva: number;
 }
 export interface newProductT extends Omit<productT, "id"> {}
-export interface productTfromApiT extends Omit<productT, "stock"> {
-  stockMouvements: { quantity: number }[];
+export interface productTfromApiT extends Omit<productT, "inventory"> {
+  inventoryMouvements: { quantity: number }[];
 }
 export interface updateProductT extends Partial<productT> {}
 //////////////////////////////////////////////////
@@ -240,7 +218,7 @@ export interface newPaymentT
 
 ///////////////// OTHERS //////////
 
-export interface FilteredStockData {
+export interface FilteredInventoryData {
   [key: string]: Record<"IN" | "OUT", number>;
 }
 
@@ -257,3 +235,14 @@ export interface RouteLinksTypeT {
 }
 
 export type FileNames = "Image" | "Doc";
+
+export type inOutReType = {
+  group_month: string;
+  total_in: number;
+  total_out: number;
+}[];
+
+export type withCount<T> = {
+  count: number;
+  data: T;
+};

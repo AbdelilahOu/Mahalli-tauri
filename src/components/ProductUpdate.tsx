@@ -1,40 +1,49 @@
-import { defineComponent, reactive, onBeforeUnmount } from "vue";
-import { useProductStore } from "@/stores/productStore";
-import { useModalStore } from "@/stores/modalStore";
+import { defineComponent, reactive, onBeforeUnmount, computed } from "vue";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import type { productT, updateProductT } from "@/types";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
+import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
-import type { updateProductT } from "@/types";
-import { storeToRefs } from "pinia";
-import { UiUpdateSelect } from "./ui/UiUpdateSelect";
+import { store } from "@/store";
+import { PRODUCT_UPDATE } from "@/constants/defaultValues";
 
 export const ProductUpdate = defineComponent({
   name: "ProductUpdate",
   components: { UiButton, UiUpdateInput },
   setup() {
-    const modalStore = useModalStore();
-    const { product: ProductRow } = storeToRefs(modalStore);
-    const Product = {
-      id: undefined,
-      name: undefined,
-      price: undefined,
-      quantity: undefined,
-      description: undefined,
-      tva: undefined,
-    };
+    const { updateQueryParams } = useUpdateRouteQueryParams();
+
+    const ProductRow = computed(() => store.getters.getSelectedRow<productT>());
+
     const updateProduct = reactive<updateProductT>({
-      ...(ProductRow.value ? ProductRow.value : Product),
+      ...(ProductRow.value ? ProductRow.value : PRODUCT_UPDATE),
       quantity: 0,
     });
-    const updateTheProduct = () => {
+
+    const updateTheProduct = async () => {
       if (updateProduct.id) {
-        useProductStore().updateOneProduct(updateProduct.id, updateProduct);
-        modalStore.updateModal({ key: "show", value: false });
+        try {
+          await invoke("update_product", {
+            product: updateProduct,
+            id: updateProduct.id,
+          });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-update-" + Math.random() * 9999,
+          });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          store.setters.updateStore({ key: "show", value: false });
+        }
       }
     };
-    onBeforeUnmount(() => modalStore.updateProductRow(null));
+    onBeforeUnmount(() =>
+      store.setters.updateStore({ key: "row", value: null })
+    );
 
     return () => (
-      <div class="w-1/2 h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+      <div class="w-1/2 h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           Update Product
         </h1>
@@ -56,7 +65,7 @@ export const ProductUpdate = defineComponent({
           >
             {{
               unite: () => (
-                <span class="h-full text-gray-400 rounded-md px-2  flex items-center justify-center">
+                <span class="h-full text-gray-400 rounded-[4px] px-2  flex items-center justify-center">
                   DH
                 </span>
               ),
@@ -74,11 +83,11 @@ export const ProductUpdate = defineComponent({
               (updateProduct["quantity"] = Number(value))
             }
             Type="number"
-            PlaceHolder="Add Stock"
+            PlaceHolder="Add Inventory"
           >
             {{
               unite: () => (
-                <span class="h-full text-gray-400 rounded-md px-2  flex items-center justify-center">
+                <span class="h-full text-gray-400 rounded-[4px] px-2  flex items-center justify-center">
                   Item
                 </span>
               ),

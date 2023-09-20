@@ -2,9 +2,7 @@
 <!-- looking for better ways using defineAsyncComponent -->
 <script lang="ts">
 import { TranslationModal } from "./TranslationModal";
-import { OrderCreate } from "./OrderCreate";
-import { OrderDelete } from "./OrderDelete";
-import { OrderUpdate } from "./OrderUpdate";
+import { InventoryCreate } from "./InventoryCreate";
 import { ProductCreate } from "./ProductCreate";
 import { ProductDelete } from "./ProductDelete";
 import { ProductUpdate } from "./ProductUpdate";
@@ -17,16 +15,15 @@ import { SellerUpdate } from "./SellerUpdate";
 import { ClientDelete } from "./ClientDelete";
 import { ClientUpdate } from "./ClientUpdate";
 import { ClientCreate } from "./ClientCreate";
-import { StockCreate } from "./StockCreate";
-import { PaymentCreate } from "./PaymentCreate";
-import { PaymentDelete } from "./PaymentDelete";
+import { OrderCreate } from "./OrderCreate";
+import { OrderDelete } from "./OrderDelete";
+import { OrderUpdate } from "./OrderUpdate";
 import { CsvUploader } from "./CsvUploader";
+import { Sittings } from "./Sittings";
 export default {
   components: {
     TranslationModal,
-    OrderCreate,
-    OrderDelete,
-    OrderUpdate,
+    InventoryCreate,
     ProductUpdate,
     ProductDelete,
     ProductCreate,
@@ -39,10 +36,11 @@ export default {
     ClientDelete,
     ClientUpdate,
     ClientCreate,
-    StockCreate,
-    PaymentCreate,
-    PaymentDelete,
+    OrderCreate,
+    OrderDelete,
+    OrderUpdate,
     CsvUploader,
+    Sittings,
   },
   props: {
     name: {

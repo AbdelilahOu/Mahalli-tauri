@@ -3,10 +3,6 @@
     windows_subsystem = "windows"
 )]
 
-use db::establish_connection;
-use diesel::SqliteConnection;
-use std::sync::Mutex;
-
 #[macro_use]
 extern crate diesel;
 extern crate diesel_migrations;
@@ -20,6 +16,10 @@ mod reposotories;
 mod schema;
 mod types;
 
+use db::establish_connection;
+use diesel::SqliteConnection;
+use std::sync::Mutex;
+
 pub struct AppState {
     db_conn: Mutex<SqliteConnection>,
 }
@@ -30,19 +30,23 @@ fn main() {
             db_conn: Mutex::new(establish_connection()),
         })
         .invoke_handler(tauri::generate_handler![
+            cmd::upload_csv_to_db,
             cmd::export_db_csv,
             cmd::get_csv_records,
             cmd::get_product,
             cmd::get_products,
+            cmd::get_all_products,
             cmd::insert_product,
             cmd::update_product,
             cmd::delete_product,
             cmd::get_client,
             cmd::get_clients,
+            cmd::get_all_clients,
             cmd::insert_client,
             cmd::update_client,
             cmd::delete_client,
             cmd::get_seller,
+            cmd::get_all_sellers,
             cmd::get_sellers,
             cmd::insert_seller,
             cmd::update_seller,
@@ -62,14 +66,12 @@ fn main() {
             cmd::update_order,
             cmd::delete_order,
             cmd::get_order_items,
-            // cmd::update_order_items,
             cmd::delete_order_items,
             cmd::get_invoice_items,
-            // cmd::update_invoice_items,
             cmd::delete_invoice_items,
-            cmd::get_inventory_mvm,
+            cmd::get_inventory_mvms,
             cmd::delete_inventory_mvm,
-            // cmd::update_inventory_mvm,
+            cmd::insert_inventory_mvm,
             cmd::get_b3_clients,
             cmd::get_b3_sellers,
             cmd::get_c_week_expenses,
@@ -80,7 +82,7 @@ fn main() {
             cmd::seed_db,
         ])
         .setup(|_app| {
-            // db::migrate_db();
+            db::migrate_db();
             Ok(())
         })
         .plugin(tauri_plugin_oauth::init())

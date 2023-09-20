@@ -1,24 +1,22 @@
-import { useTranslationStore } from "@/stores/translationStore";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useModalStore } from "@/stores/modalStore";
 import { UiButton } from "./ui/UiButton";
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import UiIcon from "./ui/UiIcon.vue";
-import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
+import { store } from "@/store";
 
 export const TranslationModal = defineComponent({
   name: "TranslationModal",
   components: { UiIcon, UiButton },
   setup() {
-    const { availableLocals } = storeToRefs(useTranslationStore());
+    const availableLocals = computed(() => store.getters.getLocales());
 
     const i18n = useI18n();
 
     const ChangeLocale = (local: { key: string; text: string }) => {
       i18n.locale.value = local.key;
-      useTranslationStore().changeLocale(local);
-      useModalStore().updateModal({ key: "show", value: false });
+      store.setters.updateStore({ key: "currentLocale", value: local });
+      store.setters.updateStore({ key: "show", value: false });
     };
 
     return () => (

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
 import { onBeforeMount, Transition } from "vue";
-onBeforeMount(() => {
-  // console.log(await invoke("get_inventory_mvm", { page: 1 }));
-  useRouter().push("/Home");
-});
+// import { invoke } from "@tauri-apps/api";
+onBeforeMount(() => useRouter().push("/Home"));
+
+// (async () => {
+//   await invoke("export_db_csv");
+// })();
 </script>
 
 <template>

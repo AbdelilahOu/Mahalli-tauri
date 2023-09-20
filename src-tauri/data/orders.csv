@@ -1,0 +1,4 @@
+id,status,created_at,seller_id
+1,pending,2023-09-16 15:19:01,1
+2,delivered,2023-09-16 15:19:01,2
+3,delivered,2023-09-19 19:46:41,3

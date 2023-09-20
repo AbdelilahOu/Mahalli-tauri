@@ -2,9 +2,10 @@ use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
 use crate::models::{NewOrder, Order, OrderItem, Product, Seller, UpdateOrder};
+use crate::schema::orders::{seller_id, status};
 use crate::schema::{order_items, orders, products, sellers};
 
-pub fn get_orders(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
+pub fn get_orders(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
 
     let result = orders::table
@@ -16,46 +17,54 @@ pub fn get_orders(page: i32, connection: &mut SqliteConnection) -> Vec<Value> {
         .load::<(Order, Seller)>(connection)
         .expect("Error fetching orders with sellers");
 
-    result
-        .into_iter()
-        .map(|(order, seller)| {
-            let order_items: Vec<(OrderItem, Product)> = order_items::table
-                .inner_join(products::table.on(order_items::product_id.eq(products::id)))
-                .select((order_items::all_columns, products::all_columns))
-                .filter(order_items::order_id.eq(order.id))
-                .load::<(OrderItem, Product)>(connection)
-                .expect("Error fetching order items with products");
+    let count: Vec<i64> = orders::table
+        .count()
+        .get_results(connection)
+        .expect("coudnt get the count");
 
-            let order_items_json = json!({
-                "orderItems": order_items.into_iter().map(|(item, product)| {
-                    json!({
-                        "id": item.id,
-                        "price": item.price,
-                        "quantity": item.quantity,
-                        "product_id": item.product_id,
-                        "inventory_id": item.inventory_id,
-                        "product": {
-                            "id": product.id,
-                            "name": product.name,
-                            "price": product.price
-                        }
-                    })
-                }).collect::<Vec<_>>()
-            });
+    json!({
+        "count": count[0],
+        "data": result
+            .into_iter()
+            .map(|(order, seller)| {
+                let order_items: Vec<(OrderItem, Product)> = order_items::table
+                    .inner_join(products::table.on(order_items::product_id.eq(products::id)))
+                    .select((order_items::all_columns, products::all_columns))
+                    .filter(order_items::order_id.eq(order.id))
+                    .load::<(OrderItem, Product)>(connection)
+                    .expect("Error fetching order items with products");
 
-            json!({
-                "id": order.id,
-                "status": order.status,
-                "created_at": order.created_at,
-                "seller_id": order.seller_id,
-                "seller": {
-                    "id": seller.id,
-                    "name": seller.name
-                },
-                "orderItems": order_items_json["orderItems"]
+                let order_items_json = json!({
+                    "order_items": order_items.into_iter().map(|(item, product)| {
+                        json!({
+                            "id": item.id,
+                            "price": item.price,
+                            "quantity": item.quantity,
+                            "product_id": item.product_id,
+                            "inventory_id": item.inventory_id,
+                            "product": {
+                                "id": product.id,
+                                "name": product.name,
+                                "price": product.price
+                            }
+                        })
+                    }).collect::<Vec<_>>()
+                });
+
+                json!({
+                    "id": order.id,
+                    "status": order.status,
+                    "created_at": order.created_at,
+                    "seller_id": order.seller_id,
+                    "seller": {
+                        "id": seller.id,
+                        "name": seller.name
+                    },
+                    "order_items": order_items_json["order_items"]
+                })
             })
-        })
-        .collect::<Vec<_>>()
+            .collect::<Vec<_>>()
+    })
 }
 
 pub fn get_order(o_id: i32, connection: &mut SqliteConnection) -> Value {
@@ -66,51 +75,42 @@ pub fn get_order(o_id: i32, connection: &mut SqliteConnection) -> Value {
         .load::<(Order, Seller)>(connection)
         .expect("Error fetching orders with sellers");
 
-    result
-        .into_iter()
-        .map(|(order, seller)| {
-            let order_items: Vec<(OrderItem, Product)> = order_items::table
-                .inner_join(products::table.on(order_items::product_id.eq(products::id)))
-                .select((order_items::all_columns, products::all_columns))
-                .filter(order_items::order_id.eq(order.id))
-                .load::<(OrderItem, Product)>(connection)
-                .expect("Error fetching order items with products");
+    let (order, seller) = result.first().unwrap();
 
-            let order_items_json = json!({
-                "orderItems": order_items.into_iter().map(|(item, product)| {
-                    json!({
-                        "id": item.id,
-                        "price": item.price,
-                        "quantity": item.quantity,
-                        "product_id": item.product_id,
-                        "inventory_id": item.inventory_id,
-                        "product": {
-                            "id": product.id,
-                            "name": product.name,
-                            "price": product.price
-                        }
-                    })
-                }).collect::<Vec<_>>()
-            });
+    let order_items: Vec<(OrderItem, Product)> = order_items::table
+        .inner_join(products::table.on(order_items::product_id.eq(products::id)))
+        .select((order_items::all_columns, products::all_columns))
+        .filter(order_items::order_id.eq(order.id))
+        .load::<(OrderItem, Product)>(connection)
+        .expect("Error fetching order items with products");
 
+    let order_items_json = json!({
+        "order_items": order_items.into_iter().map(|(item, product)| {
             json!({
-                "id": order.id,
-                "status": order.status,
-                "created_at": order.created_at,
-                "seller_id": order.seller_id,
-                "seller": {
-                    "id": seller.id,
-                    "name": seller.name
-                },
-                "orderItems": order_items_json["orderItems"]
+                "id": item.id,
+                "price": item.price,
+                "quantity": item.quantity,
+                "order_id": item.order_id,
+                "product_id": item.product_id,
+                "inventory_id": item.inventory_id,
+                "product": product
             })
-        })
-        .collect::<Value>()
+        }).collect::<Vec<_>>()
+    });
+
+    json!({
+        "id": order.id,
+        "status": order.status,
+        "created_at": order.created_at,
+        "seller_id": order.seller_id,
+        "seller": seller,
+        "order_items": order_items_json["order_items"]
+    })
 }
 
 pub fn insert_order(new_o: NewOrder, connection: &mut SqliteConnection) -> i32 {
     diesel::insert_into(orders::dsl::orders)
-        .values(new_o)
+        .values((status.eq(new_o.status), seller_id.eq(new_o.seller_id)))
         .execute(connection)
         .expect("Error adding order");
 

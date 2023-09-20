@@ -20,7 +20,7 @@ export const UiCard = defineComponent({
   setup(props) {
     return () => (
       // <UiIcon  name={"person"} />
-      <div class="w-full flex xl:sticky shadow-md xl:top-[54px] z-20 pb-1 rounded-md gap-2 flex-col">
+      <div class="w-full flex xl:sticky shadow-sm xl:top-[54px] z-20 pb-1 rounded-[4px] gap-2 flex-col">
         <div class="text-2xl font-sans py-1 flex items-center font-medium">
           {props.item?.image ? (
             <img
@@ -35,7 +35,7 @@ export const UiCard = defineComponent({
               <UiIcon name={"tag"} />
             </span>
             <span class="flex whitespace-nowrap">
-              {props.item?.id} - {props.item?.name}
+              {props.item?.id} - {props.item?.name ?? props.item?.fullname}
             </span>
           </h1>
         </div>
