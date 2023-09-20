@@ -1,7 +1,6 @@
 import { NotificationsView } from "@/views/NotificationsView";
 import { createRouter, createWebHistory } from "vue-router";
 import { InvoiceDetails } from "@/views/InvoiceDetails";
-import { UpcomingsView } from "@/views/UpcomingsView";
 import { ClientDetails } from "@/views/ClientDetails";
 import { SellerDetails } from "@/views/SellerDetails";
 import { InvoicesIndex } from "@/views/InvoicesIndex";
@@ -13,9 +12,8 @@ import { SellersIndex } from "@/views/SellersIndex";
 import { OrdersIndex } from "@/views/OrdersIndex";
 import { SellersView } from "@/views/SellersView";
 import { ClientsView } from "@/views/ClientsView";
-import { PaymentView } from "@/views/PaymentView";
 import { OrdersView } from "@/views/OrdersView";
-import { StocksView } from "@/views/StocksView";
+import { InventoryView } from "@/views/InventoryView";
 import { StatsView } from "@/views/StatsView";
 import { HomeView } from "@/views/HomeView";
 import { IndexView } from "@/views/IndexView";
@@ -74,9 +72,9 @@ const router = createRouter({
           ],
         },
         {
-          path: "Stocks",
-          name: "Stocks",
-          component: StocksView,
+          path: "Inventory",
+          name: "Inventory",
+          component: InventoryView,
         },
         {
           path: "Orders/",
@@ -122,16 +120,16 @@ const router = createRouter({
           name: "Notifications",
           component: NotificationsView,
         },
-        {
-          path: "Payment",
-          name: "Payment",
-          component: PaymentView,
-        },
-        {
-          path: "Upcomings",
-          name: "Upcomings",
-          component: UpcomingsView,
-        },
+        // {
+        //   path: "Payment",
+        //   name: "Payment",
+        //   component: PaymentView,
+        // },
+        // {
+        //   path: "Upcomings",
+        //   name: "Upcomings",
+        //   component: UpcomingsView,
+        // },
       ],
     },
     {

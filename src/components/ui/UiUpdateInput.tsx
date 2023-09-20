@@ -30,7 +30,7 @@ export const UiUpdateInput = defineComponent({
       props.OnInputChange(target.value);
     return () => (
       <div
-        class={`flex flex-nowrap h-full items-center border-2 rounded-md transition-all duration-200`}
+        class={`flex flex-nowrap h-full items-center border rounded-[4px] transition-all duration-200`}
       >
         <input
           class={"defaultInput border-none"}

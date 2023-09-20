@@ -1,34 +1,50 @@
-import { defineComponent, onBeforeUnmount, type PropType } from "vue";
-import { useClientStore } from "@/stores/clientStore";
-import { useModalStore } from "@/stores/modalStore";
-import { storeToRefs } from "pinia";
-import { UiButton } from "./ui/UiButton";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { computed, defineComponent, onBeforeUnmount } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { UiButton } from "./ui/UiButton";
+import { invoke } from "@tauri-apps/api";
+import type { clientT } from "@/types";
+import { store } from "@/store";
 
 export const ClientDelete = defineComponent({
   name: "ClientDelete",
   components: { UiButton },
   setup() {
-    const modalStore = useModalStore();
-    const { client } = storeToRefs(modalStore);
-    const deleteTheClient = () => {
-      if (client.value?.id) {
-        useClientStore().deleteOneClient(client.value?.id);
-        modalStore.updateModal({ key: "show", value: false });
+    const { updateQueryParams } = useUpdateRouteQueryParams();
+    const client = computed(() => store.getters.getSelectedRow<clientT>());
+
+    const deleteTheClient = async () => {
+      const id = client.value?.id;
+      if (id) {
+        try {
+          await invoke("delete_client", { id });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-delete-" + Math.random() * 9999,
+          });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          store.setters.updateStore({ key: "show", value: false });
+        }
       }
     };
-    onBeforeUnmount(() => modalStore.updateClientRow(null));
+    onBeforeUnmount(() =>
+      store.setters.updateStore({ key: "row", value: null })
+    );
     return () => (
-      <div class="w-1/2 h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+      <div class="w-1/2 h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
-          {globalTranslate("Clients.delete.title")} {client.value?.name} ?
+          {globalTranslate("Clients.delete.title")} {client.value?.fullname} ?
         </h1>
         <div class="flex gap-2">
           <UiButton colorTheme="a" Click={() => deleteTheClient()}>
             {globalTranslate("Clients.delete.yes")}
           </UiButton>
           <UiButton
-            Click={() => modalStore.updateModal({ key: "show", value: false })}
+            Click={() =>
+              store.setters.updateStore({ key: "show", value: false })
+            }
           >
             {globalTranslate("Clients.delete.no")}
           </UiButton>

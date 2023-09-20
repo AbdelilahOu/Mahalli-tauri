@@ -2,7 +2,7 @@ use std::fs::OpenOptions;
 use tauri::api::process::Command;
 use tauri::api::process::CommandEvent;
 
-pub async fn export_db_csv(source_path: &str, output_path: &str, table: &String) {
+pub async fn table_to_csv(source_path: &str, output_path: &str, table: &String) {
     // get data from command line
     let (mut rx, _child) = Command::new("sqlite3")
         .args([

@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS invoice_items (
   inventory_id INTEGER NOT NULL,
   CONSTRAINT invoice_items_product_id_fkey FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT invoice_items_invoice_id_fkey FOREIGN KEY (invoice_id) REFERENCES invoices (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT invoice_items_inventory_id_fkey FOREIGN KEY (inventory_id) REFERENCES inventory_mouvements (id) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT invoice_items_inventory_id_fkey FOREIGN KEY (inventory_id) REFERENCES inventory_mouvements (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS orders (
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS order_items (
   quantity BIGINT NOT NULL,
   CONSTRAINT order_items_product_id_fkey FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT order_items_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT order_items_inventory_id_fkey FOREIGN KEY (inventory_id) REFERENCES inventory_mouvements (id) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT order_items_inventory_id_fkey FOREIGN KEY (inventory_id) REFERENCES inventory_mouvements (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS inventory_mouvements (
@@ -85,4 +85,6 @@ CREATE UNIQUE INDEX IF NOT EXISTS order_items_inventory_id_key ON order_items (i
 CREATE UNIQUE INDEX IF NOT EXISTS order_items_id_key ON order_items (id);
 CREATE UNIQUE INDEX IF NOT EXISTS invoice_items_inventory_id_key ON invoice_items (inventory_id);
 CREATE UNIQUE INDEX IF NOT EXISTS products_name_key ON products (name);
+CREATE UNIQUE INDEX IF NOT EXISTS clients_fullname_key ON clients (fullname);
+CREATE UNIQUE INDEX IF NOT EXISTS sellers_name_key ON sellers (name);
   

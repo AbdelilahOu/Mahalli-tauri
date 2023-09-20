@@ -1,8 +1,12 @@
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { uploadCSVfiles } from "@/utils/fs";
 import { defineComponent, ref } from "vue";
 import { useDropZone } from "@vueuse/core";
-import { uploadCSVfiles } from "@/utils/fs";
-import UiIconVue from "./ui/UiIcon.vue";
 import { invoke } from "@tauri-apps/api";
+import UiIconVue from "./ui/UiIcon.vue";
+import { UiButton } from "./ui/UiButton";
+import { useRoute } from "vue-router";
+import { store } from "@/store";
 
 export const CsvUploader = defineComponent({
   name: "CsvUploader",
@@ -10,40 +14,46 @@ export const CsvUploader = defineComponent({
     UiIconVue,
   },
   setup() {
+    const route = useRoute();
+    const { updateQueryParams } = useUpdateRouteQueryParams();
+
     const dropZone = ref<HTMLDivElement>();
 
-    const filesData = ref<
-      { name: string; size: number; type: string; lastModified: number }[]
-    >([]);
+    const filesData = ref<File[]>([]);
 
     async function onDrop(files: File[] | null) {
       filesData.value = [];
       if (files) {
-        filesData.value = files
-          .filter((file) => file.type === "text/csv")
-          .map((file) => ({
-            name: file.name,
-            size: file.size,
-            type: file.type,
-            lastModified: file.lastModified,
-          }));
-
-        invoke("get_csv_records", {
-          csvPath: await uploadCSVfiles({ file: files[0] }),
-          table: "procts",
-        });
+        filesData.value = files.filter((file) => file.type === "text/csv");
       }
     }
     const { isOverDropZone } = useDropZone(dropZone, onDrop);
+
+    const upload = async () => {
+      try {
+        await invoke("upload_csv_to_db", {
+          csvPath: await uploadCSVfiles({ file: filesData.value[0] }),
+          table: route.query.table,
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        updateQueryParams({
+          refresh: "refresh-upload-" + Math.random() * 9999,
+        });
+        store.setters.updateStore({ key: "show", value: false });
+      }
+    };
+
     return () => (
-      <div class="w-1/2 h-fit z-50 gap-3 rounded-md flex flex-col bg-white p-2 min-w-[350px]">
+      <div class="w-1/2 h-fit z-50 gap-3 rounded-[4px] flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           Upload csv files
         </h1>
         <div class="h-full w-full flex  flex-col gap-2">
           <div
             ref={dropZone}
-            class={`w-full relative rounded-md transition-all duration-200 transform z-50 h-28 border-2 border-dashed border-spacing-4 flex items-center justify-center ${
+            class={`w-full relative rounded-[4px] transition-all duration-200 transform z-50 h-28 border-2 border-dashed border-spacing-4 flex items-center justify-center ${
               isOverDropZone.value
                 ? "fill-sky-500 border-sky-500 bg-sky-200"
                 : "fill-gray-400 border-gray-300 bg-white"
@@ -61,7 +71,7 @@ export const CsvUploader = defineComponent({
         </div>
         <div class="w-full h-fit flex flex-col gap-2">
           {filesData.value.map((f, i) => (
-            <div class="grid grid-cols-[30px_1fr_60px_30px] w-full gap-3 h-10 items-center px-1 rounded-md bg-sky-100 text-black fill-black border-sky-300 border-2">
+            <div class="grid grid-cols-[30px_1fr_80px_30px] w-full gap-3 h-10 items-center px-1 rounded-[4px] bg-sky-100 text-black fill-black border-sky-300 border-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="32"
@@ -77,6 +87,13 @@ export const CsvUploader = defineComponent({
               </span>
             </div>
           ))}
+          {filesData.value.length ? (
+            <UiButton colorTheme="" Click={upload}>
+              Upload to {route.query.table}
+            </UiButton>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     );

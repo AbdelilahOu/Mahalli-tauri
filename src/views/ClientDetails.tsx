@@ -1,25 +1,24 @@
-import { chartOptions, optionsWoTicks } from "@/constants/chartOptions";
-import { defineComponent, onBeforeMount, reactive } from "vue";
+import { CHART_OPTIONS, CHART_WO_TICKS } from "@/constants/defaultValues";
+import { groupBy, keys, mapValues, values } from "@/utils/lightLodash";
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { ChartHolder } from "@/components/ChartHolder";
-import { useClientStore } from "@/stores/clientStore";
 import { generateColor } from "@/utils/generateColor";
-import { useStatsStore } from "@/stores/statsStore";
-import { useModalStore } from "@/stores/modalStore";
 import { ChartLine } from "@/components/ChartLine";
 import { ChartBar } from "@/components/ChartBar";
 import { UiCard } from "@/components/ui/UiCard";
+import { getWeekDay } from "@/utils/formatDate";
+import { invoke } from "@tauri-apps/api";
 import type { clientT } from "@/types";
 import { useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
+import { store } from "@/store";
 
 export const ClientDetails = defineComponent({
   name: "ClientDetails",
   components: { UiCard, ChartHolder, ChartBar, ChartLine },
   setup() {
     const id = useRoute().params.id;
-    const clientStore = useClientStore();
-    const statsStore = useStatsStore();
-    const { client } = storeToRefs(clientStore);
+
+    const client = ref<clientT | null>(null);
 
     const ProductsStats = reactive({
       products: [] as string[],
@@ -30,28 +29,95 @@ export const ClientDetails = defineComponent({
     const DailyStats = reactive({
       data: [] as number[],
       keys: [] as string[],
+      color: generateColor(),
     });
 
+    async function getProductPerMonth(id: number) {
+      const data: any[] = await invoke("get_c_product_month", { id });
+
+      const existingDates = keys(groupBy(data, "month"));
+      const existingProducts = keys(groupBy(data, "name"));
+      const dataPerProduct = mapValues(groupBy(data, "name"), (value: any[]) =>
+        value.reduce((pr, cr) => {
+          if (!pr) pr = [];
+          pr.push(cr.quantity);
+          return pr;
+        }, [] as number[])
+      );
+
+      return {
+        data: dataPerProduct,
+        dates: existingDates,
+        products: existingProducts,
+      };
+    }
+
+    async function getDailyExpenses(id: number) {
+      const result: { day: string; expense: number }[] = await invoke(
+        "get_c_week_expenses",
+        { id }
+      );
+      // date related
+      const nextDay = new Date().getDay() == 6 ? 0 : new Date().getDay() + 1;
+      const resultMap = new Map<string, number>();
+      const weekDays = [0, 1, 2, 3, 4, 5, 6];
+
+      for (const index of weekDays) {
+        resultMap.set(getWeekDay(index), 0);
+      }
+
+      for (const { day, expense } of result) {
+        resultMap.set(
+          new Date(day).toLocaleDateString("en-us", {
+            weekday: "short",
+          }),
+          expense
+        );
+      }
+
+      // @ts-ignore
+      const K = keys(Object.fromEntries(resultMap));
+      // @ts-ignore
+      const V = values(Object.fromEntries(resultMap));
+      const rearrangedKeys = K.slice(nextDay).concat(K.slice(0, nextDay));
+      const rearrangedValues = V.slice(nextDay).concat(V.slice(0, nextDay));
+
+      return {
+        keys: rearrangedKeys,
+        values: rearrangedValues,
+      };
+    }
+
     onBeforeMount(async () => {
-      const productStats = await statsStore.getProductPerMonth(Number(id));
-      const dailyStats = await statsStore.getDailyExpenses(Number(id));
+      const productStats = await getProductPerMonth(Number(id));
+      const dailyStats = await getDailyExpenses(Number(id));
 
       DailyStats.keys = dailyStats.keys;
       DailyStats.data = dailyStats.values;
 
-      console.log(dailyStats);
+      // console.log(dailyStats);
 
       ProductsStats.data = productStats.data;
       ProductsStats.dates = productStats.dates;
       ProductsStats.products = productStats.products;
     });
+
     const toggleThisClient = (client: clientT | null, name: string) => {
-      useModalStore().updateModal({ key: "show", value: true });
-      useModalStore().updateModal({ key: "name", value: name });
-      useModalStore().updateClientRow(client);
+      store.setters.updateStore({ key: "show", value: true });
+      store.setters.updateStore({ key: "name", value: name });
+      store.setters.updateStore({ key: "row", value: client });
     };
 
-    onBeforeMount(() => clientStore.getOneClient(Number(id)));
+    onBeforeMount(async () => {
+      try {
+        const res = await invoke<clientT>("get_client", { id: Number(id) });
+        if (res.id) {
+          client.value = res;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
 
     return () => (
       <main class="w-full h-full px-3 py-1">
@@ -72,16 +138,36 @@ export const ClientDetails = defineComponent({
                   datasets: [
                     {
                       label: "daily expenses",
-                      backgroundColor: generateColor(),
-                      borderColor: generateColor().replace("0.2", "0.5"),
+                      backgroundColor: (ctx: any) => {
+                        const canvas = ctx.chart.ctx;
+                        const gradient = canvas.createLinearGradient(
+                          0,
+                          0,
+                          0,
+                          160
+                        );
+
+                        gradient.addColorStop(
+                          0,
+                          DailyStats.color.replace("0.2", "0.4")
+                        );
+                        gradient.addColorStop(
+                          1,
+                          DailyStats.color.replace("0.2", "0.07")
+                        );
+
+                        return gradient;
+                      },
+                      borderColor: DailyStats.color.replace("0.2", "0.5"),
                       data: DailyStats.data,
                       borderWidth: 2,
                       lineTension: 0.4,
                       pointRadius: 1,
+                      fill: true,
                     },
                   ],
                 }}
-                chartOptions={optionsWoTicks}
+                chartOptions={CHART_WO_TICKS}
               />
             </div>
           </div>
@@ -91,7 +177,7 @@ export const ClientDetails = defineComponent({
               {{
                 default: () => (
                   <ChartBar
-                    id="stock-mouvements-for-past-three-months"
+                    id="inventory-mouvements-for-past-three-months"
                     chartData={{
                       labels: ProductsStats.dates,
                       datasets: ProductsStats.products.map((product) => {
@@ -105,7 +191,7 @@ export const ClientDetails = defineComponent({
                         };
                       }),
                     }}
-                    chartOptions={chartOptions}
+                    chartOptions={CHART_OPTIONS}
                   />
                 ),
                 title: () => (

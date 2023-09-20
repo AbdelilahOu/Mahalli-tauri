@@ -1,38 +1,50 @@
-import { defineComponent, reactive, onBeforeUnmount } from "vue";
-import { useSellerStore } from "@/stores/sellerStore";
-import { useModalStore } from "@/stores/modalStore";
-import { UiUpdateInput } from "./ui/UiUpdateInput";
-import type { updateSellerT } from "@/types";
-import { UiButton } from "./ui/UiButton";
-import { storeToRefs } from "pinia";
+import { defineComponent, reactive, onBeforeUnmount, computed } from "vue";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
+import type { sellerT, updateSellerT } from "@/types";
+import { UiUpdateInput } from "./ui/UiUpdateInput";
+import { UiButton } from "./ui/UiButton";
+import { invoke } from "@tauri-apps/api";
+import { store } from "@/store";
+import { SELLER_UPDATE } from "@/constants/defaultValues";
 
 export const SellerUpdate = defineComponent({
   name: "SellerUpdate",
   components: { UiButton, UiUpdateInput },
   setup() {
-    const modalStore = useModalStore();
-    const { seller: SellerRow } = storeToRefs(modalStore);
-    const Seller = {
-      id: undefined,
-      name: undefined,
-      email: undefined,
-      phone: undefined,
-      address: undefined,
-    };
+    const { updateQueryParams } = useUpdateRouteQueryParams();
+
+    const SellerRow = computed(() => store.getters.getSelectedRow<sellerT>());
+
     const updateSeller = reactive<updateSellerT>(
-      SellerRow.value ? SellerRow.value : Seller
+      SellerRow.value ? SellerRow.value : SELLER_UPDATE
     );
-    const updateTheSeller = () => {
+
+    const updateTheSeller = async () => {
       if (updateSeller?.id) {
-        useSellerStore().updateOneSeller(updateSeller.id, updateSeller);
-        modalStore.updateModal({ key: "show", value: false });
+        try {
+          await invoke("update_seller", {
+            seller: updateSeller,
+            id: updateSeller.id,
+          });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-update-" + Math.random() * 9999,
+          });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          store.setters.updateStore({ key: "show", value: false });
+        }
       }
     };
-    onBeforeUnmount(() => modalStore.updateSellerRow(null));
+
+    onBeforeUnmount(() =>
+      store.setters.updateStore({ key: "row", value: null })
+    );
 
     return () => (
-      <div class="w-1/2 h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+      <div class="w-1/2 h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Sellers.update.title")}
         </h1>

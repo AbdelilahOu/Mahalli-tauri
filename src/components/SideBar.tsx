@@ -1,7 +1,6 @@
-import { useTranslationStore } from "@/stores/translationStore";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { defineComponent, type PropType } from "vue";
-import { useModalStore } from "@/stores/modalStore";
+import { computed, defineComponent, type PropType } from "vue";
+import { store } from "@/store";
 import { RouteLinks } from "@/constants/RouteNames";
 import { UiSideLink } from "./ui/UiSideLink";
 import { RouterLink } from "vue-router";
@@ -19,9 +18,10 @@ export const SideBar = defineComponent({
     },
   },
   setup(props) {
+    const locale = computed(() => store.getters.getCurrentLocale());
     return () => (
-      <aside class="w-full rounded-md h-full overflow-hidden sticky top-0 z-50 bg-white ">
-        <div class="w-full h-screen print:hidden sticky top-0 bg-white z-50 grid grid-rows-[50px_1fr] gap-1">
+      <aside class="w-full rounded-[4px] h-full overflow-hidden sticky top-0 z-50 bg-white ">
+        <div class="w-full h-screen print:hidden sticky top-0 bg-white z-50 grid grid-rows-[50px_1fr] gap-[2px]">
           <div class="w-full h-full px-1 grid grid-cols-1 items-center justify-start">
             <span
               class={`font-medium  text-black flex items-center px-1 ${
@@ -30,7 +30,7 @@ export const SideBar = defineComponent({
             >
               {!props.IsCollapse && (
                 <span class="whitespace-nowrap pl-2 text-gray-800 overflow-hidden">
-                  The Stocker
+                  The Inventoryer
                 </span>
               )}
               <span
@@ -53,7 +53,7 @@ export const SideBar = defineComponent({
               {RouteLinks.map((link, index) => {
                 return (
                   link.display && (
-                    <RouterLink to={link.path}>
+                    <RouterLink to={{ path: link.path, query: { page: 1 } }}>
                       <UiSideLink
                         // v-fade={0}
                         IsText={!props.IsCollapse}
@@ -78,8 +78,8 @@ export const SideBar = defineComponent({
               class="w-full cursor-pointer"
               // v-fade={10}
               onClick={() => {
-                useModalStore().updateModal({ key: "show", value: true });
-                useModalStore().updateModal({
+                store.setters.updateStore({ key: "show", value: true });
+                store.setters.updateStore({
                   key: "name",
                   value: "TranslationModal",
                 });
@@ -89,7 +89,25 @@ export const SideBar = defineComponent({
                 // v-fade={10}
                 Icon="Lang"
                 IsText={!props.IsCollapse}
-                LinkText={useTranslationStore().currentLocale.text}
+                LinkText={locale.value.text}
+              />
+            </div>
+            <div
+              class="w-full cursor-pointer"
+              // v-fade={10}
+              onClick={() => {
+                store.setters.updateStore({ key: "show", value: true });
+                store.setters.updateStore({
+                  key: "name",
+                  value: "Sittings",
+                });
+              }}
+            >
+              <UiSideLink
+                // v-fade={10}
+                Icon="sittings"
+                IsText={!props.IsCollapse}
+                LinkText={"Sittings"}
               />
             </div>
           </div>

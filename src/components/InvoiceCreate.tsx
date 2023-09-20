@@ -1,50 +1,69 @@
-import type { newInvoiceT, newInvoiceItemT } from "@/types";
+import { INVOICE_CREATE, INVOICE_ITEM_CREATE } from "@/constants/defaultValues";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import type { newInvoiceT, newInvoiceItemT, invoiceT } from "@/types";
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { useInvoiceStore } from "@/stores/invoiceStore";
-import { useProductStore } from "@/stores/productStore";
-import { useClientStore } from "@/stores/clientStore";
-import { defineComponent, reactive, ref } from "vue";
-import { useModalStore } from "@/stores/modalStore";
 import { UiCheckBox } from "./ui/UiCheckBox";
+import { invoke } from "@tauri-apps/api";
 import { UiButton } from "./ui/UiButton";
 import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import UiIcon from "./ui/UiIcon.vue";
-import { storeToRefs } from "pinia";
+import { store } from "@/store";
 
 export const InvoiceCreate = defineComponent({
   name: "InvoiceCreate",
   components: { UiButton, UiCheckBox, UiIcon, UiInput, UiSelect },
   setup() {
+    const { updateQueryParams } = useUpdateRouteQueryParams();
+
     const isFlash = ref<boolean>(false);
-    const { products } = storeToRefs(useProductStore());
-    const { clients } = storeToRefs(useClientStore());
-    const newInvoice = reactive<newInvoiceT>({
-      client_id: 0,
-      invoiceItems: [],
-      status: "",
+
+    const clients = ref<{ name: string; id: number }[]>([]);
+    const products = ref<{ name: string; id: number }[]>([]);
+
+    const newInvoice = reactive<newInvoiceT>(INVOICE_CREATE);
+
+    const InvoiceItems = ref<newInvoiceItemT[]>(INVOICE_ITEM_CREATE);
+
+    onBeforeMount(async () => {
+      const res = await Promise.allSettled([
+        invoke<{ name: string; id: number }[]>("get_all_clients"),
+        invoke<{ name: string; id: number }[]>("get_all_products"),
+      ]);
+
+      // @ts-ignore
+      if ((res[0].status = "fulfilled")) clients.value = res[0].value;
+      // @ts-ignore
+      if ((res[1].status = "fulfilled")) products.value = res[1].value;
     });
-    const InvoiceItems = ref<newInvoiceItemT[]>([
-      {
-        product_id: 0,
-        quantity: 0,
-      },
-    ]);
-    const createNewInvoice = () => {
+
+    const createNewInvoice = async () => {
       isFlash.value = true;
-      newInvoice.invoiceItems = InvoiceItems.value.filter(
+      newInvoice.invoice_items = InvoiceItems.value.filter(
         (item) => item.product_id !== 0 && item.quantity !== 0
       );
-      if (newInvoice.client_id && newInvoice.invoiceItems.length !== 0) {
-        useInvoiceStore().createOneInvoice(newInvoice);
-        useModalStore().updateModal({ key: "show", value: false });
+      if (newInvoice.client_id && newInvoice.invoice_items.length !== 0) {
+        try {
+          await invoke<invoiceT>("insert_invoice", {
+            invoice: newInvoice,
+          });
+          // toggle refresh
+          updateQueryParams({
+            refresh: "refresh-create-" + Math.random() * 9999,
+          });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          store.setters.updateStore({ key: "show", value: false });
+        }
       }
       setTimeout(() => {
         isFlash.value = false;
       }, 1000);
     };
     return () => (
-      <div class="w-5/6 lg:w-1/2 relative rounded-md h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+      <div class="w-5/6 lg:w-1/2 relative rounded-[4px] h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
           {globalTranslate("Invoices.create.title")}
         </h1>
@@ -54,10 +73,7 @@ export const InvoiceCreate = defineComponent({
               {globalTranslate("Invoices.create.details.client.title")}
             </h1>
             <UiSelect
-              items={clients.value.map((client) => ({
-                name: client.name,
-                id: client.id,
-              }))}
+              items={clients.value}
               onSelect={(id: number) => (newInvoice.client_id = id)}
             >
               {globalTranslate("Invoices.create.details.client.select")}
@@ -113,10 +129,7 @@ export const InvoiceCreate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {InvoiceItems.value.map((item, _index) => (
                     <UiSelect
-                      items={products.value.map((product) => ({
-                        name: product.name,
-                        id: product.id,
-                      }))}
+                      items={products.value}
                       onSelect={(id: number) => (item.product_id = id)}
                     >
                       {globalTranslate(
@@ -140,7 +153,7 @@ export const InvoiceCreate = defineComponent({
                       >
                         {{
                           unite: () => (
-                            <span class="h-full text-gray-400 rounded-md px-2  flex items-center justify-center">
+                            <span class="h-full text-gray-400 rounded-[4px] px-2  flex items-center justify-center">
                               Item
                             </span>
                           ),
@@ -153,7 +166,7 @@ export const InvoiceCreate = defineComponent({
                   {InvoiceItems.value.map((_item, index) => (
                     <div
                       onClick={() => InvoiceItems.value.splice(index, 1)}
-                      class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-md items-center w-full h-full"
+                      class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-[4px] items-center w-full h-full"
                     >
                       <UiIcon name="delete" />
                     </div>

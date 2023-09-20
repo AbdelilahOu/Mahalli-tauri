@@ -1,10 +1,9 @@
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import { RouteLinks } from "@/constants/RouteNames";
-import { useUserStore } from "@/stores/userStore";
 import UiIcon from "./ui/UiIcon.vue";
-import { storeToRefs } from "pinia";
+import { store } from "@/store";
 
 export const Navigation = defineComponent({
   name: "Navigation",
@@ -18,7 +17,8 @@ export const Navigation = defineComponent({
         (link) => link.component === route.name
       );
     });
-    const { User } = storeToRefs(useUserStore());
+
+    const User = computed(() => store.getters.getUser());
 
     onBeforeRouteUpdate((to) => {
       ActiveLink.value = RouteLinks.find((link) => link.component === to.name);
@@ -26,7 +26,7 @@ export const Navigation = defineComponent({
 
     return () => (
       <header class="w-full h-full print:hidden sticky top-0 mb-2 z-50 overflow-hidden bg-slate-100">
-        <div class="w-full h-full flex  items-center p-3  bg-white justify-between">
+        <div class="w-full h-full flex  items-center py-3 px-2  bg-white justify-between">
           <div class="text-black flex items-center justify-center gap-2">
             <span
               onClick={() => router.back()}
