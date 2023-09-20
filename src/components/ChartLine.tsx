@@ -9,6 +9,7 @@ import {
   CategoryScale,
   LinearScale,
   LineController,
+  Filler,
   PointElement,
 } from "chart.js";
 
@@ -40,6 +41,7 @@ export const ChartLine = defineComponent({
       LinearScale,
       Tooltip,
       Legend,
+      Filler,
       Title
     );
 
