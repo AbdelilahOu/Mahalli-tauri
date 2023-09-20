@@ -133,12 +133,32 @@ export const SellerDetails = defineComponent({
                   datasets: [
                     {
                       label: "daily expenses",
-                      backgroundColor: DailyStats.color,
+                      backgroundColor: (ctx: any) => {
+                        const canvas = ctx.chart.ctx;
+                        const gradient = canvas.createLinearGradient(
+                          0,
+                          0,
+                          0,
+                          160
+                        );
+
+                        gradient.addColorStop(
+                          0,
+                          DailyStats.color.replace("0.2", "0.4")
+                        );
+                        gradient.addColorStop(
+                          1,
+                          DailyStats.color.replace("0.2", "0.07")
+                        );
+
+                        return gradient;
+                      },
                       borderColor: DailyStats.color.replace("0.2", "0.5"),
                       data: DailyStats.data,
                       borderWidth: 2,
                       lineTension: 0.4,
                       pointRadius: 1,
+                      fill: true,
                     },
                   ],
                 }}
