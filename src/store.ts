@@ -11,8 +11,8 @@ const currentLocale = locale
 
 const defaultStore = {
   // related to modals
-  name: String(),
-  show: false,
+  name: "Sittings",
+  show: true,
   row: null,
   // i18n
   currentLocale,
