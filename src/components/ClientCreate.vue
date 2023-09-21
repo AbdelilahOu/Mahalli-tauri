@@ -45,7 +45,7 @@ export const ClientCreate = defineComponent({
     return () => (
       <div class="w-1/2 h-fit z-50 gap-3 rounded-[4px] flex flex-col bg-white p-2 min-w-[350px]">
         <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
-          {globalTranslate("Clients.create.title")}
+          {globalTranslate("Clients.create.title")}:{client.fullname}
         </h1>
         <div class="h-full w-full flex  flex-col gap-2">
           <div class="w-full h-fit flex justify-center">
@@ -56,22 +56,22 @@ export const ClientCreate = defineComponent({
             />
           </div>
           <Input
-            modelValue={client.fullname}
+            v-model={client.fullname}
             type="text"
             placeHolder={globalTranslate("Clients.create.placeholders[0]")}
           />
           <Input
-            modelValue={client.email}
+            v-model={client.email}
             type="text"
             placeHolder={globalTranslate("Clients.create.placeholders[1]")}
           />
           <Input
-            modelValue={client.phone}
+            v-model={client.phone}
             type="text"
             placeHolder={globalTranslate("Clients.create.placeholders[2]")}
           />
           <Input
-            modelValue={client.address}
+            v-model={client.address}
             type="text"
             placeHolder={globalTranslate("Clients.create.placeholders[3]")}
           />

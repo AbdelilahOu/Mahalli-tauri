@@ -146,7 +146,7 @@ export const InvoiceCreate = defineComponent({
                           "Invoices.create.details.invoice.placeholder[0]"
                         )}
                         type="number"
-                        modelValue={item.quantity}
+                        v-model={item.quantity}
                       >
                         {{
                           unite: () => (

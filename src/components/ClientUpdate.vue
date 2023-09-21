@@ -49,26 +49,26 @@ export const ClientUpdate = defineComponent({
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
           <Input
-            defaultValue={ClientRow.value?.fullname}
-            modelValue={updateClient.fullname}
+            // defaultValue={ClientRow.value?.fullname}
+            v-model={updateClient.fullname}
             type="text"
             placeHolder={globalTranslate("Clients.create.placeholders[0]")}
           />
           <Input
-            defaultValue={ClientRow.value?.email}
-            modelValue={updateClient.email}
+            // defaultValue={ClientRow.value?.email}
+            v-model={updateClient.email}
             type="text"
             placeHolder={globalTranslate("Clients.create.placeholders[1]")}
           />
           <Input
-            defaultValue={ClientRow.value?.phone}
-            modelValue={updateClient.phone}
+            // defaultValue={ClientRow.value?.phone}
+            v-model={updateClient.phone}
             type="text"
             placeHolder={globalTranslate("Clients.create.placeholders[2]")}
           />
           <Input
-            defaultValue={ClientRow.value?.address}
-            modelValue={updateClient.address}
+            // defaultValue={ClientRow.value?.address}
+            v-model={updateClient.address}
             type="text"
             placeHolder={globalTranslate("Clients.create.placeholders[3]")}
           />

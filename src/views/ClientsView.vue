@@ -83,7 +83,7 @@ export const ClientsView = defineComponent({
             <div class="flex justify-between w-full gap-9 mb-1">
               <div class="w-1/3">
                 <Input
-                  modelValue={searchQuery.value}
+                  v-model={searchQuery.value}
                   type="text"
                   placeHolder={globalTranslate("Global.search")}
                 >

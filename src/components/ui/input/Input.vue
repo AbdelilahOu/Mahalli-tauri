@@ -1,22 +1,13 @@
 <script setup lang="ts">
-import { useVModel } from "@vueuse/core";
+import { defineModel } from "vue";
 import { cn } from "@/lib/utils";
 
-const props = defineProps<{
-  defaultValue?: string | number;
-  modelValue?: string | number;
+defineProps<{
   type: string;
   placeHolder: string;
 }>();
 
-const emits = defineEmits<{
-  (e: "update:modelValue", payload: string | number): void;
-}>();
-
-const modelValue = useVModel(props, "modelValue", emits, {
-  passive: true,
-  defaultValue: props.defaultValue,
-});
+const modelValue = defineModel<string>();
 </script>
 
 <template>

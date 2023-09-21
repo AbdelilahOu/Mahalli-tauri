@@ -50,8 +50,8 @@ export const SellerUpdate = defineComponent({
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
           <Input
-            defaultValue={SellerRow.value?.name}
-            modelValue={SellerRow.value?.name}
+            // defaultValue={SellerRow.value?.name}
+            v-model={updateSeller.name}
             // OnInputChange={(value) =>
             //   (updateSeller["name"] =
             //     typeof value == "string" ? value : JSON.stringify(value))
@@ -60,8 +60,8 @@ export const SellerUpdate = defineComponent({
             placeHolder={globalTranslate("Sellers.create.placeholders[0]")}
           />
           <Input
-            defaultValue={SellerRow.value?.email}
-            modelValue={SellerRow.value?.email}
+            // defaultValue={SellerRow.value?.email}
+            v-model={updateSeller.email}
             // OnInputChange={(value) =>
             //   (updateSeller["email"] =
             //     typeof value == "string" ? value : JSON.stringify(value))
@@ -70,8 +70,8 @@ export const SellerUpdate = defineComponent({
             placeHolder={globalTranslate("Sellers.create.placeholders[1]")}
           />
           <Input
-            defaultValue={SellerRow.value?.phone}
-            modelValue={SellerRow.value?.phone}
+            // defaultValue={SellerRow.value?.phone}
+            v-model={updateSeller.phone}
             // OnInputChange={(value) =>
             //   (updateSeller["phone"] =
             //     typeof value == "string" ? value : JSON.stringify(value))
@@ -80,8 +80,8 @@ export const SellerUpdate = defineComponent({
             placeHolder={globalTranslate("Sellers.create.placeholders[2]")}
           />
           <Input
-            defaultValue={SellerRow.value?.address}
-            modelValue={SellerRow.value?.address}
+            // defaultValue={SellerRow.value?.address}
+            v-model={updateSeller.address}
             // OnInputChange={(value) =>
             //   (updateSeller["address"] =
             //     typeof value == "string" ? value : JSON.stringify(value))
