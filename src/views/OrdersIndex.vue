@@ -1,13 +1,9 @@
-import { defineComponent } from "vue";
-import { RouterView } from "vue-router";
+<template>
+  <div class="w-full h-full">
+    <RouterView></RouterView>
+  </div>
+</template>
 
-export const OrdersIndex = defineComponent({
-  name: "OrdersIndex",
-  setup() {
-    return () => (
-      <div class="w-full h-full">
-        <RouterView></RouterView>
-      </div>
-    );
-  },
-});
+<script setup lang="ts">
+import { RouterView } from "vue-router";
+</script>
