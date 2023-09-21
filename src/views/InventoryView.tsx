@@ -1,7 +1,7 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { InventoryTable } from "@/components/InventoryTable";
 import type { inventoryMvmT, withCount } from "@/types";
-import { UiButton } from "@/components/ui/UiButton";
+import { Button } from "@/components/ui/button";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { store } from "@/store";
@@ -24,7 +24,7 @@ export const InventoryView = defineComponent({
   name: "Inventory",
   components: {
     InventoryTable,
-    UiButton,
+    Button,
     UiInput,
     UiIcon,
   },
@@ -101,7 +101,7 @@ export const InventoryView = defineComponent({
                 </UiInput>
               </div>
               <div class="w-1/4 flex gap-2">
-                <UiButton
+                <Button
                   colorTheme="a"
                   Click={() => updateModal("InventoryCreate")}
                 >
@@ -110,7 +110,7 @@ export const InventoryView = defineComponent({
                     name="add"
                   />{" "}
                   {globalTranslate("Inventory.index.addButton")}
-                </UiButton>
+                </Button>
               </div>
             </div>
           </Transition>

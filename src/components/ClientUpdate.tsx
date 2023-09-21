@@ -4,13 +4,13 @@ import { CLIENT_UPDATE } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
 import type { clientT, updateClientT } from "@/types";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
 import { store } from "@/store";
 
 export const ClientUpdate = defineComponent({
   name: "ClientUpdate",
-  components: { UiButton, UiUpdateInput },
+  components: { Button, UiUpdateInput },
   setup() {
     const ClientRow = computed(() => store.getters.getSelectedRow<clientT>());
     const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -86,9 +86,9 @@ export const ClientUpdate = defineComponent({
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => updateTheClient()}>
+          <Button colorTheme="a" Click={() => updateTheClient()}>
             {globalTranslate("Clients.update.button")} {updateClient.name}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

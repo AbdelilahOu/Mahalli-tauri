@@ -5,7 +5,7 @@ import { defineComponent, reactive, ref } from "vue";
 import { ImagesFiles } from "@/constants/FileTypes";
 import { UiUploader } from "./ui/UiUploader";
 import type { newSellerT } from "@/types";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
@@ -13,7 +13,7 @@ import { store } from "@/store";
 
 export const SellerCreate = defineComponent({
   name: "sellerCreate",
-  components: { UiButton, UiInput, UiUploader },
+  components: { Button, UiInput, UiUploader },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
@@ -92,9 +92,9 @@ export const SellerCreate = defineComponent({
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => createNewseller()}>
+          <Button colorTheme="a" Click={() => createNewseller()}>
             {globalTranslate("Sellers.create.button")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

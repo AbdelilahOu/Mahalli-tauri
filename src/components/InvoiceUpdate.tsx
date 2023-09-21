@@ -5,7 +5,7 @@ import { UiUpdateSelect } from "./ui/UiUpdateSelect";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { invoke } from "@tauri-apps/api";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import {
@@ -20,7 +20,7 @@ import { INVOICE_UPDATE } from "@/constants/defaultValues";
 
 export const InvoiceUpdate = defineComponent({
   name: "InvoiceUpdate",
-  components: { UiButton, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
+  components: { Button, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -138,7 +138,7 @@ export const InvoiceUpdate = defineComponent({
               </div>
             </div>
             <div class="w-full  h-full flex flex-col gap-1">
-              <UiButton
+              <Button
                 Click={() =>
                   updateInvoice.invoice_items?.push({
                     product_id: 0,
@@ -147,7 +147,7 @@ export const InvoiceUpdate = defineComponent({
                 }
               >
                 {globalTranslate("Invoices.update.details.invoice.add")}
-              </UiButton>
+              </Button>
               <div class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
                   {updateInvoice.invoice_items?.map((item, index) => (
@@ -205,9 +205,9 @@ export const InvoiceUpdate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => updateTheInvoice()}>
+          <Button colorTheme="a" Click={() => updateTheInvoice()}>
             {globalTranslate("Invoices.update.button")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

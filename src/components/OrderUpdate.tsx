@@ -5,7 +5,7 @@ import type { orderT, updateOrdersT } from "@/types";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { invoke } from "@tauri-apps/api";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import {
@@ -20,7 +20,7 @@ import { ORDER_UPDATE } from "@/constants/defaultValues";
 
 export const OrderUpdate = defineComponent({
   name: "OrderUpdate",
-  components: { UiButton, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
+  components: { Button, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
     //
@@ -139,7 +139,7 @@ export const OrderUpdate = defineComponent({
               </div>
             </div>
             <div class="w-full  h-full flex flex-col gap-1">
-              <UiButton
+              <Button
                 Click={() =>
                   updateOrder.order_items?.push({
                     product_id: 0,
@@ -148,7 +148,7 @@ export const OrderUpdate = defineComponent({
                 }
               >
                 {globalTranslate("Orders.update.details.order.add")}
-              </UiButton>
+              </Button>
               <div class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
                   {updateOrder.order_items?.map((item, index) => (
@@ -233,9 +233,9 @@ export const OrderUpdate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => updateTheOrders()}>
+          <Button colorTheme="a" Click={() => updateTheOrders()}>
             {globalTranslate("Orders.update.button")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

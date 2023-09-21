@@ -5,7 +5,7 @@ import { ImagesFiles } from "@/constants/FileTypes";
 import { UiUploader } from "./ui/UiUploader";
 import type { newProductT } from "@/types";
 import { invoke } from "@tauri-apps/api";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
@@ -13,7 +13,7 @@ import { PRODUCT_CREATE } from "@/constants/defaultValues";
 
 export const ProductCreate = defineComponent({
   name: "ProductCreate",
-  components: { UiButton, UiInput },
+  components: { Button, UiInput },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
@@ -92,9 +92,9 @@ export const ProductCreate = defineComponent({
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => createNewProduct()}>
+          <Button colorTheme="a" Click={() => createNewProduct()}>
             {globalTranslate("Products.create.button")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );
