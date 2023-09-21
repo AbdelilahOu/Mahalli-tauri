@@ -1,12 +1,12 @@
 import { globalTranslate } from "@/utils/globalTranslate";
-import { UiButton } from "@/components/ui/UiButton";
-import { UiInput } from "@/components/ui/UiInput";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { defineComponent } from "vue";
 import { RouterLink } from "vue-router";
 
 export const HomeView = defineComponent({
   name: "Home",
-  components: { UiButton, UiInput },
+  components: { Button, Input },
   setup() {
     const Pages: { image: string; text: string; path: string }[] = [
       {

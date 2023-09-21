@@ -1,16 +1,16 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { UiButton } from "./ui/UiButton";
-import { UiSelect } from "./ui/UiSelect";
+import { Button } from "./ui/button";
+import { ComboBox } from "./ui/combobox";
 import { invoke } from "@tauri-apps/api";
-import { UiInput } from "./ui/UiInput";
+import { Input } from "./ui/input";
 import { store } from "@/store";
 import { INVENTORY_CREATE } from "@/constants/defaultValues";
 
 export const InventoryCreate = defineComponent({
   name: "InventoryCreate",
-  components: { UiButton, UiInput, UiSelect },
+  components: { Button, Input, ComboBox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -47,23 +47,23 @@ export const InventoryCreate = defineComponent({
           {globalTranslate("Inventory.create.title")}
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
-          <UiSelect
+          <ComboBox
             items={products.value}
             onSelect={(id: number) => (inventoryMvm.productId = id)}
           >
             {globalTranslate("Inventory.create.select")}
-          </UiSelect>
-          <UiInput
-            Type="number"
-            PlaceHolder={globalTranslate("Inventory.create.placeholder")}
+          </ComboBox>
+          <Input
+            type="number"
+            placeHolder={globalTranslate("Inventory.create.placeholder")}
             IsEmpty={false}
             OnInputChange={(input) => (inventoryMvm.quantity = Number(input))}
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => createNewInventory()}>
+          <Button onClick={() => createNewInventory()}>
             {globalTranslate("Inventory.create.button")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

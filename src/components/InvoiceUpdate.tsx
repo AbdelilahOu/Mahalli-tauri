@@ -1,11 +1,11 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import type { invoiceT, updateInvoiceT } from "@/types";
-import { UiUpdateSelect } from "./ui/UiUpdateSelect";
-import { UiUpdateInput } from "./ui/UiUpdateInput";
-import { UiCheckBox } from "./ui/UiCheckBox";
+import { ComboBox } from "./ui/combobox";
+import { Input } from "./ui/input";
+import { Checkbox } from "./ui/checkbox";
 import { invoke } from "@tauri-apps/api";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import {
@@ -20,7 +20,7 @@ import { INVOICE_UPDATE } from "@/constants/defaultValues";
 
 export const InvoiceUpdate = defineComponent({
   name: "InvoiceUpdate",
-  components: { UiButton, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
+  components: { Button, Input, UiIcon, ComboBox, Checkbox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -90,8 +90,8 @@ export const InvoiceUpdate = defineComponent({
             <h1 class="font-medium">
               {globalTranslate("Invoices.update.details.client.title")}
             </h1>
-            <UiUpdateSelect
-              Value={updateInvoice.client?.fullname ?? "select a client"}
+            <ComboBox
+              defaultValue={updateInvoice.client?.fullname ?? "select a client"}
               items={clients.value.map((client: any) => ({
                 name: client.name,
                 id: client.id,
@@ -99,14 +99,14 @@ export const InvoiceUpdate = defineComponent({
               onSelect={(id: number) => (updateInvoice.client_id = id)}
             >
               {globalTranslate("Invoices.update.details.client.select")}
-            </UiUpdateSelect>
+            </ComboBox>
           </div>
           <div class="w-full  h-full flex flex-col gap-1">
             <h1 class="font-medium">invoice details</h1>
             <div class="w-full  h-full flex flex-col mb-1 gap-1">
               <div class="flex justify-between w-full">
                 <div class="h-full w-full flex flex-row flex-nowrap items-center gap-2">
-                  <UiCheckBox
+                  <Checkbox
                     onCheck={(check) =>
                       check
                         ? (updateInvoice.status = "delivered")
@@ -116,7 +116,7 @@ export const InvoiceUpdate = defineComponent({
                   <span>{globalTranslate("Invoices.status.delivered")}</span>
                 </div>
                 <div class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2">
-                  <UiCheckBox
+                  <Checkbox
                     onCheck={(check) =>
                       check
                         ? (updateInvoice.status = "pending")
@@ -126,7 +126,7 @@ export const InvoiceUpdate = defineComponent({
                   <span>{globalTranslate("Invoices.status.pending")}</span>
                 </div>
                 <div class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2">
-                  <UiCheckBox
+                  <Checkbox
                     onCheck={(check) =>
                       check
                         ? (updateInvoice.status = "canceled")
@@ -138,8 +138,8 @@ export const InvoiceUpdate = defineComponent({
               </div>
             </div>
             <div class="w-full  h-full flex flex-col gap-1">
-              <UiButton
-                Click={() =>
+              <Button
+                onClick={() =>
                   updateInvoice.invoice_items?.push({
                     product_id: 0,
                     quantity: 0,
@@ -147,12 +147,12 @@ export const InvoiceUpdate = defineComponent({
                 }
               >
                 {globalTranslate("Invoices.update.details.invoice.add")}
-              </UiButton>
+              </Button>
               <div class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
                   {updateInvoice.invoice_items?.map((item, index) => (
-                    <UiUpdateSelect
-                      Value={item.product?.name ?? "select a product"}
+                    <ComboBox
+                      defaultValue={item.product?.name ?? "select a product"}
                       items={products.value.map((product: any) => ({
                         name: product.name,
                         id: product.id,
@@ -162,16 +162,16 @@ export const InvoiceUpdate = defineComponent({
                       {globalTranslate(
                         "Invoices.create.details.invoice.select"
                       )}
-                    </UiUpdateSelect>
+                    </ComboBox>
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
                   {updateInvoice.invoice_items?.map((item, index) => (
                     <div class="h-full w-full items-center relative">
-                      <UiUpdateInput
-                        Value={item.quantity}
-                        PlaceHolder="Product quantity"
-                        Type="number"
+                      <Input
+                        defaultValue={item.quantity}
+                        placeHolder="Product quantity"
+                        type="number"
                         OnInputChange={(value) =>
                           (item.quantity = Number(value))
                         }
@@ -183,7 +183,7 @@ export const InvoiceUpdate = defineComponent({
                             </span>
                           ),
                         }}
-                      </UiUpdateInput>
+                      </Input>
                     </div>
                   ))}
                 </div>
@@ -205,9 +205,9 @@ export const InvoiceUpdate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => updateTheInvoice()}>
+          <Button onClick={() => updateTheInvoice()}>
             {globalTranslate("Invoices.update.button")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

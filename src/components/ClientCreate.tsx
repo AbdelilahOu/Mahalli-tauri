@@ -6,14 +6,14 @@ import { ImagesFiles } from "@/constants/FileTypes";
 import { UiUploader } from "./ui/UiUploader";
 import type { newClientT } from "@/types";
 import { invoke } from "@tauri-apps/api";
-import { UiButton } from "./ui/UiButton";
-import { UiInput } from "./ui/UiInput";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
 
 export const ClientCreate = defineComponent({
   name: "ClientCreate",
-  components: { UiButton, UiInput },
+  components: { Button, Input },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -55,47 +55,47 @@ export const ClientCreate = defineComponent({
               onSave={(image) => (client.image = image)}
             />
           </div>
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && client["fullname"] == ""}
             OnInputChange={(value) =>
               (client["fullname"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Clients.create.placeholders[0]")}
+            type="text"
+            placeHolder={globalTranslate("Clients.create.placeholders[0]")}
           />
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && client["email"] == ""}
             OnInputChange={(value) =>
               (client["email"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Clients.create.placeholders[1]")}
+            type="text"
+            placeHolder={globalTranslate("Clients.create.placeholders[1]")}
           />
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && client["phone"] == ""}
             OnInputChange={(value) =>
               (client["phone"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Clients.create.placeholders[2]")}
+            type="text"
+            placeHolder={globalTranslate("Clients.create.placeholders[2]")}
           />
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && client["address"] == ""}
             OnInputChange={(value) =>
               (client["address"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Clients.create.placeholders[3]")}
+            type="text"
+            placeHolder={globalTranslate("Clients.create.placeholders[3]")}
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => createNewClient()}>
+          <Button onClick={() => createNewClient()}>
             {globalTranslate("Clients.create.button")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );
