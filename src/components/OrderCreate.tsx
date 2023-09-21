@@ -6,14 +6,14 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
-import { UiSelect } from "./ui/UiSelect";
+import { ComboBox } from "./ui/combobox";
 import { Input } from "./ui/input";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 
 export const OrderCreate = defineComponent({
   name: "OrderCreate",
-  components: { Button, Checkbox, UiIcon, Input, UiSelect },
+  components: { Button, Checkbox, UiIcon, Input, ComboBox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -71,12 +71,12 @@ export const OrderCreate = defineComponent({
             <h1 class="font-medium">
               {globalTranslate("Orders.create.details.seller.title")}
             </h1>
-            <UiSelect
+            <ComboBox
               items={sellers.value}
               onSelect={(id: number) => (newOrder.seller_id = id)}
             >
               {globalTranslate("Orders.create.details.seller.select")}
-            </UiSelect>
+            </ComboBox>
           </div>
           <div class="w-full  h-full flex flex-col gap-1">
             <h1 class="font-medium">
@@ -132,12 +132,12 @@ export const OrderCreate = defineComponent({
               <div class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
                   {order_items.value.map((item, index) => (
-                    <UiSelect
+                    <ComboBox
                       items={products.value}
                       onSelect={(id: number) => (item.product_id = id)}
                     >
                       {globalTranslate("Orders.create.details.order.select")}
-                    </UiSelect>
+                    </ComboBox>
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">

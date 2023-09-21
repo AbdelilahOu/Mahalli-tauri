@@ -2,7 +2,7 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { Button } from "./ui/button";
-import { UiSelect } from "./ui/UiSelect";
+import { ComboBox } from "./ui/combobox";
 import { invoke } from "@tauri-apps/api";
 import { Input } from "./ui/input";
 import { store } from "@/store";
@@ -10,7 +10,7 @@ import { INVENTORY_CREATE } from "@/constants/defaultValues";
 
 export const InventoryCreate = defineComponent({
   name: "InventoryCreate",
-  components: { Button, Input, UiSelect },
+  components: { Button, Input, ComboBox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -47,12 +47,12 @@ export const InventoryCreate = defineComponent({
           {globalTranslate("Inventory.create.title")}
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
-          <UiSelect
+          <ComboBox
             items={products.value}
             onSelect={(id: number) => (inventoryMvm.productId = id)}
           >
             {globalTranslate("Inventory.create.select")}
-          </UiSelect>
+          </ComboBox>
           <Input
             type="number"
             placeHolder={globalTranslate("Inventory.create.placeholder")}
