@@ -1,39 +1,27 @@
+import { ORDER_CREATE, ORDER_ITEM_CREATE } from "@/constants/defaultValues";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
+import type { newOrdersT, newOrdersItemT } from "@/types";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { ComboBox } from "./ui/combobox";
-import type { orderT, updateOrdersT } from "@/types";
-import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";
-import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
+import { invoke } from "@tauri-apps/api";
+import { ComboBox } from "./ui/combobox";
+import { Input } from "./ui/input";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
-import {
-  defineComponent,
-  onBeforeUnmount,
-  onBeforeMount,
-  reactive,
-  computed,
-  ref,
-} from "vue";
-import { ORDER_UPDATE } from "@/constants/defaultValues";
 
-export const OrderUpdate = defineComponent({
-  name: "OrderUpdate",
-  components: { Button, Input, UiIcon, ComboBox, Checkbox },
+export const OrderCreate = defineComponent({
+  name: "OrderCreate",
+  components: { Button, Checkbox, UiIcon, Input, ComboBox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
-    //
-    const OrdersRow = computed(() => store.getters.getSelectedRow<orderT>());
 
+    const order_items = ref<newOrdersItemT[]>(ORDER_ITEM_CREATE);
+    const newOrder = reactive<newOrdersT>(ORDER_CREATE);
     const sellers = ref<{ label: string; value: number }[]>([]);
     const products = ref<{ label: string; value: number }[]>([]);
-    //
-
-    const updateOrder = reactive<updateOrdersT>(
-      OrdersRow.value ? OrdersRow.value : ORDER_UPDATE
-    );
-    //
+    const isFlash = ref<boolean>(false);
 
     onBeforeMount(async () => {
       const res = await Promise.allSettled([
@@ -48,58 +36,51 @@ export const OrderUpdate = defineComponent({
     });
     //
 
-    const updateTheOrders = async () => {
-      if (updateOrder.id) {
+    const createNewOrders = async () => {
+      isFlash.value = true;
+      newOrder.order_items = order_items.value.filter(
+        (item) => item.product_id !== 0 && item.quantity !== 0
+      );
+      if (newOrder.seller_id && newOrder.order_items.length !== 0) {
         try {
-          await invoke("update_order", {
-            order: updateOrder,
-            id: updateOrder.id,
+          await invoke("insert_order", {
+            order: newOrder,
           });
           // toggle refresh
           updateQueryParams({
-            refresh: "refresh-update-" + Math.random() * 9999,
+            refresh: "refresh-create-" + Math.random() * 9999,
           });
         } catch (error) {
           console.log(error);
         } finally {
           store.setters.updateStore({ key: "show", value: false });
+          return;
         }
       }
+      setTimeout(() => {
+        isFlash.value = false;
+      }, 1000);
     };
-
-    async function deleteOneOrderItem(id: number) {
-      try {
-        await invoke("delete_order_items", { id });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    onBeforeUnmount(() =>
-      store.setters.updateStore({ key: "row", value: null })
-    );
-
     return () => (
-      <div class="w-5/6 lg:w-1/2 relative h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
-        <h1 class="font-semibold  text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
-          {globalTranslate("Orders.update.title")} N° {updateOrder.id}
+      <div class="w-5/6 lg:w-1/2 rounded-[4px] relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
+        <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
+          {globalTranslate("Orders.create.title")}
         </h1>
         <div class="h-full  w-full grid grid-cols-1 gap-2">
           <div class="w-full  h-full flex flex-col gap-1">
             <h1 class="font-medium">
-              {globalTranslate("Orders.update.details.seller.title")}
+              {globalTranslate("Orders.create.details.seller.title")}
             </h1>
             <ComboBox
-              // defaultValue={updateOrder.seller?.name ?? "Select a seller"}
               items={sellers.value}
-              // onSelect={(id: number) => (updateOrder.seller_id = id)}
+              // onSelect={(id: number) => (newOrder.seller_id = id)}
             >
-              {globalTranslate("Orders.update.details.seller.select")}
+              {globalTranslate("Orders.create.details.seller.select")}
             </ComboBox>
           </div>
           <div class="w-full  h-full flex flex-col gap-1">
             <h1 class="font-medium">
-              {globalTranslate("Orders.update.details.order.title")}
+              {globalTranslate("Orders.create.details.order.title")}
             </h1>
             <div class="w-full  h-full flex flex-col mb-1 gap-1">
               <div class="flex justify-between w-full">
@@ -107,8 +88,8 @@ export const OrderUpdate = defineComponent({
                   <Checkbox
                   // onCheck={(check) =>
                   //   check
-                  //     ? (updateOrder.status = "delivered")
-                  //     : (updateOrder.status = "")
+                  //     ? (newOrder.status = "delivered")
+                  //     : (newOrder.status = "")
                   // }
                   />
                   <span>{globalTranslate("Orders.status.delivered")}</span>
@@ -117,8 +98,8 @@ export const OrderUpdate = defineComponent({
                   <Checkbox
                   // onCheck={(check) =>
                   //   check
-                  //     ? (updateOrder.status = "pending")
-                  //     : (updateOrder.status = "")
+                  //     ? (newOrder.status = "pending")
+                  //     : (newOrder.status = "")
                   // }
                   />
                   <span>{globalTranslate("Orders.status.pending")}</span>
@@ -127,8 +108,8 @@ export const OrderUpdate = defineComponent({
                   <Checkbox
                   // onCheck={(check) =>
                   //   check
-                  //     ? (updateOrder.status = "canceled")
-                  //     : (updateOrder.status = "")
+                  //     ? (newOrder.status = "canceled")
+                  //     : (newOrder.status = "")
                   // }
                   />
                   <span>{globalTranslate("Orders.status.canceled")}</span>
@@ -138,36 +119,38 @@ export const OrderUpdate = defineComponent({
             <div class="w-full  h-full flex flex-col gap-1">
               <Button
                 onClick={() =>
-                  updateOrder.order_items?.push({
+                  order_items.value.push({
                     product_id: 0,
                     quantity: 0,
+                    price: 0,
                   })
                 }
               >
-                {globalTranslate("Orders.update.details.order.add")}
+                {globalTranslate("Orders.create.details.order.add")}
               </Button>
               <div class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
-                  {updateOrder.order_items?.map((item, index) => (
+                  {order_items.value.map((item, index) => (
                     <ComboBox
-                      // defaultValue={item.product?.name ?? "select a product"}
                       items={products.value}
                       // onSelect={(id: number) => (item.product_id = id)}
                     >
-                      {globalTranslate("Orders.update.details.order.select")}
+                      {globalTranslate("Orders.create.details.order.select")}
                     </ComboBox>
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateOrder.order_items?.map((item, index) => (
-                    <div class="h-full flex w-full items-center relative">
+                  {order_items.value.map((item, index) => (
+                    <div class="h-full w-full flex items-center relative">
                       <Input
                         class="border-r-0"
-                        defaultValue={item.quantity}
+                        // IsEmpty={isFlash.value && item.quantity == 0}
                         placeHolder={globalTranslate(
                           "Orders.create.details.order.placeholder[0]"
                         )}
                         type="number"
+                        v-model={item.quantity}
+                        // OnInputChange={(value) => (item.quantity = Number(value))}
                       >
                         {{
                           unite: () => (
@@ -181,15 +164,17 @@ export const OrderUpdate = defineComponent({
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
-                  {updateOrder.order_items?.map((item, index) => (
-                    <div class="h-full flex w-full items-center relative">
+                  {order_items.value.map((item, index) => (
+                    <div class="h-full w-full flex items-center relative">
                       <Input
-                        class="border-r-0 "
-                        defaultValue={item.price}
+                        class="border-r-0"
+                        // IsEmpty={isFlash.value && item.price == 0}
                         placeHolder={globalTranslate(
                           "Orders.create.details.order.placeholder[1]"
                         )}
                         type="number"
+                        v-model={item.price}
+                        // OnInputChange={(value) => (item.price = Number(value))}
                       >
                         {{
                           unite: () => (
@@ -202,13 +187,11 @@ export const OrderUpdate = defineComponent({
                     </div>
                   ))}
                 </div>
+
                 <div class="flex flex-col gap-2">
-                  {updateOrder.order_items?.map((item, index) => (
+                  {order_items.value.map((item, index) => (
                     <div
-                      onClick={() => {
-                        updateOrder.order_items?.splice(index, 1);
-                        if (item.id) deleteOneOrderItem(item.id);
-                      }}
+                      onClick={() => order_items.value.splice(index, 1)}
                       class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-[4px] items-center w-full h-full"
                     >
                       <UiIcon name="delete" />
@@ -220,8 +203,8 @@ export const OrderUpdate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <Button class={"w-full"} onClick={() => updateTheOrders()}>
-            {globalTranslate("Orders.update.button")}
+          <Button class={"w-full"} onClick={() => createNewOrders()}>
+            {globalTranslate("Orders.create.button")}
           </Button>
         </div>
       </div>

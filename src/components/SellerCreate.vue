@@ -60,7 +60,7 @@ export const SellerCreate = defineComponent({
             //   (seller["name"] =
             //     typeof value == "string" ? value : JSON.stringify(value))
             // }
-            modelValue={seller.name}
+            v-model={seller.name}
             type="text"
             placeHolder={globalTranslate("Sellers.create.placeholders[0]")}
           />
@@ -70,7 +70,7 @@ export const SellerCreate = defineComponent({
             //   (seller["email"] =
             //     typeof value == "string" ? value : JSON.stringify(value))
             // }
-            modelValue={seller.email}
+            v-model={seller.email}
             type="text"
             placeHolder={globalTranslate("Sellers.create.placeholders[1]")}
           />
@@ -80,7 +80,7 @@ export const SellerCreate = defineComponent({
             //   (seller["phone"] =
             //     typeof value == "string" ? value : JSON.stringify(value))
             // }
-            modelValue={seller.phone}
+            v-model={seller.phone}
             type="text"
             placeHolder={globalTranslate("Sellers.create.placeholders[2]")}
           />
@@ -90,7 +90,7 @@ export const SellerCreate = defineComponent({
             //   (seller["address"] =
             //     typeof value == "string" ? value : JSON.stringify(value))
             // }
-            modelValue={seller.address}
+            v-model={seller.address}
             type="text"
             placeHolder={globalTranslate("Sellers.create.placeholders[3]")}
           />

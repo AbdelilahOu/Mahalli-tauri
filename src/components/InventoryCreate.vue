@@ -56,7 +56,7 @@ export const InventoryCreate = defineComponent({
           <Input
             type="number"
             placeHolder={globalTranslate("Inventory.create.placeholder")}
-            modelValue={inventoryMvm.quantity}
+            v-model={inventoryMvm.quantity}
           />
         </div>
         <div class="flex">

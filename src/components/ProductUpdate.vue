@@ -16,7 +16,7 @@ export const ProductUpdate = defineComponent({
     const ProductRow = computed(() => store.getters.getSelectedRow<productT>());
 
     const updateProduct = reactive<updateProductT>({
-      ...(ProductRow.value ? ProductRow.value : PRODUCT_UPDATE),
+      ...(ProductRow.value.id ? ProductRow.value : PRODUCT_UPDATE),
       quantity: 0,
     });
 
@@ -49,18 +49,16 @@ export const ProductUpdate = defineComponent({
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
           <Input
-            defaultValue={ProductRow.value?.name}
             // OnInputChange={(value) =>
             //   (updateProduct["name"] =
             //     typeof value == "string" ? value : JSON.stringify(value))
             // }
-            modelValue={ProductRow.value.name}
+            v-model={updateProduct.name}
             type="text"
             placeHolder="Name"
           />
           <Input
-            defaultValue={ProductRow.value?.price}
-            modelValue={ProductRow.value?.price}
+            v-model={updateProduct.price}
             // OnInputChange={(value) => (updateProduct["price"] = Number(value))}
             type="number"
             placeHolder="Price"
@@ -74,15 +72,13 @@ export const ProductUpdate = defineComponent({
             }}
           </Input>
           <Input
-            defaultValue={ProductRow.value?.tva}
-            modelValue={ProductRow.value?.tva}
+            v-model={updateProduct.tva}
             // OnInputChange={(value) => (updateProduct["tva"] = Number(value))}
             type="number"
             placeHolder="TVA"
           />
           <Input
-            defaultValue={0}
-            modelValue={updateProduct.quantity}
+            v-model={updateProduct.quantity}
             // OnInputChange={(value) =>
             //   (updateProduct["quantity"] = Number(value))
             // }
@@ -98,8 +94,7 @@ export const ProductUpdate = defineComponent({
             }}
           </Input>
           <Input
-            defaultValue={ProductRow.value?.description}
-            modelValue={ProductRow.value?.description}
+            v-model={updateProduct.description}
             // OnInputChange={(value) =>
             //   (updateProduct["description"] =
             //     typeof value == "string" ? value : JSON.stringify(value))

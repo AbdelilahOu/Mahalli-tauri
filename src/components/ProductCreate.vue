@@ -60,7 +60,7 @@ export const ProductCreate = defineComponent({
             //   (product["name"] =
             //     typeof value == "string" ? value : JSON.stringify(value))
             // }
-            modelValue={product.name}
+            v-model={product.name}
             type="text"
             placeHolder={globalTranslate("Products.create.placeholders[0]")}
           />
@@ -68,21 +68,21 @@ export const ProductCreate = defineComponent({
             // IsEmpty={isFlash.value && product["price"] == 0}
             // OnInputChange={(value) => (product["price"] = Number(value))}
             type="Number"
-            modelValue={product.price}
+            v-model={product.price}
             placeHolder={globalTranslate("Products.create.placeholders[2]")}
           />
           <Input
             // IsEmpty={isFlash.value && product["tva"] == 0}
             // OnInputChange={(value) => (product["tva"] = Number(value))}
             type="Number"
-            modelValue={product.tva}
+            v-model={product.tva}
             placeHolder={globalTranslate("Products.create.placeholders[3]")}
           />
           <Input
             // IsEmpty={isFlash.value && product["quantity"] == 0}
             // OnInputChange={(value) => (product["quantity"] = Number(value))}
             type="Number"
-            modelValue={product.quantity}
+            v-model={product.quantity}
             placeHolder={globalTranslate("Products.create.placeholders[4]")}
           />
           <Input
@@ -92,7 +92,7 @@ export const ProductCreate = defineComponent({
             //     typeof value == "string" ? value : JSON.stringify(value))
             // }
             type="textarea"
-            modelValue={product.description}
+            v-model={product.description}
             placeHolder={globalTranslate("Products.create.placeholders[5]")}
           />
         </div>
