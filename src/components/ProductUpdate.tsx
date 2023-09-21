@@ -109,7 +109,7 @@ export const ProductUpdate = defineComponent({
           />
         </div>
         <div class="flex">
-          <Button onClick={() => updateTheProduct()}>
+          <Button class={"w-full"} onClick={() => updateTheProduct()}>
             Update {updateProduct.name}
           </Button>
         </div>

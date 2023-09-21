@@ -197,7 +197,7 @@ export const InvoiceUpdate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <Button onClick={() => updateTheInvoice()}>
+          <Button class={"w-full"} onClick={() => updateTheInvoice()}>
             {globalTranslate("Invoices.update.button")}
           </Button>
         </div>
