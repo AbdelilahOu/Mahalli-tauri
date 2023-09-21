@@ -83,15 +83,15 @@ function handleInputChange(value: string | number) {
               :placeHolder="globalTranslate('Global.search')"
             >
               <UiIcon
-                class="fill-gray-400 cursor-default hover:bg-white"
+                extraStyle="fill-gray-400 cursor-default hover:bg-white"
                 name="search"
               />
             </Input>
           </div>
           <div class="w-1/4 flex gap-2">
-            <Button @click="updateModal('InventoryCreate')">
+            <Button class="w-full" @click="updateModal('InventoryCreate')">
               <UiIcon
-                class="fill-gray-900 cursor-default hover:bg-transparent"
+                extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
               />
               {{ globalTranslate("Inventory.index.addButton") }}

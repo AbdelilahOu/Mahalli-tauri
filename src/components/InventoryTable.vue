@@ -4,6 +4,7 @@ import { formatDate } from "@/utils/formatDate";
 import type { inventoryMvmT } from "@/types";
 import { RouterLink } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
+import UiPagination from "./ui/UiPagination.vue";
 
 defineProps<{
   inventory: inventoryMvmT[];
