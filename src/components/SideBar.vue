@@ -40,8 +40,8 @@ const openSettingsModal = () => {
         <span
           class="font-medium text-black flex items-center px-1"
           :class="{
-            'justify-around': !isCollapse,
-            'justify-between': isCollapse,
+            'justify-around': isCollapse,
+            'justify-between': !isCollapse,
           }"
         >
           <span

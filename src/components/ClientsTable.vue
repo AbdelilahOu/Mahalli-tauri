@@ -112,7 +112,6 @@ const toggleThisClient = (client: clientT, name: string) => {
             </div>
           </td>
         </tr>
-        ))}
       </tbody>
     </table>
     <div>

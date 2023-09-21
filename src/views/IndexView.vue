@@ -30,7 +30,10 @@ onBeforeRouteUpdate((to: any, from: any) => {
         'w-52 min-w-[12rem]': !isCollapse,
       }"
     >
-      <SideBar :isCollapse="isCollapse" @collapse="isCollapse = !isCollapse" />
+      <SideBar
+        :isCollapse="isCollapse"
+        @toggle:collapse="isCollapse = !isCollapse"
+      />
     </div>
     <div class="grid grid-rows-[50px_1fr] w-full">
       <Navigation />

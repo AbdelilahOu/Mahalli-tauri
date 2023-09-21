@@ -44,7 +44,7 @@
         </div>
       </Transition>
       <Transition appear>
-        <InvoicesTable :Invoices="invoices" />
+        <InvoicesTable :invoices="invoices" />
       </Transition>
     </div>
   </main>
@@ -70,6 +70,7 @@ import UiIcon from "@/components/ui/UiIcon.vue";
 import type { invoiceT, withCount } from "@/types";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { store } from "@/store";
+import InvoicesTable from "@/components/InvoicesTable.vue";
 
 const router = useRouter();
 const { updateQueryParams } = useUpdateRouteQueryParams();
