@@ -51,37 +51,41 @@ export const SellerUpdate = defineComponent({
         <div class="h-full w-full flex flex-col gap-2">
           <Input
             defaultValue={SellerRow.value?.name}
-            OnInputChange={(value) =>
-              (updateSeller["name"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            modelValue={SellerRow.value?.name}
+            // OnInputChange={(value) =>
+            //   (updateSeller["name"] =
+            //     typeof value == "string" ? value : JSON.stringify(value))
+            // }
             type="text"
             placeHolder={globalTranslate("Sellers.create.placeholders[0]")}
           />
           <Input
             defaultValue={SellerRow.value?.email}
-            OnInputChange={(value) =>
-              (updateSeller["email"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            modelValue={SellerRow.value?.email}
+            // OnInputChange={(value) =>
+            //   (updateSeller["email"] =
+            //     typeof value == "string" ? value : JSON.stringify(value))
+            // }
             type="text"
             placeHolder={globalTranslate("Sellers.create.placeholders[1]")}
           />
           <Input
             defaultValue={SellerRow.value?.phone}
-            OnInputChange={(value) =>
-              (updateSeller["phone"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            modelValue={SellerRow.value?.phone}
+            // OnInputChange={(value) =>
+            //   (updateSeller["phone"] =
+            //     typeof value == "string" ? value : JSON.stringify(value))
+            // }
             type="text"
             placeHolder={globalTranslate("Sellers.create.placeholders[2]")}
           />
           <Input
             defaultValue={SellerRow.value?.address}
-            OnInputChange={(value) =>
-              (updateSeller["address"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            modelValue={SellerRow.value?.address}
+            // OnInputChange={(value) =>
+            //   (updateSeller["address"] =
+            //     typeof value == "string" ? value : JSON.stringify(value))
+            // }
             type="text"
             placeHolder={globalTranslate("Sellers.create.placeholders[3]")}
           />

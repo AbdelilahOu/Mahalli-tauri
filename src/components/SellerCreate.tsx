@@ -55,38 +55,42 @@ export const SellerCreate = defineComponent({
             />
           </div>
           <Input
-            IsEmpty={isFlash.value && seller["name"] == ""}
-            OnInputChange={(value) =>
-              (seller["name"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            // IsEmpty={isFlash.value && seller["name"] == ""}
+            // OnInputChange={(value) =>
+            //   (seller["name"] =
+            //     typeof value == "string" ? value : JSON.stringify(value))
+            // }
+            modelValue={seller.name}
             type="text"
             placeHolder={globalTranslate("Sellers.create.placeholders[0]")}
           />
           <Input
-            IsEmpty={isFlash.value && seller["email"] == ""}
-            OnInputChange={(value) =>
-              (seller["email"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            // IsEmpty={isFlash.value && seller["email"] == ""}
+            // OnInputChange={(value) =>
+            //   (seller["email"] =
+            //     typeof value == "string" ? value : JSON.stringify(value))
+            // }
+            modelValue={seller.email}
             type="text"
             placeHolder={globalTranslate("Sellers.create.placeholders[1]")}
           />
           <Input
-            IsEmpty={isFlash.value && seller["phone"] == ""}
-            OnInputChange={(value) =>
-              (seller["phone"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            // IsEmpty={isFlash.value && seller["phone"] == ""}
+            // OnInputChange={(value) =>
+            //   (seller["phone"] =
+            //     typeof value == "string" ? value : JSON.stringify(value))
+            // }
+            modelValue={seller.phone}
             type="text"
             placeHolder={globalTranslate("Sellers.create.placeholders[2]")}
           />
           <Input
-            IsEmpty={isFlash.value && seller["address"] == ""}
-            OnInputChange={(value) =>
-              (seller["address"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            // IsEmpty={isFlash.value && seller["address"] == ""}
+            // OnInputChange={(value) =>
+            //   (seller["address"] =
+            //     typeof value == "string" ? value : JSON.stringify(value))
+            // }
+            modelValue={seller.address}
             type="text"
             placeHolder={globalTranslate("Sellers.create.placeholders[3]")}
           />
