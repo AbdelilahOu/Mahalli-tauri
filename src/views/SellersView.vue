@@ -89,15 +89,15 @@ const updateModal = (name: string) => {
               :placeHolder="globalTranslate('Global.search')"
             >
               <UiIcon
-                class="fill-gray-400 cursor-default hover:bg-white"
+                extraStyle="fill-gray-400 cursor-default hover:bg-white"
                 name="search"
               />
             </Input>
           </div>
           <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
-            <Button @click="uploadCSV">
+            <Button variant="ghost" @click="uploadCSV">
               <span
-                :class="'fill-sky-400 transition-all duration-200 scale-[0.8] group-hover:fill-sky-600'"
+                :class="'text-sky-400 transition-all duration-200 scale-[0.8] group-hover:fill-sky-600'"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -113,7 +113,7 @@ const updateModal = (name: string) => {
             </Button>
             <Button @click="updateModal('SellerCreate')">
               <UiIcon
-                class="fill-gray-900 cursor-default hover:bg-transparent"
+                extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
               />
               {{ globalTranslate("Sellers.index.addButton") }}
