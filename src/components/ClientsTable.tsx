@@ -53,9 +53,7 @@ export const ClientsTable = defineComponent({
               <tr v-fade={index} key={client.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
-                    <Checkbox
-                      onCheck={(check) => checkThisUser(check, client.id)}
-                    />
+                    <Checkbox />
                   </span>
                 </td>
                 <td class="p-2">

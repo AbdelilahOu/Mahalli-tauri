@@ -50,16 +50,18 @@ export const ProductUpdate = defineComponent({
         <div class="h-full w-full flex flex-col gap-2">
           <Input
             defaultValue={ProductRow.value?.name}
-            OnInputChange={(value) =>
-              (updateProduct["name"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            // OnInputChange={(value) =>
+            //   (updateProduct["name"] =
+            //     typeof value == "string" ? value : JSON.stringify(value))
+            // }
+            modelValue={ProductRow.value.name}
             type="text"
             placeHolder="Name"
           />
           <Input
             defaultValue={ProductRow.value?.price}
-            OnInputChange={(value) => (updateProduct["price"] = Number(value))}
+            modelValue={ProductRow.value?.price}
+            // OnInputChange={(value) => (updateProduct["price"] = Number(value))}
             type="number"
             placeHolder="Price"
           >
@@ -73,15 +75,17 @@ export const ProductUpdate = defineComponent({
           </Input>
           <Input
             defaultValue={ProductRow.value?.tva}
-            OnInputChange={(value) => (updateProduct["tva"] = Number(value))}
+            modelValue={ProductRow.value?.tva}
+            // OnInputChange={(value) => (updateProduct["tva"] = Number(value))}
             type="number"
             placeHolder="TVA"
           />
           <Input
             defaultValue={0}
-            OnInputChange={(value) =>
-              (updateProduct["quantity"] = Number(value))
-            }
+            modelValue={updateProduct.quantity}
+            // OnInputChange={(value) =>
+            //   (updateProduct["quantity"] = Number(value))
+            // }
             type="number"
             placeHolder="Add Inventory"
           >
@@ -95,10 +99,11 @@ export const ProductUpdate = defineComponent({
           </Input>
           <Input
             defaultValue={ProductRow.value?.description}
-            OnInputChange={(value) =>
-              (updateProduct["description"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            modelValue={ProductRow.value?.description}
+            // OnInputChange={(value) =>
+            //   (updateProduct["description"] =
+            //     typeof value == "string" ? value : JSON.stringify(value))
+            // }
             type="text"
             placeHolder="Address"
           />

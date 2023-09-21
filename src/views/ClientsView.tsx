@@ -114,7 +114,7 @@ export const ClientsView = defineComponent({
                   <UiIcon
                     class=" fill-white cursor-default hover:bg-transparent"
                     name="add"
-                  />{" "}
+                  />
                   {globalTranslate("Clients.index.addButton")}
                 </Button>
               </div>

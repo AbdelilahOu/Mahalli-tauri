@@ -16,11 +16,11 @@ export const InventoryCreate = defineComponent({
 
     const inventoryMvm = reactive(INVENTORY_CREATE);
 
-    const products = ref<{ name: string; id: number }[]>([]);
+    const products = ref<{ label: string; value: number }[]>([]);
 
     onBeforeMount(async () => {
       const res = await Promise.allSettled([
-        invoke<{ name: string; id: number }[]>("get_all_products"),
+        invoke<{ label: string; value: number }[]>("get_all_products"),
       ]);
       // @ts-ignore
       if ((res[0].status = "fulfilled")) products.value = res[0].value;
@@ -49,15 +49,14 @@ export const InventoryCreate = defineComponent({
         <div class="h-full w-full flex flex-col gap-2">
           <ComboBox
             items={products.value}
-            onSelect={(id: number) => (inventoryMvm.productId = id)}
+            // onSelect={(id: number) => (inventoryMvm.productId = id)}
           >
             {globalTranslate("Inventory.create.select")}
           </ComboBox>
           <Input
             type="number"
             placeHolder={globalTranslate("Inventory.create.placeholder")}
-            IsEmpty={false}
-            OnInputChange={(input) => (inventoryMvm.quantity = Number(input))}
+            modelValue={inventoryMvm.quantity}
           />
         </div>
         <div class="flex">

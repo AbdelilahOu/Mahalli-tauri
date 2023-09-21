@@ -56,38 +56,22 @@ export const ClientCreate = defineComponent({
             />
           </div>
           <Input
-            IsEmpty={isFlash.value && client["fullname"] == ""}
-            OnInputChange={(value) =>
-              (client["fullname"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            modelValue={client.fullname}
             type="text"
             placeHolder={globalTranslate("Clients.create.placeholders[0]")}
           />
           <Input
-            IsEmpty={isFlash.value && client["email"] == ""}
-            OnInputChange={(value) =>
-              (client["email"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            modelValue={client.email}
             type="text"
             placeHolder={globalTranslate("Clients.create.placeholders[1]")}
           />
           <Input
-            IsEmpty={isFlash.value && client["phone"] == ""}
-            OnInputChange={(value) =>
-              (client["phone"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            modelValue={client.phone}
             type="text"
             placeHolder={globalTranslate("Clients.create.placeholders[2]")}
           />
           <Input
-            IsEmpty={isFlash.value && client["address"] == ""}
-            OnInputChange={(value) =>
-              (client["address"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            modelValue={client.address}
             type="text"
             placeHolder={globalTranslate("Clients.create.placeholders[3]")}
           />

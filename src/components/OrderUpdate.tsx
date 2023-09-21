@@ -26,8 +26,8 @@ export const OrderUpdate = defineComponent({
     //
     const OrdersRow = computed(() => store.getters.getSelectedRow<orderT>());
 
-    const sellers = ref<{ name: string; id: number }[]>([]);
-    const products = ref<{ name: string; id: number }[]>([]);
+    const sellers = ref<{ label: string; value: number }[]>([]);
+    const products = ref<{ label: string; value: number }[]>([]);
     //
 
     const updateOrder = reactive<updateOrdersT>(
@@ -37,8 +37,8 @@ export const OrderUpdate = defineComponent({
 
     onBeforeMount(async () => {
       const res = await Promise.allSettled([
-        invoke<{ name: string; id: number }[]>("get_all_sellers"),
-        invoke<{ name: string; id: number }[]>("get_all_products"),
+        invoke<{ label: string; value: number }[]>("get_all_sellers"),
+        invoke<{ label: string; value: number }[]>("get_all_products"),
       ]);
 
       // @ts-ignore
@@ -91,10 +91,7 @@ export const OrderUpdate = defineComponent({
             </h1>
             <ComboBox
               // defaultValue={updateOrder.seller?.name ?? "Select a seller"}
-              items={sellers.value.map((seller) => ({
-                label: seller.name,
-                value: seller.id,
-              }))}
+              items={sellers.value}
               // onSelect={(id: number) => (updateOrder.seller_id = id)}
             >
               {globalTranslate("Orders.update.details.seller.select")}
@@ -108,31 +105,31 @@ export const OrderUpdate = defineComponent({
               <div class="flex justify-between w-full">
                 <div class="h-full w-full flex flex-row flex-nowrap items-center gap-2">
                   <Checkbox
-                    onCheck={(check) =>
-                      check
-                        ? (updateOrder.status = "delivered")
-                        : (updateOrder.status = "")
-                    }
+                  // onCheck={(check) =>
+                  //   check
+                  //     ? (updateOrder.status = "delivered")
+                  //     : (updateOrder.status = "")
+                  // }
                   />
                   <span>{globalTranslate("Orders.status.delivered")}</span>
                 </div>
                 <div class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2">
                   <Checkbox
-                    onCheck={(check) =>
-                      check
-                        ? (updateOrder.status = "pending")
-                        : (updateOrder.status = "")
-                    }
+                  // onCheck={(check) =>
+                  //   check
+                  //     ? (updateOrder.status = "pending")
+                  //     : (updateOrder.status = "")
+                  // }
                   />
                   <span>{globalTranslate("Orders.status.pending")}</span>
                 </div>
                 <div class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2">
                   <Checkbox
-                    onCheck={(check) =>
-                      check
-                        ? (updateOrder.status = "canceled")
-                        : (updateOrder.status = "")
-                    }
+                  // onCheck={(check) =>
+                  //   check
+                  //     ? (updateOrder.status = "canceled")
+                  //     : (updateOrder.status = "")
+                  // }
                   />
                   <span>{globalTranslate("Orders.status.canceled")}</span>
                 </div>
@@ -154,10 +151,7 @@ export const OrderUpdate = defineComponent({
                   {updateOrder.order_items?.map((item, index) => (
                     <ComboBox
                       // defaultValue={item.product?.name ?? "select a product"}
-                      items={products.value.map((product) => ({
-                        label: product.name,
-                        value: product.id,
-                      }))}
+                      items={products.value}
                       // onSelect={(id: number) => (item.product_id = id)}
                     >
                       {globalTranslate("Orders.update.details.order.select")}

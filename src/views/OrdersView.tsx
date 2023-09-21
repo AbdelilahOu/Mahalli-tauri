@@ -126,7 +126,7 @@ export const OrdersView = defineComponent({
                   <UiIcon
                     class=" fill-gray-900 cursor-default hover:bg-transparent"
                     name="add"
-                  />{" "}
+                  />
                   {globalTranslate("Orders.index.addButton")}
                 </Button>
               </div>

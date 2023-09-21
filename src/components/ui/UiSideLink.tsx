@@ -1,5 +1,4 @@
 import { defineComponent } from "vue";
-import { RouterLink } from "vue-router";
 import UiIconVue from "./UiIcon.vue";
 
 export const UiSideLink = defineComponent({

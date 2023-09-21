@@ -105,7 +105,7 @@ export const InventoryView = defineComponent({
                   <UiIcon
                     class=" fill-gray-900 cursor-default hover:bg-transparent"
                     name="add"
-                  />{" "}
+                  />
                   {globalTranslate("Inventory.index.addButton")}
                 </Button>
               </div>

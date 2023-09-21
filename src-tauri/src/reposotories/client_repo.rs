@@ -39,8 +39,8 @@ pub fn get_all_clients(connection: &mut SqliteConnection) -> Vec<Value> {
 
     response.into_iter().for_each(|(fname, c_id)| {
         result.push(json!({
-            "name":fname,
-            "id":c_id
+            "label":fname,
+            "value":c_id
         }))
     });
 

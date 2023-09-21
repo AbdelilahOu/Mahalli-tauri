@@ -55,39 +55,44 @@ export const ProductCreate = defineComponent({
             />
           </div>
           <Input
-            IsEmpty={isFlash.value && product["name"] == ""}
-            OnInputChange={(value) =>
-              (product["name"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            // IsEmpty={isFlash.value && product["name"] == ""}
+            // OnInputChange={(value) =>
+            //   (product["name"] =
+            //     typeof value == "string" ? value : JSON.stringify(value))
+            // }
+            modelValue={product.name}
             type="text"
             placeHolder={globalTranslate("Products.create.placeholders[0]")}
           />
           <Input
-            IsEmpty={isFlash.value && product["price"] == 0}
-            OnInputChange={(value) => (product["price"] = Number(value))}
+            // IsEmpty={isFlash.value && product["price"] == 0}
+            // OnInputChange={(value) => (product["price"] = Number(value))}
             type="Number"
+            modelValue={product.price}
             placeHolder={globalTranslate("Products.create.placeholders[2]")}
           />
           <Input
-            IsEmpty={isFlash.value && product["tva"] == 0}
-            OnInputChange={(value) => (product["tva"] = Number(value))}
+            // IsEmpty={isFlash.value && product["tva"] == 0}
+            // OnInputChange={(value) => (product["tva"] = Number(value))}
             type="Number"
+            modelValue={product.tva}
             placeHolder={globalTranslate("Products.create.placeholders[3]")}
           />
           <Input
-            IsEmpty={isFlash.value && product["quantity"] == 0}
-            OnInputChange={(value) => (product["quantity"] = Number(value))}
+            // IsEmpty={isFlash.value && product["quantity"] == 0}
+            // OnInputChange={(value) => (product["quantity"] = Number(value))}
             type="Number"
+            modelValue={product.quantity}
             placeHolder={globalTranslate("Products.create.placeholders[4]")}
           />
           <Input
-            IsEmpty={isFlash.value && product["description"] == ""}
-            OnInputChange={(value) =>
-              (product["description"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
+            // IsEmpty={isFlash.value && product["description"] == ""}
+            // OnInputChange={(value) =>
+            //   (product["description"] =
+            //     typeof value == "string" ? value : JSON.stringify(value))
+            // }
             type="textarea"
+            modelValue={product.description}
             placeHolder={globalTranslate("Products.create.placeholders[5]")}
           />
         </div>
