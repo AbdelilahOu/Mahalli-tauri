@@ -1,6 +1,6 @@
-import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
 import { defineComponent } from "vue";
+import { Button } from "./ui/button";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 
