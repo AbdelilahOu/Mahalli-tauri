@@ -6,14 +6,14 @@ import { ImagesFiles } from "@/constants/FileTypes";
 import { UiUploader } from "./ui/UiUploader";
 import type { newClientT } from "@/types";
 import { invoke } from "@tauri-apps/api";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { UiInput } from "./ui/UiInput";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
 
 export const ClientCreate = defineComponent({
   name: "ClientCreate",
-  components: { UiButton, UiInput },
+  components: { Button, UiInput },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -93,9 +93,9 @@ export const ClientCreate = defineComponent({
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => createNewClient()}>
+          <Button colorTheme="a" Click={() => createNewClient()}>
             {globalTranslate("Clients.create.button")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

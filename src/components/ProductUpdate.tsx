@@ -3,13 +3,13 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import type { productT, updateProductT } from "@/types";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
 import { invoke } from "@tauri-apps/api";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { store } from "@/store";
 import { PRODUCT_UPDATE } from "@/constants/defaultValues";
 
 export const ProductUpdate = defineComponent({
   name: "ProductUpdate",
-  components: { UiButton, UiUpdateInput },
+  components: { Button, UiUpdateInput },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -104,9 +104,9 @@ export const ProductUpdate = defineComponent({
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => updateTheProduct()}>
+          <Button colorTheme="a" Click={() => updateTheProduct()}>
             Update {updateProduct.name}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

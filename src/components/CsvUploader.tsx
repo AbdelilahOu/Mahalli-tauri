@@ -4,7 +4,7 @@ import { defineComponent, ref } from "vue";
 import { useDropZone } from "@vueuse/core";
 import { invoke } from "@tauri-apps/api";
 import UiIconVue from "./ui/UiIcon.vue";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { useRoute } from "vue-router";
 import { store } from "@/store";
 
@@ -88,9 +88,9 @@ export const CsvUploader = defineComponent({
             </div>
           ))}
           {filesData.value.length ? (
-            <UiButton colorTheme="" Click={upload}>
+            <Button colorTheme="" Click={upload}>
               Upload to {route.query.table}
-            </UiButton>
+            </Button>
           ) : (
             ""
           )}

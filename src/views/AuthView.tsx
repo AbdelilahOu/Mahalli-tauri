@@ -1,7 +1,7 @@
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import data from "@/animations/66291-meditative-business-man.json";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { UiButton } from "@/components/ui/UiButton";
+import { Button } from "@/components/ui/button";
 import { UiInput } from "@/components/ui/UiInput";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { getCurrentUser } from "vuefire";
@@ -12,7 +12,7 @@ import { login } from "@/utils/Oauth";
 
 export const AuthView = defineComponent({
   name: "Auth",
-  components: { UiButton, UiInput, Vue3Lottie, UiIcon },
+  components: { Button, UiInput, Vue3Lottie, UiIcon },
   setup() {
     const checkForAuth = ref(
       useRouter().currentRoute.value.query.checkAuth === "true"
@@ -131,9 +131,9 @@ export const AuthView = defineComponent({
                     />
                   </div>
                   <div class="flex h-[2.5rem]">
-                    <UiButton colorTheme="a" Click={() => LogIn()}>
+                    <Button colorTheme="a" Click={() => LogIn()}>
                       {globalTranslate("Auth.title")}
-                    </UiButton>
+                    </Button>
                   </div>
                 </div>
               </div>

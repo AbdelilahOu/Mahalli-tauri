@@ -4,7 +4,7 @@ import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import type { newOrdersT, newOrdersItemT } from "@/types";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiCheckBox } from "./ui/UiCheckBox";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
 import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
@@ -13,7 +13,7 @@ import { store } from "@/store";
 
 export const OrderCreate = defineComponent({
   name: "OrderCreate",
-  components: { UiButton, UiCheckBox, UiIcon, UiInput, UiSelect },
+  components: { Button, UiCheckBox, UiIcon, UiInput, UiSelect },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -118,7 +118,7 @@ export const OrderCreate = defineComponent({
               </div>
             </div>
             <div class="w-full  h-full flex flex-col gap-1">
-              <UiButton
+              <Button
                 Click={() =>
                   order_items.value.push({
                     product_id: 0,
@@ -128,7 +128,7 @@ export const OrderCreate = defineComponent({
                 }
               >
                 {globalTranslate("Orders.create.details.order.add")}
-              </UiButton>
+              </Button>
               <div class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
                   {order_items.value.map((item, index) => (
@@ -204,9 +204,9 @@ export const OrderCreate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => createNewOrders()}>
+          <Button colorTheme="a" Click={() => createNewOrders()}>
             {globalTranslate("Orders.create.button")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

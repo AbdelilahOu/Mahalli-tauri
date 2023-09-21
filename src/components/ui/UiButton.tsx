@@ -1,7 +1,7 @@
 import { defineComponent, type PropType } from "vue";
 
-export const UiButton = defineComponent({
-  name: "UiButton",
+export const Button = defineComponent({
+  name: "Button",
   props: {
     colorTheme: {
       type: String,

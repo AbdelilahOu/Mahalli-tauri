@@ -3,14 +3,14 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import type { sellerT, updateSellerT } from "@/types";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
 import { store } from "@/store";
 import { SELLER_UPDATE } from "@/constants/defaultValues";
 
 export const SellerUpdate = defineComponent({
   name: "SellerUpdate",
-  components: { UiButton, UiUpdateInput },
+  components: { Button, UiUpdateInput },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -87,10 +87,10 @@ export const SellerUpdate = defineComponent({
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => updateTheSeller()}>
+          <Button colorTheme="a" Click={() => updateTheSeller()}>
             {globalTranslate("Sellers.update.button")}
             {updateSeller.name}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

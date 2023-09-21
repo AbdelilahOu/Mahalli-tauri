@@ -1,7 +1,7 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { UiSelect } from "./ui/UiSelect";
 import { invoke } from "@tauri-apps/api";
 import { UiInput } from "./ui/UiInput";
@@ -10,7 +10,7 @@ import { INVENTORY_CREATE } from "@/constants/defaultValues";
 
 export const InventoryCreate = defineComponent({
   name: "InventoryCreate",
-  components: { UiButton, UiInput, UiSelect },
+  components: { Button, UiInput, UiSelect },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -61,9 +61,9 @@ export const InventoryCreate = defineComponent({
           />
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => createNewInventory()}>
+          <Button colorTheme="a" Click={() => createNewInventory()}>
             {globalTranslate("Inventory.create.button")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

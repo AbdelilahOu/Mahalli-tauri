@@ -1,5 +1,5 @@
 import { globalTranslate } from "@/utils/globalTranslate";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { computed, defineComponent } from "vue";
 import UiIcon from "./ui/UiIcon.vue";
 import { useI18n } from "vue-i18n";
@@ -7,7 +7,7 @@ import { store } from "@/store";
 
 export const TranslationModal = defineComponent({
   name: "TranslationModal",
-  components: { UiIcon, UiButton },
+  components: { UiIcon, Button },
   setup() {
     const availableLocals = computed(() => store.getters.getLocales());
 
@@ -26,14 +26,14 @@ export const TranslationModal = defineComponent({
         </h1>
         <div class="grid grid-cols-2 gap-2 ">
           {availableLocals.value.map((item) => (
-            <UiButton Click={() => ChangeLocale(item)}>
+            <Button Click={() => ChangeLocale(item)}>
               <span class="w-3/5 items-center h-full text-start flex justify-center gap-2">
                 <span class="py-2">
                   <UiIcon IsStyled={true} name={item.key} />
                 </span>
                 {item.text}
               </span>
-            </UiButton>
+            </Button>
           ))}
         </div>
       </div>

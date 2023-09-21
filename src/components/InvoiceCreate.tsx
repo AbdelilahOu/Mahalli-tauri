@@ -5,7 +5,7 @@ import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiCheckBox } from "./ui/UiCheckBox";
 import { invoke } from "@tauri-apps/api";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { UiSelect } from "./ui/UiSelect";
 import { UiInput } from "./ui/UiInput";
 import UiIcon from "./ui/UiIcon.vue";
@@ -13,7 +13,7 @@ import { store } from "@/store";
 
 export const InvoiceCreate = defineComponent({
   name: "InvoiceCreate",
-  components: { UiButton, UiCheckBox, UiIcon, UiInput, UiSelect },
+  components: { Button, UiCheckBox, UiIcon, UiInput, UiSelect },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -118,13 +118,13 @@ export const InvoiceCreate = defineComponent({
           </div>
           <div class="w-full  h-full flex flex-col gap-1">
             <div class="w-full  h-full flex flex-col gap-1">
-              <UiButton
+              <Button
                 Click={() =>
                   InvoiceItems.value.push({ product_id: 0, quantity: 0 })
                 }
               >
                 {globalTranslate("Invoices.create.details.invoice.add")}
-              </UiButton>
+              </Button>
               <div class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
                   {InvoiceItems.value.map((item, _index) => (
@@ -177,9 +177,9 @@ export const InvoiceCreate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => createNewInvoice()}>
+          <Button colorTheme="a" Click={() => createNewInvoice()}>
             {globalTranslate("Invoices.create.button")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );
