@@ -7,7 +7,7 @@ import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox/index";
 import type { invoiceT } from "@/types";
 
-defineProps<{ Invoices: invoiceT[] }>();
+defineProps<{ invoices: invoiceT[] }>();
 
 const checkedInvoices = ref<number[]>([]);
 
@@ -48,7 +48,7 @@ const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
         <tr
           v-fade="index"
           :key="Invoice.id"
-          v-for="(Invoice, index) in Invoices"
+          v-for="(Invoice, index) in invoices"
         >
           <td class="p-2">
             <span class="h-full w-full grid">
@@ -70,18 +70,20 @@ const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="Invoice.invoice_items?.length" class="text-red-400"
+              <span v-if="!Invoice.invoice_items?.length" class="text-red-400"
                 >No products</span
               >
-              {{
-                Invoice.invoice_items?.length
-                  ? `${Invoice.invoice_items.length} ${
-                      Invoice.invoice_items.length === 1
-                        ? "Product"
-                        : "Products"
-                    }`
-                  : ""
-              }}
+              <span v-else>
+                {{
+                  Invoice.invoice_items?.length
+                    ? `${Invoice.invoice_items.length} ${
+                        Invoice.invoice_items.length === 1
+                          ? "Product"
+                          : "Products"
+                      }`
+                    : ""
+                }}
+              </span>
             </div>
           </td>
           <td class="p-2">
@@ -108,18 +110,23 @@ const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
                     ? 'bg-green-300/60 text-green-800'
                     : 'bg-red-300/60 text-red-800',
                 ]"
-                >{
-                globalTranslate(`Orders.status.${Invoice.status.toLowerCase()}`)
-                }</span
+                >{{
+                  globalTranslate(
+                    `Orders.status.${Invoice.status.toLowerCase()}`
+                  )
+                }}</span
               >
-              : <span class="text-red-400">No status</span> }}
+              <span v-else class="text-red-400">No status</span>
             </div>
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="Invoice.created_at" class="text-red-400"
+              <span v-if="!Invoice.created_at" class="text-red-400"
                 >No date</span
               >
+              <span v-else>
+                {{ Invoice.created_at }}
+              </span>
             </div>
           </td>
           <td class="p-2">
