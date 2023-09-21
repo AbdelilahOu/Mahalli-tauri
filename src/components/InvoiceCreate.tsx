@@ -3,7 +3,7 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import type { newInvoiceT, newInvoiceItemT, invoiceT } from "@/types";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { UiCheckBox } from "./ui/UiCheckBox";
+import { Checkbox } from "./ui/checkbox";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import { UiSelect } from "./ui/UiSelect";
@@ -13,7 +13,7 @@ import { store } from "@/store";
 
 export const InvoiceCreate = defineComponent({
   name: "InvoiceCreate",
-  components: { Button, UiCheckBox, UiIcon, UiInput, UiSelect },
+  components: { Button, Checkbox, UiIcon, UiInput, UiSelect },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -85,7 +85,7 @@ export const InvoiceCreate = defineComponent({
           <div class="w-full  h-full flex flex-col mb-1 gap-1">
             <div class="flex justify-between w-full">
               <div class="h-full w-full flex flex-row flex-nowrap items-center gap-2">
-                <UiCheckBox
+                <Checkbox
                   onCheck={(check) =>
                     check
                       ? (newInvoice.status = "delivered")
@@ -95,7 +95,7 @@ export const InvoiceCreate = defineComponent({
                 <span>{globalTranslate("Orders.status.delivered")}</span>
               </div>
               <div class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2">
-                <UiCheckBox
+                <Checkbox
                   onCheck={(check) =>
                     check
                       ? (newInvoice.status = "pending")
@@ -105,7 +105,7 @@ export const InvoiceCreate = defineComponent({
                 <span>{globalTranslate("Orders.status.pending")}</span>
               </div>
               <div class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2">
-                <UiCheckBox
+                <Checkbox
                   onCheck={(check) =>
                     check
                       ? (newInvoice.status = "canceled")

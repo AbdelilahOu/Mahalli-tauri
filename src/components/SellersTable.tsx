@@ -3,7 +3,7 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { store } from "@/store";
 import { UiPagination } from "./ui/UiPagination";
-import { UiCheckBox } from "./ui/UiCheckBox";
+import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
 import type { sellerT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
@@ -16,7 +16,7 @@ export const SellersTable = defineComponent({
       required: true,
     },
   },
-  components: { UiCheckBox, UiIcon, UiPagination },
+  components: { Checkbox, UiIcon, UiPagination },
   setup(props) {
     const checkedSellers = ref<number[]>([]);
 
@@ -52,7 +52,7 @@ export const SellersTable = defineComponent({
               <tr v-fade={index} key={Seller.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
-                    <UiCheckBox
+                    <Checkbox
                       onCheck={(check) => checkThisUser(check, Seller.id)}
                     />
                   </span>
