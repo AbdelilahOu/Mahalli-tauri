@@ -7,13 +7,13 @@ import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
 import { UiSelect } from "./ui/UiSelect";
-import { UiInput } from "./ui/UiInput";
+import { Input } from "./ui/input";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 
 export const OrderCreate = defineComponent({
   name: "OrderCreate",
-  components: { Button, Checkbox, UiIcon, UiInput, UiSelect },
+  components: { Button, Checkbox, UiIcon, Input, UiSelect },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -143,13 +143,13 @@ export const OrderCreate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {order_items.value.map((item, index) => (
                     <div class="h-full w-full flex items-center relative">
-                      <UiInput
+                      <Input
                         class="border-r-0"
                         IsEmpty={isFlash.value && item.quantity == 0}
-                        PlaceHolder={globalTranslate(
+                        placeHolder={globalTranslate(
                           "Orders.create.details.order.placeholder[0]"
                         )}
-                        Type="number"
+                        type="number"
                         OnInputChange={(value) =>
                           (item.quantity = Number(value))
                         }
@@ -161,20 +161,20 @@ export const OrderCreate = defineComponent({
                             </span>
                           ),
                         }}
-                      </UiInput>
+                      </Input>
                     </div>
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
                   {order_items.value.map((item, index) => (
                     <div class="h-full w-full flex items-center relative">
-                      <UiInput
+                      <Input
                         class="border-r-0"
                         IsEmpty={isFlash.value && item.price == 0}
-                        PlaceHolder={globalTranslate(
+                        placeHolder={globalTranslate(
                           "Orders.create.details.order.placeholder[1]"
                         )}
-                        Type="number"
+                        type="number"
                         OnInputChange={(value) => (item.price = Number(value))}
                       >
                         {{
@@ -184,7 +184,7 @@ export const OrderCreate = defineComponent({
                             </span>
                           ),
                         }}
-                      </UiInput>
+                      </Input>
                     </div>
                   ))}
                 </div>

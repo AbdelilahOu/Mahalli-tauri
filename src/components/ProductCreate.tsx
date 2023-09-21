@@ -6,14 +6,14 @@ import { UiUploader } from "./ui/UiUploader";
 import type { newProductT } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
-import { UiInput } from "./ui/UiInput";
+import { Input } from "./ui/input";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
 import { PRODUCT_CREATE } from "@/constants/defaultValues";
 
 export const ProductCreate = defineComponent({
   name: "ProductCreate",
-  components: { Button, UiInput },
+  components: { Button, Input },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
@@ -54,41 +54,41 @@ export const ProductCreate = defineComponent({
               onSave={(image) => (product.image = image)}
             />
           </div>
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && product["name"] == ""}
             OnInputChange={(value) =>
               (product["name"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Products.create.placeholders[0]")}
+            type="text"
+            placeHolder={globalTranslate("Products.create.placeholders[0]")}
           />
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && product["price"] == 0}
             OnInputChange={(value) => (product["price"] = Number(value))}
-            Type="Number"
-            PlaceHolder={globalTranslate("Products.create.placeholders[2]")}
+            type="Number"
+            placeHolder={globalTranslate("Products.create.placeholders[2]")}
           />
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && product["tva"] == 0}
             OnInputChange={(value) => (product["tva"] = Number(value))}
-            Type="Number"
-            PlaceHolder={globalTranslate("Products.create.placeholders[3]")}
+            type="Number"
+            placeHolder={globalTranslate("Products.create.placeholders[3]")}
           />
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && product["quantity"] == 0}
             OnInputChange={(value) => (product["quantity"] = Number(value))}
-            Type="Number"
-            PlaceHolder={globalTranslate("Products.create.placeholders[4]")}
+            type="Number"
+            placeHolder={globalTranslate("Products.create.placeholders[4]")}
           />
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && product["description"] == ""}
             OnInputChange={(value) =>
               (product["description"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="textarea"
-            PlaceHolder={globalTranslate("Products.create.placeholders[5]")}
+            type="textarea"
+            placeHolder={globalTranslate("Products.create.placeholders[5]")}
           />
         </div>
         <div class="flex">

@@ -4,13 +4,13 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import { Button } from "./ui/button";
 import { UiSelect } from "./ui/UiSelect";
 import { invoke } from "@tauri-apps/api";
-import { UiInput } from "./ui/UiInput";
+import { Input } from "./ui/input";
 import { store } from "@/store";
 import { INVENTORY_CREATE } from "@/constants/defaultValues";
 
 export const InventoryCreate = defineComponent({
   name: "InventoryCreate",
-  components: { Button, UiInput, UiSelect },
+  components: { Button, Input, UiSelect },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -53,9 +53,9 @@ export const InventoryCreate = defineComponent({
           >
             {globalTranslate("Inventory.create.select")}
           </UiSelect>
-          <UiInput
-            Type="number"
-            PlaceHolder={globalTranslate("Inventory.create.placeholder")}
+          <Input
+            type="number"
+            placeHolder={globalTranslate("Inventory.create.placeholder")}
             IsEmpty={false}
             OnInputChange={(input) => (inventoryMvm.quantity = Number(input))}
           />

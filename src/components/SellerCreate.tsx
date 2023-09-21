@@ -7,13 +7,13 @@ import { UiUploader } from "./ui/UiUploader";
 import type { newSellerT } from "@/types";
 import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
-import { UiInput } from "./ui/UiInput";
+import { Input } from "./ui/input";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
 
 export const SellerCreate = defineComponent({
   name: "sellerCreate",
-  components: { Button, UiInput, UiUploader },
+  components: { Button, Input, UiUploader },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
     const isFlash = ref<boolean>(false);
@@ -54,41 +54,41 @@ export const SellerCreate = defineComponent({
               onSave={(image) => (seller.image = image)}
             />
           </div>
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && seller["name"] == ""}
             OnInputChange={(value) =>
               (seller["name"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Sellers.create.placeholders[0]")}
+            type="text"
+            placeHolder={globalTranslate("Sellers.create.placeholders[0]")}
           />
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && seller["email"] == ""}
             OnInputChange={(value) =>
               (seller["email"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Sellers.create.placeholders[1]")}
+            type="text"
+            placeHolder={globalTranslate("Sellers.create.placeholders[1]")}
           />
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && seller["phone"] == ""}
             OnInputChange={(value) =>
               (seller["phone"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Sellers.create.placeholders[2]")}
+            type="text"
+            placeHolder={globalTranslate("Sellers.create.placeholders[2]")}
           />
-          <UiInput
+          <Input
             IsEmpty={isFlash.value && seller["address"] == ""}
             OnInputChange={(value) =>
               (seller["address"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Sellers.create.placeholders[3]")}
+            type="text"
+            placeHolder={globalTranslate("Sellers.create.placeholders[3]")}
           />
         </div>
         <div class="flex">

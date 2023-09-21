@@ -2,7 +2,7 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import { InventoryTable } from "@/components/InventoryTable";
 import type { inventoryMvmT, withCount } from "@/types";
 import { Button } from "@/components/ui/button";
-import { UiInput } from "@/components/ui/UiInput";
+import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { store } from "@/store";
 import { invoke } from "@tauri-apps/api";
@@ -25,7 +25,7 @@ export const InventoryView = defineComponent({
   components: {
     InventoryTable,
     Button,
-    UiInput,
+    Input,
     UiIcon,
   },
   setup() {
@@ -83,7 +83,7 @@ export const InventoryView = defineComponent({
           <Transition appear>
             <div class="flex justify-between w-full gap-9 mb-1">
               <div class="w-1/3">
-                <UiInput
+                <Input
                   IsEmpty={false}
                   OnInputChange={(value) =>
                     (searchQuery.value =
@@ -91,14 +91,14 @@ export const InventoryView = defineComponent({
                         ? JSON.stringify(value)
                         : value.toLocaleLowerCase())
                   }
-                  Type="text"
-                  PlaceHolder={globalTranslate("Global.search")}
+                  type="text"
+                  placeHolder={globalTranslate("Global.search")}
                 >
                   <UiIcon
                     class=" fill-gray-400 cursor-default hover:bg-white"
                     name="search"
                   />
-                </UiInput>
+                </Input>
               </div>
               <div class="w-1/4 flex gap-2">
                 <Button

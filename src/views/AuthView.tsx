@@ -2,7 +2,7 @@ import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import data from "@/animations/66291-meditative-business-man.json";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { Button } from "@/components/ui/button";
-import { UiInput } from "@/components/ui/UiInput";
+import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { getCurrentUser } from "vuefire";
 import { Vue3Lottie } from "vue3-lottie";
@@ -12,7 +12,7 @@ import { login } from "@/utils/Oauth";
 
 export const AuthView = defineComponent({
   name: "Auth",
-  components: { Button, UiInput, Vue3Lottie, UiIcon },
+  components: { Button, Input, Vue3Lottie, UiIcon },
   setup() {
     const checkForAuth = ref(
       useRouter().currentRoute.value.query.checkAuth === "true"
@@ -96,9 +96,9 @@ export const AuthView = defineComponent({
                     or
                   </div>
                   <div class="h-full w-full grid grid-cols-1 grid-rows-[repeat(3,2.5rem)] gap-2">
-                    <UiInput
-                      Type="text"
-                      PlaceHolder={globalTranslate("Auth.email")}
+                    <Input
+                      type="text"
+                      placeHolder={globalTranslate("Auth.email")}
                       IsEmpty={User.email !== "" && isflash.value}
                       OnInputChange={(input) =>
                         (User.email =
@@ -107,9 +107,9 @@ export const AuthView = defineComponent({
                             : input)
                       }
                     />
-                    <UiInput
-                      Type="text"
-                      PlaceHolder={globalTranslate("Auth.username")}
+                    <Input
+                      type="text"
+                      placeHolder={globalTranslate("Auth.username")}
                       IsEmpty={User.username !== "" && isflash.value}
                       OnInputChange={(input) =>
                         (User.username =
@@ -118,9 +118,9 @@ export const AuthView = defineComponent({
                             : input)
                       }
                     />
-                    <UiInput
-                      Type="password"
-                      PlaceHolder={globalTranslate("Auth.password")}
+                    <Input
+                      type="password"
+                      placeHolder={globalTranslate("Auth.password")}
                       IsEmpty={User.password !== "" && isflash.value}
                       OnInputChange={(input) =>
                         (User.password =
