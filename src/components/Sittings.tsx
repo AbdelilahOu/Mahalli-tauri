@@ -30,7 +30,7 @@ export const Sittings = defineComponent({
         <div class="h-full w-full flex  flex-col gap-2">
           <div class="w-full h-10 grid grid-cols-2 items-center">
             <span class="font-semibold text-lg">Export database as csv</span>
-            <Button colorTheme="" Click={() => Export()}>
+            <Button colorTheme="" onClick={() => Export()}>
               <UiIcon
                 class="cursor-default hover:bg-transparent mr-2"
                 name="export"

@@ -87,7 +87,7 @@ export const SellerUpdate = defineComponent({
           />
         </div>
         <div class="flex">
-          <Button colorTheme="a" Click={() => updateTheSeller()}>
+          <Button colorTheme="a" onClick={() => updateTheSeller()}>
             {globalTranslate("Sellers.update.button")}
             {updateSeller.name}
           </Button>

@@ -140,7 +140,7 @@ export const OrderUpdate = defineComponent({
             </div>
             <div class="w-full  h-full flex flex-col gap-1">
               <Button
-                Click={() =>
+                onClick={() =>
                   updateOrder.order_items?.push({
                     product_id: 0,
                     quantity: 0,
@@ -233,7 +233,7 @@ export const OrderUpdate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <Button colorTheme="a" Click={() => updateTheOrders()}>
+          <Button colorTheme="a" onClick={() => updateTheOrders()}>
             {globalTranslate("Orders.update.button")}
           </Button>
         </div>

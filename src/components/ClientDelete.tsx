@@ -38,11 +38,11 @@ export const ClientDelete = defineComponent({
           {globalTranslate("Clients.delete.title")} {client.value?.fullname} ?
         </h1>
         <div class="flex gap-2">
-          <Button colorTheme="a" Click={() => deleteTheClient()}>
+          <Button colorTheme="a" onClick={() => deleteTheClient()}>
             {globalTranslate("Clients.delete.yes")}
           </Button>
           <Button
-            Click={() =>
+            onClick={() =>
               store.setters.updateStore({ key: "show", value: false })
             }
           >
