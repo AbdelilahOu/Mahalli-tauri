@@ -13,7 +13,9 @@ import {
 } from "./ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
-defineProps<{ value: string; label: string }[]>();
+defineProps<{
+  items: { value: string | number; label: string }[];
+}>();
 
 const open = ref(false);
 const value = ref({});
