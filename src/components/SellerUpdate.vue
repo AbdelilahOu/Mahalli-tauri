@@ -1,102 +1,78 @@
-import { defineComponent, reactive, onBeforeUnmount, computed } from "vue";
+<script setup lang="ts">
+import { ref, computed, onBeforeUnmount } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
-import type { sellerT, updateSellerT } from "@/types";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
 import { store } from "@/store";
 import { SELLER_UPDATE } from "@/constants/defaultValues";
+import type { sellerT, updateSellerT } from "@/types";
 
-export const SellerUpdate = defineComponent({
-  name: "SellerUpdate",
-  components: { Button, Input },
-  setup() {
-    const { updateQueryParams } = useUpdateRouteQueryParams();
+const { updateQueryParams } = useUpdateRouteQueryParams();
 
-    const SellerRow = computed(() => store.getters.getSelectedRow<sellerT>());
+const SellerRow = computed(() => store.getters.getSelectedRow<sellerT>());
+const updateSeller = ref<updateSellerT>(
+  SellerRow.value ? SellerRow.value : SELLER_UPDATE
+);
 
-    const updateSeller = reactive<updateSellerT>(
-      SellerRow.value ? SellerRow.value : SELLER_UPDATE
-    );
+const updateTheSeller = async () => {
+  if (updateSeller.value?.id) {
+    try {
+      await invoke("update_seller", {
+        seller: updateSeller.value,
+        id: updateSeller.value.id,
+      });
+      // toggle refresh
+      updateQueryParams({
+        refresh: "refresh-update-" + Math.random() * 9999,
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      store.setters.updateStore({ key: "show", value: false });
+    }
+  }
+};
 
-    const updateTheSeller = async () => {
-      if (updateSeller?.id) {
-        try {
-          await invoke("update_seller", {
-            seller: updateSeller,
-            id: updateSeller.id,
-          });
-          // toggle refresh
-          updateQueryParams({
-            refresh: "refresh-update-" + Math.random() * 9999,
-          });
-        } catch (error) {
-          console.log(error);
-        } finally {
-          store.setters.updateStore({ key: "show", value: false });
-        }
-      }
-    };
+onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
+</script>
 
-    onBeforeUnmount(() =>
-      store.setters.updateStore({ key: "row", value: null })
-    );
-
-    return () => (
-      <div class="w-1/2 h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
-        <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
-          {globalTranslate("Sellers.update.title")}
-        </h1>
-        <div class="h-full w-full flex flex-col gap-2">
-          <Input
-            // defaultValue={SellerRow.value?.name}
-            v-model={updateSeller.name}
-            // OnInputChange={(value) =>
-            //   (updateSeller["name"] =
-            //     typeof value == "string" ? value : JSON.stringify(value))
-            // }
-            type="text"
-            placeHolder={globalTranslate("Sellers.create.placeholders[0]")}
-          />
-          <Input
-            // defaultValue={SellerRow.value?.email}
-            v-model={updateSeller.email}
-            // OnInputChange={(value) =>
-            //   (updateSeller["email"] =
-            //     typeof value == "string" ? value : JSON.stringify(value))
-            // }
-            type="text"
-            placeHolder={globalTranslate("Sellers.create.placeholders[1]")}
-          />
-          <Input
-            // defaultValue={SellerRow.value?.phone}
-            v-model={updateSeller.phone}
-            // OnInputChange={(value) =>
-            //   (updateSeller["phone"] =
-            //     typeof value == "string" ? value : JSON.stringify(value))
-            // }
-            type="text"
-            placeHolder={globalTranslate("Sellers.create.placeholders[2]")}
-          />
-          <Input
-            // defaultValue={SellerRow.value?.address}
-            v-model={updateSeller.address}
-            // OnInputChange={(value) =>
-            //   (updateSeller["address"] =
-            //     typeof value == "string" ? value : JSON.stringify(value))
-            // }
-            type="text"
-            placeHolder={globalTranslate("Sellers.create.placeholders[3]")}
-          />
-        </div>
-        <div class="flex">
-          <Button class={"w-full"} onClick={() => updateTheSeller()}>
-            {globalTranslate("Sellers.update.button")}
-            {updateSeller.name}
-          </Button>
-        </div>
-      </div>
-    );
-  },
-});
+<template>
+  <div
+    class="w-1/2 h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
+  >
+    <h1
+      class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
+    >
+      {{ globalTranslate("Sellers.update.title") }}
+    </h1>
+    <div class="h-full w-full flex flex-col gap-2">
+      <Input
+        v-model="updateSeller.name"
+        type="text"
+        placeHolder="{{ globalTranslate('Sellers.create.placeholders[0]') }}"
+      />
+      <Input
+        v-model="updateSeller.email"
+        type="text"
+        placeHolder="{{ globalTranslate('Sellers.create.placeholders[1]') }}"
+      />
+      <Input
+        v-model="updateSeller.phone"
+        type="text"
+        placeHolder="{{ globalTranslate('Sellers.create.placeholders[2]') }}"
+      />
+      <Input
+        v-model="updateSeller.address"
+        type="text"
+        placeHolder="{{ globalTranslate('Sellers.create.placeholders[3]') }}"
+      />
+    </div>
+    <div class="flex">
+      <Button class="w-full" @click="updateTheSeller()">
+        {{ globalTranslate("Sellers.update.button") }} {{ updateSeller.name }}
+      </Button>
+    </div>
+  </div>
+</template>
