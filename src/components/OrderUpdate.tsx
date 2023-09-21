@@ -1,6 +1,6 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { UiUpdateSelect } from "./ui/UiUpdateSelect";
+import { ComboBox } from "./ui/combobox";
 import type { orderT, updateOrdersT } from "@/types";
 import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";
@@ -20,7 +20,7 @@ import { ORDER_UPDATE } from "@/constants/defaultValues";
 
 export const OrderUpdate = defineComponent({
   name: "OrderUpdate",
-  components: { Button, Input, UiIcon, UiUpdateSelect, Checkbox },
+  components: { Button, Input, UiIcon, ComboBox, Checkbox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
     //
@@ -89,7 +89,7 @@ export const OrderUpdate = defineComponent({
             <h1 class="font-medium">
               {globalTranslate("Orders.update.details.seller.title")}
             </h1>
-            <UiUpdateSelect
+            <ComboBox
               defaultValue={updateOrder.seller?.name ?? "Select a seller"}
               items={sellers.value.map((seller) => ({
                 name: seller.name,
@@ -98,7 +98,7 @@ export const OrderUpdate = defineComponent({
               onSelect={(id: number) => (updateOrder.seller_id = id)}
             >
               {globalTranslate("Orders.update.details.seller.select")}
-            </UiUpdateSelect>
+            </ComboBox>
           </div>
           <div class="w-full  h-full flex flex-col gap-1">
             <h1 class="font-medium">
@@ -152,16 +152,16 @@ export const OrderUpdate = defineComponent({
               <div class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
                   {updateOrder.order_items?.map((item, index) => (
-                    <UiUpdateSelect
+                    <ComboBox
                       defaultValue={item.product?.name ?? "select a product"}
                       items={products.value.map((product) => ({
-                        name: product.name,
-                        id: product.id,
+                        label: product.name,
+                        value: product.id,
                       }))}
                       onSelect={(id: number) => (item.product_id = id)}
                     >
                       {globalTranslate("Orders.update.details.order.select")}
-                    </UiUpdateSelect>
+                    </ComboBox>
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">

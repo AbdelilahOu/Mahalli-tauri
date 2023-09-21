@@ -1,7 +1,7 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import type { invoiceT, updateInvoiceT } from "@/types";
-import { UiUpdateSelect } from "./ui/UiUpdateSelect";
+import { ComboBox } from "./ui/combobox";
 import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";
 import { invoke } from "@tauri-apps/api";
@@ -20,7 +20,7 @@ import { INVOICE_UPDATE } from "@/constants/defaultValues";
 
 export const InvoiceUpdate = defineComponent({
   name: "InvoiceUpdate",
-  components: { Button, Input, UiIcon, UiUpdateSelect, Checkbox },
+  components: { Button, Input, UiIcon, ComboBox, Checkbox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -90,7 +90,7 @@ export const InvoiceUpdate = defineComponent({
             <h1 class="font-medium">
               {globalTranslate("Invoices.update.details.client.title")}
             </h1>
-            <UiUpdateSelect
+            <ComboBox
               defaultValue={updateInvoice.client?.fullname ?? "select a client"}
               items={clients.value.map((client: any) => ({
                 name: client.name,
@@ -99,7 +99,7 @@ export const InvoiceUpdate = defineComponent({
               onSelect={(id: number) => (updateInvoice.client_id = id)}
             >
               {globalTranslate("Invoices.update.details.client.select")}
-            </UiUpdateSelect>
+            </ComboBox>
           </div>
           <div class="w-full  h-full flex flex-col gap-1">
             <h1 class="font-medium">invoice details</h1>
@@ -151,7 +151,7 @@ export const InvoiceUpdate = defineComponent({
               <div class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
                   {updateInvoice.invoice_items?.map((item, index) => (
-                    <UiUpdateSelect
+                    <ComboBox
                       defaultValue={item.product?.name ?? "select a product"}
                       items={products.value.map((product: any) => ({
                         name: product.name,
@@ -162,7 +162,7 @@ export const InvoiceUpdate = defineComponent({
                       {globalTranslate(
                         "Invoices.create.details.invoice.select"
                       )}
-                    </UiUpdateSelect>
+                    </ComboBox>
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
