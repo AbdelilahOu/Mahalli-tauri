@@ -1,6 +1,6 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, onBeforeMount, ref } from "vue";
-import { UiButton } from "@/components/ui/UiButton";
+import { Button } from "@/components/ui/button";
 import type { orderDetailsT } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { useRoute } from "vue-router";
@@ -234,9 +234,9 @@ export const OrdersDetails = defineComponent({
               </table>
               <div class="w-full flex items-center justify-center">
                 <div class="w-1/3">
-                  <UiButton Click={() => window.print()} colorTheme="A">
+                  <Button onClick={() => window.print()}>
                     {globalTranslate("OrdersDetails.details.button")}
-                  </UiButton>
+                  </Button>
                 </div>
               </div>
             </div>

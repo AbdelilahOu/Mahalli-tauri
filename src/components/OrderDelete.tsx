@@ -1,14 +1,14 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { computed, defineComponent, onBeforeUnmount } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
 import type { orderT } from "@/types";
 import { store } from "@/store";
 
 export const OrderDelete = defineComponent({
   name: "OrderDelete",
-  components: { UiButton },
+  components: { Button },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -41,16 +41,16 @@ export const OrderDelete = defineComponent({
           {globalTranslate("Orders.delete.title")}n° {order.value?.id} ?
         </h1>
         <div class="flex gap-2">
-          <UiButton colorTheme="a" Click={() => deleteTheOrders()}>
+          <Button onClick={() => deleteTheOrders()}>
             {globalTranslate("Orders.delete.yes")}
-          </UiButton>
-          <UiButton
-            Click={() =>
+          </Button>
+          <Button
+            onClick={() =>
               store.setters.updateStore({ key: "show", value: false })
             }
           >
             {globalTranslate("Orders.delete.no")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

@@ -3,17 +3,17 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import type { newOrdersT, newOrdersItemT } from "@/types";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { UiCheckBox } from "./ui/UiCheckBox";
-import { UiButton } from "./ui/UiButton";
+import { Checkbox } from "./ui/checkbox";
+import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
-import { UiSelect } from "./ui/UiSelect";
-import { UiInput } from "./ui/UiInput";
+import { ComboBox } from "./ui/combobox";
+import { Input } from "./ui/input";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 
 export const OrderCreate = defineComponent({
   name: "OrderCreate",
-  components: { UiButton, UiCheckBox, UiIcon, UiInput, UiSelect },
+  components: { Button, Checkbox, UiIcon, Input, ComboBox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -71,12 +71,12 @@ export const OrderCreate = defineComponent({
             <h1 class="font-medium">
               {globalTranslate("Orders.create.details.seller.title")}
             </h1>
-            <UiSelect
+            <ComboBox
               items={sellers.value}
               onSelect={(id: number) => (newOrder.seller_id = id)}
             >
               {globalTranslate("Orders.create.details.seller.select")}
-            </UiSelect>
+            </ComboBox>
           </div>
           <div class="w-full  h-full flex flex-col gap-1">
             <h1 class="font-medium">
@@ -86,7 +86,7 @@ export const OrderCreate = defineComponent({
             <div class="w-full  h-full flex flex-col mb-1 gap-1">
               <div class="flex justify-between w-full">
                 <div class="h-full w-full flex flex-row flex-nowrap items-center gap-2">
-                  <UiCheckBox
+                  <Checkbox
                     onCheck={(check) =>
                       check
                         ? (newOrder.status = "delivered")
@@ -96,7 +96,7 @@ export const OrderCreate = defineComponent({
                   <span>{globalTranslate("Orders.status.delivered")}</span>
                 </div>
                 <div class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2">
-                  <UiCheckBox
+                  <Checkbox
                     onCheck={(check) =>
                       check
                         ? (newOrder.status = "pending")
@@ -106,7 +106,7 @@ export const OrderCreate = defineComponent({
                   <span>{globalTranslate("Orders.status.pending")}</span>
                 </div>
                 <div class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2">
-                  <UiCheckBox
+                  <Checkbox
                     onCheck={(check) =>
                       check
                         ? (newOrder.status = "canceled")
@@ -118,8 +118,8 @@ export const OrderCreate = defineComponent({
               </div>
             </div>
             <div class="w-full  h-full flex flex-col gap-1">
-              <UiButton
-                Click={() =>
+              <Button
+                onClick={() =>
                   order_items.value.push({
                     product_id: 0,
                     quantity: 0,
@@ -128,28 +128,28 @@ export const OrderCreate = defineComponent({
                 }
               >
                 {globalTranslate("Orders.create.details.order.add")}
-              </UiButton>
+              </Button>
               <div class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
                   {order_items.value.map((item, index) => (
-                    <UiSelect
+                    <ComboBox
                       items={products.value}
                       onSelect={(id: number) => (item.product_id = id)}
                     >
                       {globalTranslate("Orders.create.details.order.select")}
-                    </UiSelect>
+                    </ComboBox>
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
                   {order_items.value.map((item, index) => (
                     <div class="h-full w-full flex items-center relative">
-                      <UiInput
+                      <Input
                         class="border-r-0"
                         IsEmpty={isFlash.value && item.quantity == 0}
-                        PlaceHolder={globalTranslate(
+                        placeHolder={globalTranslate(
                           "Orders.create.details.order.placeholder[0]"
                         )}
-                        Type="number"
+                        type="number"
                         OnInputChange={(value) =>
                           (item.quantity = Number(value))
                         }
@@ -161,20 +161,20 @@ export const OrderCreate = defineComponent({
                             </span>
                           ),
                         }}
-                      </UiInput>
+                      </Input>
                     </div>
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
                   {order_items.value.map((item, index) => (
                     <div class="h-full w-full flex items-center relative">
-                      <UiInput
+                      <Input
                         class="border-r-0"
                         IsEmpty={isFlash.value && item.price == 0}
-                        PlaceHolder={globalTranslate(
+                        placeHolder={globalTranslate(
                           "Orders.create.details.order.placeholder[1]"
                         )}
-                        Type="number"
+                        type="number"
                         OnInputChange={(value) => (item.price = Number(value))}
                       >
                         {{
@@ -184,7 +184,7 @@ export const OrderCreate = defineComponent({
                             </span>
                           ),
                         }}
-                      </UiInput>
+                      </Input>
                     </div>
                   ))}
                 </div>
@@ -204,9 +204,9 @@ export const OrderCreate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <UiButton colorTheme="a" Click={() => createNewOrders()}>
+          <Button onClick={() => createNewOrders()}>
             {globalTranslate("Orders.create.button")}
-          </UiButton>
+          </Button>
         </div>
       </div>
     );

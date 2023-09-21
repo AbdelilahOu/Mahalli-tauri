@@ -1,13 +1,13 @@
 import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, onBeforeMount, ref } from "vue";
-import { UiButton } from "@/components/ui/UiButton";
+import { Button } from "@/components/ui/button";
 import { useRoute } from "vue-router";
 import type { invoiceDetailsT } from "@/types";
 import { invoke } from "@tauri-apps/api";
 
 export const InvoiceDetails = defineComponent({
   name: "InvoiceDetails",
-  components: { UiButton },
+  components: { Button },
   setup() {
     const id = useRoute().params.id;
     const invoice = ref<invoiceDetailsT | null>(null);
@@ -269,9 +269,9 @@ export const InvoiceDetails = defineComponent({
               </table>
               <div class="w-full flex items-center justify-center">
                 <div class="w-1/3">
-                  <UiButton Click={() => window.print()} colorTheme="A">
+                  <Button onClick={() => window.print()}>
                     {globalTranslate("InvoiceDetails.details.button")}
-                  </UiButton>
+                  </Button>
                 </div>
               </div>
             </div>

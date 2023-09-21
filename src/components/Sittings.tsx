@@ -1,4 +1,4 @@
-import { UiButton } from "./ui/UiButton";
+import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
 import { defineComponent } from "vue";
 import UiIcon from "./ui/UiIcon.vue";
@@ -7,7 +7,7 @@ import { store } from "@/store";
 export const Sittings = defineComponent({
   name: "Sittings",
   components: {
-    UiButton,
+    Button,
     UiIcon,
   },
   setup() {
@@ -30,13 +30,13 @@ export const Sittings = defineComponent({
         <div class="h-full w-full flex  flex-col gap-2">
           <div class="w-full h-10 grid grid-cols-2 items-center">
             <span class="font-semibold text-lg">Export database as csv</span>
-            <UiButton colorTheme="" Click={() => Export()}>
+            <Button onClick={() => Export()}>
               <UiIcon
                 class="cursor-default hover:bg-transparent mr-2"
                 name="export"
               />
               Export
-            </UiButton>
+            </Button>
           </div>
         </div>
       </div>

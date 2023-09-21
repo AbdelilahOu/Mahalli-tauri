@@ -1,5 +1,6 @@
 import type { RouteLinksTypeT } from "../types";
 
+// Routes
 export const RouteLinks: RouteLinksTypeT[] = [
   {
     path: "/Clients/all",
