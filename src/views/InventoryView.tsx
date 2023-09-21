@@ -101,10 +101,7 @@ export const InventoryView = defineComponent({
                 </Input>
               </div>
               <div class="w-1/4 flex gap-2">
-                <Button
-                  colorTheme="a"
-                  onClick={() => updateModal("InventoryCreate")}
-                >
+                <Button onClick={() => updateModal("InventoryCreate")}>
                   <UiIcon
                     class=" fill-gray-900 cursor-default hover:bg-transparent"
                     name="add"

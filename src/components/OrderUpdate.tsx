@@ -174,10 +174,6 @@ export const OrderUpdate = defineComponent({
                           "Orders.create.details.order.placeholder[0]"
                         )}
                         type="number"
-                        OnInputChange={(value) =>
-                          (updateOrder.order_items[index].quantity =
-                            Number(value))
-                        }
                       >
                         {{
                           unite: () => (
@@ -200,9 +196,6 @@ export const OrderUpdate = defineComponent({
                           "Orders.create.details.order.placeholder[1]"
                         )}
                         type="number"
-                        OnInputChange={(value) =>
-                          (updateOrder.order_items[index].price = Number(value))
-                        }
                       >
                         {{
                           unite: () => (
@@ -233,7 +226,7 @@ export const OrderUpdate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <Button colorTheme="a" onClick={() => updateTheOrders()}>
+          <Button onClick={() => updateTheOrders()}>
             {globalTranslate("Orders.update.button")}
           </Button>
         </div>

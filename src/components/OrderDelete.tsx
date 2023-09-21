@@ -41,7 +41,7 @@ export const OrderDelete = defineComponent({
           {globalTranslate("Orders.delete.title")}n° {order.value?.id} ?
         </h1>
         <div class="flex gap-2">
-          <Button colorTheme="a" onClick={() => deleteTheOrders()}>
+          <Button onClick={() => deleteTheOrders()}>
             {globalTranslate("Orders.delete.yes")}
           </Button>
           <Button
