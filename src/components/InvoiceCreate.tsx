@@ -19,8 +19,8 @@ export const InvoiceCreate = defineComponent({
 
     const isFlash = ref<boolean>(false);
 
-    const clients = ref<{ name: string; id: number }[]>([]);
-    const products = ref<{ name: string; id: number }[]>([]);
+    const clients = ref<{ label: string; value: number }[]>([]);
+    const products = ref<{ label: string; value: number }[]>([]);
 
     const newInvoice = reactive<newInvoiceT>(INVOICE_CREATE);
 
@@ -28,8 +28,8 @@ export const InvoiceCreate = defineComponent({
 
     onBeforeMount(async () => {
       const res = await Promise.allSettled([
-        invoke<{ name: string; id: number }[]>("get_all_clients"),
-        invoke<{ name: string; id: number }[]>("get_all_products"),
+        invoke<{ label: string; value: number }[]>("get_all_clients"),
+        invoke<{ label: string; value: number }[]>("get_all_products"),
       ]);
 
       // @ts-ignore
@@ -74,7 +74,7 @@ export const InvoiceCreate = defineComponent({
             </h1>
             <ComboBox
               items={clients.value}
-              onSelect={(id: number) => (newInvoice.client_id = id)}
+              // onSelect={(id: number) => (newInvoice.client_id = id)}
             >
               {globalTranslate("Invoices.create.details.client.select")}
             </ComboBox>
@@ -86,31 +86,31 @@ export const InvoiceCreate = defineComponent({
             <div class="flex justify-between w-full">
               <div class="h-full w-full flex flex-row flex-nowrap items-center gap-2">
                 <Checkbox
-                  onCheck={(check) =>
-                    check
-                      ? (newInvoice.status = "delivered")
-                      : (newInvoice.status = "")
-                  }
+                // onCheck={(check) =>
+                //   check
+                //     ? (newInvoice.status = "delivered")
+                //     : (newInvoice.status = "")
+                // }
                 />
                 <span>{globalTranslate("Orders.status.delivered")}</span>
               </div>
               <div class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2">
                 <Checkbox
-                  onCheck={(check) =>
-                    check
-                      ? (newInvoice.status = "pending")
-                      : (newInvoice.status = "")
-                  }
+                // onCheck={(check) =>
+                //   check
+                //     ? (newInvoice.status = "pending")
+                //     : (newInvoice.status = "")
+                // }
                 />
                 <span>{globalTranslate("Orders.status.pending")}</span>
               </div>
               <div class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2">
                 <Checkbox
-                  onCheck={(check) =>
-                    check
-                      ? (newInvoice.status = "canceled")
-                      : (newInvoice.status = "")
-                  }
+                // onCheck={(check) =>
+                //   check
+                //     ? (newInvoice.status = "canceled")
+                //     : (newInvoice.status = "")
+                // }
                 />
                 <span>{globalTranslate("Orders.status.canceled")}</span>
               </div>
@@ -130,7 +130,7 @@ export const InvoiceCreate = defineComponent({
                   {InvoiceItems.value.map((item, _index) => (
                     <ComboBox
                       items={products.value}
-                      onSelect={(id: number) => (item.product_id = id)}
+                      // onSelect={(id: number) => (item.product_id = id)}
                     >
                       {globalTranslate(
                         "Invoices.create.details.invoice.select"
@@ -142,14 +142,11 @@ export const InvoiceCreate = defineComponent({
                   {InvoiceItems.value.map((item, _index) => (
                     <div class="h-full w-full items-center relative">
                       <Input
-                        IsEmpty={isFlash.value && item.quantity == 0}
                         placeHolder={globalTranslate(
                           "Invoices.create.details.invoice.placeholder[0]"
                         )}
                         type="number"
-                        OnInputChange={(value) =>
-                          (item.quantity = Number(value))
-                        }
+                        modelValue={item.quantity}
                       >
                         {{
                           unite: () => (

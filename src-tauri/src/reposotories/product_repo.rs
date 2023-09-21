@@ -52,8 +52,8 @@ pub fn get_all_products(connection: &mut SqliteConnection) -> Vec<Value> {
 
     response.into_iter().for_each(|(pname, p_id)| {
         result.push(json!({
-            "name":pname,
-            "id":p_id
+            "label":pname,
+            "value":p_id
         }))
     });
 

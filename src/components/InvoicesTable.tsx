@@ -75,7 +75,7 @@ export const InvoicesTable = defineComponent({
                   <div class="text-left whitespace-nowrap overflow-ellipsis">
                     {Invoice.invoice_items?.length ? (
                       <span>
-                        {Invoice.invoice_items?.length}{" "}
+                        {Invoice.invoice_items?.length}
                         {Invoice.invoice_items?.length == 1
                           ? " Product"
                           : " Products"}

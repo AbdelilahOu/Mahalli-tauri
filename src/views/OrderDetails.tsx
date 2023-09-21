@@ -192,7 +192,7 @@ export const OrdersDetails = defineComponent({
                         <div class="text-left">
                           {item.price === 0
                             ? item.product.price.toFixed(2)
-                            : item.price.toFixed(2)}{" "}
+                            : item.price.toFixed(2)}
                           DH
                         </div>
                       </td>
@@ -201,7 +201,7 @@ export const OrdersDetails = defineComponent({
                           {(item.price === 0
                             ? item.product.price * item.quantity
                             : item.price * item.quantity
-                          ).toFixed(2)}{" "}
+                          ).toFixed(2)}
                           DH
                         </div>
                       </td>
@@ -226,7 +226,7 @@ export const OrdersDetails = defineComponent({
                                 : curr.quantity * curr.price),
                           0
                         )
-                        .toFixed(2)}{" "}
+                        .toFixed(2)}
                       DH
                     </td>
                   </tr>

@@ -45,7 +45,7 @@ export const InventoryTable = defineComponent({
                   <div class="text-left">
                     {mvm.orderItem?.price && mvm.orderItem?.price > 0
                       ? mvm.orderItem?.price?.toFixed(2)
-                      : mvm.product?.price?.toFixed(2)}{" "}
+                      : mvm.product?.price?.toFixed(2)}
                     DH
                   </div>
                 </td>

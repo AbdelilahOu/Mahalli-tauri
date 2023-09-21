@@ -47,12 +47,12 @@ export const ProductsTable = defineComponent({
                 <td class="p-2">
                   <span class="h-full w-full grid">
                     <Checkbox
-                      onCheck={(check) =>
-                        console.log(
-                          product.name,
-                          check ? "is checked" : "is unchecked"
-                        )
-                      }
+                    // onCheck={(check) =>
+                    //   console.log(
+                    //     product.name,
+                    //     check ? "is checked" : "is unchecked"
+                    //   )
+                    // }
                     />
                   </span>
                 </td>

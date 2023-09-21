@@ -24,14 +24,14 @@ export const InvoiceUpdate = defineComponent({
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
-    const clients = ref<{ name: string; id: number }[]>([]);
-    const products = ref<{ name: string; id: number }[]>([]);
+    const clients = ref<{ label: string; value: number }[]>([]);
+    const products = ref<{ label: string; value: number }[]>([]);
     const invoiceRow = computed(() => store.getters.getSelectedRow<invoiceT>());
 
     onBeforeMount(async () => {
       const res = await Promise.allSettled([
-        invoke<{ name: string; id: number }[]>("get_all_clients"),
-        invoke<{ name: string; id: number }[]>("get_all_products"),
+        invoke<{ label: string; value: number }[]>("get_all_clients"),
+        invoke<{ label: string; value: number }[]>("get_all_products"),
       ]);
 
       // @ts-ignore
@@ -91,12 +91,9 @@ export const InvoiceUpdate = defineComponent({
               {globalTranslate("Invoices.update.details.client.title")}
             </h1>
             <ComboBox
-              defaultValue={updateInvoice.client?.fullname ?? "select a client"}
-              items={clients.value.map((client: any) => ({
-                name: client.name,
-                id: client.id,
-              }))}
-              onSelect={(id: number) => (updateInvoice.client_id = id)}
+              // defaultValue={updateInvoice.client?.fullname ?? "select a client"}
+              items={clients.value}
+              // onSelect={(id: number) => (updateInvoice.client_id = id)}
             >
               {globalTranslate("Invoices.update.details.client.select")}
             </ComboBox>
@@ -107,31 +104,31 @@ export const InvoiceUpdate = defineComponent({
               <div class="flex justify-between w-full">
                 <div class="h-full w-full flex flex-row flex-nowrap items-center gap-2">
                   <Checkbox
-                    onCheck={(check) =>
-                      check
-                        ? (updateInvoice.status = "delivered")
-                        : (updateInvoice.status = "")
-                    }
+                  // onCheck={(check) =>
+                  //   check
+                  //     ? (updateInvoice.status = "delivered")
+                  //     : (updateInvoice.status = "")
+                  // }
                   />
                   <span>{globalTranslate("Invoices.status.delivered")}</span>
                 </div>
                 <div class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2">
                   <Checkbox
-                    onCheck={(check) =>
-                      check
-                        ? (updateInvoice.status = "pending")
-                        : (updateInvoice.status = "")
-                    }
+                  // onCheck={(check) =>
+                  //   check
+                  //     ? (updateInvoice.status = "pending")
+                  //     : (updateInvoice.status = "")
+                  // }
                   />
                   <span>{globalTranslate("Invoices.status.pending")}</span>
                 </div>
                 <div class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2">
                   <Checkbox
-                    onCheck={(check) =>
-                      check
-                        ? (updateInvoice.status = "canceled")
-                        : (updateInvoice.status = "")
-                    }
+                  // onCheck={(check) =>
+                  //   check
+                  //     ? (updateInvoice.status = "canceled")
+                  //     : (updateInvoice.status = "")
+                  // }
                   />
                   <span>{globalTranslate("Invoices.status.canceled")}</span>
                 </div>
@@ -152,12 +149,9 @@ export const InvoiceUpdate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {updateInvoice.invoice_items?.map((item, index) => (
                     <ComboBox
-                      defaultValue={item.product?.name ?? "select a product"}
-                      items={products.value.map((product: any) => ({
-                        name: product.name,
-                        id: product.id,
-                      }))}
-                      onSelect={(id: number) => (item.product_id = id)}
+                      // defaultValue={item.product?.name ?? "select a product"}
+                      items={products.value}
+                      // onSelect={(id: number) => (item.product_id = id)}
                     >
                       {globalTranslate(
                         "Invoices.create.details.invoice.select"
@@ -172,9 +166,7 @@ export const InvoiceUpdate = defineComponent({
                         defaultValue={item.quantity}
                         placeHolder="Product quantity"
                         type="number"
-                        OnInputChange={(value) =>
-                          (item.quantity = Number(value))
-                        }
+                        modelValue={item.quantity}
                       >
                         {{
                           unite: () => (

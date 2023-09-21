@@ -53,7 +53,7 @@ export const Navigation = defineComponent({
                     name={"Home"}
                   />
                 </span>
-              </button>{" "}
+              </button>
               {route.fullPath !== "/" && (
                 <span class="flex items-center">
                   <span class="flex items-center">
@@ -69,9 +69,7 @@ export const Navigation = defineComponent({
                       </span>
                     )} */}
                     {ActiveLink.value &&
-                      globalTranslate(
-                        `Global.routes.${ActiveLink.value.name}`
-                      )}{" "}
+                      globalTranslate(`Global.routes.${ActiveLink.value.name}`)}
                     {route.params.id ? `/ n° ${route.params.id}` : ""}
                   </span>
                 </span>

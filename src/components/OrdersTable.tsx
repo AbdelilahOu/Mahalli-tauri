@@ -53,7 +53,7 @@ export const OrdersTable = defineComponent({
                 <td class="p-2">
                   <span class="h-full w-full grid">
                     <Checkbox
-                      onCheck={(check) => checkThisOrders(check, Orders.id)}
+                    // onCheck={(check) => checkThisOrders(check, Orders.id)}
                     />
                   </span>
                 </td>
@@ -76,7 +76,7 @@ export const OrdersTable = defineComponent({
                   <div class="text-left whitespace-nowrap overflow-ellipsis">
                     {Orders.order_items?.length ? (
                       <span>
-                        {Orders.order_items?.length}{" "}
+                        {Orders.order_items?.length}
                         {Orders.order_items?.length == 1
                           ? " Product"
                           : " Products"}

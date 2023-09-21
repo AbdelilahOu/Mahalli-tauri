@@ -196,7 +196,7 @@ export const InvoiceDetails = defineComponent({
                             item.product.price *
                             (item.product.tva / 100) *
                             item.quantity
-                          ).toFixed(2)}{" "}
+                          ).toFixed(2)}
                           DH
                         </div>
                       </td>
@@ -226,7 +226,7 @@ export const InvoiceDetails = defineComponent({
                               (curr.product.tva / 100)),
                           0
                         )
-                        .toFixed(2)}{" "}
+                        .toFixed(2)}
                       DH
                     </td>
                     <td class="p-2 font-semibold">
@@ -236,7 +236,7 @@ export const InvoiceDetails = defineComponent({
                             (acc += curr.quantity * curr.product.price),
                           0
                         )
-                        .toFixed(2)}{" "}
+                        .toFixed(2)}
                       DH
                     </td>
                   </tr>
@@ -261,7 +261,7 @@ export const InvoiceDetails = defineComponent({
                             (acc += curr.quantity * curr.product.price),
                           0
                         ) ?? 0)
-                      ).toFixed(2)}{" "}
+                      ).toFixed(2)}
                       DH
                     </td>
                   </tr>

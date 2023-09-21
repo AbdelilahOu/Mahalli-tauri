@@ -19,14 +19,14 @@ export const OrderCreate = defineComponent({
 
     const order_items = ref<newOrdersItemT[]>(ORDER_ITEM_CREATE);
     const newOrder = reactive<newOrdersT>(ORDER_CREATE);
-    const sellers = ref<{ name: string; id: number }[]>([]);
-    const products = ref<{ name: string; id: number }[]>([]);
+    const sellers = ref<{ label: string; value: number }[]>([]);
+    const products = ref<{ label: string; value: number }[]>([]);
     const isFlash = ref<boolean>(false);
 
     onBeforeMount(async () => {
       const res = await Promise.allSettled([
-        invoke<{ name: string; id: number }[]>("get_all_sellers"),
-        invoke<{ name: string; id: number }[]>("get_all_products"),
+        invoke<{ label: string; value: number }[]>("get_all_sellers"),
+        invoke<{ label: string; value: number }[]>("get_all_products"),
       ]);
 
       // @ts-ignore
@@ -73,45 +73,44 @@ export const OrderCreate = defineComponent({
             </h1>
             <ComboBox
               items={sellers.value}
-              onSelect={(id: number) => (newOrder.seller_id = id)}
+              // onSelect={(id: number) => (newOrder.seller_id = id)}
             >
               {globalTranslate("Orders.create.details.seller.select")}
             </ComboBox>
           </div>
           <div class="w-full  h-full flex flex-col gap-1">
             <h1 class="font-medium">
-              {" "}
               {globalTranslate("Orders.create.details.order.title")}
             </h1>
             <div class="w-full  h-full flex flex-col mb-1 gap-1">
               <div class="flex justify-between w-full">
                 <div class="h-full w-full flex flex-row flex-nowrap items-center gap-2">
                   <Checkbox
-                    onCheck={(check) =>
-                      check
-                        ? (newOrder.status = "delivered")
-                        : (newOrder.status = "")
-                    }
+                  // onCheck={(check) =>
+                  //   check
+                  //     ? (newOrder.status = "delivered")
+                  //     : (newOrder.status = "")
+                  // }
                   />
                   <span>{globalTranslate("Orders.status.delivered")}</span>
                 </div>
                 <div class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2">
                   <Checkbox
-                    onCheck={(check) =>
-                      check
-                        ? (newOrder.status = "pending")
-                        : (newOrder.status = "")
-                    }
+                  // onCheck={(check) =>
+                  //   check
+                  //     ? (newOrder.status = "pending")
+                  //     : (newOrder.status = "")
+                  // }
                   />
                   <span>{globalTranslate("Orders.status.pending")}</span>
                 </div>
                 <div class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2">
                   <Checkbox
-                    onCheck={(check) =>
-                      check
-                        ? (newOrder.status = "canceled")
-                        : (newOrder.status = "")
-                    }
+                  // onCheck={(check) =>
+                  //   check
+                  //     ? (newOrder.status = "canceled")
+                  //     : (newOrder.status = "")
+                  // }
                   />
                   <span>{globalTranslate("Orders.status.canceled")}</span>
                 </div>
@@ -134,7 +133,7 @@ export const OrderCreate = defineComponent({
                   {order_items.value.map((item, index) => (
                     <ComboBox
                       items={products.value}
-                      onSelect={(id: number) => (item.product_id = id)}
+                      // onSelect={(id: number) => (item.product_id = id)}
                     >
                       {globalTranslate("Orders.create.details.order.select")}
                     </ComboBox>
@@ -145,14 +144,13 @@ export const OrderCreate = defineComponent({
                     <div class="h-full w-full flex items-center relative">
                       <Input
                         class="border-r-0"
-                        IsEmpty={isFlash.value && item.quantity == 0}
+                        // IsEmpty={isFlash.value && item.quantity == 0}
                         placeHolder={globalTranslate(
                           "Orders.create.details.order.placeholder[0]"
                         )}
                         type="number"
-                        OnInputChange={(value) =>
-                          (item.quantity = Number(value))
-                        }
+                        modelValue={item.quantity}
+                        // OnInputChange={(value) => (item.quantity = Number(value))}
                       >
                         {{
                           unite: () => (
@@ -170,12 +168,13 @@ export const OrderCreate = defineComponent({
                     <div class="h-full w-full flex items-center relative">
                       <Input
                         class="border-r-0"
-                        IsEmpty={isFlash.value && item.price == 0}
+                        // IsEmpty={isFlash.value && item.price == 0}
                         placeHolder={globalTranslate(
                           "Orders.create.details.order.placeholder[1]"
                         )}
                         type="number"
-                        OnInputChange={(value) => (item.price = Number(value))}
+                        modelValue={item.price}
+                        // OnInputChange={(value) => (item.price = Number(value))}
                       >
                         {{
                           unite: () => (
