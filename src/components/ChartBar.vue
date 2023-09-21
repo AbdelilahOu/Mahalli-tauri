@@ -1,5 +1,5 @@
-import { defineComponent, type PropType } from "vue";
-import { Bar, Line } from "vue-chartjs";
+<script setup lang="ts">
+import { Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
   Title,
@@ -10,34 +10,23 @@ import {
   LinearScale,
 } from "chart.js";
 
-export const ChartBar = defineComponent({
-  name: "ChartBar",
-  props: {
-    chartData: {
-      type: Object as PropType<{
-        labels: string[];
-        datasets: { [key: string]: any; data: number[] }[];
-      }>,
-      required: true,
-    },
-    chartOptions: {
-      type: Object,
-      default: () => {},
-    },
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    ChartJS.register(
-      Title,
-      Tooltip,
-      Legend,
-      BarElement,
-      CategoryScale,
-      LinearScale
-    );
-    return () => <Bar options={props.chartOptions} data={props.chartData} />;
-  },
-});
+defineProps<{
+  chartData: {
+    labels: string[];
+    datasets: { [key: string]: any; data: number[] }[];
+  };
+  chartOptions: Record<any, any>;
+  id: string;
+}>();
+
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+);
+</script>
+
+<template><Bar :options="chartOptions" :data="chartData" /></template>

@@ -1,25 +1,25 @@
 <!-- we load all the components which slows the app  -->
 <!-- looking for better ways using defineAsyncComponent -->
 <script lang="ts">
-import { TranslationModal } from "./TranslationModal";
-import { InventoryCreate } from "./InventoryCreate";
-import { ProductCreate } from "./ProductCreate";
-import { ProductDelete } from "./ProductDelete";
-import { ProductUpdate } from "./ProductUpdate";
-import { InvoiceCreate } from "./InvoiceCreate";
-import { InvoiceDelete } from "./InvoiceDelete";
-import { InvoiceUpdate } from "./InvoiceUpdate";
-import { SellerCreate } from "./SellerCreate";
-import { SellerDelete } from "./SellerDelete";
-import { SellerUpdate } from "./SellerUpdate";
-import { ClientDelete } from "./ClientDelete";
-import { ClientUpdate } from "./ClientUpdate";
-import { ClientCreate } from "./ClientCreate";
-import { OrderCreate } from "./OrderCreate";
-import { OrderDelete } from "./OrderDelete";
-import { OrderUpdate } from "./OrderUpdate";
-import { CsvUploader } from "./CsvUploader";
-import { Sittings } from "./Sittings";
+import TranslationModal from "./TranslationModal.vue";
+import InventoryCreate from "./InventoryCreate.vue";
+import ProductCreate from "./ProductCreate.vue";
+import ProductDelete from "./ProductDelete.vue";
+import ProductUpdate from "./ProductUpdate.vue";
+import InvoiceCreate from "./InvoiceCreate.vue";
+import InvoiceDelete from "./InvoiceDelete.vue";
+import InvoiceUpdate from "./InvoiceUpdate.vue";
+import SellerCreate from "./SellerCreate.vue";
+import SellerDelete from "./SellerDelete.vue";
+import SellerUpdate from "./SellerUpdate.vue";
+import ClientDelete from "./ClientDelete.vue";
+import ClientUpdate from "./ClientUpdate.vue";
+import ClientCreate from "./ClientCreate.vue";
+import OrderCreate from "./OrderCreate.vue";
+import OrderDelete from "./OrderDelete.vue";
+import OrderUpdate from "./OrderUpdate.vue";
+import CsvUploader from "./CsvUploader.vue";
+import Sittings from "./Sittings.vue";
 export default {
   components: {
     TranslationModal,
