@@ -41,7 +41,7 @@
         </div>
       </Transition>
       <Transition appear>
-        <OrdersTable :Orders="orders" />
+        <OrdersTable :orders="orders" />
       </Transition>
     </div>
   </main>
@@ -64,6 +64,7 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import type { orderT, withCount } from "@/types";
 import { store } from "@/store";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import OrdersTable from "@/components/OrdersTable.vue";
 
 const router = useRouter();
 const searchQuery = ref<string>("");

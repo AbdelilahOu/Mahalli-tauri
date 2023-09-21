@@ -18,7 +18,7 @@ defineProps<{
     ]"
   >
     <UiIcon
-      :IsStyled="false"
+      :isStyled="false"
       extraStyle="min-w-[30px] h-[30px] w-[30px] max-w-[30px] group-hover:text-primary transition-all duration-150 text-gray-400"
       :name="icon"
     />

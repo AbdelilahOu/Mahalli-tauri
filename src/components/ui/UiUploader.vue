@@ -5,7 +5,6 @@ import { open } from "@tauri-apps/api/dialog";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import type { FileNames } from "@/types";
 import UiIcon from "./UiIcon.vue";
-import { emit } from "process";
 
 const { name, extensions } = defineProps<{
   extensions: string[];

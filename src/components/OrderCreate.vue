@@ -58,8 +58,12 @@ const createNewOrders = async () => {
 </script>
 
 <template>
-  <div class="w-5/6 lg:w-1/2 rounded-[4px] relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
-    <h1 class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center">
+  <div
+    class="w-5/6 lg:w-1/2 rounded-[4px] relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
+  >
+    <h1
+      class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
+    >
       {{ globalTranslate("Orders.create.title") }}
     </h1>
     <div class="h-full w-full grid grid-cols-1 gap-2">
@@ -67,9 +71,7 @@ const createNewOrders = async () => {
         <h1 class="font-medium">
           {{ globalTranslate("Orders.create.details.seller.title") }}
         </h1>
-        <ComboBox
-          :items="sellers"
-        >
+        <ComboBox :items="sellers">
           {{ globalTranslate("Orders.create.details.seller.select") }}
         </ComboBox>
       </div>
@@ -79,19 +81,22 @@ const createNewOrders = async () => {
         </h1>
         <div class="w-full h-full flex flex-col mb-1 gap-1">
           <div class="flex justify-between w-full">
-            <div class="h-full w-full flex flex-row flex-nowrap items-center gap-2">
-              <Checkbox
-              />
+            <div
+              class="h-full w-full flex flex-row flex-nowrap items-center gap-2"
+            >
+              <Checkbox />
               <span>{{ globalTranslate("Orders.status.delivered") }}</span>
             </div>
-            <div class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2">
-              <Checkbox
-              />
+            <div
+              class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2"
+            >
+              <Checkbox />
               <span>{{ globalTranslate("Orders.status.pending") }}</span>
             </div>
-            <div class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2">
-              <Checkbox
-              />
+            <div
+              class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2"
+            >
+              <Checkbox />
               <span>{{ globalTranslate("Orders.status.canceled") }}</span>
             </div>
           </div>
@@ -102,12 +107,12 @@ const createNewOrders = async () => {
           >
             {{ globalTranslate("Orders.create.details.order.add") }}
           </Button>
-          <div class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
+          <div
+            class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
+          >
             <div class="flex flex-col gap-2">
               <template v-for="(item, index) in order_items">
-                <ComboBox
-                  :items="products"
-                >
+                <ComboBox :items="products">
                   {{ globalTranslate("Orders.create.details.order.select") }}
                 </ComboBox>
               </template>
@@ -117,7 +122,11 @@ const createNewOrders = async () => {
                 <div class="h-full w-full flex items-center relative">
                   <Input
                     class="border-r-0"
-                    :placeHolder="globalTranslate('Orders.create.details.order.placeholder[0]')"
+                    :placeHolder="
+                      globalTranslate(
+                        'Orders.create.details.order.placeholder[0]'
+                      )
+                    "
                     type="number"
                     v-model="item.quantity"
                   >
@@ -137,7 +146,11 @@ const createNewOrders = async () => {
                 <div class="h-full w-full flex items-center relative">
                   <Input
                     class="border-r-0"
-                    :placeHolder="globalTranslate('Orders.create.details.order.placeholder[1]')"
+                    :placeHolder="
+                      globalTranslate(
+                        'Orders.create.details.order.placeholder[1]'
+                      )
+                    "
                     type="number"
                     v-model="item.price"
                   >
@@ -157,7 +170,7 @@ const createNewOrders = async () => {
               <template v-for="(item, index) in order_items">
                 <div
                   @click="order_items.splice(index, 1)"
-                  class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200  rounded-[4px] items-center w-full h-full"
+                  class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
                 >
                   <UiIcon name="delete" />
                 </div>
@@ -174,4 +187,3 @@ const createNewOrders = async () => {
     </div>
   </div>
 </template>
-</script>

@@ -98,7 +98,8 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         <h1 class="font-medium">
           {{ globalTranslate("Orders.update.details.seller.title") }}
         </h1>
-        <ComboBox :items="sellers" v-model="updateOrder.seller?.name">
+        <ComboBox :items="sellers">
+          <!-- v-model="updateOrder.seller?.name" -->
           {{ globalTranslate("Orders.update.details.seller.select") }}
         </ComboBox>
       </div>
@@ -145,8 +146,8 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
                 v-for="(item, index) in updateOrder.order_items"
                 :key="index"
                 :items="products"
-                v-model="item.product?.name"
               >
+                <!-- v-model="item.product?.name" -->
                 {{ globalTranslate("Orders.update.details.order.select") }}
               </ComboBox>
             </div>
@@ -158,10 +159,10 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
               >
                 <Input
                   class="border-r-0"
-                  v-model="item.quantity"
                   placeHolder="{{ globalTranslate('Orders.create.details.order.placeholder[0]') }}"
                   type="number"
                 >
+                  <!-- v-model="item.quantity" -->
                   <!-- {{ unite: () => (
                   <span
                     class="h-full text-gray-400 rounded-[4px] px-2 border-r-2 flex items-center justify-center"
@@ -180,7 +181,6 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
               >
                 <Input
                   class="border-r-0"
-                  v-model="item.price"
                   :placeHolder="
                     globalTranslate(
                       'Orders.create.details.order.placeholder[1]'
@@ -188,6 +188,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
                   "
                   type="number"
                 >
+                  <!-- v-model="item.price" -->
                   <!-- {{ unite: () => (
                   <span
                     class="h-full text-gray-400 rounded-[4px] px-2 border-r-2 flex items-center justify-center"
