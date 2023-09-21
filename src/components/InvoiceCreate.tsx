@@ -6,14 +6,14 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import { Checkbox } from "./ui/checkbox";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
-import { UiSelect } from "./ui/UiSelect";
+import { ComboBox } from "./ui/combobox";
 import { Input } from "./ui/input";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 
 export const InvoiceCreate = defineComponent({
   name: "InvoiceCreate",
-  components: { Button, Checkbox, UiIcon, Input, UiSelect },
+  components: { Button, Checkbox, UiIcon, Input, ComboBox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -72,12 +72,12 @@ export const InvoiceCreate = defineComponent({
             <h1 class="font-medium">
               {globalTranslate("Invoices.create.details.client.title")}
             </h1>
-            <UiSelect
+            <ComboBox
               items={clients.value}
               onSelect={(id: number) => (newInvoice.client_id = id)}
             >
               {globalTranslate("Invoices.create.details.client.select")}
-            </UiSelect>
+            </ComboBox>
           </div>
           <h1 class="font-medium">
             {globalTranslate("Invoices.create.details.invoice.title")}
@@ -128,14 +128,14 @@ export const InvoiceCreate = defineComponent({
               <div class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1">
                 <div class="flex flex-col gap-2">
                   {InvoiceItems.value.map((item, _index) => (
-                    <UiSelect
+                    <ComboBox
                       items={products.value}
                       onSelect={(id: number) => (item.product_id = id)}
                     >
                       {globalTranslate(
                         "Invoices.create.details.invoice.select"
                       )}
-                    </UiSelect>
+                    </ComboBox>
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">

@@ -90,12 +90,12 @@ export const OrderUpdate = defineComponent({
               {globalTranslate("Orders.update.details.seller.title")}
             </h1>
             <ComboBox
-              defaultValue={updateOrder.seller?.name ?? "Select a seller"}
+              // defaultValue={updateOrder.seller?.name ?? "Select a seller"}
               items={sellers.value.map((seller) => ({
-                name: seller.name,
-                id: seller.id,
+                label: seller.name,
+                value: seller.id,
               }))}
-              onSelect={(id: number) => (updateOrder.seller_id = id)}
+              // onSelect={(id: number) => (updateOrder.seller_id = id)}
             >
               {globalTranslate("Orders.update.details.seller.select")}
             </ComboBox>
@@ -153,12 +153,12 @@ export const OrderUpdate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {updateOrder.order_items?.map((item, index) => (
                     <ComboBox
-                      defaultValue={item.product?.name ?? "select a product"}
+                      // defaultValue={item.product?.name ?? "select a product"}
                       items={products.value.map((product) => ({
                         label: product.name,
                         value: product.id,
                       }))}
-                      onSelect={(id: number) => (item.product_id = id)}
+                      // onSelect={(id: number) => (item.product_id = id)}
                     >
                       {globalTranslate("Orders.update.details.order.select")}
                     </ComboBox>
