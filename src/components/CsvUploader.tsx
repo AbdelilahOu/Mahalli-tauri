@@ -88,9 +88,7 @@ export const CsvUploader = defineComponent({
             </div>
           ))}
           {filesData.value.length ? (
-            <Button colorTheme="" onClick={upload}>
-              Upload to {route.query.table}
-            </Button>
+            <Button onClick={upload}>Upload to {route.query.table}</Button>
           ) : (
             ""
           )}

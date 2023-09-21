@@ -61,7 +61,7 @@ export const InventoryCreate = defineComponent({
           />
         </div>
         <div class="flex">
-          <Button colorTheme="a" onClick={() => createNewInventory()}>
+          <Button onClick={() => createNewInventory()}>
             {globalTranslate("Inventory.create.button")}
           </Button>
         </div>

@@ -106,7 +106,7 @@ export const ProductsView = defineComponent({
                 </Input>
               </div>
               <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
-                <Button colorTheme="primary" onClick={() => uploadCSV()}>
+                <Button onClick={() => uploadCSV()}>
                   <span
                     class={
                       "fill-sky-400 transition-all duration-200 scale-[0.8] group-hover:fill-sky-600"
@@ -122,10 +122,7 @@ export const ProductsView = defineComponent({
                     </svg>
                   </span>
                 </Button>
-                <Button
-                  colorTheme="a"
-                  onClick={() => updateModal("ProductCreate")}
-                >
+                <Button onClick={() => updateModal("ProductCreate")}>
                   <UiIcon
                     class=" fill-gray-900 cursor-default hover:bg-transparent"
                     name="add"

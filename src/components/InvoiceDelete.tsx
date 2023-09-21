@@ -40,7 +40,7 @@ export const InvoiceDelete = defineComponent({
           {globalTranslate("Invoices.delete.title")} n° {invoice.value?.id} ?
         </h1>
         <div class="flex gap-2">
-          <Button colorTheme="a" onClick={() => deleteTheInvoice()}>
+          <Button onClick={() => deleteTheInvoice()}>
             {globalTranslate("Invoices.delete.yes")}
           </Button>
           <Button

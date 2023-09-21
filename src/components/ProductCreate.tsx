@@ -92,7 +92,7 @@ export const ProductCreate = defineComponent({
           />
         </div>
         <div class="flex">
-          <Button colorTheme="a" onClick={() => createNewProduct()}>
+          <Button onClick={() => createNewProduct()}>
             {globalTranslate("Products.create.button")}
           </Button>
         </div>
