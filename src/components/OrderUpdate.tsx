@@ -2,7 +2,7 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { UiUpdateSelect } from "./ui/UiUpdateSelect";
 import type { orderT, updateOrdersT } from "@/types";
-import { UiUpdateInput } from "./ui/UiUpdateInput";
+import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
@@ -20,7 +20,7 @@ import { ORDER_UPDATE } from "@/constants/defaultValues";
 
 export const OrderUpdate = defineComponent({
   name: "OrderUpdate",
-  components: { Button, UiUpdateInput, UiIcon, UiUpdateSelect, Checkbox },
+  components: { Button, Input, UiIcon, UiUpdateSelect, Checkbox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
     //
@@ -90,7 +90,7 @@ export const OrderUpdate = defineComponent({
               {globalTranslate("Orders.update.details.seller.title")}
             </h1>
             <UiUpdateSelect
-              Value={updateOrder.seller?.name ?? "Select a seller"}
+              defaultValue={updateOrder.seller?.name ?? "Select a seller"}
               items={sellers.value.map((seller) => ({
                 name: seller.name,
                 id: seller.id,
@@ -153,7 +153,7 @@ export const OrderUpdate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {updateOrder.order_items?.map((item, index) => (
                     <UiUpdateSelect
-                      Value={item.product?.name ?? "select a product"}
+                      defaultValue={item.product?.name ?? "select a product"}
                       items={products.value.map((product) => ({
                         name: product.name,
                         id: product.id,
@@ -167,13 +167,13 @@ export const OrderUpdate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {updateOrder.order_items?.map((item, index) => (
                     <div class="h-full flex w-full items-center relative">
-                      <UiUpdateInput
+                      <Input
                         class="border-r-0"
-                        Value={item.quantity}
-                        PlaceHolder={globalTranslate(
+                        defaultValue={item.quantity}
+                        placeHolder={globalTranslate(
                           "Orders.create.details.order.placeholder[0]"
                         )}
-                        Type="number"
+                        type="number"
                         OnInputChange={(value) =>
                           (updateOrder.order_items[index].quantity =
                             Number(value))
@@ -186,20 +186,20 @@ export const OrderUpdate = defineComponent({
                             </span>
                           ),
                         }}
-                      </UiUpdateInput>
+                      </Input>
                     </div>
                   ))}
                 </div>
                 <div class="flex flex-col gap-2">
                   {updateOrder.order_items?.map((item, index) => (
                     <div class="h-full flex w-full items-center relative">
-                      <UiUpdateInput
+                      <Input
                         class="border-r-0 "
-                        Value={item.price}
-                        PlaceHolder={globalTranslate(
+                        defaultValue={item.price}
+                        placeHolder={globalTranslate(
                           "Orders.create.details.order.placeholder[1]"
                         )}
-                        Type="number"
+                        type="number"
                         OnInputChange={(value) =>
                           (updateOrder.order_items[index].price = Number(value))
                         }
@@ -211,7 +211,7 @@ export const OrderUpdate = defineComponent({
                             </span>
                           ),
                         }}
-                      </UiUpdateInput>
+                      </Input>
                     </div>
                   ))}
                 </div>

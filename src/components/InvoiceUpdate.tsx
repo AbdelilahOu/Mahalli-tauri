@@ -2,7 +2,7 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import type { invoiceT, updateInvoiceT } from "@/types";
 import { UiUpdateSelect } from "./ui/UiUpdateSelect";
-import { UiUpdateInput } from "./ui/UiUpdateInput";
+import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
@@ -20,7 +20,7 @@ import { INVOICE_UPDATE } from "@/constants/defaultValues";
 
 export const InvoiceUpdate = defineComponent({
   name: "InvoiceUpdate",
-  components: { Button, UiUpdateInput, UiIcon, UiUpdateSelect, Checkbox },
+  components: { Button, Input, UiIcon, UiUpdateSelect, Checkbox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -91,7 +91,7 @@ export const InvoiceUpdate = defineComponent({
               {globalTranslate("Invoices.update.details.client.title")}
             </h1>
             <UiUpdateSelect
-              Value={updateInvoice.client?.fullname ?? "select a client"}
+              defaultValue={updateInvoice.client?.fullname ?? "select a client"}
               items={clients.value.map((client: any) => ({
                 name: client.name,
                 id: client.id,
@@ -152,7 +152,7 @@ export const InvoiceUpdate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {updateInvoice.invoice_items?.map((item, index) => (
                     <UiUpdateSelect
-                      Value={item.product?.name ?? "select a product"}
+                      defaultValue={item.product?.name ?? "select a product"}
                       items={products.value.map((product: any) => ({
                         name: product.name,
                         id: product.id,
@@ -168,10 +168,10 @@ export const InvoiceUpdate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {updateInvoice.invoice_items?.map((item, index) => (
                     <div class="h-full w-full items-center relative">
-                      <UiUpdateInput
-                        Value={item.quantity}
-                        PlaceHolder="Product quantity"
-                        Type="number"
+                      <Input
+                        defaultValue={item.quantity}
+                        placeHolder="Product quantity"
+                        type="number"
                         OnInputChange={(value) =>
                           (item.quantity = Number(value))
                         }
@@ -183,7 +183,7 @@ export const InvoiceUpdate = defineComponent({
                             </span>
                           ),
                         }}
-                      </UiUpdateInput>
+                      </Input>
                     </div>
                   ))}
                 </div>

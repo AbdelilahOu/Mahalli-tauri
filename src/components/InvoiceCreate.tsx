@@ -7,13 +7,13 @@ import { Checkbox } from "./ui/checkbox";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import { UiSelect } from "./ui/UiSelect";
-import { UiInput } from "./ui/UiInput";
+import { Input } from "./ui/input";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 
 export const InvoiceCreate = defineComponent({
   name: "InvoiceCreate",
-  components: { Button, Checkbox, UiIcon, UiInput, UiSelect },
+  components: { Button, Checkbox, UiIcon, Input, UiSelect },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -141,12 +141,12 @@ export const InvoiceCreate = defineComponent({
                 <div class="flex flex-col gap-2">
                   {InvoiceItems.value.map((item, _index) => (
                     <div class="h-full w-full items-center relative">
-                      <UiInput
+                      <Input
                         IsEmpty={isFlash.value && item.quantity == 0}
-                        PlaceHolder={globalTranslate(
+                        placeHolder={globalTranslate(
                           "Invoices.create.details.invoice.placeholder[0]"
                         )}
-                        Type="number"
+                        type="number"
                         OnInputChange={(value) =>
                           (item.quantity = Number(value))
                         }
@@ -158,7 +158,7 @@ export const InvoiceCreate = defineComponent({
                             </span>
                           ),
                         }}
-                      </UiInput>
+                      </Input>
                     </div>
                   ))}
                 </div>

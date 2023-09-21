@@ -1,7 +1,7 @@
 import { defineComponent, reactive, onBeforeUnmount, computed } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import type { productT, updateProductT } from "@/types";
-import { UiUpdateInput } from "./ui/UiUpdateInput";
+import { Input } from "./ui/input";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import { store } from "@/store";
@@ -9,7 +9,7 @@ import { PRODUCT_UPDATE } from "@/constants/defaultValues";
 
 export const ProductUpdate = defineComponent({
   name: "ProductUpdate",
-  components: { Button, UiUpdateInput },
+  components: { Button, Input },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -48,20 +48,20 @@ export const ProductUpdate = defineComponent({
           Update Product
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
-          <UiUpdateInput
-            Value={ProductRow.value?.name}
+          <Input
+            defaultValue={ProductRow.value?.name}
             OnInputChange={(value) =>
               (updateProduct["name"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder="Name"
+            type="text"
+            placeHolder="Name"
           />
-          <UiUpdateInput
-            Value={ProductRow.value?.price}
+          <Input
+            defaultValue={ProductRow.value?.price}
             OnInputChange={(value) => (updateProduct["price"] = Number(value))}
-            Type="number"
-            PlaceHolder="Price"
+            type="number"
+            placeHolder="Price"
           >
             {{
               unite: () => (
@@ -70,20 +70,20 @@ export const ProductUpdate = defineComponent({
                 </span>
               ),
             }}
-          </UiUpdateInput>
-          <UiUpdateInput
-            Value={ProductRow.value?.tva}
+          </Input>
+          <Input
+            defaultValue={ProductRow.value?.tva}
             OnInputChange={(value) => (updateProduct["tva"] = Number(value))}
-            Type="number"
-            PlaceHolder="TVA"
+            type="number"
+            placeHolder="TVA"
           />
-          <UiUpdateInput
-            Value={0}
+          <Input
+            defaultValue={0}
             OnInputChange={(value) =>
               (updateProduct["quantity"] = Number(value))
             }
-            Type="number"
-            PlaceHolder="Add Inventory"
+            type="number"
+            placeHolder="Add Inventory"
           >
             {{
               unite: () => (
@@ -92,15 +92,15 @@ export const ProductUpdate = defineComponent({
                 </span>
               ),
             }}
-          </UiUpdateInput>
-          <UiUpdateInput
-            Value={ProductRow.value?.description}
+          </Input>
+          <Input
+            defaultValue={ProductRow.value?.description}
             OnInputChange={(value) =>
               (updateProduct["description"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder="Address"
+            type="text"
+            placeHolder="Address"
           />
         </div>
         <div class="flex">

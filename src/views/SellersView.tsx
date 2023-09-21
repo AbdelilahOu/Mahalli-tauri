@@ -2,7 +2,7 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { SellersTable } from "@/components/SellersTable";
 import { Button } from "@/components/ui/button";
-import { UiInput } from "@/components/ui/UiInput";
+import { Input } from "@/components/ui/input";
 import type { sellerT, withCount } from "@/types";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { store } from "@/store";
@@ -23,7 +23,7 @@ import {
 
 export const SellersView = defineComponent({
   name: "Sellers",
-  components: { SellersTable, Button, UiInput, UiIcon },
+  components: { SellersTable, Button, Input, UiIcon },
   setup() {
     const router = useRouter();
     const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -86,7 +86,7 @@ export const SellersView = defineComponent({
           <Transition appear>
             <div class="flex justify-between w-full gap-9 mb-1">
               <div class="w-1/3">
-                <UiInput
+                <Input
                   IsEmpty={false}
                   OnInputChange={(value) =>
                     (searchQuery.value =
@@ -94,14 +94,14 @@ export const SellersView = defineComponent({
                         ? JSON.stringify(value)
                         : value.toLocaleLowerCase())
                   }
-                  Type="text"
-                  PlaceHolder={globalTranslate("Global.search")}
+                  type="text"
+                  placeHolder={globalTranslate("Global.search")}
                 >
                   <UiIcon
                     class=" fill-gray-400 cursor-default hover:bg-white"
                     name="search"
                   />
-                </UiInput>
+                </Input>
               </div>
               <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
                 <Button colorTheme="primary" Click={() => uploadCSV()}>

@@ -1,7 +1,7 @@
 import { defineComponent, ref, type PropType, watch } from "vue";
 
-export const UiUpdateInput = defineComponent({
-  name: "UiUpdateInput",
+export const Input = defineComponent({
+  name: "Input",
   props: {
     Type: {
       type: String,
@@ -20,7 +20,7 @@ export const UiUpdateInput = defineComponent({
       type: Function as PropType<(value: string | number) => void>,
       required: true,
     },
-    PlaceHolder: {
+    placeHolder: {
       type: String,
       required: true,
     },
@@ -38,7 +38,7 @@ export const UiUpdateInput = defineComponent({
           disabled={props.Disable}
           onInput={(e) => emitChange(e as { target: any })}
           type={props.Type}
-          placeholder={props.PlaceHolder}
+          placeholder={props.placeHolder}
         />
         {slots.unite?.()}
       </div>

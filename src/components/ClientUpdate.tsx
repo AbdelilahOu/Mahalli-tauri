@@ -3,14 +3,14 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { CLIENT_UPDATE } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
 import type { clientT, updateClientT } from "@/types";
-import { UiUpdateInput } from "./ui/UiUpdateInput";
+import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
 import { store } from "@/store";
 
 export const ClientUpdate = defineComponent({
   name: "ClientUpdate",
-  components: { Button, UiUpdateInput },
+  components: { Button, Input },
   setup() {
     const ClientRow = computed(() => store.getters.getSelectedRow<clientT>());
     const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -48,45 +48,33 @@ export const ClientUpdate = defineComponent({
           {globalTranslate("Clients.update.title")}
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
-          <UiUpdateInput
-            Value={ClientRow.value?.["fullname"]}
-            OnInputChange={(value) =>
-              (updateClient["fullname"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
-            Type="text"
-            PlaceHolder={globalTranslate("Clients.create.placeholders[0]")}
+          <Input
+            defaultValue={ClientRow.value?.fullname}
+            modelValue={updateClient.fullname}
+            type="text"
+            placeHolder={globalTranslate("Clients.create.placeholders[0]")}
           />
-          <UiUpdateInput
-            Value={ClientRow.value?.email}
-            OnInputChange={(value) =>
-              (updateClient["email"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
-            Type="text"
-            PlaceHolder={globalTranslate("Clients.create.placeholders[1]")}
+          <Input
+            defaultValue={ClientRow.value?.email}
+            modelValue={updateClient.email}
+            type="text"
+            placeHolder={globalTranslate("Clients.create.placeholders[1]")}
           />
-          <UiUpdateInput
-            Value={ClientRow.value?.phone}
-            OnInputChange={(value) =>
-              (updateClient["phone"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
-            Type="text"
-            PlaceHolder={globalTranslate("Clients.create.placeholders[2]")}
+          <Input
+            defaultValue={ClientRow.value?.phone}
+            modelValue={updateClient.phone}
+            type="text"
+            placeHolder={globalTranslate("Clients.create.placeholders[2]")}
           />
-          <UiUpdateInput
-            Value={ClientRow.value?.address}
-            OnInputChange={(value) =>
-              (updateClient["address"] =
-                typeof value == "string" ? value : JSON.stringify(value))
-            }
-            Type="text"
-            PlaceHolder={globalTranslate("Clients.create.placeholders[3]")}
+          <Input
+            defaultValue={ClientRow.value?.address}
+            modelValue={updateClient.address}
+            type="text"
+            placeHolder={globalTranslate("Clients.create.placeholders[3]")}
           />
         </div>
         <div class="flex">
-          <Button colorTheme="a" Click={() => updateTheClient()}>
+          <Button onClick={() => updateTheClient()}>
             {globalTranslate("Clients.update.button")} {updateClient.name}
           </Button>
         </div>

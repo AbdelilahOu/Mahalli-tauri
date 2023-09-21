@@ -2,7 +2,7 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { ClientsTable } from "@/components/ClientsTable";
 import { Button } from "@/components/ui/button";
-import { UiInput } from "@/components/ui/UiInput";
+import { Input } from "@/components/ui/input";
 import type { clientT, withCount } from "@/types";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { invoke } from "@tauri-apps/api";
@@ -23,7 +23,7 @@ import {
 
 export const ClientsView = defineComponent({
   name: "Clients",
-  components: { ClientsTable, Button, UiInput, UiIcon },
+  components: { ClientsTable, Button, Input, UiIcon },
   setup() {
     const router = useRouter();
     const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -82,22 +82,16 @@ export const ClientsView = defineComponent({
           <Transition appear>
             <div class="flex justify-between w-full gap-9 mb-1">
               <div class="w-1/3">
-                <UiInput
-                  IsEmpty={false}
-                  OnInputChange={(value) =>
-                    (searchQuery.value =
-                      typeof value !== "string"
-                        ? JSON.stringify(value)
-                        : value.toLocaleLowerCase())
-                  }
-                  Type="text"
-                  PlaceHolder={globalTranslate("Global.search")}
+                <Input
+                  modelValue={searchQuery.value}
+                  type="text"
+                  placeHolder={globalTranslate("Global.search")}
                 >
                   <UiIcon
                     class=" fill-gray-400 cursor-default hover:bg-white"
                     name="search"
                   />
-                </UiInput>
+                </Input>
               </div>
               <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
                 <Button variant={"ghost"} onClick={() => uploadCSV()}>

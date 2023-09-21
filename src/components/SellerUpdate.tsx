@@ -2,7 +2,7 @@ import { defineComponent, reactive, onBeforeUnmount, computed } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import type { sellerT, updateSellerT } from "@/types";
-import { UiUpdateInput } from "./ui/UiUpdateInput";
+import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
 import { store } from "@/store";
@@ -10,7 +10,7 @@ import { SELLER_UPDATE } from "@/constants/defaultValues";
 
 export const SellerUpdate = defineComponent({
   name: "SellerUpdate",
-  components: { Button, UiUpdateInput },
+  components: { Button, Input },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -49,41 +49,41 @@ export const SellerUpdate = defineComponent({
           {globalTranslate("Sellers.update.title")}
         </h1>
         <div class="h-full w-full flex flex-col gap-2">
-          <UiUpdateInput
-            Value={SellerRow.value?.name}
+          <Input
+            defaultValue={SellerRow.value?.name}
             OnInputChange={(value) =>
               (updateSeller["name"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Sellers.create.placeholders[0]")}
+            type="text"
+            placeHolder={globalTranslate("Sellers.create.placeholders[0]")}
           />
-          <UiUpdateInput
-            Value={SellerRow.value?.email}
+          <Input
+            defaultValue={SellerRow.value?.email}
             OnInputChange={(value) =>
               (updateSeller["email"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Sellers.create.placeholders[1]")}
+            type="text"
+            placeHolder={globalTranslate("Sellers.create.placeholders[1]")}
           />
-          <UiUpdateInput
-            Value={SellerRow.value?.phone}
+          <Input
+            defaultValue={SellerRow.value?.phone}
             OnInputChange={(value) =>
               (updateSeller["phone"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Sellers.create.placeholders[2]")}
+            type="text"
+            placeHolder={globalTranslate("Sellers.create.placeholders[2]")}
           />
-          <UiUpdateInput
-            Value={SellerRow.value?.address}
+          <Input
+            defaultValue={SellerRow.value?.address}
             OnInputChange={(value) =>
               (updateSeller["address"] =
                 typeof value == "string" ? value : JSON.stringify(value))
             }
-            Type="text"
-            PlaceHolder={globalTranslate("Sellers.create.placeholders[3]")}
+            type="text"
+            placeHolder={globalTranslate("Sellers.create.placeholders[3]")}
           />
         </div>
         <div class="flex">
