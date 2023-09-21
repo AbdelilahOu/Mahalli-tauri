@@ -2,7 +2,7 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import { defineComponent, ref, type PropType } from "vue";
 import { store } from "@/store";
 import { UiPagination } from "./ui/UiPagination";
-import { UiCheckBox } from "./ui/UiCheckBox";
+import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
 import type { invoiceT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
@@ -15,7 +15,7 @@ export const InvoicesTable = defineComponent({
       required: true,
     },
   },
-  components: { UiIcon, UiCheckBox, UiPagination },
+  components: { UiIcon, Checkbox, UiPagination },
   setup(props) {
     const checkedInvoices = ref<number[]>([]);
 
@@ -51,8 +51,8 @@ export const InvoicesTable = defineComponent({
               <tr v-fade={index} key={Invoice.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
-                    <UiCheckBox
-                      onCheck={(check) => checkThisInvoice(check, Invoice.id)}
+                    <Checkbox
+                    // onCheck={(check) => checkThisInvoice(check, Invoice.id)}
                     />
                   </span>
                 </td>

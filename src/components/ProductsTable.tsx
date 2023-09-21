@@ -2,14 +2,14 @@ import { defineComponent, ref, type PropType } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { store } from "@/store";
 import { UiPagination } from "./ui/UiPagination";
-import { UiCheckBox } from "./ui/UiCheckBox";
+import { Checkbox } from "./ui/checkbox";
 import type { productT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 
 export const ProductsTable = defineComponent({
   name: "ProductsTable",
-  components: { UiCheckBox, UiIcon, UiPagination },
+  components: { Checkbox, UiIcon, UiPagination },
   props: {
     Products: {
       type: Array as PropType<productT[]>,
@@ -46,7 +46,7 @@ export const ProductsTable = defineComponent({
               <tr v-fade={index} key={product.id}>
                 <td class="p-2">
                   <span class="h-full w-full grid">
-                    <UiCheckBox
+                    <Checkbox
                       onCheck={(check) =>
                         console.log(
                           product.name,

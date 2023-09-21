@@ -3,7 +3,7 @@ import { globalTranslate } from "@/utils/globalTranslate";
 import { UiUpdateSelect } from "./ui/UiUpdateSelect";
 import type { orderT, updateOrdersT } from "@/types";
 import { UiUpdateInput } from "./ui/UiUpdateInput";
-import { UiCheckBox } from "./ui/UiCheckBox";
+import { Checkbox } from "./ui/checkbox";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import UiIcon from "./ui/UiIcon.vue";
@@ -20,7 +20,7 @@ import { ORDER_UPDATE } from "@/constants/defaultValues";
 
 export const OrderUpdate = defineComponent({
   name: "OrderUpdate",
-  components: { Button, UiUpdateInput, UiIcon, UiUpdateSelect, UiCheckBox },
+  components: { Button, UiUpdateInput, UiIcon, UiUpdateSelect, Checkbox },
   setup() {
     const { updateQueryParams } = useUpdateRouteQueryParams();
     //
@@ -107,7 +107,7 @@ export const OrderUpdate = defineComponent({
             <div class="w-full  h-full flex flex-col mb-1 gap-1">
               <div class="flex justify-between w-full">
                 <div class="h-full w-full flex flex-row flex-nowrap items-center gap-2">
-                  <UiCheckBox
+                  <Checkbox
                     onCheck={(check) =>
                       check
                         ? (updateOrder.status = "delivered")
@@ -117,7 +117,7 @@ export const OrderUpdate = defineComponent({
                   <span>{globalTranslate("Orders.status.delivered")}</span>
                 </div>
                 <div class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2">
-                  <UiCheckBox
+                  <Checkbox
                     onCheck={(check) =>
                       check
                         ? (updateOrder.status = "pending")
@@ -127,7 +127,7 @@ export const OrderUpdate = defineComponent({
                   <span>{globalTranslate("Orders.status.pending")}</span>
                 </div>
                 <div class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2">
-                  <UiCheckBox
+                  <Checkbox
                     onCheck={(check) =>
                       check
                         ? (updateOrder.status = "canceled")
