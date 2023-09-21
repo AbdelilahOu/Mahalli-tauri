@@ -139,7 +139,7 @@ export const InvoiceUpdate = defineComponent({
             </div>
             <div class="w-full  h-full flex flex-col gap-1">
               <Button
-                Click={() =>
+                onClick={() =>
                   updateInvoice.invoice_items?.push({
                     product_id: 0,
                     quantity: 0,
@@ -205,7 +205,7 @@ export const InvoiceUpdate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <Button colorTheme="a" Click={() => updateTheInvoice()}>
+          <Button colorTheme="a" onClick={() => updateTheInvoice()}>
             {globalTranslate("Invoices.update.button")}
           </Button>
         </div>

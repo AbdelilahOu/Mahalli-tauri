@@ -234,7 +234,7 @@ export const OrdersDetails = defineComponent({
               </table>
               <div class="w-full flex items-center justify-center">
                 <div class="w-1/3">
-                  <Button Click={() => window.print()} colorTheme="A">
+                  <Button onClick={() => window.print()} colorTheme="A">
                     {globalTranslate("OrdersDetails.details.button")}
                   </Button>
                 </div>

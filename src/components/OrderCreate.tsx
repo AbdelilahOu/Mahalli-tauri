@@ -119,7 +119,7 @@ export const OrderCreate = defineComponent({
             </div>
             <div class="w-full  h-full flex flex-col gap-1">
               <Button
-                Click={() =>
+                onClick={() =>
                   order_items.value.push({
                     product_id: 0,
                     quantity: 0,
@@ -204,7 +204,7 @@ export const OrderCreate = defineComponent({
           </div>
         </div>
         <div class="flex">
-          <Button colorTheme="a" Click={() => createNewOrders()}>
+          <Button colorTheme="a" onClick={() => createNewOrders()}>
             {globalTranslate("Orders.create.button")}
           </Button>
         </div>

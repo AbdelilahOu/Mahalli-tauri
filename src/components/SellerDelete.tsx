@@ -40,11 +40,11 @@ export const SellerDelete = defineComponent({
           {seller.value?.name} ?
         </h1>
         <div class="flex gap-2">
-          <Button colorTheme="a" Click={() => deleteTheSeller()}>
+          <Button colorTheme="a" onClick={() => deleteTheSeller()}>
             {globalTranslate("Sellers.delete.yes")}
           </Button>
           <Button
-            Click={() =>
+            onClick={() =>
               store.setters.updateStore({ key: "show", value: false })
             }
           >
