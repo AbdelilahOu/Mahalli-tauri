@@ -74,7 +74,7 @@ export const ClientUpdate = defineComponent({
           />
         </div>
         <div class="flex">
-          <Button onClick={() => updateTheClient()}>
+          <Button class={"w-full"} onClick={() => updateTheClient()}>
             {globalTranslate("Clients.update.button")} {updateClient.name}
           </Button>
         </div>

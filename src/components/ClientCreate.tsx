@@ -76,8 +76,8 @@ export const ClientCreate = defineComponent({
             placeHolder={globalTranslate("Clients.create.placeholders[3]")}
           />
         </div>
-        <div class="flex">
-          <Button onClick={() => createNewClient()}>
+        <div class="w-full">
+          <Button class={"w-full"} onClick={() => createNewClient()}>
             {globalTranslate("Clients.create.button")}
           </Button>
         </div>

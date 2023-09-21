@@ -97,7 +97,7 @@ export const ProductCreate = defineComponent({
           />
         </div>
         <div class="flex">
-          <Button onClick={() => createNewProduct()}>
+          <Button class={"w-full"} onClick={() => createNewProduct()}>
             {globalTranslate("Products.create.button")}
           </Button>
         </div>

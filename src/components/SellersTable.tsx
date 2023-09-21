@@ -53,7 +53,7 @@ export const SellersTable = defineComponent({
                 <td class="p-2">
                   <span class="h-full w-full grid">
                     <Checkbox
-                      onCheck={(check) => checkThisUser(check, Seller.id)}
+                    // onCheck={(check) => checkThisUser(check, Seller.id)}
                     />
                   </span>
                 </td>
