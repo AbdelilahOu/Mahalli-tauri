@@ -1,23 +1,23 @@
-import { NotificationsView } from "@/views/NotificationsView";
 import { createRouter, createWebHistory } from "vue-router";
-import { InvoiceDetails } from "@/views/InvoiceDetails";
-import { ClientDetails } from "@/views/ClientDetails";
-import { SellerDetails } from "@/views/SellerDetails";
-import { InvoicesIndex } from "@/views/InvoicesIndex";
-import { OrdersDetails } from "@/views/OrderDetails";
-import { ProductsView } from "@/views/ProductsView";
-import { InvoicesView } from "@/views/InvoicesView";
-import { ClientsIndex } from "@/views/ClientsIndex";
-import { SellersIndex } from "@/views/SellersIndex";
-import { OrdersIndex } from "@/views/OrdersIndex";
-import { SellersView } from "@/views/SellersView";
-import { ClientsView } from "@/views/ClientsView";
-import { OrdersView } from "@/views/OrdersView";
-import { InventoryView } from "@/views/InventoryView";
-import { StatsView } from "@/views/StatsView";
-import { HomeView } from "@/views/HomeView";
-import { IndexView } from "@/views/IndexView";
-import { AuthView } from "@/views/AuthView";
+import NotificationsView from "@/views/NotificationsView.vue";
+import InvoiceDetails from "@/views/InvoiceDetails.vue";
+import ClientDetails from "@/views/ClientDetails.vue";
+import SellerDetails from "@/views/SellerDetails.vue";
+import InvoicesIndex from "@/views/InvoicesIndex.vue";
+import OrdersDetails from "@/views/OrderDetails.vue";
+import ProductsView from "@/views/ProductsView.vue";
+import InvoicesView from "@/views/InvoicesView.vue";
+import ClientsIndex from "@/views/ClientsIndex.vue";
+import SellersIndex from "@/views/SellersIndex.vue";
+import OrdersIndex from "@/views/OrdersIndex.vue";
+import SellersView from "@/views/SellersView.vue";
+import ClientsView from "@/views/ClientsView.vue";
+import OrdersView from "@/views/OrdersView.vue";
+import InventoryView from "@/views/InventoryView.vue";
+import StatsView from "@/views/StatsView.vue";
+import HomeView from "@/views/HomeView.vue";
+import IndexView from "@/views/IndexView.vue";
+import AuthView from "@/views/AuthView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

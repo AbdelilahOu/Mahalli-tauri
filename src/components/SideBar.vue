@@ -76,17 +76,19 @@ const openSettingsModal = () => {
         class="w-full px-1 mt-2 h-full overflow-x-hidden grid grid-cols-1 gap-1 grid-rows-[1fr_36px] justify-between pb-[18px]"
       >
         <div class="w-full h-full flex flex-col gap-1">
-          <RouterLink
-            v-for="(link, index) in RouteLinks"
-            :key="index"
-            :to="{ path: link.path, query: { page: 1 } }"
-          >
-            <UiSideLink
-              :isText="!isCollapse"
-              :icon="link.name"
-              :linkText="globalTranslate(`Global.routes.${link.name}`)"
-            />
-          </RouterLink>
+          <span v-for="(link, index) in RouteLinks">
+            <RouterLink
+              v-if="link.display"
+              :key="index"
+              :to="{ path: link.path, query: { page: 1 } }"
+            >
+              <UiSideLink
+                :isText="!isCollapse"
+                :icon="link.name"
+                :linkText="globalTranslate(`Global.routes.${link.name}`)"
+              />
+            </RouterLink>
+          </span>
         </div>
         <RouterLink to="/Notifications">
           <UiSideLink

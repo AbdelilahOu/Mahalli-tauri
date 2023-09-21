@@ -57,19 +57,19 @@ onBeforeRouteUpdate((to) => {
           </button>
           <span v-if="route.fullPath !== '/'" class="flex items-center">
             <span class="flex items-center">
-              {{ ActiveLink.value && " / " }}
+              {{ ActiveLink && " / " }}
               {{
-                ActiveLink.value &&
-                globalTranslate(`Global.routes.${ActiveLink.value.name}`)
+                ActiveLink &&
+                globalTranslate(`Global.routes.${ActiveLink.name}`)
               }}
               {{ route.params.id ? `/ n° ${route.params.id}` : "" }}
             </span>
           </span>
         </span>
       </div>
-      <div v-if="User.value" class="flex items-center gap-2">
-        <img class="rounded-full w-8 h-8" :src="User.value.photoURL" alt="" />
-        <span class="font-semibold">{{ User.value.displayName }}</span>
+      <div v-if="User" class="flex items-center gap-2">
+        <img class="rounded-full w-8 h-8" :src="User.photoURL" alt="" />
+        <span class="font-semibold">{{ User.displayName }}</span>
       </div>
     </div>
   </header>

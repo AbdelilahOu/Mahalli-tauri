@@ -74,7 +74,7 @@ const updateModal = (name: string) => {
             <Input
               v-model="searchQuery"
               type="text"
-              placeHolder="globalTranslate('Global.search')"
+              :placeHolder="globalTranslate('Global.search')"
             >
               <UiIcon
                 class="fill-gray-400 cursor-default hover:bg-white"
@@ -92,9 +92,7 @@ const updateModal = (name: string) => {
                   width="32"
                   height="32"
                   viewBox="0 0 256 256"
-                >
-                  <!-- SVG path for the upload icon -->
-                </svg>
+                ></svg>
               </span>
             </Button>
             <Button @click="() => updateModal('ClientCreate')">
@@ -102,7 +100,7 @@ const updateModal = (name: string) => {
                 class="fill-white cursor-default hover:bg-transparent"
                 name="add"
               />
-              {globalTranslate("Clients.index.addButton")}
+              {{ globalTranslate("Clients.index.addButton") }}
             </Button>
           </div>
         </div>
