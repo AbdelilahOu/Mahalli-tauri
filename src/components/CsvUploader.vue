@@ -90,7 +90,7 @@ const upload = async () => {
         </svg>
         <span>{f.name}</span>
         <div class="w-full text-end">{{ f.size }} bytes</div>
-        <span @click="() => filesData.splice(i, 1)">
+        <span @click="filesData.splice(i, 1)">
           <UiIconVue IsStyled name="delete" />
         </span>
       </div>
