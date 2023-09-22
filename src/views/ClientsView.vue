@@ -106,7 +106,7 @@ const updateModal = (name: string) => {
                 </svg>
               </span>
             </Button>
-            <Button @click="() => updateModal('ClientCreate')">
+            <Button @click="updateModal('ClientCreate')">
               <UiIcon
                 extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
