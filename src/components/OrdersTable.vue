@@ -104,10 +104,10 @@ const toggleThisOrders = (Order: orderT, name: string) => {
           <td class="p-2">
             <div class="flex justify-start gap-3">
               <span @click="toggleThisOrders(order, 'OrderDelete')">
-                <UiIcon name="delete" />
+                <UiIcon isStyled name="delete" />
               </span>
               <span @click="toggleThisOrders(order, 'OrderUpdate')">
-                <UiIcon name="edit" />
+                <UiIcon isStyled name="edit" />
               </span>
               <RouterLink
                 :to="{
