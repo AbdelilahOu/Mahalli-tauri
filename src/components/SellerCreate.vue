@@ -55,7 +55,11 @@ const saveImage = (image: string) => {
     </h1>
     <div class="h-full w-full flex flex-col gap-2">
       <div class="w-full h-fit flex justify-center">
-        <UiUploader name="Image" :extensions="ImagesFiles" @save="saveImage" />
+        <UiUploader
+          name="Image"
+          :extensions="ImagesFiles"
+          @on:save="saveImage"
+        />
       </div>
       <Input
         v-model="seller.name"

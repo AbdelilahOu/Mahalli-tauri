@@ -63,27 +63,27 @@ const setImage = (image: string) => {
         />
       </div>
       <Input
-        :v-model="product.name"
+        v-model="product.name"
         type="text"
         :placeHolder="globalTranslate('Products.create.placeholders[0]')"
       />
       <Input
-        :v-model="product.price"
+        v-model="product.price"
         type="Number"
         :placeHolder="globalTranslate('Products.create.placeholders[2]')"
       />
       <Input
-        :v-model="product.tva"
+        v-model="product.tva"
         type="Number"
         :placeHolder="globalTranslate('Products.create.placeholders[3]')"
       />
       <Input
-        :v-model="product.quantity"
+        v-model="product.quantity"
         type="Number"
         :placeHolder="globalTranslate('Products.create.placeholders[4]')"
       />
       <Input
-        :v-model="product.description"
+        v-model="product.description"
         type="textarea"
         :placeHolder="globalTranslate('Products.create.placeholders[5]')"
       />
