@@ -1,3 +1,9 @@
+<script setup lang="ts">
+defineProps<{
+  error: string;
+}>();
+</script>
+
 <template>
   <div class="w-1/2 h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]">
     <h1
@@ -5,6 +11,8 @@
     >
       Error
     </h1>
-    <div class="h-full w-full flex flex-col gap-2"></div>
+    <div class="h-full w-full text-center flex flex-col gap-2">
+      {{ error }}
+    </div>
   </div>
 </template>

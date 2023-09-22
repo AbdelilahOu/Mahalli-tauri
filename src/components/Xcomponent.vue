@@ -64,9 +64,9 @@ import Error from "./Error.vue";
 const { name } = defineProps<{ name: string }>();
 
 const component = defineAsyncComponent({
-  loader: () => import(`../components/${name}.vue`),
-  errorComponent: Error,
+  loader: () => import(`../componentsx/${name}.vue`),
   loadingComponent: ModalLoading,
+  errorComponent: Error,
 });
 </script>
 
