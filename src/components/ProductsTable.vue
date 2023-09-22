@@ -86,10 +86,10 @@ const handleCheck = (product: productT, isChecked: boolean) => {
           <td class="p-2">
             <div class="flex justify-start gap-3">
               <span @click="toggleThisProduct(product, 'ProductDelete')">
-                <UiIcon name="delete" />
+                <UiIcon isStyled name="delete" />
               </span>
               <span @click="toggleThisProduct(product, 'ProductUpdate')">
-                <UiIcon name="edit" />
+                <UiIcon isStyled name="edit" />
               </span>
             </div>
           </td>
