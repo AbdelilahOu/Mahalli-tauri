@@ -211,7 +211,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
                 v-for="(item, index) in updateOrder.order_items"
                 :key="index"
               >
-                <UiIcon name="delete" />
+                <UiIcon isStyled name="delete" />
               </div>
             </div>
           </div>
