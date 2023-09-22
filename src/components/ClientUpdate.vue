@@ -70,7 +70,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
       />
     </div>
     <div class="flex">
-      <Button class="w-full" @click="() => updateTheClient()">
+      <Button class="w-full" @click="updateTheClient">
         {{ globalTranslate("Clients.update.button") }} {{ updateClient.name }}
       </Button>
     </div>
