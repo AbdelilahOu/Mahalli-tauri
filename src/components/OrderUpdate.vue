@@ -158,8 +158,13 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
                 :key="index"
               >
                 <Input
+                  v-model="item.quantity"
                   class="border-r-0"
-                  placeHolder="{{ globalTranslate('Orders.create.details.order.placeholder[0]') }}"
+                  :placeHolder="
+                    globalTranslate(
+                      'Orders.create.details.order.placeholder[0]'
+                    )
+                  "
                   type="number"
                 >
                   <!-- v-model="item.quantity" -->
@@ -180,6 +185,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
                 :key="index"
               >
                 <Input
+                  v-model="item.price"
                   class="border-r-0"
                   :placeHolder="
                     globalTranslate(
@@ -188,7 +194,6 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
                   "
                   type="number"
                 >
-                  <!-- v-model="item.price" -->
                   <!-- {{ unite: () => (
                   <span
                     class="h-full text-gray-400 rounded-[4px] px-2 border-r-2 flex items-center justify-center"
