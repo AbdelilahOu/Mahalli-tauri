@@ -1,6 +1,6 @@
 <!-- we load all the components which slows the app  -->
 <!-- looking for better ways using defineAsyncComponent -->
-<script lang="ts">
+<!-- <script lang="ts">
 import TranslationModal from "./TranslationModal.vue";
 import InventoryCreate from "./InventoryCreate.vue";
 import ProductCreate from "./ProductCreate.vue";
@@ -54,8 +54,21 @@ export default {
     };
   },
 };
+</script> -->
+
+<script setup lang="ts">
+import { defineAsyncComponent } from "vue";
+const props = defineProps({
+  name: {
+    type: String,
+    required: true,
+  },
+});
+const component = defineAsyncComponent({
+  loader: () => import(`../components/${props.name}.vue`),
+});
 </script>
 
 <template>
-  <component :is="name" />
+  <component :is="component" />
 </template>
