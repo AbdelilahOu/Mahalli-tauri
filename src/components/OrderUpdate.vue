@@ -206,7 +206,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
             </div>
             <div class="flex flex-col gap-2">
               <div
-                @click="() => deleteOrderItem(index)"
+                @click="deleteOrderItem(index)"
                 class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
                 v-for="(item, index) in updateOrder.order_items"
                 :key="index"
