@@ -58,14 +58,15 @@ export default {
 
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
-const props = defineProps({
-  name: {
-    type: String,
-    required: true,
-  },
-});
+import ModalLoading from "./ModalLoading.vue";
+import Error from "./Error.vue";
+
+const { name } = defineProps<{ name: string }>();
+
 const component = defineAsyncComponent({
-  loader: () => import(`../components/${props.name}.vue`),
+  loader: () => import(`../components/${name}.vue`),
+  errorComponent: Error,
+  loadingComponent: ModalLoading,
 });
 </script>
 
