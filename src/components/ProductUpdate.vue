@@ -7,6 +7,7 @@ import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import { store } from "@/store";
 import { PRODUCT_UPDATE } from "@/constants/defaultValues";
+import { globalTranslate } from "@/utils/globalTranslate";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -48,7 +49,7 @@ onBeforeUnmount(() => {
     <h1
       class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
     >
-      Update Product
+      {{ globalTranslate("Products.update.title") }}
     </h1>
     <div class="h-full w-full flex flex-col gap-2">
       <Input v-model="updateProduct.name" type="text" placeHolder="Name" />
