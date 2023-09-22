@@ -7,7 +7,9 @@ defineProps<{
   placeHolder: string;
 }>();
 
-const modelValue = defineModel<string | number>();
+const modelValue = defineModel<string | number | undefined>({
+  required: true,
+});
 </script>
 
 <template>
