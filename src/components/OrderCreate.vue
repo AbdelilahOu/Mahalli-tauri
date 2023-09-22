@@ -172,7 +172,7 @@ const createNewOrders = async () => {
                   @click="order_items.splice(index, 1)"
                   class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
                 >
-                  <UiIcon name="delete" />
+                  <UiIcon isStyled name="delete" />
                 </div>
               </template>
             </div>
