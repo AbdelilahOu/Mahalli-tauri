@@ -1,5 +1,3 @@
-import { defineComponent } from "vue";
-
 <script setup lang="ts">
 import UiIcon from "./UiIcon.vue";
 
