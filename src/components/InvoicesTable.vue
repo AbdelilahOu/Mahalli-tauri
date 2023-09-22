@@ -132,10 +132,10 @@ const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
           <td class="p-2">
             <div class="flex justify-start gap-3">
               <span @click="toggleThisInvoice(Invoice, 'InvoiceDelete')">
-                <UiIcon name="delete" />
+                <UiIcon isStyled name="delete" />
               </span>
               <span @click="toggleThisInvoice(Invoice, 'InvoiceUpdate')">
-                <UiIcon name="edit" />
+                <UiIcon isStyled name="edit" />
               </span>
               <router-link
                 :to="{ name: 'InvoiceDetails', params: { id: Invoice.id } }"
