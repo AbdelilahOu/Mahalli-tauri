@@ -51,22 +51,22 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
       <Input
         v-model="updateSeller.name"
         type="text"
-        placeHolder="{{ globalTranslate('Sellers.create.placeholders[0]') }}"
+        :placeHolder="globalTranslate('Sellers.create.placeholders[0]')"
       />
       <Input
         v-model="updateSeller.email"
         type="text"
-        placeHolder="{{ globalTranslate('Sellers.create.placeholders[1]') }}"
+        :placeHolder="globalTranslate('Sellers.create.placeholders[1]')"
       />
       <Input
         v-model="updateSeller.phone"
         type="text"
-        placeHolder="{{ globalTranslate('Sellers.create.placeholders[2]') }}"
+        :placeHolder="globalTranslate('Sellers.create.placeholders[2]')"
       />
       <Input
         v-model="updateSeller.address"
         type="text"
-        placeHolder="{{ globalTranslate('Sellers.create.placeholders[3]') }}"
+        :placeHolder="globalTranslate('Sellers.create.placeholders[3]')"
       />
     </div>
     <div class="flex">
