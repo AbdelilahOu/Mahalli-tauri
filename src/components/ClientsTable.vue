@@ -95,10 +95,10 @@ const toggleThisClient = (client: clientT, name: string) => {
           </td>
           <td class="p-2">
             <div class="flex justify-start gap-3">
-              <span @click="() => toggleThisClient(client, 'ClientDelete')">
+              <span @click="toggleThisClient(client, 'ClientDelete')">
                 <UiIcon name="delete" />
               </span>
-              <span @click="() => toggleThisClient(client, 'ClientUpdate')">
+              <span @click="toggleThisClient(client, 'ClientUpdate')">
                 <UiIcon name="edit" />
               </span>
               <RouterLink
