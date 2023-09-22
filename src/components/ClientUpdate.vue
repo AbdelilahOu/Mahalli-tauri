@@ -45,28 +45,28 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
     <h1
       class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
     >
-      {globalTranslate("Clients.update.title")}
+      {{ globalTranslate("Clients.update.title") }}
     </h1>
     <div class="h-full w-full flex flex-col gap-2">
       <Input
         v-model="updateClient.fullname"
         type="text"
-        placeHolder="globalTranslate('Clients.create.placeholders[0]')"
+        :placeHolder="globalTranslate('Clients.create.placeholders[0]')"
       />
       <Input
         v-model="updateClient.email"
         type="text"
-        placeHolder="globalTranslate('Clients.create.placeholders[1]')"
+        :placeHolder="globalTranslate('Clients.create.placeholders[1]')"
       />
       <Input
         v-model="updateClient.phone"
         type="text"
-        placeHolder="globalTranslate('Clients.create.placeholders[2]')"
+        :placeHolder="globalTranslate('Clients.create.placeholders[2]')"
       />
       <Input
         v-model="updateClient.address"
         type="text"
-        placeHolder="globalTranslate('Clients.create.placeholders[3]')"
+        :placeHolder="globalTranslate('Clients.create.placeholders[3]')"
       />
     </div>
     <div class="flex">
