@@ -95,10 +95,10 @@ const toggleThisSeller = (seller: sellerT, name: string) => {
           <td class="p-2">
             <div class="flex w-full justify-start gap-3">
               <span @click="toggleThisSeller(seller, 'SellerDelete')">
-                <UiIcon name="delete" />
+                <UiIcon isStyled name="delete" />
               </span>
               <span @click="toggleThisSeller(seller, 'SellerUpdate')">
-                <UiIcon name="edit" />
+                <UiIcon isStyled name="edit" />
               </span>
               <RouterLink
                 :to="{ name: 'SellerDetails', params: { id: seller.id } }"
