@@ -4,7 +4,7 @@ import UiIcon from "@/components/ui/UiIcon.vue";
 
 defineProps<{
   title: string;
-  item: Record<any, any>;
+  item: Record<any, any> | null;
 }>();
 </script>
 
