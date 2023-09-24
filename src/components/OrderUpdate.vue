@@ -12,22 +12,6 @@ import { ref, computed, reactive, onBeforeMount, onBeforeUnmount } from "vue";
 import { store } from "@/store";
 import { ORDER_UPDATE } from "@/constants/defaultValues";
 
-defineProps<{ orders: orderT[] }>();
-
-const checkedOrders = ref<number[]>([]);
-
-const checkThisOrders = (IsIncluded: boolean, id: number) => {
-  IsIncluded
-    ? checkedOrders.value.push(id)
-    : checkedOrders.value.splice(checkedOrders.value.indexOf(id), 1);
-};
-
-const toggleThisOrders = (Order: orderT, name: string) => {
-  store.setters.updateStore({ key: "row", value: Order });
-  store.setters.updateStore({ key: "name", value: name });
-  store.setters.updateStore({ key: "show", value: true });
-};
-
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const OrdersRow = computed(() => store.getters.getSelectedRow<orderT>());
@@ -40,6 +24,7 @@ const updateOrder = reactive<updateOrdersT>(
 );
 
 onBeforeMount(async () => {
+  // @ts-ignore
   const res = await Promise.allSettled([
     invoke<{ label: string; value: number }[]>("get_all_sellers"),
     invoke<{ label: string; value: number }[]>("get_all_products"),
@@ -48,6 +33,10 @@ onBeforeMount(async () => {
   if (res[0].status === "fulfilled") sellers.value = res[0].value;
   if (res[1].status === "fulfilled") products.value = res[1].value;
 });
+
+const addOrderItem = () => {
+  updateOrder.order_items.push({ product_id: 0, quantity: 0, price: 0 });
+};
 
 const updateTheOrders = async () => {
   if (updateOrder.id) {
@@ -130,16 +119,11 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
           </div>
         </div>
         <div class="w-full h-full flex flex-col gap-1">
-          <Button
-            @click="
-              () =>
-                updateOrder.order_items?.push({ product_id: 0, quantity: 0 })
-            "
-          >
+          <Button @click="addOrderItem">
             {{ globalTranslate("Orders.update.details.order.add") }}
           </Button>
           <div
-            class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
+            class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <div class="flex flex-col gap-2">
               <ComboBox
@@ -167,14 +151,13 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
                   "
                   type="number"
                 >
-                  <!-- v-model="item.quantity" -->
-                  <!-- {{ unite: () => (
-                  <span
-                    class="h-full text-gray-400 rounded-[4px] px-2 border-r-2 flex items-center justify-center"
-                  >
-                    Item
-                  </span>
-                  ), }} -->
+                  <template #unite>
+                    <span
+                      class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+                    >
+                      Item
+                    </span>
+                  </template>
                 </Input>
               </div>
             </div>
@@ -194,13 +177,13 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
                   "
                   type="number"
                 >
-                  <!-- {{ unite: () => (
-                  <span
-                    class="h-full text-gray-400 rounded-[4px] px-2 border-r-2 flex items-center justify-center"
-                  >
-                    DH
-                  </span>
-                  ), }} -->
+                  <template #unite>
+                    <span
+                      class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+                    >
+                      DH
+                    </span>
+                  </template>
                 </Input>
               </div>
             </div>
@@ -211,7 +194,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
                 v-for="(item, index) in updateOrder.order_items"
                 :key="index"
               >
-                <UiIcon isStyled name="delete" />
+                <UiIcon name="delete" />
               </div>
             </div>
           </div>
