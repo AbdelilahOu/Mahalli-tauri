@@ -1,3 +1,119 @@
+<script setup lang="ts">
+import { onBeforeMount, reactive, ref } from "vue";
+import { invoke } from "@tauri-apps/api";
+import { useRoute } from "vue-router";
+import { CHART_OPTIONS, CHART_WO_TICKS } from "@/constants/defaultValues";
+import { generateColor } from "@/utils/generateColor";
+import { getWeekDay } from "@/utils/formatDate";
+import { groupBy, keys, mapValues, values } from "@/utils/lightLodash";
+import { store } from "@/store";
+import ChartBar from "@/components/ChartBar.vue";
+import ChartHolder from "@/components/ChartHolder.vue";
+import ChartLine from "@/components/ChartLine.vue";
+import type { clientT } from "@/types";
+import UiCard from "@/components/ui/UiCard.vue";
+
+const { id } = useRoute().params;
+const client = ref<clientT | null>(null);
+
+const ProductsStats = reactive({
+  products: [] as string[],
+  dates: [] as string[],
+  data: {} as Record<string, number[]>,
+});
+
+const DailyStats = reactive({
+  data: [] as number[],
+  keys: [] as string[],
+  color: generateColor(),
+});
+
+const getProductPerMonth = async (id: number) => {
+  const data: any[] = await invoke("get_c_product_month", { id });
+
+  const existingDates = keys(groupBy(data, "month"));
+  const existingProducts = keys(groupBy(data, "name"));
+  const dataPerProduct = mapValues(groupBy(data, "name"), (value: any[]) =>
+    value.reduce((pr, cr) => {
+      if (!pr) pr = [];
+      pr.push(cr.quantity);
+      return pr;
+    }, [] as number[])
+  );
+
+  return {
+    data: dataPerProduct,
+    dates: existingDates,
+    products: existingProducts,
+  };
+};
+
+const getDailyExpenses = async (id: number) => {
+  const result: { day: string; expense: number }[] = await invoke(
+    "get_c_week_expenses",
+    { id }
+  );
+  const nextDay = new Date().getDay() === 6 ? 0 : new Date().getDay() + 1;
+  const resultMap = new Map<string, number>();
+
+  const weekDays = [0, 1, 2, 3, 4, 5, 6];
+
+  for (const index of weekDays) {
+    resultMap.set(getWeekDay(index), 0);
+  }
+
+  for (const { day, expense } of result) {
+    resultMap.set(
+      new Date(day).toLocaleDateString("en-us", {
+        weekday: "short",
+      }),
+      expense
+    );
+  }
+
+  // @ts-ignore
+  const K = keys(Object.fromEntries(resultMap));
+  // @ts-ignore
+  const V = values(Object.fromEntries(resultMap));
+  const rearrangedKeys = K.slice(nextDay).concat(K.slice(0, nextDay));
+  const rearrangedValues = V.slice(nextDay).concat(V.slice(0, nextDay));
+
+  return {
+    keys: rearrangedKeys,
+    values: rearrangedValues,
+  };
+};
+
+const toggleThisClient = (client: clientT | null, name: string) => {
+  store.setters.updateStore({ key: "show", value: true });
+  store.setters.updateStore({ key: "name", value: name });
+  store.setters.updateStore({ key: "row", value: client });
+};
+
+onBeforeMount(async () => {
+  const productStats = await getProductPerMonth(Number(id));
+  const dailyStats = await getDailyExpenses(Number(id));
+
+  DailyStats.keys = dailyStats.keys;
+  DailyStats.data = dailyStats.values;
+
+  ProductsStats.data = productStats.data;
+  ProductsStats.dates = productStats.dates;
+  ProductsStats.products = productStats.products;
+});
+
+onBeforeMount(async () => {
+  try {
+    const res = await invoke<clientT>("get_client", { id: Number(id) });
+    if (res.id) {
+      client.value = res;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+</script>
+
 <template>
   <main class="w-full h-full px-3 py-1">
     <div
@@ -77,116 +193,3 @@
     </div>
   </main>
 </template>
-
-<script setup lang="ts">
-import { onBeforeMount, reactive, ref } from "vue";
-import { invoke } from "@tauri-apps/api";
-import { useRoute } from "vue-router";
-import { CHART_OPTIONS, CHART_WO_TICKS } from "@/constants/defaultValues";
-import { generateColor } from "@/utils/generateColor";
-import { getWeekDay } from "@/utils/formatDate";
-import { groupBy, keys, mapValues, values } from "@/utils/lightLodash";
-import { store } from "@/store";
-import ChartBar from "@/components/ChartBar.vue";
-import ChartHolder from "@/components/ChartHolder.vue";
-import ChartLine from "@/components/ChartLine.vue";
-import type { clientT } from "@/types";
-
-const { id } = useRoute().params;
-const client = ref<clientT | null>(null);
-
-const ProductsStats = reactive({
-  products: [] as string[],
-  dates: [] as string[],
-  data: {} as Record<string, number[]>,
-});
-
-const DailyStats = reactive({
-  data: [] as number[],
-  keys: [] as string[],
-  color: generateColor(),
-});
-
-const getProductPerMonth = async (id: number) => {
-  const data: any[] = await invoke("get_c_product_month", { id });
-
-  const existingDates = keys(groupBy(data, "month"));
-  const existingProducts = keys(groupBy(data, "name"));
-  const dataPerProduct = mapValues(groupBy(data, "name"), (value: any[]) =>
-    value.reduce((pr, cr) => {
-      if (!pr) pr = [];
-      pr.push(cr.quantity);
-      return pr;
-    }, [] as number[])
-  );
-
-  return {
-    data: dataPerProduct,
-    dates: existingDates,
-    products: existingProducts,
-  };
-};
-
-const getDailyExpenses = async (id: number) => {
-  const result: { day: string; expense: number }[] = await invoke(
-    "get_c_week_expenses",
-    { id }
-  );
-  const nextDay = new Date().getDay() === 6 ? 0 : new Date().getDay() + 1;
-  const resultMap = new Map<string, number>();
-
-  const weekDays = [0, 1, 2, 3, 4, 5, 6];
-
-  for (const index of weekDays) {
-    resultMap.set(getWeekDay(index), 0);
-  }
-
-  for (const { day, expense } of result) {
-    resultMap.set(
-      new Date(day).toLocaleDateString("en-us", {
-        weekday: "short",
-      }),
-      expense
-    );
-  }
-
-  const K = keys(Object.fromEntries(resultMap));
-  const V = values(Object.fromEntries(resultMap));
-  const rearrangedKeys = K.slice(nextDay).concat(K.slice(0, nextDay));
-  const rearrangedValues = V.slice(nextDay).concat(V.slice(0, nextDay));
-
-  return {
-    keys: rearrangedKeys,
-    values: rearrangedValues,
-  };
-};
-
-const toggleThisClient = (client: clientT | null, name: string) => {
-  store.setters.updateStore({ key: "show", value: true });
-  store.setters.updateStore({ key: "name", value: name });
-  store.setters.updateStore({ key: "row", value: client });
-};
-
-onBeforeMount(async () => {
-  const productStats = await getProductPerMonth(Number(id));
-  const dailyStats = await getDailyExpenses(Number(id));
-
-  DailyStats.keys = dailyStats.keys;
-  DailyStats.data = dailyStats.values;
-
-  ProductsStats.data = productStats.data;
-  ProductsStats.dates = productStats.dates;
-  ProductsStats.products = productStats.products;
-});
-
-onBeforeMount(async () => {
-  try {
-    const res = await invoke<clientT>("get_client", { id: Number(id) });
-    if (res.id) {
-      client.value = res;
-    }
-  } catch (error) {
-    console.log(error);
-  }
-});
-</script>

@@ -1,3 +1,49 @@
+<script setup lang="ts">
+import data from "@/animations/66291-meditative-business-man.json";
+import { onBeforeMount, ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { globalTranslate } from "@/utils/globalTranslate";
+import { login } from "@/utils/Oauth";
+import { Vue3Lottie } from "vue3-lottie";
+
+const checkForAuth = ref(
+  useRouter().currentRoute.value.query.checkAuth === "true"
+);
+const shouldLogIn = ref(false);
+const isflash = ref(false);
+
+const User = reactive({
+  username: "",
+  email: "",
+  password: "",
+});
+
+// const updateUserField = (field, value) => {
+//   User[field] = typeof value === "number" ? JSON.stringify(value) : value;
+// };
+
+const router = useRouter();
+
+const loginWithGoogle = () => {
+  login();
+};
+
+const logIn = () => {
+  if (User.username === "test") {
+    router.push({ name: "Home" });
+  }
+};
+
+// onBeforeMount(async () => {
+//   const isAuthenticated = await getCurrentUser();
+//   if (isAuthenticated) {
+//     router.push({ name: 'Home' });
+//     return;
+//   }
+//   shouldLogIn.value = true;
+// });
+</script>
+
 <template>
   <main class="w-screen h-screen bg-white">
     <div class="w-full h-full flex justify-center items-center flex-col">
@@ -77,49 +123,3 @@
     </div>
   </main>
 </template>
-
-<script setup lang="ts">
-import data from "@/animations/66291-meditative-business-man.json";
-import { onBeforeMount, ref, reactive } from "vue";
-import { useRouter } from "vue-router";
-import { globalTranslate } from "@/utils/globalTranslate";
-import { login } from "@/utils/Oauth";
-import { Vue3Lottie } from "vue3-lottie";
-
-const checkForAuth = ref(
-  useRouter().currentRoute.value.query.checkAuth === "true"
-);
-const shouldLogIn = ref(false);
-const isflash = ref(false);
-
-const User = reactive({
-  username: "",
-  email: "",
-  password: "",
-});
-
-// const updateUserField = (field, value) => {
-//   User[field] = typeof value === "number" ? JSON.stringify(value) : value;
-// };
-
-const router = useRouter();
-
-const loginWithGoogle = () => {
-  login();
-};
-
-const logIn = () => {
-  if (User.username === "test") {
-    router.push({ name: "Home" });
-  }
-};
-
-// onBeforeMount(async () => {
-//   const isAuthenticated = await getCurrentUser();
-//   if (isAuthenticated) {
-//     router.push({ name: 'Home' });
-//     return;
-//   }
-//   shouldLogIn.value = true;
-// });
-</script>

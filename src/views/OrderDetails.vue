@@ -1,3 +1,29 @@
+<script setup lang="ts">
+import { useRoute } from "vue-router";
+import { ref, onBeforeMount } from "vue";
+import { invoke } from "@tauri-apps/api";
+import { globalTranslate } from "@/utils/globalTranslate";
+import type { orderDetailsT } from "@/types";
+
+const id = useRoute().params.id;
+const order = ref<orderDetailsT | null>(null);
+
+onBeforeMount(async () => {
+  try {
+    const res = await invoke<orderDetailsT>("get_order", {
+      id: Number(id),
+    });
+    if (res?.id) {
+      order.value = res;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+const print = () => window.print();
+</script>
+
 <template>
   <main class="w-full h-full">
     <div class="w-full h-full text-black flex justify-center print:pr-12">
@@ -221,29 +247,3 @@
     </div>
   </main>
 </template>
-
-<script setup lang="ts">
-import { useRoute } from "vue-router";
-import { ref, onBeforeMount } from "vue";
-import { invoke } from "@tauri-apps/api";
-import { globalTranslate } from "@/utils/globalTranslate";
-import type { orderDetailsT } from "@/types";
-
-const id = useRoute().params.id;
-const order = ref<orderDetailsT | null>(null);
-
-onBeforeMount(async () => {
-  try {
-    const res = await invoke<orderDetailsT>("get_order", {
-      id: Number(id),
-    });
-    if (res?.id) {
-      order.value = res;
-    }
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-const print = () => window.print();
-</script>
