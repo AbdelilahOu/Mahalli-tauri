@@ -1,8 +1,8 @@
 import messages from "@intlify/unplugin-vue-i18n/messages";
 import { createApp, type DirectiveBinding } from "vue";
-import { VueFire, VueFireAuth } from "vuefire";
+// import { VueFire, VueFireAuth } from "vuefire";
 import { useMotion } from "@vueuse/motion";
-import { FireApp } from "./utils/firebase";
+// import { FireApp } from "./utils/firebase";
 import { createI18n } from "vue-i18n";
 import "vue3-lottie/dist/style.css";
 import router from "./router";
@@ -14,10 +14,10 @@ const locale = localStorage.getItem("locale");
 const initiVueApp = () => {
   // create app
   createApp(App)
-    .use(VueFire, {
-      firebaseApp: FireApp,
-      modules: [VueFireAuth()],
-    })
+    // .use(VueFire, {
+    //   firebaseApp: FireApp,
+    //   modules: [VueFireAuth()],
+    // })
     .directive("slide", {
       mounted: (el: HTMLElement, bin: DirectiveBinding) => {
         useMotion(el, {
