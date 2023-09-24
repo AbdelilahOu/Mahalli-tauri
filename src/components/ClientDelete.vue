@@ -26,6 +26,11 @@ const deleteTheClient = async () => {
     }
   }
 };
+
+const cancelDelete = () => {
+  store.setters.updateStore({ key: "show", value: false });
+};
+
 onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 </script>
 <template>
@@ -41,7 +46,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
       <Button @click="deleteTheClient">
         {{ globalTranslate("Clients.delete.yes") }}
       </Button>
-      <Button @click="store.setters.updateStore({ key: 'show', value: false })">
+      <Button @click="cancelDelete">
         {{ globalTranslate("Clients.delete.no") }}
       </Button>
     </div>
