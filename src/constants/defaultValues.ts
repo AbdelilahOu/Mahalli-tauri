@@ -48,10 +48,10 @@ export const ORDER_UPDATE = {
 
 export const PRODUCT_CREATE = {
   name: String(),
-  price: 0,
-  quantity: 0,
+  price: undefined,
+  quantity: undefined,
   description: String(),
-  tva: 0,
+  tva: undefined,
   image: String(),
 };
 
@@ -89,9 +89,9 @@ export const INVOICE_ITEM_CREATE = [
 
 export const ORDER_ITEM_CREATE = [
   {
-    product_id: 0,
-    quantity: 0,
-    price: 0,
+    product_id: undefined,
+    quantity: undefined,
+    price: undefined,
   },
 ];
 
