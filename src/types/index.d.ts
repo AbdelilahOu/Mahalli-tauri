@@ -43,9 +43,8 @@ export interface orderItemT {
 }
 
 export interface newOrdersT extends Partial<Omit<orderT, "order_items">> {
-  order_items: Omit<
-    orderItemT,
-    "id" | "order_id" | "inventory_id" | "product"
+  order_items: Partial<
+    Omit<orderItemT, "id" | "order_id" | "inventory_id" | "product">
   >[];
 }
 
@@ -54,7 +53,7 @@ export interface updateOrdersT extends Partial<Omit<orderT, "order_items">> {
 }
 
 export interface newOrdersItemT
-  extends Pick<orderItemT, "product_id" | "quantity" | "price"> {}
+  extends Partial<Pick<orderItemT, "product_id" | "quantity" | "price">> {}
 
 export interface orderDetailsItemsT extends orderItemT {
   product: {
@@ -196,7 +195,7 @@ export interface productT {
   description?: string;
   tva: number;
 }
-export interface newProductT extends Omit<productT, "id"> {}
+export interface newProductT extends Partial<Omit<productT, "id">> {}
 export interface productTfromApiT extends Omit<productT, "inventory"> {
   inventoryMouvements: { quantity: number }[];
 }
@@ -246,3 +245,67 @@ export type withCount<T> = {
   count: number;
   data: T;
 };
+
+// :::::::::::::::::::::::::::::::::::::::::::::::::
+interface args1 {
+  key: "show";
+  value: boolean;
+}
+
+interface args2 {
+  key: "name";
+  value:
+    | "TranslationModal"
+    | "InventoryCreate"
+    | "ProductUpdate"
+    | "ProductDelete"
+    | "ProductCreate"
+    | "InvoiceCreate"
+    | "InvoiceUpdate"
+    | "InvoiceDelete"
+    | "SellerCreate"
+    | "SellerDelete"
+    | "SellerUpdate"
+    | "ClientDelete"
+    | "ClientUpdate"
+    | "ClientCreate"
+    | "OrderCreate"
+    | "OrderDelete"
+    | "OrderUpdate"
+    | "CsvUploader"
+    | "Sittings"
+    | string;
+}
+
+interface args4 {
+  key: "currentLocale";
+  value: locale;
+}
+
+interface args5 {
+  key: "user";
+  value: any;
+}
+
+interface args3 {
+  key: "row";
+  value: clientT | productT | sellerT | orderT | invoiceT | null;
+}
+
+export type Args = args1 | args2 | args3 | args4 | args5;
+
+export interface storeState
+  extends Record<
+      "row",
+      clientT | productT | sellerT | orderT | invoiceT | null
+    >,
+    Record<"availableLocals", locale[]>,
+    Record<"currentLocale", locale>,
+    Record<"show", boolean>,
+    Record<"name", string>,
+    Record<"user", any> {}
+
+export interface locale {
+  key: string;
+  text: string;
+}
