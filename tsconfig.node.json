@@ -9,7 +9,7 @@
   "compilerOptions": {
     "composite": true,
     "types": ["node"],
-    "target": "esnext",
+    "target": "ES2022",
     "ignoreDeprecations": "5.0"
   }
 }
