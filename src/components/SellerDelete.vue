@@ -28,7 +28,7 @@ const deleteTheSeller = async () => {
   }
 };
 
-const hideSellerDelete = () => {
+const cancelDelete = () => {
   store.setters.updateStore({ key: "show", value: false });
 };
 
@@ -50,7 +50,7 @@ onBeforeUnmount(() => {
       <Button @click="deleteTheSeller">
         {{ globalTranslate("Sellers.delete.yes") }}
       </Button>
-      <Button @click="hideSellerDelete">
+      <Button @click="cancelDelete">
         {{ globalTranslate("Sellers.delete.no") }}
       </Button>
     </div>
