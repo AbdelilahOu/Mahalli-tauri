@@ -54,13 +54,13 @@ onBeforeUnmount(() => {
     <div class="h-full w-full flex flex-col gap-2">
       <Input v-model="updateProduct.name" type="text" placeHolder="Name" />
       <Input v-model="updateProduct.price" type="number" placeHolder="Price">
-        <!-- {{
-          unite: () => (
-            <span class="h-full text-gray-400 rounded-[4px] px-2  flex items-center justify-center">
-              DH
-            </span>
-          ),
-        }} -->
+        <template #unite>
+          <span
+            class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+          >
+            DH
+          </span>
+        </template>
       </Input>
       <Input v-model="updateProduct.tva" type="number" placeHolder="TVA" />
       <Input
@@ -68,13 +68,13 @@ onBeforeUnmount(() => {
         type="number"
         placeHolder="Add Inventory"
       >
-        <!-- {{
-          unite: () => (
-            <span class="h-full text-gray-400 rounded-[4px] px-2  flex items-center justify-center">
-              Item
-            </span>
-          ),
-        }} -->
+        <template #unite>
+          <span
+            class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+          >
+            Item
+          </span>
+        </template>
       </Input>
       <Input
         v-model="updateProduct.description"
