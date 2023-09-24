@@ -1,17 +1,16 @@
 <script setup lang="ts">
+import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { Check, ChevronsUpDown } from "lucide-vue-next";
-
-import { ref } from "vue";
-import { cn } from "@/lib/utils";
 import { Button } from "../button";
+import { cn } from "@/lib/utils";
+import { ref } from "vue";
 import {
-  Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
+  Command,
 } from "../command";
-import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 
 defineProps<{
   items: { value: string | number; label: string }[];
