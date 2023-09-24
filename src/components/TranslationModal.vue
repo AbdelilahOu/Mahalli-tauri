@@ -3,6 +3,8 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { store } from "@/store";
+import { Button } from "./ui/button";
+import UiIcon from "./ui/UiIcon.vue";
 
 const availableLocales = computed(() => store.getters.getLocales());
 const i18n = useI18n();
@@ -23,6 +25,7 @@ const changeLocale = (locale: { key: string; text: string }) => {
     </h1>
     <div class="grid grid-cols-2 gap-2">
       <Button
+        variant="ghost"
         v-for="item in availableLocales"
         :key="item.key"
         @click="changeLocale(item)"

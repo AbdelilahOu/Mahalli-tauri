@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { store } from "@/store";
+import { Button } from "./ui/button";
+import UiIcon from "./ui/UiIcon.vue";
 
 const exportDatabase = async () => {
   try {
@@ -25,7 +27,7 @@ const exportDatabase = async () => {
     <div class="h-full w-full flex flex-col gap-2">
       <div class="w-full h-10 grid grid-cols-2 items-center">
         <span class="font-semibold text-lg">Export database as csv</span>
-        <Button @click="exportDatabase">
+        <Button variant="default" @click="exportDatabase">
           <UiIcon
             class="cursor-default hover:bg-transparent mr-2"
             name="export"
