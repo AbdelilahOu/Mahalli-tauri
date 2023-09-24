@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { store } from "@/store";
 import UiPagination from "./ui/UiPagination.vue";
@@ -8,7 +7,7 @@ import UiIcon from "./ui/UiIcon.vue";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import type { productT } from "@/types";
 
-const Props = defineProps<{ products: productT[] }>();
+defineProps<{ products: productT[] }>();
 
 const toggleThisProduct = (product: productT, name: string) => {
   store.setters.updateStore({ key: "row", value: product });
