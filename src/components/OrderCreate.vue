@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { ORDER_CREATE, ORDER_ITEM_CREATE } from "@/constants/defaultValues";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { ref, onBeforeMount, reactive } from "vue";
+import type { newOrdersItemT, newOrdersT } from "@/types";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { ref, onBeforeMount, reactive } from "vue";
 import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
@@ -9,8 +11,6 @@ import { ComboBox } from "./ui/combobox";
 import { Input } from "./ui/input";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
-import { ORDER_CREATE, ORDER_ITEM_CREATE } from "@/constants/defaultValues";
-import type { newOrdersItemT, newOrdersT } from "@/types";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const order_items = ref<newOrdersItemT[]>(ORDER_ITEM_CREATE);
@@ -20,6 +20,7 @@ const products = ref<{ label: string; value: number }[]>([]);
 const isFlash = ref<boolean>(false);
 
 onBeforeMount(async () => {
+  // @ts-ignore
   const res = await Promise.allSettled([
     invoke<{ label: string; value: number }[]>("get_all_sellers"),
     invoke<{ label: string; value: number }[]>("get_all_products"),
@@ -28,6 +29,14 @@ onBeforeMount(async () => {
   if (res[0].status === "fulfilled") sellers.value = res[0].value;
   if (res[1].status === "fulfilled") products.value = res[1].value;
 });
+
+const addOrderItem = () => {
+  order_items.value.push({ product_id: 0, quantity: 0, price: 0 });
+};
+
+const removeOrderItem = (index: number) => {
+  order_items.value.splice(index, 1);
+};
 
 const createNewOrders = async () => {
   isFlash.value = true;
@@ -102,13 +111,11 @@ const createNewOrders = async () => {
           </div>
         </div>
         <div class="w-full h-full flex flex-col gap-1">
-          <Button
-            @click="order_items.push({ product_id: 0, quantity: 0, price: 0 })"
-          >
+          <Button @click="addOrderItem">
             {{ globalTranslate("Orders.create.details.order.add") }}
           </Button>
           <div
-            class="w-full grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
+            class="w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <div class="flex flex-col gap-2">
               <template v-for="(item, index) in order_items">
@@ -130,13 +137,13 @@ const createNewOrders = async () => {
                     type="number"
                     v-model="item.quantity"
                   >
-                    <!-- {{
-                      unite: () => (
-                        <span class="h-full text-gray-400 rounded-[4px] px-2 border-r-2  flex items-center justify-center">
-                          Item
-                        </span>
-                      ),
-                    }} -->
+                    <template #unite>
+                      <span
+                        class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+                      >
+                        Item
+                      </span>
+                    </template>
                   </Input>
                 </div>
               </template>
@@ -154,13 +161,13 @@ const createNewOrders = async () => {
                     type="number"
                     v-model="item.price"
                   >
-                    <!-- {{
-                      unite: () => (
-                        <span class="h-full text-gray-400 rounded-[4px] px-2 border-r-2  flex items-center justify-center">
-                          DH
-                        </span>
-                      ),
-                    }} -->
+                    <template #unite>
+                      <span
+                        class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+                      >
+                        Item
+                      </span>
+                    </template>
                   </Input>
                 </div>
               </template>
@@ -169,7 +176,7 @@ const createNewOrders = async () => {
             <div class="flex flex-col gap-2">
               <template v-for="(item, index) in order_items">
                 <div
-                  @click="order_items.splice(index, 1)"
+                  @click="removeOrderItem(index)"
                   class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
                 >
                   <UiIcon isStyled name="delete" />
