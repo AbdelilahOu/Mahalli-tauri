@@ -19,6 +19,7 @@ const products = ref<{ label: string; value: number }[]>([]);
 const invoiceRow = computed(() => store.getters.getSelectedRow<invoiceT>());
 
 onBeforeMount(async () => {
+  // @ts-ignore
   const res = await Promise.allSettled([
     invoke<{ label: string; value: number }[]>("get_all_clients"),
     invoke<{ label: string; value: number }[]>("get_all_products"),
@@ -145,13 +146,13 @@ const deleteInvoiceItem = (index: number) => {
                   type="number"
                   v-model="item.quantity"
                 >
-                  <!-- {{ unite: () => (
-                  <span
-                    class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
-                  >
-                    Item
-                  </span>
-                  ), }} -->
+                  <template #unite>
+                    <span
+                      class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+                    >
+                      Item
+                    </span>
+                  </template>
                 </Input>
               </div>
             </div>
