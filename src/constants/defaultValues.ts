@@ -15,13 +15,13 @@ export const CLIENT_UPDATE = {
 };
 
 export const INVENTORY_CREATE = {
-  productId: 0,
-  quantity: 0,
+  product_id: undefined,
+  quantity: undefined,
   model: "IN",
 };
 
 export const INVOICE_CREATE = {
-  client_id: 0,
+  client_id: undefined,
   invoice_items: [],
   status: String(),
 };
@@ -82,8 +82,8 @@ export const SELLER_UPDATE = {
 
 export const INVOICE_ITEM_CREATE = [
   {
-    product_id: 0,
-    quantity: 0,
+    product_id: undefined,
+    quantity: undefined,
   },
 ];
 

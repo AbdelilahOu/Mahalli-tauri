@@ -1,13 +1,4 @@
-import type {
-  clientT,
-  invoiceT,
-  orderT,
-  productT,
-  sellerT,
-  storeState,
-  Args,
-  locale,
-} from "@/types";
+import type { storeState, Args, locale } from "@/types";
 import { reactive } from "vue";
 
 const locale = localStorage.getItem("locale");
@@ -44,7 +35,7 @@ const DEFAULT_STORE = {
     },
   ],
   // auth,
-  user: {},
+  user: null,
 };
 
 export const store = {
