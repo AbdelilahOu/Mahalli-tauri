@@ -2,9 +2,9 @@ use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
 use crate::models::{NewUser, User};
-use crate::schema::users::{self, email, password, role, username};
+use crate::schema::users::{self, email, id, password, role, username};
 
-pub fn get_user(u_id: i32, connection: &mut SqliteConnection) -> Value {
+pub fn get_user(u_id: String, connection: &mut SqliteConnection) -> Value {
     let result = users::dsl::users
         .find(&u_id)
         .first::<User>(connection)
@@ -23,6 +23,7 @@ pub fn get_user(u_id: i32, connection: &mut SqliteConnection) -> Value {
 pub fn insert_user(new_user: NewUser, connection: &mut SqliteConnection) -> usize {
     let result = diesel::insert_into(users::dsl::users)
         .values((
+            id.eq(new_user.id),
             username.eq(new_user.username),
             password.eq(new_user.password),
             email.eq(new_user.email),
@@ -34,7 +35,7 @@ pub fn insert_user(new_user: NewUser, connection: &mut SqliteConnection) -> usiz
     result
 }
 
-pub fn delete_user(u_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn delete_user(u_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::delete(users::dsl::users.find(&u_id))
         .execute(connection)
         .expect("Expect delete channel");
@@ -42,7 +43,7 @@ pub fn delete_user(u_id: i32, connection: &mut SqliteConnection) -> usize {
     result
 }
 
-pub fn update_user(u_update: User, u_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn update_user(u_update: User, u_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::update(users::dsl::users.find(&u_id))
         .set((
             users::username.eq(u_update.username),
