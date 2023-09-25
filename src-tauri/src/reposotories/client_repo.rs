@@ -11,7 +11,7 @@ pub fn get_clients(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
 
     let result = clients::dsl::clients
-        .order(clients::id.desc())
+        .order(clients::created_at.desc())
         .limit(17)
         .offset(offset as i64)
         .load::<Client>(connection)
@@ -32,22 +32,22 @@ pub fn get_all_clients(connection: &mut SqliteConnection) -> Vec<Value> {
     let response = clients::dsl::clients
         .order(clients::id.desc())
         .select((clients::fullname, clients::id))
-        .load::<(String, i32)>(connection)
+        .load::<(String, String)>(connection)
         .expect("error get all clients");
 
     let mut result: Vec<Value> = Vec::new();
 
     response.into_iter().for_each(|(fname, c_id)| {
         result.push(json!({
-            "label":fname,
-            "value":c_id
+            "label": fname,
+            "value": format!("{}",c_id)
         }))
     });
 
     result
 }
 
-pub fn get_client(c_id: i32, connection: &mut SqliteConnection) -> Client {
+pub fn get_client(c_id: String, connection: &mut SqliteConnection) -> Client {
     let result = clients::dsl::clients
         .find(&c_id)
         .first::<Client>(connection)
@@ -60,6 +60,7 @@ pub fn insert_client(new_c: NewClient, connection: &mut SqliteConnection) -> Cli
     // insert
     diesel::insert_into(clients::dsl::clients)
         .values((
+            id.eq(new_c.id),
             fullname.eq(new_c.fullname),
             phone.eq(new_c.phone),
             email.eq(new_c.email),
@@ -77,7 +78,7 @@ pub fn insert_client(new_c: NewClient, connection: &mut SqliteConnection) -> Cli
     result
 }
 
-pub fn delete_client(c_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn delete_client(c_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::delete(clients::dsl::clients.find(&c_id))
         .execute(connection)
         .expect("Expect delete client");
@@ -85,7 +86,7 @@ pub fn delete_client(c_id: i32, connection: &mut SqliteConnection) -> usize {
     result
 }
 
-pub fn update_client(c_update: Client, c_id: i32, connection: &mut SqliteConnection) -> Client {
+pub fn update_client(c_update: Client, c_id: String, connection: &mut SqliteConnection) -> Client {
     diesel::update(clients::dsl::clients.find(&c_id))
         .set((
             clients::fullname.eq(c_update.fullname),
