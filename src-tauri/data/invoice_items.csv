@@ -1,6 +1,2 @@
 id,product_id,invoice_id,quantity,inventory_id
-1,2,1,20,6
-2,1,1,70,7
-3,2,2,100,8
-4,1,3,20,9
-5,2,3,15,10
+16ac01ba-93cd-49ba-873a-2c1ff32b0422,865699d5-8021-45c8-9d16-627549421dab,5f921104-55c1-4c23-9c6d-e82aa0cb8a4d,40,1a337e08-fa3c-4520-a1c4-4cca6d123702
