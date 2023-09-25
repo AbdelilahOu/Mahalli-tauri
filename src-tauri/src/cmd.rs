@@ -20,7 +20,7 @@ pub async fn export_db_csv() -> String {
     let database_url: String = if _env.is_ok() == false {
         path::Path::new(&tauri::api::path::data_dir().unwrap())
             .join(".stocker")
-            .join("stocker.db")
+            .join("stocker.sqlite")
             .to_str()
             .expect("Failed to convert path to string")
             .to_string()
@@ -108,7 +108,7 @@ pub fn get_all_clients(state: tauri::State<AppState>) -> Vec<Value> {
 }
 
 #[tauri::command]
-pub fn get_client(id: i32, state: tauri::State<AppState>) -> Client {
+pub fn get_client(id: String, state: tauri::State<AppState>) -> Client {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = client_repo::get_client(id, conn);
@@ -116,7 +116,7 @@ pub fn get_client(id: i32, state: tauri::State<AppState>) -> Client {
 }
 
 #[tauri::command]
-pub fn delete_client(id: i32, state: tauri::State<AppState>) -> usize {
+pub fn delete_client(id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = client_repo::delete_client(id, conn);
@@ -124,15 +124,27 @@ pub fn delete_client(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_client(client: NewClient, state: tauri::State<AppState>) -> Client {
+pub fn insert_client(client: TNewClient, state: tauri::State<AppState>) -> Client {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = client_repo::insert_client(client, conn);
+    let created_uuid = uuid::Uuid::new_v4().hyphenated().to_string();
+
+    let result = client_repo::insert_client(
+        NewClient {
+            id: created_uuid,
+            fullname: client.fullname,
+            email: client.email,
+            phone: client.phone,
+            address: client.address,
+            image: client.image,
+        },
+        conn,
+    );
     result
 }
 
 #[tauri::command]
-pub fn update_client(client: Client, id: i32, state: tauri::State<AppState>) -> Client {
+pub fn update_client(client: Client, id: String, state: tauri::State<AppState>) -> Client {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = client_repo::update_client(client, id, conn);
@@ -156,7 +168,7 @@ pub fn get_all_sellers(state: tauri::State<AppState>) -> Vec<Value> {
 }
 
 #[tauri::command]
-pub fn get_seller(id: i32, state: tauri::State<AppState>) -> Seller {
+pub fn get_seller(id: String, state: tauri::State<AppState>) -> Seller {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = seller_repo::get_seller(id, conn);
@@ -164,7 +176,7 @@ pub fn get_seller(id: i32, state: tauri::State<AppState>) -> Seller {
 }
 
 #[tauri::command]
-pub fn delete_seller(id: i32, state: tauri::State<AppState>) -> usize {
+pub fn delete_seller(id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = seller_repo::delete_seller(id, conn);
@@ -172,15 +184,28 @@ pub fn delete_seller(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_seller(seller: NewSeller, state: tauri::State<AppState>) -> usize {
+pub fn insert_seller(seller: TNewSeller, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = seller_repo::insert_seller(seller, conn);
+
+    let created_uuid = uuid::Uuid::new_v4().hyphenated().to_string();
+
+    let result = seller_repo::insert_seller(
+        NewSeller {
+            id: created_uuid,
+            name: seller.name,
+            image: seller.image,
+            address: seller.address,
+            email: seller.email,
+            phone: seller.phone,
+        },
+        conn,
+    );
     result
 }
 
 #[tauri::command]
-pub fn update_seller(seller: Seller, id: i32, state: tauri::State<AppState>) -> usize {
+pub fn update_seller(seller: Seller, id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = seller_repo::update_seller(seller, id, conn);
@@ -204,7 +229,7 @@ pub fn get_all_products(state: tauri::State<AppState>) -> Vec<Value> {
 }
 
 #[tauri::command]
-pub fn get_product(id: i32, state: tauri::State<AppState>) -> Product {
+pub fn get_product(id: String, state: tauri::State<AppState>) -> Product {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = product_repo::get_product(id, conn);
@@ -212,7 +237,7 @@ pub fn get_product(id: i32, state: tauri::State<AppState>) -> Product {
 }
 
 #[tauri::command]
-pub fn delete_product(id: i32, state: tauri::State<AppState>) -> usize {
+pub fn delete_product(id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = product_repo::delete_product(id, conn);
@@ -225,6 +250,7 @@ pub fn insert_product(product: TNewProduct, state: tauri::State<AppState>) {
     let conn = &mut *conn;
     let id = product_repo::insert_product(
         NewProduct {
+            id: uuid::Uuid::new_v4().hyphenated().to_string(),
             description: product.description,
             name: product.name,
             price: product.price,
@@ -236,6 +262,7 @@ pub fn insert_product(product: TNewProduct, state: tauri::State<AppState>) {
 
     inventory_mvm_repo::insert_inventory_mvm(
         NewInventoryMvm {
+            id: uuid::Uuid::new_v4().hyphenated().to_string(),
             model: String::from("IN"),
             quantity: product.quantity,
             product_id: id,
@@ -245,7 +272,7 @@ pub fn insert_product(product: TNewProduct, state: tauri::State<AppState>) {
 }
 
 #[tauri::command]
-pub fn update_product(product: Product, id: i32, state: tauri::State<AppState>) -> usize {
+pub fn update_product(product: Product, id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = product_repo::update_product(product, id, conn);
@@ -253,7 +280,7 @@ pub fn update_product(product: Product, id: i32, state: tauri::State<AppState>) 
 }
 
 #[tauri::command]
-pub fn get_user(id: i32, state: tauri::State<AppState>) -> Value {
+pub fn get_user(id: String, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = user_repo::get_user(id, conn);
@@ -261,7 +288,7 @@ pub fn get_user(id: i32, state: tauri::State<AppState>) -> Value {
 }
 
 #[tauri::command]
-pub fn delete_user(id: i32, state: tauri::State<AppState>) -> usize {
+pub fn delete_user(id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = user_repo::delete_user(id, conn);
@@ -269,15 +296,26 @@ pub fn delete_user(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_user(user: NewUser, state: tauri::State<AppState>) -> usize {
+pub fn insert_user(user: TNewUser, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = user_repo::insert_user(user, conn);
+    let created_uuid = uuid::Uuid::new_v4().hyphenated().to_string();
+
+    let result = user_repo::insert_user(
+        NewUser {
+            id: created_uuid,
+            username: user.username,
+            password: user.password,
+            email: user.email,
+            role: user.role,
+        },
+        conn,
+    );
     result
 }
 
 #[tauri::command]
-pub fn update_user(user: User, id: i32, state: tauri::State<AppState>) -> usize {
+pub fn update_user(user: User, id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = user_repo::update_user(user, id, conn);
@@ -285,7 +323,7 @@ pub fn update_user(user: User, id: i32, state: tauri::State<AppState>) -> usize 
 }
 
 #[tauri::command]
-pub fn get_invoice(id: i32, state: tauri::State<AppState>) -> Value {
+pub fn get_invoice(id: String, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = invoice_repo::get_invoice(id, conn);
@@ -301,7 +339,7 @@ pub fn get_invoices(page: i32, state: tauri::State<AppState>) -> Value {
 }
 
 #[tauri::command]
-pub fn delete_invoice(id: i32, state: tauri::State<AppState>) -> usize {
+pub fn delete_invoice(id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = invoice_repo::delete_invoice(id, conn);
@@ -314,6 +352,7 @@ pub fn insert_invoice(invoice: TNewInvoice, state: tauri::State<AppState>) {
     let conn = &mut *conn;
     let inserted_id = invoice_repo::insert_invoice(
         NewInvoice {
+            id: uuid::Uuid::new_v4().hyphenated().to_string(),
             status: invoice.status,
             client_id: invoice.client_id,
         },
@@ -322,15 +361,17 @@ pub fn insert_invoice(invoice: TNewInvoice, state: tauri::State<AppState>) {
     for item in invoice.invoice_items.into_iter() {
         let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
             NewInventoryMvm {
+                id: uuid::Uuid::new_v4().hyphenated().to_string(),
                 model: String::from("OUT"),
                 quantity: item.quantity,
-                product_id: item.product_id,
+                product_id: item.product_id.clone(),
             },
             conn,
         );
 
         invoice_item_repo::insert_invoice_item(
             NewInvoiceItem {
+                id: uuid::Uuid::new_v4().hyphenated().to_string(),
                 product_id: item.product_id,
                 invoice_id: inserted_id.clone(),
                 quantity: item.quantity,
@@ -342,14 +383,14 @@ pub fn insert_invoice(invoice: TNewInvoice, state: tauri::State<AppState>) {
 }
 
 #[tauri::command]
-pub fn update_invoice(invoice: TUpdateInvoice, id: i32, state: tauri::State<AppState>) -> usize {
+pub fn update_invoice(invoice: TUpdateInvoice, id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = invoice_repo::update_invoice(
         UpdateInvoice {
             status: invoice.status,
         },
-        id,
+        id.clone(),
         conn,
     );
     for item in invoice.invoice_items.into_iter() {
@@ -378,17 +419,19 @@ pub fn update_invoice(invoice: TUpdateInvoice, id: i32, state: tauri::State<AppS
             None => {
                 let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
                     NewInventoryMvm {
+                        id: uuid::Uuid::new_v4().hyphenated().to_string(),
                         model: String::from("OUT"),
                         quantity: item.quantity,
-                        product_id: item.product_id,
+                        product_id: item.product_id.clone(),
                     },
                     conn,
                 );
 
                 invoice_item_repo::insert_invoice_item(
                     NewInvoiceItem {
+                        id: uuid::Uuid::new_v4().hyphenated().to_string(),
                         product_id: item.product_id,
-                        invoice_id: id,
+                        invoice_id: id.clone(),
                         quantity: item.quantity,
                         inventory_id: inserted_im_id,
                     },
@@ -401,7 +444,7 @@ pub fn update_invoice(invoice: TUpdateInvoice, id: i32, state: tauri::State<AppS
 }
 
 #[tauri::command]
-pub fn get_order(id: i32, state: tauri::State<AppState>) -> Value {
+pub fn get_order(id: String, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = order_repo::get_order(id, conn);
@@ -417,7 +460,7 @@ pub fn get_orders(page: i32, state: tauri::State<AppState>) -> Value {
 }
 
 #[tauri::command]
-pub fn delete_order(id: i32, state: tauri::State<AppState>) -> usize {
+pub fn delete_order(id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = order_repo::delete_order(id, conn);
@@ -430,6 +473,7 @@ pub fn insert_order(order: TNewOrder, state: tauri::State<AppState>) {
     let conn = &mut *conn;
     let inserted_id = order_repo::insert_order(
         NewOrder {
+            id: uuid::Uuid::new_v4().hyphenated().to_string(),
             status: order.status,
             seller_id: order.seller_id,
         },
@@ -438,15 +482,17 @@ pub fn insert_order(order: TNewOrder, state: tauri::State<AppState>) {
     for item in order.order_items.into_iter() {
         let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
             NewInventoryMvm {
+                id: uuid::Uuid::new_v4().hyphenated().to_string(),
                 model: String::from("IN"),
                 quantity: item.quantity,
-                product_id: item.product_id,
+                product_id: item.product_id.clone(),
             },
             conn,
         );
 
         order_item_repo::insert_order_item(
             NewOrderItem {
+                id: uuid::Uuid::new_v4().hyphenated().to_string(),
                 product_id: item.product_id,
                 order_id: inserted_id.clone(),
                 quantity: item.quantity,
@@ -459,14 +505,14 @@ pub fn insert_order(order: TNewOrder, state: tauri::State<AppState>) {
 }
 
 #[tauri::command]
-pub fn update_order(order: TUpdateOrder, id: i32, state: tauri::State<AppState>) -> usize {
+pub fn update_order(order: TUpdateOrder, id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = order_repo::update_order(
         UpdateOrder {
             status: order.status,
         },
-        id,
+        id.clone(),
         conn,
     );
 
@@ -497,17 +543,19 @@ pub fn update_order(order: TUpdateOrder, id: i32, state: tauri::State<AppState>)
             None => {
                 let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
                     NewInventoryMvm {
+                        id: uuid::Uuid::new_v4().hyphenated().to_string(),
                         model: String::from("OUT"),
                         quantity: item.quantity,
-                        product_id: item.product_id,
+                        product_id: item.product_id.clone(),
                     },
                     conn,
                 );
 
                 order_item_repo::insert_order_item(
                     NewOrderItem {
+                        id: uuid::Uuid::new_v4().hyphenated().to_string(),
                         product_id: item.product_id,
-                        order_id: id,
+                        order_id: id.clone(),
                         quantity: item.quantity,
                         price: item.price,
                         inventory_id: inserted_im_id,
@@ -521,15 +569,15 @@ pub fn update_order(order: TUpdateOrder, id: i32, state: tauri::State<AppState>)
 }
 
 #[tauri::command]
-pub fn get_order_items(id: i32, state: tauri::State<AppState>) -> Value {
+pub fn get_order_items(page: i32, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = order_item_repo::get_order_items(id, conn);
+    let result = order_item_repo::get_order_items(page, conn);
     result
 }
 
 #[tauri::command]
-pub fn delete_order_items(id: i32, state: tauri::State<AppState>) -> usize {
+pub fn delete_order_items(id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = order_item_repo::delete_order_item(id, conn);
@@ -537,15 +585,15 @@ pub fn delete_order_items(id: i32, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn get_invoice_items(id: i32, state: tauri::State<AppState>) -> Value {
+pub fn get_invoice_items(page: i32, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
-    let result = invoice_item_repo::get_invoice_items(id, conn);
+    let result = invoice_item_repo::get_invoice_items(page, conn);
     result
 }
 
 #[tauri::command]
-pub fn delete_invoice_items(id: i32, state: tauri::State<AppState>) -> usize {
+pub fn delete_invoice_items(id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = invoice_item_repo::delete_invoice_item(id, conn);
@@ -561,11 +609,12 @@ pub fn get_inventory_mvms(page: i32, state: tauri::State<AppState>) -> Value {
 }
 
 #[tauri::command]
-pub fn insert_inventory_mvm(inventory: TNewInventory, state: tauri::State<AppState>) -> i32 {
+pub fn insert_inventory_mvm(inventory: TNewInventory, state: tauri::State<AppState>) -> String {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = inventory_mvm_repo::insert_inventory_mvm(
         NewInventoryMvm {
+            id: uuid::Uuid::new_v4().hyphenated().to_string(),
             model: inventory.model,
             quantity: inventory.quantity,
             product_id: inventory.product_id,
@@ -577,7 +626,7 @@ pub fn insert_inventory_mvm(inventory: TNewInventory, state: tauri::State<AppSta
 }
 
 #[tauri::command]
-pub fn delete_inventory_mvm(id: i32, state: tauri::State<AppState>) -> usize {
+pub fn delete_inventory_mvm(id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = inventory_mvm_repo::delete_inventory_mvm(id, conn);
@@ -601,7 +650,7 @@ pub fn get_b3_clients(state: tauri::State<AppState>) -> Vec<Value> {
 }
 
 #[tauri::command]
-pub fn get_c_week_expenses(id: i32, state: tauri::State<AppState>) -> Vec<Value> {
+pub fn get_c_week_expenses(id: String, state: tauri::State<AppState>) -> Vec<Value> {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = stats_repo::get_client_expenses(id, conn);
@@ -609,7 +658,7 @@ pub fn get_c_week_expenses(id: i32, state: tauri::State<AppState>) -> Vec<Value>
 }
 
 #[tauri::command]
-pub fn get_s_week_expenses(id: i32, state: tauri::State<AppState>) -> Vec<Value> {
+pub fn get_s_week_expenses(id: String, state: tauri::State<AppState>) -> Vec<Value> {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = stats_repo::get_seller_expenses(id, conn);
@@ -617,7 +666,7 @@ pub fn get_s_week_expenses(id: i32, state: tauri::State<AppState>) -> Vec<Value>
 }
 
 #[tauri::command]
-pub fn get_c_product_month(id: i32, state: tauri::State<AppState>) -> Vec<Value> {
+pub fn get_c_product_month(id: String, state: tauri::State<AppState>) -> Vec<Value> {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = stats_repo::get_client_details(id, conn);
@@ -625,7 +674,7 @@ pub fn get_c_product_month(id: i32, state: tauri::State<AppState>) -> Vec<Value>
 }
 
 #[tauri::command]
-pub fn get_s_product_month(id: i32, state: tauri::State<AppState>) -> Vec<Value> {
+pub fn get_s_product_month(id: String, state: tauri::State<AppState>) -> Vec<Value> {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = stats_repo::get_seller_details(id, conn);
