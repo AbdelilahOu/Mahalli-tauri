@@ -109,7 +109,7 @@
 }
 
 .router-link-active {
-  @apply bg-white transition-colors bg-primary/10 rounded-[4px] transform duration-200;
+  @apply bg-slate-50 transition-colors rounded-[4px] transform duration-200;
 }
 
 .router-link-active > span > span,
