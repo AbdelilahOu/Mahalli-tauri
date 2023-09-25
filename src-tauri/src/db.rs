@@ -87,6 +87,7 @@ pub fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut Sqlite
                     for client in client_records {
                         reposotories::client_repo::insert_client(
                             NewClient {
+                                id: client.id,
                                 fullname: client.fullname,
                                 email: client.email,
                                 image: client.image,
@@ -101,6 +102,7 @@ pub fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut Sqlite
                     for seller in seller_records {
                         reposotories::seller_repo::insert_seller(
                             NewSeller {
+                                id: seller.id,
                                 name: seller.name,
                                 image: seller.image,
                                 address: seller.address,
@@ -119,6 +121,7 @@ pub fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut Sqlite
                              -> need product image
                             */
                             NewProduct {
+                                id: product.id,
                                 name: product.name,
                                 price: product.price,
                                 description: product.description,
@@ -133,6 +136,7 @@ pub fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut Sqlite
                     for inventory in inventory_records {
                         reposotories::inventory_mvm_repo::insert_inventory_mvm(
                             NewInventoryMvm {
+                                id: inventory.id,
                                 model: inventory.model,
                                 product_id: inventory.product_id,
                                 quantity: inventory.quantity,
@@ -145,6 +149,7 @@ pub fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut Sqlite
                     for invoice in invoice_records {
                         reposotories::invoice_repo::insert_invoice(
                             NewInvoice {
+                                id: invoice.id,
                                 status: invoice.status,
                                 client_id: invoice.client_id,
                             },
@@ -156,6 +161,7 @@ pub fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut Sqlite
                     for invoice_item in invoice_items_records {
                         reposotories::invoice_item_repo::insert_invoice_item(
                             NewInvoiceItem {
+                                id: invoice_item.id,
                                 inventory_id: invoice_item.inventory_id,
                                 invoice_id: invoice_item.invoice_id,
                                 product_id: invoice_item.product_id,
@@ -169,6 +175,7 @@ pub fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut Sqlite
                     for order in order_records {
                         reposotories::order_repo::insert_order(
                             NewOrder {
+                                id: order.id,
                                 status: order.status,
                                 seller_id: order.seller_id,
                             },
@@ -180,6 +187,7 @@ pub fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut Sqlite
                     for order_item in order_item_records {
                         reposotories::order_item_repo::insert_order_item(
                             NewOrderItem {
+                                id: order_item.id,
                                 inventory_id: order_item.inventory_id,
                                 order_id: order_item.order_id,
                                 product_id: order_item.product_id,
