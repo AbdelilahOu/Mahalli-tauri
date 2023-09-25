@@ -2,9 +2,10 @@
 
 diesel::table! {
     clients (id) {
-        id -> Integer,
+        id -> Text,
         fullname -> Text,
         phone -> Text,
+        created_at -> Timestamp,
         email -> Text,
         address -> Text,
         image -> Text,
@@ -13,59 +14,61 @@ diesel::table! {
 
 diesel::table! {
     inventory_mouvements (id) {
-        id -> Integer,
+        id -> Text,
         date -> Timestamp,
         model -> Text,
         quantity -> BigInt,
-        product_id -> Integer,
+        created_at -> Timestamp,
+        product_id -> Text,
     }
 }
 
 diesel::table! {
     invoice_items (id) {
-        id -> Integer,
-        product_id -> Integer,
-        invoice_id -> Integer,
+        id -> Text,
+        product_id -> Text,
+        invoice_id -> Text,
         quantity -> BigInt,
-        inventory_id -> Integer,
+        inventory_id -> Text,
     }
 }
 
 diesel::table! {
     invoices (id) {
-        id -> Integer,
+        id -> Text,
         status -> Text,
         created_at -> Timestamp,
-        client_id -> Integer,
+        client_id -> Text,
     }
 }
 
 diesel::table! {
     order_items (id) {
-        id -> Integer,
-        product_id -> Integer,
+        id -> Text,
+        product_id -> Text,
         price -> Nullable<Float>,
-        order_id -> Integer,
-        inventory_id -> Integer,
+        order_id -> Text,
+        inventory_id -> Text,
         quantity -> BigInt,
     }
 }
 
 diesel::table! {
     orders (id) {
-        id -> Integer,
+        id -> Text,
         status -> Text,
         created_at -> Timestamp,
-        seller_id -> Integer,
+        seller_id -> Text,
     }
 }
 
 diesel::table! {
     products (id) {
-        id -> Integer,
+        id -> Text,
         name -> Text,
         image -> Text,
         description -> Text,
+        created_at -> Timestamp,
         price -> Float,
         tva -> Float,
     }
@@ -73,9 +76,10 @@ diesel::table! {
 
 diesel::table! {
     sellers (id) {
-        id -> Integer,
+        id -> Text,
         name -> Text,
         phone -> Text,
+        created_at -> Timestamp,
         email -> Text,
         address -> Text,
         image -> Text,
@@ -84,7 +88,7 @@ diesel::table! {
 
 diesel::table! {
     users (id) {
-        id -> Integer,
+        id -> Text,
         username -> Text,
         password -> Text,
         email -> Text,
