@@ -97,7 +97,7 @@ pub fn get_inventory_stats(connection: &mut SqliteConnection) -> Vec<Value> {
     final_result
 }
 
-pub fn get_client_details(id: i32, connection: &mut SqliteConnection) -> Vec<Value> {
+pub fn get_client_details(id: String, connection: &mut SqliteConnection) -> Vec<Value> {
     let iitem_invoice_join = invoice_items::table.on(invoices::id.eq(invoice_items::invoice_id));
     let iitem_product_join = products::table.on(invoice_items::product_id.eq(products::id));
 
@@ -136,7 +136,7 @@ pub fn get_client_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
     final_result
 }
 
-pub fn get_seller_details(id: i32, connection: &mut SqliteConnection) -> Vec<Value> {
+pub fn get_seller_details(id: String, connection: &mut SqliteConnection) -> Vec<Value> {
     let oitem_order_join = order_items::table.on(orders::id.eq(order_items::order_id));
     let oitem_product_join = products::table.on(order_items::product_id.eq(products::id));
 
@@ -175,7 +175,7 @@ pub fn get_seller_details(id: i32, connection: &mut SqliteConnection) -> Vec<Val
     final_result
 }
 
-pub fn get_client_expenses(id: i32, connection: &mut SqliteConnection) -> Vec<Value> {
+pub fn get_client_expenses(id: String, connection: &mut SqliteConnection) -> Vec<Value> {
     let invoiceitem_invoice_join =
         invoice_items::table.on(invoices::id.eq(invoice_items::invoice_id));
     let invoiceitem_product_join = products::table.on(invoice_items::product_id.eq(products::id));
@@ -210,7 +210,7 @@ pub fn get_client_expenses(id: i32, connection: &mut SqliteConnection) -> Vec<Va
     final_result
 }
 
-pub fn get_seller_expenses(id: i32, connection: &mut SqliteConnection) -> Vec<Value> {
+pub fn get_seller_expenses(id: String, connection: &mut SqliteConnection) -> Vec<Value> {
     let orderitem_order_join = order_items::table.on(orders::id.eq(order_items::order_id));
     let orderitem_product_join = products::table.on(order_items::product_id.eq(products::id));
 

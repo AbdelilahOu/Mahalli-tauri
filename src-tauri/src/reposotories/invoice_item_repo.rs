@@ -6,6 +6,7 @@ use crate::models::InvoiceItem;
 use crate::models::NewInvoiceItem;
 use crate::models::UpdateInvoiceItem;
 use crate::schema::invoice_items;
+use crate::schema::invoice_items::id;
 use crate::schema::invoice_items::inventory_id;
 use crate::schema::invoice_items::invoice_id;
 use crate::schema::invoice_items::product_id;
@@ -33,12 +34,10 @@ pub fn get_invoice_items(page: i32, connection: &mut SqliteConnection) -> Value 
     })
 }
 
-pub fn insert_invoice_item(
-    new_ii: NewInvoiceItem,
-    connection: &mut SqliteConnection,
-) -> InvoiceItem {
+pub fn insert_invoice_item(new_ii: NewInvoiceItem, connection: &mut SqliteConnection) -> String {
     diesel::insert_into(invoice_items::dsl::invoice_items)
         .values((
+            id.eq(new_ii.id.clone()),
             product_id.eq(new_ii.product_id),
             invoice_id.eq(new_ii.invoice_id),
             quantity.eq(new_ii.quantity),
@@ -47,15 +46,10 @@ pub fn insert_invoice_item(
         .execute(connection)
         .expect("Error adding invoice items");
 
-    let result = invoice_items::dsl::invoice_items
-        .order(invoice_items::id.desc())
-        .first::<InvoiceItem>(connection)
-        .expect("Error fetching all invoices items");
-
-    result
+    new_ii.id
 }
 
-pub fn delete_invoice_item(ii_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn delete_invoice_item(ii_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::delete(invoices::dsl::invoices.find(&ii_id))
         .execute(connection)
         .expect("Error deleting invoice itesm");
@@ -65,7 +59,7 @@ pub fn delete_invoice_item(ii_id: i32, connection: &mut SqliteConnection) -> usi
 
 pub fn update_invoice_item(
     ii_update: UpdateInvoiceItem,
-    ii_id: i32,
+    ii_id: String,
     connection: &mut SqliteConnection,
 ) -> usize {
     let result = diesel::update(invoice_items::dsl::invoice_items.find(&ii_id))

@@ -2,7 +2,7 @@ use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
 use crate::models::{Client, Invoice, InvoiceItem, NewInvoice, Product, UpdateInvoice};
-use crate::schema::invoices::{client_id, status};
+use crate::schema::invoices::{client_id, id, status};
 use crate::schema::{clients, invoice_items, invoices, products};
 
 pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Value {
@@ -11,7 +11,7 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Value {
     let result = invoices::table
         .inner_join(clients::table.on(invoices::client_id.eq(clients::id)))
         .select((invoices::all_columns, clients::all_columns))
-        .order(invoices::id.desc())
+        .order(invoices::created_at.desc())
         .limit(17)
         .offset(offset as i64)
         .load::<(Invoice, Client)>(connection)
@@ -30,7 +30,7 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Value {
             let invoice_items: Vec<(InvoiceItem, Product)> = invoice_items::table
                 .inner_join(products::table.on(invoice_items::product_id.eq(products::id)))
                 .select((invoice_items::all_columns, products::all_columns))
-                .filter(invoice_items::invoice_id.eq(invoice.id))
+                .filter(invoice_items::invoice_id.eq(invoice.id.clone()))
                 .load::<(InvoiceItem, Product)>(connection)
                 .expect("Error fetching invoice items with products");
 
@@ -70,7 +70,7 @@ pub fn get_invoices(page: i32, connection: &mut SqliteConnection) -> Value {
     })
 }
 
-pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
+pub fn get_invoice(i_id: String, connection: &mut SqliteConnection) -> Value {
     let result = invoices::table
         .inner_join(clients::table.on(invoices::client_id.eq(clients::id)))
         .filter(invoices::id.eq(i_id))
@@ -83,7 +83,7 @@ pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
     let invoice_items: Vec<(InvoiceItem, Product)> = invoice_items::table
         .inner_join(products::table.on(invoice_items::product_id.eq(products::id)))
         .select((invoice_items::all_columns, products::all_columns))
-        .filter(invoice_items::invoice_id.eq(invoice.id))
+        .filter(invoice_items::invoice_id.eq(invoice.id.clone()))
         .load::<(InvoiceItem, Product)>(connection)
         .expect("Error fetching invoice items with products");
 
@@ -110,22 +110,20 @@ pub fn get_invoice(i_id: i32, connection: &mut SqliteConnection) -> Value {
     })
 }
 
-pub fn insert_invoice(new_i: NewInvoice, connection: &mut SqliteConnection) -> i32 {
+pub fn insert_invoice(new_i: NewInvoice, connection: &mut SqliteConnection) -> String {
     diesel::insert_into(invoices::dsl::invoices)
-        .values((status.eq(new_i.status), client_id.eq(new_i.client_id)))
+        .values((
+            id.eq(new_i.id.clone()),
+            status.eq(new_i.status),
+            client_id.eq(new_i.client_id),
+        ))
         .execute(connection)
         .expect("Error adding invoice");
 
-    let result = invoices::dsl::invoices
-        .order_by(invoices::id.desc())
-        .select(invoices::id)
-        .first::<i32>(connection)
-        .expect("error get all invoices");
-
-    result
+    new_i.id
 }
 
-pub fn delete_invoice(i_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn delete_invoice(i_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::delete(invoices::dsl::invoices.find(&i_id))
         .execute(connection)
         .expect("Error deleting invoice");
@@ -135,7 +133,7 @@ pub fn delete_invoice(i_id: i32, connection: &mut SqliteConnection) -> usize {
 
 pub fn update_invoice(
     i_update: UpdateInvoice,
-    i_id: i32,
+    i_id: String,
     connection: &mut SqliteConnection,
 ) -> usize {
     let result = diesel::update(invoices::dsl::invoices.find(&i_id))

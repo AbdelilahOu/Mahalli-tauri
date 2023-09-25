@@ -2,7 +2,7 @@ use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
 use crate::models::{NewProduct, Product, ProductWithQuantity};
-use crate::schema::products::{description, image, name, price, tva};
+use crate::schema::products::{description, id, image, name, price, tva};
 use crate::schema::{inventory_mouvements, products};
 
 pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Value {
@@ -24,7 +24,7 @@ pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Value {
             ),
         ))
         .group_by(products::id)
-        .order(products::id.desc())
+        .order(products::created_at.desc())
         .limit(17)
         .offset(offset as i64)
         .load::<ProductWithQuantity>(connection)
@@ -45,22 +45,22 @@ pub fn get_all_products(connection: &mut SqliteConnection) -> Vec<Value> {
     let response = products::dsl::products
         .order(products::id.desc())
         .select((products::name, products::id))
-        .load::<(String, i32)>(connection)
+        .load::<(String, String)>(connection)
         .expect("error get all products");
 
     let mut result: Vec<Value> = Vec::new();
 
     response.into_iter().for_each(|(pname, p_id)| {
         result.push(json!({
-            "label":pname,
-            "value":p_id
+            "label": pname,
+            "value": format!("{}",p_id)
         }))
     });
 
     result
 }
 
-pub fn get_product(p_id: i32, connection: &mut SqliteConnection) -> Product {
+pub fn get_product(p_id: String, connection: &mut SqliteConnection) -> Product {
     let result = products::dsl::products
         .find(&p_id)
         .first::<Product>(connection)
@@ -68,9 +68,10 @@ pub fn get_product(p_id: i32, connection: &mut SqliteConnection) -> Product {
 
     result
 }
-pub fn insert_product(new_p: NewProduct, connection: &mut SqliteConnection) -> i32 {
+pub fn insert_product(new_p: NewProduct, connection: &mut SqliteConnection) -> String {
     diesel::insert_into(products::dsl::products)
         .values((
+            id.eq(new_p.id.clone()),
             description.eq(new_p.description),
             name.eq(new_p.name),
             price.eq(new_p.price),
@@ -80,24 +81,17 @@ pub fn insert_product(new_p: NewProduct, connection: &mut SqliteConnection) -> i
         .execute(connection)
         .expect("Expect add articles");
 
-    // select last inserted row
-    let result = products::dsl::products
-        .order_by(products::id.desc())
-        .select(products::id)
-        .first::<i32>(connection)
-        .expect("error get all products");
-
-    result
+    new_p.id
 }
 
-pub fn delete_product(p_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn delete_product(p_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::delete(products::dsl::products.find(&p_id))
         .execute(connection)
         .expect("Expect delete channel");
 
     result
 }
-pub fn update_product(p_update: Product, p_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn update_product(p_update: Product, p_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::update(products::dsl::products.find(&p_id))
         .set((
             products::tva.eq(p_update.tva),
