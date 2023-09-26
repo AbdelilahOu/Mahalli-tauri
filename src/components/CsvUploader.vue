@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { uploadCSVfiles } from "@/utils/fs";
-import { defineComponent, ref } from "vue";
 import { useDropZone } from "@vueuse/core";
 import { invoke } from "@tauri-apps/api";
-import UiIconVue from "./ui/UiIcon.vue";
 import { useRoute } from "vue-router";
+import UiIcon from "./ui/UiIcon.vue";
 import { Button } from "./ui/button";
 import { store } from "@/store";
+import { ref } from "vue";
 
 const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -91,7 +91,7 @@ const upload = async () => {
         <span>{{ file.name }}</span>
         <div class="w-full text-end">{{ file.size }} bytes</div>
         <span @click="filesData.splice(i, 1)">
-          <UiIconVue IsStyled name="delete" />
+          <UiIcon IsStyled name="delete" />
         </span>
       </div>
       <Button @click="upload">Upload to {{ route.query.table }}</Button>

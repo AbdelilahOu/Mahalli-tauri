@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { globalTranslate } from "@/utils/globalTranslate";
+import UiPagination from "./ui/UiPagination.vue";
 import { formatDate } from "@/utils/formatDate";
 import type { inventoryMvmT } from "@/types";
 import { RouterLink } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
-import UiPagination from "./ui/UiPagination.vue";
 
 defineProps<{
   inventory: inventoryMvmT[];
@@ -59,9 +59,9 @@ defineProps<{
                 }"
               >
                 <span
-                  class="px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-sky-300/60 text-sky-800"
+                  class="px-3 py-[1px] h-full flex w-fit items-center justify-center gap-2 rounded-full bg-sky-300/60 text-sky-800"
                 >
-                  # {{ mvm.orderItem?.order_id }} <span>order</span>
+                  <span>order</span>
                 </span>
               </RouterLink>
               <RouterLink
@@ -73,9 +73,9 @@ defineProps<{
                 }"
               >
                 <span
-                  class="px-2 py-[1px] h-full flex w-fit items-center gap-2 rounded-full bg-sky-300/60 text-sky-800"
+                  class="px-3 py-[1px] h-full flex w-fit items-center justify-center gap-2 rounded-full bg-sky-300/60 text-sky-800"
                 >
-                  # {{ mvm.invoiceItem?.invoice_id }} <span>invoice</span>
+                  <span>invoice</span>
                 </span>
               </RouterLink>
             </div>
