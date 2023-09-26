@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useVModel } from "@vueuse/core";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/shadcn";
+import { ref } from "vue";
 
 const props = defineProps<{
   defaultValue?: string | number;
@@ -17,23 +18,47 @@ const modelValue = useVModel(props, "modelValue", emits, {
   passive: true,
   defaultValue: props.defaultValue,
 });
+
+const isFocused = ref(false);
 </script>
 <template>
   <div class="w-full h-fit flex">
-    <div class="w-fit h-full flex items-center justify-center">
+    <div
+      v-if="$slots.default"
+      :class="[
+        'w-fit h-10 transform transition-color duration-100 border-r-0 flex rounded-l-md items-center justify-end',
+        isFocused ? 'border-black border-2 border-r-0' : 'border',
+      ]"
+    >
       <slot name="default"></slot>
     </div>
     <input
-      v-model="modelValue"
+      @focusout="isFocused = false"
+      @focus="isFocused = true"
       :type="type"
+      v-model="modelValue"
       :placeholder="placeHolder"
       :class="
         cn(
-          'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:border-black disabled:cursor-not-allowed disabled:opacity-50 transition-color duration-150',
-          $attrs.class ?? ''
+          'flex h-10 w-full border pr-2 focus-visible:border-2 focus-visible:border-black focus:outline-0 rounded-md border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 transform transition-color duration-100',
+          $attrs.class ?? '',
+          $slots.default
+            ? 'rounded-l-none border-l-0 focus-visible:border-l-0 pl-0'
+            : 'pl-2',
+          $slots.unite
+            ? 'rounded-r-none border-r-0 focus-visible:border-r-0'
+            : ''
         )
       "
     />
-    <slot name="unite"></slot>
+    <div
+      v-if="$slots.unite"
+      :class="[
+        'w-fit h-10 transform transition-color duration-100 border-l-0 flex rounded-r-md  items-center justify-center',
+        isFocused ? 'border-black border-2 border-l-0' : 'border',
+      ]"
+    >
+      <slot name="unite"></slot>
+    </div>
   </div>
 </template>
