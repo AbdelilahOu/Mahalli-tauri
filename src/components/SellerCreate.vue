@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import type { newSellerT } from "@/types";
-import UiUploader from "./ui/UiUploader.vue";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { saveFile } from "@/utils/fs";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { SELLER_CREATE } from "@/constants/defaultValues";
-import { invoke } from "@tauri-apps/api";
-import { store } from "@/store";
 import { ImagesFiles } from "@/constants/FileTypes";
+import UiUploader from "./ui/UiUploader.vue";
+import type { newSellerT } from "@/types";
+import { invoke } from "@tauri-apps/api";
+import { saveFile } from "@/utils/fs";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { store } from "@/store";
+import { ref } from "vue";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const isFlash = ref<boolean>(false);

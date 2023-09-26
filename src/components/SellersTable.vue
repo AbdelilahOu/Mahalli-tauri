@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
-import { store } from "@/store";
-import { Checkbox } from "./ui/checkbox";
-import UiIcon from "./ui/UiIcon.vue";
 import UiPagination from "./ui/UiPagination.vue";
+import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
 import type { sellerT } from "@/types";
+import UiIcon from "./ui/UiIcon.vue";
+import { store } from "@/store";
+import { ref } from "vue";
 
-const checkedSellers = ref<number[]>([]);
+const checkedSellers = ref<string[]>([]);
 
 defineProps<{
   sellers: sellerT[];
 }>();
 
-const checkThisUser = (IsInclude: boolean, id: number) => {
+const checkThisUser = (IsInclude: boolean, id: string) => {
   IsInclude
     ? checkedSellers.value.push(id)
     : checkedSellers.value.splice(checkedSellers.value.indexOf(id), 1);

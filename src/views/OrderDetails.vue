@@ -4,6 +4,7 @@ import { ref, onBeforeMount } from "vue";
 import { invoke } from "@tauri-apps/api";
 import { globalTranslate } from "@/utils/globalTranslate";
 import type { orderDetailsT } from "@/types";
+import { Button } from "@/components/ui/button";
 
 const id = useRoute().params.id;
 const order = ref<orderDetailsT | null>(null);
@@ -11,8 +12,9 @@ const order = ref<orderDetailsT | null>(null);
 onBeforeMount(async () => {
   try {
     const res = await invoke<orderDetailsT>("get_order", {
-      id: Number(id),
+      id,
     });
+    console.log(res);
     if (res?.id) {
       order.value = res;
     }
@@ -189,9 +191,9 @@ const print = () => window.print();
                 <td class="p-2">
                   <div class="text-left">
                     {{
-                      item.price === 0
-                        ? item.product.price.toFixed(2)
-                        : item.price.toFixed(2)
+                      item.price
+                        ? item.price?.toFixed(2)
+                        : item.product.price?.toFixed(2)
                     }}
                     DH
                   </div>
@@ -199,9 +201,9 @@ const print = () => window.print();
                 <td class="p-2">
                   <div class="flex justify-start gap-3">
                     {{
-                      (item.price === 0
-                        ? item.product.price * item.quantity
-                        : item.price * item.quantity
+                      (item.price
+                        ? item.price * item.quantity
+                        : item.product.price * item.quantity
                       ).toFixed(2)
                     }}
                     DH
@@ -224,8 +226,8 @@ const print = () => window.print();
                         (acc, curr) =>
                           (acc +=
                             curr.price === 0
-                              ? curr.quantity * curr.product.price
-                              : curr.quantity * curr.price),
+                              ? curr.quantity * curr.price
+                              : curr.quantity * curr.product.price),
                         0
                       )
                       .toFixed(2)

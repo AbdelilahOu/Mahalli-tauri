@@ -11,7 +11,6 @@ import { useRouter } from "vue-router";
 import { store } from "@/store";
 import {
   type WatchStopHandle,
-  defineComponent,
   onBeforeMount,
   onUnmounted,
   Transition,
@@ -41,7 +40,6 @@ onBeforeMount(() => getProducts(page.value));
 //
 onMounted(() => {
   unwatch = watch([page, refresh], ([p]) => {
-    console.log(p, refresh);
     if (p && p > 0) getProducts(p);
   });
 });

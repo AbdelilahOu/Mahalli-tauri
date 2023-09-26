@@ -27,7 +27,7 @@ defineProps<{
           <UiIcon name="tag" />
         </span>
         <span class="flex whitespace-nowrap">
-          {{ item?.id }} - {{ item?.name ?? item?.fullname }}
+          {{ item?.name ?? item?.fullname }}
         </span>
       </h1>
     </div>

@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, ref, onBeforeUnmount } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import type { productT, updateProductT } from "@/types";
-import { Input } from "./ui/input";
-import { invoke } from "@tauri-apps/api";
-import { Button } from "./ui/button";
-import { store } from "@/store";
 import { PRODUCT_UPDATE } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
+import type { productT, updateProductT } from "@/types";
+import { computed, ref, onBeforeUnmount } from "vue";
+import { invoke } from "@tauri-apps/api";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { store } from "@/store";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 

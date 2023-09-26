@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { groupBy, keys, values, mapValues } from "@/utils/lightLodash";
 import type { FilteredInventoryData, inOutReType } from "@/types";
-import { defineComponent, onBeforeMount, reactive } from "vue";
+import { onBeforeMount, reactive } from "vue";
 import ChartDoughnut from "@/components/ChartDoughnut.vue";
 import { CHART_OPTIONS } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
 import ChartHolder from "@/components/ChartHolder.vue";
 import { generateColor } from "@/utils/generateColor";
-import ChartLine from "@/components/ChartLine.vue";
 import ChartBar from "@/components/ChartBar.vue";
-import { getWeekDay } from "@/utils/formatDate";
 import { invoke } from "@tauri-apps/api";
 const InsOuts = reactive({
   keys: ["IN", "OUT"] as const,

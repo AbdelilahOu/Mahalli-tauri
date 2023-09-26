@@ -5,8 +5,9 @@ import { onBeforeMount, Transition } from "vue";
 onBeforeMount(() => useRouter().push("/Home"));
 
 // (async () => {
-//   await invoke("export_db_csv");
+//   await invoke("seed_db");
 // })();
+//
 </script>
 
 <template>
