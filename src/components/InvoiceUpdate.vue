@@ -2,7 +2,7 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import type { invoiceT, updateInvoiceT } from "@/types";
-import { ComboBox } from "./ui/combobox";
+import ComboBox from "./ui/combobox/ComboBox.vue";
 import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";
 import { invoke } from "@tauri-apps/api";
@@ -14,15 +14,15 @@ import { INVOICE_UPDATE } from "@/constants/defaultValues";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const clients = ref<{ label: string; value: number }[]>([]);
-const products = ref<{ label: string; value: number }[]>([]);
+const clients = ref<{ label: string; value: string }[]>([]);
+const products = ref<{ label: string; value: string }[]>([]);
 const invoiceRow = computed(() => store.getters.getSelectedRow<invoiceT>());
 
 onBeforeMount(async () => {
   // @ts-ignore
   const res = await Promise.allSettled([
-    invoke<{ label: string; value: number }[]>("get_all_clients"),
-    invoke<{ label: string; value: number }[]>("get_all_products"),
+    invoke<{ label: string; value: string }[]>("get_all_clients"),
+    invoke<{ label: string; value: string }[]>("get_all_products"),
   ]);
 
   // @ts-ignore
@@ -35,7 +35,7 @@ const updateInvoice = reactive<updateInvoiceT>(
   invoiceRow.value ? invoiceRow.value : INVOICE_UPDATE
 );
 
-async function deleteOneinvoiceItem(id: number) {
+async function deleteOneinvoiceItem(id: string) {
   try {
     await invoke("delete_invoice_items", { id });
   } catch (error) {
@@ -66,7 +66,10 @@ const updateTheInvoice = async () => {
 };
 
 const addInvoiceItem = () => {
-  updateInvoice.invoice_items?.push({ product_id: 0, quantity: 0 });
+  updateInvoice.invoice_items?.push({
+    product_id: undefined,
+    quantity: undefined,
+  });
 };
 
 const deleteInvoiceItem = (index: number) => {
@@ -90,9 +93,11 @@ const deleteInvoiceItem = (index: number) => {
         <h1 class="font-medium">
           {{ globalTranslate("Invoices.update.details.client.title") }}
         </h1>
-        <ComboBox :items="clients" v-model="updateInvoice.client_id">
-          {{ globalTranslate("Invoices.update.details.client.select") }}
-        </ComboBox>
+        <ComboBox
+          :label="globalTranslate('Invoices.update.details.client.select')"
+          :items="clients"
+          v-model="updateInvoice.client_id"
+        />
       </div>
       <div class="w-full h-full flex flex-col gap-1">
         <h1 class="font-medium">invoice details</h1>
@@ -101,19 +106,29 @@ const deleteInvoiceItem = (index: number) => {
             <div
               class="h-full w-full flex flex-row flex-nowrap items-center gap-2"
             >
-              <Checkbox v-model="updateInvoice.status" value="delivered" />
+              <Checkbox
+                :checked="updateInvoice.status === 'delivered'"
+                @update:checked="() => (updateInvoice.status = 'delivered')"
+              />
+
               <span>{{ globalTranslate("Invoices.status.delivered") }}</span>
             </div>
             <div
               class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2"
             >
-              <Checkbox v-model="updateInvoice.status" value="pending" />
+              <Checkbox
+                :checked="updateInvoice.status === 'pending'"
+                @update:checked="() => (updateInvoice.status = 'pending')"
+              />
               <span>{{ globalTranslate("Invoices.status.pending") }}</span>
             </div>
             <div
               class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2"
             >
-              <Checkbox v-model="updateInvoice.status" value="canceled" />
+              <Checkbox
+                :checked="updateInvoice.status === 'canceled'"
+                @update:checked="() => (updateInvoice.status = 'canceled')"
+              />
               <span>{{ globalTranslate("Invoices.status.canceled") }}</span>
             </div>
           </div>
@@ -126,14 +141,18 @@ const deleteInvoiceItem = (index: number) => {
             class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <div class="flex flex-col gap-2">
-              <ComboBox
+              <template
                 v-for="(item, index) in updateInvoice.invoice_items"
                 :key="index"
-                :items="products"
-                v-model="item.product_id"
               >
-                {{ globalTranslate("Invoices.create.details.invoice.select") }}
-              </ComboBox>
+                <ComboBox
+                  :label="
+                    globalTranslate('Invoices.create.details.invoice.select')
+                  "
+                  :items="products"
+                  v-model="item.product_id"
+                />
+              </template>
             </div>
             <div class="flex flex-col gap-2">
               <div
