@@ -1,12 +1,22 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { store } from "@/store";
 import { Button } from "./ui/button";
 import UiIcon from "./ui/UiIcon.vue";
+import { store } from "@/store";
 
 const exportDatabase = async () => {
   try {
     await invoke("export_db_csv");
+  } catch (error) {
+    console.log(error);
+  } finally {
+    store.setters.updateStore({ key: "show", value: false });
+  }
+};
+
+const importDatabase = async () => {
+  try {
+    await invoke("seed_db");
   } catch (error) {
     console.log(error);
   } finally {
@@ -28,6 +38,16 @@ const exportDatabase = async () => {
       <div class="w-full h-10 grid grid-cols-2 items-center">
         <span class="font-semibold text-lg">Export database as csv</span>
         <Button variant="default" @click="exportDatabase">
+          <UiIcon
+            class="cursor-default hover:bg-transparent mr-2"
+            name="export"
+          />
+          Export
+        </Button>
+      </div>
+      <div class="w-full h-10 grid grid-cols-2 items-center">
+        <span class="font-semibold text-lg">Use fake data</span>
+        <Button variant="default" @click="importDatabase">
           <UiIcon
             class="cursor-default hover:bg-transparent mr-2"
             name="export"
