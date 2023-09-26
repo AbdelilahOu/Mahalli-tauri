@@ -87,8 +87,23 @@ pub fn upload_csv_to_db(csv_path: String, table: String, state: tauri::State<App
 }
 
 #[tauri::command]
-pub async fn seed_db() {
-    db::seed_db().await
+pub async fn seed_db(handle: tauri::AppHandle) {
+    dotenv().ok();
+    let _env = env::var("DEV_ENV");
+    match _env {
+        Ok(_env) => {
+            let old_data_folder = path::Path::new("./data");
+            db::seed_db(old_data_folder).await
+        }
+        Err(_) => {
+            let resource_path = handle
+                .path_resolver()
+                .resolve_resource("data")
+                .expect("failed to resolve resource");
+
+            db::seed_db(&resource_path.as_path()).await
+        }
+    }
 }
 
 #[tauri::command]

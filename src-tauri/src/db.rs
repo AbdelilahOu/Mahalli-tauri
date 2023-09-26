@@ -6,6 +6,7 @@ use diesel_migrations::MigrationHarness;
 use dotenv::dotenv;
 use std::env;
 use std::path;
+use std::path::Path;
 
 use crate::csvparsing::import;
 use crate::csvparsing::import::TableRecord;
@@ -48,7 +49,7 @@ pub fn migrate_db() {
         .expect("Error migrating");
 }
 
-pub async fn seed_db() {
+pub async fn seed_db(data_source_path: &Path) {
     // table names
     let mut table_names: Vec<String> = vec![
         String::from("products"),
@@ -60,15 +61,12 @@ pub async fn seed_db() {
         String::from("order_items"),
         String::from("invoice_items"),
     ];
-    // path to old db and wehere to store csvs
-    let old_data_folder = path::Path::new("./data");
     //
     let mut conn = establish_connection();
 
     for table in table_names.iter_mut() {
         // checking if we already have the csvs
-        let out_put_file = old_data_folder.join(format!("{}.csv", table));
-
+        let out_put_file = data_source_path.join(format!("{}.csv", table));
         // read csv
         let result = import::get_csv_records(
             String::from(out_put_file.to_str().unwrap()),
