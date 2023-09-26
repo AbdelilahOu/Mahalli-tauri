@@ -13,9 +13,9 @@ defineProps<{
   clients: clientT[];
 }>();
 
-const checkedClients = ref<number[]>([]);
+const checkedClients = ref<string[]>([]);
 
-const checkThisUser = (IsInclude: boolean, id: number) => {
+const checkThisUser = (IsInclude: boolean, id: string) => {
   IsInclude
     ? checkedClients.value.push(id)
     : checkedClients.value.splice(checkedClients.value.indexOf(id), 1);
