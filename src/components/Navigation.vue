@@ -1,24 +1,16 @@
 <script setup lang="ts">
-import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { computed, ref, onMounted } from "vue";
 import { RouteLinks } from "@/constants/RouteNames";
+import { useRoute } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
+import { computed } from "vue";
 import { store } from "@/store";
 
-const router = useRouter();
 const route = useRoute();
-const ActiveLink = ref<any>("");
-
-onMounted(() => {
-  ActiveLink.value = RouteLinks.find((link) => link.component === route.name);
-});
-
+const ActiveLink = computed(() =>
+  RouteLinks.find((link) => link.component === route.name)
+);
 const User = computed(() => store.getters.getUser());
-
-onBeforeRouteUpdate((to) => {
-  ActiveLink.value = RouteLinks.find((link) => link.component === to.name);
-});
 </script>
 
 <template>
@@ -30,7 +22,7 @@ onBeforeRouteUpdate((to) => {
     >
       <div class="text-black flex items-center justify-center gap-2">
         <span
-          @click="router.back()"
+          @click="$router.back()"
           class="flex items-center justify-center cursor-pointer fill-gray-700 hover:fill-gray-800 transform-all duration-200"
         >
           <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24">
@@ -40,7 +32,7 @@ onBeforeRouteUpdate((to) => {
           </svg>
         </span>
         <span
-          @click="router.forward()"
+          @click="$router.forward()"
           class="flex rotate-180 items-center justify-center cursor-pointer fill-gray-700 hover:fill-gray-800 transform-all duration-200"
         >
           <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24">
@@ -50,7 +42,7 @@ onBeforeRouteUpdate((to) => {
           </svg>
         </span>
         <span class="pb-[3px] text-gray-700 flex items-center">
-          <button @click="router.push('/Home')">
+          <button @click="$router.push('/Home')">
             <span class="w-full h-full cursor-pointer bg-white">
               <UiIcon IsStyled="true" class="text-gray-700" name="Home" />
             </span>
