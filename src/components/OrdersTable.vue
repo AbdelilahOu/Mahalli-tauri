@@ -10,9 +10,9 @@ import { ref } from "vue";
 
 defineProps<{ orders: orderT[] }>();
 
-const checkedOrders = ref<number[]>([]);
+const checkedOrders = ref<string[]>([]);
 
-const checkThisOrders = (IsIncluded: boolean, id: number) => {
+const checkThisOrders = (IsIncluded: boolean, id: string) => {
   IsIncluded
     ? checkedOrders.value.push(id)
     : checkedOrders.value.splice(checkedOrders.value.indexOf(id), 1);
