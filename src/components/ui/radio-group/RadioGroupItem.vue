@@ -4,7 +4,7 @@ import {
   RadioGroupItem,
   type RadioGroupItemProps,
 } from "radix-vue";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/shadcn";
 
 const props = defineProps<RadioGroupItemProps & { class?: string }>();
 </script>
