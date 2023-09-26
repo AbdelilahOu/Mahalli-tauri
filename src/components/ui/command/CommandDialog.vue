@@ -2,7 +2,7 @@
 import type { DialogRootEmits, DialogRootProps } from "radix-vue";
 import Command from "./Command.vue";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { useEmitAsProps } from "@/lib/utils";
+import { useEmitAsProps } from "@/utils/shadcn";
 
 const props = defineProps<DialogRootProps>();
 const emits = defineEmits<DialogRootEmits>();

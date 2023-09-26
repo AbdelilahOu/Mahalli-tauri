@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { DialogTitle, type DialogTitleProps } from 'radix-vue'
-import { cn } from '@/lib/utils'
+import { DialogTitle, type DialogTitleProps } from "radix-vue";
+import { cn } from "@/utils/shadcn";
 
-const props = defineProps<DialogTitleProps & { class?: string }>()
+const props = defineProps<DialogTitleProps & { class?: string }>();
 </script>
 
 <template>
@@ -11,7 +11,7 @@ const props = defineProps<DialogTitleProps & { class?: string }>()
     :class="
       cn(
         'text-lg text-foreground font-semibold leading-none tracking-tight',
-        props.class,
+        props.class
       )
     "
   >

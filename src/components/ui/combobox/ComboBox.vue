@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { Check, ChevronsUpDown } from "lucide-vue-next";
+import { cn, useEmitAsProps } from "@/utils/shadcn";
 import { Button } from "../button";
-import { cn } from "@/lib/utils";
 import { ref } from "vue";
 import {
   CommandEmpty,
@@ -12,48 +12,55 @@ import {
   Command,
 } from "../command";
 
-defineProps<{
-  items: { value: string | number; label: string }[];
+const props = defineProps<{
+  items: { value: string; label: string }[];
+  modelValue: any;
+  label: string;
 }>();
 
+const emits = defineEmits<{
+  "update:modelValue": [value: string | Array<string> | object | Array<object>];
+}>();
+
+const emitsAsProps = useEmitAsProps(emits);
+
 const open = ref(false);
-const value = ref({});
 </script>
 
 <template>
   <Popover v-model:open="open">
     <PopoverTrigger as-child>
       <Button
-        variant="outline"
+        :variant="modelValue?.value ? 'secondary' : 'outline'"
         role="combobox"
         :aria-expanded="open"
-        class="w-[200px] justify-between"
+        class="w-full justify-between"
       >
         {{
-          value
-            ? items.find((item) => item.value === value)?.label
-            : "Select item..."
+          modelValue
+            ? items.find((item) => item.value === modelValue)?.label
+            : label
         }}
 
         <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
     </PopoverTrigger>
-    <PopoverContent class="w-[200px] p-0">
-      <Command v-model="value">
-        <CommandInput placeholder="Search item..." />
-        <CommandEmpty>No item found.</CommandEmpty>
+    <PopoverContent class="w-full p-0">
+      <Command v-bind:="{ modelValue, ...emitsAsProps }">
+        <!-- <CommandInput placeholder="Search" />
+        <CommandEmpty>No item found.</CommandEmpty> -->
         <CommandGroup>
           <CommandItem
             v-for="item in items"
             :key="item.value"
-            :value="item"
+            :value="String(item.value)"
             @select="open = false"
           >
             <Check
               :class="
                 cn(
                   'mr-2 h-4 w-4',
-                  value === item.value ? 'opacity-100' : 'opacity-0'
+                  modelValue === item.value ? 'opacity-100' : 'opacity-0'
                 )
               "
             />

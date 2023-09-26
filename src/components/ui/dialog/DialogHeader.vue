@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils'
+import { cn } from "@/utils/shadcn";
 
 interface DialogHeaderProps {
-  class?: string
+  class?: string;
 }
 
-const props = defineProps<DialogHeaderProps>()
+const props = defineProps<DialogHeaderProps>();
 </script>
 
 <template>

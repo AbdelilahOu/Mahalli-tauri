@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { ComboboxSeparatorProps } from 'radix-vue'
-import { ComboboxSeparator } from 'radix-vue'
-import { cn } from '@/lib/utils'
+import type { ComboboxSeparatorProps } from "radix-vue";
+import { ComboboxSeparator } from "radix-vue";
+import { cn } from "@/utils/shadcn";
 
-const props = defineProps<ComboboxSeparatorProps>()
+const props = defineProps<ComboboxSeparatorProps>();
 </script>
 
 <template>
