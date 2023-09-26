@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { globalTranslate } from "@/utils/globalTranslate";
-import { store } from "@/store";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
-import UiIcon from "./ui/UiIcon.vue";
-import { convertFileSrc } from "@tauri-apps/api/tauri";
 import type { productT } from "@/types";
+import UiIcon from "./ui/UiIcon.vue";
+import { store } from "@/store";
 
 defineProps<{ products: productT[] }>();
 

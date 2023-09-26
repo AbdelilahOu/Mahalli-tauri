@@ -28,7 +28,7 @@ const DailyStats = reactive({
   color: generateColor(),
 });
 
-const getProductPerMonth = async (id: number) => {
+const getProductPerMonth = async (id: string) => {
   const data: any[] = await invoke("get_c_product_month", { id });
 
   const existingDates = keys(groupBy(data, "month"));
@@ -48,7 +48,7 @@ const getProductPerMonth = async (id: number) => {
   };
 };
 
-const getDailyExpenses = async (id: number) => {
+const getDailyExpenses = async (id: string) => {
   const result: { day: string; expense: number }[] = await invoke(
     "get_c_week_expenses",
     { id }
@@ -91,8 +91,8 @@ const toggleThisClient = (client: clientT | null, name: string) => {
 };
 
 onBeforeMount(async () => {
-  const productStats = await getProductPerMonth(Number(id));
-  const dailyStats = await getDailyExpenses(Number(id));
+  const productStats = await getProductPerMonth(id as string);
+  const dailyStats = await getDailyExpenses(id as string);
 
   DailyStats.keys = dailyStats.keys;
   DailyStats.data = dailyStats.values;
@@ -104,7 +104,7 @@ onBeforeMount(async () => {
 
 onBeforeMount(async () => {
   try {
-    const res = await invoke<clientT>("get_client", { id: Number(id) });
+    const res = await invoke<clientT>("get_client", { id });
     if (res.id) {
       client.value = res;
     }

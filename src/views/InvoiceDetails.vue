@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineComponent, onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { useRoute } from "vue-router";
 import { invoke } from "@tauri-apps/api";
 import { globalTranslate } from "@/utils/globalTranslate";
@@ -12,7 +12,7 @@ const invoice = ref<invoiceDetailsT | null>(null);
 onBeforeMount(async () => {
   try {
     const res = await invoke<invoiceDetailsT>("get_invoice", {
-      id: Number(id),
+      id,
     });
     if (res.id) {
       invoice.value = res;

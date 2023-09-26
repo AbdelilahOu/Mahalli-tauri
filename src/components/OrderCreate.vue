@@ -4,26 +4,26 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import type { newOrdersItemT, newOrdersT } from "@/types";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { ref, onBeforeMount, reactive } from "vue";
+import ComboBox from "./ui/combobox/ComboBox.vue";
 import { Checkbox } from "./ui/checkbox";
-import { Button } from "./ui/button";
 import { invoke } from "@tauri-apps/api";
-import { ComboBox } from "./ui/combobox";
-import { Input } from "./ui/input";
 import UiIcon from "./ui/UiIcon.vue";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 import { store } from "@/store";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const order_items = ref<newOrdersItemT[]>(ORDER_ITEM_CREATE);
 const newOrder = reactive<newOrdersT>(ORDER_CREATE);
-const sellers = ref<{ label: string; value: number }[]>([]);
-const products = ref<{ label: string; value: number }[]>([]);
+const sellers = ref<{ label: string; value: string }[]>([]);
+const products = ref<{ label: string; value: string }[]>([]);
 const isFlash = ref<boolean>(false);
 
 onBeforeMount(async () => {
   // @ts-ignore
   const res = await Promise.allSettled([
-    invoke<{ label: string; value: number }[]>("get_all_sellers"),
-    invoke<{ label: string; value: number }[]>("get_all_products"),
+    invoke<{ label: string; value: string }[]>("get_all_sellers"),
+    invoke<{ label: string; value: string }[]>("get_all_products"),
   ]);
 
   if (res[0].status === "fulfilled") sellers.value = res[0].value;
@@ -31,7 +31,11 @@ onBeforeMount(async () => {
 });
 
 const addOrderItem = () => {
-  order_items.value.push({ product_id: 0, quantity: 0, price: 0 });
+  order_items.value.push({
+    product_id: undefined,
+    quantity: undefined,
+    price: undefined,
+  });
 };
 
 const removeOrderItem = (index: number) => {
@@ -41,7 +45,7 @@ const removeOrderItem = (index: number) => {
 const createNewOrders = async () => {
   isFlash.value = true;
   newOrder.order_items = order_items.value.filter(
-    (item) => item.product_id !== 0 && item.quantity !== 0
+    (item) => item.product_id && item.quantity
   );
 
   if (newOrder.seller_id && newOrder.order_items.length !== 0) {
@@ -80,9 +84,11 @@ const createNewOrders = async () => {
         <h1 class="font-medium">
           {{ globalTranslate("Orders.create.details.seller.title") }}
         </h1>
-        <ComboBox :items="sellers">
-          {{ globalTranslate("Orders.create.details.seller.select") }}
-        </ComboBox>
+        <ComboBox
+          :label="globalTranslate('Orders.create.details.seller.select')"
+          v-model="newOrder.seller_id"
+          :items="sellers"
+        />
       </div>
       <div class="w-full h-full flex flex-col gap-1">
         <h1 class="font-medium">
@@ -93,19 +99,23 @@ const createNewOrders = async () => {
             <div
               class="h-full w-full flex flex-row flex-nowrap items-center gap-2"
             >
-              <Checkbox />
+              <Checkbox
+                @update:checked="() => (newOrder.status = 'delivered')"
+              />
               <span>{{ globalTranslate("Orders.status.delivered") }}</span>
             </div>
             <div
               class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2"
             >
-              <Checkbox />
+              <Checkbox @update:checked="() => (newOrder.status = 'pending')" />
               <span>{{ globalTranslate("Orders.status.pending") }}</span>
             </div>
             <div
               class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2"
             >
-              <Checkbox />
+              <Checkbox
+                @update:checked="() => (newOrder.status = 'canceled')"
+              />
               <span>{{ globalTranslate("Orders.status.canceled") }}</span>
             </div>
           </div>
@@ -119,9 +129,11 @@ const createNewOrders = async () => {
           >
             <div class="flex flex-col gap-2">
               <template v-for="(item, index) in order_items">
-                <ComboBox :items="products">
-                  {{ globalTranslate("Orders.create.details.order.select") }}
-                </ComboBox>
+                <ComboBox
+                  :label="globalTranslate('Orders.create.details.order.select')"
+                  v-model="item.product_id"
+                  :items="products"
+                />
               </template>
             </div>
             <div class="flex flex-col gap-2">

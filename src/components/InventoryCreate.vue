@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { onBeforeMount, ref, reactive } from "vue";
+import { INVENTORY_CREATE } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { Button } from "./ui/button";
-import { ComboBox } from "./ui/combobox";
+import { onBeforeMount, ref, reactive } from "vue";
+import ComboBox from "./ui/combobox/ComboBox.vue";
+import type { newInventoryMvmT } from "@/types";
 import { invoke } from "@tauri-apps/api";
+import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
-import { INVENTORY_CREATE } from "@/constants/defaultValues";
-import type { newInventoryMvmT } from "@/types";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const inventoryMvm = reactive<newInventoryMvmT>(INVENTORY_CREATE);
 
-const products = ref<{ label: string; value: number }[]>([]);
+const products = ref<{ label: string; value: string }[]>([]);
 
 onBeforeMount(async () => {
+  // @ts-ignore
   const res = await Promise.allSettled([invoke("get_all_products")]);
   if (res[0].status === "fulfilled") {
     // @ts-ignore
@@ -25,7 +26,7 @@ onBeforeMount(async () => {
 });
 
 const createNewInventory = async () => {
-  if (inventoryMvm.productId !== 0 && inventoryMvm.quantity !== 0) {
+  if (inventoryMvm.product_id !== "" && inventoryMvm.quantity !== 0) {
     try {
       await invoke("insert_inventory_mvm", { inventory: inventoryMvm });
       // toggle refresh
@@ -48,9 +49,11 @@ const createNewInventory = async () => {
       {{ globalTranslate("Inventory.create.title") }}
     </h1>
     <div class="h-full w-full flex flex-col gap-2">
-      <ComboBox :items="products">
-        {{ globalTranslate("Inventory.create.select") }}
-      </ComboBox>
+      <ComboBox
+        :label="globalTranslate('Inventory.create.select')"
+        v-model="inventoryMvm.product_id"
+        :items="products"
+      />
       <Input
         type="number"
         :placeHolder="globalTranslate('Inventory.create.placeholder')"

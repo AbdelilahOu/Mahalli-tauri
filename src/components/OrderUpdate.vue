@@ -1,23 +1,23 @@
 <script setup lang="ts">
+import { ref, computed, reactive, onBeforeMount, onBeforeUnmount } from "vue";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { ComboBox } from "./ui/combobox";
+import { ORDER_UPDATE } from "@/constants/defaultValues";
 import type { orderT, updateOrdersT } from "@/types";
-import { Input } from "./ui/input";
+import ComboBox from "./ui/combobox/ComboBox.vue";
 import { Checkbox } from "./ui/checkbox";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import UiIcon from "./ui/UiIcon.vue";
-import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { ref, computed, reactive, onBeforeMount, onBeforeUnmount } from "vue";
+import { Input } from "./ui/input";
 import { store } from "@/store";
-import { ORDER_UPDATE } from "@/constants/defaultValues";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const OrdersRow = computed(() => store.getters.getSelectedRow<orderT>());
 
-const sellers = ref<{ label: string; value: number }[]>([]);
-const products = ref<{ label: string; value: number }[]>([]);
+const sellers = ref<{ label: string; value: string }[]>([]);
+const products = ref<{ label: string; value: string }[]>([]);
 
 const updateOrder = reactive<updateOrdersT>(
   OrdersRow.value ? OrdersRow.value : ORDER_UPDATE
@@ -26,8 +26,8 @@ const updateOrder = reactive<updateOrdersT>(
 onBeforeMount(async () => {
   // @ts-ignore
   const res = await Promise.allSettled([
-    invoke<{ label: string; value: number }[]>("get_all_sellers"),
-    invoke<{ label: string; value: number }[]>("get_all_products"),
+    invoke<{ label: string; value: string }[]>("get_all_sellers"),
+    invoke<{ label: string; value: string }[]>("get_all_products"),
   ]);
 
   if (res[0].status === "fulfilled") sellers.value = res[0].value;
@@ -35,7 +35,11 @@ onBeforeMount(async () => {
 });
 
 const addOrderItem = () => {
-  updateOrder.order_items.push({ product_id: 0, quantity: 0, price: 0 });
+  updateOrder.order_items.push({
+    product_id: undefined,
+    quantity: undefined,
+    price: undefined,
+  });
 };
 
 const updateTheOrders = async () => {
@@ -57,7 +61,7 @@ const updateTheOrders = async () => {
   }
 };
 
-async function deleteOneOrderItem(id: number) {
+async function deleteOneOrderItem(id: string) {
   try {
     await invoke("delete_order_items", { id });
   } catch (error) {
@@ -87,10 +91,11 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         <h1 class="font-medium">
           {{ globalTranslate("Orders.update.details.seller.title") }}
         </h1>
-        <ComboBox :items="sellers">
-          <!-- v-model="updateOrder.seller?.name" -->
-          {{ globalTranslate("Orders.update.details.seller.select") }}
-        </ComboBox>
+        <ComboBox
+          :label="globalTranslate('Orders.update.details.seller.select')"
+          v-model="updateOrder.seller_id"
+          :items="sellers"
+        />
       </div>
       <div class="w-full h-full flex flex-col gap-1">
         <h1 class="font-medium">
@@ -101,19 +106,28 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
             <div
               class="h-full w-full flex flex-row flex-nowrap items-center gap-2"
             >
-              <Checkbox />
+              <Checkbox
+                :checked="updateOrder.status === 'delivered'"
+                @update:checked="() => (updateOrder.status = 'delivered')"
+              />
               <span>{{ globalTranslate("Orders.status.delivered") }}</span>
             </div>
             <div
               class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2"
             >
-              <Checkbox />
+              <Checkbox
+                :checked="updateOrder.status === 'pending'"
+                @update:checked="() => (updateOrder.status = 'pending')"
+              />
               <span>{{ globalTranslate("Orders.status.pending") }}</span>
             </div>
             <div
               class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2"
             >
-              <Checkbox />
+              <Checkbox
+                :checked="updateOrder.status === 'canceled'"
+                @update:checked="() => (updateOrder.status = 'canceled')"
+              />
               <span>{{ globalTranslate("Orders.status.canceled") }}</span>
             </div>
           </div>
@@ -126,14 +140,16 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
             class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <div class="flex flex-col gap-2">
-              <ComboBox
+              <template
                 v-for="(item, index) in updateOrder.order_items"
                 :key="index"
-                :items="products"
               >
-                <!-- v-model="item.product?.name" -->
-                {{ globalTranslate("Orders.update.details.order.select") }}
-              </ComboBox>
+                <ComboBox
+                  :label="globalTranslate('Orders.update.details.order.select')"
+                  v-model="item.product_id"
+                  :items="products"
+                />
+              </template>
             </div>
             <div class="flex flex-col gap-2">
               <div

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { PRODUCT_CREATE } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { ImagesFiles } from "@/constants/FileTypes";
 import UiUploader from "./ui/UiUploader.vue";
@@ -10,7 +11,6 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
-import { PRODUCT_CREATE } from "@/constants/defaultValues";
 
 const isFlash = ref<boolean>(false);
 
@@ -23,7 +23,15 @@ const createNewProduct = async () => {
   if (product.name !== "") {
     try {
       let image: string = await saveFile(product.image as string, "Image");
-      await invoke("insert_product", { product: { ...product, image } });
+      await invoke("insert_product", {
+        product: {
+          image,
+          ...product,
+          price: Number(product.price),
+          tva: Number(product.tva),
+          quantity: Number(product.quantity),
+        },
+      });
       // toggle refresh
       updateQueryParams({
         refresh: "refresh-create-" + Math.random() * 9999,
@@ -69,17 +77,17 @@ const setImage = (image: string) => {
       />
       <Input
         v-model="product.price"
-        type="Number"
+        type="number"
         :placeHolder="globalTranslate('Products.create.placeholders[2]')"
       />
       <Input
         v-model="product.tva"
-        type="Number"
+        type="number"
         :placeHolder="globalTranslate('Products.create.placeholders[3]')"
       />
       <Input
         v-model="product.quantity"
-        type="Number"
+        type="number"
         :placeHolder="globalTranslate('Products.create.placeholders[4]')"
       />
       <Input

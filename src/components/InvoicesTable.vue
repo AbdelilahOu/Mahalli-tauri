@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { globalTranslate } from "@/utils/globalTranslate";
-import { ref } from "vue";
-import { store } from "@/store";
-import UiIcon from "./ui/UiIcon.vue";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox/index";
 import type { invoiceT } from "@/types";
+import UiIcon from "./ui/UiIcon.vue";
+import { store } from "@/store";
+import { ref } from "vue";
 
 defineProps<{ invoices: invoiceT[] }>();
 
-const checkedInvoices = ref<number[]>([]);
+const checkedInvoices = ref<string[]>([]);
 
-const checkThisInvoice = (IsIncluded: boolean, id: number) => {
+const checkThisInvoice = (IsIncluded: boolean, id: string) => {
   IsIncluded
     ? checkedInvoices.value.push(id)
     : checkedInvoices.value.splice(checkedInvoices.value.indexOf(id), 1);

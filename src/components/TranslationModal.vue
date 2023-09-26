@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { store } from "@/store";
-import { Button } from "./ui/button";
 import UiIcon from "./ui/UiIcon.vue";
+import { Button } from "./ui/button";
+import { useI18n } from "vue-i18n";
+import { store } from "@/store";
+import { computed } from "vue";
 
 const availableLocales = computed(() => store.getters.getLocales());
 const i18n = useI18n();
