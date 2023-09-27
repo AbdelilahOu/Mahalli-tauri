@@ -48,11 +48,11 @@ const importDatabase = async () => {
       <div class="w-full h-10 grid grid-cols-2 items-center">
         <span class="font-semibold text-lg">Use fake data</span>
         <Button variant="default" @click="importDatabase">
-          <UiIcon
+          <!-- <UiIcon
             class="cursor-default hover:bg-transparent mr-2"
             name="export"
-          />
-          Export
+          /> -->
+          Use
         </Button>
       </div>
     </div>

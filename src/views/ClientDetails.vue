@@ -127,7 +127,7 @@ onBeforeMount(async () => {
           @updateItem="toggleThisClient(client, 'ClientUpdate')"
           :item="client"
         />
-        <div class="w-full flex items-end xl:items-start h-full">
+        <div class="w-full flex items-end xl:items-start h-fit">
           <ChartLine
             id="sjdlsdksd"
             :chartData="{
