@@ -18,7 +18,7 @@ withDefaults(defineProps<Props>(), {
   <component
     @click="onClick"
     :is="as"
-    :class="cn(buttonVariants({ variant, size }), $attrs.class ?? '')"
+    :class="cn(buttonVariants({ variant, size }), $attrs.class as String ?? '')"
   >
     <slot />
   </component>
