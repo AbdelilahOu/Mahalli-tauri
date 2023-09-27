@@ -3,7 +3,7 @@ use serde::Serialize;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ProductRecord {
-    id: i64,
+    pub id: String,
     pub name: String,
     pub price: f32,
     pub tva: f32,
@@ -13,7 +13,7 @@ pub struct ProductRecord {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ClientRecord {
-    id: i64,
+    pub id: String,
     pub fullname: String,
     pub phone: String,
     pub email: String,
@@ -23,7 +23,7 @@ pub struct ClientRecord {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct SellerRecord {
-    id: i64,
+    pub id: String,
     pub name: String,
     pub phone: String,
     pub email: String,
@@ -33,44 +33,44 @@ pub struct SellerRecord {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct InvoiceRecord {
-    id: i64,
+    pub id: String,
     pub status: String,
     pub created_at: String,
-    pub client_id: i32,
+    pub client_id: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct InvoiceItemRecord {
-    id: i32,
-    pub product_id: i32,
-    pub invoice_id: i32,
+    pub id: String,
+    pub product_id: String,
+    pub invoice_id: String,
     pub quantity: i64,
-    pub inventory_id: i32,
+    pub inventory_id: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct OrderRecord {
-    id: i32,
+    pub id: String,
     pub status: String,
     pub created_at: String,
-    pub seller_id: i32,
+    pub seller_id: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct OrderItemRecord {
-    id: i32,
-    pub product_id: i32,
+    pub id: String,
+    pub product_id: String,
     pub price: Option<f32>,
-    pub order_id: i32,
+    pub order_id: String,
     pub quantity: i64,
-    pub inventory_id: i32,
+    pub inventory_id: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct InventoryMouvementRecord {
-    id: i32,
+    pub id: String,
     pub date: String,
     pub model: String,
     pub quantity: i64,
-    pub product_id: i32,
+    pub product_id: String,
 }

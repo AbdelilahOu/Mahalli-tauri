@@ -6,11 +6,11 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  IsStyled: {
+  isStyled: {
     type: Boolean,
     default: false,
   },
-  Class: {
+  extraStyle: {
     type: String,
   },
 });
@@ -22,8 +22,9 @@ const icon = defineAsyncComponent({
 <template>
   <component
     :class="[
-      Class ?? 'w-8 h-8 minh-[2rem] max-h-8 p-1',
-      IsStyled && 'cursor-pointer rounded-md hover:bg-gray-100',
+      extraStyle,
+      'w-8 h-8 min-h-[2rem] max-h-8 p-1',
+      isStyled && 'cursor-pointer rounded-md hover:bg-gray-100',
     ]"
     :is="icon"
   />

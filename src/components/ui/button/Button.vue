@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { buttonVariants } from ".";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/shadcn";
 
 interface Props {
   variant?: NonNullable<Parameters<typeof buttonVariants>[0]>["variant"];
   size?: NonNullable<Parameters<typeof buttonVariants>[0]>["size"];
   as?: string;
-  onClick: (args: any) => void;
+  onClick?: (args: any) => void;
 }
 
 withDefaults(defineProps<Props>(), {

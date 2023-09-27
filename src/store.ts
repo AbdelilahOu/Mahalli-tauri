@@ -1,4 +1,4 @@
-import type { clientT, invoiceT, orderT, productT, sellerT } from "@/types";
+import type { storeState, Args, locale } from "@/types";
 import { reactive } from "vue";
 
 const locale = localStorage.getItem("locale");
@@ -9,7 +9,7 @@ const currentLocale = locale
       text: "English",
     };
 
-const defaultStore = {
+const DEFAULT_STORE = {
   // related to modals
   name: "",
   show: false,
@@ -35,11 +35,11 @@ const defaultStore = {
     },
   ],
   // auth,
-  user: {},
+  user: null,
 };
 
 export const store = {
-  state: reactive<storeState>(defaultStore),
+  state: reactive<storeState>(DEFAULT_STORE),
   getters: {
     getModalVisibility: () => store.state.show,
     getSelectedRow: <T>() => store.state.row as T,
@@ -58,66 +58,3 @@ export const store = {
     },
   },
 };
-
-interface args1 {
-  key: "show";
-  value: boolean;
-}
-
-interface args2 {
-  key: "name";
-  value:
-    | "TranslationModal"
-    | "InventoryCreate"
-    | "ProductUpdate"
-    | "ProductDelete"
-    | "ProductCreate"
-    | "InvoiceCreate"
-    | "InvoiceUpdate"
-    | "InvoiceDelete"
-    | "SellerCreate"
-    | "SellerDelete"
-    | "SellerUpdate"
-    | "ClientDelete"
-    | "ClientUpdate"
-    | "ClientCreate"
-    | "OrderCreate"
-    | "OrderDelete"
-    | "OrderUpdate"
-    | "CsvUploader"
-    | "Sittings"
-    | string;
-}
-
-interface args4 {
-  key: "currentLocale";
-  value: locale;
-}
-
-interface args5 {
-  key: "user";
-  value: any;
-}
-
-interface args3 {
-  key: "row";
-  value: clientT | productT | sellerT | orderT | invoiceT | null;
-}
-
-type Args = args1 | args2 | args3 | args4 | args5;
-
-interface storeState
-  extends Record<
-      "row",
-      clientT | productT | sellerT | orderT | invoiceT | null
-    >,
-    Record<"availableLocals", locale[]>,
-    Record<"currentLocale", locale>,
-    Record<"show", boolean>,
-    Record<"name", string>,
-    Record<"user", any> {}
-
-interface locale {
-  key: string;
-  text: string;
-}

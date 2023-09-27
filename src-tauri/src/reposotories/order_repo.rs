@@ -2,7 +2,7 @@ use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
 use crate::models::{NewOrder, Order, OrderItem, Product, Seller, UpdateOrder};
-use crate::schema::orders::{seller_id, status};
+use crate::schema::orders::{id, seller_id, status};
 use crate::schema::{order_items, orders, products, sellers};
 
 pub fn get_orders(page: i32, connection: &mut SqliteConnection) -> Value {
@@ -11,7 +11,7 @@ pub fn get_orders(page: i32, connection: &mut SqliteConnection) -> Value {
     let result = orders::table
         .inner_join(sellers::table.on(orders::seller_id.eq(sellers::id)))
         .select((orders::all_columns, sellers::all_columns))
-        .order(orders::id.desc())
+        .order(orders::created_at.desc())
         .limit(17)
         .offset(offset as i64)
         .load::<(Order, Seller)>(connection)
@@ -30,7 +30,7 @@ pub fn get_orders(page: i32, connection: &mut SqliteConnection) -> Value {
                 let order_items: Vec<(OrderItem, Product)> = order_items::table
                     .inner_join(products::table.on(order_items::product_id.eq(products::id)))
                     .select((order_items::all_columns, products::all_columns))
-                    .filter(order_items::order_id.eq(order.id))
+                    .filter(order_items::order_id.eq(order.id.clone()))
                     .load::<(OrderItem, Product)>(connection)
                     .expect("Error fetching order items with products");
 
@@ -67,7 +67,7 @@ pub fn get_orders(page: i32, connection: &mut SqliteConnection) -> Value {
     })
 }
 
-pub fn get_order(o_id: i32, connection: &mut SqliteConnection) -> Value {
+pub fn get_order(o_id: String, connection: &mut SqliteConnection) -> Value {
     let result = orders::table
         .inner_join(sellers::table.on(orders::seller_id.eq(sellers::id)))
         .filter(orders::id.eq(o_id))
@@ -80,7 +80,7 @@ pub fn get_order(o_id: i32, connection: &mut SqliteConnection) -> Value {
     let order_items: Vec<(OrderItem, Product)> = order_items::table
         .inner_join(products::table.on(order_items::product_id.eq(products::id)))
         .select((order_items::all_columns, products::all_columns))
-        .filter(order_items::order_id.eq(order.id))
+        .filter(order_items::order_id.eq(order.id.clone()))
         .load::<(OrderItem, Product)>(connection)
         .expect("Error fetching order items with products");
 
@@ -108,22 +108,20 @@ pub fn get_order(o_id: i32, connection: &mut SqliteConnection) -> Value {
     })
 }
 
-pub fn insert_order(new_o: NewOrder, connection: &mut SqliteConnection) -> i32 {
+pub fn insert_order(new_o: NewOrder, connection: &mut SqliteConnection) -> String {
     diesel::insert_into(orders::dsl::orders)
-        .values((status.eq(new_o.status), seller_id.eq(new_o.seller_id)))
+        .values((
+            id.eq(new_o.id.clone()),
+            status.eq(new_o.status),
+            seller_id.eq(new_o.seller_id),
+        ))
         .execute(connection)
         .expect("Error adding order");
 
-    let result = orders::dsl::orders
-        .order_by(orders::id.desc())
-        .select(orders::id)
-        .first::<i32>(connection)
-        .expect("error get all orders");
-
-    result
+    new_o.id
 }
 
-pub fn delete_order(o_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn delete_order(o_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::delete(orders::dsl::orders.find(&o_id))
         .execute(connection)
         .expect("Error deleting order");
@@ -131,7 +129,11 @@ pub fn delete_order(o_id: i32, connection: &mut SqliteConnection) -> usize {
     result
 }
 
-pub fn update_order(o_update: UpdateOrder, o_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn update_order(
+    o_update: UpdateOrder,
+    o_id: String,
+    connection: &mut SqliteConnection,
+) -> usize {
     let result = diesel::update(orders::dsl::orders.find(&o_id))
         .set(orders::status.eq(o_update.status))
         .execute(connection)
