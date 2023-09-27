@@ -9,8 +9,9 @@ import ChartHolder from "@/components/ChartHolder.vue";
 import { generateColor } from "@/utils/generateColor";
 import ChartBar from "@/components/ChartBar.vue";
 import { invoke } from "@tauri-apps/api";
+
 const InsOuts = reactive({
-  keys: ["IN", "OUT"] as const,
+  keys: [] as { [key: string]: any; data: number[] }[],
   months: [] as string[],
   data: {} as FilteredInventoryData,
 });
@@ -62,6 +63,19 @@ onBeforeMount(async () => {
   const InOutStats = await getInventoryMouvementStats();
   InsOuts.months = InOutStats.months.reverse();
   InsOuts.data = InOutStats.result;
+  InsOuts.keys = ["IN", "OUT"].map((model, index) => {
+    const color = generateColor();
+    return {
+      label: globalTranslate(`Stats.Labels[${index}]`),
+      backgroundColor: color,
+      borderColor: color.replace("0.2", "0.5"),
+      data: InsOuts.months.map(
+        // @ts-ignore
+        (month) => InsOuts.data[month][model] ?? 0
+      ),
+      borderWidth: 2,
+    };
+  });
 
   const TopClients = await getBestThree();
   const TopSellers = await getBestThree(false);
@@ -84,18 +98,7 @@ onBeforeMount(async () => {
               id="inventory-mouvements-for-past-three-months"
               :chartData="{
                 labels: InsOuts.months,
-                datasets: InsOuts.keys.map((model, index) => {
-                  const color = generateColor();
-                  return {
-                    label: globalTranslate(`Stats.Labels[${index}]`),
-                    backgroundColor: color,
-                    borderColor: color.replace('0.2', '0.5'),
-                    data: InsOuts.months.map(
-                      (month) => InsOuts.data[month][model] ?? 0
-                    ),
-                    borderWidth: 2,
-                  };
-                }),
+                datasets: InsOuts.keys,
               }"
               :chartOptions="CHART_OPTIONS"
             />
