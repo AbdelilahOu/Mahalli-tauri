@@ -7,7 +7,7 @@ import { cn } from "@/utils/shadcn";
     :class="
       cn(
         'ml-auto text-xs tracking-widest text-muted-foreground',
-        $attrs.class ?? ''
+        $attrs.class as String ?? ''
       )
     "
   >

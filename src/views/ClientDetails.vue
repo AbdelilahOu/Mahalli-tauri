@@ -17,7 +17,7 @@ const { id } = useRoute().params;
 const client = ref<clientT | null>(null);
 
 const ProductsStats = reactive({
-  products: [] as string[],
+  products: [] as { [key: string]: any; data: number[] }[],
   dates: [] as string[],
   data: {} as Record<string, number[]>,
 });
@@ -27,6 +27,14 @@ const DailyStats = reactive({
   keys: [] as string[],
   color: generateColor(),
 });
+
+const getGradientBackground = (ctx: any) => {
+  const canvas = ctx.chart.ctx;
+  const gradient = canvas.createLinearGradient(0, 0, 0, 160);
+  gradient.addColorStop(0, DailyStats.color.replace("0.2", "0.4"));
+  gradient.addColorStop(1, DailyStats.color.replace("0.2", "0.07"));
+  return gradient;
+};
 
 const getProductPerMonth = async (id: string) => {
   const data: any[] = await invoke("get_c_product_month", { id });
@@ -99,7 +107,16 @@ onBeforeMount(async () => {
 
   ProductsStats.data = productStats.data;
   ProductsStats.dates = productStats.dates;
-  ProductsStats.products = productStats.products;
+  ProductsStats.products = productStats.products.map((product) => {
+    const color = generateColor();
+    return {
+      label: product,
+      backgroundColor: color,
+      borderColor: color.replace("0.2", "0.5"),
+      data: ProductsStats.data[product],
+      borderWidth: 2,
+    };
+  });
 });
 
 onBeforeMount(async () => {
@@ -135,19 +152,7 @@ onBeforeMount(async () => {
               datasets: [
                 {
                   label: 'daily expenses',
-                  backgroundColor: (ctx:any) => {
-                    const canvas = ctx.chart.ctx;
-                    const gradient = canvas.createLinearGradient(0, 0, 0, 160);
-                    gradient.addColorStop(
-                      0,
-                      DailyStats.color.replace('0.2', '0.4')
-                    );
-                    gradient.addColorStop(
-                      1,
-                      DailyStats.color.replace('0.2', '0.07')
-                    );
-                    return gradient;
-                  },
+                  backgroundColor: getGradientBackground,
                   borderColor: DailyStats.color.replace('0.2', '0.5'),
                   data: DailyStats.data,
                   borderWidth: 2,
@@ -169,16 +174,7 @@ onBeforeMount(async () => {
               id="inventory-mouvements-for-past-three-months"
               :chartData="{
                 labels: ProductsStats.dates,
-                datasets: ProductsStats.products.map((product) => {
-                  const color = generateColor();
-                  return {
-                    label: product,
-                    backgroundColor: color,
-                    borderColor: color.replace('0.2', '0.5'),
-                    data: ProductsStats.data[product],
-                    borderWidth: 2,
-                  };
-                }),
+                datasets: ProductsStats.products,
               }"
               :chartOptions="CHART_OPTIONS"
             />

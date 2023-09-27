@@ -16,6 +16,7 @@ export const groupBy: groupBy = (list, by) => {
     }
   }
 
+  //@ts-ignore
   return Object.fromEntries(result);
 };
 
@@ -25,7 +26,7 @@ export const keys: keys = (obj) => {
   if (typeof obj !== "object") return [];
 
   let result = new Set<string>();
-
+  //@ts-ignore
   for (const [key] of Object.entries(obj)) {
     result.add(key);
   }
@@ -40,6 +41,7 @@ export const values: values = (obj) => {
 
   let result = [];
 
+  //@ts-ignore
   for (const [_, value] of Object.entries(obj)) {
     result.push(value);
   }
@@ -54,9 +56,11 @@ export const mapValues: mapValues = (obj, callback) => {
 
   let result = new Map<string, any>();
 
+  //@ts-ignore
   for (const [key, value] of Object.entries(obj)) {
     result.set(key, callback(value));
   }
 
+  //@ts-ignore
   return Object.fromEntries(result);
 };
