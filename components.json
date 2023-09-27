@@ -10,6 +10,6 @@
   "framework": "vite",
   "aliases": {
     "components": "@/components",
-    "utils": "@/lib/utils"
+    "utils": "@/utils/shadcn"
   }
 }

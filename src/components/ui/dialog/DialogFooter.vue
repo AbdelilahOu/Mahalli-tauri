@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils'
+import { cn } from "@/utils/shadcn";
 
 interface DialogFooterProps {
-  class?: string
+  class?: string;
 }
 
-const props = defineProps<DialogFooterProps>()
+const props = defineProps<DialogFooterProps>();
 </script>
 
 <template>
@@ -13,7 +13,7 @@ const props = defineProps<DialogFooterProps>()
     :class="
       cn(
         'flex flex-col space-y-2 sm:space-y-0 mt-1.5 sm:flex-row sm:justify-end sm:space-x-2',
-        props.class,
+        props.class
       )
     "
   >

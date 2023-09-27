@@ -6,6 +6,7 @@ use crate::models::NewInventoryMvm;
 use crate::models::Product;
 use crate::models::UpdateInventoryMvm;
 use crate::schema::inventory_mouvements;
+use crate::schema::inventory_mouvements::id;
 use crate::schema::inventory_mouvements::model;
 use crate::schema::inventory_mouvements::product_id;
 use crate::schema::inventory_mouvements::quantity;
@@ -19,7 +20,7 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Value {
     let result = inventory_mouvements::table
         .inner_join(products::table.on(inventory_mouvements::product_id.eq(products::id)))
         .select((inventory_mouvements::all_columns, products::all_columns))
-        .order(inventory_mouvements::id.desc())
+        .order(inventory_mouvements::created_at.desc())
         .limit(17)
         .offset(offset as i64)
         .load::<(InventoryMvm, Product)>(connection)
@@ -36,20 +37,22 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Value {
             .into_iter()
             // .map(|(mvm, product, oi, ii)| {
             .map(|(mvm, product)| {
-                let invoice_items: Vec<i32> = invoice_items::dsl::invoice_items
-                    .filter(invoice_items::inventory_id.eq(mvm.id))
-                    .select(invoice_items::invoice_id)
-                    .load::<i32>(connection)
+                let invoice_items: Vec<(String,i64)> = invoice_items::dsl::invoice_items
+                    .filter(invoice_items::inventory_id.eq(mvm.id.clone()))
+                    .select((invoice_items::invoice_id, invoice_items::quantity))
+                    .load::<(String,i64)>(connection)
                     .expect("Error fetching all invoices");
 
-                let order_items: Vec<(i32, Option<f32>)> = order_items::dsl::order_items
-                    .filter(order_items::inventory_id.eq(mvm.id))
+                let order_items: Vec<(String, Option<f32>)> = order_items::dsl::order_items
+                    .filter(order_items::inventory_id.eq(mvm.id.clone()))
                     .select((order_items::order_id, order_items::price))
-                    .load::<(i32, Option<f32>)>(connection)
+                    .load::<(String, Option<f32>)>(connection)
                     .expect("Error fetching all orders");
 
-                let ii = invoice_items.first().unwrap_or(&0);
-                let oi = order_items.first().unwrap_or(&(0,Some(0.0)));
+
+
+                let ii = invoice_items.first().clone();
+                let oi = order_items.first().clone();
 
                 json!({
                     "id": mvm.id,
@@ -57,11 +60,11 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Value {
                     "model": mvm.model,
                     "quantity": mvm.quantity,
                     "orderItem": json!({
-                        "order_id": oi.0,
-                        "price": oi.1
+                        "order_id": if oi.is_some() { oi.unwrap().clone().0 } else { String::from("").clone() },
+                        "price": if oi.is_some() { oi.unwrap().1.unwrap_or(0.0) } else { 0.0 }
                     }),
                     "invoiceItem": json!({
-                        "invoice_id": ii,
+                        "invoice_id": if ii.is_some() { ii.unwrap().0.clone() } else { let s = String::from(""); s },
                     }),
                     "product_id": mvm.product_id,
                     "product": json!({
@@ -75,9 +78,10 @@ pub fn get_inventory(page: i32, connection: &mut SqliteConnection) -> Value {
     })
 }
 
-pub fn insert_inventory_mvm(new_im: NewInventoryMvm, connection: &mut SqliteConnection) -> i32 {
+pub fn insert_inventory_mvm(new_im: NewInventoryMvm, connection: &mut SqliteConnection) -> String {
     diesel::insert_into(inventory_mouvements::dsl::inventory_mouvements)
         .values((
+            id.eq(new_im.id.clone()),
             model.eq(new_im.model),
             quantity.eq(new_im.quantity),
             product_id.eq(new_im.product_id),
@@ -85,16 +89,10 @@ pub fn insert_inventory_mvm(new_im: NewInventoryMvm, connection: &mut SqliteConn
         .execute(connection)
         .expect("Error adding inventory");
 
-    let result = inventory_mouvements::dsl::inventory_mouvements
-        .order_by(inventory_mouvements::id.desc())
-        .select(inventory_mouvements::id)
-        .first::<i32>(connection)
-        .expect("error get all inventory_mouvements");
-
-    result
+    new_im.id
 }
 
-pub fn delete_inventory_mvm(mvm_id: i32, connection: &mut SqliteConnection) -> usize {
+pub fn delete_inventory_mvm(mvm_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::delete(inventory_mouvements::dsl::inventory_mouvements.find(&mvm_id))
         .execute(connection)
         .expect("Error deleting inventory");
@@ -104,7 +102,7 @@ pub fn delete_inventory_mvm(mvm_id: i32, connection: &mut SqliteConnection) -> u
 
 pub fn update_inventory_mvm(
     mvm_update: UpdateInventoryMvm,
-    mvm_id: i32,
+    mvm_id: String,
     connection: &mut SqliteConnection,
 ) -> usize {
     let result = diesel::update(inventory_mouvements::dsl::inventory_mouvements.find(&mvm_id))

@@ -2,7 +2,7 @@
 import type { CheckboxRootEmits, CheckboxRootProps } from "radix-vue";
 import { CheckboxIndicator, CheckboxRoot } from "radix-vue";
 import { Check } from "lucide-vue-next";
-import { cn, useEmitAsProps } from "@/lib/utils";
+import { cn, useEmitAsProps } from "@/utils/shadcn";
 
 const props = defineProps<CheckboxRootProps>();
 const emits = defineEmits<CheckboxRootEmits>();
