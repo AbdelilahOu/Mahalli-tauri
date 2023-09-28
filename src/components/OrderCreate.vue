@@ -13,8 +13,10 @@ import { Input } from "./ui/input";
 import { store } from "@/store";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const order_items = ref<newOrdersItemT[]>(ORDER_ITEM_CREATE);
-const newOrder = reactive<newOrdersT>(ORDER_CREATE);
+const order_items = ref<newOrdersItemT[]>(
+  ORDER_ITEM_CREATE.map((a) => Object.assign({}, a))
+);
+const newOrder = reactive<newOrdersT>(Object.assign({}, ORDER_CREATE));
 const sellers = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
 const isFlash = ref<boolean>(false);
