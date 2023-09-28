@@ -14,7 +14,7 @@ import { store } from "@/store";
 
 const isFlash = ref<boolean>(false);
 
-const product = reactive<newProductT>(PRODUCT_CREATE);
+const product = reactive<newProductT>(Object.assign({}, PRODUCT_CREATE));
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
