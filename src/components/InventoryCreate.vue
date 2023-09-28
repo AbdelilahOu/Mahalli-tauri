@@ -12,7 +12,9 @@ import { store } from "@/store";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const inventoryMvm = reactive<newInventoryMvmT>(INVENTORY_CREATE);
+const inventoryMvm = reactive<newInventoryMvmT>(
+  Object.assign({}, INVENTORY_CREATE)
+);
 
 const products = ref<{ label: string; value: string }[]>([]);
 

@@ -15,7 +15,7 @@ import { ref } from "vue";
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const isFlash = ref<boolean>(false);
 
-const seller = ref<newSellerT>(SELLER_CREATE);
+const seller = ref<newSellerT>(Object.assign({}, SELLER_CREATE));
 
 const createNewSeller = async () => {
   isFlash.value = true;
