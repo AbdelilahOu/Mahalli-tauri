@@ -14,7 +14,7 @@ import { store } from "@/store";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const client = reactive<newClientT>(CLIENT_CREATE);
+const client = reactive<newClientT>(Object.assign({}, CLIENT_CREATE));
 const isFlash = ref<boolean>(false);
 
 const createNewClient = async () => {

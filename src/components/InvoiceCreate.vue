@@ -16,8 +16,10 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
-const newInvoice = reactive<newInvoiceT>(INVOICE_CREATE);
-const invoice_items = ref<newInvoiceItemT[]>(INVOICE_ITEM_CREATE);
+const newInvoice = reactive<newInvoiceT>(Object.assign({}, INVOICE_CREATE));
+const invoice_items = ref<newInvoiceItemT[]>(
+  INVOICE_ITEM_CREATE.map((a) => Object.assign({}, a))
+);
 const isFlash = ref<boolean>(false);
 
 onBeforeMount(async () => {
