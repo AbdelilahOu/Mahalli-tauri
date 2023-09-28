@@ -60,13 +60,17 @@ async function getBestThree(isClients = true) {
 }
 
 onBeforeMount(async () => {
+  const labels = [
+    globalTranslate(`Stats.Labels[0]`),
+    globalTranslate(`Stats.Labels[1]`),
+  ];
   const InOutStats = await getInventoryMouvementStats();
   InsOuts.months = InOutStats.months.reverse();
   InsOuts.data = InOutStats.result;
   InsOuts.keys = ["IN", "OUT"].map((model, index) => {
     const color = generateColor();
     return {
-      label: globalTranslate(`Stats.Labels[${index}]`),
+      label: labels[index],
       backgroundColor: color,
       borderColor: color.replace("0.2", "0.5"),
       data: InsOuts.months.map(
