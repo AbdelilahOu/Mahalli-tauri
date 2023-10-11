@@ -28,6 +28,8 @@ onBeforeMount(async () => {
     invoke<{ label: string; value: string }[]>("get_all_products"),
   ]);
 
+  console.log(res);
+
   if (res[0].status === "fulfilled") sellers.value = res[0].value;
   if (res[1].status === "fulfilled") products.value = res[1].value;
 });
