@@ -179,7 +179,7 @@ const createNewOrders = async () => {
                       <span
                         class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
                       >
-                        Item
+                        DH
                       </span>
                     </template>
                   </Input>
