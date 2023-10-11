@@ -2,57 +2,105 @@
 import { computed, inject, type Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import {
+  Pagination,
+  PaginationEllipsis,
+  PaginationFirst,
+  PaginationLast,
+  PaginationList,
+  PaginationListItem,
+  PaginationNext,
+  PaginationPrev,
+} from "@/components/ui/pagination";
+
+import { Button } from "./button";
+
 const router = useRouter();
 const route = useRoute();
-const page = computed(() => Number(router.currentRoute.value.query.page));
+const defaultPage = computed(() =>
+  Number(router.currentRoute.value.query.page)
+);
 
 const rowsCount = inject<Ref<number>>("count");
 
-const goBack = () => {
-  if (page.value > 1) {
+const goBackward = () => {
+  if (defaultPage.value > 1) {
     router.push({
       path: route.path,
-      query: { page: page.value - 1 },
+      query: { page: defaultPage.value - 1 },
     });
   }
 };
 
 const goForward = () => {
-  if (page.value < Math.ceil((rowsCount?.value ?? 1) / 17)) {
+  if (defaultPage.value < Math.ceil((rowsCount?.value ?? 1) / 17)) {
     router.push({
       path: route.path,
-      query: { page: page.value + 1 },
+      query: { page: defaultPage.value + 1 },
+    });
+  }
+};
+
+const goToPage = (page: number) => {
+  console.log(page);
+  router.push({
+    path: route.path,
+    query: { page },
+  });
+};
+
+const goToFirst = () => {
+  router.push({
+    path: route.path,
+    query: { page: 1 },
+  });
+};
+
+const goToLast = () => {
+  if (rowsCount?.value) {
+    router.push({
+      path: route.path,
+      query: { page: Math.ceil(rowsCount?.value / 17) },
     });
   }
 };
 </script>
 
 <template>
-  <div class="h-8 w-full mt-2 flex items-center justify-center">
-    <div
-      class="h-fit w-fit flex items-center text-lg bg-slate-200 px-4 rounded-[4px] font-semibold text-gray-800 gap-4"
+  <div class="w-full flex items-center justify-center pt-1">
+    <Pagination
+      v-slot="{ page }"
+      :total="rowsCount"
+      :sibling-count="1"
+      show-edges
+      :default-page="defaultPage"
+      :items-per-page="17"
     >
-      <span
-        class="rounded-full flex items-center justify-center cursor-pointer"
-        @click="goBack"
-      >
-        -
-      </span>
-      <div class="flex w-full h-full items-center">
-        <span class="px-1 text-base text-gray-400">
-          {{ page > 1 ? page - 1 : page == 1 ? "" : page }}
-        </span>
-        <span class="px-1">{{ page }}</span>
-        <span class="px-1 text-base text-gray-400">
-          {{ page === Math.ceil((rowsCount ?? 1) / 17) ? "" : page + 1 }}
-        </span>
-      </div>
-      <span
-        @click="goForward()"
-        class="rounded-full flex items-center justify-center cursor-pointer"
-      >
-        +
-      </span>
-    </div>
+      <PaginationList v-slot="{ items }" class="flex items-center gap-1">
+        <PaginationFirst @click="goToFirst" />
+        <PaginationPrev @click="goBackward" />
+
+        <template v-for="(item, index) in items">
+          <PaginationListItem
+            v-if="item.type === 'page'"
+            :key="index"
+            :value="item.value"
+            as-child
+          >
+            <Button
+              @click="goToPage(item.value)"
+              class="w-10 h-10 p-0"
+              :variant="item.value === page ? 'default' : 'outline'"
+            >
+              {{ item.value }}
+            </Button>
+          </PaginationListItem>
+          <PaginationEllipsis v-else :key="item.type" :index="index" />
+        </template>
+
+        <PaginationNext @click="goForward" />
+        <PaginationLast @click="goToLast" />
+      </PaginationList>
+    </Pagination>
   </div>
 </template>

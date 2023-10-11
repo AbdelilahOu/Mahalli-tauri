@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { PaginationPrev, type PaginationPrevProps, useForwardProps } from 'radix-vue'
-import { ChevronLeft } from 'lucide-vue-next'
 import {
-  Button,
-} from '@/components/ui/button'
+  PaginationPrev,
+  type PaginationPrevProps,
+  useForwardProps,
+} from "radix-vue";
+import { ChevronLeft } from "lucide-vue-next";
+import { Button } from "@/components/ui/button";
 
 const props = withDefaults(defineProps<PaginationPrevProps>(), {
   asChild: true,
-})
-const forwarded = useForwardProps(props)
+});
+const forwarded = useForwardProps(props);
 </script>
 
 <template>
