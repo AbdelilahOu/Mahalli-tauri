@@ -55,7 +55,7 @@ async function getSellers(page: number = 1) {
     const res = await invoke<withCount<sellerT[]>>("get_sellers", {
       page,
     });
-    if (res.data.length) {
+    if (res?.data) {
       sellers.value = res.data;
       totalRows.value = res.count;
       return;

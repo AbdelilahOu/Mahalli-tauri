@@ -205,7 +205,7 @@ const print = () => window.print();
                 </td>
               </tr>
               <tr>
-                <td v-for="index in 7" :key="index"></td>
+                <td v-for="index in 6" :key="index"></td>
                 <td class="p-2 font-semibold">
                   {{
                     (
@@ -235,7 +235,7 @@ const print = () => window.print();
                 </td>
               </tr>
               <tr>
-                <td v-for="index in 8" :key="index"></td>
+                <td v-for="index in 7" :key="index"></td>
                 <td class="p-2 font-semibold">
                   {{
                     (
@@ -260,7 +260,7 @@ const print = () => window.print();
             </tbody>
           </table>
           <div class="w-full flex items-center justify-center">
-            <div class="w-1/3">
+            <div class="w-1/3 flex justify-center">
               <Button @click="print">
                 {{ globalTranslate("InvoiceDetails.details.button") }}
               </Button>

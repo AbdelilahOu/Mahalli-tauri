@@ -14,7 +14,6 @@ onBeforeMount(async () => {
     const res = await invoke<orderDetailsT>("get_order", {
       id,
     });
-    console.log(res);
     if (res?.id) {
       order.value = res;
     }
@@ -160,7 +159,7 @@ const print = () => window.print();
                   <div class="font-semibold text-left">
                     {{
                       globalTranslate(
-                        `OrdersDetails.details.items.fields[${index}]`
+                        `OrdersDetails.details.items.fields[${index - 1}]`
                       )
                     }}
                   </div>
@@ -238,7 +237,7 @@ const print = () => window.print();
             </tbody>
           </table>
           <div class="w-full flex items-center justify-center">
-            <div class="w-1/3">
+            <div class="w-1/3 flex items-center justify-center">
               <Button @click="print">
                 {{ globalTranslate("OrdersDetails.details.button") }}
               </Button>
