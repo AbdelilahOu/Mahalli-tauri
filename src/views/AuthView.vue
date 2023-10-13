@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import data from "@/animations/66291-meditative-business-man.json";
+// import data from "@/animations/66291-meditative-business-man.json";
 import { onBeforeMount, ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { login } from "@/utils/Oauth";
-import { Vue3Lottie } from "vue3-lottie";
+// import { Vue3Lottie } from "vue3-lottie";
 
 const checkForAuth = ref(
   useRouter().currentRoute.value.query.checkAuth === "true"
@@ -54,12 +54,12 @@ const logIn = () => {
         class="w-full h-full grid gap-4 grid-rows-1 transition-all transform duration-200"
       >
         <div class="w-full h-full">
-          <Vue3Lottie
+          <!-- <Vue3Lottie
             class="fill-gray-100"
             height="100%"
             width="100%"
             :animationData="data"
-          />
+          /> -->
         </div>
         <div
           v-if="shouldLogIn"
