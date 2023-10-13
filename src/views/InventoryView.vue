@@ -51,7 +51,7 @@ async function getInventory(page: number = 1) {
       page,
     });
 
-    if (res?.data.length) {
+    if (res?.data) {
       inventoryMouvements.value = res.data;
       totalRows.value = res.count;
     }
