@@ -20,7 +20,7 @@ pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Value {
             products::price,
             products::tva,
             diesel::dsl::sql::<diesel::sql_types::BigInt>(
-                "COALESCE(SUM(inventory_mouvements.quantity), 0) AS quantity",
+                "COALESCE(SUM(CASE WHEN inventory_mouvements.model = 'IN' THEN inventory_mouvements.quantity WHEN inventory_mouvements.model = 'OUT' THEN -inventory_mouvements.quantity END), 0) AS quantity",
             ),
         ))
         .group_by(products::id)
