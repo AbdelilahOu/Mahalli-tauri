@@ -559,7 +559,7 @@ pub fn update_order(order: TUpdateOrder, id: String, state: tauri::State<AppStat
                 let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
                     NewInventoryMvm {
                         id: uuid::Uuid::new_v4().hyphenated().to_string(),
-                        model: String::from("OUT"),
+                        model: String::from("IN"),
                         quantity: item.quantity,
                         product_id: item.product_id.clone(),
                     },
