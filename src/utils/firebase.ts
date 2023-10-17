@@ -14,3 +14,4 @@
 // // Initialize Firebase
 // export const FireApp = initializeApp(firebaseConfig);
 // // const analytics = getAnalytics(app);
+export {};
