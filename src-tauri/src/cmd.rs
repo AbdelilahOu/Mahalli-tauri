@@ -1,6 +1,7 @@
 use dotenv::dotenv;
 use serde_json::Value;
 use std::env;
+use std::fs::remove_file;
 use std::path;
 use std::path::Path;
 use tauri::api::process::Command;
@@ -55,7 +56,7 @@ pub async fn export_db_csv() -> String {
         }
     }
     // run ggo binary that turns csv to excel
-    let (mut rx, mut child) = Command::new_sidecar("csv-to-excel-go")
+    let (mut rx, mut _child) = Command::new_sidecar("csv-to-excel-go")
         .expect("failed to create `my-sidecar` binary command")
         .args([documents_path
             .clone()
@@ -69,10 +70,22 @@ pub async fn export_db_csv() -> String {
         // read events such as stdout
         while let Some(event) = rx.recv().await {
             if let CommandEvent::Stdout(line) = event {
-                println!("message {:?}", Some(format!("'{}'", line)))
+                println!("message {:?}", line)
             }
         }
     });
+    // delete generated files
+    for table in table_names.iter_mut() {
+        // checking if we already have the csvs
+        let out_put_file = &output_path.join(format!("{}.csv", table));
+        let remove_result = remove_file(out_put_file);
+        match remove_result {
+            Ok(_) => {}
+            Err(_) => {
+                return String::from("Failed to remove file");
+            }
+        }
+    }
     // open file explorer to the path wehere the asssets are
     // using cmd for windows
 
