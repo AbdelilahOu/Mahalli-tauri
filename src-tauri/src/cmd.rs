@@ -2,7 +2,9 @@ use dotenv::dotenv;
 use serde_json::Value;
 use std::env;
 use std::path;
+use std::path::Path;
 use tauri::api::process::Command;
+use tauri::api::process::CommandEvent;
 
 use crate::csvparsing::export;
 use crate::csvparsing::import;
@@ -53,8 +55,13 @@ pub async fn export_db_csv() -> String {
         }
     }
     // run ggo binary that turns csv to excel
-    let (mut rx, mut child) = Command::new_sidecar("csv-to-excel-go.exe")
+    let (mut rx, mut child) = Command::new_sidecar("csv-to-excel-go")
         .expect("failed to create `my-sidecar` binary command")
+        .args([documents_path
+            .clone()
+            .into_os_string()
+            .into_string()
+            .unwrap()])
         .spawn()
         .expect("Failed to spawn sidecar");
 
@@ -62,11 +69,7 @@ pub async fn export_db_csv() -> String {
         // read events such as stdout
         while let Some(event) = rx.recv().await {
             if let CommandEvent::Stdout(line) = event {
-                window
-                    .emit("message", Some(format!("'{}'", line)))
-                    .expect("failed to emit event");
-                // write to stdin
-                child.write("message from Rust\n".as_bytes()).unwrap();
+                println!("message {:?}", Some(format!("'{}'", line)))
             }
         }
     });
