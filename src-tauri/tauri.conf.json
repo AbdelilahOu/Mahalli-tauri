@@ -17,8 +17,9 @@
         "sidecar": true,
         "scope": [
           {
-            "name": "./bin/csv-to-excel-go.exe",
-            "sidecar": true
+            "name": "./bin/csv-to-excel-go",
+            "sidecar": true,
+            "args": true
           }
         ]
       },
@@ -48,7 +49,7 @@
       "deb": {
         "depends": []
       },
-      "externalBin": ["./bin/csv-to-excel-go.exe"],
+      "externalBin": ["./bin/csv-to-excel-go"],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
