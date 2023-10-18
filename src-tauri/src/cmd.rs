@@ -52,7 +52,24 @@ pub async fn export_db_csv() -> String {
             export::table_to_csv(&database_url, &out_put_file.to_str().unwrap(), &table).await;
         }
     }
+    // run ggo binary that turns csv to excel
+    let (mut rx, mut child) = Command::new_sidecar("csv-to-excel-go.exe")
+        .expect("failed to create `my-sidecar` binary command")
+        .spawn()
+        .expect("Failed to spawn sidecar");
 
+    tauri::async_runtime::spawn(async move {
+        // read events such as stdout
+        while let Some(event) = rx.recv().await {
+            if let CommandEvent::Stdout(line) = event {
+                window
+                    .emit("message", Some(format!("'{}'", line)))
+                    .expect("failed to emit event");
+                // write to stdin
+                child.write("message from Rust\n".as_bytes()).unwrap();
+            }
+        }
+    });
     // open file explorer to the path wehere the asssets are
     // using cmd for windows
 

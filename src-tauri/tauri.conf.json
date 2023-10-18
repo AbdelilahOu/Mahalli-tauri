@@ -13,7 +13,14 @@
   "tauri": {
     "allowlist": {
       "shell": {
-        "open": true
+        "open": true,
+        "sidecar": true,
+        "scope": [
+          {
+            "name": "./bin/csv-to-excel-go.exe",
+            "sidecar": true
+          }
+        ]
       },
       "dialog": {
         "open": true
@@ -41,7 +48,7 @@
       "deb": {
         "depends": []
       },
-      "externalBin": [],
+      "externalBin": ["./bin/csv-to-excel-go.exe"],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -58,7 +65,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": ["./data/*", "./bin/csv-to-excel-go.exe"],
+      "resources": ["./data/*"],
       "shortDescription": "",
       "targets": "all",
       "windows": {
