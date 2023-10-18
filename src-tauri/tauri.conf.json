@@ -58,7 +58,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": ["./data/*"],
+      "resources": ["./data/*", "./bin/csv-to-excel-go.exe"],
       "shortDescription": "",
       "targets": "all",
       "windows": {
