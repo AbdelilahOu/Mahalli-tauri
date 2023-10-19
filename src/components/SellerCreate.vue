@@ -13,12 +13,12 @@ import { store } from "@/store";
 import { ref } from "vue";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const isFlash = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
 
 const seller = ref<newSellerT>(Object.assign({}, SELLER_CREATE));
 
 const createNewSeller = async () => {
-  isFlash.value = true;
+  isLoading.value = true;
   if (seller.value.name !== "") {
     try {
       let image: string = await saveFile(seller.value.image as string, "Image");
@@ -30,13 +30,12 @@ const createNewSeller = async () => {
     } catch (error) {
       console.log(error);
     } finally {
+      isLoading.value = false;
       store.setters.updateStore({ key: "show", value: false });
-      return;
     }
+    return;
   }
-  setTimeout(() => {
-    isFlash.value = false;
-  }, 1000);
+  isLoading.value = false;
 };
 
 const saveImage = (image: string) => {
@@ -83,7 +82,7 @@ const saveImage = (image: string) => {
       />
     </div>
     <div class="flex">
-      <Button class="w-full" @click="createNewSeller">
+      <Button :disabled="isLoading" class="w-full" @click="createNewSeller">
         {{ globalTranslate("Sellers.create.button") }}
       </Button>
     </div>

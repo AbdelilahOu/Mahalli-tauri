@@ -53,7 +53,7 @@ async function getProducts(page: number = 1) {
     const res = await invoke<withCount<productT[]>>("get_products", {
       page,
     });
-    if (res.data.length) {
+    if (res?.data) {
       products.value = res.data;
       totalRows.value = res.count;
       return;

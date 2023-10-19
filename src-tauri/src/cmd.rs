@@ -1,8 +1,10 @@
 use dotenv::dotenv;
 use serde_json::Value;
 use std::env;
+use std::fs::remove_file;
 use std::path;
 use tauri::api::process::Command;
+use tauri::api::process::CommandEvent;
 
 use crate::csvparsing::export;
 use crate::csvparsing::import;
@@ -52,10 +54,37 @@ pub async fn export_db_csv() -> String {
             export::table_to_csv(&database_url, &out_put_file.to_str().unwrap(), &table).await;
         }
     }
+    // run ggo binary that turns csv to excel
+    let (mut rx, mut _child) = Command::new_sidecar("csv-to-excel-go")
+        .expect("failed to create `my-sidecar` binary command")
+        .args([documents_path
+            .clone()
+            .into_os_string()
+            .into_string()
+            .unwrap()])
+        .spawn()
+        .expect("Failed to spawn sidecar");
 
+    // listen for stdout
+    while let Some(event) = rx.recv().await {
+        if let CommandEvent::Stdout(line) = event {
+            println!("message {:?}", line)
+        }
+    }
+    // delete generated files
+    for table in table_names.iter_mut() {
+        // checking if we already have the csvs
+        let out_put_file = &output_path.join(format!("{}.csv", table));
+        let remove_result = remove_file(out_put_file);
+        match remove_result {
+            Ok(_) => {}
+            Err(_) => {
+                return String::from("Failed to remove file");
+            }
+        }
+    }
     // open file explorer to the path wehere the asssets are
     // using cmd for windows
-
     #[cfg(target_os = "windows")]
     let (mut _rx, _child) = Command::new("explorer")
         .args([output_path.to_str().unwrap()])
@@ -559,7 +588,7 @@ pub fn update_order(order: TUpdateOrder, id: String, state: tauri::State<AppStat
                 let inserted_im_id = inventory_mvm_repo::insert_inventory_mvm(
                     NewInventoryMvm {
                         id: uuid::Uuid::new_v4().hyphenated().to_string(),
-                        model: String::from("OUT"),
+                        model: String::from("IN"),
                         quantity: item.quantity,
                         product_id: item.product_id.clone(),
                     },

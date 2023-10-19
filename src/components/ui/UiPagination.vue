@@ -14,54 +14,41 @@ import {
 } from "@/components/ui/pagination";
 
 import { Button } from "./button";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 
 const router = useRouter();
-const route = useRoute();
+
 const defaultPage = computed(() =>
   Number(router.currentRoute.value.query.page)
 );
+
+const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const rowsCount = inject<Ref<number>>("count");
 
 const goBackward = () => {
   if (defaultPage.value > 1) {
-    router.push({
-      path: route.path,
-      query: { page: defaultPage.value - 1 },
-    });
+    updateQueryParams({ page: defaultPage.value - 1 });
   }
 };
 
 const goForward = () => {
   if (defaultPage.value < Math.ceil((rowsCount?.value ?? 1) / 17)) {
-    router.push({
-      path: route.path,
-      query: { page: defaultPage.value + 1 },
-    });
+    updateQueryParams({ page: defaultPage.value + 1 });
   }
 };
 
 const goToPage = (page: number) => {
-  console.log(page);
-  router.push({
-    path: route.path,
-    query: { page },
-  });
+  updateQueryParams({ page });
 };
 
 const goToFirst = () => {
-  router.push({
-    path: route.path,
-    query: { page: 1 },
-  });
+  updateQueryParams({ page: 1 });
 };
 
 const goToLast = () => {
   if (rowsCount?.value) {
-    router.push({
-      path: route.path,
-      query: { page: Math.ceil(rowsCount?.value / 17) },
-    });
+    updateQueryParams({ page: Math.ceil(rowsCount?.value / 17) });
   }
 };
 </script>

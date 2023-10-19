@@ -50,7 +50,7 @@ async function getInvoices(page: number = 1) {
     const res = await invoke<withCount<invoiceT[]>>("get_invoices", {
       page,
     });
-    if (res.data.length) {
+    if (res?.data) {
       invoices.value = res.data;
       totalRows.value = res.count;
     }

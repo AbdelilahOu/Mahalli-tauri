@@ -42,8 +42,8 @@ const form = useForm({
 const client = reactive<newClientT>(Object.assign({}, CLIENT_CREATE));
 const isLoading = ref<boolean>(false);
 
-const createNewClient = async (client: newClientT) => {
-  isLoading.value = true;
+const createNewClient = async () => {
+  isFlash.value = true;
   if (client.fullname !== "") {
     try {
       let image: string = await saveFile(client.image as string, "Image");
@@ -55,12 +55,13 @@ const createNewClient = async (client: newClientT) => {
     } catch (error) {
       console.log(error);
     } finally {
+      isLoading.value = false;
       store.setters.updateStore({ key: "show", value: false });
-      return;
     }
+    return;
   }
   setTimeout(() => {
-    isLoading.value = false;
+    isFlash.value = false;
   }, 1000);
 };
 
@@ -108,7 +109,7 @@ const onSubmit = form.handleSubmit((values) => {
       />
     </div>
     <div class="w-full">
-      <Button class="w-full" @click="createNewClient">
+      <Button :disabled="isLoading" class="w-full" @click="createNewClient">
         {{ globalTranslate("Clients.create.button") }}
       </Button>
     </div> -->
