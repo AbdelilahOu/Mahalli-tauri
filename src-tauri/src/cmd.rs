@@ -65,29 +65,26 @@ pub async fn export_db_csv() -> String {
         .spawn()
         .expect("Failed to spawn sidecar");
 
-    tauri::async_runtime::spawn(async move {
-        // read events such as stdout
-        while let Some(event) = rx.recv().await {
-            if let CommandEvent::Stdout(line) = event {
-                println!("message {:?}", line)
+    // listen for stdout
+    while let Some(event) = rx.recv().await {
+        if let CommandEvent::Stdout(line) = event {
+            println!("message {:?}", line)
+        }
+    }
+    // delete generated files
+    for table in table_names.iter_mut() {
+        // checking if we already have the csvs
+        let out_put_file = &output_path.join(format!("{}.csv", table));
+        let remove_result = remove_file(out_put_file);
+        match remove_result {
+            Ok(_) => {}
+            Err(_) => {
+                return String::from("Failed to remove file");
             }
         }
-    });
-    // delete generated files
-    // for table in table_names.iter_mut() {
-    //     // checking if we already have the csvs
-    //     let out_put_file = &output_path.join(format!("{}.csv", table));
-    //     let remove_result = remove_file(out_put_file);
-    //     match remove_result {
-    //         Ok(_) => {}
-    //         Err(_) => {
-    //             return String::from("Failed to remove file");
-    //         }
-    //     }
-    // }
+    }
     // open file explorer to the path wehere the asssets are
     // using cmd for windows
-
     #[cfg(target_os = "windows")]
     let (mut _rx, _child) = Command::new("explorer")
         .args([output_path.to_str().unwrap()])
