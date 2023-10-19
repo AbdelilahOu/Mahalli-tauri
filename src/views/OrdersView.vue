@@ -50,7 +50,7 @@ const getOrders = async (page = 1) => {
     const res = await invoke<withCount<orderT[]>>("get_orders", {
       page,
     });
-    if (res.data.length) {
+    if (res?.data) {
       orders.value = res.data;
       totalRows.value = res.count;
     }

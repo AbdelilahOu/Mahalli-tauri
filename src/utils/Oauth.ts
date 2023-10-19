@@ -2,11 +2,11 @@ import { open } from "@tauri-apps/api/shell";
 import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
 import callbackTemplate from "./callBackTemplate";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithCredential,
-} from "firebase/auth";
+// import {
+//   getAuth,
+//   GoogleAuthProvider,
+//   signInWithCredential,
+// } from "firebase/auth";
 import router from "@/router";
 import { store } from "@/store";
 
@@ -39,25 +39,24 @@ export const googleSignIn = async (payload: string) => {
     return;
   }
 
-  console.log(url, access_token);
-  const auth = getAuth();
+  // const auth = getAuth();
 
-  const credential = GoogleAuthProvider.credential(null, access_token);
+  // const credential = GoogleAuthProvider.credential(null, access_token);
   //   this doesnt work
-  signInWithCredential(auth, credential)
-    .then((user) => {
-      store.setters.updateStore({ key: "user", value: user });
-      console.log(user);
-      router.push({ path: "/Home" });
-    })
-    .catch((error) => {
-      console.log(error);
-      return;
-    });
+  // signInWithCredential(auth, credential)
+  //   .then((user) => {
+  //     store.setters.updateStore({ key: "user", value: user });
+  //     console.log(user);
+  //     router.push({ path: "/Home" });
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //     return;
+  //   });
 };
 export const signOut = () => {
-  const auth = getAuth();
-  return auth.signOut();
+  // const auth = getAuth();
+  // return auth.signOut();
 };
 export const login = () => {
   listen("oauth://url", (data) => {

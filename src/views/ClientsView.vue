@@ -50,7 +50,7 @@ const getClients = async (page: number = 1) => {
     const res = await invoke<withCount<clientT[]>>("get_clients", {
       page,
     });
-    if (res?.data.length) {
+    if (res?.data) {
       clients.value = res.data;
       totalRows.value = res.count;
       return;
