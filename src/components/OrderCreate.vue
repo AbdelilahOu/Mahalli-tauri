@@ -19,7 +19,7 @@ const order_items = ref<newOrdersItemT[]>(
 const newOrder = reactive<newOrdersT>(Object.assign({}, ORDER_CREATE));
 const sellers = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
-const isFlash = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
 
 onBeforeMount(async () => {
   // @ts-ignore
@@ -45,7 +45,7 @@ const removeOrderItem = (index: number) => {
 };
 
 const createNewOrders = async () => {
-  isFlash.value = true;
+  isLoading.value = true;
   newOrder.order_items = order_items.value.filter(
     (item) => item.product_id && item.quantity
   );
@@ -62,13 +62,13 @@ const createNewOrders = async () => {
     } catch (error) {
       console.log(error);
     } finally {
+      isLoading.value = false;
       store.setters.updateStore({ key: "show", value: false });
     }
+    return;
   }
 
-  setTimeout(() => {
-    isFlash.value = false;
-  }, 1000);
+  isLoading.value = false;
 };
 </script>
 
