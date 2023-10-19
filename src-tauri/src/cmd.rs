@@ -3,7 +3,6 @@ use serde_json::Value;
 use std::env;
 use std::fs::remove_file;
 use std::path;
-use std::path::Path;
 use tauri::api::process::Command;
 use tauri::api::process::CommandEvent;
 
@@ -75,17 +74,17 @@ pub async fn export_db_csv() -> String {
         }
     });
     // delete generated files
-    for table in table_names.iter_mut() {
-        // checking if we already have the csvs
-        let out_put_file = &output_path.join(format!("{}.csv", table));
-        let remove_result = remove_file(out_put_file);
-        match remove_result {
-            Ok(_) => {}
-            Err(_) => {
-                return String::from("Failed to remove file");
-            }
-        }
-    }
+    // for table in table_names.iter_mut() {
+    //     // checking if we already have the csvs
+    //     let out_put_file = &output_path.join(format!("{}.csv", table));
+    //     let remove_result = remove_file(out_put_file);
+    //     match remove_result {
+    //         Ok(_) => {}
+    //         Err(_) => {
+    //             return String::from("Failed to remove file");
+    //         }
+    //     }
+    // }
     // open file explorer to the path wehere the asssets are
     // using cmd for windows
 
