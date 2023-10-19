@@ -11,14 +11,39 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { reactive, ref } from "vue";
 import { store } from "@/store";
+import { toTypedSchema } from "@vee-validate/zod";
+import { z } from "zod";
+import { useForm } from "vee-validate";
+
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const client = reactive<newClientT>(Object.assign({}, CLIENT_CREATE));
-const isFlash = ref<boolean>(false);
+const clientSchema = toTypedSchema(
+  z.object({
+    fullname: z.string().min(2).max(50),
+    email: z.string().min(2).max(50),
+    phone: z.string().min(2).max(50),
+    address: z.string().min(2).max(50),
+  })
+);
 
-const createNewClient = async () => {
-  isFlash.value = true;
+const form = useForm({
+  validationSchema: clientSchema,
+});
+
+const client = reactive<newClientT>(Object.assign({}, CLIENT_CREATE));
+const isLoading = ref<boolean>(false);
+
+const createNewClient = async (client: newClientT) => {
+  isLoading.value = true;
   if (client.fullname !== "") {
     try {
       let image: string = await saveFile(client.image as string, "Image");
@@ -35,16 +60,20 @@ const createNewClient = async () => {
     }
   }
   setTimeout(() => {
-    isFlash.value = false;
+    isLoading.value = false;
   }, 1000);
 };
+
+const onSubmit = form.handleSubmit((values) => {
+  console.log("Form submitted!", values);
+});
 </script>
 
 <template>
   <div
     class="w-1/2 h-fit z-50 gap-3 rounded-[4px] flex flex-col bg-white p-2 min-w-[350px]"
   >
-    <h1
+    <!-- <h1
       class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
     >
       {{ globalTranslate("Clients.create.title") }}
@@ -82,6 +111,57 @@ const createNewClient = async () => {
       <Button class="w-full" @click="createNewClient">
         {{ globalTranslate("Clients.create.button") }}
       </Button>
-    </div>
+    </div> -->
+    <form @submit="onSubmit">
+      <FormField v-slot="{ componentField }" name="fullname">
+        <FormItem>
+          <FormLabel>Full name</FormLabel>
+          <FormControl>
+            <Input type="text" placeHolder="shadcn" v-bind="componentField" />
+          </FormControl>
+          <FormDescription>
+            This is your public display full name.
+          </FormDescription>
+          <!-- <FormMessage /> -->
+        </FormItem>
+      </FormField>
+      <FormField v-slot="{ componentField }" name="email">
+        <FormItem>
+          <FormLabel>Email</FormLabel>
+          <FormControl>
+            <Input type="text" placeHolder="shadcn" v-bind="componentField" />
+          </FormControl>
+          <FormDescription>
+            This is your public display email.
+          </FormDescription>
+          <!-- <FormMessage /> -->
+        </FormItem>
+      </FormField>
+      <FormField v-slot="{ componentField }" name="phone">
+        <FormItem>
+          <FormLabel>Phone number</FormLabel>
+          <FormControl>
+            <Input type="text" placeHolder="shadcn" v-bind="componentField" />
+          </FormControl>
+          <FormDescription>
+            This is your public display phone number.
+          </FormDescription>
+          <!-- <FormMessage /> -->
+        </FormItem>
+      </FormField>
+      <FormField v-slot="{ componentField }" name="address">
+        <FormItem>
+          <FormLabel>Address</FormLabel>
+          <FormControl>
+            <Input type="text" placeHolder="shadcn" v-bind="componentField" />
+          </FormControl>
+          <FormDescription>
+            This is your public display adress.
+          </FormDescription>
+          <!-- <FormMessage /> -->
+        </FormItem>
+      </FormField>
+      <Button type="submit"> Create client </Button>
+    </form>
   </div>
 </template>
