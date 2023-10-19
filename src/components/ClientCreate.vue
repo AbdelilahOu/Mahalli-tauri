@@ -43,7 +43,7 @@ const client = reactive<newClientT>(Object.assign({}, CLIENT_CREATE));
 const isLoading = ref<boolean>(false);
 
 const createNewClient = async () => {
-  isFlash.value = true;
+  isLoading.value = true;
   if (client.fullname !== "") {
     try {
       let image: string = await saveFile(client.image as string, "Image");
@@ -60,9 +60,7 @@ const createNewClient = async () => {
     }
     return;
   }
-  setTimeout(() => {
-    isFlash.value = false;
-  }, 1000);
+  isLoading.value = false;
 };
 
 const onSubmit = form.handleSubmit((values) => {
