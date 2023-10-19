@@ -12,14 +12,14 @@ import { Input } from "./ui/input";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
 
-const isFlash = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
 
 const product = reactive<newProductT>(Object.assign({}, PRODUCT_CREATE));
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const createNewProduct = async () => {
-  isFlash.value = true;
+  isLoading.value = true;
   if (product.name !== "") {
     try {
       let image: string = await saveFile(product.image as string, "Image");
@@ -39,13 +39,12 @@ const createNewProduct = async () => {
     } catch (error) {
       console.log(error);
     } finally {
+      isLoading.value = false;
       store.setters.updateStore({ key: "show", value: false });
-      return;
     }
+    return;
   }
-  setTimeout(() => {
-    isFlash.value = false;
-  }, 1000);
+  isLoading.value = false;
 };
 
 const setImage = (image: string) => {
@@ -97,7 +96,7 @@ const setImage = (image: string) => {
       />
     </div>
     <div class="flex">
-      <Button class="w-full" @click="createNewProduct">
+      <Button :disabled="isLoading" class="w-full" @click="createNewProduct">
         {{ globalTranslate("Products.create.button") }}
       </Button>
     </div>

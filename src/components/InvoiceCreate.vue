@@ -20,7 +20,7 @@ const newInvoice = reactive<newInvoiceT>(Object.assign({}, INVOICE_CREATE));
 const invoice_items = ref<newInvoiceItemT[]>(
   INVOICE_ITEM_CREATE.map((a) => Object.assign({}, a))
 );
-const isFlash = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
 
 onBeforeMount(async () => {
   // @ts-ignore
@@ -44,7 +44,7 @@ const removeInvoiceItem = (index: number) => {
 };
 
 const createNewInvoice = async () => {
-  isFlash.value = true;
+  isLoading.value = true;
   newInvoice.invoice_items = invoice_items.value.filter(
     (item) => item.product_id && item.quantity
   );
@@ -60,12 +60,12 @@ const createNewInvoice = async () => {
     } catch (error) {
       console.log(error);
     } finally {
+      isLoading.value = false;
       store.setters.updateStore({ key: "show", value: false });
     }
+    return;
   }
-  setTimeout(() => {
-    isFlash.value = false;
-  }, 1000);
+  isLoading.value = false;
 };
 </script>
 
@@ -175,7 +175,7 @@ const createNewInvoice = async () => {
       </div>
     </div>
     <div class="flex">
-      <Button class="w-full" @click="createNewInvoice">
+      <Button :disabled="isLoading" class="w-full" @click="createNewInvoice">
         {{ globalTranslate("Invoices.create.button") }}
       </Button>
     </div>

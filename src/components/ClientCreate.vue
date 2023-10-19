@@ -15,10 +15,10 @@ import { store } from "@/store";
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const client = reactive<newClientT>(Object.assign({}, CLIENT_CREATE));
-const isFlash = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
 
 const createNewClient = async () => {
-  isFlash.value = true;
+  isLoading.value = true;
   if (client.fullname !== "") {
     try {
       let image: string = await saveFile(client.image as string, "Image");
@@ -30,13 +30,12 @@ const createNewClient = async () => {
     } catch (error) {
       console.log(error);
     } finally {
+      isLoading.value = false;
       store.setters.updateStore({ key: "show", value: false });
-      return;
     }
+    return;
   }
-  setTimeout(() => {
-    isFlash.value = false;
-  }, 1000);
+  isLoading.value = false;
 };
 </script>
 
@@ -79,7 +78,7 @@ const createNewClient = async () => {
       />
     </div>
     <div class="w-full">
-      <Button class="w-full" @click="createNewClient">
+      <Button :disabled="isLoading" class="w-full" @click="createNewClient">
         {{ globalTranslate("Clients.create.button") }}
       </Button>
     </div>
