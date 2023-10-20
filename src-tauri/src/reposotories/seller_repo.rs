@@ -3,6 +3,7 @@ use serde_json::{json, Value};
 use crate::diesel::prelude::*;
 use crate::models::{NewSeller, Seller};
 use crate::schema::sellers::{self, address, email, id, image, name, phone};
+use crate::types::TSeller;
 
 pub fn get_sellers(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
@@ -77,7 +78,7 @@ pub fn delete_seller(s_id: String, connection: &mut SqliteConnection) -> usize {
     result
 }
 
-pub fn update_seller(s_update: Seller, s_id: String, connection: &mut SqliteConnection) -> usize {
+pub fn update_seller(s_update: TSeller, s_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::update(sellers::dsl::sellers.find(&s_id))
         .set((
             sellers::name.eq(s_update.name),

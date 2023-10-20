@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-pub struct TNewClient {
+pub struct TClient {
     pub fullname: String,
     pub email: String,
     pub phone: String,
@@ -10,7 +10,7 @@ pub struct TNewClient {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct TNewSeller {
+pub struct TSeller {
     pub name: String,
     pub image: String,
     pub address: String,
@@ -90,7 +90,7 @@ pub struct TUpdateInvoiceItem {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct TNewProduct {
+pub struct TProduct {
     pub description: String,
     pub name: String,
     pub price: f32,
