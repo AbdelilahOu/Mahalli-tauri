@@ -2,7 +2,7 @@ import { useRoute, useRouter } from "vue-router";
 
 export function useUpdateRouteQueryParams() {
   const router = useRouter();
-  const route = useRoute();
+  const route = router.currentRoute.value;
 
   const updateQueryParams = (query: Record<any, any>) => {
     router.push({

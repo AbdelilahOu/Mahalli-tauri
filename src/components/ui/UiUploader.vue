@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { pictureDir, downloadDir } from "@tauri-apps/api/path";
-import { defineComponent, ref, type PropType } from "vue";
+import { defineComponent, ref, type PropType, onBeforeUnmount } from "vue";
 import { open } from "@tauri-apps/api/dialog";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import type { FileNames } from "@/types";
 import UiIcon from "./UiIcon.vue";
 import { useDropZone } from "@vueuse/core";
+import { deleteTempFolder, uploadImagefiles } from "@/utils/fs";
 
 const { name, extensions } = defineProps<{
   extensions: string[];
@@ -20,7 +21,10 @@ const dropZone = ref<HTMLDivElement>();
 
 async function onDrop(files: File[] | null) {
   if (files) {
-    selectedFile.value = files[0].name;
+    const imagePath = await uploadImagefiles(files[0]);
+    console.log(imagePath);
+    emits("on:save", imagePath);
+    selectedFile.value = convertFileSrc(imagePath);
   }
 }
 const { isOverDropZone } = useDropZone(dropZone, onDrop);
@@ -46,20 +50,30 @@ const OpenDialog = async () => {
     console.log("sth went wrong reading the file");
   }
 };
-
-const getpath = (src: string) => new URL(src, import.meta.url).toString();
+onBeforeUnmount(() => {
+  // clear tempo folder
+  deleteTempFolder();
+});
 </script>
 
 <template>
   <div
-    class="w-full relative h-36 rounded-md overflow-hidden flex text-black justify-center items-center"
+    class="w-full relative h-36 flex-col rounded-md flex text-black justify-center items-center"
   >
+    <span
+      @click="selectedFile = null"
+      v-if="selectedFile"
+      class="absolute w-8 h-8 bg-white rounded-bl-md rounded-tr-md hover:bg-gray-100 cursor-pointer transition-all duration-150 -top-0 -right-0 z-[90]"
+    >
+      <UiIcon name="delete" />
+    </span>
     <img
       v-if="name == 'Image' && selectedFile"
-      class="absolute top-0 rounded-md object-cover w-full h-full"
+      class="absolute top-0 border border-gray-300 rounded-md object-cover w-full h-full"
       :src="selectedFile"
     />
     <div
+      v-else
       ref="dropZone"
       :class="[
         'w-full relative h-full rounded-md transition-all duration-200 transform z-50 border-2 border-dashed border-spacing-4 flex items-center justify-center',
