@@ -74,11 +74,15 @@ const createNewInvoice = async () => {
       console.log(error);
     } finally {
       isLoading.value = false;
-      store.setters.updateStore({ key: "show", value: false });
+      hideModal();
     }
     return;
   }
   isLoading.value = false;
+};
+
+const hideModal = () => {
+  store.setters.updateStore({ key: "show", value: false });
 };
 </script>
 
@@ -198,7 +202,7 @@ const createNewInvoice = async () => {
         >
           {{ globalTranslate("Invoices.create.button") }}
         </Button>
-        <Button variant="outline"> Cancel </Button>
+        <Button @click="hideModal" variant="outline"> Cancel </Button>
       </div>
     </template>
   </UiModalCard>
