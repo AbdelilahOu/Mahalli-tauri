@@ -1,23 +1,21 @@
 <script setup lang="ts">
-import { ref, reactive } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { PRODUCT_CREATE } from "@/constants/defaultValues";
+import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { ImagesFiles } from "@/constants/FileTypes";
+import { toTypedSchema } from "@vee-validate/zod";
+import UiModalCard from "./ui/UiModalCard.vue";
 import UiUploader from "./ui/UiUploader.vue";
 import type { newProductT } from "@/types";
 import { invoke } from "@tauri-apps/api";
+import { Textarea } from "./ui/textarea";
+import { useForm } from "vee-validate";
+import { saveFile } from "@/utils/fs";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
-import UiModalCard from "./ui/UiModalCard.vue";
-import { toTypedSchema } from "@vee-validate/zod";
+import { ref } from "vue";
 import { z } from "zod";
-import { useForm } from "vee-validate";
-import { Textarea } from "./ui/textarea";
-
-import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 
 const isLoading = ref<boolean>(false);
 

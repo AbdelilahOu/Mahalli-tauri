@@ -46,7 +46,9 @@ onBeforeMount(async () => {
 const createNewInventory = async (inventoryMvm: newInventoryMvmT) => {
   isLoading.value = true;
   try {
-    await invoke("insert_inventory_mvm", { inventory: inventoryMvm });
+    await invoke("insert_inventory_mvm", {
+      inventory: { ...inventoryMvm, model: "IN" },
+    });
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-create-" + Math.random() * 9999,

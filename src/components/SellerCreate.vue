@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { ImagesFiles } from "@/constants/FileTypes";
+import { toTypedSchema } from "@vee-validate/zod";
+import UiModalCard from "./ui/UiModalCard.vue";
 import UiUploader from "./ui/UiUploader.vue";
 import type { newSellerT } from "@/types";
 import { invoke } from "@tauri-apps/api";
+import { useForm } from "vee-validate";
 import { saveFile } from "@/utils/fs";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
 import { ref } from "vue";
-import UiModalCard from "./ui/UiModalCard.vue";
-import { toTypedSchema } from "@vee-validate/zod";
 import { z } from "zod";
-import { useForm } from "vee-validate";
-
-import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const isLoading = ref<boolean>(false);

@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { globalTranslate } from "@/utils/globalTranslate";
 import type { sellerT, updateSellerT } from "@/types";
 import { ref, computed, onBeforeUnmount } from "vue";
+import { toTypedSchema } from "@vee-validate/zod";
+import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
+import { useForm } from "vee-validate";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
-import { toTypedSchema } from "@vee-validate/zod";
 import { z } from "zod";
-import { useForm } from "vee-validate";
-
-import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
-import UiModalCard from "./ui/UiModalCard.vue";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
