@@ -4,6 +4,9 @@ import {
   copyFile,
   exists,
   writeBinaryFile,
+  removeDir,
+  readDir,
+  removeFile,
 } from "@tauri-apps/api/fs";
 import { appDataDir, sep, join } from "@tauri-apps/api/path";
 
@@ -79,6 +82,46 @@ export const uploadCSVfiles = async ({ file }: { file: File }) => {
     return path;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const uploadImagefiles = async (file: File) => {
+  try {
+    // create folder
+    await createFolder("tempo");
+    // read the file
+    const bytes = (await getBytesArray(file)) as ArrayBuffer;
+    // get final path
+    const path = await join(await appDataDir(), "tempo", file.name);
+    // write the file into the final path
+    await writeBinaryFile(path, bytes, {
+      dir: BaseDirectory.AppData,
+    });
+    // return final path
+    return path;
+  } catch (err) {
+    console.log(err);
+    return "";
+  }
+};
+
+export const deleteTempFolder = async () => {
+  try {
+    // delete all the files inside tempo folder
+    const files = await readDir("tempo", {
+      dir: BaseDirectory.AppData,
+    });
+    for await (const file of files) {
+      await removeFile(file.path, {
+        dir: BaseDirectory.AppData,
+      });
+    }
+    // delete the folder
+    removeDir("tempo", {
+      dir: BaseDirectory.AppData,
+    });
+  } catch (err) {
+    console.log(err);
   }
 };
 

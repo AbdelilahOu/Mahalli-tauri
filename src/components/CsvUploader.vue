@@ -25,18 +25,20 @@ async function onDrop(files: File[] | null) {
 const { isOverDropZone } = useDropZone(dropZone, onDrop);
 
 const upload = async () => {
-  try {
-    await invoke("upload_csv_to_db", {
-      csvPath: await uploadCSVfiles({ file: filesData.value[0] }),
-      table: route.query.table,
-    });
-  } catch (error) {
-    console.log(error);
-  } finally {
-    updateQueryParams({
-      refresh: "refresh-upload-" + Math.random() * 9999,
-    });
-    store.setters.updateStore({ key: "show", value: false });
+  for await (const file of filesData.value) {
+    try {
+      await invoke("upload_csv_to_db", {
+        csvPath: await uploadCSVfiles({ file: file }),
+        table: route.query.table,
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      updateQueryParams({
+        refresh: "refresh-upload-" + Math.random() * 9999,
+      });
+      store.setters.updateStore({ key: "show", value: false });
+    }
   }
 };
 </script>
