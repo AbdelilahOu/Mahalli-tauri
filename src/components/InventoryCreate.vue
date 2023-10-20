@@ -12,6 +12,11 @@ import UiModalCard from "./ui/UiModalCard.vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { z } from "zod";
 import { useForm } from "vee-validate";
+import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
+import { cn } from "@/utils/shadcn";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Command, CommandGroup, CommandItem } from "./ui/command";
+import { Check, ChevronsUpDown } from "lucide-vue-next";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -25,7 +30,7 @@ const inventoryMvmSchema = toTypedSchema(
   })
 );
 
-const form = useForm({
+const { handleSubmit, setValues, values } = useForm({
   validationSchema: inventoryMvmSchema,
 });
 
@@ -54,7 +59,7 @@ const createNewInventory = async (inventoryMvm: newInventoryMvmT) => {
   }
 };
 
-const onSubmit = form.handleSubmit((values) => {
+const onSubmit = handleSubmit((values) => {
   createNewInventory(values);
 });
 
@@ -72,13 +77,62 @@ const hideModal = () => {
         <FormField v-slot="{ componentField }" name="product_id">
           <FormItem>
             <FormLabel>Product</FormLabel>
-            <FormControl>
-              <ComboBox
-                :label="globalTranslate('Inventory.create.select')"
-                v-bind="componentField"
-                :items="products"
-              />
-            </FormControl>
+            <Popover>
+              <PopoverTrigger as-child>
+                <FormControl>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    role="combobox"
+                    :class="
+                      cn(
+                        'w-[200px] justify-between',
+                        !values.product_id && 'text-muted-foreground'
+                      )
+                    "
+                  >
+                    {{
+                      values.product_id
+                        ? products.find(
+                            (product) => product.value === values.product_id
+                          )?.label
+                        : "Select product..."
+                    }}
+                    <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent class="w-[200px] p-0">
+                <Command>
+                  <CommandGroup>
+                    <CommandItem
+                      v-for="product in products"
+                      :key="product.value"
+                      :value="product.label"
+                      @select="
+                        () => {
+                          setValues({
+                            product_id: product.value,
+                          });
+                        }
+                      "
+                    >
+                      <Check
+                        :class="
+                          cn(
+                            'mr-2 h-4 w-4',
+                            product.value === values.product_id
+                              ? 'opacity-100'
+                              : 'opacity-0'
+                          )
+                        "
+                      />
+                      {{ product.label }}
+                    </CommandItem>
+                  </CommandGroup>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </FormItem>
         </FormField>
 

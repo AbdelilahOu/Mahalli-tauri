@@ -64,3 +64,9 @@ export const mapValues: mapValues = (obj, callback) => {
   //@ts-ignore
   return Object.fromEntries(result);
 };
+
+type cFLetter = (text: string) => string;
+
+export const capitalizeFirstLetter: cFLetter = (text) => {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
