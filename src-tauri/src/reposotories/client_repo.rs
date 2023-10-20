@@ -6,6 +6,7 @@ use crate::models::Client;
 use crate::models::NewClient;
 use crate::schema::clients;
 use crate::schema::clients::*;
+use crate::types::TClient;
 
 pub fn get_clients(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
@@ -86,7 +87,7 @@ pub fn delete_client(c_id: String, connection: &mut SqliteConnection) -> usize {
     result
 }
 
-pub fn update_client(c_update: Client, c_id: String, connection: &mut SqliteConnection) -> Client {
+pub fn update_client(c_update: TClient, c_id: String, connection: &mut SqliteConnection) -> Client {
     diesel::update(clients::dsl::clients.find(&c_id))
         .set((
             clients::fullname.eq(c_update.fullname),

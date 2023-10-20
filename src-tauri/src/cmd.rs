@@ -168,7 +168,7 @@ pub fn delete_client(id: String, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_client(client: TNewClient, state: tauri::State<AppState>) -> Client {
+pub fn insert_client(client: TClient, state: tauri::State<AppState>) -> Client {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let created_uuid = uuid::Uuid::new_v4().hyphenated().to_string();
@@ -188,7 +188,7 @@ pub fn insert_client(client: TNewClient, state: tauri::State<AppState>) -> Clien
 }
 
 #[tauri::command]
-pub fn update_client(client: Client, id: String, state: tauri::State<AppState>) -> Client {
+pub fn update_client(client: TClient, id: String, state: tauri::State<AppState>) -> Client {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = client_repo::update_client(client, id, conn);
@@ -228,7 +228,7 @@ pub fn delete_seller(id: String, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_seller(seller: TNewSeller, state: tauri::State<AppState>) -> usize {
+pub fn insert_seller(seller: TSeller, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
 
@@ -249,7 +249,7 @@ pub fn insert_seller(seller: TNewSeller, state: tauri::State<AppState>) -> usize
 }
 
 #[tauri::command]
-pub fn update_seller(seller: Seller, id: String, state: tauri::State<AppState>) -> usize {
+pub fn update_seller(seller: TSeller, id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = seller_repo::update_seller(seller, id, conn);
@@ -289,7 +289,7 @@ pub fn delete_product(id: String, state: tauri::State<AppState>) -> usize {
 }
 
 #[tauri::command]
-pub fn insert_product(product: TNewProduct, state: tauri::State<AppState>) {
+pub fn insert_product(product: TProduct, state: tauri::State<AppState>) {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let id = product_repo::insert_product(
@@ -316,7 +316,7 @@ pub fn insert_product(product: TNewProduct, state: tauri::State<AppState>) {
 }
 
 #[tauri::command]
-pub fn update_product(product: Product, id: String, state: tauri::State<AppState>) -> usize {
+pub fn update_product(product: TProduct, id: String, state: tauri::State<AppState>) -> usize {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = product_repo::update_product(product, id, conn);

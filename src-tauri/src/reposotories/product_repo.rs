@@ -4,6 +4,7 @@ use crate::diesel::prelude::*;
 use crate::models::{NewProduct, Product, ProductWithQuantity};
 use crate::schema::products::{description, id, image, name, price, tva};
 use crate::schema::{inventory_mouvements, products};
+use crate::types::TProduct;
 
 pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
@@ -68,20 +69,20 @@ pub fn get_product(p_id: String, connection: &mut SqliteConnection) -> Product {
 
     result
 }
-pub fn insert_product(new_p: NewProduct, connection: &mut SqliteConnection) -> String {
+pub fn insert_product(product: NewProduct, connection: &mut SqliteConnection) -> String {
     diesel::insert_into(products::dsl::products)
         .values((
-            id.eq(new_p.id.clone()),
-            description.eq(new_p.description),
-            name.eq(new_p.name),
-            price.eq(new_p.price),
-            tva.eq(new_p.tva),
-            image.eq(new_p.image),
+            id.eq(product.id.clone()),
+            description.eq(product.description),
+            name.eq(product.name),
+            price.eq(product.price),
+            tva.eq(product.tva),
+            image.eq(product.image),
         ))
         .execute(connection)
         .expect("Expect add articles");
 
-    new_p.id
+    product.id
 }
 
 pub fn delete_product(p_id: String, connection: &mut SqliteConnection) -> usize {
@@ -91,14 +92,14 @@ pub fn delete_product(p_id: String, connection: &mut SqliteConnection) -> usize 
 
     result
 }
-pub fn update_product(p_update: Product, p_id: String, connection: &mut SqliteConnection) -> usize {
+pub fn update_product(product: TProduct, p_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::update(products::dsl::products.find(&p_id))
         .set((
-            products::tva.eq(p_update.tva),
-            products::name.eq(p_update.name),
-            products::price.eq(p_update.price),
-            products::image.eq(p_update.image),
-            products::description.eq(p_update.description),
+            products::tva.eq(product.tva),
+            products::name.eq(product.name),
+            products::price.eq(product.price),
+            products::image.eq(product.image),
+            products::description.eq(product.description),
         ))
         .execute(connection)
         .expect("Expect add articles");
