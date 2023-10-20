@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
-import { SELLER_CREATE } from "@/constants/defaultValues";
 import { ImagesFiles } from "@/constants/FileTypes";
 import UiUploader from "./ui/UiUploader.vue";
 import type { newSellerT } from "@/types";
@@ -11,18 +10,37 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
 import { ref } from "vue";
+import UiModalCard from "./ui/UiModalCard.vue";
+import { toTypedSchema } from "@vee-validate/zod";
+import { z } from "zod";
+import { useForm } from "vee-validate";
+
+import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const isLoading = ref<boolean>(false);
 
-const seller = ref<newSellerT>(Object.assign({}, SELLER_CREATE));
+const sellerSchema = toTypedSchema(
+  z.object({
+    name: z.string().min(2).max(50),
+    email: z.string().min(2).max(50),
+    phone: z.string().min(2).max(50),
+    address: z.string().min(2).max(50),
+  })
+);
 
-const createNewSeller = async () => {
+const imagePath = ref<string>();
+
+const form = useForm({
+  validationSchema: sellerSchema,
+});
+
+const createNewSeller = async (seller: newSellerT) => {
   isLoading.value = true;
-  if (seller.value.name !== "") {
+  if (seller.name !== "") {
     try {
-      let image: string = await saveFile(seller.value.image as string, "Image");
-      await invoke("insert_seller", { seller: { ...seller.value, image } });
+      let image: string = await saveFile(seller.image as string, "Image");
+      await invoke("insert_seller", { seller: { ...seller, image } });
       // toggle refresh
       updateQueryParams({
         refresh: "refresh-create-" + Math.random() * 9999,
@@ -38,53 +56,93 @@ const createNewSeller = async () => {
   isLoading.value = false;
 };
 
+const hideModal = () => {
+  store.setters.updateStore({ key: "show", value: false });
+};
+
+const onSubmit = form.handleSubmit((values) => {
+  createNewSeller(values);
+});
+
 const saveImage = (image: string) => {
-  seller.value.image = image;
+  imagePath.value = image;
 };
 </script>
 
 <template>
-  <div
-    class="w-1/2 h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
-  >
-    <h1
-      class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
-    >
+  <UiModalCard>
+    <template #title>
       {{ globalTranslate("Sellers.create.title") }}
-    </h1>
-    <div class="h-full w-full flex flex-col gap-2">
-      <div class="w-full h-fit flex justify-center">
+    </template>
+    <template #content>
+      <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
         <UiUploader
           name="Image"
           :extensions="ImagesFiles"
           @on:save="saveImage"
         />
-      </div>
-      <Input
-        v-model="seller.name"
-        type="text"
-        :placeHolder="globalTranslate('Sellers.create.placeholders[0]')"
-      />
-      <Input
-        v-model="seller.email"
-        type="text"
-        :placeHolder="globalTranslate('Sellers.create.placeholders[1]')"
-      />
-      <Input
-        v-model="seller.phone"
-        type="text"
-        :placeHolder="globalTranslate('Sellers.create.placeholders[2]')"
-      />
-      <Input
-        v-model="seller.address"
-        type="text"
-        :placeHolder="globalTranslate('Sellers.create.placeholders[3]')"
-      />
-    </div>
-    <div class="flex">
-      <Button :disabled="isLoading" class="w-full" @click="createNewSeller">
-        {{ globalTranslate("Sellers.create.button") }}
-      </Button>
-    </div>
-  </div>
+        <FormField v-slot="{ componentField }" name="fullname">
+          <FormItem>
+            <FormLabel>Full name</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="full name"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="email">
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="example@gmail.com"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="phone">
+          <FormItem>
+            <FormLabel>Phone number</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="+2126********"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="address">
+          <FormItem>
+            <FormLabel>Address</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="Address"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <div class="w-full grid grid-cols-3 gap-2">
+          <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
+            {{ globalTranslate("Sellers.create.button") }}
+          </Button>
+          <Button
+            @click="hideModal"
+            type="button"
+            :disabled="isLoading"
+            variant="outline"
+          >
+            Cancel</Button
+          >
+        </div>
+      </form>
+    </template>
+  </UiModalCard>
 </template>

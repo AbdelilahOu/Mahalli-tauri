@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { PRODUCT_UPDATE } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
 import type { productT, updateProductT } from "@/types";
 import { computed, ref, onBeforeUnmount } from "vue";
@@ -8,22 +7,43 @@ import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
+import UiModalCard from "./ui/UiModalCard.vue";
+import { toTypedSchema } from "@vee-validate/zod";
+import { z } from "zod";
+import { useForm } from "vee-validate";
+import { Textarea } from "./ui/textarea";
+import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const ProductRow = computed(() => store.getters.getSelectedRow<productT>());
 
-const updateProduct = ref<updateProductT>({
-  ...(ProductRow.value.id ? ProductRow.value : PRODUCT_UPDATE),
-  quantity: 0,
+const isLoading = ref<boolean>(false);
+
+const productSchema = toTypedSchema(
+  z.object({
+    name: z.string().min(2).max(50).default(ProductRow.value.name),
+    price: z.number().min(0).default(ProductRow.value.price),
+    description: z
+      .string()
+      .min(2)
+      .max(50)
+      .default(ProductRow.value.description ?? ""),
+    quantity: z.number().min(0).default(0),
+    tva: z.number().min(0).max(100).default(ProductRow.value.tva),
+  })
+);
+
+const form = useForm({
+  validationSchema: productSchema,
 });
 
-const updateTheProduct = async () => {
-  if (updateProduct.value.id) {
+const updateTheProduct = async (product: updateProductT) => {
+  if (ProductRow.value.id) {
     try {
       await invoke("update_product", {
-        product: updateProduct.value,
-        id: updateProduct.value.id,
+        product: { ...product, image: ProductRow.value.image },
+        id: ProductRow.value.id,
       });
       // toggle refresh
       updateQueryParams({
@@ -37,55 +57,102 @@ const updateTheProduct = async () => {
   }
 };
 
+const hideModal = () => {
+  store.setters.updateStore({ key: "show", value: false });
+};
+
+const onSubmit = form.handleSubmit((values) => {
+  updateTheProduct(values);
+});
+
 onBeforeUnmount(() => {
   store.setters.updateStore({ key: "row", value: null });
 });
 </script>
 
 <template>
-  <div
-    class="w-1/2 h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
-  >
-    <h1
-      class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
-    >
+  <UiModalCard>
+    <template #title>
       {{ globalTranslate("Products.update.title") }}
-    </h1>
-    <div class="h-full w-full flex flex-col gap-2">
-      <Input v-model="updateProduct.name" type="text" placeHolder="Name" />
-      <Input v-model="updateProduct.price" type="number" placeHolder="Price">
-        <template #unite>
-          <span
-            class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+    </template>
+    <template #content>
+      <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
+        <FormField v-slot="{ componentField }" name="name">
+          <FormItem>
+            <FormLabel>Name</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="Product name"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="price">
+          <FormItem>
+            <FormLabel>Price</FormLabel>
+            <FormControl>
+              <Input
+                type="number"
+                placeHolder="Product price"
+                v-bind="componentField"
+              >
+                <template #unite> DH </template>
+              </Input>
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="tva">
+          <FormItem>
+            <FormLabel>TVA</FormLabel>
+            <FormControl>
+              <Input type="text" placeHolder="tva" v-bind="componentField">
+                <template #unite> % </template>
+              </Input>
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="quantity">
+          <FormItem>
+            <FormLabel>Quantity</FormLabel>
+            <FormControl>
+              <Input
+                type="number"
+                placeHolder="Quantity"
+                v-bind="componentField"
+              >
+                <template #unite> Item </template>
+              </Input>
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="description">
+          <FormItem>
+            <FormLabel>Description</FormLabel>
+            <FormControl>
+              <Textarea
+                type="text"
+                placeholder="Description"
+                v-bind="componentField"
+              ></Textarea>
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <div class="w-full grid grid-cols-3 gap-2">
+          <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
+            Update {{ ProductRow.name }}
+          </Button>
+          <Button
+            @click="hideModal"
+            type="button"
+            :disabled="isLoading"
+            variant="outline"
           >
-            DH
-          </span>
-        </template>
-      </Input>
-      <Input v-model="updateProduct.tva" type="number" placeHolder="TVA" />
-      <Input
-        v-model="updateProduct.quantity"
-        type="number"
-        placeHolder="Add Inventory"
-      >
-        <template #unite>
-          <span
-            class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+            Cancel</Button
           >
-            Item
-          </span>
-        </template>
-      </Input>
-      <Input
-        v-model="updateProduct.description"
-        type="text"
-        placeHolder="Address"
-      />
-    </div>
-    <div class="flex">
-      <Button class="w-full" @click="updateTheProduct()">
-        Update {{ updateProduct.name }}
-      </Button>
-    </div>
-  </div>
+        </div>
+      </form>
+    </template>
+  </UiModalCard>
 </template>

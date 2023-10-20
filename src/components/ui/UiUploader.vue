@@ -5,6 +5,7 @@ import { open } from "@tauri-apps/api/dialog";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import type { FileNames } from "@/types";
 import UiIcon from "./UiIcon.vue";
+import { useDropZone } from "@vueuse/core";
 
 const { name, extensions } = defineProps<{
   extensions: string[];
@@ -14,6 +15,15 @@ const { name, extensions } = defineProps<{
 const emits = defineEmits<{
   (e: "on:save", image: string): void;
 }>();
+
+const dropZone = ref<HTMLDivElement>();
+
+async function onDrop(files: File[] | null) {
+  if (files) {
+    selectedFile.value = files[0].name;
+  }
+}
+const { isOverDropZone } = useDropZone(dropZone, onDrop);
 
 const selectedFile = ref<string | null>();
 const OpenDialog = async () => {
@@ -42,21 +52,45 @@ const getpath = (src: string) => new URL(src, import.meta.url).toString();
 
 <template>
   <div
-    class="w-36 relative h-36 bg-gray-300 rounded-[4px] overflow-hidden flex text-black justify-center items-center"
+    class="w-full relative h-36 rounded-md overflow-hidden flex text-black justify-center items-center"
   >
     <img
-      v-if="name == 'Image'"
-      class="absolute top-0 rounded-[4px] object-cover w-full h-full"
-      :src="selectedFile ?? '/clients.jpg'"
+      v-if="name == 'Image' && selectedFile"
+      class="absolute top-0 rounded-md object-cover w-full h-full"
+      :src="selectedFile"
     />
     <div
-      class="w-full bg-white/40 transition-all duration-200 group hover:bg-white/30 absolute top-0 z-10 h-full"
+      ref="dropZone"
+      :class="[
+        'w-full relative h-full rounded-md transition-all duration-200 transform z-50 border-2 border-dashed border-spacing-4 flex items-center justify-center',
+
+        isOverDropZone
+          ? 'fill-sky-500 border-sky-500 bg-sky-200'
+          : 'fill-gray-400 border-gray-300 bg-white',
+      ]"
     >
       <button
+        type="button"
+        @mouseenter="isOverDropZone = true"
+        @mouseleave="isOverDropZone = false"
         @click="OpenDialog"
-        class="w-full text-gray-500 transition-all duration-200 hover:scale-125 h-full grid hover:text-black justify-center items-center"
+        :class="[
+          'w-full h-full flex flex-col gap-2 justify-center items-center',
+          isOverDropZone ? 'text-sky-500' : 'text-gray-400',
+        ]"
       >
-        <UiIcon :name="name === 'Image' ? 'addDoc' : 'addDoc'" />
+        <span> Drag and drop or select your image </span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 256 256"
+        >
+          <path
+            fill="currentColor"
+            d="m213.7 82.3l-56-56A8.1 8.1 0 0 0 152 24H56a16 16 0 0 0-16 16v176a16 16 0 0 0 16 16h144a16 16 0 0 0 16-16V88a8.1 8.1 0 0 0-2.3-5.7Zm-53.7-31L188.7 80H160ZM200 216H56V40h88v48a8 8 0 0 0 8 8h48v120Zm-40-64a8 8 0 0 1-8 8h-16v16a8 8 0 0 1-16 0v-16h-16a8 8 0 0 1 0-16h16v-16a8 8 0 0 1 16 0v16h16a8 8 0 0 1 8 8Z"
+          />
+        </svg>
       </button>
     </div>
   </div>

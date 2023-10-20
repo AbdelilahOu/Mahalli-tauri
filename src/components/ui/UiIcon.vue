@@ -1,6 +1,7 @@
 <!-- npm i vite-svg-loader -->
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
+import { cn } from "@/utils/shadcn";
 const props = defineProps({
   name: {
     type: String,
@@ -21,11 +22,7 @@ const icon = defineAsyncComponent({
 
 <template>
   <component
-    :class="[
-      extraStyle,
-      'w-8 h-8 min-h-[2rem] max-h-8 p-1',
-      isStyled && 'cursor-pointer rounded-md hover:bg-gray-100',
-    ]"
+    :class="[cn(extraStyle, 'w-8 h-8 min-h-[2rem] max-h-8 p-1')]"
     :is="icon"
   />
 </template>

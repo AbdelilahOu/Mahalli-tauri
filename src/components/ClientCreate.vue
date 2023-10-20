@@ -1,28 +1,20 @@
 <script setup lang="ts">
+import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { CLIENT_CREATE } from "@/constants/defaultValues";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { ImagesFiles } from "@/constants/FileTypes";
+import { toTypedSchema } from "@vee-validate/zod";
+import UiModalCard from "./ui/UiModalCard.vue";
 import UiUploader from "./ui/UiUploader.vue";
 import type { newClientT } from "@/types";
 import { invoke } from "@tauri-apps/api";
+import { useForm } from "vee-validate";
 import { saveFile } from "@/utils/fs";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import { store } from "@/store";
-import { toTypedSchema } from "@vee-validate/zod";
 import { z } from "zod";
-import { useForm } from "vee-validate";
-
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -39,10 +31,11 @@ const form = useForm({
   validationSchema: clientSchema,
 });
 
-const client = reactive<newClientT>(Object.assign({}, CLIENT_CREATE));
+const image = ref<string>();
+
 const isLoading = ref<boolean>(false);
 
-const createNewClient = async () => {
+const createNewClient = async (client: newClientT) => {
   isLoading.value = true;
   if (client.fullname !== "") {
     try {
@@ -56,111 +49,100 @@ const createNewClient = async () => {
       console.log(error);
     } finally {
       isLoading.value = false;
-      store.setters.updateStore({ key: "show", value: false });
+      hideModal();
     }
     return;
   }
   isLoading.value = false;
 };
 
+const hideModal = () => {
+  store.setters.updateStore({ key: "show", value: false });
+};
+
 const onSubmit = form.handleSubmit((values) => {
-  console.log("Form submitted!", values);
+  createNewClient(values);
 });
+
+const setImage = (imagePath: string) => {
+  image.value = imagePath;
+};
 </script>
 
 <template>
-  <div
-    class="w-1/2 h-fit z-50 gap-3 rounded-[4px] flex flex-col bg-white p-2 min-w-[350px]"
-  >
-    <!-- <h1
-      class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
-    >
+  <UiModalCard>
+    <template #title>
       {{ globalTranslate("Clients.create.title") }}
-    </h1>
-    <div class="h-full w-full flex flex-col gap-2">
-      <div class="w-full h-fit flex justify-center">
+    </template>
+    <template #content>
+      <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
         <UiUploader
           name="Image"
           :extensions="ImagesFiles"
-          @on:save="(image) => (client.image = image)"
+          @on:save="setImage"
         />
-      </div>
-      <Input
-        v-model="client.fullname"
-        type="text"
-        :placeHolder="globalTranslate('Clients.create.placeholders[0]')"
-      />
-      <Input
-        v-model="client.email"
-        type="text"
-        :placeHolder="globalTranslate('Clients.create.placeholders[1]')"
-      />
-      <Input
-        v-model="client.phone"
-        type="text"
-        :placeHolder="globalTranslate('Clients.create.placeholders[2]')"
-      />
-      <Input
-        v-model="client.address"
-        type="text"
-        :placeHolder="globalTranslate('Clients.create.placeholders[3]')"
-      />
-    </div>
-    <div class="w-full">
-      <Button :disabled="isLoading" class="w-full" @click="createNewClient">
-        {{ globalTranslate("Clients.create.button") }}
-      </Button>
-    </div> -->
-    <form @submit="onSubmit">
-      <FormField v-slot="{ componentField }" name="fullname">
-        <FormItem>
-          <FormLabel>Full name</FormLabel>
-          <FormControl>
-            <Input type="text" placeHolder="shadcn" v-bind="componentField" />
-          </FormControl>
-          <FormDescription>
-            This is your public display full name.
-          </FormDescription>
-          <!-- <FormMessage /> -->
-        </FormItem>
-      </FormField>
-      <FormField v-slot="{ componentField }" name="email">
-        <FormItem>
-          <FormLabel>Email</FormLabel>
-          <FormControl>
-            <Input type="text" placeHolder="shadcn" v-bind="componentField" />
-          </FormControl>
-          <FormDescription>
-            This is your public display email.
-          </FormDescription>
-          <!-- <FormMessage /> -->
-        </FormItem>
-      </FormField>
-      <FormField v-slot="{ componentField }" name="phone">
-        <FormItem>
-          <FormLabel>Phone number</FormLabel>
-          <FormControl>
-            <Input type="text" placeHolder="shadcn" v-bind="componentField" />
-          </FormControl>
-          <FormDescription>
-            This is your public display phone number.
-          </FormDescription>
-          <!-- <FormMessage /> -->
-        </FormItem>
-      </FormField>
-      <FormField v-slot="{ componentField }" name="address">
-        <FormItem>
-          <FormLabel>Address</FormLabel>
-          <FormControl>
-            <Input type="text" placeHolder="shadcn" v-bind="componentField" />
-          </FormControl>
-          <FormDescription>
-            This is your public display adress.
-          </FormDescription>
-          <!-- <FormMessage /> -->
-        </FormItem>
-      </FormField>
-      <Button type="submit"> Create client </Button>
-    </form>
-  </div>
+        <FormField v-slot="{ componentField }" name="fullname">
+          <FormItem>
+            <FormLabel>Full name</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="full name"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="email">
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="example@gmail.com"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="phone">
+          <FormItem>
+            <FormLabel>Phone number</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="+2126********"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="address">
+          <FormItem>
+            <FormLabel>Address</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="Address"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <div class="w-full grid grid-cols-3 gap-2">
+          <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
+            {{ globalTranslate("Clients.create.button") }}
+          </Button>
+          <Button
+            @click="hideModal"
+            type="button"
+            :disabled="isLoading"
+            variant="outline"
+          >
+            Cancel</Button
+          >
+        </div>
+      </form>
+    </template>
+  </UiModalCard>
 </template>

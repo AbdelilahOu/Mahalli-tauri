@@ -6,6 +6,7 @@ import { invoke } from "@tauri-apps/api";
 import type { invoiceT } from "@/types";
 import { Button } from "./ui/button";
 import { store } from "@/store";
+import UiModalCard from "./ui/UiModalCard.vue";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -38,21 +39,19 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div
-    class="w-1/2 h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
-  >
-    <h1
-      class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
-    >
+  <UiModalCard>
+    <template #title>
       {{ globalTranslate("Invoices.delete.title") }} n° {{ invoice.id }} ?
-    </h1>
-    <div class="flex gap-2">
-      <Button @click="deleteTheInvoice">
-        {{ globalTranslate("Invoices.delete.yes") }}
-      </Button>
-      <Button @click="cancelDelete">
-        {{ globalTranslate("Invoices.delete.no") }}
-      </Button>
-    </div>
-  </div>
+    </template>
+    <template #footer>
+      <div class="grid grid-cols-3 gap-2">
+        <Button class="col-span-2" @click="deleteTheInvoice">
+          {{ globalTranslate("Invoices.delete.yes") }}
+        </Button>
+        <Button variant="outline" @click="cancelDelete">
+          {{ globalTranslate("Invoices.delete.no") }}
+        </Button>
+      </div>
+    </template>
+  </UiModalCard>
 </template>
