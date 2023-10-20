@@ -2,11 +2,11 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
 import { computed, onBeforeUnmount } from "vue";
+import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
 import type { clientT } from "@/types";
 import { Button } from "./ui/button";
 import { store } from "@/store";
-import UiModalCard from "./ui/UiModalCard.vue";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const client = computed(() => store.getters.getSelectedRow<clientT>());

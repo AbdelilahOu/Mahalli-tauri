@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { globalTranslate } from "@/utils/globalTranslate";
+import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
 import type { productT } from "@/types";
 import { Button } from "./ui/button";
 import { store } from "@/store";
 import { computed } from "vue";
-import UiModalCard from "./ui/UiModalCard.vue";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
