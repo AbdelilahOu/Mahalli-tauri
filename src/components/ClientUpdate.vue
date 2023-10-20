@@ -1,27 +1,42 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { reactive, onBeforeUnmount, computed } from "vue";
-import { CLIENT_UPDATE } from "@/constants/defaultValues";
+import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { globalTranslate } from "@/utils/globalTranslate";
+import { onBeforeUnmount, computed, ref } from "vue";
 import type { clientT, updateClientT } from "@/types";
+import { toTypedSchema } from "@vee-validate/zod";
+import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
+import { useForm } from "vee-validate";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
+import { z } from "zod";
 
 const ClientRow = computed(() => store.getters.getSelectedRow<clientT>());
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const updateClient = reactive<updateClientT>(
-  ClientRow.value ? ClientRow.value : CLIENT_UPDATE
+const isLoading = ref<boolean>(false);
+
+const clientSchema = toTypedSchema(
+  z.object({
+    fullname: z.string().min(2).max(50).default(ClientRow.value.fullname),
+    email: z.string().default(ClientRow.value.email ?? ""),
+    phone: z.string().default(ClientRow.value.phone ?? ""),
+    address: z.string().default(ClientRow.value.address ?? ""),
+  })
 );
 
-const updateTheClient = async () => {
-  if (updateClient.id) {
+const form = useForm({
+  validationSchema: clientSchema,
+});
+
+const updateTheClient = async (client: updateClientT) => {
+  if (ClientRow.value.id) {
     try {
       await invoke("update_client", {
-        client: updateClient,
-        id: updateClient.id,
+        client: { ...client, image: ClientRow.value.image },
+        id: ClientRow.value.id,
       });
       // toggle refresh
       updateQueryParams({
@@ -30,49 +45,92 @@ const updateTheClient = async () => {
     } catch (error) {
       console.log(error);
     } finally {
-      store.setters.updateStore({ key: "show", value: false });
+      hideModal();
     }
   }
 };
+
+const hideModal = () => {
+  store.setters.updateStore({ key: "show", value: false });
+};
+
+const onSubmit = form.handleSubmit((values) => {
+  updateTheClient(values);
+});
 
 onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 </script>
 
 <template>
-  <div
-    class="w-1/2 h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
-  >
-    <h1
-      class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
-    >
+  <UiModalCard>
+    <template #title>
       {{ globalTranslate("Clients.update.title") }}
-    </h1>
-    <div class="h-full w-full flex flex-col gap-2">
-      <Input
-        v-model="updateClient.fullname"
-        type="text"
-        :placeHolder="globalTranslate('Clients.create.placeholders[0]')"
-      />
-      <Input
-        v-model="updateClient.email"
-        type="text"
-        :placeHolder="globalTranslate('Clients.create.placeholders[1]')"
-      />
-      <Input
-        v-model="updateClient.phone"
-        type="text"
-        :placeHolder="globalTranslate('Clients.create.placeholders[2]')"
-      />
-      <Input
-        v-model="updateClient.address"
-        type="text"
-        :placeHolder="globalTranslate('Clients.create.placeholders[3]')"
-      />
-    </div>
-    <div class="flex">
-      <Button class="w-full" @click="updateTheClient">
-        {{ globalTranslate("Clients.update.button") }} {{ updateClient.name }}
-      </Button>
-    </div>
-  </div>
+    </template>
+    <template #content>
+      <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
+        <FormField v-slot="{ componentField }" name="fullname">
+          <FormItem>
+            <FormLabel>Full name</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="full name"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="email">
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="example@gmail.com"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="phone">
+          <FormItem>
+            <FormLabel>Phone number</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="+2126********"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="address">
+          <FormItem>
+            <FormLabel>Address</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="Address"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <div class="w-full grid grid-cols-3 gap-2">
+          <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
+            {{ globalTranslate("Clients.update.button") }}
+            {{ ClientRow.fullname }}
+          </Button>
+          <Button
+            type="button"
+            @click="hideModal"
+            :disabled="isLoading"
+            variant="outline"
+          >
+            Cancel</Button
+          >
+        </div>
+      </form>
+    </template>
+  </UiModalCard>
 </template>

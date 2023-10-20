@@ -58,7 +58,11 @@ const isFocused = ref(false);
         isFocused ? 'border-black border-2 border-l-0' : 'border',
       ]"
     >
-      <slot name="unite"></slot>
+      <span
+        class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+      >
+        <slot name="unite"></slot>
+      </span>
     </div>
   </div>
 </template>

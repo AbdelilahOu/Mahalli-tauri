@@ -11,14 +11,35 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { saveFile } from "@/utils/fs";
 import { store } from "@/store";
+import UiModalCard from "./ui/UiModalCard.vue";
+import { toTypedSchema } from "@vee-validate/zod";
+import { z } from "zod";
+import { useForm } from "vee-validate";
+import { Textarea } from "./ui/textarea";
+
+import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 
 const isLoading = ref<boolean>(false);
 
-const product = reactive<newProductT>(Object.assign({}, PRODUCT_CREATE));
+const image = ref<string>();
+
+const productSchema = toTypedSchema(
+  z.object({
+    name: z.string().min(2).max(50),
+    price: z.number().min(0),
+    description: z.string().min(2).max(50),
+    quantity: z.number().min(0),
+    tva: z.number().min(0).max(100),
+  })
+);
+
+const form = useForm({
+  validationSchema: productSchema,
+});
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const createNewProduct = async () => {
+const createNewProduct = async (product: newProductT) => {
   isLoading.value = true;
   if (product.name !== "") {
     try {
@@ -40,65 +61,114 @@ const createNewProduct = async () => {
       console.log(error);
     } finally {
       isLoading.value = false;
-      store.setters.updateStore({ key: "show", value: false });
+      hideModal();
     }
     return;
   }
   isLoading.value = false;
 };
 
-const setImage = (image: string) => {
-  product.image = image;
+const hideModal = () => {
+  store.setters.updateStore({ key: "show", value: false });
+};
+
+const onSubmit = form.handleSubmit((values) => {
+  createNewProduct(values);
+});
+
+const setImage = (path: string) => {
+  image.value = path;
 };
 </script>
 
 <template>
-  <div
-    class="w-1/2 h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
-  >
-    <h1
-      class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
-    >
+  <UiModalCard>
+    <template #title>
       {{ globalTranslate("Products.create.title") }}
-    </h1>
-    <div class="h-full w-full flex flex-col gap-2">
-      <div class="w-full h-fit flex justify-center">
+    </template>
+    <template #content>
+      <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
         <UiUploader
           name="Image"
           :extensions="ImagesFiles"
           @on:save="setImage"
         />
-      </div>
-      <Input
-        v-model="product.name"
-        type="text"
-        :placeHolder="globalTranslate('Products.create.placeholders[0]')"
-      />
-      <Input
-        v-model="product.price"
-        type="number"
-        :placeHolder="globalTranslate('Products.create.placeholders[2]')"
-      />
-      <Input
-        v-model="product.tva"
-        type="number"
-        :placeHolder="globalTranslate('Products.create.placeholders[3]')"
-      />
-      <Input
-        v-model="product.quantity"
-        type="number"
-        :placeHolder="globalTranslate('Products.create.placeholders[4]')"
-      />
-      <Input
-        v-model="product.description"
-        type="textarea"
-        :placeHolder="globalTranslate('Products.create.placeholders[5]')"
-      />
-    </div>
-    <div class="flex">
-      <Button :disabled="isLoading" class="w-full" @click="createNewProduct">
-        {{ globalTranslate("Products.create.button") }}
-      </Button>
-    </div>
-  </div>
+        <FormField v-slot="{ componentField }" name="name">
+          <FormItem>
+            <FormLabel>Name</FormLabel>
+            <FormControl>
+              <Input
+                type="text"
+                placeHolder="Product name"
+                v-bind="componentField"
+              />
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="price">
+          <FormItem>
+            <FormLabel>Price</FormLabel>
+            <FormControl>
+              <Input
+                type="number"
+                placeHolder="Product price"
+                v-bind="componentField"
+              >
+                <template #unite> DH </template>
+              </Input>
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="tva">
+          <FormItem>
+            <FormLabel>TVA</FormLabel>
+            <FormControl>
+              <Input type="text" placeHolder="tva" v-bind="componentField">
+                <template #unite> % </template>
+              </Input>
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="quantity">
+          <FormItem>
+            <FormLabel>Quantity</FormLabel>
+            <FormControl>
+              <Input
+                type="number"
+                placeHolder="Quantity"
+                v-bind="componentField"
+              >
+                <template #unite> Item </template>
+              </Input>
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="description">
+          <FormItem>
+            <FormLabel>Description</FormLabel>
+            <FormControl>
+              <Textarea
+                type="text"
+                placeholder="Description"
+                v-bind="componentField"
+              ></Textarea>
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <div class="w-full grid grid-cols-3 gap-2">
+          <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
+            {{ globalTranslate("Clients.create.button") }}
+          </Button>
+          <Button
+            @click="hideModal"
+            type="button"
+            :disabled="isLoading"
+            variant="outline"
+          >
+            Cancel</Button
+          >
+        </div>
+      </form>
+    </template>
+  </UiModalCard>
 </template>
