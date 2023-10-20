@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { pictureDir, downloadDir } from "@tauri-apps/api/path";
-import { defineComponent, ref, type PropType, onBeforeUnmount } from "vue";
-import { open } from "@tauri-apps/api/dialog";
-import { convertFileSrc } from "@tauri-apps/api/tauri";
-import type { FileNames } from "@/types";
-import UiIcon from "./UiIcon.vue";
-import { useDropZone } from "@vueuse/core";
 import { deleteTempFolder, uploadImagefiles } from "@/utils/fs";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
+import { open } from "@tauri-apps/api/dialog";
+import { useDropZone } from "@vueuse/core";
+import { ref, onBeforeUnmount } from "vue";
+import UiIcon from "./UiIcon.vue";
 
 const { name, extensions } = defineProps<{
   extensions: string[];
