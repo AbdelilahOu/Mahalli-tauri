@@ -12,6 +12,7 @@ import UiIcon from "./ui/UiIcon.vue";
 import { Input } from "./ui/input";
 import { store } from "@/store";
 import UiModalCard from "./ui/UiModalCard.vue";
+import { Label } from "./ui/label";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -92,47 +93,57 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
     <template #content>
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="w-full h-full flex flex-col gap-1">
-          <h1 class="font-medium">
+          <Label for="seller_id">
             {{ globalTranslate("Orders.update.details.seller.title") }}
-          </h1>
+          </Label>
           <ComboBox
+            id="seller_id"
             :label="globalTranslate('Orders.update.details.seller.select')"
             v-model="updateOrder.seller_id"
             :items="sellers"
           />
         </div>
         <div class="w-full h-full flex flex-col gap-1">
-          <h1 class="font-medium">
+          <Label for="status">
             {{ globalTranslate("Orders.update.details.order.title") }}
-          </h1>
-          <div class="w-full h-full flex flex-col mb-1 gap-1">
+          </Label>
+          <div id="status" class="w-full h-full flex flex-col mb-1 gap-1">
             <div class="flex justify-between w-full">
               <div
                 class="h-full w-full flex flex-row flex-nowrap items-center gap-2"
               >
                 <Checkbox
+                  id="status_1"
                   :checked="updateOrder.status === 'delivered'"
                   @update:checked="() => (updateOrder.status = 'delivered')"
                 />
-                <span>{{ globalTranslate("Orders.status.delivered") }}</span>
+                <Label for="status_1">{{
+                  globalTranslate("Orders.status.delivered")
+                }}</Label>
               </div>
               <div
                 class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2"
               >
                 <Checkbox
+                  id="status_2"
                   :checked="updateOrder.status === 'pending'"
                   @update:checked="() => (updateOrder.status = 'pending')"
                 />
-                <span>{{ globalTranslate("Orders.status.pending") }}</span>
+                <Label for="status_2">{{
+                  globalTranslate("Orders.status.pending")
+                }}</Label>
               </div>
               <div
                 class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2"
               >
                 <Checkbox
+                  id="status_3"
                   :checked="updateOrder.status === 'canceled'"
                   @update:checked="() => (updateOrder.status = 'canceled')"
                 />
-                <span>{{ globalTranslate("Orders.status.canceled") }}</span>
+                <Label for="status_3">{{
+                  globalTranslate("Orders.status.canceled")
+                }}</Label>
               </div>
             </div>
           </div>
@@ -143,82 +154,58 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
             <div
               class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
             >
-              <div class="flex flex-col gap-2">
-                <template
-                  v-for="(item, index) in updateOrder.order_items"
-                  :key="index"
+              <template
+                v-for="(item, index) in updateOrder.order_items"
+                :key="index"
+              >
+                <ComboBox
+                  :label="globalTranslate('Orders.update.details.order.select')"
+                  v-model="item.product_id"
+                  :items="products"
+                />
+                <Input
+                  v-model="item.quantity"
+                  class="border-r-0"
+                  :placeHolder="
+                    globalTranslate(
+                      'Orders.create.details.order.placeholder[0]'
+                    )
+                  "
+                  type="number"
                 >
-                  <ComboBox
-                    :label="
-                      globalTranslate('Orders.update.details.order.select')
-                    "
-                    v-model="item.product_id"
-                    :items="products"
-                  />
-                </template>
-              </div>
-              <div class="flex flex-col gap-2">
-                <div
-                  class="h-full flex w-full items-center relative"
-                  v-for="(item, index) in updateOrder.order_items"
-                  :key="index"
+                  <template #unite>
+                    <span
+                      class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+                    >
+                      Item
+                    </span>
+                  </template>
+                </Input>
+                <Input
+                  v-model="item.price"
+                  class="border-r-0"
+                  :placeHolder="
+                    globalTranslate(
+                      'Orders.create.details.order.placeholder[1]'
+                    )
+                  "
+                  type="number"
                 >
-                  <Input
-                    v-model="item.quantity"
-                    class="border-r-0"
-                    :placeHolder="
-                      globalTranslate(
-                        'Orders.create.details.order.placeholder[0]'
-                      )
-                    "
-                    type="number"
-                  >
-                    <template #unite>
-                      <span
-                        class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
-                      >
-                        Item
-                      </span>
-                    </template>
-                  </Input>
-                </div>
-              </div>
-              <div class="flex flex-col gap-2">
-                <div
-                  class="h-full flex w-full items-center relative"
-                  v-for="(item, index) in updateOrder.order_items"
-                  :key="index"
-                >
-                  <Input
-                    v-model="item.price"
-                    class="border-r-0"
-                    :placeHolder="
-                      globalTranslate(
-                        'Orders.create.details.order.placeholder[1]'
-                      )
-                    "
-                    type="number"
-                  >
-                    <template #unite>
-                      <span
-                        class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
-                      >
-                        DH
-                      </span>
-                    </template>
-                  </Input>
-                </div>
-              </div>
-              <div class="flex flex-col gap-2">
+                  <template #unite>
+                    <span
+                      class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+                    >
+                      DH
+                    </span>
+                  </template>
+                </Input>
                 <div
                   @click="deleteOrderItem(index)"
                   class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
-                  v-for="(item, index) in updateOrder.order_items"
-                  :key="index"
                 >
                   <UiIcon name="delete" />
                 </div>
-              </div>
+              </template>
             </div>
           </div>
         </div>
