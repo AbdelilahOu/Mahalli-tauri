@@ -97,12 +97,13 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
           <Label for="seller_id">
             {{ globalTranslate("Orders.update.details.seller.title") }}
           </Label>
-          <ComboBox
-            id="seller_id"
-            :label="globalTranslate('Orders.update.details.seller.select')"
-            v-model="updateOrder.seller_id"
-            :items="sellers"
-          />
+          <span id="seller_id">
+            <ComboBox
+              :label="globalTranslate('Orders.update.details.seller.select')"
+              v-model="updateOrder.seller_id"
+              :items="sellers"
+            />
+          </span>
         </div>
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">

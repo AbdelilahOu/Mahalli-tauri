@@ -92,12 +92,13 @@ const hideModal = () => {
           <Label for="seller_id">
             {{ globalTranslate("Orders.create.details.seller.title") }}
           </Label>
-          <ComboBox
-            id="seller_id"
-            :label="globalTranslate('Orders.create.details.seller.select')"
-            v-model="newOrder.seller_id"
-            :items="sellers"
-          />
+          <span id="seller_id">
+            <ComboBox
+              :label="globalTranslate('Orders.create.details.seller.select')"
+              v-model="newOrder.seller_id"
+              :items="sellers"
+            />
+          </span>
         </div>
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">

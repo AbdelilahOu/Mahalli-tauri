@@ -101,12 +101,13 @@ const hideModal = () => {
           <Label for="client_id">
             {{ globalTranslate("Invoices.create.details.client.title") }}
           </Label>
-          <ComboBox
-            id="client_id"
-            :label="globalTranslate('Invoices.create.details.client.select')"
-            v-model="newInvoice.client_id"
-            :items="clients"
-          />
+          <span id="client_id">
+            <ComboBox
+              :label="globalTranslate('Invoices.create.details.client.select')"
+              v-model="newInvoice.client_id"
+              :items="clients"
+            />
+          </span>
         </div>
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
@@ -159,7 +160,7 @@ const hideModal = () => {
           <div
             class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
-            <template v-for="(item, index) in invoice_items" :key="_index">
+            <template v-for="(item, index) in invoice_items" :key="index">
               <ComboBox
                 :label="
                   globalTranslate('Invoices.create.details.invoice.select')

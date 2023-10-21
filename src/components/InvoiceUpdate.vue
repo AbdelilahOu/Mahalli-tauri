@@ -98,12 +98,13 @@ const deleteInvoiceItem = (index: number) => {
           <Label for="client_id">
             {{ globalTranslate("Invoices.update.details.client.title") }}
           </Label>
-          <ComboBox
-            id="client_id"
-            :label="globalTranslate('Invoices.update.details.client.select')"
-            :items="clients"
-            v-model="updateInvoice.client_id"
-          />
+          <span id="client_id">
+            <ComboBox
+              :label="globalTranslate('Invoices.update.details.client.select')"
+              :items="clients"
+              v-model="updateInvoice.client_id"
+            />
+          </span>
         </div>
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
