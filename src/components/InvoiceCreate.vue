@@ -11,8 +11,10 @@ import Input from "./ui/input/Input.vue";
 import { Checkbox } from "./ui/checkbox";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
-import { ZodAny, z } from "zod";
+import { z } from "zod";
 import UiModalCard from "./ui/UiModalCard.vue";
+import { Label } from "./ui/label";
+import { Separator } from "./ui/separator";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -96,99 +98,100 @@ const hideModal = () => {
     <template #content>
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="w-full h-full flex flex-col gap-1">
-          <h1 class="font-medium">
+          <Label for="client_id">
             {{ globalTranslate("Invoices.create.details.client.title") }}
-          </h1>
-          <ComboBox
-            :label="globalTranslate('Invoices.create.details.client.select')"
-            v-model="newInvoice.client_id"
-            :items="clients"
-          />
+          </Label>
+          <span id="client_id">
+            <ComboBox
+              :label="globalTranslate('Invoices.create.details.client.select')"
+              v-model="newInvoice.client_id"
+              :items="clients"
+            />
+          </span>
         </div>
-        <h1 class="font-medium">
-          {{ globalTranslate("Invoices.create.details.invoice.title") }}
-        </h1>
-        <div class="w-full h-full flex flex-col mb-1 gap-1">
-          <div class="flex justify-between w-full">
-            <div
-              class="h-full w-full flex flex-row flex-nowrap items-center gap-2"
-            >
-              <Checkbox
-                @update:checked="() => (newInvoice.status = 'delivered')"
-              />
-              <span>{{ globalTranslate("Orders.status.delivered") }}</span>
-            </div>
-            <div
-              class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2"
-            >
-              <Checkbox
-                @update:checked="() => (newInvoice.status = 'pending')"
-              />
-              <span>{{ globalTranslate("Orders.status.pending") }}</span>
-            </div>
-            <div
-              class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2"
-            >
-              <Checkbox
-                @update:checked="() => (newInvoice.status = 'canceled')"
-              />
-              <span>{{ globalTranslate("Orders.status.canceled") }}</span>
+        <Separator />
+        <div class="w-full h-full flex flex-col gap-1">
+          <Label for="status">
+            {{ globalTranslate("Invoices.create.details.invoice.title") }}
+          </Label>
+          <div id="status" class="w-full h-full flex flex-col mb-1 gap-1">
+            <div class="flex justify-between w-full">
+              <div
+                class="h-full w-full flex flex-row flex-nowrap items-center gap-2"
+              >
+                <Checkbox
+                  id="status-1"
+                  @update:checked="() => (newInvoice.status = 'delivered')"
+                />
+                <Label for="status-1">{{
+                  globalTranslate("Orders.status.delivered")
+                }}</Label>
+              </div>
+              <div
+                class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2"
+              >
+                <Checkbox
+                  id="status-2"
+                  @update:checked="() => (newInvoice.status = 'pending')"
+                />
+                <Label for="status-2">{{
+                  globalTranslate("Orders.status.pending")
+                }}</Label>
+              </div>
+              <div
+                class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2"
+              >
+                <Checkbox
+                  id="status-3"
+                  @update:checked="() => (newInvoice.status = 'canceled')"
+                />
+                <Label for="status-3">{{
+                  globalTranslate("Orders.status.canceled")
+                }}</Label>
+              </div>
             </div>
           </div>
         </div>
+        <Separator />
         <div class="w-full h-full flex flex-col gap-1">
-          <div class="w-full h-full flex flex-col gap-1">
-            <Button @click="addInvoiceItem">
-              {{ globalTranslate("Invoices.create.details.invoice.add") }}
-            </Button>
-            <div
-              class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
-            >
-              <div class="flex flex-col gap-2">
-                <template v-for="(item, _index) in invoice_items" :key="_index">
-                  <ComboBox
-                    :label="
-                      globalTranslate('Invoices.create.details.invoice.select')
-                    "
-                    v-model="item.product_id"
-                    :items="products"
-                  />
-                </template>
-              </div>
-              <div class="flex flex-col gap-2">
-                <template v-for="(item, _index) in invoice_items" :key="_index">
-                  <div class="h-full w-full items-center relative">
-                    <Input
-                      :placeHolder="
-                        globalTranslate(
-                          'Invoices.create.details.invoice.placeholder[0]'
-                        )
-                      "
-                      type="number"
-                      v-model="item.quantity"
-                    >
-                      <template #unite>
-                        <span
-                          class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
-                        >
-                          Item
-                        </span>
-                      </template>
-                    </Input>
-                  </div>
-                </template>
-              </div>
-              <div class="flex flex-col gap-2">
-                <template v-for="(_item, index) in invoice_items" :key="index">
-                  <div
-                    @click="removeInvoiceItem(index)"
-                    class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
+          <Button @click="addInvoiceItem">
+            {{ globalTranslate("Invoices.create.details.invoice.add") }}
+          </Button>
+          <div
+            class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
+          >
+            <template v-for="(item, index) in invoice_items" :key="index">
+              <ComboBox
+                :label="
+                  globalTranslate('Invoices.create.details.invoice.select')
+                "
+                v-model="item.product_id"
+                :items="products"
+              />
+              <Input
+                :placeHolder="
+                  globalTranslate(
+                    'Invoices.create.details.invoice.placeholder[0]'
+                  )
+                "
+                type="number"
+                v-model="item.quantity"
+              >
+                <template #unite>
+                  <span
+                    class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
                   >
-                    <UiIcon isStyled name="delete" />
-                  </div>
+                    Item
+                  </span>
                 </template>
+              </Input>
+              <div
+                @click="removeInvoiceItem(index)"
+                class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
+              >
+                <UiIcon isStyled name="delete" />
               </div>
-            </div>
+            </template>
           </div>
         </div>
       </div>
