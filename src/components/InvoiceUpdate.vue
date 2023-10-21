@@ -13,7 +13,7 @@ import { onBeforeUnmount, onBeforeMount, computed, reactive, ref } from "vue";
 import { INVOICE_UPDATE } from "@/constants/defaultValues";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { Label } from "./ui/label";
-
+import { Separator } from "./ui/separator";
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const clients = ref<{ label: string; value: string }[]>([]);
@@ -105,6 +105,7 @@ const deleteInvoiceItem = (index: number) => {
             v-model="updateInvoice.client_id"
           />
         </div>
+        <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="status">invoice details</Label>
           <div id="status" class="w-full h-full flex flex-col mb-1 gap-1">
@@ -147,45 +148,46 @@ const deleteInvoiceItem = (index: number) => {
               </div>
             </div>
           </div>
-          <div class="w-full h-full flex flex-col gap-1">
-            <Button @click="addInvoiceItem">
-              {{ globalTranslate("Invoices.update.details.invoice.add") }}
-            </Button>
-            <div
-              class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
+        </div>
+        <Separator />
+        <div class="w-full h-full flex flex-col gap-1">
+          <Button @click="addInvoiceItem">
+            {{ globalTranslate("Invoices.update.details.invoice.add") }}
+          </Button>
+          <div
+            class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
+          >
+            <template
+              v-for="(item, index) in updateInvoice.invoice_items"
+              :key="index"
             >
-              <template
-                v-for="(item, index) in updateInvoice.invoice_items"
-                :key="index"
+              <ComboBox
+                :label="
+                  globalTranslate('Invoices.create.details.invoice.select')
+                "
+                :items="products"
+                v-model="item.product_id"
+              />
+              <Input
+                placeHolder="Product quantity"
+                type="number"
+                v-model="item.quantity"
               >
-                <ComboBox
-                  :label="
-                    globalTranslate('Invoices.create.details.invoice.select')
-                  "
-                  :items="products"
-                  v-model="item.product_id"
-                />
-                <Input
-                  placeHolder="Product quantity"
-                  type="number"
-                  v-model="item.quantity"
-                >
-                  <template #unite>
-                    <span
-                      class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
-                    >
-                      Item
-                    </span>
-                  </template>
-                </Input>
-                <div
-                  class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
-                  @click="deleteInvoiceItem(index)"
-                >
-                  <UiIcon isStyled name="delete" />
-                </div>
-              </template>
-            </div>
+                <template #unite>
+                  <span
+                    class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+                  >
+                    Item
+                  </span>
+                </template>
+              </Input>
+              <div
+                class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
+                @click="deleteInvoiceItem(index)"
+              >
+                <UiIcon isStyled name="delete" />
+              </div>
+            </template>
           </div>
         </div>
       </div>
