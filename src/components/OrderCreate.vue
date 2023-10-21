@@ -13,6 +13,7 @@ import { Input } from "./ui/input";
 import { store } from "@/store";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { Label } from "./ui/label";
+import { Separator } from "./ui/separator";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const order_items = ref<newOrdersItemT[]>(
@@ -98,6 +99,7 @@ const hideModal = () => {
             :items="sellers"
           />
         </div>
+        <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="status">
             {{ globalTranslate("Orders.create.details.order.title") }}
@@ -139,63 +141,60 @@ const hideModal = () => {
               </div>
             </div>
           </div>
-          <div class="w-full h-full flex flex-col gap-1">
-            <Button @click="addOrderItem">
-              {{ globalTranslate("Orders.create.details.order.add") }}
-            </Button>
-            <div
-              class="w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
-            >
-              <template v-for="(item, index) in order_items">
-                <ComboBox
-                  :label="globalTranslate('Orders.create.details.order.select')"
-                  v-model="item.product_id"
-                  :items="products"
-                />
-                <Input
-                  class="border-r-0"
-                  :placeHolder="
-                    globalTranslate(
-                      'Orders.create.details.order.placeholder[0]'
-                    )
-                  "
-                  type="number"
-                  v-model="item.quantity"
-                >
-                  <template #unite>
-                    <span
-                      class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
-                    >
-                      Item
-                    </span>
-                  </template>
-                </Input>
-                <Input
-                  class="border-r-0"
-                  :placeHolder="
-                    globalTranslate(
-                      'Orders.create.details.order.placeholder[1]'
-                    )
-                  "
-                  type="number"
-                  v-model="item.price"
-                >
-                  <template #unite>
-                    <span
-                      class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
-                    >
-                      DH
-                    </span>
-                  </template>
-                </Input>
-                <div
-                  @click="removeOrderItem(index)"
-                  class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
-                >
-                  <UiIcon isStyled name="delete" />
-                </div>
-              </template>
-            </div>
+        </div>
+        <Separator />
+        <div class="w-full h-full flex flex-col gap-1">
+          <Button @click="addOrderItem">
+            {{ globalTranslate("Orders.create.details.order.add") }}
+          </Button>
+          <div
+            class="w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
+          >
+            <template v-for="(item, index) in order_items">
+              <ComboBox
+                :label="globalTranslate('Orders.create.details.order.select')"
+                v-model="item.product_id"
+                :items="products"
+              />
+              <Input
+                class="border-r-0"
+                :placeHolder="
+                  globalTranslate('Orders.create.details.order.placeholder[0]')
+                "
+                type="number"
+                v-model="item.quantity"
+              >
+                <template #unite>
+                  <span
+                    class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+                  >
+                    Item
+                  </span>
+                </template>
+              </Input>
+              <Input
+                class="border-r-0"
+                :placeHolder="
+                  globalTranslate('Orders.create.details.order.placeholder[1]')
+                "
+                type="number"
+                v-model="item.price"
+              >
+                <template #unite>
+                  <span
+                    class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+                  >
+                    DH
+                  </span>
+                </template>
+              </Input>
+              <div
+                @click="removeOrderItem(index)"
+                class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
+              >
+                <UiIcon isStyled name="delete" />
+              </div>
+            </template>
           </div>
         </div>
       </div>
