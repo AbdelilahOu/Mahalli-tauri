@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { computed, onBeforeUnmount } from "vue";
 import { invoke } from "@tauri-apps/api";
 import type { orderT } from "@/types";
@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { store } from "@/store";
 import UiModalCard from "./ui/UiModalCard.vue";
 
+const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const order = computed(() => store.getters.getSelectedRow<orderT>());
 
@@ -38,15 +39,15 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 <template>
   <UiModalCard>
     <template #title>
-      {{ globalTranslate("Orders.delete.title") }}n° {{ order?.id }} ?
+      {{ t("Orders.delete.title") }}n° {{ order?.id }} ?
     </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
         <Button class="col-span-2" @click="deleteTheOrders()">
-          {{ globalTranslate("Orders.delete.yes") }}
+          {{ t("Orders.delete.yes") }}
         </Button>
         <Button variant="outline" @click="cancelDelete">
-          {{ globalTranslate("Orders.delete.no") }}
+          {{ t("Orders.delete.no") }}
         </Button>
       </div>
     </template>

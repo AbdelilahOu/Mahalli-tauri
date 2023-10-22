@@ -11,7 +11,7 @@ import {
 } from "vue";
 import { useRouter } from "vue-router";
 import { invoke } from "@tauri-apps/api";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
@@ -20,6 +20,7 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { store } from "@/store";
 import InvoicesTable from "@/components/InvoicesTable.vue";
 
+const { t } = useI18n();
 const router = useRouter();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -77,7 +78,7 @@ const updateModal = (name: string) => {
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
           <div class="w-1/3">
-            <Input type="text" :placeHolder="globalTranslate('Global.search')">
+            <Input type="text" :placeHolder="t('Global.search')">
               <UiIcon
                 :modeValue="searchQuery"
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
@@ -107,7 +108,7 @@ const updateModal = (name: string) => {
                 extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
               />
-              {{ globalTranslate("Invoices.index.addButton") }}
+              {{ t("Invoices.index.addButton") }}
             </Button>
           </div>
         </div>

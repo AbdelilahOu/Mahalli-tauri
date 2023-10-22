@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import ProductsTable from "@/components/ProductsTable.vue";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { Button } from "@/components/ui/button";
 import type { productT, withCount } from "@/types";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,7 @@ import {
   ref,
 } from "vue";
 
+const { t } = useI18n();
 const router = useRouter();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 //
@@ -83,7 +84,7 @@ const updateModal = (name: string) => {
             <Input
               v-model="searchQuery"
               type="text"
-              :placeHolder="globalTranslate('Global.search')"
+              :placeHolder="t('Global.search')"
             >
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
@@ -113,7 +114,7 @@ const updateModal = (name: string) => {
                 extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
               />
-              {{ globalTranslate("Products.index.addButton") }}
+              {{ t("Products.index.addButton") }}
             </Button>
           </div>
         </div>

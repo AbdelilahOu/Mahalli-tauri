@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { globalTranslate } from "@/utils/globalTranslate";
 import UiIcon from "./ui/UiIcon.vue";
 import { Button } from "./ui/button";
 import { useI18n } from "vue-i18n";
@@ -21,7 +20,7 @@ const changeLocale = (locale: { key: string; text: string }) => {
     <h1
       class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
     >
-      {{ globalTranslate("Global.translationTitle") }}
+      {{ t("Global.translationTitle") }}
     </h1>
     <div class="grid grid-cols-2 gap-2">
       <Button

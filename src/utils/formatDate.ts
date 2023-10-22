@@ -7,7 +7,7 @@ export const formatDate = (theDate: string): string =>
     minute: "2-digit",
   });
 
-export const getWeekDay = (i: number) =>
-  new Date(2023, 4, i).toLocaleDateString("en-us", {
+export const getWeekDay = (i: number, locale = "en-us") =>
+  new Date(2023, 4, i).toLocaleDateString(locale, {
     weekday: "short",
   });

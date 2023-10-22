@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { onBeforeMount, ref, reactive } from "vue";
 import ComboBox from "./ui/combobox/ComboBox.vue";
 import type { newInventoryMvmT } from "@/types";
@@ -19,6 +19,7 @@ import { Command, CommandGroup, CommandItem } from "./ui/command";
 import { Check, ChevronsUpDown } from "lucide-vue-next";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { t } = useI18n();
 
 const products = ref<{ label: string; value: string }[]>([]);
 const isLoading = ref<boolean>(false);
@@ -72,7 +73,7 @@ const hideModal = () => {
 <template>
   <UiModalCard>
     <template #title>
-      {{ globalTranslate("Inventory.create.title") }}
+      {{ t("Inventory.create.title") }}
     </template>
     <template #content>
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
@@ -144,7 +145,7 @@ const hideModal = () => {
             <FormControl>
               <Input
                 type="number"
-                :placeHolder="globalTranslate('Inventory.create.placeholder')"
+                :placeHolder="t('Inventory.create.placeholder')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -153,7 +154,7 @@ const hideModal = () => {
 
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ globalTranslate("Inventory.create.button") }}
+            {{ t("Inventory.create.button") }}
           </Button>
           <Button
             @click="hideModal"

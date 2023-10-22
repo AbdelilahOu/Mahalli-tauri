@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
@@ -9,11 +9,13 @@ import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import { ref } from "vue";
 
-const checkedSellers = ref<string[]>([]);
-
 defineProps<{
   sellers: sellerT[];
 }>();
+
+const { t } = useI18n();
+
+const checkedSellers = ref<string[]>([]);
 
 const checkThisUser = (IsInclude: boolean, id: string) => {
   IsInclude
@@ -42,7 +44,7 @@ const toggleThisSeller = (seller: sellerT, name: string) => {
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
-              {{ globalTranslate(`Sellers.index.feilds[${index}]`) }}
+              {{ t(`Sellers.index.feilds[${index}]`) }}
             </div>
           </th>
         </tr>

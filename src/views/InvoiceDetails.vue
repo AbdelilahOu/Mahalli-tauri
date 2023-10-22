@@ -2,10 +2,11 @@
 import { onBeforeMount, ref } from "vue";
 import { useRoute } from "vue-router";
 import { invoke } from "@tauri-apps/api";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import type { invoiceDetailsT } from "@/types";
 import { Button } from "@/components/ui/button";
 
+const { t } = useI18n();
 const id = useRoute().params.id;
 const invoice = ref<invoiceDetailsT | null>(null);
 
@@ -33,7 +34,7 @@ const print = () => window.print();
       >
         <div class="w-full h-full flex-col flex">
           <h1 class="uppercase font-semibold mb-1">
-            {{ globalTranslate("InvoiceDetails.details.invoice.title") }}
+            {{ t("InvoiceDetails.details.invoice.title") }}
           </h1>
           <table class="table-auto rounded-[4px] overflow-hidden w-full">
             <tbody class="text-sm divide-y divide-gray-100">
@@ -42,7 +43,7 @@ const print = () => window.print();
                   class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
                 >
                   <span class="h-full w-full grid">
-                    {{ globalTranslate("InvoiceDetails.details.invoice.date") }}
+                    {{ t("InvoiceDetails.details.invoice.date") }}
                   </span>
                 </td>
                 <td class="p-2">
@@ -66,7 +67,7 @@ const print = () => window.print();
         </div>
         <div class="w-full h-full flex flex-col">
           <h1 class="uppercase font-semibold mb-1">
-            {{ globalTranslate("InvoiceDetails.details.client.title") }}
+            {{ t("InvoiceDetails.details.client.title") }}
           </h1>
           <table class="table-auto rounded-[4px] overflow-hidden w-full">
             <tbody class="text-sm divide-y divide-gray-100">
@@ -75,7 +76,7 @@ const print = () => window.print();
                   class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
                 >
                   <span class="h-full w-full grid">
-                    {{ globalTranslate("InvoiceDetails.details.client.name") }}
+                    {{ t("InvoiceDetails.details.client.name") }}
                   </span>
                 </td>
                 <td class="p-2">
@@ -89,7 +90,7 @@ const print = () => window.print();
                   class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
                 >
                   <span class="h-full w-full grid">
-                    {{ globalTranslate("InvoiceDetails.details.client.phone") }}
+                    {{ t("InvoiceDetails.details.client.phone") }}
                   </span>
                 </td>
                 <td class="p-2">
@@ -103,7 +104,7 @@ const print = () => window.print();
                   class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
                 >
                   <span class="h-full w-full grid">
-                    {{ globalTranslate("InvoiceDetails.details.client.email") }}
+                    {{ t("InvoiceDetails.details.client.email") }}
                   </span>
                 </td>
                 <td class="p-2">
@@ -117,9 +118,7 @@ const print = () => window.print();
                   class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
                 >
                   <span class="h-full w-full grid">
-                    {{
-                      globalTranslate("InvoiceDetails.details.client.address")
-                    }}
+                    {{ t("InvoiceDetails.details.client.address") }}
                   </span>
                 </td>
                 <td class="p-2">
@@ -133,7 +132,7 @@ const print = () => window.print();
         </div>
         <div class="w-full h-full col-span-2 row-span-2 text-black">
           <h1 class="uppercase font-semibold mb-1">
-            {{ globalTranslate("InvoiceDetails.details.items.title") }}
+            {{ t("InvoiceDetails.details.items.title") }}
           </h1>
           <table class="table-auto rounded-[4px] overflow-hidden w-full">
             <thead
@@ -143,11 +142,7 @@ const print = () => window.print();
                 <th></th>
                 <th v-for="index in 7" :key="index" class="p-2">
                   <div class="font-semibold text-left">
-                    {{
-                      globalTranslate(
-                        `InvoiceDetails.details.items.fields[${index - 1}]`
-                      )
-                    }}
+                    {{ t(`InvoiceDetails.details.items.fields[${index - 1}]`) }}
                   </div>
                 </th>
                 <th></th>
@@ -262,7 +257,7 @@ const print = () => window.print();
           <div class="w-full flex items-center justify-center">
             <div class="w-1/3 flex justify-center">
               <Button @click="print">
-                {{ globalTranslate("InvoiceDetails.details.button") }}
+                {{ t("InvoiceDetails.details.button") }}
               </Button>
             </div>
           </div>

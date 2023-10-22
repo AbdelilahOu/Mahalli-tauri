@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
@@ -8,6 +8,8 @@ import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 
 defineProps<{ products: productT[] }>();
+
+const { t } = useI18n();
 
 const toggleThisProduct = (product: productT, name: string) => {
   store.setters.updateStore({ key: "row", value: product });
@@ -35,7 +37,7 @@ const handleCheck = (product: productT, isChecked: boolean) => {
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
-              {{ globalTranslate(`Products.index.feilds[${index}]`) }}
+              {{ t(`Products.index.feilds[${index}]`) }}
             </div>
           </th>
         </tr>

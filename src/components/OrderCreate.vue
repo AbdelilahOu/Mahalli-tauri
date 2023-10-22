@@ -2,7 +2,7 @@
 import { ORDER_CREATE, ORDER_ITEM_CREATE } from "@/constants/defaultValues";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import type { newOrdersItemT, newOrdersT } from "@/types";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { ref, onBeforeMount, reactive } from "vue";
 import ComboBox from "./ui/combobox/ComboBox.vue";
 import { Checkbox } from "./ui/checkbox";
@@ -15,6 +15,7 @@ import UiModalCard from "./ui/UiModalCard.vue";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 
+const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const order_items = ref<newOrdersItemT[]>(
   ORDER_ITEM_CREATE.map((a) => Object.assign({}, a))
@@ -84,17 +85,17 @@ const hideModal = () => {
     class="w-5/6 lg:w-1/2 rounded-[4px] relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
   >
     <template #title>
-      {{ globalTranslate("Orders.create.title") }}
+      {{ t("Orders.create.title") }}
     </template>
     <template #content>
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="seller_id">
-            {{ globalTranslate("Orders.create.details.seller.title") }}
+            {{ t("Orders.create.details.seller.title") }}
           </Label>
           <span id="seller_id">
             <ComboBox
-              :label="globalTranslate('Orders.create.details.seller.select')"
+              :label="t('Orders.create.details.seller.select')"
               v-model="newOrder.seller_id"
               :items="sellers"
             />
@@ -103,7 +104,7 @@ const hideModal = () => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="status">
-            {{ globalTranslate("Orders.create.details.order.title") }}
+            {{ t("Orders.create.details.order.title") }}
           </Label>
           <div id="status" class="w-full h-full flex flex-col mb-1 gap-1">
             <div class="flex justify-between w-full">
@@ -114,9 +115,7 @@ const hideModal = () => {
                   id="status_1"
                   @update:checked="() => (newOrder.status = 'delivered')"
                 />
-                <Label for="status_1">{{
-                  globalTranslate("Orders.status.delivered")
-                }}</Label>
+                <Label for="status_1">{{ t("Orders.status.delivered") }}</Label>
               </div>
               <div
                 class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2"
@@ -125,9 +124,7 @@ const hideModal = () => {
                   id="status_2"
                   @update:checked="() => (newOrder.status = 'pending')"
                 />
-                <Label for="status_2">{{
-                  globalTranslate("Orders.status.pending")
-                }}</Label>
+                <Label for="status_2">{{ t("Orders.status.pending") }}</Label>
               </div>
               <div
                 class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2"
@@ -136,9 +133,7 @@ const hideModal = () => {
                   id="status_3"
                   @update:checked="() => (newOrder.status = 'canceled')"
                 />
-                <Label for="status_3">{{
-                  globalTranslate("Orders.status.canceled")
-                }}</Label>
+                <Label for="status_3">{{ t("Orders.status.canceled") }}</Label>
               </div>
             </div>
           </div>
@@ -146,22 +141,20 @@ const hideModal = () => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Button @click="addOrderItem">
-            {{ globalTranslate("Orders.create.details.order.add") }}
+            {{ t("Orders.create.details.order.add") }}
           </Button>
           <div
             class="w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <template v-for="(item, index) in order_items">
               <ComboBox
-                :label="globalTranslate('Orders.create.details.order.select')"
+                :label="t('Orders.create.details.order.select')"
                 v-model="item.product_id"
                 :items="products"
               />
               <Input
                 class="border-r-0"
-                :placeHolder="
-                  globalTranslate('Orders.create.details.order.placeholder[0]')
-                "
+                :placeHolder="t('Orders.create.details.order.placeholder[0]')"
                 type="number"
                 v-model="item.quantity"
               >
@@ -169,9 +162,7 @@ const hideModal = () => {
               </Input>
               <Input
                 class="border-r-0"
-                :placeHolder="
-                  globalTranslate('Orders.create.details.order.placeholder[1]')
-                "
+                :placeHolder="t('Orders.create.details.order.placeholder[1]')"
                 type="number"
                 v-model="item.price"
               >
@@ -191,7 +182,7 @@ const hideModal = () => {
     <template #footer>
       <div class="grid w-full grid-cols-3 gap-2">
         <Button class="col-span-2" @click="createNewOrders()">
-          {{ globalTranslate("Orders.create.button") }}
+          {{ t("Orders.create.button") }}
         </Button>
         <Button @click="hideModal" variant="outline"> Cancel </Button>
       </div>

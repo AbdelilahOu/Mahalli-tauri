@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox/index";
 import type { invoiceT } from "@/types";
@@ -8,6 +8,8 @@ import { store } from "@/store";
 import { ref } from "vue";
 
 defineProps<{ invoices: invoiceT[] }>();
+
+const { t } = useI18n();
 
 const checkedInvoices = ref<string[]>([]);
 
@@ -39,7 +41,7 @@ const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
-              {{ globalTranslate(`Invoices.index.feilds[${index}]`) }}
+              {{ t(`Invoices.index.feilds[${index}]`) }}
             </div>
           </th>
         </tr>
@@ -110,11 +112,7 @@ const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
                     ? 'bg-green-300/60 text-green-800'
                     : 'bg-red-300/60 text-red-800',
                 ]"
-                >{{
-                  globalTranslate(
-                    `Orders.status.${Invoice.status.toLowerCase()}`
-                  )
-                }}</span
+                >{{ t(`Orders.status.${Invoice.status.toLowerCase()}`) }}</span
               >
               <span v-else class="text-red-400">No status</span>
             </div>
