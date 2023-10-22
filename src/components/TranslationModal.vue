@@ -20,7 +20,7 @@ const changeLocale = (locale: { key: string; text: string }) => {
     <h1
       class="font-semibold text-lg text-gray-800 border-b-2 border-b-gray-500 pb-2 uppercase text-center"
     >
-      {{ t("Global.translationTitle") }}
+      {{ i18n.t("Global.translationTitle") }}
     </h1>
     <div class="grid grid-cols-2 gap-2">
       <Button
