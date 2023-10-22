@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
@@ -13,6 +13,7 @@ defineProps<{
   clients: clientT[];
 }>();
 
+const { t } = useI18n();
 const checkedClients = ref<string[]>([]);
 
 const checkThisUser = (IsInclude: boolean, id: string) => {
@@ -43,7 +44,7 @@ const toggleThisClient = (client: clientT, name: string) => {
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
-              {{ globalTranslate(`Clients.index.feilds[${index}]`) }}
+              {{ t(`Clients.index.feilds[${index}]`) }}
             </div>
           </th>
         </tr>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import type { sellerT, updateSellerT } from "@/types";
 import { ref, computed, onBeforeUnmount } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
@@ -14,6 +14,7 @@ import { store } from "@/store";
 import { z } from "zod";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { t } = useI18n();
 
 const SellerRow = computed(() => store.getters.getSelectedRow<sellerT>());
 
@@ -65,7 +66,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 <template>
   <UiModalCard>
     <template #title>
-      {{ globalTranslate("Sellers.update.title") }}
+      {{ t("Sellers.update.title") }}
     </template>
     <template #content>
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
@@ -119,7 +120,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ globalTranslate("Sellers.update.button") }} {{ SellerRow.name }}
+            {{ t("Sellers.update.button") }} {{ SellerRow.name }}
           </Button>
           <Button
             @click="hideModal"

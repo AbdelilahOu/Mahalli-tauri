@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import type { productT, updateProductT } from "@/types";
 import { computed, ref, onBeforeUnmount } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
@@ -15,6 +15,7 @@ import { store } from "@/store";
 import { z } from "zod";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { t } = useI18n();
 
 const ProductRow = computed(() => store.getters.getSelectedRow<productT>());
 
@@ -73,7 +74,7 @@ onBeforeUnmount(() => {
 <template>
   <UiModalCard>
     <template #title>
-      {{ globalTranslate("Products.update.title") }}
+      {{ t("Products.update.title") }}
     </template>
     <template #content>
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">

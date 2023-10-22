@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { onBeforeUnmount, computed, ref } from "vue";
 import type { clientT, updateClientT } from "@/types";
 import { toTypedSchema } from "@vee-validate/zod";
@@ -13,8 +13,10 @@ import { Input } from "./ui/input";
 import { store } from "@/store";
 import { z } from "zod";
 
-const ClientRow = computed(() => store.getters.getSelectedRow<clientT>());
+const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
+
+const ClientRow = computed(() => store.getters.getSelectedRow<clientT>());
 
 const isLoading = ref<boolean>(false);
 
@@ -64,7 +66,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 <template>
   <UiModalCard>
     <template #title>
-      {{ globalTranslate("Clients.update.title") }}
+      {{ t("Clients.update.title") }}
     </template>
     <template #content>
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
@@ -118,7 +120,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ globalTranslate("Clients.update.button") }}
+            {{ t("Clients.update.button") }}
             {{ ClientRow.fullname }}
           </Button>
           <Button

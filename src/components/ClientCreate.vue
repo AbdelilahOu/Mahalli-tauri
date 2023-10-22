@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { ImagesFiles } from "@/constants/FileTypes";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
@@ -16,6 +16,7 @@ import { ref } from "vue";
 import { store } from "@/store";
 import { z } from "zod";
 
+const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const clientSchema = toTypedSchema(
@@ -72,7 +73,7 @@ const setImage = (imagePath: string) => {
 <template>
   <UiModalCard>
     <template #title>
-      {{ globalTranslate("Clients.create.title") }}
+      {{ t("Clients.create.title") }}
     </template>
     <template #content>
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
@@ -131,7 +132,7 @@ const setImage = (imagePath: string) => {
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ globalTranslate("Clients.create.button") }}
+            {{ t("Clients.create.button") }}
           </Button>
           <Button
             @click="hideModal"

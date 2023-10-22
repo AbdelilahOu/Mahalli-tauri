@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
@@ -10,6 +10,7 @@ import { ref } from "vue";
 
 defineProps<{ orders: orderT[] }>();
 
+const { t } = useI18n();
 const checkedOrders = ref<string[]>([]);
 
 const checkThisOrders = (IsIncluded: boolean, id: string) => {
@@ -38,7 +39,7 @@ const toggleThisOrders = (Order: orderT, name: string) => {
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
-              {{ globalTranslate(`Orders.index.feilds[${index}]`) }}
+              {{ t(`Orders.index.feilds[${index}]`) }}
             </div>
           </th>
         </tr>
@@ -86,9 +87,7 @@ const toggleThisOrders = (Order: orderT, name: string) => {
                     order.status != 'pending' && order.status != 'delivered',
                 }"
               >
-                {{
-                  globalTranslate(`Orders.status.${order.status.toLowerCase()}`)
-                }}
+                {{ t(`Orders.status.${order.status.toLowerCase()}`) }}
               </span>
               <span v-else class="text-red-400">No status</span>
             </div>

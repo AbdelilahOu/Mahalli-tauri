@@ -2,7 +2,7 @@
 // import data from "@/animations/66291-meditative-business-man.json";
 import { onBeforeMount, ref, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { login } from "@/utils/Oauth";
 // import { Vue3Lottie } from "vue3-lottie";
 
@@ -96,26 +96,24 @@ const logIn = () => {
               <Input
                 type="text"
                 v-model="User.email"
-                :placeHolder="globalTranslate('Auth.email')"
+                :placeHolder="t('Auth.email')"
                 :isEmpty="User.email !== '' && isflash"
               />
               <Input
                 type="text"
                 v-model="User.username"
-                :placeHolder="globalTranslate('Auth.username')"
+                :placeHolder="t('Auth.username')"
                 :isEmpty="User.username !== '' && isflash"
               />
               <Input
                 type="password"
                 v-model="User.password"
-                :placeHolder="globalTranslate('Auth.password')"
+                :placeHolder="t('Auth.password')"
                 :isEmpty="User.password !== '' && isflash"
               />
             </div>
             <div class="flex h-[2.5rem]">
-              <Button @click="logIn">{{
-                globalTranslate("Auth.title")
-              }}</Button>
+              <Button @click="logIn">{{ t("Auth.title") }}</Button>
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@
 import { INVOICE_CREATE, INVOICE_ITEM_CREATE } from "@/constants/defaultValues";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import type { newInvoiceT, newInvoiceItemT, invoiceT } from "@/types";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { ref, reactive, onBeforeMount } from "vue";
 import ComboBox from "./ui/combobox/ComboBox.vue";
 import Button from "./ui/button/Button.vue";
@@ -17,6 +17,7 @@ import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { t } = useI18n();
 
 const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
@@ -93,17 +94,17 @@ const hideModal = () => {
     class="w-5/6 lg:w-1/2 relative rounded-[4px] h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
   >
     <template #title>
-      {{ globalTranslate("Invoices.create.title") }}
+      {{ t("Invoices.create.title") }}
     </template>
     <template #content>
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="client_id">
-            {{ globalTranslate("Invoices.create.details.client.title") }}
+            {{ t("Invoices.create.details.client.title") }}
           </Label>
           <span id="client_id">
             <ComboBox
-              :label="globalTranslate('Invoices.create.details.client.select')"
+              :label="t('Invoices.create.details.client.select')"
               v-model="newInvoice.client_id"
               :items="clients"
             />
@@ -112,7 +113,7 @@ const hideModal = () => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="status">
-            {{ globalTranslate("Invoices.create.details.invoice.title") }}
+            {{ t("Invoices.create.details.invoice.title") }}
           </Label>
           <div id="status" class="w-full h-full flex flex-col mb-1 gap-1">
             <div class="flex justify-between w-full">
@@ -123,9 +124,7 @@ const hideModal = () => {
                   id="status-1"
                   @update:checked="() => (newInvoice.status = 'delivered')"
                 />
-                <Label for="status-1">{{
-                  globalTranslate("Orders.status.delivered")
-                }}</Label>
+                <Label for="status-1">{{ t("Orders.status.delivered") }}</Label>
               </div>
               <div
                 class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2"
@@ -134,9 +133,7 @@ const hideModal = () => {
                   id="status-2"
                   @update:checked="() => (newInvoice.status = 'pending')"
                 />
-                <Label for="status-2">{{
-                  globalTranslate("Orders.status.pending")
-                }}</Label>
+                <Label for="status-2">{{ t("Orders.status.pending") }}</Label>
               </div>
               <div
                 class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2"
@@ -145,9 +142,7 @@ const hideModal = () => {
                   id="status-3"
                   @update:checked="() => (newInvoice.status = 'canceled')"
                 />
-                <Label for="status-3">{{
-                  globalTranslate("Orders.status.canceled")
-                }}</Label>
+                <Label for="status-3">{{ t("Orders.status.canceled") }}</Label>
               </div>
             </div>
           </div>
@@ -155,24 +150,20 @@ const hideModal = () => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Button @click="addInvoiceItem">
-            {{ globalTranslate("Invoices.create.details.invoice.add") }}
+            {{ t("Invoices.create.details.invoice.add") }}
           </Button>
           <div
             class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <template v-for="(item, index) in invoice_items" :key="index">
               <ComboBox
-                :label="
-                  globalTranslate('Invoices.create.details.invoice.select')
-                "
+                :label="t('Invoices.create.details.invoice.select')"
                 v-model="item.product_id"
                 :items="products"
               />
               <Input
                 :placeHolder="
-                  globalTranslate(
-                    'Invoices.create.details.invoice.placeholder[0]'
-                  )
+                  t('Invoices.create.details.invoice.placeholder[0]')
                 "
                 type="number"
                 v-model="item.quantity"
@@ -197,7 +188,7 @@ const hideModal = () => {
           class="col-span-2"
           @click="createNewInvoice"
         >
-          {{ globalTranslate("Invoices.create.button") }}
+          {{ t("Invoices.create.button") }}
         </Button>
         <Button @click="hideModal" variant="outline"> Cancel </Button>
       </div>

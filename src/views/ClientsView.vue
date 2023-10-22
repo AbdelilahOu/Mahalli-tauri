@@ -13,13 +13,14 @@ import { useRouter } from "vue-router";
 import { invoke } from "@tauri-apps/api";
 import { store } from "@/store";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import ClientsTable from "@/components/ClientsTable.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { clientT, withCount } from "@/types";
 import UiIcon from "@/components/ui/UiIcon.vue";
 
+const { t } = useI18n();
 const router = useRouter();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -81,7 +82,7 @@ const updateModal = (name: string) => {
             <Input
               v-model="searchQuery"
               type="text"
-              :placeHolder="globalTranslate('Global.search')"
+              :placeHolder="t('Global.search')"
             >
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
@@ -111,7 +112,7 @@ const updateModal = (name: string) => {
                 extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
               />
-              {{ globalTranslate("Clients.index.addButton") }}
+              {{ t("Clients.index.addButton") }}
             </Button>
           </div>
         </div>

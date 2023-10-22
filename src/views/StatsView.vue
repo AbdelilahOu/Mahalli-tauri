@@ -4,11 +4,13 @@ import type { FilteredInventoryData, inOutReType } from "@/types";
 import { onBeforeMount, reactive } from "vue";
 import ChartDoughnut from "@/components/ChartDoughnut.vue";
 import { CHART_OPTIONS } from "@/constants/defaultValues";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import ChartHolder from "@/components/ChartHolder.vue";
 import { generateColor } from "@/utils/generateColor";
 import ChartBar from "@/components/ChartBar.vue";
 import { invoke } from "@tauri-apps/api";
+
+const { t } = useI18n();
 
 const InsOuts = reactive({
   keys: [] as { [key: string]: any; data: number[] }[],
@@ -60,10 +62,7 @@ async function getBestThree(isClients = true) {
 }
 
 onBeforeMount(async () => {
-  const labels = [
-    globalTranslate(`Stats.Labels[0]`),
-    globalTranslate(`Stats.Labels[1]`),
-  ];
+  const labels = [t(`Stats.Labels[0]`), t(`Stats.Labels[1]`)];
   const InOutStats = await getInventoryMouvementStats();
   InsOuts.months = InOutStats.months.reverse();
   InsOuts.data = InOutStats.result;
@@ -109,7 +108,7 @@ onBeforeMount(async () => {
           </template>
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>{{ globalTranslate("Stats.Title") }}</i>
+              <i>{{ t("Stats.Title") }}</i>
             </h1>
           </template>
         </ChartHolder>

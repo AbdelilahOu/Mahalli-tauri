@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { RouteLinks } from "@/constants/RouteNames";
 import { useRoute } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
 import { computed } from "vue";
 import { store } from "@/store";
 
+const { t } = useI18n();
 const route = useRoute();
 const ActiveLink = computed(() =>
   RouteLinks.find((link) => link.component === route.name)
@@ -50,10 +51,7 @@ const User = computed(() => store.getters.getUser());
           <span v-if="route.fullPath !== '/'" class="flex items-center">
             <span class="flex items-center">
               {{ ActiveLink && " / " }}
-              {{
-                ActiveLink &&
-                globalTranslate(`Global.routes.${ActiveLink.name}`)
-              }}
+              {{ ActiveLink && t(`Global.routes.${ActiveLink.name}`) }}
               {{ route.params.id ? `/ n° ${route.params.id}` : "" }}
             </span>
           </span>

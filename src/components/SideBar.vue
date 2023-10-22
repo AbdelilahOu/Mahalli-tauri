@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import { RouteLinks } from "@/constants/RouteNames";
 import UiSideLink from "./ui/UiSideLink.vue";
 import { RouterLink } from "vue-router";
@@ -13,6 +13,8 @@ defineProps<{
 defineEmits<{
   (e: "toggle:collapse"): void;
 }>();
+
+const { t } = useI18n();
 
 const locale = computed(() => store.getters.getCurrentLocale());
 
@@ -85,7 +87,7 @@ const openSettingsModal = () => {
               <UiSideLink
                 :isText="!isCollapse"
                 :icon="link.name"
-                :linkText="globalTranslate(`Global.routes.${link.name}`)"
+                :linkText="t(`Global.routes.${link.name}`)"
               />
             </RouterLink>
           </template>

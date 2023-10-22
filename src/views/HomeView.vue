@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
-import { globalTranslate } from "@/utils/globalTranslate";
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const pages = ref([
   {
     image: "/clients.jpg",
@@ -69,7 +69,7 @@ const pages = ref([
                 <span
                   class="text-center text-xl text-gray-900 font-bold bg-white rounded-[4px] px-4 z-20 py-2 flex justify-center items-center transition-all duration-250"
                 >
-                  {{ globalTranslate(`Global.routes.${page.text}`) }}
+                  {{ t(`Global.routes.${page.text}`) }}
                 </span>
               </div>
             </RouterLink>

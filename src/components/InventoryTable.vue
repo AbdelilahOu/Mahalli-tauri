@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
 import { formatDate } from "@/utils/formatDate";
 import type { inventoryMvmT } from "@/types";
 import { RouterLink } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
+
+const { t } = useI18n();
 
 defineProps<{
   inventory: inventoryMvmT[];
@@ -23,7 +25,7 @@ defineProps<{
             class="p-2 first:rounded-l-[4px] last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
-              {{ globalTranslate(`Inventory.index.feilds[${index}]`) }}
+              {{ t(`Inventory.index.feilds[${index}]`) }}
             </div>
           </th>
         </tr>

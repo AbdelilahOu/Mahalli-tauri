@@ -2,7 +2,7 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useRouter } from "vue-router";
 import { invoke } from "@tauri-apps/api";
-import { globalTranslate } from "@/utils/globalTranslate";
+import { useI18n } from "vue-i18n";
 import InventoryTable from "@/components/InventoryTable.vue";
 import type { inventoryMvmT, withCount } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import {
   type WatchStopHandle,
 } from "vue";
 
+const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const inventoryMouvements = ref<inventoryMvmT[]>([]);
@@ -81,7 +82,7 @@ const uploadCSV = () => {
             <Input
               v-model="searchQuery"
               type="text"
-              :placeHolder="globalTranslate('Global.search')"
+              :placeHolder="t('Global.search')"
             >
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
@@ -112,7 +113,7 @@ const uploadCSV = () => {
                 extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
               />
-              {{ globalTranslate("Inventory.index.addButton") }}
+              {{ t("Inventory.index.addButton") }}
             </Button>
           </div>
         </div>
