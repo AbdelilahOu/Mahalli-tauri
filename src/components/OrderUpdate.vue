@@ -176,13 +176,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
                 "
                 type="number"
               >
-                <template #unite>
-                  <span
-                    class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
-                  >
-                    Item
-                  </span>
-                </template>
+                <template #unite> Item </template>
               </Input>
               <Input
                 v-model="item.price"
@@ -192,13 +186,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
                 "
                 type="number"
               >
-                <template #unite>
-                  <span
-                    class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
-                  >
-                    DH
-                  </span>
-                </template>
+                <template #unite> DH </template>
               </Input>
               <div
                 @click="deleteOrderItem(index)"

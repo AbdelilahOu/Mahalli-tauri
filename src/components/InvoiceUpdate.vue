@@ -174,13 +174,7 @@ const deleteInvoiceItem = (index: number) => {
                 type="number"
                 v-model="item.quantity"
               >
-                <template #unite>
-                  <span
-                    class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
-                  >
-                    Item
-                  </span>
-                </template>
+                <template #unite> Item </template>
               </Input>
               <div
                 class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
