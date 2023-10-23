@@ -66,7 +66,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 <template>
   <UiModalCard>
     <template #title>
-      {{ t("Clients.update.title") }}
+      {{ t("c.u.title") }}
     </template>
     <template #content>
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
@@ -120,7 +120,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("Clients.update.button") }}
+            {{ t("c.u.button") }}
             {{ ClientRow.fullname }}
           </Button>
           <Button

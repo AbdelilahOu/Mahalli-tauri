@@ -73,7 +73,7 @@ const setImage = (imagePath: string) => {
 <template>
   <UiModalCard>
     <template #title>
-      {{ t("Clients.create.title") }}
+      {{ t("c.c.title") }}
     </template>
     <template #content>
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
@@ -132,7 +132,7 @@ const setImage = (imagePath: string) => {
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("Clients.create.button") }}
+            {{ t("c.c.button") }}
           </Button>
           <Button
             @click="hideModal"

@@ -44,7 +44,7 @@ const toggleThisClient = (client: clientT, name: string) => {
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
-              {{ t(`Clients.index.feilds[${index}]`) }}
+              {{ t(`c.i.feilds[${index}]`) }}
             </div>
           </th>
         </tr>
