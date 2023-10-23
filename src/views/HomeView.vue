@@ -69,7 +69,7 @@ const pages = ref([
                 <span
                   class="text-center text-xl text-gray-900 font-bold bg-white rounded-[4px] px-4 z-20 py-2 flex justify-center items-center transition-all duration-250"
                 >
-                  {{ t(`Global.routes.${page.text}`) }}
+                  {{ t(`g.r.${page.text}`) }}
                 </span>
               </div>
             </RouterLink>

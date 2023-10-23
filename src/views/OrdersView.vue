@@ -78,11 +78,7 @@ const updateModal = (name: string) => {
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
           <div class="w-1/3">
-            <Input
-              v-model="searchQuery"
-              type="text"
-              :placeHolder="t('Global.search')"
-            >
+            <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
                 name="search"
@@ -111,7 +107,7 @@ const updateModal = (name: string) => {
                 extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
               />
-              {{ t("Orders.index.addButton") }}
+              {{ t("o.i.addButton") }}
             </Button>
           </div>
         </div>

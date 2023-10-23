@@ -113,7 +113,7 @@ const logIn = () => {
               />
             </div>
             <div class="flex h-[2.5rem]">
-              <Button @click="logIn">{{ t("Auth.title") }}</Button>
+              <Button @click="logIn">{{ t("auth.title") }}</Button>
             </div>
           </div>
         </div>
