@@ -38,15 +38,15 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 <template>
   <UiModalCard>
     <template #title>
-      {{ t("Clients.delete.title") }}
+      {{ t("c.d.title") }}
     </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
         <Button class="col-span-2" @click="deleteTheClient">
-          {{ t("Clients.delete.yes") }}
+          {{ t("c.d.yes") }}
         </Button>
         <Button variant="outline" @click="cancelDelete">
-          {{ t("Clients.delete.no") }}
+          {{ t("c.d.no") }}
         </Button>
       </div>
     </template>
