@@ -74,7 +74,7 @@ onBeforeUnmount(() => {
 <template>
   <UiModalCard>
     <template #title>
-      {{ t("Products.update.title") }}
+      {{ t("p.u.title") }}
     </template>
     <template #content>
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">

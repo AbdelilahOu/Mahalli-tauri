@@ -37,16 +37,14 @@ const cancelDelete = () => {
 
 <template>
   <UiModalCard>
-    <template #title>
-      {{ t("Products.delete.title") }} {{ product.name }} ?
-    </template>
+    <template #title> {{ t("p.d.title") }} {{ product.name }} ? </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
         <Button class="col-span-2" @click="deleteTheProduct">
-          {{ t("Products.delete.yes") }}
+          {{ t("p.d.yes") }}
         </Button>
         <Button variant="outline" @click="cancelDelete">
-          {{ t("Products.delete.no") }}
+          {{ t("p.d.no") }}
         </Button>
       </div>
     </template>
