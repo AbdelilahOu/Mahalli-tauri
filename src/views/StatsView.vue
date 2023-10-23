@@ -108,7 +108,7 @@ onBeforeMount(async () => {
           </template>
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>{{ t("Stats.Title") }}</i>
+              <i>{{ t("stats.Title") }}</i>
             </h1>
           </template>
         </ChartHolder>
