@@ -94,13 +94,13 @@ const hideModal = () => {
     class="w-5/6 lg:w-1/2 relative rounded-[4px] h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
   >
     <template #title>
-      {{ t("Invoices.create.title") }}
+      {{ t("i.c.title") }}
     </template>
     <template #content>
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="client_id">
-            {{ t("Invoices.create.details.client.title") }}
+            {{ t("i.c.d.c.title") }}
           </Label>
           <span id="client_id">
             <ComboBox
@@ -113,7 +113,7 @@ const hideModal = () => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="status">
-            {{ t("Invoices.create.details.invoice.title") }}
+            {{ t("i.c.d.i.title") }}
           </Label>
           <div id="status" class="w-full h-full flex flex-col mb-1 gap-1">
             <div class="flex justify-between w-full">
@@ -124,7 +124,7 @@ const hideModal = () => {
                   id="status-1"
                   @update:checked="() => (newInvoice.status = 'delivered')"
                 />
-                <Label for="status-1">{{ t("Orders.status.delivered") }}</Label>
+                <Label for="status-1">{{ t("o.s.delivered") }}</Label>
               </div>
               <div
                 class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2"
@@ -133,7 +133,7 @@ const hideModal = () => {
                   id="status-2"
                   @update:checked="() => (newInvoice.status = 'pending')"
                 />
-                <Label for="status-2">{{ t("Orders.status.pending") }}</Label>
+                <Label for="status-2">{{ t("o.s.pending") }}</Label>
               </div>
               <div
                 class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2"
@@ -142,7 +142,7 @@ const hideModal = () => {
                   id="status-3"
                   @update:checked="() => (newInvoice.status = 'canceled')"
                 />
-                <Label for="status-3">{{ t("Orders.status.canceled") }}</Label>
+                <Label for="status-3">{{ t("o.s.canceled") }}</Label>
               </div>
             </div>
           </div>
@@ -150,21 +150,19 @@ const hideModal = () => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Button @click="addInvoiceItem">
-            {{ t("Invoices.create.details.invoice.add") }}
+            {{ t("i.c.d.i.add") }}
           </Button>
           <div
             class="w-full grid grid-cols-[1fr_1fr_36px] pb-10 scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <template v-for="(item, index) in invoice_items" :key="index">
               <ComboBox
-                :label="t('Invoices.create.details.invoice.select')"
+                :label="t('i.c.d.i.select')"
                 v-model="item.product_id"
                 :items="products"
               />
               <Input
-                :placeHolder="
-                  t('Invoices.create.details.invoice.placeholder[0]')
-                "
+                :placeHolder="t('i.c.d.i.placeholder[0]')"
                 type="number"
                 v-model="item.quantity"
               >
@@ -188,7 +186,7 @@ const hideModal = () => {
           class="col-span-2"
           @click="createNewInvoice"
         >
-          {{ t("Invoices.create.button") }}
+          {{ t("i.c.button") }}
         </Button>
         <Button @click="hideModal" variant="outline"> Cancel </Button>
       </div>
