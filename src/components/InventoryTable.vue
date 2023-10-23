@@ -25,7 +25,7 @@ defineProps<{
             class="p-2 first:rounded-l-[4px] last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
-              {{ t(`Inventory.index.feilds[${index}]`) }}
+              {{ t(`im.i.feilds[${index}]`) }}
             </div>
           </th>
         </tr>
