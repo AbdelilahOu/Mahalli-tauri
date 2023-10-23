@@ -73,11 +73,11 @@ const hideModal = () => {
 <template>
   <UiModalCard>
     <template #title>
-      {{ t("Inventory.create.title") }}
+      {{ t("im.c.title") }}
     </template>
     <template #content>
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
-        <FormField v-slot="{ componentField }" name="product_id">
+        <FormField name="product_id">
           <FormItem>
             <FormLabel>Product</FormLabel>
             <Popover>
@@ -89,7 +89,7 @@ const hideModal = () => {
                     role="combobox"
                     :class="
                       cn(
-                        'w-[200px] justify-between',
+                        'w-full justify-between',
                         !values.product_id && 'text-muted-foreground'
                       )
                     "
@@ -145,7 +145,7 @@ const hideModal = () => {
             <FormControl>
               <Input
                 type="number"
-                :placeHolder="t('Inventory.create.placeholder')"
+                :placeHolder="t('im.c.placeholder')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -154,7 +154,7 @@ const hideModal = () => {
 
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("Inventory.create.button") }}
+            {{ t("im.c.button") }}
           </Button>
           <Button
             @click="hideModal"
