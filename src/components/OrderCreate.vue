@@ -85,17 +85,17 @@ const hideModal = () => {
     class="w-5/6 lg:w-1/2 rounded-[4px] relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
   >
     <template #title>
-      {{ t("Orders.create.title") }}
+      {{ t("o.c.title") }}
     </template>
     <template #content>
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="seller_id">
-            {{ t("Orders.create.details.seller.title") }}
+            {{ t("o.c.details.seller.title") }}
           </Label>
           <span id="seller_id">
             <ComboBox
-              :label="t('Orders.create.details.seller.select')"
+              :label="t('o.c.d.s.select')"
               v-model="newOrder.seller_id"
               :items="sellers"
             />
@@ -104,7 +104,7 @@ const hideModal = () => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="status">
-            {{ t("Orders.create.details.order.title") }}
+            {{ t("o.c.details.order.title") }}
           </Label>
           <div id="status" class="w-full h-full flex flex-col mb-1 gap-1">
             <div class="flex justify-between w-full">
@@ -115,7 +115,7 @@ const hideModal = () => {
                   id="status_1"
                   @update:checked="() => (newOrder.status = 'delivered')"
                 />
-                <Label for="status_1">{{ t("Orders.status.delivered") }}</Label>
+                <Label for="status_1">{{ t("o.s.delivered") }}</Label>
               </div>
               <div
                 class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2"
@@ -124,7 +124,7 @@ const hideModal = () => {
                   id="status_2"
                   @update:checked="() => (newOrder.status = 'pending')"
                 />
-                <Label for="status_2">{{ t("Orders.status.pending") }}</Label>
+                <Label for="status_2">{{ t("o.s.pending") }}</Label>
               </div>
               <div
                 class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2"
@@ -133,7 +133,7 @@ const hideModal = () => {
                   id="status_3"
                   @update:checked="() => (newOrder.status = 'canceled')"
                 />
-                <Label for="status_3">{{ t("Orders.status.canceled") }}</Label>
+                <Label for="status_3">{{ t("o.s.canceled") }}</Label>
               </div>
             </div>
           </div>
@@ -141,20 +141,20 @@ const hideModal = () => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Button @click="addOrderItem">
-            {{ t("Orders.create.details.order.add") }}
+            {{ t("o.c.details.order.add") }}
           </Button>
           <div
             class="w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <template v-for="(item, index) in order_items">
               <ComboBox
-                :label="t('Orders.create.details.order.select')"
+                :label="t('o.c.d.o.select')"
                 v-model="item.product_id"
                 :items="products"
               />
               <Input
                 class="border-r-0"
-                :placeHolder="t('Orders.create.details.order.placeholder[0]')"
+                :placeHolder="t('o.c.d.o.placeholder[0]')"
                 type="number"
                 v-model="item.quantity"
               >
@@ -162,7 +162,7 @@ const hideModal = () => {
               </Input>
               <Input
                 class="border-r-0"
-                :placeHolder="t('Orders.create.details.order.placeholder[1]')"
+                :placeHolder="t('o.c.d.o.placeholder[1]')"
                 type="number"
                 v-model="item.price"
               >
@@ -182,7 +182,7 @@ const hideModal = () => {
     <template #footer>
       <div class="grid w-full grid-cols-3 gap-2">
         <Button class="col-span-2" @click="createNewOrders()">
-          {{ t("Orders.create.button") }}
+          {{ t("o.c.button") }}
         </Button>
         <Button @click="hideModal" variant="outline"> Cancel </Button>
       </div>
