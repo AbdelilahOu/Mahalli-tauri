@@ -37,7 +37,7 @@ const handleCheck = (product: productT, isChecked: boolean) => {
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
-              {{ t(`Products.index.feilds[${index}]`) }}
+              {{ t(`p.i.feilds[${index}]`) }}
             </div>
           </th>
         </tr>
