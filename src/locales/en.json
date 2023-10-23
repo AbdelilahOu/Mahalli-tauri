@@ -1,50 +1,50 @@
 {
-  "Stats": {
+  "stats": {
     "Title": "Sold and bought items during the last three months",
     "Labels": ["BOUGHT", "SOLD"]
   },
-  "Clients": {
-    "index": {
+  "c": {
+    "i": {
       "addButton": "Add new client",
       "feilds": ["client name", "e-mail", "phone number", "address", "action"]
     },
-    "create": {
+    "c": {
       "title": "create a client",
       "button": "Create",
       "placeholders": ["Name", "E-mail", "Phone number", "Addresse"]
     },
-    "update": {
+    "u": {
       "title": "update client",
       "button": "Update "
     },
-    "delete": {
+    "d": {
       "title": "are you sure you wanna delete the client ",
       "yes": "Confirme",
       "no": "Cancel"
     }
   },
-  "Sellers": {
-    "index": {
+  "s": {
+    "i": {
       "addButton": "Add new seller",
       "feilds": ["seller name", "e-mail", "phone number", "address", "action"]
     },
-    "create": {
+    "c": {
       "title": "create a seller",
       "button": "Create",
       "placeholders": ["Name", "E-mail", "Phone number", "Addresse"]
     },
-    "update": {
+    "u": {
       "title": "update seller",
       "button": "Update "
     },
-    "delete": {
+    "d": {
       "title": "are you sure you wanna delete the seller ",
       "yes": "Confirme",
       "no": "Cancel"
     }
   },
-  "Products": {
-    "index": {
+  "p": {
+    "i": {
       "addButton": "Add new product",
       "feilds": [
         "id",
@@ -57,7 +57,7 @@
       ],
       "types": ["Product", "Service"]
     },
-    "create": {
+    "c": {
       "title": "create a product",
       "button": "Create",
       "placeholders": [
@@ -69,29 +69,29 @@
         "Description"
       ]
     },
-    "update": {
+    "u": {
       "title": "UPDATE product",
       "button": "Update "
     },
-    "delete": {
+    "d": {
       "title": "are you sure you wanna delete the product ",
       "yes": "Confirme",
       "no": "Cancel"
     }
   },
-  "Orders": {
-    "index": {
+  "o": {
+    "i": {
       "addButton": "Add new order",
       "feilds": ["id", "seller", "items", "STATUS", "Date", "action"]
     },
-    "create": {
+    "c": {
       "title": "create new order",
-      "details": {
-        "seller": {
+      "d": {
+        "s": {
           "title": "seller details",
           "select": "Select a seller"
         },
-        "order": {
+        "o": {
           "title": "order details",
           "add": "Add a product",
           "select": "Select a product",
@@ -100,14 +100,14 @@
       },
       "button": "Create a Orders"
     },
-    "update": {
+    "u": {
       "title": "update order",
-      "details": {
-        "seller": {
+      "d": {
+        "s": {
           "title": "seller details",
           "select": "Select a seller"
         },
-        "order": {
+        "o": {
           "title": "order details",
           "select": "Select a product",
           "add": "Add a product"
@@ -115,26 +115,26 @@
       },
       "button": "Update Orders"
     },
-    "delete": {
+    "d": {
       "title": "are you sure you wanna delete the order ",
       "yes": "Confirme",
       "no": "Cancel"
     },
-    "status": {
+    "s": {
       "delivered": "Delivered",
       "pending": "Pending",
       "canceled": "Canceled"
     }
   },
-  "OrdersDetails": {
-    "details": {
-      "order": {
+  "od": {
+    "d": {
+      "o": {
         "title": "order details",
         "id": "id",
         "date": "date",
         "status": "status"
       },
-      "seller": {
+      "s": {
         "title": "seller details",
         "id": "id",
         "name": "name",
@@ -142,21 +142,21 @@
         "email": "email",
         "address": "address"
       },
-      "items": {
+      "i": {
         "title": "order items details",
         "fields": ["name", "description", "quantity", "price", "total"]
       },
       "button": "print"
     }
   },
-  "InvoiceDetails": {
-    "details": {
-      "invoice": {
+  "id": {
+    "d": {
+      "i": {
         "title": "invoice details",
         "id": "id",
         "date": "date"
       },
-      "client": {
+      "c": {
         "title": "client details",
         "id": "id",
         "name": "name",
@@ -164,7 +164,7 @@
         "email": "email",
         "address": "address"
       },
-      "items": {
+      "it": {
         "title": "invoice items details",
         "fields": [
           "name",
@@ -179,19 +179,19 @@
       "button": "print"
     }
   },
-  "Invoices": {
-    "index": {
+  "i": {
+    "i": {
       "addButton": "Add new invoice",
       "feilds": ["id", "client", "items", "total", "status", "Date", "action"]
     },
-    "create": {
+    "c": {
       "title": "create new invoice",
-      "details": {
-        "client": {
+      "d": {
+        "c": {
           "title": "client details",
           "select": "Select a client"
         },
-        "invoice": {
+        "i": {
           "title": "invoice details",
           "add": "Add a product",
           "select": "Select a product",
@@ -200,14 +200,14 @@
       },
       "button": "Create a Invoice"
     },
-    "update": {
+    "u": {
       "title": "update invoice",
-      "details": {
-        "client": {
+      "d": {
+        "c": {
           "title": "client details",
           "select": ""
         },
-        "invoice": {
+        "i": {
           "title": "invoice details",
           "add": "Add a product",
           "select": ""
@@ -215,19 +215,19 @@
       },
       "button": "Update Invoice"
     },
-    "delete": {
+    "d": {
       "title": "are you sure you wanna delete the invoice ",
       "yes": "Confirme",
       "no": "Cancel"
     },
-    "status": {
+    "s": {
       "delivered": "Delivered",
       "pending": "Pending",
       "canceled": "Canceled"
     }
   },
-  "Inventory": {
-    "index": {
+  "im": {
+    "i": {
       "addButton": "Add to Inventory",
       "feilds": [
         "id",
@@ -240,39 +240,22 @@
         ""
       ]
     },
-    "create": {
+    "c": {
       "title": "add items to inventory",
       "select": "Select a product",
       "placeholder": "Quantity",
       "button": "Add"
     }
   },
-  "Payments": {
-    "index": {
-      "addButton": "Add to Paymentt",
-      "feilds": ["id", "client name", "client id", "amount", "date", ""]
-    },
-    "create": {
-      "title": "add credit",
-      "select": "Select a client",
-      "placeholder": "Amount",
-      "button": "Add"
-    },
-    "delete": {
-      "title": "are you sure you wanna delete the credit ",
-      "yes": "Confirme",
-      "no": "Cancel"
-    }
-  },
-  "Auth": {
+  "auth": {
     "title": "Log in",
     "username": "Username",
     "email": "Email",
     "password": "Password"
   },
-  "Global": {
-    "search": "Search",
-    "routes": {
+  "g": {
+    "s": "Search",
+    "r": {
       "Clients": "Clients",
       "Sellers": "Sellers",
       "Products": "Products",
