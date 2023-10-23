@@ -44,7 +44,7 @@ const toggleThisSeller = (seller: sellerT, name: string) => {
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
-              {{ t(`Sellers.index.feilds[${index}]`) }}
+              {{ t(`s.i.feilds[${index}]`) }}
             </div>
           </th>
         </tr>

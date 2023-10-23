@@ -72,7 +72,7 @@ const saveImage = (image: string) => {
 <template>
   <UiModalCard>
     <template #title>
-      {{ t("Sellers.create.title") }}
+      {{ t("s.c.title") }}
     </template>
     <template #content>
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
@@ -131,7 +131,7 @@ const saveImage = (image: string) => {
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("Sellers.create.button") }}
+            {{ t("s.c.button") }}
           </Button>
           <Button
             @click="hideModal"
