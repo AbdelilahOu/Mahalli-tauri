@@ -51,7 +51,7 @@ const User = computed(() => store.getters.getUser());
           <span v-if="route.fullPath !== '/'" class="flex items-center">
             <span class="flex items-center">
               {{ ActiveLink && " / " }}
-              {{ ActiveLink && t(`Global.routes.${ActiveLink.name}`) }}
+              {{ ActiveLink && t(`g.r.${ActiveLink.name}`) }}
               {{ route.params.id ? `/ n° ${route.params.id}` : "" }}
             </span>
           </span>
