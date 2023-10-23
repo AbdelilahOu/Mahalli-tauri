@@ -41,7 +41,7 @@ const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
-              {{ t(`Invoices.index.feilds[${index}]`) }}
+              {{ t(`i.i.feilds[${index}]`) }}
             </div>
           </th>
         </tr>

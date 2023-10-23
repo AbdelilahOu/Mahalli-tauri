@@ -41,16 +41,14 @@ onBeforeUnmount(() => {
 
 <template>
   <UiModalCard>
-    <template #title>
-      {{ t("Invoices.delete.title") }} n° {{ invoice.id }} ?
-    </template>
+    <template #title> {{ t("i.d.title") }} n° {{ invoice.id }} ? </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
         <Button class="col-span-2" @click="deleteTheInvoice">
-          {{ t("Invoices.delete.yes") }}
+          {{ t("i.d.yes") }}
         </Button>
         <Button variant="outline" @click="cancelDelete">
-          {{ t("Invoices.delete.no") }}
+          {{ t("i.d.no") }}
         </Button>
       </div>
     </template>
