@@ -72,7 +72,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
         <FormField v-slot="{ componentField }" name="fullname">
           <FormItem>
-            <FormLabel>Full name</FormLabel>
+            <FormLabel>{{ t("c.p.a") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -84,7 +84,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         </FormField>
         <FormField v-slot="{ componentField }" name="email">
           <FormItem>
-            <FormLabel>Email</FormLabel>
+            <FormLabel>{{ t("c.p.b") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -96,7 +96,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         </FormField>
         <FormField v-slot="{ componentField }" name="phone">
           <FormItem>
-            <FormLabel>Phone number</FormLabel>
+            <FormLabel>{{ t("c.p.c") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -108,7 +108,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         </FormField>
         <FormField v-slot="{ componentField }" name="address">
           <FormItem>
-            <FormLabel>Address</FormLabel>
+            <FormLabel>{{ t("c.p.d") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -120,8 +120,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("c.u.button") }}
-            {{ ClientRow.fullname }}
+            {{ t("g.b.u.ok", { name: ClientRow.fullname }) }}
           </Button>
           <Button
             type="button"
@@ -129,7 +128,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
             :disabled="isLoading"
             variant="outline"
           >
-            Cancel</Button
+            {{ t("g.b.no") }}</Button
           >
         </div>
       </form>

@@ -12,42 +12,46 @@
       "Payment": "Paymentt"
     },
     "b": {
+      "no": "Cancel",
       "c": {
-        "ok": "Create",
-        "no": "Cancel"
+        "ok": "Create"
       },
       "d": {
-        "ok": "Confirme",
-        "no": "Cancel"
-      }
+        "ok": "Confirme"
+      },
+      "u": {
+        "ok": "Update {name}"
+      },
+      "csv": "Upload to {table}"
     },
     "translationTitle": "Change Language"
+  },
+  "csv": {
+    "title": "Upload csv files"
   },
   "stats": {
     "Title": "Sold and bought items during the last three months",
     "Labels": ["BOUGHT", "SOLD"]
   },
   "c": {
+    "p": {
+      "a": "Full name",
+      "b": "E-mail",
+      "c": "Phone number",
+      "d": "Address"
+    },
     "i": {
       "addButton": "Add new client",
       "feilds": ["client name", "e-mail", "phone number", "address", "action"]
     },
     "c": {
-      "title": "create a client",
-      "button": "Create",
-      "p": {
-        "a": "Full name",
-        "b": "E-mail",
-        "c": "Phone number",
-        "d": "Address"
-      }
+      "title": "create a client"
     },
     "u": {
-      "title": "update client",
-      "button": "Update "
+      "title": "update client"
     },
     "d": {
-      "title": "are you sure you wanna delete the client "
+      "title": "are you sure you wanna delete the client"
     }
   },
   "s": {

@@ -84,7 +84,7 @@ const setImage = (imagePath: string) => {
         />
         <FormField v-slot="{ componentField }" name="fullname">
           <FormItem>
-            <FormLabel>{{ t("c.c.p.a") }}</FormLabel>
+            <FormLabel>{{ t("c.p.a") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -96,7 +96,7 @@ const setImage = (imagePath: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="email">
           <FormItem>
-            <FormLabel>{{ t("c.c.p.b") }}</FormLabel>
+            <FormLabel>{{ t("c.p.b") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -108,7 +108,7 @@ const setImage = (imagePath: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="phone">
           <FormItem>
-            <FormLabel>{{ t("c.c.p.c") }}</FormLabel>
+            <FormLabel>{{ t("c.p.c") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -120,7 +120,7 @@ const setImage = (imagePath: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="address">
           <FormItem>
-            <FormLabel>{{ t("c.c.p.d") }}</FormLabel>
+            <FormLabel>{{ t("c.p.d") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -132,7 +132,7 @@ const setImage = (imagePath: string) => {
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("g.b.ok") }}
+            {{ t("g.b.c.ok") }}
           </Button>
           <Button
             @click="hideModal"
