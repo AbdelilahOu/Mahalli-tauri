@@ -79,7 +79,7 @@ const hideModal = () => {
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
         <FormField name="product_id">
           <FormItem>
-            <FormLabel>Product</FormLabel>
+            <FormLabel>{{ t("im.c.l.a") }}</FormLabel>
             <Popover>
               <PopoverTrigger as-child>
                 <FormControl>
@@ -99,7 +99,7 @@ const hideModal = () => {
                         ? products.find(
                             (product) => product.value === values.product_id
                           )?.label
-                        : "Select product..."
+                        : t("im.c.p.a")
                     }}
                     <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
@@ -141,11 +141,11 @@ const hideModal = () => {
 
         <FormField v-slot="{ componentField }" name="quantity">
           <FormItem>
-            <FormLabel>Quantity</FormLabel>
+            <FormLabel>{{ t("im.c.l.b") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
-                :placeHolder="t('im.c.placeholder')"
+                :placeHolder="t('im.c.p.b')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -154,7 +154,7 @@ const hideModal = () => {
 
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("im.c.button") }}
+            {{ t("g.b.a") }}
           </Button>
           <Button
             @click="hideModal"
@@ -162,8 +162,8 @@ const hideModal = () => {
             :disabled="isLoading"
             variant="outline"
           >
-            Cancel</Button
-          >
+            {{ t("g.b.no") }}
+          </Button>
         </div>
       </form>
     </template>
