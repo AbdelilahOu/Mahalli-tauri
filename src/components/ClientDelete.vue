@@ -43,10 +43,10 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
         <Button class="col-span-2" @click="deleteTheClient">
-          {{ t("b.d.ok") }}
+          {{ t("g.b.d.ok") }}
         </Button>
         <Button variant="outline" @click="cancelDelete">
-          {{ t("b.d.no") }}
+          {{ t("g.b.no") }}
         </Button>
       </div>
     </template>
