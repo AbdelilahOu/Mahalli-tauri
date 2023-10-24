@@ -22,6 +22,7 @@
       "u": {
         "ok": "Update {name}"
       },
+      "a": "Add",
       "csv": "Upload to {table}"
     },
     "translationTitle": "Change Language"
@@ -273,9 +274,14 @@
     },
     "c": {
       "title": "add items to inventory",
-      "select": "Select a product",
-      "placeholder": "Quantity",
-      "button": "Add"
+      "l": {
+        "a": "Product",
+        "b": "Quantity"
+      },
+      "p": {
+        "a": "Select a product",
+        "b": "Quantity"
+      }
     }
   },
   "auth": {
