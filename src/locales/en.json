@@ -1,4 +1,22 @@
 {
+  "g": {
+    "s": "Search",
+    "r": {
+      "Clients": "Clients",
+      "Sellers": "Sellers",
+      "Products": "Products",
+      "Orders": "Orders",
+      "Invoices": "Invoices",
+      "Inventory": "Inventory",
+      "Statistics": "Statistics",
+      "Payment": "Paymentt"
+    },
+    "b": {
+      "ok": "Create",
+      "no": "Cancel"
+    },
+    "translationTitle": "Change Language"
+  },
   "stats": {
     "Title": "Sold and bought items during the last three months",
     "Labels": ["BOUGHT", "SOLD"]
@@ -11,7 +29,12 @@
     "c": {
       "title": "create a client",
       "button": "Create",
-      "placeholders": ["Name", "E-mail", "Phone number", "Addresse"]
+      "p": {
+        "a": "Full name",
+        "b": "E-mail",
+        "c": "Phone number",
+        "d": "Address"
+      }
     },
     "u": {
       "title": "update client",
@@ -252,19 +275,5 @@
     "username": "Username",
     "email": "Email",
     "password": "Password"
-  },
-  "g": {
-    "s": "Search",
-    "r": {
-      "Clients": "Clients",
-      "Sellers": "Sellers",
-      "Products": "Products",
-      "Orders": "Orders",
-      "Invoices": "Invoices",
-      "Inventory": "Inventory",
-      "Statistics": "Statistics",
-      "Payment": "Paymentt"
-    },
-    "translationTitle": "Change Language"
   }
 }

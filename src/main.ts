@@ -55,9 +55,10 @@ const initiVueApp = () => {
       createI18n({
         legacy: false,
         globalInjection: false,
-        locale: locale ? JSON.parse(locale).key : "fr",
-        fallbackLocale: "fr",
-        availableLocales: ["en", "fr", "ar", "de"],
+        locale: locale ? JSON.parse(locale).key : "en",
+        fallbackLocale: "en",
+        availableLocales: ["en"],
+        // availableLocales: ["en", "fr", "ar", "de"],
         messages: messages,
       })
     )

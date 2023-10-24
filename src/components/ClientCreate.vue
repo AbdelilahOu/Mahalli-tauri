@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { useI18n } from "vue-i18n";
 import { ImagesFiles } from "@/constants/FileTypes";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
@@ -12,8 +11,9 @@ import { useForm } from "vee-validate";
 import { saveFile } from "@/utils/fs";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { store } from "@/store";
+import { ref } from "vue";
 import { z } from "zod";
 
 const { t } = useI18n();
@@ -84,7 +84,7 @@ const setImage = (imagePath: string) => {
         />
         <FormField v-slot="{ componentField }" name="fullname">
           <FormItem>
-            <FormLabel>Full name</FormLabel>
+            <FormLabel>{{ t("c.c.p.a") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -96,7 +96,7 @@ const setImage = (imagePath: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="email">
           <FormItem>
-            <FormLabel>Email</FormLabel>
+            <FormLabel>{{ t("c.c.p.b") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -108,7 +108,7 @@ const setImage = (imagePath: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="phone">
           <FormItem>
-            <FormLabel>Phone number</FormLabel>
+            <FormLabel>{{ t("c.c.p.c") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -120,7 +120,7 @@ const setImage = (imagePath: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="address">
           <FormItem>
-            <FormLabel>Address</FormLabel>
+            <FormLabel>{{ t("c.c.p.d") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -132,7 +132,7 @@ const setImage = (imagePath: string) => {
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("c.c.button") }}
+            {{ t("g.b.ok") }}
           </Button>
           <Button
             @click="hideModal"
@@ -140,7 +140,7 @@ const setImage = (imagePath: string) => {
             :disabled="isLoading"
             variant="outline"
           >
-            Cancel</Button
+            {{ t("g.b.no") }}</Button
           >
         </div>
       </form>
