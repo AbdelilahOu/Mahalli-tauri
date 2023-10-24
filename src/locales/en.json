@@ -12,8 +12,14 @@
       "Payment": "Paymentt"
     },
     "b": {
-      "ok": "Create",
-      "no": "Cancel"
+      "c": {
+        "ok": "Create",
+        "no": "Cancel"
+      },
+      "d": {
+        "ok": "Confirme",
+        "no": "Cancel"
+      }
     },
     "translationTitle": "Change Language"
   },
@@ -41,9 +47,7 @@
       "button": "Update "
     },
     "d": {
-      "title": "are you sure you wanna delete the client ",
-      "yes": "Confirme",
-      "no": "Cancel"
+      "title": "are you sure you wanna delete the client "
     }
   },
   "s": {
