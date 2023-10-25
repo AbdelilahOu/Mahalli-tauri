@@ -13,15 +13,9 @@
     },
     "b": {
       "no": "Cancel",
-      "c": {
-        "ok": "Create"
-      },
-      "d": {
-        "ok": "Confirme"
-      },
-      "u": {
-        "ok": "Update {name}"
-      },
+      "c": "Create",
+      "d": "Confirme",
+      "u": "Update {name}",
       "a": "Add",
       "csv": "Upload to {table}"
     },
@@ -56,23 +50,24 @@
     }
   },
   "s": {
+    "p": {
+      "a": "Full name",
+      "b": "E-mail",
+      "c": "Phone number",
+      "d": "Address"
+    },
     "i": {
       "addButton": "Add new seller",
       "feilds": ["seller name", "e-mail", "phone number", "address", "action"]
     },
     "c": {
-      "title": "create a seller",
-      "button": "Create",
-      "placeholders": ["Name", "E-mail", "Phone number", "Addresse"]
+      "title": "create a seller"
     },
     "u": {
-      "title": "update seller",
-      "button": "Update "
+      "title": "update seller"
     },
     "d": {
-      "title": "are you sure you wanna delete the seller ",
-      "yes": "Confirme",
-      "no": "Cancel"
+      "title": "are you sure you wanna delete the seller"
     }
   },
   "p": {
