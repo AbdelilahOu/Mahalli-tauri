@@ -81,9 +81,9 @@ const saveImage = (image: string) => {
           :extensions="ImagesFiles"
           @on:save="saveImage"
         />
-        <FormField v-slot="{ componentField }" name="fullname">
+        <FormField v-slot="{ componentField }" name="name">
           <FormItem>
-            <FormLabel>Full name</FormLabel>
+            <FormLabel>{{ t("s.p.a") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -95,7 +95,7 @@ const saveImage = (image: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="email">
           <FormItem>
-            <FormLabel>Email</FormLabel>
+            <FormLabel>{{ t("s.p.b") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -107,7 +107,7 @@ const saveImage = (image: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="phone">
           <FormItem>
-            <FormLabel>Phone number</FormLabel>
+            <FormLabel>{{ t("s.p.c") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -119,7 +119,7 @@ const saveImage = (image: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="address">
           <FormItem>
-            <FormLabel>Address</FormLabel>
+            <FormLabel>{{ t("s.p.d") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -131,7 +131,7 @@ const saveImage = (image: string) => {
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("s.c.button") }}
+            {{ t("g.b.c") }}
           </Button>
           <Button
             @click="hideModal"
@@ -139,8 +139,8 @@ const saveImage = (image: string) => {
             :disabled="isLoading"
             variant="outline"
           >
-            Cancel</Button
-          >
+            {{ t("g.b.no") }}
+          </Button>
         </div>
       </form>
     </template>
