@@ -120,7 +120,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("g.b.u.ok", { name: ClientRow.fullname }) }}
+            {{ t("g.b.u", { name: ClientRow.fullname }) }}
           </Button>
           <Button
             type="button"
