@@ -1,10 +1,12 @@
 <script setup lang="ts">
 // import data from "@/animations/66291-meditative-business-man.json";
-import { onBeforeMount, ref, reactive } from "vue";
+import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { login } from "@/utils/Oauth";
 // import { Vue3Lottie } from "vue3-lottie";
+
+const { t } = useI18n();
 
 const checkForAuth = ref(
   useRouter().currentRoute.value.query.checkAuth === "true"
@@ -96,19 +98,19 @@ const logIn = () => {
               <Input
                 type="text"
                 v-model="User.email"
-                :placeHolder="t('Auth.email')"
+                :placeHolder="t('auth.email')"
                 :isEmpty="User.email !== '' && isflash"
               />
               <Input
                 type="text"
                 v-model="User.username"
-                :placeHolder="t('Auth.username')"
+                :placeHolder="t('auth.username')"
                 :isEmpty="User.username !== '' && isflash"
               />
               <Input
                 type="password"
                 v-model="User.password"
-                :placeHolder="t('Auth.password')"
+                :placeHolder="t('auth.password')"
                 :isEmpty="User.password !== '' && isflash"
               />
             </div>
