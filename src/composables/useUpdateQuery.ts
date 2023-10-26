@@ -1,4 +1,4 @@
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 
 export function useUpdateRouteQueryParams() {
   const router = useRouter();

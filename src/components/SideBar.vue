@@ -87,7 +87,7 @@ const openSettingsModal = () => {
               <UiSideLink
                 :isText="!isCollapse"
                 :icon="link.name"
-                :linkText="t(`Global.routes.${link.name}`)"
+                :linkText="t(`g.r.${link.name}`)"
               />
             </RouterLink>
           </template>
@@ -96,7 +96,7 @@ const openSettingsModal = () => {
           <UiSideLink
             :isText="!isCollapse"
             icon="Notifications"
-            linkText="Notifications"
+            :linkText="t('g.r.Notifications')"
           />
         </RouterLink>
         <div class="w-full cursor-pointer" @click="openTranslationModal">
@@ -110,7 +110,7 @@ const openSettingsModal = () => {
           <UiSideLink
             :isText="!isCollapse"
             icon="sittings"
-            linkText="Sittings"
+            :linkText="t('g.r.Sittings')"
           />
         </div>
       </div>
