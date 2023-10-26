@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { RouterView, onBeforeRouteUpdate } from "vue-router";
-import Xcomponent from "@/components/Xcomponent.vue";
+import ModalComponentsRenderer from "@/components/ModalComponentsRenderer.vue";
 import Navigation from "@/components/Navigation.vue";
 import SideBar from "@/components/SideBar.vue";
 import { store } from "@/store";
@@ -45,7 +45,7 @@ onBeforeRouteUpdate((to: any, from: any) => {
           @click.self="hideModal"
           class="w-full h-full flex items-center justify-center absolute bg-gray-400 z-50 top-0 left-0 bg-opacity-10"
         >
-          <Xcomponent :name="name" />
+          <ModalComponentsRenderer :name="name" />
         </div>
         <div class="w-full bg-white p-2 rounded-[4px] h-full">
           <RouterView></RouterView>
