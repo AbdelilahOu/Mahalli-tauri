@@ -186,9 +186,11 @@ const hideModal = () => {
           class="col-span-2"
           @click="createNewInvoice"
         >
-          {{ t("i.c.button") }}
+          {{ t("g.b.c") }}
         </Button>
-        <Button @click="hideModal" variant="outline"> Cancel </Button>
+        <Button @click="hideModal" variant="outline">
+          {{ t("g.b.no") }}
+        </Button>
       </div>
     </template>
   </UiModalCard>

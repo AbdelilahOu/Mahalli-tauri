@@ -45,10 +45,10 @@ onBeforeUnmount(() => {
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
         <Button class="col-span-2" @click="deleteTheInvoice">
-          {{ t("i.d.yes") }}
+          {{ t("g.b.d") }}
         </Button>
         <Button variant="outline" @click="cancelDelete">
-          {{ t("i.d.no") }}
+          {{ t("g.b.no") }}
         </Button>
       </div>
     </template>

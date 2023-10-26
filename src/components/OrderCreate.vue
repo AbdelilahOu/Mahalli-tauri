@@ -91,7 +91,7 @@ const hideModal = () => {
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="seller_id">
-            {{ t("o.c.details.seller.title") }}
+            {{ t("o.c.d.s.title") }}
           </Label>
           <span id="seller_id">
             <ComboBox
@@ -104,7 +104,7 @@ const hideModal = () => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="status">
-            {{ t("o.c.details.order.title") }}
+            {{ t("o.c.d.o.title") }}
           </Label>
           <div id="status" class="w-full h-full flex flex-col mb-1 gap-1">
             <div class="flex justify-between w-full">
@@ -141,7 +141,7 @@ const hideModal = () => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Button @click="addOrderItem">
-            {{ t("o.c.details.order.add") }}
+            {{ t("o.c.d.o.add") }}
           </Button>
           <div
             class="w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
@@ -182,9 +182,11 @@ const hideModal = () => {
     <template #footer>
       <div class="grid w-full grid-cols-3 gap-2">
         <Button class="col-span-2" @click="createNewOrders()">
-          {{ t("o.c.button") }}
+          {{ t("g.b.c") }}
         </Button>
-        <Button @click="hideModal" variant="outline"> Cancel </Button>
+        <Button @click="hideModal" variant="outline">
+          {{ t("g.b.no") }}
+        </Button>
       </div>
     </template>
   </UiModalCard>
