@@ -62,7 +62,7 @@ async function getBestThree(isClients = true) {
 }
 
 onBeforeMount(async () => {
-  const labels = [t(`Stats.Labels[0]`), t(`Stats.Labels[1]`)];
+  const labels = [t("stats.Labels[0]"), t("stats.Labels[1]")];
   const InOutStats = await getInventoryMouvementStats();
   InsOuts.months = InOutStats.months.reverse();
   InsOuts.data = InOutStats.result;
