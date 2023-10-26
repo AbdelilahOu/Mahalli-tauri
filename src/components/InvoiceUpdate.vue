@@ -1,19 +1,19 @@
 <script setup lang="ts">
+import { onBeforeUnmount, onBeforeMount, computed, reactive, ref } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { useI18n } from "vue-i18n";
+import { INVOICE_UPDATE } from "@/constants/defaultValues";
 import type { invoiceT, updateInvoiceT } from "@/types";
 import ComboBox from "./ui/combobox/ComboBox.vue";
-import { Input } from "./ui/input";
-import { Checkbox } from "./ui/checkbox";
+import UiModalCard from "./ui/UiModalCard.vue";
+import { Separator } from "./ui/separator";
 import { invoke } from "@tauri-apps/api";
+import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
 import UiIcon from "./ui/UiIcon.vue";
-import { store } from "@/store";
-import { onBeforeUnmount, onBeforeMount, computed, reactive, ref } from "vue";
-import { INVOICE_UPDATE } from "@/constants/defaultValues";
-import UiModalCard from "./ui/UiModalCard.vue";
+import { useI18n } from "vue-i18n";
+import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Separator } from "./ui/separator";
+import { store } from "@/store";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
