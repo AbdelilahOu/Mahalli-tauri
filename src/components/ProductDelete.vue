@@ -41,10 +41,10 @@ const cancelDelete = () => {
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
         <Button class="col-span-2" @click="deleteTheProduct">
-          {{ t("p.d.yes") }}
+          {{ t("g.b.d") }}
         </Button>
         <Button variant="outline" @click="cancelDelete">
-          {{ t("p.d.no") }}
+          {{ t("g.b.no") }}
         </Button>
       </div>
     </template>

@@ -87,7 +87,7 @@ const toggleThisOrders = (Order: orderT, name: string) => {
                     order.status != 'pending' && order.status != 'delivered',
                 }"
               >
-                {{ t(`Orders.status.${order.status.toLowerCase()}`) }}
+                {{ t(`o.s.${order.status.toLowerCase()}`) }}
               </span>
               <span v-else class="text-red-400">No status</span>
             </div>

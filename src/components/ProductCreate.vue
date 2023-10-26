@@ -95,7 +95,7 @@ const setImage = (path: string) => {
         />
         <FormField v-slot="{ componentField }" name="name">
           <FormItem>
-            <FormLabel>Name</FormLabel>
+            <FormLabel>{{ t("p.p.a") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -107,7 +107,7 @@ const setImage = (path: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="price">
           <FormItem>
-            <FormLabel>Price</FormLabel>
+            <FormLabel>{{ t("p.p.b") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
@@ -121,7 +121,7 @@ const setImage = (path: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="tva">
           <FormItem>
-            <FormLabel>TVA</FormLabel>
+            <FormLabel>{{ t("p.p.c") }}</FormLabel>
             <FormControl>
               <Input type="text" placeHolder="tva" v-bind="componentField">
                 <template #unite> % </template>
@@ -131,7 +131,7 @@ const setImage = (path: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="quantity">
           <FormItem>
-            <FormLabel>Quantity</FormLabel>
+            <FormLabel>{{ t("p.p.d") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
@@ -145,7 +145,9 @@ const setImage = (path: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="description">
           <FormItem>
-            <FormLabel>Description</FormLabel>
+            <FormLabel>
+              {{ t("p.p.e") }}
+            </FormLabel>
             <FormControl>
               <Textarea
                 type="text"
@@ -157,7 +159,7 @@ const setImage = (path: string) => {
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("c.c.button") }}
+            {{ t("g.b.c") }}
           </Button>
           <Button
             @click="hideModal"
@@ -165,8 +167,8 @@ const setImage = (path: string) => {
             :disabled="isLoading"
             variant="outline"
           >
-            Cancel</Button
-          >
+            {{ t("g.b.no") }}
+          </Button>
         </div>
       </form>
     </template>

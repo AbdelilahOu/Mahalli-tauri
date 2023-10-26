@@ -112,7 +112,7 @@ const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
                     ? 'bg-green-300/60 text-green-800'
                     : 'bg-red-300/60 text-red-800',
                 ]"
-                >{{ t(`Orders.status.${Invoice.status.toLowerCase()}`) }}</span
+                >{{ t(`o.s.${Invoice.status.toLowerCase()}`) }}</span
               >
               <span v-else class="text-red-400">No status</span>
             </div>
