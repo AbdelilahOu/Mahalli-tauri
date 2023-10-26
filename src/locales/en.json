@@ -84,26 +84,21 @@
       ],
       "types": ["Product", "Service"]
     },
+    "p": {
+      "a": "Name",
+      "b": "Price",
+      "c": "TVA",
+      "d": "Initiale Quantity",
+      "e": "Description"
+    },
     "c": {
-      "title": "create a product",
-      "button": "Create",
-      "placeholders": [
-        "Name",
-        "Select type",
-        "Price in DH",
-        "TVA",
-        "Initiale Quantity",
-        "Description"
-      ]
+      "title": "create a product"
     },
     "u": {
-      "title": "UPDATE product",
-      "button": "Update "
+      "title": "UPDATE product"
     },
     "d": {
-      "title": "are you sure you wanna delete the product ",
-      "yes": "Confirme",
-      "no": "Cancel"
+      "title": "are you sure you wanna delete the product "
     }
   },
   "o": {

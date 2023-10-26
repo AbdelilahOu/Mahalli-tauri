@@ -80,7 +80,7 @@ onBeforeUnmount(() => {
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
         <FormField v-slot="{ componentField }" name="name">
           <FormItem>
-            <FormLabel>Name</FormLabel>
+            <FormLabel>{{ t("p.p.a") }}</FormLabel>
             <FormControl>
               <Input
                 type="text"
@@ -92,7 +92,7 @@ onBeforeUnmount(() => {
         </FormField>
         <FormField v-slot="{ componentField }" name="price">
           <FormItem>
-            <FormLabel>Price</FormLabel>
+            <FormLabel>{{ t("p.p.b") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
@@ -106,7 +106,7 @@ onBeforeUnmount(() => {
         </FormField>
         <FormField v-slot="{ componentField }" name="tva">
           <FormItem>
-            <FormLabel>TVA</FormLabel>
+            <FormLabel>{{ t("p.p.c") }}</FormLabel>
             <FormControl>
               <Input type="text" placeHolder="tva" v-bind="componentField">
                 <template #unite> % </template>
@@ -116,7 +116,7 @@ onBeforeUnmount(() => {
         </FormField>
         <FormField v-slot="{ componentField }" name="quantity">
           <FormItem>
-            <FormLabel>Quantity</FormLabel>
+            <FormLabel>{{ t("p.p.d") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
@@ -130,7 +130,9 @@ onBeforeUnmount(() => {
         </FormField>
         <FormField v-slot="{ componentField }" name="description">
           <FormItem>
-            <FormLabel>Description</FormLabel>
+            <FormLabel>
+              {{ t("p.p.e") }}
+            </FormLabel>
             <FormControl>
               <Textarea
                 type="text"
@@ -142,7 +144,7 @@ onBeforeUnmount(() => {
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            Update {{ ProductRow.name }}
+            {{ t("g.b.u", { name: ProductRow.name }) }}
           </Button>
           <Button
             @click="hideModal"
@@ -150,8 +152,8 @@ onBeforeUnmount(() => {
             :disabled="isLoading"
             variant="outline"
           >
-            Cancel</Button
-          >
+            {{ t("g.b.no") }}
+          </Button>
         </div>
       </form>
     </template>
