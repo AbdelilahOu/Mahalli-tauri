@@ -94,11 +94,11 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="seller_id">
-            {{ t("o.u.details.seller.title") }}
+            {{ t("o.u.d.o.title") }}
           </Label>
           <span id="seller_id">
             <ComboBox
-              :label="t('Orders.update.details.seller.select')"
+              :label="t('o.u.d.o.select')"
               v-model="updateOrder.seller_id"
               :items="sellers"
             />
@@ -107,7 +107,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="status">
-            {{ t("o.u.details.order.title") }}
+            {{ t("o.u.d.o.title") }}
           </Label>
           <div id="status" class="w-full h-full flex flex-col mb-1 gap-1">
             <div class="flex justify-between w-full">
@@ -191,9 +191,11 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
         <Button class="col-span-2" @click="updateTheOrders">
-          {{ t("o.u.button") }}
+          {{ t("g.b.d") }}
         </Button>
-        <Button variant="outline" @click="hideModal"> Cancel </Button>
+        <Button variant="outline" @click="hideModal">
+          {{ t("g.b.no") }}
+        </Button>
       </div>
     </template>
   </UiModalCard>

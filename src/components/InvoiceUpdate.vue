@@ -110,7 +110,9 @@ const deleteInvoiceItem = (index: number) => {
         </div>
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
-          <Label for="status">invoice details</Label>
+          <Label for="status">
+            {{ t("i.u.d.i.title") }}
+          </Label>
           <div id="status" class="w-full h-full flex flex-col mb-1 gap-1">
             <div class="flex justify-between w-full">
               <div
@@ -184,9 +186,11 @@ const deleteInvoiceItem = (index: number) => {
     <template #footer>
       <div class="w-full grid grid-cols-3 gap-2">
         <Button class="col-span-2" @click="updateTheInvoice">
-          {{ t("i.u.button") }}
+          {{ t("g.b.u") }}
         </Button>
-        <Button @click="hideModal" variant="outline"> Cancel </Button>
+        <Button @click="hideModal" variant="outline">
+          {{ t("g.b.no") }}
+        </Button>
       </div>
     </template>
   </UiModalCard>
