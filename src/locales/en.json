@@ -9,7 +9,9 @@
       "Invoices": "Invoices",
       "Inventory": "Inventory",
       "Statistics": "Statistics",
-      "Payment": "Paymentt"
+      "Payment": "Paymentt",
+      "Sittings": "Sittings",
+      "Notifications": "Notifications"
     },
     "b": {
       "no": "Cancel",
