@@ -62,7 +62,7 @@ async function getBestThree(isClients = true) {
 }
 
 onBeforeMount(async () => {
-  const labels = [t("stats.Labels[0]"), t("stats.Labels[1]")];
+  const labels = [t("stats.i.labels[0]"), t("stats.i.labels[1]")];
   const InOutStats = await getInventoryMouvementStats();
   InsOuts.months = InOutStats.months.reverse();
   InsOuts.data = InOutStats.result;
@@ -108,7 +108,7 @@ onBeforeMount(async () => {
           </template>
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>{{ t("stats.Title") }}</i>
+              <i>{{ t("stats.i.title") }}</i>
             </h1>
           </template>
         </ChartHolder>
@@ -138,7 +138,7 @@ onBeforeMount(async () => {
             </template>
             <template #title>
               <h1 class="m-2 w-full text-center text-base font-medium">
-                <i>Best clients based on expenses</i>
+                <i>{{ t("stats.i.b3c") }}</i>
               </h1>
             </template>
           </ChartHolder>
@@ -167,7 +167,9 @@ onBeforeMount(async () => {
             </template>
             <template #title>
               <h1 class="m-2 w-full text-center text-base font-medium">
-                <i>Best sellers based on expenses</i>
+                <i>
+                  {{ t("stats.i.b3s") }}
+                </i>
               </h1>
             </template>
           </ChartHolder>

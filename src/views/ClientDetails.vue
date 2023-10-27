@@ -12,7 +12,9 @@ import ChartHolder from "@/components/ChartHolder.vue";
 import ChartLine from "@/components/ChartLine.vue";
 import type { clientT } from "@/types";
 import UiCard from "@/components/ui/UiCard.vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const { id } = useRoute().params;
 const client = ref<clientT | null>(null);
 
@@ -181,7 +183,9 @@ onBeforeMount(async () => {
           </template>
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>Products baught last three months</i>
+              <i>
+                {{ t("stats.de.title") }}
+              </i>
             </h1>
           </template>
         </ChartHolder>
