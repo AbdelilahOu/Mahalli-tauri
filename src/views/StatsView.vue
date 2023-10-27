@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { groupBy, keys, values, mapValues } from "@/utils/lightLodash";
 import type { FilteredInventoryData, inOutReType } from "@/types";
-import { onBeforeMount, reactive } from "vue";
 import ChartDoughnut from "@/components/ChartDoughnut.vue";
 import { CHART_OPTIONS } from "@/constants/defaultValues";
-import { useI18n } from "vue-i18n";
 import ChartHolder from "@/components/ChartHolder.vue";
 import { generateColor } from "@/utils/generateColor";
 import ChartBar from "@/components/ChartBar.vue";
+import { onBeforeMount, reactive } from "vue";
 import { invoke } from "@tauri-apps/api";
+import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 
