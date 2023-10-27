@@ -12,7 +12,9 @@ import { invoke } from "@tauri-apps/api";
 import type { sellerT } from "@/types";
 import { useRoute } from "vue-router";
 import { store } from "@/store";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const id = useRoute().params.id;
 const seller = ref<sellerT | null>(null);
 
@@ -180,7 +182,9 @@ onBeforeMount(async () => {
           </template>
           <template #title?>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>Products bought last three months</i>
+              <i>
+                {{ t("stats.de.title") }}
+              </i>
             </h1>
           </template>
         </ChartHolder>

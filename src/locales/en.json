@@ -27,8 +27,15 @@
     "title": "Upload csv files"
   },
   "stats": {
-    "Title": "Sold and bought items during the last three months",
-    "Labels": ["BOUGHT", "SOLD"]
+    "i": {
+      "title": "Sold and bought items during the last three months",
+      "labels": ["BOUGHT", "SOLD"],
+      "b3c": "Best clients based on expenses",
+      "b3s": "Best sellers based on expenses"
+    },
+    "de": {
+      "title": "Products baught last three months"
+    }
   },
   "c": {
     "p": {
