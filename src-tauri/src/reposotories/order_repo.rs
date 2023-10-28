@@ -108,17 +108,17 @@ pub fn get_order(o_id: String, connection: &mut SqliteConnection) -> Value {
     })
 }
 
-pub fn insert_order(new_o: NewOrder, connection: &mut SqliteConnection) -> String {
+pub fn insert_order(order: NewOrder, connection: &mut SqliteConnection) -> String {
     diesel::insert_into(orders::dsl::orders)
         .values((
-            id.eq(new_o.id.clone()),
-            status.eq(new_o.status),
-            seller_id.eq(new_o.seller_id),
+            id.eq(order.id.clone()),
+            status.eq(order.status),
+            seller_id.eq(order.seller_id),
         ))
         .execute(connection)
         .expect("Error adding order");
 
-    new_o.id
+    order.id
 }
 
 pub fn delete_order(o_id: String, connection: &mut SqliteConnection) -> usize {
@@ -129,13 +129,9 @@ pub fn delete_order(o_id: String, connection: &mut SqliteConnection) -> usize {
     result
 }
 
-pub fn update_order(
-    o_update: UpdateOrder,
-    o_id: String,
-    connection: &mut SqliteConnection,
-) -> usize {
+pub fn update_order(order: UpdateOrder, o_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::update(orders::dsl::orders.find(&o_id))
-        .set(orders::status.eq(o_update.status))
+        .set(orders::status.eq(order.status))
         .execute(connection)
         .expect("Error updating order");
 
