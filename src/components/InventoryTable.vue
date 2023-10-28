@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
-import { formatDate } from "@/utils/formatDate";
 import type { inventoryMvmT } from "@/types";
 import { RouterLink } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
 
-const { t } = useI18n();
+const { t, d } = useI18n();
 
 defineProps<{
   inventory: inventoryMvmT[];
@@ -83,7 +82,9 @@ defineProps<{
             </div>
           </td>
           <td class="p-2">
-            <div class="text-left">{{ formatDate(mvm.date) }}</div>
+            <div class="text-left">
+              {{ d(new Date(mvm.date), "long") }}
+            </div>
           </td>
           <td class="p-2">
             <div class="flex justify-start gap-3 font-bold text-xl h-8 p-1">

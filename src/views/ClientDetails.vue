@@ -14,7 +14,7 @@ import type { clientT } from "@/types";
 import UiCard from "@/components/ui/UiCard.vue";
 import { useI18n } from "vue-i18n";
 
-const { t } = useI18n();
+const { t, d } = useI18n();
 const { id } = useRoute().params;
 const client = ref<clientT | null>(null);
 
@@ -109,9 +109,7 @@ onBeforeMount(async () => {
 
   ProductsStats.data = productStats.data;
   ProductsStats.dates = productStats.dates.map((pDate) =>
-    new Date(pDate).toLocaleDateString("fr-fr", {
-      month: "long",
-    })
+    d(new Date(pDate), "monthOnly")
   );
   ProductsStats.products = productStats.products.map((product) => {
     const color = generateColor();

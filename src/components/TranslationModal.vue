@@ -33,7 +33,7 @@ const changeLocale = (locale: { key: string; text: string }) => {
             class="w-3/5 items-center h-full text-start flex justify-center gap-2"
           >
             <span class="py-2">
-              <UiIcon :isStyled="true" :name="item.key" />
+              <UiIcon :isStyled="true" :name="item.key.split('-')[0]" />
             </span>
             {{ item.text }}
           </span>

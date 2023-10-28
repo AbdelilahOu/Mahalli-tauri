@@ -10,7 +10,7 @@ import { onBeforeMount, reactive } from "vue";
 import { invoke } from "@tauri-apps/api";
 import { useI18n } from "vue-i18n";
 
-const { t } = useI18n();
+const { t, d } = useI18n();
 
 const InsOuts = reactive({
   keys: [] as { [key: string]: any; data: number[] }[],
@@ -36,9 +36,7 @@ async function getInventoryMouvementStats() {
   const Rows: inOutReType = await invoke("get_inventory_stats");
   //
   for (const { group_month, total_in: IN, total_out: OUT } of Rows) {
-    const month = new Date(group_month).toLocaleDateString("en-us", {
-      month: "long",
-    });
+    const month = d(new Date(group_month), "monthOnly");
     months.add(month);
     results.set(month, { IN, OUT: Math.abs(OUT) });
   }

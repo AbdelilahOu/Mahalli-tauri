@@ -18,19 +18,19 @@ const DEFAULT_STORE = {
   currentLocale,
   availableLocals: [
     {
-      key: "fr",
-      text: "Francais",
-    },
-    {
-      key: "en",
+      key: "en-US",
       text: "English",
     },
     {
-      key: "ar",
+      key: "fr-FR",
+      text: "Francais",
+    },
+    {
+      key: "ar-AE",
       text: "Arabic",
     },
     {
-      key: "de",
+      key: "de-DE",
       text: "German",
     },
   ],

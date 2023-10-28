@@ -11,6 +11,32 @@ import "./assets/main.css";
 
 const locale = localStorage.getItem("locale");
 
+const DEFAULT_DATE_TIME_FORMAT = {
+  short: {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  },
+  monthOnly: {
+    month: "long",
+  },
+  long: {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    weekday: "short",
+    hour: "numeric",
+    minute: "numeric",
+  },
+};
+
+const datetimeFormats = {
+  "en-US": DEFAULT_DATE_TIME_FORMAT,
+  "fr-FR": DEFAULT_DATE_TIME_FORMAT,
+  "ar-AE": DEFAULT_DATE_TIME_FORMAT,
+  "de-DE": DEFAULT_DATE_TIME_FORMAT,
+};
+
 const initiVueApp = () => {
   // create app
   createApp(App)
@@ -55,11 +81,12 @@ const initiVueApp = () => {
       createI18n({
         legacy: false,
         globalInjection: false,
-        locale: locale ? JSON.parse(locale).key : "en",
-        fallbackLocale: "en",
-        availableLocales: ["en"],
-        // availableLocales: ["en", "fr", "ar", "de"],
+        locale: locale ? JSON.parse(locale).key : "en-US",
+        fallbackLocale: "en-US",
+        availableLocales: ["en-US", "fr-FR", "ar-AE", "de-DE"],
         messages: messages,
+        // @ts-ignore
+        datetimeFormats,
       })
     )
     .mount("#app");

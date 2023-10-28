@@ -9,7 +9,7 @@ import { ref } from "vue";
 
 defineProps<{ invoices: invoiceT[] }>();
 
-const { t } = useI18n();
+const { t, d } = useI18n();
 
 const checkedInvoices = ref<string[]>([]);
 
@@ -123,7 +123,7 @@ const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
                 >No date</span
               >
               <span v-else>
-                {{ Invoice.created_at }}
+                {{ d(new Date(Invoice.created_at), "long") }}
               </span>
             </div>
           </td>
