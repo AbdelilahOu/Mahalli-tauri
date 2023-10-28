@@ -157,7 +157,7 @@ const print = () => window.print();
                 <th></th>
                 <th v-for="index in 5" :key="index" class="p-2">
                   <div class="font-semibold text-left">
-                    {{ t(`od.d.it.fields[${index - 1}]`) }}
+                    {{ t(`od.d.i.fields[${index - 1}]`) }}
                   </div>
                 </th>
                 <th></th>
@@ -235,7 +235,7 @@ const print = () => window.print();
           <div class="w-full flex items-center justify-center">
             <div class="w-1/3 flex items-center justify-center">
               <Button @click="print">
-                {{ t("od.details.button") }}
+                {{ t("od.d.button") }}
               </Button>
             </div>
           </div>
