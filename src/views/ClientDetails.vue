@@ -108,7 +108,11 @@ onBeforeMount(async () => {
   DailyStats.data = dailyStats.values;
 
   ProductsStats.data = productStats.data;
-  ProductsStats.dates = productStats.dates;
+  ProductsStats.dates = productStats.dates.map((pDate) =>
+    new Date(pDate).toLocaleDateString("fr-fr", {
+      month: "long",
+    })
+  );
   ProductsStats.products = productStats.products.map((product) => {
     const color = generateColor();
     return {
