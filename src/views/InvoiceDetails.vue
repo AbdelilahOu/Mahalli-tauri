@@ -6,7 +6,7 @@ import { useI18n } from "vue-i18n";
 import type { invoiceDetailsT } from "@/types";
 import { Button } from "@/components/ui/button";
 
-const { t } = useI18n();
+const { t, d } = useI18n();
 const id = useRoute().params.id;
 const invoice = ref<invoiceDetailsT | null>(null);
 
@@ -48,17 +48,7 @@ const print = () => window.print();
                 </td>
                 <td class="p-2">
                   <span class="h-full w-full grid">
-                    {{
-                      new Date(
-                        invoice?.created_at ?? new Date()
-                      ).toLocaleDateString("en-us", {
-                        month: "2-digit",
-                        year: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })
-                    }}
+                    {{ d(new Date(invoice?.created_at ?? new Date()), "long") }}
                   </span>
                 </td>
               </tr>

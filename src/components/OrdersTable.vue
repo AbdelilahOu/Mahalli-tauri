@@ -10,7 +10,7 @@ import { ref } from "vue";
 
 defineProps<{ orders: orderT[] }>();
 
-const { t } = useI18n();
+const { t, d } = useI18n();
 const checkedOrders = ref<string[]>([]);
 
 const checkThisOrders = (IsIncluded: boolean, id: string) => {
@@ -96,7 +96,7 @@ const toggleThisOrders = (Order: orderT, name: string) => {
             <div class="text-left whitespace-nowrap overflow-ellipsis">
               <span v-if="!order.created_at" class="text-red-400">No date</span>
               <span v-else>
-                {{ order.created_at }}
+                {{ d(new Date(order.created_at), "long") }}
               </span>
             </div>
           </td>
