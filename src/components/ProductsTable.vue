@@ -82,7 +82,9 @@ const handleCheck = (product: productT, isChecked: boolean) => {
             <div class="text-left">{{ product.tva.toFixed(2) }} %</div>
           </td>
           <td class="p-2">
-            <div class="text-left">{{ product?.quantity }} item</div>
+            <div class="text-left">
+              {{ t("g.plrz.i", { n: product?.quantity }) }}
+            </div>
           </td>
           <td class="p-2">
             <div class="flex justify-start gap-3">

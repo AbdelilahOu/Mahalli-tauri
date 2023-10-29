@@ -72,20 +72,7 @@ const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="!Invoice.invoice_items?.length" class="text-red-400"
-                >No products</span
-              >
-              <span v-else>
-                {{
-                  Invoice.invoice_items?.length
-                    ? `${Invoice.invoice_items.length} ${
-                        Invoice.invoice_items.length === 1
-                          ? "Product"
-                          : "Products"
-                      }`
-                    : ""
-                }}
-              </span>
+              {{ t("g.plrz.p", { n: Invoice.invoice_items?.length }) }}
             </div>
           </td>
           <td class="p-2">

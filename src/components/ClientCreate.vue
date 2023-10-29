@@ -88,7 +88,7 @@ const setImage = (imagePath: string) => {
             <FormControl>
               <Input
                 type="text"
-                placeHolder="full name"
+                :placeHolder="t('c.p.a')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -124,7 +124,7 @@ const setImage = (imagePath: string) => {
             <FormControl>
               <Input
                 type="text"
-                placeHolder="Address"
+                :placeHolder="t('c.p.d')"
                 v-bind="componentField"
               />
             </FormControl>

@@ -6,6 +6,7 @@ import { open } from "@tauri-apps/api/dialog";
 import { useDropZone } from "@vueuse/core";
 import { ref, onBeforeUnmount } from "vue";
 import UiIcon from "./UiIcon.vue";
+import { useI18n } from "vue-i18n";
 
 const { name, extensions } = defineProps<{
   extensions: string[];
@@ -16,6 +17,7 @@ const emits = defineEmits<{
   (e: "on:save", image: string): void;
 }>();
 
+const { t } = useI18n();
 const dropZone = ref<HTMLDivElement>();
 
 async function onDrop(files: File[] | null) {
@@ -26,6 +28,7 @@ async function onDrop(files: File[] | null) {
     selectedFile.value = convertFileSrc(imagePath);
   }
 }
+
 const { isOverDropZone } = useDropZone(dropZone, onDrop);
 
 const selectedFile = ref<string | null>();
@@ -92,7 +95,7 @@ onBeforeUnmount(() => {
           isOverDropZone ? 'text-sky-500' : 'text-gray-400',
         ]"
       >
-        <span> Drag and drop or select your image </span>
+        <span> {{ t("g.dropZone") }} </span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="32"

@@ -21,7 +21,12 @@
       "a": "Add",
       "csv": "Upload to {table}"
     },
-    "translationTitle": "Change Language"
+    "translationTitle": "Change Language",
+    "dropZone": "Drag and drop or select your image",
+    "plrz": {
+      "i": "no items | {n} item | {n} items",
+      "p": "no products | {n} product | {n} products"
+    }
   },
   "csv": {
     "title": "Upload csv files"
