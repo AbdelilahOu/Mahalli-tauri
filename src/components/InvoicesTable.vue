@@ -19,8 +19,6 @@ const checkThisInvoice = (IsIncluded: boolean, id: string) => {
     : checkedInvoices.value.splice(checkedInvoices.value.indexOf(id), 1);
 };
 
-const pagination = ref(0);
-
 const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
   store.setters.updateStore({ key: "row", value: Invoice });
   store.setters.updateStore({ key: "name", value: name });
