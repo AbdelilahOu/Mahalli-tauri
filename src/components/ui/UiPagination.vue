@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, inject, type Ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 
 import {
   Pagination,
