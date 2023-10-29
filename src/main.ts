@@ -30,11 +30,69 @@ const DEFAULT_DATE_TIME_FORMAT = {
   },
 };
 
+const DEFAULT_NUMBER_FORMATS = {
+  US: {
+    currency: {
+      style: "currency",
+      currency: "USD",
+      notation: "standard",
+    },
+    decimal: {
+      style: "decimal",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    },
+    percent: {
+      style: "percent",
+      useGrouping: false,
+    },
+  },
+  EU: {
+    currency: {
+      style: "currency",
+      currency: "EUR",
+      notation: "standard",
+    },
+    decimal: {
+      style: "decimal",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    },
+    percent: {
+      style: "percent",
+      useGrouping: false,
+    },
+  },
+  AR: {
+    currency: {
+      style: "currency",
+      currency: "MAD",
+      notation: "standard",
+    },
+    decimal: {
+      style: "decimal",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    },
+    percent: {
+      style: "percent",
+      useGrouping: false,
+    },
+  },
+};
+
 const datetimeFormats = {
   "en-US": DEFAULT_DATE_TIME_FORMAT,
   "fr-FR": DEFAULT_DATE_TIME_FORMAT,
   "ar-AE": DEFAULT_DATE_TIME_FORMAT,
   "de-DE": DEFAULT_DATE_TIME_FORMAT,
+};
+
+const numberFormats = {
+  "en-US": DEFAULT_NUMBER_FORMATS.US,
+  "fr-FR": DEFAULT_NUMBER_FORMATS.EU,
+  "ar-AE": DEFAULT_NUMBER_FORMATS.EU,
+  "de-DE": DEFAULT_NUMBER_FORMATS.AR,
 };
 
 const initiVueApp = () => {
@@ -87,6 +145,7 @@ const initiVueApp = () => {
         messages: messages,
         // @ts-ignore
         datetimeFormats,
+        numberFormats,
       })
     )
     .mount("#app");
