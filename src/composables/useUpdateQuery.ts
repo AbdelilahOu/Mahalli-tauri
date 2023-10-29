@@ -7,7 +7,7 @@ export function useUpdateRouteQueryParams() {
   const updateQueryParams = (query: Record<any, any>) => {
     router.push({
       path: route.path,
-      params: { ...route.params },
+      params: route.params,
       query: { ...route.query, ...query },
     });
   };
