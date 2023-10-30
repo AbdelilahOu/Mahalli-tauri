@@ -14,7 +14,6 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@tanstack/vue-table": "^8.10.7",
     "@tauri-apps/api": "^1.4.0",
     "@vee-validate/zod": "^4.11.8",
     "@vueuse/core": "^10.1.2",
