@@ -1,1 +1,285 @@
-{"g":{"s":"Recherche","r":{"Clients":"Clientèle","Sellers":"Les vendeurs","Products":"Des produits","Orders":"Ordres","Invoices":"Factures","Inventory":"Inventaire","Statistics":"Statistiques","Payment":"Paiement","Sittings":"Séances","Notifications":"Notifications"},"b":{"no":"Annuler","c":"Créer","d":"Confirmer","u":"Mettre à jour {name}","a":"Ajouter","csv":"Télécharger vers {table}"},"translationTitle":"Changer de langue","dropZone":"Glissez-déposez ou sélectionnez votre image","plrz":{"i":"aucun article | {n} article | {n} articles","p":"aucun produit | {n} produit | {n} produits"}},"csv":{"title":"Téléchargez des fichiers csv"},"stats":{"i":{"title":"Articles vendus et achetés au cours des trois derniers mois","labels":["ACHETÉ","VENDU"],"b3c":"Meilleurs clients en fonction des dépenses","b3s":"Meilleures ventes basées sur les dépenses"},"de":{"title":"Produits achetés au cours des trois derniers mois"}},"c":{"p":{"a":"Nom et prénom","b":"E-mail","c":"Numéro de téléphone","d":"Adresse"},"i":{"addButton":"Ajouter un nouveau client","feilds":["Nom du client","e-mail","numéro de téléphone","adresse","action"]},"c":{"title":"créer un client"},"u":{"title":"mettre à jour le client"},"d":{"title":"es-tu sûr de vouloir supprimer le client"}},"s":{"p":{"a":"Nom et prénom","b":"E-mail","c":"Numéro de téléphone","d":"Adresse"},"i":{"addButton":"Ajouter un nouveau vendeur","feilds":["Nom du Vendeur","e-mail","numéro de téléphone","adresse","action"]},"c":{"title":"créer un vendeur"},"u":{"title":"mettre à jour le vendeur"},"d":{"title":"es-tu sûr de vouloir supprimer le vendeur"}},"p":{"i":{"addButton":"Ajouter un nouveau produit","feilds":["identifiant","nom du produit","description","prix","TVA","inventaire","action"],"types":["Produit","Service"]},"p":{"a":"Nom","b":"Prix","c":"TVA","d":"Quantité initiale","e":"Description"},"c":{"title":"créer un produit"},"u":{"title":"MISE À JOUR du produit"},"d":{"title":"es-tu sûr de vouloir supprimer le produit"}},"o":{"i":{"addButton":"Ajouter une nouvelle commande","feilds":["identifiant","vendeur","articles","STATUT","Date","action"]},"c":{"title":"créer une nouvelle commande","d":{"s":{"title":"détails du vendeur","select":"Sélectionnez un vendeur"},"o":{"title":"détails de la commande","add":"Ajouter un produit","select":"choisissez un produit","placeholder":["La quantité de produit","Nouveau prix"]}},"button":"Créer une commande"},"u":{"title":"mise à jour de la commande","d":{"s":{"title":"détails du vendeur","select":"Sélectionnez un vendeur"},"o":{"title":"détails de la commande","select":"choisissez un produit","add":"Ajouter un produit"}},"button":"Mettre à jour les commandes"},"d":{"title":"es-tu sûr de vouloir supprimer la commande","yes":"Confirmer","no":"Annuler"},"s":{"delivered":"Livré","pending":"En attente","canceled":"Annulé"}},"od":{"d":{"o":{"title":"détails de la commande","id":"identifiant","date":"date","status":"statut"},"s":{"title":"détails du vendeur","id":"identifiant","name":"nom","phone":"numéro de téléphone","email":"e-mail","address":"adresse"},"i":{"title":"détails des articles commandés","fields":["nom","description","quantité","prix","total"]},"button":"imprimer"}},"id":{"d":{"i":{"title":"Détails de la facture","id":"identifiant","date":"date"},"c":{"title":"détails du client","id":"identifiant","name":"nom","phone":"numéro de téléphone","email":"e-mail","address":"adresse"},"it":{"title":"détails des éléments de la facture","fields":["nom","description","quantité","prix","TVA","tva totale","total"]},"button":"imprimer"}},"i":{"i":{"addButton":"Ajouter une nouvelle facture","feilds":["identifiant","client","articles","total","statut","Date","action"]},"c":{"title":"créer une nouvelle facture","d":{"c":{"title":"détails du client","select":"Sélectionnez un client"},"i":{"title":"Détails de la facture","add":"Ajouter un produit","select":"choisissez un produit","placeholder":["La quantité de produit","Nouveau prix"]}},"button":"Créer une facture"},"u":{"title":"mettre à jour la facture","d":{"c":{"title":"détails du client","select":"--"},"i":{"title":"Détails de la facture","add":"Ajouter un produit","select":"--"}},"button":"Mettre à jour la facture"},"d":{"title":"es-tu sûr de vouloir supprimer la facture","yes":"Confirmer","no":"Annuler"},"s":{"delivered":"Livré","pending":"En attente","canceled":"Annulé"}},"im":{"i":{"addButton":"Ajouter à l'inventaire","feilds":["identifiant","nom du produit","prix du produit","prix de vente","quantité","type de mouvement","date","--"]},"c":{"title":"ajouter des articles à l'inventaire","l":{"a":"Produit","b":"Quantité"},"p":{"a":"choisissez un produit","b":"Quantité"}}},"auth":{"title":"Se connecter","username":"Nom d'utilisateur","email":"E-mail","password":"Mot de passe"}}
+{
+  "g": {
+    "s": "Recherche",
+    "r": {
+      "Clients": "Clientèle",
+      "Sellers": "Les vendeurs",
+      "Products": "Des produits",
+      "Orders": "Ordres",
+      "Invoices": "Factures",
+      "Inventory": "Inventaire",
+      "Statistics": "Statistiques",
+      "Payment": "Paiement",
+      "Sittings": "Séances",
+      "Notifications": "Notifications"
+    },
+    "b": {
+      "no": "Annuler",
+      "c": "Créer",
+      "d": "Confirmer",
+      "u": "Mettre à jour {name}",
+      "a": "Ajouter",
+      "csv": "Télécharger vers {table}"
+    },
+    "translationTitle": "Changer de langue",
+    "dropZone": "Glissez-déposez ou sélectionnez votre image",
+    "plrz": {
+      "i": "aucun article | {n} article | {n} articles",
+      "p": "aucun produit | {n} produit | {n} produits"
+    }
+  },
+  "csv": { "title": "Téléchargez des fichiers csv" },
+  "stats": {
+    "i": {
+      "title": "Articles vendus et achetés au cours des trois derniers mois",
+      "labels": ["ACHETÉ", "VENDU"],
+      "b3c": "Meilleurs clients en fonction des dépenses",
+      "b3s": "Meilleures ventes basées sur les dépenses"
+    },
+    "de": { "title": "Produits achetés au cours des trois derniers mois" }
+  },
+  "c": {
+    "p": {
+      "a": "Nom et prénom",
+      "b": "E-mail",
+      "c": "Numéro de téléphone",
+      "d": "Adresse"
+    },
+    "i": {
+      "addButton": "Ajouter un nouveau client",
+      "feilds": [
+        "Nom du client",
+        "e-mail",
+        "numéro de téléphone",
+        "adresse",
+        "action"
+      ]
+    },
+    "c": { "title": "créer un client" },
+    "u": { "title": "mettre à jour le client" },
+    "d": { "title": "es-tu sûr de vouloir supprimer le client" }
+  },
+  "s": {
+    "p": {
+      "a": "Nom et prénom",
+      "b": "E-mail",
+      "c": "Numéro de téléphone",
+      "d": "Adresse"
+    },
+    "i": {
+      "addButton": "Ajouter un nouveau vendeur",
+      "feilds": [
+        "Nom du Vendeur",
+        "e-mail",
+        "numéro de téléphone",
+        "adresse",
+        "action"
+      ]
+    },
+    "c": { "title": "créer un vendeur" },
+    "u": { "title": "mettre à jour le vendeur" },
+    "d": { "title": "es-tu sûr de vouloir supprimer le vendeur" }
+  },
+  "p": {
+    "i": {
+      "addButton": "Ajouter un nouveau produit",
+      "feilds": [
+        "identifiant",
+        "nom du produit",
+        "description",
+        "prix",
+        "TVA",
+        "inventaire",
+        "action"
+      ],
+      "types": ["Produit", "Service"]
+    },
+    "p": {
+      "a": "Nom",
+      "b": "Prix",
+      "c": "TVA",
+      "d": "Quantité initiale",
+      "e": "Description"
+    },
+    "c": { "title": "créer un produit" },
+    "u": { "title": "MISE À JOUR du produit" },
+    "d": { "title": "es-tu sûr de vouloir supprimer le produit" }
+  },
+  "o": {
+    "i": {
+      "addButton": "Ajouter une nouvelle commande",
+      "feilds": [
+        "identifiant",
+        "vendeur",
+        "articles",
+        "STATUT",
+        "Date",
+        "action"
+      ]
+    },
+    "c": {
+      "title": "créer une nouvelle commande",
+      "d": {
+        "s": {
+          "title": "détails du vendeur",
+          "select": "Sélectionnez un vendeur"
+        },
+        "o": {
+          "title": "détails de la commande",
+          "add": "Ajouter un produit",
+          "select": "choisissez un produit",
+          "placeholder": ["La quantité de produit", "Nouveau prix"]
+        }
+      },
+      "button": "Créer une commande"
+    },
+    "u": {
+      "title": "mise à jour de la commande",
+      "d": {
+        "s": {
+          "title": "détails du vendeur",
+          "select": "Sélectionnez un vendeur"
+        },
+        "o": {
+          "title": "détails de la commande",
+          "select": "choisissez un produit",
+          "add": "Ajouter un produit"
+        }
+      },
+      "button": "Mettre à jour les commandes"
+    },
+    "d": {
+      "title": "es-tu sûr de vouloir supprimer la commande",
+      "yes": "Confirmer",
+      "no": "Annuler"
+    },
+    "s": { "delivered": "Livré", "pending": "En attente", "canceled": "Annulé" }
+  },
+  "od": {
+    "d": {
+      "o": {
+        "title": "détails de la commande",
+        "id": "identifiant",
+        "date": "date",
+        "status": "statut"
+      },
+      "s": {
+        "title": "détails du vendeur",
+        "id": "identifiant",
+        "name": "nom",
+        "phone": "numéro de téléphone",
+        "email": "e-mail",
+        "address": "adresse"
+      },
+      "i": {
+        "title": "détails des articles commandés",
+        "fields": ["nom", "description", "quantité", "prix", "total"]
+      },
+      "button": "imprimer"
+    }
+  },
+  "id": {
+    "d": {
+      "i": {
+        "title": "Détails de la facture",
+        "id": "identifiant",
+        "date": "date"
+      },
+      "c": {
+        "title": "détails du client",
+        "id": "identifiant",
+        "name": "nom",
+        "phone": "numéro de téléphone",
+        "email": "e-mail",
+        "address": "adresse"
+      },
+      "it": {
+        "title": "détails des éléments de la facture",
+        "fields": [
+          "nom",
+          "description",
+          "quantité",
+          "prix",
+          "TVA",
+          "tva totale",
+          "total"
+        ]
+      },
+      "button": "imprimer"
+    }
+  },
+  "i": {
+    "i": {
+      "addButton": "Ajouter une nouvelle facture",
+      "feilds": [
+        "identifiant",
+        "client",
+        "articles",
+        "total",
+        "statut",
+        "Date",
+        "action"
+      ]
+    },
+    "c": {
+      "title": "créer une nouvelle facture",
+      "d": {
+        "c": {
+          "title": "détails du client",
+          "select": "Sélectionnez un client"
+        },
+        "i": {
+          "title": "Détails de la facture",
+          "add": "Ajouter un produit",
+          "select": "choisissez un produit",
+          "placeholder": ["La quantité de produit", "Nouveau prix"]
+        }
+      },
+      "button": "Créer une facture"
+    },
+    "u": {
+      "title": "mettre à jour la facture",
+      "d": {
+        "c": { "title": "détails du client", "select": "--" },
+        "i": {
+          "title": "Détails de la facture",
+          "add": "Ajouter un produit",
+          "select": "--"
+        }
+      },
+      "button": "Mettre à jour la facture"
+    },
+    "d": {
+      "title": "es-tu sûr de vouloir supprimer la facture",
+      "yes": "Confirmer",
+      "no": "Annuler"
+    },
+    "s": { "delivered": "Livré", "pending": "En attente", "canceled": "Annulé" }
+  },
+  "im": {
+    "i": {
+      "addButton": "Ajouter à l'inventaire",
+      "feilds": [
+        "identifiant",
+        "nom du produit",
+        "prix du produit",
+        "prix de vente",
+        "quantité",
+        "type de mouvement",
+        "date",
+        "--"
+      ]
+    },
+    "c": {
+      "title": "ajouter des articles à l'inventaire",
+      "l": { "a": "Produit", "b": "Quantité" },
+      "p": { "a": "choisissez un produit", "b": "Quantité" }
+    }
+  },
+  "auth": {
+    "title": "Se connecter",
+    "username": "Nom d'utilisateur",
+    "email": "E-mail",
+    "password": "Mot de passe"
+  }
+}
