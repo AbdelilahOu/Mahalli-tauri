@@ -1,1 +1,278 @@
-{"g":{"s":"Suchen","r":{"Clients":"Kunden","Sellers":"Verkäufer","Products":"Produkte","Orders":"Aufträge","Invoices":"Rechnungen","Inventory":"Inventar","Statistics":"Statistiken","Payment":"Zahlungt","Sittings":"Sitzungen","Notifications":"Benachrichtigungen"},"b":{"no":"Stornieren","c":"Erstellen","d":"Bestätigen","u":"Aktualisieren Sie {name}","a":"Hinzufügen","csv":"Hochladen auf {table}"},"translationTitle":"Sprache ändern","dropZone":"Ziehen Sie Ihr Bild per Drag & Drop oder wählen Sie es aus","plrz":{"i":"keine Artikel | {n} Artikel | {n} Artikel","p":"keine Produkte | {n} Produkt | {n} Produkte"}},"csv":{"title":"CSV-Dateien hochladen"},"stats":{"i":{"title":"In den letzten drei Monaten verkaufte und gekaufte Artikel","labels":["GEKAUFT","VERKAUFT"],"b3c":"Beste Kunden basierend auf den Ausgaben","b3s":"Bestseller basierend auf den Ausgaben"},"de":{"title":"Produkte, die in den letzten drei Monaten gekauft wurden"}},"c":{"p":{"a":"Vollständiger Name","b":"Email","c":"Telefonnummer","d":"Adresse"},"i":{"addButton":"Neuen Kunden hinzufügen","feilds":["Kundenname","Email","Telefonnummer","Adresse","Aktion"]},"c":{"title":"Erstellen Sie einen Kunden"},"u":{"title":"Client aktualisieren"},"d":{"title":"Sind Sie sicher, dass Sie den Client löschen möchten?"}},"s":{"p":{"a":"Vollständiger Name","b":"Email","c":"Telefonnummer","d":"Adresse"},"i":{"addButton":"Neuen Verkäufer hinzufügen","feilds":["Name des Verkäufers","Email","Telefonnummer","Adresse","Aktion"]},"c":{"title":"Erstellen Sie einen Verkäufer"},"u":{"title":"Verkäufer aktualisieren"},"d":{"title":"Sind Sie sicher, dass Sie den Verkäufer löschen möchten?"}},"p":{"i":{"addButton":"Neues Produkt hinzufügen","feilds":["Ausweis","Produktname","Beschreibung","Preis","TVA","Inventar","Aktion"],"types":["Produkt","Service"]},"p":{"a":"Name","b":"Preis","c":"TVA","d":"Anfangsmenge","e":"Beschreibung"},"c":{"title":"ein Produkt erstellen"},"u":{"title":"Produkt aktualisieren"},"d":{"title":"Sind Sie sicher, dass Sie das Produkt löschen möchten?"}},"o":{"i":{"addButton":"Neue Bestellung hinzufügen","feilds":["Ausweis","Verkäufer","Artikel","STATUS","Datum","Aktion"]},"c":{"title":"neue Ordnung erstellen","d":{"s":{"title":"Angaben zum Verkäufer","select":"Wählen Sie einen Verkäufer aus"},"o":{"title":"Bestelldetails","add":"Fügen Sie ein Produkt hinzu","select":"Wähle ein Produkt","placeholder":["Produktmenge","Neuer Preis"]}},"button":"Erstellen Sie eine Bestellung"},"u":{"title":"Reihenfolge aktualisieren","d":{"s":{"title":"Angaben zum Verkäufer","select":"Wählen Sie einen Verkäufer aus"},"o":{"title":"Bestelldetails","select":"Wähle ein Produkt","add":"Fügen Sie ein Produkt hinzu"}},"button":"Bestellungen aktualisieren"},"d":{"title":"Sind Sie sicher, dass Sie die Bestellung löschen möchten?","yes":"Bestätigen","no":"Stornieren"},"s":{"delivered":"Geliefert","pending":"Ausstehend","canceled":"Abgesagt"}},"od":{"d":{"o":{"title":"Bestelldetails","id":"Ausweis","date":"Datum","status":"Status"},"s":{"title":"Angaben zum Verkäufer","id":"Ausweis","name":"Name","phone":"Telefonnummer","email":"Email","address":"Adresse"},"i":{"title":"Einzelheiten zu den Bestellartikeln","fields":["Name","Beschreibung","Menge","Preis","gesamt"]},"button":"drucken"}},"id":{"d":{"i":{"title":"Rechnungs-Details","id":"Ausweis","date":"Datum"},"c":{"title":"Kundendaten","id":"Ausweis","name":"Name","phone":"Telefonnummer","email":"Email","address":"Adresse"},"it":{"title":"Einzelheiten zu den Rechnungspositionen","fields":["Name","Beschreibung","Menge","Preis","tva","total tva","gesamt"]},"button":"drucken"}},"i":{"i":{"addButton":"Neue Rechnung hinzufügen","feilds":["Ausweis","Klient","Artikel","gesamt","Status","Datum","Aktion"]},"c":{"title":"Neue Rechnung erstellen","d":{"c":{"title":"Kundendaten","select":"Wählen Sie einen Kunden aus"},"i":{"title":"Rechnungs-Details","add":"Fügen Sie ein Produkt hinzu","select":"Wähle ein Produkt","placeholder":["Produktmenge","Neuer Preis"]}},"button":"Erstellen Sie eine Rechnung"},"u":{"title":"Rechnung aktualisieren","d":{"c":{"title":"Kundendaten","select":"--"},"i":{"title":"Rechnungs-Details","add":"Fügen Sie ein Produkt hinzu","select":"--"}},"button":"Rechnung aktualisieren"},"d":{"title":"Sind Sie sicher, dass Sie die Rechnung löschen möchten?","yes":"Bestätigen","no":"Stornieren"},"s":{"delivered":"Geliefert","pending":"Ausstehend","canceled":"Abgesagt"}},"im":{"i":{"addButton":"Zum Inventar hinzufügen","feilds":["Ausweis","Produktname","Produktpreis","Verkaufspreis","Menge","Bewegungsart","Datum","--"]},"c":{"title":"Artikel zum Inventar hinzufügen","l":{"a":"Produkt","b":"Menge"},"p":{"a":"Wähle ein Produkt","b":"Menge"}}},"auth":{"title":"Anmeldung","username":"Nutzername","email":"Email","password":"Passwort"}}
+{
+  "g": {
+    "s": "Suchen",
+    "r": {
+      "Clients": "Kunden",
+      "Sellers": "Verkäufer",
+      "Products": "Produkte",
+      "Orders": "Aufträge",
+      "Invoices": "Rechnungen",
+      "Inventory": "Inventar",
+      "Statistics": "Statistiken",
+      "Payment": "Zahlungt",
+      "Sittings": "Sitzungen",
+      "Notifications": "Benachrichtigungen"
+    },
+    "b": {
+      "no": "Stornieren",
+      "c": "Erstellen",
+      "d": "Bestätigen",
+      "u": "Aktualisieren Sie {name}",
+      "a": "Hinzufügen",
+      "csv": "Hochladen auf {table}"
+    },
+    "translationTitle": "Sprache ändern",
+    "dropZone": "Ziehen Sie Ihr Bild per Drag & Drop oder wählen Sie es aus",
+    "plrz": {
+      "i": "keine Artikel | {n} Artikel | {n} Artikel",
+      "p": "keine Produkte | {n} Produkt | {n} Produkte"
+    }
+  },
+  "csv": { "title": "CSV-Dateien hochladen" },
+  "stats": {
+    "i": {
+      "title": "In den letzten drei Monaten verkaufte und gekaufte Artikel",
+      "labels": ["GEKAUFT", "VERKAUFT"],
+      "b3c": "Beste Kunden basierend auf den Ausgaben",
+      "b3s": "Bestseller basierend auf den Ausgaben"
+    },
+    "de": {
+      "title": "Produkte, die in den letzten drei Monaten gekauft wurden"
+    }
+  },
+  "c": {
+    "p": {
+      "a": "Vollständiger Name",
+      "b": "Email",
+      "c": "Telefonnummer",
+      "d": "Adresse"
+    },
+    "i": {
+      "addButton": "Neuen Kunden hinzufügen",
+      "feilds": ["Kundenname", "Email", "Telefonnummer", "Adresse", "Aktion"]
+    },
+    "c": { "title": "Erstellen Sie einen Kunden" },
+    "u": { "title": "Client aktualisieren" },
+    "d": { "title": "Sind Sie sicher, dass Sie den Client löschen möchten?" }
+  },
+  "s": {
+    "p": {
+      "a": "Vollständiger Name",
+      "b": "Email",
+      "c": "Telefonnummer",
+      "d": "Adresse"
+    },
+    "i": {
+      "addButton": "Neuen Verkäufer hinzufügen",
+      "feilds": [
+        "Name des Verkäufers",
+        "Email",
+        "Telefonnummer",
+        "Adresse",
+        "Aktion"
+      ]
+    },
+    "c": { "title": "Erstellen Sie einen Verkäufer" },
+    "u": { "title": "Verkäufer aktualisieren" },
+    "d": { "title": "Sind Sie sicher, dass Sie den Verkäufer löschen möchten?" }
+  },
+  "p": {
+    "i": {
+      "addButton": "Neues Produkt hinzufügen",
+      "feilds": [
+        "Ausweis",
+        "Produktname",
+        "Beschreibung",
+        "Preis",
+        "TVA",
+        "Inventar",
+        "Aktion"
+      ],
+      "types": ["Produkt", "Service"]
+    },
+    "p": {
+      "a": "Name",
+      "b": "Preis",
+      "c": "TVA",
+      "d": "Anfangsmenge",
+      "e": "Beschreibung"
+    },
+    "c": { "title": "ein Produkt erstellen" },
+    "u": { "title": "Produkt aktualisieren" },
+    "d": { "title": "Sind Sie sicher, dass Sie das Produkt löschen möchten?" }
+  },
+  "o": {
+    "i": {
+      "addButton": "Neue Bestellung hinzufügen",
+      "feilds": ["Ausweis", "Verkäufer", "Artikel", "STATUS", "Datum", "Aktion"]
+    },
+    "c": {
+      "title": "neue Ordnung erstellen",
+      "d": {
+        "s": {
+          "title": "Angaben zum Verkäufer",
+          "select": "Wählen Sie einen Verkäufer aus"
+        },
+        "o": {
+          "title": "Bestelldetails",
+          "add": "Fügen Sie ein Produkt hinzu",
+          "select": "Wähle ein Produkt",
+          "placeholder": ["Produktmenge", "Neuer Preis"]
+        }
+      },
+      "button": "Erstellen Sie eine Bestellung"
+    },
+    "u": {
+      "title": "Reihenfolge aktualisieren",
+      "d": {
+        "s": {
+          "title": "Angaben zum Verkäufer",
+          "select": "Wählen Sie einen Verkäufer aus"
+        },
+        "o": {
+          "title": "Bestelldetails",
+          "select": "Wähle ein Produkt",
+          "add": "Fügen Sie ein Produkt hinzu"
+        }
+      },
+      "button": "Bestellungen aktualisieren"
+    },
+    "d": {
+      "title": "Sind Sie sicher, dass Sie die Bestellung löschen möchten?",
+      "yes": "Bestätigen",
+      "no": "Stornieren"
+    },
+    "s": {
+      "delivered": "Geliefert",
+      "pending": "Ausstehend",
+      "canceled": "Abgesagt"
+    }
+  },
+  "od": {
+    "d": {
+      "o": {
+        "title": "Bestelldetails",
+        "id": "Ausweis",
+        "date": "Datum",
+        "status": "Status"
+      },
+      "s": {
+        "title": "Angaben zum Verkäufer",
+        "id": "Ausweis",
+        "name": "Name",
+        "phone": "Telefonnummer",
+        "email": "Email",
+        "address": "Adresse"
+      },
+      "i": {
+        "title": "Einzelheiten zu den Bestellartikeln",
+        "fields": ["Name", "Beschreibung", "Menge", "Preis", "gesamt"]
+      },
+      "button": "drucken"
+    }
+  },
+  "id": {
+    "d": {
+      "i": { "title": "Rechnungs-Details", "id": "Ausweis", "date": "Datum" },
+      "c": {
+        "title": "Kundendaten",
+        "id": "Ausweis",
+        "name": "Name",
+        "phone": "Telefonnummer",
+        "email": "Email",
+        "address": "Adresse"
+      },
+      "it": {
+        "title": "Einzelheiten zu den Rechnungspositionen",
+        "fields": [
+          "Name",
+          "Beschreibung",
+          "Menge",
+          "Preis",
+          "tva",
+          "total tva",
+          "gesamt"
+        ]
+      },
+      "button": "drucken"
+    }
+  },
+  "i": {
+    "i": {
+      "addButton": "Neue Rechnung hinzufügen",
+      "feilds": [
+        "Ausweis",
+        "Klient",
+        "Artikel",
+        "gesamt",
+        "Status",
+        "Datum",
+        "Aktion"
+      ]
+    },
+    "c": {
+      "title": "Neue Rechnung erstellen",
+      "d": {
+        "c": {
+          "title": "Kundendaten",
+          "select": "Wählen Sie einen Kunden aus"
+        },
+        "i": {
+          "title": "Rechnungs-Details",
+          "add": "Fügen Sie ein Produkt hinzu",
+          "select": "Wähle ein Produkt",
+          "placeholder": ["Produktmenge", "Neuer Preis"]
+        }
+      },
+      "button": "Erstellen Sie eine Rechnung"
+    },
+    "u": {
+      "title": "Rechnung aktualisieren",
+      "d": {
+        "c": { "title": "Kundendaten", "select": "--" },
+        "i": {
+          "title": "Rechnungs-Details",
+          "add": "Fügen Sie ein Produkt hinzu",
+          "select": "--"
+        }
+      },
+      "button": "Rechnung aktualisieren"
+    },
+    "d": {
+      "title": "Sind Sie sicher, dass Sie die Rechnung löschen möchten?",
+      "yes": "Bestätigen",
+      "no": "Stornieren"
+    },
+    "s": {
+      "delivered": "Geliefert",
+      "pending": "Ausstehend",
+      "canceled": "Abgesagt"
+    }
+  },
+  "im": {
+    "i": {
+      "addButton": "Zum Inventar hinzufügen",
+      "feilds": [
+        "Ausweis",
+        "Produktname",
+        "Produktpreis",
+        "Verkaufspreis",
+        "Menge",
+        "Bewegungsart",
+        "Datum",
+        "--"
+      ]
+    },
+    "c": {
+      "title": "Artikel zum Inventar hinzufügen",
+      "l": { "a": "Produkt", "b": "Menge" },
+      "p": { "a": "Wähle ein Produkt", "b": "Menge" }
+    }
+  },
+  "auth": {
+    "title": "Anmeldung",
+    "username": "Nutzername",
+    "email": "Email",
+    "password": "Passwort"
+  }
+}
