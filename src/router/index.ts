@@ -3,20 +3,17 @@ import NotificationsView from "@/views/NotificationsView.vue";
 import InvoiceDetails from "@/views/InvoiceDetails.vue";
 import ClientDetails from "@/views/ClientDetails.vue";
 import SellerDetails from "@/views/SellerDetails.vue";
-import InvoicesIndex from "@/views/InvoicesIndex.vue";
 import OrdersDetails from "@/views/OrderDetails.vue";
 import ProductsView from "@/views/ProductsView.vue";
 import InvoicesView from "@/views/InvoicesView.vue";
-import ClientsIndex from "@/views/ClientsIndex.vue";
-import SellersIndex from "@/views/SellersIndex.vue";
-import OrdersIndex from "@/views/OrdersIndex.vue";
+import CommenLayout from "@/layouts/CommenLayout.vue";
 import SellersView from "@/views/SellersView.vue";
 import ClientsView from "@/views/ClientsView.vue";
 import OrdersView from "@/views/OrdersView.vue";
 import InventoryView from "@/views/InventoryView.vue";
 import StatsView from "@/views/StatsView.vue";
 import HomeView from "@/views/HomeView.vue";
-import IndexView from "@/views/IndexView.vue";
+import RootLayout from "@/layouts/RootLayout.vue";
 import AuthView from "@/views/AuthView.vue";
 
 const router = createRouter({
@@ -25,7 +22,7 @@ const router = createRouter({
     {
       path: "/",
       name: "Index",
-      component: IndexView,
+      component: RootLayout,
       children: [
         {
           path: "Products",
@@ -40,7 +37,7 @@ const router = createRouter({
         {
           path: "Clients",
           name: "Clients",
-          component: ClientsIndex,
+          component: CommenLayout,
           children: [
             {
               path: "all",
@@ -57,7 +54,7 @@ const router = createRouter({
         {
           path: "Sellers",
           name: "Sellers",
-          component: SellersIndex,
+          component: CommenLayout,
           children: [
             {
               path: "all",
@@ -79,7 +76,7 @@ const router = createRouter({
         {
           path: "Orders/",
           name: "Orders",
-          component: OrdersIndex,
+          component: CommenLayout,
           children: [
             {
               path: "all",
@@ -101,7 +98,7 @@ const router = createRouter({
         {
           path: "Invoices/",
           name: "Invoice",
-          component: InvoicesIndex,
+          component: CommenLayout,
           children: [
             {
               path: "all",
