@@ -123,7 +123,6 @@ pub fn insert_into_tables(result: Result<TableRecord, String>, conn: &mut Sqlite
                                 name: product.name,
                                 price: product.price,
                                 description: product.description,
-                                tva: product.tva,
                                 image: product.image,
                             },
                             conn,

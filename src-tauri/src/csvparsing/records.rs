@@ -6,7 +6,6 @@ pub struct ProductRecord {
     pub id: String,
     pub name: String,
     pub price: f32,
-    pub tva: f32,
     pub description: String,
     pub image: String,
 }
