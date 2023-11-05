@@ -10,6 +10,8 @@ pub struct User {
     #[diesel(sql_type = Text)]
     pub username: String,
     #[diesel(sql_type = Text)]
+    pub created_at: String,
+    #[diesel(sql_type = Text)]
     pub password: String,
     #[diesel(sql_type = Text)]
     pub email: String,
@@ -103,8 +105,6 @@ pub struct Product {
     pub created_at: String,
     #[diesel(sql_type = Float)]
     pub price: f32,
-    #[diesel(sql_type = Float)]
-    pub tva: f32,
 }
 
 #[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
@@ -115,7 +115,6 @@ pub struct NewProduct {
     pub description: String,
     pub name: String,
     pub price: f32,
-    pub tva: f32,
     pub image: String,
 }
 
@@ -294,8 +293,6 @@ pub struct ProductWithQuantity {
     pub description: String,
     #[diesel(sql_type = Float)]
     pub price: f32,
-    #[diesel(sql_type = Float)]
-    pub tva: f32,
     #[diesel(sql_type = BigInt)]
     pub quantity: i64,
 }

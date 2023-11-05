@@ -298,7 +298,6 @@ pub fn insert_product(product: TProduct, state: tauri::State<AppState>) {
             description: product.description,
             name: product.name,
             price: product.price,
-            tva: product.tva,
             image: product.image,
         },
         conn,

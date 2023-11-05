@@ -2,7 +2,7 @@ use serde_json::{json, Value};
 
 use crate::diesel::prelude::*;
 use crate::models::{NewProduct, Product, ProductWithQuantity};
-use crate::schema::products::{description, id, image, name, price, tva};
+use crate::schema::products::{description, id, image, name, price};
 use crate::schema::{inventory_mouvements, products};
 use crate::types::TProduct;
 
@@ -19,7 +19,6 @@ pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Value {
             products::image,
             products::description,
             products::price,
-            products::tva,
             diesel::dsl::sql::<diesel::sql_types::BigInt>(
                 "COALESCE(SUM(CASE WHEN inventory_mouvements.model = 'IN' THEN inventory_mouvements.quantity WHEN inventory_mouvements.model = 'OUT' THEN -inventory_mouvements.quantity END), 0) AS quantity",
             ),
@@ -76,7 +75,6 @@ pub fn insert_product(product: NewProduct, connection: &mut SqliteConnection) ->
             description.eq(product.description),
             name.eq(product.name),
             price.eq(product.price),
-            tva.eq(product.tva),
             image.eq(product.image),
         ))
         .execute(connection)
@@ -95,7 +93,6 @@ pub fn delete_product(p_id: String, connection: &mut SqliteConnection) -> usize 
 pub fn update_product(product: TProduct, p_id: String, connection: &mut SqliteConnection) -> usize {
     let result = diesel::update(products::dsl::products.find(&p_id))
         .set((
-            products::tva.eq(product.tva),
             products::name.eq(product.name),
             products::price.eq(product.price),
             products::image.eq(product.image),

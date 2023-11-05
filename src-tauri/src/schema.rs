@@ -70,7 +70,6 @@ diesel::table! {
         description -> Text,
         created_at -> Timestamp,
         price -> Float,
-        tva -> Float,
     }
 }
 
@@ -90,6 +89,7 @@ diesel::table! {
     users (id) {
         id -> Text,
         username -> Text,
+        created_at -> Timestamp,
         password -> Text,
         email -> Text,
         role -> Text,
