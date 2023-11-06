@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS products (
   name TEXT NOT NULL,
   image TEXT NOT NULL DEFAULT "",
   description TEXT NOT NULL DEFAULT "",
+  tva REAL NOT NULL DEFAULT 0,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   price REAL NOT NULL
 );
@@ -91,4 +92,3 @@ CREATE UNIQUE INDEX IF NOT EXISTS invoice_items_inventory_id_key ON invoice_item
 CREATE UNIQUE INDEX IF NOT EXISTS products_name_key ON products (name);
 CREATE UNIQUE INDEX IF NOT EXISTS clients_fullname_key ON clients (fullname);
 CREATE UNIQUE INDEX IF NOT EXISTS sellers_name_key ON sellers (name);
-  
