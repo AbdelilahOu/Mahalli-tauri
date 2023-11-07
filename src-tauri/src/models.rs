@@ -82,7 +82,6 @@ pub struct Seller {
 #[diesel(table_name = sellers)]
 pub struct NewSeller {
     pub id: String,
-
     pub name: String,
     pub image: String,
     pub address: String,
@@ -111,7 +110,6 @@ pub struct Product {
 #[diesel(table_name = products)]
 pub struct NewProduct {
     pub id: String,
-
     pub description: String,
     pub name: String,
     pub price: f32,
@@ -141,7 +139,6 @@ pub struct UpdateInvoice {
 #[diesel(table_name = invoices)]
 pub struct NewInvoice {
     pub id: String,
-
     pub status: String,
     pub client_id: String,
 }
@@ -263,6 +260,8 @@ pub struct InventoryMvm {
     pub created_at: String,
     #[diesel(sql_type = Text)]
     pub product_id: String,
+    #[diesel(sql_type = Text)]
+    pub currency: String,
 }
 
 #[derive(Debug, AsChangeset, Serialize, Deserialize)]
@@ -279,6 +278,7 @@ pub struct NewInventoryMvm {
     pub model: String,
     pub quantity: i64,
     pub product_id: String,
+    pub currency: String,
 }
 
 #[derive(QueryableByName, Queryable, Deserialize, Serialize)]
