@@ -202,15 +202,7 @@
       },
       "it": {
         "title": "invoice items details",
-        "fields": [
-          "name",
-          "description",
-          "quantity",
-          "price",
-          "tva",
-          "total tva",
-          "total"
-        ]
+        "fields": ["name", "description", "quantity", "price", "total"]
       },
       "button": "print"
     }
