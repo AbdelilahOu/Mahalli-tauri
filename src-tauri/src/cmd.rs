@@ -298,6 +298,7 @@ pub fn insert_product(product: TProduct, state: tauri::State<AppState>) {
             description: product.description,
             name: product.name,
             price: product.price,
+            // tva: product.tva,
             image: product.image,
         },
         conn,
@@ -309,6 +310,7 @@ pub fn insert_product(product: TProduct, state: tauri::State<AppState>) {
             model: String::from("IN"),
             quantity: product.quantity,
             product_id: id,
+            currency: String::from("USD"),
         },
         conn,
     );
@@ -408,6 +410,7 @@ pub fn insert_invoice(invoice: TNewInvoice, state: tauri::State<AppState>) {
                 model: String::from("OUT"),
                 quantity: item.quantity,
                 product_id: item.product_id.clone(),
+                currency: String::from("USD"),
             },
             conn,
         );
@@ -466,6 +469,7 @@ pub fn update_invoice(invoice: TUpdateInvoice, id: String, state: tauri::State<A
                         model: String::from("OUT"),
                         quantity: item.quantity,
                         product_id: item.product_id.clone(),
+                        currency: String::from("USD"),
                     },
                     conn,
                 );
@@ -529,6 +533,7 @@ pub fn insert_order(order: TNewOrder, state: tauri::State<AppState>) {
                 model: String::from("IN"),
                 quantity: item.quantity,
                 product_id: item.product_id.clone(),
+                currency: String::from("USD"),
             },
             conn,
         );
@@ -590,6 +595,7 @@ pub fn update_order(order: TUpdateOrder, id: String, state: tauri::State<AppStat
                         model: String::from("IN"),
                         quantity: item.quantity,
                         product_id: item.product_id.clone(),
+                        currency: String::from("USD"),
                     },
                     conn,
                 );
@@ -661,6 +667,7 @@ pub fn insert_inventory_mvm(inventory: TNewInventory, state: tauri::State<AppSta
             model: inventory.model,
             quantity: inventory.quantity,
             product_id: inventory.product_id,
+            currency: String::from("USD"),
         },
         conn,
     );
