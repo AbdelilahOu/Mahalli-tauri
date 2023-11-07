@@ -184,15 +184,7 @@
       },
       "it": {
         "title": "Einzelheiten zu den Rechnungspositionen",
-        "fields": [
-          "Name",
-          "Beschreibung",
-          "Menge",
-          "Preis",
-          "tva",
-          "total tva",
-          "gesamt"
-        ]
+        "fields": ["Name", "Beschreibung", "Menge", "Preis", "gesamt"]
       },
       "button": "drucken"
     }
