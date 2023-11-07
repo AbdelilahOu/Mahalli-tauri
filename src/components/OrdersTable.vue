@@ -66,10 +66,9 @@ const toggleThisOrders = (Order: orderT, name: string) => {
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="order.order_items?.length">
+              <span>
                 {{ t("g.plrz.p", { n: order.order_items?.length }) }}
               </span>
-              <span v-else class="text-red-400">No products</span>
             </div>
           </td>
           <td class="p-2">
