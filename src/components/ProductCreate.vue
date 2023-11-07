@@ -29,7 +29,7 @@ const productSchema = toTypedSchema(
     price: z.number().min(0),
     description: z.string().min(2).max(50),
     quantity: z.number().min(0),
-    tva: z.number().min(0).max(100),
+    // tva: z.number().min(0).max(100),
   })
 );
 
@@ -49,7 +49,7 @@ const createNewProduct = async (product: newProductT) => {
           image,
           ...product,
           price: Number(product.price),
-          tva: Number(product.tva),
+          // tva: Number(product.tva),
           quantity: Number(product.quantity),
         },
       });
@@ -119,7 +119,7 @@ const setImage = (path: string) => {
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="tva">
+        <!-- <FormField v-slot="{ componentField }" name="tva">
           <FormItem>
             <FormLabel>{{ t("p.p.c") }}</FormLabel>
             <FormControl>
@@ -128,7 +128,7 @@ const setImage = (path: string) => {
               </Input>
             </FormControl>
           </FormItem>
-        </FormField>
+        </FormField> -->
         <FormField v-slot="{ componentField }" name="quantity">
           <FormItem>
             <FormLabel>{{ t("p.p.d") }}</FormLabel>
