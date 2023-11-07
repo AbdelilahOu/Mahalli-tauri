@@ -31,7 +31,7 @@ const productSchema = toTypedSchema(
       .max(50)
       .default(ProductRow.value.description ?? ""),
     quantity: z.number().min(0).default(0),
-    tva: z.number().min(0).max(100).default(ProductRow.value.tva),
+    // tva: z.number().min(0).max(100).default(ProductRow.value.tva),
   })
 );
 
@@ -104,7 +104,7 @@ onBeforeUnmount(() => {
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="tva">
+        <!-- <FormField v-slot="{ componentField }" name="tva">
           <FormItem>
             <FormLabel>{{ t("p.p.c") }}</FormLabel>
             <FormControl>
@@ -113,7 +113,7 @@ onBeforeUnmount(() => {
               </Input>
             </FormControl>
           </FormItem>
-        </FormField>
+        </FormField> -->
         <FormField v-slot="{ componentField }" name="quantity">
           <FormItem>
             <FormLabel>{{ t("p.p.d") }}</FormLabel>
