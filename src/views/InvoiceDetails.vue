@@ -130,7 +130,7 @@ const print = () => window.print();
             >
               <tr>
                 <th></th>
-                <th v-for="index in 7" :key="index" class="p-2">
+                <th v-for="index in 5" :key="index" class="p-2">
                   <div class="font-semibold text-left">
                     {{ t(`id.d.it.fields[${index - 1}]`) }}
                   </div>
@@ -163,12 +163,12 @@ const print = () => window.print();
                     {{ item.product.price.toFixed(2) }}
                   </div>
                 </td>
-                <td class="p-2">
+                <!-- <td class="p-2">
                   <div class="text-left">
                     {{ item.product.tva.toFixed(2) }} %
                   </div>
-                </td>
-                <td class="p-2">
+                </td> -->
+                <!-- <td class="p-2">
                   <div class="flex justify-start gap-3">
                     {{
                       (
@@ -179,7 +179,7 @@ const print = () => window.print();
                     }}
                     DH
                   </div>
-                </td>
+                </td> -->
                 <td class="p-2">
                   <div class="flex justify-start gap-3">
                     {{ (item.product.price * item.quantity).toFixed(2) }} DH
@@ -189,7 +189,7 @@ const print = () => window.print();
                   <div class="flex justify-start gap-3"></div>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td v-for="index in 6" :key="index"></td>
                 <td class="p-2 font-semibold">
                   {{
@@ -205,7 +205,7 @@ const print = () => window.print();
                     ).toFixed(2)
                   }}
                   DH
-                </td>
+                </td> 
                 <td class="p-2 font-semibold">
                   {{
                     (
@@ -218,25 +218,25 @@ const print = () => window.print();
                   }}
                   DH
                 </td>
-              </tr>
+              </tr> -->
               <tr>
-                <td v-for="index in 7" :key="index"></td>
+                <td v-for="index in 5" :key="index"></td>
                 <td class="p-2 font-semibold">
                   {{
+                    // (invoice?.invoice_items.reduce(
+                    //   (acc, curr) =>
+                    //     (acc +=
+                    //       curr.quantity *
+                    //       curr.product.price *
+                    //       (curr.product.tva / 100)),
+                    //   0
+                    // ) ?? 0) +
                     (
-                      (invoice?.invoice_items.reduce(
-                        (acc, curr) =>
-                          (acc +=
-                            curr.quantity *
-                            curr.product.price *
-                            (curr.product.tva / 100)),
-                        0
-                      ) ?? 0) +
-                      (invoice?.invoice_items.reduce(
+                      invoice?.invoice_items.reduce(
                         (acc, curr) =>
                           (acc += curr.quantity * curr.product.price),
                         0
-                      ) ?? 0)
+                      ) ?? 0
                     ).toFixed(2)
                   }}
                   DH
