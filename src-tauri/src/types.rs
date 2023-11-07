@@ -94,7 +94,7 @@ pub struct TProduct {
     pub description: String,
     pub name: String,
     pub price: f32,
-    pub tva: f32,
+    // pub tva: f32,
     pub quantity: i64,
     pub image: String,
 }
