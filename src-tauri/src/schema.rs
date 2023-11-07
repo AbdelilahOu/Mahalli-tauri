@@ -20,6 +20,7 @@ diesel::table! {
         quantity -> BigInt,
         created_at -> Timestamp,
         product_id -> Text,
+        currency -> Text,
     }
 }
 
