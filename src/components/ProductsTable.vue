@@ -32,7 +32,7 @@ const handleCheck = (product: productT, isChecked: boolean) => {
           <th class="rounded-l-[4px]"></th>
           <th class="p-2 w-fit"></th>
           <th
-            v-for="index in [1, 2, 3, 4, 5, 6]"
+            v-for="index in [1, 2, 3, 5, 6]"
             :key="index"
             class="p-2 w-fit last:rounded-r-[4px]"
           >
@@ -78,9 +78,9 @@ const handleCheck = (product: productT, isChecked: boolean) => {
           <td class="p-2">
             <div class="text-left">{{ product.price.toFixed(2) }} DH</div>
           </td>
-          <td class="p-2">
+          <!-- <td class="p-2">
             <div class="text-left">{{ product.tva.toFixed(2) }} %</div>
-          </td>
+          </td> -->
           <td class="p-2">
             <div class="text-left">
               {{ t("g.plrz.i", { n: product?.quantity }) }}
