@@ -118,7 +118,7 @@ export interface invoiceDetailsItemT extends invoiceItemT {
   product: {
     price: number;
     name: string;
-    tva: number;
+    // tva: number;
     description: string;
   };
 }
@@ -191,7 +191,7 @@ export interface productT {
   price: number;
   quantity: number;
   description?: string;
-  tva: number;
+  // tva: number;
 }
 export interface newProductT extends Partial<Omit<productT, "id">> {}
 export interface productTfromApiT extends Omit<productT, "inventory"> {
