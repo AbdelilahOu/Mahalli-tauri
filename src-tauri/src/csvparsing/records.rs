@@ -72,4 +72,5 @@ pub struct InventoryMouvementRecord {
     pub model: String,
     pub quantity: i64,
     pub product_id: String,
+    pub currency: String,
 }
