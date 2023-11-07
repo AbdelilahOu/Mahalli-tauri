@@ -195,15 +195,7 @@
       },
       "it": {
         "title": "détails des éléments de la facture",
-        "fields": [
-          "nom",
-          "description",
-          "quantité",
-          "prix",
-          "TVA",
-          "tva totale",
-          "total"
-        ]
+        "fields": ["nom", "description", "quantité", "prix", "total"]
       },
       "button": "imprimer"
     }
