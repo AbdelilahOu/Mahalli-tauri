@@ -18,7 +18,6 @@ pub fn search_products(search: String, page: i32, connection: &mut SqliteConnect
             products::image,
             products::description,
             products::price,
-            // products::tva,
             diesel::dsl::sql::<diesel::sql_types::BigInt>(
                 "COALESCE(SUM(CASE WHEN inventory_mouvements.model = 'IN' THEN inventory_mouvements.quantity WHEN inventory_mouvements.model = 'OUT' THEN -inventory_mouvements.quantity END), 0) AS quantity",
             ),
