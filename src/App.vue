@@ -1,13 +1,8 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
 import { onBeforeMount, Transition } from "vue";
-// import { invoke } from "@tauri-apps/api";
+// import "vue3-lottie/dist/style.css";
 onBeforeMount(() => useRouter().push("/Home"));
-
-// (async () => {
-//   await invoke("seed_db");
-// })();
-//
 </script>
 
 <template>
