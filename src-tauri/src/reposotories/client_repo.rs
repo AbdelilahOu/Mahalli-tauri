@@ -8,6 +8,29 @@ use crate::schema::clients;
 use crate::schema::clients::*;
 use crate::types::TClient;
 
+pub fn search_clients(search: String, page: i32, connection: &mut SqliteConnection) -> Value {
+    let offset = (page - 1) * 17;
+
+    let result = clients::dsl::clients
+        .filter(fullname.like(format!("%{}%", search)))
+        .order(clients::created_at.desc())
+        .limit(17)
+        .offset(offset as i64)
+        .load::<Client>(connection)
+        .expect("error get all clients");
+
+    let count: Vec<i64> = clients::table
+        .filter(fullname.like(format!("%{}%", search)))
+        .count()
+        .get_results(connection)
+        .expect("coudnt get the count");
+
+    json!({
+        "count": count[0],
+        "data": result
+    })
+}
+
 pub fn get_clients(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
 

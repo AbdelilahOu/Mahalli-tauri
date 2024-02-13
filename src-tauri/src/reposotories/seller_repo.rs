@@ -5,6 +5,29 @@ use crate::models::{NewSeller, Seller};
 use crate::schema::sellers::{self, address, email, id, image, name, phone};
 use crate::types::TSeller;
 
+pub fn search_sellers(search: String, page: i32, connection: &mut SqliteConnection) -> Value {
+    let offset = (page - 1) * 17;
+
+    let result = sellers::dsl::sellers
+        .filter(name.like(format!("%{}%", search)))
+        .order(sellers::created_at.desc())
+        .limit(17 as i64)
+        .offset(offset as i64)
+        .load::<Seller>(connection)
+        .expect("error get all sellers");
+
+    let count: Vec<i64> = sellers::table
+        .filter(name.like(format!("%{}%", search)))
+        .count()
+        .get_results(connection)
+        .expect("coudnt get the count");
+
+    json!({
+        "count": count[0],
+        "data": result
+    })
+}
+
 pub fn get_sellers(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
 
