@@ -19,7 +19,12 @@ const { class: className, ...rest } = useAttrs();
 
 <template>
   <PaginationEllipsis
-    :class="cn('w-9 h-9 flex items-center justify-center', className as string ?? '')"
+    :class="
+      cn(
+        'w-9 h-9 flex items-center justify-center',
+        (className as string) ?? '',
+      )
+    "
     v-bind="{ ...forwarded, ...rest }"
   >
     <slot>
