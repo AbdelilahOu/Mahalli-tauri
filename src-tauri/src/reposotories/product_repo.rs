@@ -6,6 +6,41 @@ use crate::schema::products::{description, id, image, name, price};
 use crate::schema::{inventory_mouvements, products};
 use crate::types::TProduct;
 
+pub fn search_products(search: String, page: i32, connection: &mut SqliteConnection) -> Value {
+    let offset = (page - 1) * 17;
+    let result = products::table
+        .left_join(
+            inventory_mouvements::table.on(products::id.eq(inventory_mouvements::product_id)),
+        )
+        .select((
+            products::id,
+            products::name,
+            products::image,
+            products::description,
+            products::price,
+            // products::tva,
+            diesel::dsl::sql::<diesel::sql_types::BigInt>(
+                "COALESCE(SUM(CASE WHEN inventory_mouvements.model = 'IN' THEN inventory_mouvements.quantity WHEN inventory_mouvements.model = 'OUT' THEN -inventory_mouvements.quantity END), 0) AS quantity",
+            ),
+        ))
+        .group_by(products::id)
+        .filter(products::name.like(format!("%{}%", search)))
+        .limit(17)
+        .offset(offset as i64)
+        .load::<ProductWithQuantity>(connection)
+        .expect("error get all products");
+
+    let count: Vec<i64> = products::table
+        .count()
+        .get_results(connection)
+        .expect("coudnt get the count");
+
+    json!({
+        "count": count[0],
+        "data": result
+    })
+}
+
 pub fn get_products(page: i32, connection: &mut SqliteConnection) -> Value {
     let offset = (page - 1) * 17;
 

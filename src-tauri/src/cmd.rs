@@ -136,6 +136,14 @@ pub async fn seed_db(handle: tauri::AppHandle) {
 }
 
 #[tauri::command]
+pub fn search_clients(search: String, page: i32, state: tauri::State<AppState>) -> Value {
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = client_repo::search_clients(search, page, conn);
+    result
+}
+
+#[tauri::command]
 pub fn get_clients(page: i32, state: tauri::State<AppState>) -> Value {
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
@@ -192,6 +200,14 @@ pub fn update_client(client: TClient, id: String, state: tauri::State<AppState>)
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = client_repo::update_client(client, id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn search_sellers(search: String, page: i32, state: tauri::State<AppState>) -> Value {
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = seller_repo::search_sellers(search, page, conn);
     result
 }
 
@@ -253,6 +269,14 @@ pub fn update_seller(seller: TSeller, id: String, state: tauri::State<AppState>)
     let mut conn = state.db_conn.lock().unwrap();
     let conn = &mut *conn;
     let result = seller_repo::update_seller(seller, id, conn);
+    result
+}
+
+#[tauri::command]
+pub fn search_products(search: String, page: i32, state: tauri::State<AppState>) -> Value {
+    let mut conn = state.db_conn.lock().unwrap();
+    let conn = &mut *conn;
+    let result = product_repo::search_products(search, page, conn);
     result
 }
 
