@@ -1,24 +1,24 @@
 <script setup lang="ts">
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import ClientsTable from "@/components/ClientsTable.vue";
+import type { clientT, withCount } from "@/types";
+import { Button } from "@/components/ui/button";
+import UiIcon from "@/components/ui/UiIcon.vue";
+import { Input } from "@/components/ui/input";
+import { invoke } from "@tauri-apps/api";
+import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+import { store } from "@/store";
 import {
-  ref,
-  computed,
+  type WatchStopHandle,
   onBeforeMount,
   onUnmounted,
+  onMounted,
+  computed,
   provide,
   watch,
-  type WatchStopHandle,
-  onMounted,
+  ref,
 } from "vue";
-import { useRouter } from "vue-router";
-import { invoke } from "@tauri-apps/api";
-import { store } from "@/store";
-import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { useI18n } from "vue-i18n";
-import ClientsTable from "@/components/ClientsTable.vue";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import type { clientT, withCount } from "@/types";
-import UiIcon from "@/components/ui/UiIcon.vue";
 
 const { t } = useI18n();
 const router = useRouter();
