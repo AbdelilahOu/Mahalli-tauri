@@ -23,7 +23,6 @@ const dropZone = ref<HTMLDivElement>();
 async function onDrop(files: File[] | null) {
   if (files) {
     const imagePath = await uploadImagefiles(files[0]);
-    console.log(imagePath);
     emits("on:save", imagePath);
     selectedFile.value = convertFileSrc(imagePath);
   }
@@ -38,7 +37,6 @@ const OpenDialog = async () => {
       multiple: false,
       filters: [{ name, extensions }],
       defaultPath: name == "Image" ? await pictureDir() : await downloadDir(),
-      // C:\Users\abdel\AppData\Roaming\tauriApp
     })) as string | null;
 
     if (selectedFile.value) {
