@@ -48,6 +48,36 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        manager
+            .create_table(
+                Table::create()
+                    .table(Product::Table)
+                    .if_not_exists()
+                    .col(
+                        ColumnDef::new(Product::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
+                    .col(ColumnDef::new(Product::Name).string().not_null())
+                    .col(
+                        ColumnDef::new(Product::CreatedAt)
+                            .date_time()
+                            .not_null()
+                            .default(Expr::current_timestamp()),
+                    )
+                    .col(ColumnDef::new(Product::Description).string())
+                    .col(
+                        ColumnDef::new(Product::Price)
+                            .float()
+                            .not_null()
+                            .default(0.0f32),
+                    )
+                    .col(ColumnDef::new(Product::Image).string())
+                    .to_owned(),
+            )
+            .await?;
+
         Ok(())
     }
 
@@ -95,4 +125,32 @@ enum Seller {
     Email,
     #[sea_orm(iden = "address")]
     Address,
+}
+
+#[derive(DeriveIden)]
+enum Product {
+    #[sea_orm(iden = "products")]
+    Table,
+    Id,
+    #[sea_orm(iden = "name")]
+    Name,
+    #[sea_orm(iden = "created_at")]
+    CreatedAt,
+    #[sea_orm(iden = "image")]
+    Image,
+    #[sea_orm(iden = "description")]
+    Description,
+    #[sea_orm(iden = "price")]
+    Price,
+}
+
+#[derive(DeriveIden)]
+enum InventoryMouvement {
+    #[sea_orm(iden = "inventory_mouvements")]
+    Table,
+    Id,
+    #[sea_orm(iden = "mvm_type")]
+    MvmType,
+    #[sea_orm(iden = "quantity")]
+    Quantity,
 }
