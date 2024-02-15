@@ -3,11 +3,12 @@
     windows_subsystem = "windows"
 )]
 
+mod cmd;
 mod db;
 
 use db::establish_connection;
 use migration::{Migrator, MigratorTrait};
-use service::{sea_orm::DatabaseConnection, MutationsService, QueriesService};
+use service::sea_orm::DatabaseConnection;
 
 use std::sync::Mutex;
 
