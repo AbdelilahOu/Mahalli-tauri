@@ -156,7 +156,7 @@ impl MigrationTrait for Migration {
                             .to(Order::Table, Order::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    .col(ColumnDef::new(OrderItem::OrderId).string().not_null())
+                    .col(ColumnDef::new(OrderItem::InventoryId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_order_item_inventory_id")
@@ -225,7 +225,7 @@ impl MigrationTrait for Migration {
                             .to(Invoice::Table, Invoice::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    .col(ColumnDef::new(InvoiceItem::InvoiceId).string().not_null())
+                    .col(ColumnDef::new(InvoiceItem::InventoryId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_invoice_item_inventory_id")
