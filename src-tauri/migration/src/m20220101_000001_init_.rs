@@ -168,6 +168,75 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        manager
+            .create_table(
+                Table::create()
+                    .table(Invoice::Table)
+                    .if_not_exists()
+                    .col(
+                        ColumnDef::new(Invoice::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
+                    .col(ColumnDef::new(Invoice::ClientId).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_invoice_client_id")
+                            .from(Invoice::Table, Invoice::ClientId)
+                            .to(Seller::Table, Seller::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .col(ColumnDef::new(Invoice::Status).string().not_null())
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_table(
+                Table::create()
+                    .table(InvoiceItem::Table)
+                    .if_not_exists()
+                    .col(
+                        ColumnDef::new(InvoiceItem::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
+                    .col(
+                        ColumnDef::new(InvoiceItem::Price)
+                            .float()
+                            .not_null()
+                            .default(0.0f32),
+                    )
+                    .col(ColumnDef::new(InvoiceItem::ProductId).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_invoice_item_product_id")
+                            .from(InvoiceItem::Table, InvoiceItem::ProductId)
+                            .to(Product::Table, Product::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .col(ColumnDef::new(InvoiceItem::InvoiceId).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_invoice_item_invoice_id")
+                            .from(InvoiceItem::Table, InvoiceItem::InvoiceId)
+                            .to(Invoice::Table, Invoice::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .col(ColumnDef::new(InvoiceItem::InvoiceId).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_invoice_item_inventory_id")
+                            .from(InvoiceItem::Table, InvoiceItem::InventoryId)
+                            .to(InventoryMouvement::Table, InventoryMouvement::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .to_owned(),
+            )
+            .await?;
+
         Ok(())
     }
 
@@ -252,6 +321,7 @@ enum Order {
     Id,
     #[sea_orm(iden = "seller_id")]
     SellerId,
+    // status: delivered, cancel, ongoing
     #[sea_orm(iden = "status")]
     Status,
 }
@@ -265,6 +335,33 @@ enum OrderItem {
     ProductId,
     #[sea_orm(iden = "order_id")]
     OrderId,
+    #[sea_orm(iden = "inventory_id")]
+    InventoryId,
+    #[sea_orm(iden = "price")]
+    Price,
+}
+
+#[derive(DeriveIden)]
+enum Invoice {
+    #[sea_orm(iden = "invoices")]
+    Table,
+    Id,
+    #[sea_orm(iden = "client_id")]
+    ClientId,
+    // status: paid, cancel, ongoing
+    #[sea_orm(iden = "status")]
+    Status,
+}
+
+#[derive(DeriveIden)]
+enum InvoiceItem {
+    #[sea_orm(iden = "invoice_items")]
+    Table,
+    Id,
+    #[sea_orm(iden = "product_id")]
+    ProductId,
+    #[sea_orm(iden = "invoice_id")]
+    InvoiceId,
     #[sea_orm(iden = "inventory_id")]
     InventoryId,
     #[sea_orm(iden = "price")]
