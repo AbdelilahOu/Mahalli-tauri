@@ -104,6 +104,70 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        manager
+            .create_table(
+                Table::create()
+                    .table(Order::Table)
+                    .if_not_exists()
+                    .col(ColumnDef::new(Order::Id).string().not_null().primary_key())
+                    .col(ColumnDef::new(Order::SellerId).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_order_seller_id")
+                            .from(Order::Table, Order::SellerId)
+                            .to(Seller::Table, Seller::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .col(ColumnDef::new(Order::Status).string().not_null())
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_table(
+                Table::create()
+                    .table(OrderItem::Table)
+                    .if_not_exists()
+                    .col(
+                        ColumnDef::new(OrderItem::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
+                    .col(
+                        ColumnDef::new(OrderItem::Price)
+                            .float()
+                            .not_null()
+                            .default(0.0f32),
+                    )
+                    .col(ColumnDef::new(OrderItem::ProductId).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_order_item_product_id")
+                            .from(OrderItem::Table, OrderItem::ProductId)
+                            .to(Product::Table, Product::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .col(ColumnDef::new(OrderItem::OrderId).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_order_item_order_id")
+                            .from(OrderItem::Table, OrderItem::OrderId)
+                            .to(Order::Table, Order::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .col(ColumnDef::new(OrderItem::OrderId).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_order_item_inventory_id")
+                            .from(OrderItem::Table, OrderItem::InventoryId)
+                            .to(InventoryMouvement::Table, InventoryMouvement::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .to_owned(),
+            )
+            .await?;
+
         Ok(())
     }
 
@@ -186,8 +250,8 @@ enum Order {
     #[sea_orm(iden = "orders")]
     Table,
     Id,
-    #[sea_orm(iden = "client_id")]
-    ClientId,
+    #[sea_orm(iden = "seller_id")]
+    SellerId,
     #[sea_orm(iden = "status")]
     Status,
 }
