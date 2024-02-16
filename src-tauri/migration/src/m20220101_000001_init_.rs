@@ -78,6 +78,32 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        manager
+            .create_table(
+                Table::create()
+                    .table(InventoryMouvement::Table)
+                    .if_not_exists()
+                    .col(
+                        ColumnDef::new(InventoryMouvement::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
+                    .col(
+                        ColumnDef::new(InventoryMouvement::MvmType)
+                            .string()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(InventoryMouvement::Quantity)
+                            .float()
+                            .not_null()
+                            .default(0.0f32),
+                    )
+                    .to_owned(),
+            )
+            .await?;
+
         Ok(())
     }
 
@@ -153,4 +179,30 @@ enum InventoryMouvement {
     MvmType,
     #[sea_orm(iden = "quantity")]
     Quantity,
+}
+
+#[derive(DeriveIden)]
+enum Order {
+    #[sea_orm(iden = "orders")]
+    Table,
+    Id,
+    #[sea_orm(iden = "client_id")]
+    ClientId,
+    #[sea_orm(iden = "status")]
+    Status,
+}
+
+#[derive(DeriveIden)]
+enum OrderItem {
+    #[sea_orm(iden = "order_items")]
+    Table,
+    Id,
+    #[sea_orm(iden = "product_id")]
+    ProductId,
+    #[sea_orm(iden = "order_id")]
+    OrderId,
+    #[sea_orm(iden = "inventory_id")]
+    InventoryId,
+    #[sea_orm(iden = "price")]
+    Price,
 }

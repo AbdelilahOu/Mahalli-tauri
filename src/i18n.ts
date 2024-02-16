@@ -96,6 +96,4 @@ export const i18n = createI18n({
   messages: messages,
   // @ts-ignore
   datetimeFormats,
-  // @ts-ignore
-  //   numberFormats,
 });
