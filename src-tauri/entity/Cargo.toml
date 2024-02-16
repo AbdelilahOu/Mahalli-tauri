@@ -6,3 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+serde = { version = "1.0.192", features = ["derive"] }
+uuid = { version = "1.5.0", features = ["v4"] }
+
+
+[dependencies.sea-orm]
+version = "0.12.4"
