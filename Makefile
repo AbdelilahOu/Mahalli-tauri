@@ -15,3 +15,6 @@ dev:
 
 build: 
 	npm run tauri build
+
+check:
+	cd src-tauri && cargo check

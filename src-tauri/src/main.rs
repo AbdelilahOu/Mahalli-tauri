@@ -12,7 +12,7 @@ use service::sea_orm::DatabaseConnection;
 
 use std::sync::Mutex;
 
-pub struct AppState {
+pub struct State {
     db_conn: Mutex<DatabaseConnection>,
 }
 
@@ -24,7 +24,7 @@ async fn main() {
     Migrator::up(&db_conn, None).await.unwrap();
     //
     tauri::Builder::default()
-        .manage(AppState {
+        .manage(State {
             db_conn: Mutex::new(db_conn),
         })
         .plugin(tauri_plugin_oauth::init())
