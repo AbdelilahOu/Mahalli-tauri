@@ -12,6 +12,8 @@ pub struct Model {
     pub description: Option<String>,
     #[sea_orm(column_type = "Double")]
     pub price: f64,
+    #[sea_orm(column_type = "Double")]
+    pub min_quantity: f64,
     pub image: Option<String>,
 }
 

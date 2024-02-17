@@ -12,5 +12,3 @@ pub mod products;
 pub mod quote_items;
 pub mod quotes;
 pub mod sellers;
-
-pub use uuid;
