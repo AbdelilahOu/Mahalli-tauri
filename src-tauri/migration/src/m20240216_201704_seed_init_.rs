@@ -13,7 +13,10 @@ use fake::{
 use sea_orm_migration::{prelude::*, sea_orm::Statement};
 
 use crate::{
-    m20220101_000001_init_::{Client, InventoryMouvement, Product, Seller},
+    m20220101_000001_init_::{
+        Client, InventoryMouvement, Invoice, InvoiceItem, Order, OrderItem, Product, Quote,
+        QuoteItem, Seller,
+    },
     utils::get_random_enum,
 };
 
@@ -265,6 +268,38 @@ impl MigrationTrait for Migration {
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        let delete_item = Query::delete().from_table(OrderItem::Table).to_owned();
+        manager.exec_stmt(delete_item).await?;
+
+        let delete_item = Query::delete().from_table(InvoiceItem::Table).to_owned();
+        manager.exec_stmt(delete_item).await?;
+
+        let delete_item: DeleteStatement = Query::delete().from_table(QuoteItem::Table).to_owned();
+        manager.exec_stmt(delete_item).await?;
+
+        let delete = Query::delete().from_table(Order::Table).to_owned();
+        manager.exec_stmt(delete).await?;
+
+        let delete = Query::delete().from_table(Invoice::Table).to_owned();
+        manager.exec_stmt(delete).await?;
+
+        let delete = Query::delete().from_table(Quote::Table).to_owned();
+        manager.exec_stmt(delete).await?;
+
+        let delete = Query::delete()
+            .from_table(InventoryMouvement::Table)
+            .to_owned();
+        manager.exec_stmt(delete).await?;
+
+        let delete = Query::delete().from_table(Product::Table).to_owned();
+        manager.exec_stmt(delete).await?;
+
+        let delete = Query::delete().from_table(Client::Table).to_owned();
+        manager.exec_stmt(delete).await?;
+
+        let delete = Query::delete().from_table(Seller::Table).to_owned();
+        manager.exec_stmt(delete).await?;
+
         Ok(())
     }
 }
