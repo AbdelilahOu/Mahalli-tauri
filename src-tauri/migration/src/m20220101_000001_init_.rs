@@ -73,6 +73,12 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(0.0f32),
                     )
+                    .col(
+                        ColumnDef::new(Product::MinQuantity)
+                            .float()
+                            .not_null()
+                            .default(0.0f32),
+                    )
                     .col(ColumnDef::new(Product::Image).string())
                     .to_owned(),
             )
@@ -304,7 +310,7 @@ impl MigrationTrait for Migration {
 }
 
 #[derive(DeriveIden)]
-enum Client {
+pub enum Client {
     #[sea_orm(iden = "clients")]
     Table,
     Id,
@@ -323,7 +329,7 @@ enum Client {
 }
 
 #[derive(DeriveIden)]
-enum Seller {
+pub enum Seller {
     #[sea_orm(iden = "sellers")]
     Table,
     Id,
@@ -342,7 +348,7 @@ enum Seller {
 }
 
 #[derive(DeriveIden)]
-enum Product {
+pub enum Product {
     #[sea_orm(iden = "products")]
     Table,
     Id,
@@ -356,10 +362,12 @@ enum Product {
     Description,
     #[sea_orm(iden = "price")]
     Price,
+    #[sea_orm(iden = "min_quantity")]
+    MinQuantity,
 }
 
 #[derive(DeriveIden)]
-enum InventoryMouvement {
+pub enum InventoryMouvement {
     #[sea_orm(iden = "inventory_mouvements")]
     Table,
     Id,
@@ -370,7 +378,7 @@ enum InventoryMouvement {
 }
 
 #[derive(DeriveIden)]
-enum Order {
+pub enum Order {
     #[sea_orm(iden = "orders")]
     Table,
     Id,
@@ -382,7 +390,7 @@ enum Order {
 }
 
 #[derive(DeriveIden)]
-enum OrderItem {
+pub enum OrderItem {
     #[sea_orm(iden = "order_items")]
     Table,
     Id,
@@ -397,7 +405,7 @@ enum OrderItem {
 }
 
 #[derive(DeriveIden)]
-enum Invoice {
+pub enum Invoice {
     #[sea_orm(iden = "invoices")]
     Table,
     Id,
@@ -409,7 +417,7 @@ enum Invoice {
 }
 
 #[derive(DeriveIden)]
-enum InvoiceItem {
+pub enum InvoiceItem {
     #[sea_orm(iden = "invoice_items")]
     Table,
     Id,
@@ -424,7 +432,7 @@ enum InvoiceItem {
 }
 
 #[derive(DeriveIden)]
-enum Quote {
+pub enum Quote {
     #[sea_orm(iden = "quotes")]
     Table,
     Id,
@@ -433,7 +441,7 @@ enum Quote {
 }
 
 #[derive(DeriveIden)]
-enum QuoteItem {
+pub enum QuoteItem {
     #[sea_orm(iden = "quote_items")]
     Table,
     Id,
