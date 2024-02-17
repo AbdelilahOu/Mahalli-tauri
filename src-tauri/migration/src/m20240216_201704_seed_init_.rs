@@ -152,6 +152,28 @@ impl MigrationTrait for Migration {
             db.execute(insert_order).await?;
         }
 
+        for _ in 0..1000 {
+            let id = uuid::Uuid::new_v4();
+            let price: u8 = Faker.fake();
+            let insert_order = Statement::from_sql_and_values(
+                sea_orm::DatabaseBackend::Sqlite,
+                r#"
+                INSERT INTO 
+                    order_items (id, price, product_id, order_id, inventory_id)
+                VALUES
+                    (
+                        $1, 
+                        $2, 
+                        (SELECT id FROM products ORDER BY RANDOM() LIMIT 1),
+                        (SELECT id FROM orders ORDER BY RANDOM() LIMIT 1),
+                        (SELECT id FROM inventory_mouvements ORDER BY RANDOM() LIMIT 1)
+                    )
+                "#,
+                [id.to_string().into(), price.into()],
+            );
+            db.execute(insert_order).await?;
+        }
+
         let status = vec![
             String::from("PAID"),
             String::from("CANCELED"),
@@ -178,6 +200,28 @@ impl MigrationTrait for Migration {
             db.execute(insert_invoice).await?;
         }
 
+        for _ in 0..1000 {
+            let id = uuid::Uuid::new_v4();
+            let price: u8 = Faker.fake();
+            let insert_invoice = Statement::from_sql_and_values(
+                sea_orm::DatabaseBackend::Sqlite,
+                r#"
+                INSERT INTO 
+                    invoice_items (id, price, product_id, invoice_id, inventory_id)
+                VALUES
+                    (
+                        $1, 
+                        $2, 
+                        (SELECT id FROM products ORDER BY RANDOM() LIMIT 1),
+                        (SELECT id FROM invoices ORDER BY RANDOM() LIMIT 1),
+                        (SELECT id FROM inventory_mouvements ORDER BY RANDOM() LIMIT 1)
+                    )
+                "#,
+                [id.to_string().into(), price.into()],
+            );
+            db.execute(insert_invoice).await?;
+        }
+
         for _ in 0..150 {
             let id = uuid::Uuid::new_v4();
             let insert_quote = Statement::from_sql_and_values(
@@ -196,11 +240,31 @@ impl MigrationTrait for Migration {
             db.execute(insert_quote).await?;
         }
 
+        for _ in 0..1000 {
+            let id = uuid::Uuid::new_v4();
+            let price: u8 = Faker.fake();
+            let insert_quote = Statement::from_sql_and_values(
+                sea_orm::DatabaseBackend::Sqlite,
+                r#"
+                INSERT INTO 
+                    quote_items (id, price, product_id, quote_id)
+                VALUES
+                    (
+                        $1, 
+                        $2, 
+                        (SELECT id FROM products ORDER BY RANDOM() LIMIT 1),
+                        (SELECT id FROM quotes ORDER BY RANDOM() LIMIT 1)
+                    )
+                "#,
+                [id.to_string().into(), price.into()],
+            );
+            db.execute(insert_quote).await?;
+        }
+
         Ok(())
     }
 
-    async fn down(&self, _manager: &SchemaManager) -> Result<(), DbErr> {
-        // Replace the sample below with your own migration scripts
+    async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         Ok(())
     }
 }
