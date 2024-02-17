@@ -18,3 +18,6 @@ build:
 
 check:
 	cd src-tauri && cargo check
+
+migration: 
+	cd src-tauri && sea-orm-cli migrate generate $(name)
