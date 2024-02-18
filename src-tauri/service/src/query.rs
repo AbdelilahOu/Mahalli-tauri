@@ -6,8 +6,8 @@ use entity::{
 };
 use sea_orm::{
     sea_query::{Alias, Expr, Func, Query, SimpleExpr, SqliteQueryBuilder, SubQueryStatement},
-    ConnectionTrait, DatabaseConnection as DbConn, DbBackend, DbErr, FromQueryResult, JoinType,
-    JsonValue, Order, Statement,
+    ColumnTrait, ConnectionTrait, DatabaseConnection as DbConn, DbBackend, DbErr, EntityTrait,
+    FromQueryResult, JoinType, JsonValue, Order, QueryFilter, SelectColumns, Statement,
 };
 use serde_json::json;
 
@@ -108,5 +108,16 @@ impl QueriesService {
         });
 
         Ok(result)
+    }
+    pub async fn search_products(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
+        let products = Product::find()
+            .select_column(products::Column::Name)
+            .select_column(products::Column::Id)
+            .filter(products::Column::Name.like(search))
+            .into_json()
+            .all(db)
+            .await?;
+
+        Ok(products)
     }
 }
