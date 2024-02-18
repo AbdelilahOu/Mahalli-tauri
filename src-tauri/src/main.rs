@@ -3,14 +3,14 @@
     windows_subsystem = "windows"
 )]
 
-mod cmd;
+mod commands;
 mod db;
 
 use db::establish_connection;
 use migration::{Migrator, MigratorTrait};
 use service::sea_orm::DatabaseConnection;
 
-pub struct State {
+pub struct AppState {
     db_conn: DatabaseConnection,
 }
 
@@ -22,8 +22,14 @@ async fn main() {
     Migrator::up(&db_conn, None).await.unwrap();
     //
     tauri::Builder::default()
-        .manage(State { db_conn })
-        .invoke_handler(tauri::generate_handler![cmd::list_products])
+        .manage(AppState { db_conn })
+        .invoke_handler(tauri::generate_handler![
+            commands::products::list_products,
+            commands::products::search_products,
+            commands::products::create_product,
+            commands::products::update_product,
+            commands::products::delete_product,
+        ])
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

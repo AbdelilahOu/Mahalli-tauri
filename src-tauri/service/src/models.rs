@@ -12,3 +12,22 @@ pub struct SelectProducts {
     pub stock: f64,
     pub min_quantity: Option<f64>,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct NewProduct {
+    pub name: String,
+    pub description: Option<String>,
+    pub price: f64,
+    pub min_quantity: f64,
+    pub image: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Product {
+    pub id: String,
+    pub name: String,
+    pub description: Option<String>,
+    pub price: f64,
+    pub min_quantity: f64,
+    pub image: Option<String>,
+}
