@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use service::{MutationsService, NewProduct, Product, QueriesService};
+use service::{ListArgs, MutationsService, NewProduct, Product, QueriesService};
 use tauri::State;
 
 use crate::AppState;
@@ -20,9 +20,9 @@ pub struct Fail {
 pub type SResult<T> = Result<Seccess<T>, Fail>;
 
 #[tauri::command]
-pub async fn list_products(state: State<'_, AppState>) -> SResult<Vec<Value>> {
+pub async fn list_products(state: State<'_, AppState>, args: ListArgs) -> SResult<Value> {
     let _ = state.db_conn;
-    let res = QueriesService::list_products(&state.db_conn).await;
+    let res = QueriesService::list_products(&state.db_conn, args).await;
     match res {
         Ok(res) => Ok(Seccess {
             error: None,

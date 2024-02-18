@@ -19,12 +19,14 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 const router = useRouter();
 
 const defaultPage = computed(() =>
-  Number(router.currentRoute.value.query.page)
+  Number(router.currentRoute.value.query.page),
 );
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const rowsCount = inject<Ref<number>>("count");
+
+console.log(rowsCount?.value);
 
 const goBackward = () => {
   if (defaultPage.value > 1) {

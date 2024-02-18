@@ -191,6 +191,7 @@ export interface productT {
   price: number;
   quantity: number;
   description?: string;
+  stock?: string;
   // tva: number;
 }
 export interface newProductT extends Partial<Omit<productT, "id">> {}
@@ -241,6 +242,12 @@ export type inOutReType = {
 
 export type withCount<T> = {
   count: number;
+  data: T;
+};
+
+export type Res<T> = {
+  error?: message;
+  message?: string;
   data: T;
 };
 

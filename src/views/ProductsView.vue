@@ -7,7 +7,7 @@ import type { productT, withCount } from "@/types";
 import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { invoke } from "@tauri-apps/api";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { store } from "@/store";
 import {
   type WatchStopHandle,
@@ -23,25 +23,26 @@ import {
 
 const { t } = useI18n();
 const router = useRouter();
+const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 //
 const products = ref<productT[]>([]);
 const searchQuery = ref<string>("");
 const totalRows = ref<number>(0);
 //
+console.log(route.query);
 const page = computed(() => Number(router.currentRoute.value.query.page));
 const refresh = computed(() => router.currentRoute.value.query.refresh);
 //
 let unwatch: WatchStopHandle | null = null;
 //
 provide("count", totalRows);
-
 //
-onBeforeMount(() => getProducts(page.value));
+onBeforeMount(() => listProducts("", page.value));
 //
 onMounted(() => {
   unwatch = watch([page, refresh], ([p]) => {
-    if (p && p > 0) getProducts(p);
+    if (p && p > 0) listProducts("", p);
   });
 });
 //
@@ -49,14 +50,19 @@ onUnmounted(() => {
   if (unwatch) unwatch();
 });
 //
-async function getProducts(page: number = 1) {
+async function listProducts(search: string, page: number = 1) {
   try {
-    const res = await invoke<withCount<productT[]>>("get_products", {
-      page,
+    const res = await invoke<any>("list_products", {
+      args: {
+        search,
+        page,
+        limit: 17,
+      },
     });
-    if (res?.data) {
-      products.value = res.data;
-      totalRows.value = res.count;
+    console.log(res);
+    if (!res?.error) {
+      products.value = res.data.products;
+      totalRows.value = res.data.count;
       return;
     }
   } catch (error) {
@@ -73,6 +79,15 @@ const updateModal = (name: string) => {
   store.setters.updateStore({ key: "show", value: true });
   store.setters.updateStore({ key: "name", value: name });
 };
+//
+let timer: number | undefined;
+const updateSearch = async (value: string | number) => {
+  searchQuery.value = value as string;
+  clearTimeout(timer);
+  timer = setTimeout(async () => {
+    listProducts(searchQuery.value);
+  }, 500);
+};
 </script>
 
 <template>
@@ -81,7 +96,12 @@ const updateModal = (name: string) => {
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
           <div class="w-1/3">
-            <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
+            <Input
+              v-model="searchQuery"
+              @update:model-value="updateSearch"
+              type="text"
+              :placeHolder="t('g.s')"
+            >
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
                 name="search"

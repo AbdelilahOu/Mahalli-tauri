@@ -5,18 +5,38 @@ use entity::{
     products::{self, Entity as Product},
 };
 use sea_orm::{
-    sea_query::{Alias, Expr, Func, Query, SimpleExpr, SqliteQueryBuilder, SubQueryStatement},
-    ColumnTrait, ConnectionTrait, DatabaseConnection as DbConn, DbBackend, DbErr, EntityTrait,
-    FromQueryResult, JoinType, JsonValue, Order, QueryFilter, SelectColumns, Statement,
+    sea_query::{
+        Alias, Cond, Expr, Func, Query, SimpleExpr, SqliteQueryBuilder, SubQueryStatement,
+    },
+    ColumnTrait, Condition, ConnectionTrait, DatabaseConnection as DbConn, DbBackend, DbErr,
+    EntityTrait, FromQueryResult, JoinType, JsonValue, Order, PaginatorTrait, QueryFilter,
+    SelectColumns, Statement,
 };
+use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 use crate::SelectProducts;
 
+#[derive(Deserialize, Serialize)]
+pub struct ListArgs {
+    pub page: u64,
+    pub limit: u64,
+    pub search: String,
+}
+
 pub struct QueriesService;
 
 impl QueriesService {
-    pub async fn list_products(db: &DbConn) -> Result<Vec<JsonValue>, DbErr> {
+    pub async fn list_products(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
+        let count = Product::find()
+            .filter(
+                Condition::any()
+                    .add(products::Column::Name.like(format!("{}%", args.search)))
+                    .add(products::Column::Description.like(format!("%{}%", args.search))),
+            )
+            .count(db)
+            .await?;
+
         let (sql, values) = Query::select()
             .from(Product)
             .exprs([
@@ -75,6 +95,19 @@ impl QueriesService {
                 )),
                 Alias::new("stock"),
             )
+            .cond_where(
+                Cond::any()
+                    .add(
+                        Expr::col((Product, products::Column::Name))
+                            .like(format!("{}%", args.search)),
+                    )
+                    .add(
+                        Expr::col((Product, products::Column::Description))
+                            .like(format!("%{}%", args.search)),
+                    ),
+            )
+            .limit(args.limit)
+            .offset((args.page - 1) * args.limit)
             .order_by(products::Column::CreatedAt, Order::Desc)
             .to_owned()
             .build(SqliteQueryBuilder);
@@ -107,7 +140,10 @@ impl QueriesService {
             };
         });
 
-        Ok(result)
+        Ok(json!({
+            "count": count,
+            "products": result
+        }))
     }
     pub async fn search_products(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
         let products = Product::find()
