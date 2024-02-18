@@ -45,7 +45,7 @@ const handleCheck = (product: productT, isChecked: boolean) => {
       <tbody class="text-sm divide-y divide-gray-100">
         <tr
           v-for="(product, index) in products"
-          :key="product.id"
+          :key="product.id + index"
           v-fade="index"
         >
           <td class="p-2">
@@ -72,18 +72,15 @@ const handleCheck = (product: productT, isChecked: boolean) => {
           </td>
           <td class="p-2">
             <div class="font-medium text-gray-800">
-              {{ product.description }}
+              {{ product.description?.substring(0, 50) + "..." }}
             </div>
           </td>
           <td class="p-2">
             <div class="text-left">{{ product.price.toFixed(2) }} DH</div>
           </td>
-          <!-- <td class="p-2">
-            <div class="text-left">{{ product.tva.toFixed(2) }} %</div>
-          </td> -->
           <td class="p-2">
             <div class="text-left">
-              {{ t("g.plrz.i", { n: product?.quantity }) }}
+              {{ t("g.plrz.i", { n: product?.stock }) }}
             </div>
           </td>
           <td class="p-2">
@@ -100,7 +97,7 @@ const handleCheck = (product: productT, isChecked: boolean) => {
       </tbody>
     </table>
     <div>
-      <UiPagination />
+      <UiPagination v-if="products.length" />
     </div>
   </div>
 </template>
