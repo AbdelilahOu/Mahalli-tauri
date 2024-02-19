@@ -19,7 +19,7 @@ import { z } from "zod";
 
 const { t } = useI18n();
 
-const isLoading = ref<boolean>(false);
+const isCreating = ref<boolean>(false);
 
 const image = ref<string>();
 
@@ -39,31 +39,37 @@ const form = useForm({
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const createNewProduct = async (product: newProductT) => {
-  isLoading.value = true;
-  if (product.name !== "") {
-    try {
-      let image: string = await saveFile(product.image as string, "Image");
-      await invoke("insert_product", {
-        product: {
-          image,
-          ...product,
-          price: Number(product.price),
-          quantity: Number(product.quantity),
+  isCreating.value = true;
+  try {
+    let image: string = await saveFile(product.image as string, "Image");
+    let productRes = await invoke<any>("insert_product", {
+      product: {
+        name: product.name,
+        price: Number(product.price),
+        description: product.description,
+        min_quantity: product.min_quantity,
+        image,
+      },
+    });
+    if (!productRes.error) {
+      await invoke("create_inventory", {
+        mvm: {
+          mvm_type: "IN",
+          product_id: productRes.data,
+          quantity: product.quantity,
         },
       });
-      // toggle refresh
-      updateQueryParams({
-        refresh: "refresh-create-" + Math.random() * 9999,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      isLoading.value = false;
-      hideModal();
     }
-    return;
+    // toggle refresh
+    updateQueryParams({
+      refresh: "refresh-create-" + Math.random() * 9999,
+    });
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isCreating.value = false;
+    hideModal();
   }
-  isLoading.value = false;
 };
 
 const hideModal = () => {
@@ -156,13 +162,17 @@ const setImage = (path: string) => {
           </FormItem>
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
-          <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
+          <Button
+            :disabled="isCreating"
+            type="submit"
+            class="w-full col-span-2"
+          >
             {{ t("g.b.c") }}
           </Button>
           <Button
             @click="hideModal"
             type="button"
-            :disabled="isLoading"
+            :disabled="isCreating"
             variant="outline"
           >
             {{ t("g.b.no") }}

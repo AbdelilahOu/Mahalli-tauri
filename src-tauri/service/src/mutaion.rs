@@ -6,7 +6,7 @@ use crate::{NewInventory, NewProduct, Product};
 pub struct MutationsService;
 
 impl MutationsService {
-    pub async fn create_product(db: &DbConn, product: NewProduct) -> Result<(), DbErr> {
+    pub async fn create_product(db: &DbConn, product: NewProduct) -> Result<String, DbErr> {
         let product = ProductActiveModel {
             name: ActiveValue::Set(product.name),
             price: ActiveValue::Set(product.price),
@@ -16,7 +16,7 @@ impl MutationsService {
             ..Default::default()
         };
         match product.save(db).await {
-            Ok(_) => Ok(()),
+            Ok(p) => Ok(p.id.unwrap()),
             Err(err) => Err(err),
         }
     }
