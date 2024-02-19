@@ -57,4 +57,26 @@ impl MutationsService {
             Err(err) => Err(err),
         }
     }
+    pub async fn delete_inv_mvm(db: &DbConn, id: String) -> Result<u64, DbErr> {
+        let city_model = InventoryMouvements::find_by_id(id).one(db).await?;
+        match city_model {
+            Some(city_model) => {
+                let city = city_model.delete(db).await?;
+                Ok(city.rows_affected)
+            }
+            None => Ok(0),
+        }
+    }
+    pub async fn update_inv_mvm(db: &DbConn, q: f64) -> Result<(), DbErr> {
+        // update only the quantity for now
+        let mvm = InventoryMouvementActiveModel {
+            quantity: ActiveValue::Set(q),
+            ..Default::default()
+        };
+
+        match mvm.save(db).await {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err),
+        }
+    }
 }
