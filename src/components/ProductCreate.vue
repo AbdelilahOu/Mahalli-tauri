@@ -5,7 +5,6 @@ import { ImagesFiles } from "@/constants/FileTypes";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
 import UiUploader from "./ui/UiUploader.vue";
-import type { newProductT } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { Textarea } from "./ui/textarea";
 import { useForm } from "vee-validate";
@@ -15,39 +14,31 @@ import { Input } from "./ui/input";
 import { useI18n } from "vue-i18n";
 import { store } from "@/store";
 import { ref } from "vue";
-import { z } from "zod";
+import type { Res } from "@/types";
+import { CreateProductSchema, type ProductT } from "@/schemas";
 
 const { t } = useI18n();
+const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const isCreating = ref<boolean>(false);
-
 const image = ref<string>();
+const quantity = ref<string>("");
 
-const productSchema = toTypedSchema(
-  z.object({
-    name: z.string().min(2).max(50),
-    price: z.number().min(0),
-    description: z.string().min(2),
-    quantity: z.number().min(0),
-  }),
-);
-
+const productSchema = toTypedSchema(CreateProductSchema);
 const form = useForm({
   validationSchema: productSchema,
 });
 
-const { updateQueryParams } = useUpdateRouteQueryParams();
-
-const createNewProduct = async (product: newProductT) => {
+const createNewProduct = async (product: ProductT) => {
   isCreating.value = true;
   try {
     let image: string = await saveFile(product.image as string, "Image");
-    let productRes = await invoke<any>("insert_product", {
+    let productRes = await invoke<Res<string>>("insert_product", {
       product: {
         name: product.name,
         price: Number(product.price),
         description: product.description,
-        min_quantity: product.min_quantity,
+        min_quantity: product.minQuantity,
         image,
       },
     });
@@ -56,7 +47,7 @@ const createNewProduct = async (product: newProductT) => {
         mvm: {
           mvm_type: "IN",
           product_id: productRes.data,
-          quantity: product.quantity,
+          quantity: Number(quantity.value),
         },
       });
     }
@@ -123,17 +114,18 @@ const setImage = (path: string) => {
             </FormControl>
           </FormItem>
         </FormField>
-        <!-- <FormField v-slot="{ componentField }" name="tva">
+        <FormField name="">
           <FormItem>
-            <FormLabel>{{ t("p.p.c") }}</FormLabel>
+            <FormLabel>{{ t("p.p.d") }}</FormLabel>
             <FormControl>
-              <Input type="text" placeHolder="tva" v-bind="componentField">
-                <template #unite> % </template>
+              <Input type="number" placeHolder="Quantity" v-model="quantity">
+                <template #unite> Item </template>
               </Input>
             </FormControl>
           </FormItem>
-        </FormField> -->
-        <FormField v-slot="{ componentField }" name="quantity">
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="minQuantity">
           <FormItem>
             <FormLabel>{{ t("p.p.d") }}</FormLabel>
             <FormControl>
