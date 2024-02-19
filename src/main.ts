@@ -39,7 +39,7 @@ const initiVueApp = () => {
           enter: {
             opacity: 1,
             transition: {
-              delay: (bin.value + 1) * 100,
+              delay: (bin.value + 1) * 30,
             },
           },
         });

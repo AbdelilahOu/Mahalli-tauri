@@ -30,7 +30,7 @@ const toggleThisClient = (client: clientT, name: string) => {
 </script>
 
 <template>
-  <div class="flex flex-col h-full w-full">
+  <div class="flex flex-col h-full w-full gap-10">
     <table class="w-full">
       <thead
         class="text-xs h-9 bg-gray-300 max-w-lg w-fit font-semibold uppercase text-[rgba(25,23,17,0.6)]"
