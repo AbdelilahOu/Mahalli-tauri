@@ -33,7 +33,7 @@ const createNewProduct = async (product: ProductT) => {
   isCreating.value = true;
   try {
     // let image: string = await saveFile(product.image as string, "Image");
-    let createRes = await invoke<Res<string>>("insert_product", {
+    let createRes = await invoke<Res<string>>("create_product", {
       product: {
         name: product.name,
         price: Number(product.price),
