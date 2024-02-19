@@ -3,27 +3,27 @@ import { useI18n } from "vue-i18n";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
-import type { productT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
+import type { dbProductT } from "@/schemas/products.schema";
 
-defineProps<{ products: productT[] }>();
+defineProps<{ products: dbProductT[] }>();
 
 const { t } = useI18n();
 
-const toggleThisProduct = (product: productT, name: string) => {
+const toggleThisProduct = (product: dbProductT, name: string) => {
   store.setters.updateStore({ key: "row", value: product });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
 };
 
-const handleCheck = (product: productT, isChecked: boolean) => {
+const handleCheck = (product: dbProductT, isChecked: boolean) => {
   console.log(product.name, isChecked ? "is checked" : "is unchecked");
 };
 </script>
 
 <template>
-  <div class="w-full flex flex-col">
+  <div class="w-full flex flex-col gap-10">
     <table class="table-auto w-full">
       <thead
         class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
@@ -45,7 +45,7 @@ const handleCheck = (product: productT, isChecked: boolean) => {
       <tbody class="text-sm divide-y divide-gray-100">
         <tr
           v-for="(product, index) in products"
-          :key="product.id + index"
+          :key="(product.id as string) + index"
           v-fade="index"
         >
           <td class="p-2">
