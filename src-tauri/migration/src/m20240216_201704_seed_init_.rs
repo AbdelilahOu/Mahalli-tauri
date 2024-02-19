@@ -108,26 +108,31 @@ impl MigrationTrait for Migration {
             manager.exec_stmt(insert).await?;
         }
 
-        let status = vec![String::from("IN"), String::from("OUT")];
+        let db = manager.get_connection();
+
+        let mvm_type = vec![String::from("IN"), String::from("OUT")];
 
         for _ in 0..1000 {
             let id = uuid::Uuid::new_v4();
-            let status_ = get_random_enum(status.clone());
+            let mvm = get_random_enum(mvm_type.clone());
             let quantity: u8 = Faker.fake();
-            let insert = Query::insert()
-                .into_table(InventoryMouvement::Table)
-                .columns([
-                    InventoryMouvement::Id,
-                    InventoryMouvement::MvmType,
-                    InventoryMouvement::Quantity,
-                ])
-                .values_panic([id.to_string().into(), status_.into(), quantity.into()])
-                .to_owned();
-
-            manager.exec_stmt(insert).await?;
+            let insert_inventory = Statement::from_sql_and_values(
+                sea_orm::DatabaseBackend::Sqlite,
+                r#"
+                INSERT INTO 
+                    inventory_mouvements (id, mvm_type, quantity, product_id)
+                VALUES
+                    (
+                        $1, 
+                        $2, 
+                        $3,
+                        (SELECT id FROM products ORDER BY RANDOM() LIMIT 1)
+                    )
+                "#,
+                [id.to_string().into(), mvm.into(), quantity.into()],
+            );
+            db.execute(insert_inventory).await?;
         }
-
-        let db = manager.get_connection();
 
         let status = vec![
             String::from("DELIVERED"),
@@ -162,12 +167,11 @@ impl MigrationTrait for Migration {
                 sea_orm::DatabaseBackend::Sqlite,
                 r#"
                 INSERT INTO 
-                    order_items (id, price, product_id, order_id, inventory_id)
+                    order_items (id, price, order_id, inventory_id)
                 VALUES
                     (
                         $1, 
                         $2, 
-                        (SELECT id FROM products ORDER BY RANDOM() LIMIT 1),
                         (SELECT id FROM orders ORDER BY RANDOM() LIMIT 1),
                         (SELECT id FROM inventory_mouvements ORDER BY RANDOM() LIMIT 1)
                     )
@@ -210,12 +214,11 @@ impl MigrationTrait for Migration {
                 sea_orm::DatabaseBackend::Sqlite,
                 r#"
                 INSERT INTO 
-                    invoice_items (id, price, product_id, invoice_id, inventory_id)
+                    invoice_items (id, price, invoice_id, inventory_id)
                 VALUES
                     (
                         $1, 
                         $2, 
-                        (SELECT id FROM products ORDER BY RANDOM() LIMIT 1),
                         (SELECT id FROM invoices ORDER BY RANDOM() LIMIT 1),
                         (SELECT id FROM inventory_mouvements ORDER BY RANDOM() LIMIT 1)
                     )

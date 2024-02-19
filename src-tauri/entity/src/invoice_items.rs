@@ -9,7 +9,6 @@ pub struct Model {
     pub id: String,
     #[sea_orm(column_type = "Double")]
     pub price: f64,
-    pub product_id: String,
     pub invoice_id: String,
     pub inventory_id: String,
 }
@@ -32,14 +31,6 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Invoices,
-    #[sea_orm(
-        belongs_to = "super::products::Entity",
-        from = "Column::ProductId",
-        to = "super::products::Column::Id",
-        on_update = "NoAction",
-        on_delete = "Cascade"
-    )]
-    Products,
 }
 
 impl Related<super::inventory_mouvements::Entity> for Entity {
@@ -51,12 +42,6 @@ impl Related<super::inventory_mouvements::Entity> for Entity {
 impl Related<super::invoices::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Invoices.def()
-    }
-}
-
-impl Related<super::products::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::Products.def()
     }
 }
 

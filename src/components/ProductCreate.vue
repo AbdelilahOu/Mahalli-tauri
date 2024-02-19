@@ -27,10 +27,9 @@ const productSchema = toTypedSchema(
   z.object({
     name: z.string().min(2).max(50),
     price: z.number().min(0),
-    description: z.string().min(2).max(50),
+    description: z.string().min(2),
     quantity: z.number().min(0),
-    // tva: z.number().min(0).max(100),
-  })
+  }),
 );
 
 const form = useForm({
@@ -49,7 +48,6 @@ const createNewProduct = async (product: newProductT) => {
           image,
           ...product,
           price: Number(product.price),
-          // tva: Number(product.tva),
           quantity: Number(product.quantity),
         },
       });

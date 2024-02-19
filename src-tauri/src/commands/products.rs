@@ -1,23 +1,9 @@
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::Value;
 use service::{ListArgs, MutationsService, NewProduct, Product, QueriesService};
 use tauri::State;
 
 use crate::AppState;
-#[derive(Deserialize, Serialize, Debug, Clone)]
-pub struct Seccess<T> {
-    pub error: Option<String>,
-    pub message: Option<String>,
-    pub data: Option<T>,
-}
-
-#[derive(Deserialize, Serialize, Debug, Clone)]
-pub struct Fail {
-    pub error: Option<String>,
-    pub message: Option<String>,
-}
-
-pub type SResult<T> = Result<Seccess<T>, Fail>;
 
 #[tauri::command]
 pub async fn list_products(state: State<'_, AppState>, args: ListArgs) -> SResult<Value> {
@@ -60,22 +46,14 @@ pub async fn search_products(state: State<'_, AppState>, search: String) -> SRes
 }
 
 #[tauri::command]
-pub async fn create_product(state: State<'_, AppState>, product: NewProduct) -> SResult<Value> {
+pub async fn create_product(state: State<'_, AppState>, product: NewProduct) -> SResult<String> {
     let _ = state.db_conn;
     let res = MutationsService::create_product(&state.db_conn, product).await;
     match res {
-        Ok(res) => Ok(Seccess {
+        Ok(_) => Ok(Seccess::<String> {
             error: None,
-            message: None,
-            data: Some(json!({
-                "id": res.id,
-                "name": res.name,
-                "price": res.price,
-                "description": res.description,
-                "image": res.image,
-                "createdAt": res.created_at,
-                "minQuantity": res.min_quantity,
-            })),
+            message: Option::Some(String::from("product created successfully")),
+            data: None,
         }),
         Err(err) => {
             println!("Error: {}", err);
@@ -112,10 +90,10 @@ pub async fn update_product(state: State<'_, AppState>, product: Product) -> SRe
     let _ = state.db_conn;
     let res = MutationsService::update_product(&state.db_conn, product).await;
     match res {
-        Ok(res) => Ok(Seccess {
+        Ok(_) => Ok(Seccess::<String> {
             error: None,
-            message: None,
-            data: Some(res),
+            message: Option::Some(String::from("update products success")),
+            data: None,
         }),
         Err(err) => {
             println!("Error: {}", err);

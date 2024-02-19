@@ -10,6 +10,7 @@ pub struct Model {
     pub mvm_type: String,
     #[sea_orm(column_type = "Double")]
     pub quantity: f64,
+    pub product_id: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
@@ -18,6 +19,14 @@ pub enum Relation {
     InvoiceItems,
     #[sea_orm(has_many = "super::order_items::Entity")]
     OrderItems,
+    #[sea_orm(
+        belongs_to = "super::products::Entity",
+        from = "Column::ProductId",
+        to = "super::products::Column::Id",
+        on_update = "NoAction",
+        on_delete = "Cascade"
+    )]
+    Products,
 }
 
 impl Related<super::invoice_items::Entity> for Entity {
@@ -29,6 +38,12 @@ impl Related<super::invoice_items::Entity> for Entity {
 impl Related<super::order_items::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::OrderItems.def()
+    }
+}
+
+impl Related<super::products::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Products.def()
     }
 }
 

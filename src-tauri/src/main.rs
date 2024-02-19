@@ -29,6 +29,7 @@ async fn main() {
             commands::products::create_product,
             commands::products::update_product,
             commands::products::delete_product,
+            commands::inventory::create_inventory,
         ])
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())

@@ -1,16 +1,10 @@
-use entity::{
-    inventory_mouvements::{self, Entity as InventoryMouvement},
-    invoice_items::{self, Entity as InvoiceItems},
-    order_items::{self, Entity as OrderItems},
-    products::{self, Entity as Product},
-};
+use entity::prelude::*;
 use sea_orm::{
     sea_query::{
         Alias, Cond, Expr, Func, Query, SimpleExpr, SqliteQueryBuilder, SubQueryStatement,
     },
-    ColumnTrait, Condition, ConnectionTrait, DatabaseConnection as DbConn, DbBackend, DbErr,
-    EntityTrait, FromQueryResult, JoinType, JsonValue, Order, PaginatorTrait, QueryFilter,
-    SelectColumns, Statement,
+    ColumnTrait, Condition, DatabaseConnection as DbConn, DbBackend, DbErr, EntityTrait,
+    FromQueryResult, JsonValue, Order, PaginatorTrait, QueryFilter, SelectColumns, Statement,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -28,7 +22,7 @@ pub struct QueriesService;
 
 impl QueriesService {
     pub async fn list_products(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
-        let count = Product::find()
+        let count = Products::find()
             .filter(
                 Condition::any()
                     .add(products::Column::Name.like(format!("{}%", args.search)))
@@ -38,35 +32,41 @@ impl QueriesService {
             .await?;
 
         let (sql, values) = Query::select()
-            .from(Product)
+            .from(Products)
             .exprs([
-                Expr::col((Product, products::Column::Id)),
-                Expr::col((Product, products::Column::Name)),
-                Expr::col((Product, products::Column::Description)),
-                Expr::col((Product, products::Column::Image)),
-                Expr::col((Product, products::Column::CreatedAt)),
-                Expr::col((Product, products::Column::Price)),
-                Expr::col((Product, products::Column::MinQuantity)),
+                Expr::col((Products, products::Column::Id)),
+                Expr::col((Products, products::Column::Name)),
+                Expr::col((Products, products::Column::Description)),
+                Expr::col((Products, products::Column::Image)),
+                Expr::col((Products, products::Column::CreatedAt)),
+                Expr::col((Products, products::Column::Price)),
+                Expr::col((Products, products::Column::MinQuantity)),
             ])
             .expr_as(
                 SimpleExpr::SubQuery(
                     None,
                     Box::new(SubQueryStatement::SelectStatement(
                         Query::select()
-                            .from(InventoryMouvement)
+                            .from(InventoryMouvements)
                             .expr(Func::coalesce([
                                 Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
                                 Expr::val(0.0f64).into(),
                             ]))
-                            .join(
-                                JoinType::Join,
-                                OrderItems,
-                                Expr::col((OrderItems, order_items::Column::InventoryId))
-                                    .equals((InventoryMouvement, inventory_mouvements::Column::Id)),
-                            )
                             .cond_where(
-                                Expr::col((OrderItems, order_items::Column::ProductId))
-                                    .equals((Product, products::Column::Id)),
+                                Cond::all().add(
+                                    Expr::col((
+                                        InventoryMouvements,
+                                        inventory_mouvements::Column::ProductId,
+                                    ))
+                                    .equals((Products, products::Column::Id))
+                                    .add(
+                                        Expr::col((
+                                            InventoryMouvements,
+                                            inventory_mouvements::Column::MvmType,
+                                        ))
+                                        .equals(Alias::new("IN")),
+                                    ),
+                                ),
                             )
                             .to_owned(),
                     )),
@@ -75,20 +75,26 @@ impl QueriesService {
                     None,
                     Box::new(SubQueryStatement::SelectStatement(
                         Query::select()
-                            .from(InventoryMouvement)
+                            .from(InventoryMouvements)
                             .expr(Func::coalesce([
                                 Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
                                 Expr::val(0.0f64).into(),
                             ]))
-                            .join(
-                                JoinType::Join,
-                                InvoiceItems,
-                                Expr::col((InvoiceItems, invoice_items::Column::InventoryId))
-                                    .equals((InventoryMouvement, inventory_mouvements::Column::Id)),
-                            )
                             .cond_where(
-                                Expr::col((InvoiceItems, invoice_items::Column::ProductId))
-                                    .equals((Product, products::Column::Id)),
+                                Cond::all().add(
+                                    Expr::col((
+                                        InventoryMouvements,
+                                        inventory_mouvements::Column::ProductId,
+                                    ))
+                                    .equals((Products, products::Column::Id))
+                                    .add(
+                                        Expr::col((
+                                            InventoryMouvements,
+                                            inventory_mouvements::Column::MvmType,
+                                        ))
+                                        .equals(Alias::new("OUT")),
+                                    ),
+                                ),
                             )
                             .to_owned(),
                     )),
@@ -98,11 +104,11 @@ impl QueriesService {
             .cond_where(
                 Cond::any()
                     .add(
-                        Expr::col((Product, products::Column::Name))
+                        Expr::col((Products, products::Column::Name))
                             .like(format!("{}%", args.search)),
                     )
                     .add(
-                        Expr::col((Product, products::Column::Description))
+                        Expr::col((Products, products::Column::Description))
                             .like(format!("%{}%", args.search)),
                     ),
             )
@@ -112,32 +118,26 @@ impl QueriesService {
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        let res = db
-            .query_all(Statement::from_sql_and_values(
-                DbBackend::Sqlite,
-                sql,
-                values,
-            ))
-            .await?;
+        let res = SelectProducts::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .all(db)
+        .await?;
 
         let mut result = Vec::<JsonValue>::new();
         res.into_iter().for_each(|row| {
-            let product = SelectProducts::from_query_result(&row, "");
-            match product {
-                Ok(r) => result.push(json!({
-                    "id": r.id,
-                    "name": r.name,
-                    "description": r.description,
-                    "image": r.image,
-                    "price": r.price,
-                    "minQuantity": r.min_quantity,
-                    "stock": r.stock,
-                    "createdAt": r.created_at,
-                })),
-                Err(e) => {
-                    println!("{:?}", e);
-                }
-            };
+            result.push(json!({
+                "id": row.id,
+                "name": row.name,
+                "description": row.description,
+                "image": row.image,
+                "price": row.price,
+                "minQuantity": row.min_quantity,
+                "stock": row.stock,
+                "createdAt": row.created_at,
+            }));
         });
 
         Ok(json!({
@@ -146,10 +146,10 @@ impl QueriesService {
         }))
     }
     pub async fn search_products(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
-        let products = Product::find()
+        let products = Products::find()
             .select_column(products::Column::Name)
             .select_column(products::Column::Id)
-            .filter(products::Column::Name.like(search))
+            .filter(products::Column::Name.like(format!("{}%", search)))
             .into_json()
             .all(db)
             .await?;

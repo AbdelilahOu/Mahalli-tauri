@@ -28,11 +28,13 @@ const productSchema = toTypedSchema(
     description: z
       .string()
       .min(2)
-      .max(50)
       .default(ProductRow.value.description ?? ""),
     quantity: z.number().min(0).default(0),
-    // tva: z.number().min(0).max(100).default(ProductRow.value.tva),
-  })
+    min_quantity: z
+      .number()
+      .min(0)
+      .default(ProductRow.value.min_quantity ?? 0),
+  }),
 );
 
 const form = useForm({
@@ -43,8 +45,11 @@ const updateTheProduct = async (product: updateProductT) => {
   if (ProductRow.value.id) {
     try {
       await invoke("update_product", {
-        product: { ...product, image: ProductRow.value.image },
-        id: ProductRow.value.id,
+        product: {
+          ...product,
+          image: ProductRow.value.image,
+          id: ProductRow.value.id,
+        },
       });
       // toggle refresh
       updateQueryParams({
@@ -104,17 +109,21 @@ onBeforeUnmount(() => {
             </FormControl>
           </FormItem>
         </FormField>
-        <!-- <FormField v-slot="{ componentField }" name="tva">
+        <FormField v-slot="{ componentField }" name="quantity">
           <FormItem>
-            <FormLabel>{{ t("p.p.c") }}</FormLabel>
+            <FormLabel>{{ t("p.p.d") }}</FormLabel>
             <FormControl>
-              <Input type="text" placeHolder="tva" v-bind="componentField">
-                <template #unite> % </template>
+              <Input
+                type="number"
+                placeHolder="Quantity"
+                v-bind="componentField"
+              >
+                <template #unite> Item </template>
               </Input>
             </FormControl>
           </FormItem>
-        </FormField> -->
-        <FormField v-slot="{ componentField }" name="quantity">
+        </FormField>
+        <FormField v-slot="{ componentField }" name="min_quantity">
           <FormItem>
             <FormLabel>{{ t("p.p.d") }}</FormLabel>
             <FormControl>
