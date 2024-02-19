@@ -15,8 +15,8 @@ impl MutationsService {
             min_quantity: ActiveValue::Set(product.min_quantity),
             ..Default::default()
         };
-        match product.save(db).await {
-            Ok(p) => Ok(p.id.unwrap()),
+        match product.insert(db).await {
+            Ok(p) => Ok(p.id),
             Err(err) => Err(err),
         }
     }
@@ -52,8 +52,8 @@ impl MutationsService {
             product_id: ActiveValue::Set(mvm.product_id),
             ..Default::default()
         };
-        match in_mvm.save(db).await {
-            Ok(im) => Ok(im.id.unwrap()),
+        match in_mvm.insert(db).await {
+            Ok(im) => Ok(im.id),
             Err(err) => Err(err),
         }
     }
