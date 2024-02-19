@@ -192,6 +192,7 @@ export interface productT {
   quantity: number;
   description?: string;
   stock?: string;
+  min_quantity?: number;
   // tva: number;
 }
 export interface newProductT extends Partial<Omit<productT, "id">> {}

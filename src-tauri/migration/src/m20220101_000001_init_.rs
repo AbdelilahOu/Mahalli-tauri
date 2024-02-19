@@ -106,6 +106,18 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(0.0f32),
                     )
+                    .col(
+                        ColumnDef::new(InventoryMouvement::ProductId)
+                            .string()
+                            .not_null(),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_inventory_mvm_product_id")
+                            .from(InventoryMouvement::Table, InventoryMouvement::ProductId)
+                            .to(Product::Table, Product::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
                     .to_owned(),
             )
             .await?;
@@ -145,14 +157,6 @@ impl MigrationTrait for Migration {
                             .float()
                             .not_null()
                             .default(0.0f32),
-                    )
-                    .col(ColumnDef::new(OrderItem::ProductId).string().not_null())
-                    .foreign_key(
-                        ForeignKey::create()
-                            .name("fk_order_item_product_id")
-                            .from(OrderItem::Table, OrderItem::ProductId)
-                            .to(Product::Table, Product::Id)
-                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .col(ColumnDef::new(OrderItem::OrderId).string().not_null())
                     .foreign_key(
@@ -214,14 +218,6 @@ impl MigrationTrait for Migration {
                             .float()
                             .not_null()
                             .default(0.0f32),
-                    )
-                    .col(ColumnDef::new(InvoiceItem::ProductId).string().not_null())
-                    .foreign_key(
-                        ForeignKey::create()
-                            .name("fk_invoice_item_product_id")
-                            .from(InvoiceItem::Table, InvoiceItem::ProductId)
-                            .to(Product::Table, Product::Id)
-                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .col(ColumnDef::new(InvoiceItem::InvoiceId).string().not_null())
                     .foreign_key(
@@ -375,6 +371,8 @@ pub enum InventoryMouvement {
     MvmType,
     #[sea_orm(iden = "quantity")]
     Quantity,
+    #[sea_orm(iden = "product_id")]
+    ProductId,
 }
 
 #[derive(DeriveIden)]
@@ -394,8 +392,6 @@ pub enum OrderItem {
     #[sea_orm(iden = "order_items")]
     Table,
     Id,
-    #[sea_orm(iden = "product_id")]
-    ProductId,
     #[sea_orm(iden = "order_id")]
     OrderId,
     #[sea_orm(iden = "inventory_id")]
@@ -421,8 +417,6 @@ pub enum InvoiceItem {
     #[sea_orm(iden = "invoice_items")]
     Table,
     Id,
-    #[sea_orm(iden = "product_id")]
-    ProductId,
     #[sea_orm(iden = "invoice_id")]
     InvoiceId,
     #[sea_orm(iden = "inventory_id")]
