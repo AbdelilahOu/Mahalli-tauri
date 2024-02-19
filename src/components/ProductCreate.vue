@@ -15,7 +15,7 @@ import { useI18n } from "vue-i18n";
 import { store } from "@/store";
 import { ref } from "vue";
 import type { Res } from "@/types";
-import { CreateProductSchema, type ProductT } from "@/schemas";
+import { CreateProductSchema, type ProductT } from "@/schemas/products.schema";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -32,21 +32,21 @@ const form = useForm({
 const createNewProduct = async (product: ProductT) => {
   isCreating.value = true;
   try {
-    let image: string = await saveFile(product.image as string, "Image");
-    let productRes = await invoke<Res<string>>("insert_product", {
+    // let image: string = await saveFile(product.image as string, "Image");
+    let createRes = await invoke<Res<string>>("insert_product", {
       product: {
         name: product.name,
         price: Number(product.price),
         description: product.description,
         min_quantity: product.minQuantity,
-        image,
+        image: "",
       },
     });
-    if (!productRes.error) {
+    if (!createRes.error) {
       await invoke("create_inventory", {
         mvm: {
           mvm_type: "IN",
-          product_id: productRes.data,
+          product_id: createRes.data,
           quantity: Number(quantity.value),
         },
       });

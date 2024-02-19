@@ -1,7 +1,8 @@
 use entity::prelude::*;
 use sea_orm::{
     sea_query::{
-        Alias, Cond, Expr, Func, Query, SimpleExpr, SqliteQueryBuilder, SubQueryStatement,
+        Alias, Cond, Expr, Func, IntoCondition, Query, SimpleExpr, SqliteQueryBuilder,
+        SubQueryStatement,
     },
     ColumnTrait, Condition, DatabaseConnection as DbConn, DbBackend, DbErr, EntityTrait,
     FromQueryResult, JsonValue, Order, PaginatorTrait, QueryFilter, SelectColumns, Statement,
@@ -59,12 +60,11 @@ impl QueriesService {
                                         inventory_mouvements::Column::ProductId,
                                     ))
                                     .equals((Products, products::Column::Id))
+                                    .into_condition()
                                     .add(
-                                        Expr::col((
-                                            InventoryMouvements,
-                                            inventory_mouvements::Column::MvmType,
-                                        ))
-                                        .equals(Alias::new("IN")),
+                                        inventory_mouvements::Column::MvmType
+                                            .eq("IN")
+                                            .into_condition(),
                                     ),
                                 ),
                             )
@@ -87,12 +87,11 @@ impl QueriesService {
                                         inventory_mouvements::Column::ProductId,
                                     ))
                                     .equals((Products, products::Column::Id))
+                                    .into_condition()
                                     .add(
-                                        Expr::col((
-                                            InventoryMouvements,
-                                            inventory_mouvements::Column::MvmType,
-                                        ))
-                                        .equals(Alias::new("OUT")),
+                                        inventory_mouvements::Column::MvmType
+                                            .eq("OUT")
+                                            .into_condition(),
                                     ),
                                 ),
                             )
@@ -105,11 +104,13 @@ impl QueriesService {
                 Cond::any()
                     .add(
                         Expr::col((Products, products::Column::Name))
-                            .like(format!("{}%", args.search)),
+                            .like(format!("{}%", args.search))
+                            .into_condition(),
                     )
                     .add(
                         Expr::col((Products, products::Column::Description))
-                            .like(format!("%{}%", args.search)),
+                            .like(format!("%{}%", args.search))
+                            .into_condition(),
                     ),
             )
             .limit(args.limit)
