@@ -51,10 +51,10 @@ pub async fn create_product(state: State<'_, AppState>, product: NewProduct) -> 
     let _ = state.db_conn;
     let res = MutationsService::create_product(&state.db_conn, product).await;
     match res {
-        Ok(_) => Ok(Seccess::<String> {
+        Ok(id) => Ok(Seccess::<String> {
             error: None,
             message: Option::Some(String::from("product created successfully")),
-            data: None,
+            data: Some(id),
         }),
         Err(err) => {
             println!("Error: {}", err);
