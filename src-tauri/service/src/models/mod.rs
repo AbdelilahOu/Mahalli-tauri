@@ -1,5 +1,7 @@
+mod client;
 mod inventory;
-mod products;
+mod product;
 
+pub use client::*;
 pub use inventory::*;
-pub use products::*;
+pub use product::*;

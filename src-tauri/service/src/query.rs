@@ -157,4 +157,124 @@ impl QueriesService {
 
         Ok(products)
     }
+    pub async fn list_clients(db: &DbConn, args: ListArgs) -> Result<Vec<JsonValue>, DbErr> {
+        let count = Clients::find()
+            .filter(clients::Column::FullName.like(format!("{}%", args.search)))
+            .count(db)
+            .await?;
+
+        let (sql, values) = Query::select()
+            .from(Products)
+            .exprs([
+                Expr::col((Clients, clients::Column::Id)),
+                Expr::col((Clients, clients::Column::FullName)),
+                Expr::col((Clients, clients::Column::Address)),
+                Expr::col((Clients, clients::Column::PhoneNumber)),
+                Expr::col((Clients, clients::Column::CreatedAt)),
+                Expr::col((Clients, clients::Column::Image)),
+                Expr::col((Clients, clients::Column::Email)),
+            ])
+            .expr_as(
+                SimpleExpr::SubQuery(
+                    None,
+                    Box::new(SubQueryStatement::SelectStatement(
+                        Query::select()
+                            .from(InventoryMouvements)
+                            .expr(Func::coalesce([
+                                Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
+                                Expr::val(0.0f64).into(),
+                            ]))
+                            .cond_where(
+                                Cond::all().add(
+                                    Expr::col((
+                                        InventoryMouvements,
+                                        inventory_mouvements::Column::ProductId,
+                                    ))
+                                    .equals((Products, products::Column::Id))
+                                    .into_condition()
+                                    .add(
+                                        inventory_mouvements::Column::MvmType
+                                            .eq("IN")
+                                            .into_condition(),
+                                    ),
+                                ),
+                            )
+                            .to_owned(),
+                    )),
+                )
+                .sub(SimpleExpr::SubQuery(
+                    None,
+                    Box::new(SubQueryStatement::SelectStatement(
+                        Query::select()
+                            .from(InventoryMouvements)
+                            .expr(Func::coalesce([
+                                Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
+                                Expr::val(0.0f64).into(),
+                            ]))
+                            .cond_where(
+                                Cond::all().add(
+                                    Expr::col((
+                                        InventoryMouvements,
+                                        inventory_mouvements::Column::ProductId,
+                                    ))
+                                    .equals((Products, products::Column::Id))
+                                    .into_condition()
+                                    .add(
+                                        inventory_mouvements::Column::MvmType
+                                            .eq("OUT")
+                                            .into_condition(),
+                                    ),
+                                ),
+                            )
+                            .to_owned(),
+                    )),
+                )),
+                Alias::new("stock"),
+            )
+            .cond_where(
+                Cond::any()
+                    .add(
+                        Expr::col((Products, products::Column::Name))
+                            .like(format!("{}%", args.search))
+                            .into_condition(),
+                    )
+                    .add(
+                        Expr::col((Products, products::Column::Description))
+                            .like(format!("%{}%", args.search))
+                            .into_condition(),
+                    ),
+            )
+            .limit(args.limit)
+            .offset((args.page - 1) * args.limit)
+            .order_by(products::Column::CreatedAt, Order::Desc)
+            .to_owned()
+            .build(SqliteQueryBuilder);
+
+        let res = SelectProducts::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .all(db)
+        .await?;
+
+        let mut result = Vec::<JsonValue>::new();
+        res.into_iter().for_each(|row| {
+            result.push(json!({
+                "id": row.id,
+                "name": row.name,
+                "description": row.description,
+                "image": row.image,
+                "price": row.price,
+                "minQuantity": row.min_quantity,
+                "stock": row.stock,
+                "createdAt": row.created_at,
+            }));
+        });
+
+        Ok(json!({
+            "count": count,
+            "clients": result
+        }))
+    }
 }
