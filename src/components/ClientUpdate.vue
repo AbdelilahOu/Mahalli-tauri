@@ -3,7 +3,6 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useI18n } from "vue-i18n";
 import { onBeforeUnmount, computed, ref } from "vue";
-import type { clientT, updateClientT } from "@/types";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
@@ -12,11 +11,12 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
 import { z } from "zod";
+import type { ClientT } from "@/schemas/client.schema";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const ClientRow = computed(() => store.getters.getSelectedRow<clientT>());
+const ClientRow = computed(() => store.getters.getSelectedRow<ClientT>());
 
 const isLoading = ref<boolean>(false);
 
@@ -24,31 +24,36 @@ const clientSchema = toTypedSchema(
   z.object({
     fullname: z.string().min(2).max(50).default(ClientRow.value.fullname),
     email: z.string().default(ClientRow.value.email ?? ""),
-    phone: z.string().default(ClientRow.value.phone ?? ""),
+    phoneNumber: z.string().default(ClientRow.value.phoneNumber ?? ""),
     address: z.string().default(ClientRow.value.address ?? ""),
-  })
+    image: z.string().default(ClientRow.value.image ?? ""),
+  }),
 );
 
 const form = useForm({
   validationSchema: clientSchema,
 });
 
-const updateTheClient = async (client: updateClientT) => {
-  if (ClientRow.value.id) {
-    try {
-      await invoke("update_client", {
-        client: { ...client, image: ClientRow.value.image },
+const updateTheClient = async (client: ClientT) => {
+  try {
+    await invoke("update_client", {
+      client: {
         id: ClientRow.value.id,
-      });
-      // toggle refresh
-      updateQueryParams({
-        refresh: "refresh-update-" + Math.random() * 9999,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      hideModal();
-    }
+        full_name: client.fullname,
+        email: client.email,
+        phone_number: client.phoneNumber,
+        address: client.address,
+        image: client.image,
+      },
+    });
+    // toggle refresh
+    updateQueryParams({
+      refresh: "refresh-update-" + Math.random() * 9999,
+    });
+  } catch (error) {
+    console.log(error);
+  } finally {
+    hideModal();
   }
 };
 
@@ -94,7 +99,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="phone">
+        <FormField v-slot="{ componentField }" name="phoneNumber">
           <FormItem>
             <FormLabel>{{ t("c.p.c") }}</FormLabel>
             <FormControl>

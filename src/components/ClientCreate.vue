@@ -5,7 +5,6 @@ import { ImagesFiles } from "@/constants/FileTypes";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
 import UiUploader from "./ui/UiUploader.vue";
-import type { newClientT } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { useForm } from "vee-validate";
 import { saveFile } from "@/utils/fs";
@@ -15,18 +14,12 @@ import { useI18n } from "vue-i18n";
 import { store } from "@/store";
 import { ref } from "vue";
 import { z } from "zod";
+import { CreateClientSchema, type ClientT } from "@/schemas/client.schema";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const clientSchema = toTypedSchema(
-  z.object({
-    fullname: z.string().min(2).max(50),
-    email: z.string().min(2).max(50),
-    phone: z.string().min(2).max(50),
-    address: z.string().min(2).max(50),
-  })
-);
+const clientSchema = toTypedSchema(CreateClientSchema);
 
 const form = useForm({
   validationSchema: clientSchema,
@@ -36,7 +29,7 @@ const image = ref<string>();
 
 const isLoading = ref<boolean>(false);
 
-const createNewClient = async (client: newClientT) => {
+const createNewClient = async (client: ClientT) => {
   isLoading.value = true;
   if (client.fullname !== "") {
     try {

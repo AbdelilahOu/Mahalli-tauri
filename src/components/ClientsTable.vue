@@ -4,13 +4,13 @@ import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
-import type { clientT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import { ref } from "vue";
+import type { ClientT } from "@/schemas/client.schema";
 
 defineProps<{
-  clients: clientT[];
+  clients: ClientT[];
 }>();
 
 const { t } = useI18n();
@@ -22,7 +22,7 @@ const checkThisUser = (IsInclude: boolean, id: string) => {
     : checkedClients.value.splice(checkedClients.value.indexOf(id), 1);
 };
 
-const toggleThisClient = (client: clientT, name: string) => {
+const toggleThisClient = (client: ClientT, name: string) => {
   store.setters.updateStore({ key: "row", value: client });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
@@ -40,7 +40,7 @@ const toggleThisClient = (client: clientT, name: string) => {
           <th class="p-2"></th>
 
           <th
-            v-for="index in [0, 1, 2, 3, 4]"
+            v-for="index in [0, 1, 2, 3, 4, 5]"
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
@@ -82,8 +82,10 @@ const toggleThisClient = (client: clientT, name: string) => {
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              {{ client.phone }}
-              <span v-if="!client.phone" class="text-red-400">No phone</span>
+              {{ client.phoneNumber }}
+              <span v-if="!client.phoneNumber" class="text-red-400"
+                >No phone</span
+              >
             </div>
           </td>
           <td class="p-2">
@@ -92,6 +94,11 @@ const toggleThisClient = (client: clientT, name: string) => {
               <span v-if="!client.address" class="text-red-400"
                 >No address</span
               >
+            </div>
+          </td>
+          <td class="p-2">
+            <div class="text-left whitespace-nowrap overflow-ellipsis">
+              {{ client.credi }} DH
             </div>
           </td>
           <td class="p-2">

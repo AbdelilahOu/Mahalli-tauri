@@ -3,15 +3,15 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
-import type { productT } from "@/types";
 import { Button } from "./ui/button";
 import { store } from "@/store";
 import { computed } from "vue";
+import type { ProductT } from "@/schemas/products.schema";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
 
-const product = computed(() => store.getters.getSelectedRow<productT>());
+const product = computed(() => store.getters.getSelectedRow<ProductT>());
 
 const deleteTheProduct = async () => {
   const id = product.value?.id;

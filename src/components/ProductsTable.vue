@@ -5,19 +5,19 @@ import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
-import type { dbProductT } from "@/schemas/products.schema";
+import type { ProductT } from "@/schemas/products.schema";
 
-defineProps<{ products: dbProductT[] }>();
+defineProps<{ products: ProductT[] }>();
 
 const { t } = useI18n();
 
-const toggleThisProduct = (product: dbProductT, name: string) => {
+const toggleThisProduct = (product: ProductT, name: string) => {
   store.setters.updateStore({ key: "row", value: product });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
 };
 
-const handleCheck = (product: dbProductT, isChecked: boolean) => {
+const handleCheck = (product: ProductT, isChecked: boolean) => {
   console.log(product.name, isChecked ? "is checked" : "is unchecked");
 };
 </script>
