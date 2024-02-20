@@ -164,7 +164,7 @@ impl QueriesService {
             .await?;
 
         let (sql, values) = Query::select()
-            .from(Products)
+            .from(Clients)
             .exprs([
                 Expr::col((Clients, clients::Column::Id)),
                 Expr::col((Clients, clients::Column::FullName)),
@@ -179,24 +179,27 @@ impl QueriesService {
                     None,
                     Box::new(SubQueryStatement::SelectStatement(
                         Query::select()
-                            .from(InventoryMouvements)
+                            .from(Invoices)
                             .expr(Func::coalesce([
                                 Func::sum(
-                                    Expr::col(inventory_mouvements::Column::Quantity)
-                                        .mul(Expr::col(invoice_items::Column::Price)),
+                                    Expr::col((
+                                        InventoryMouvements,
+                                        inventory_mouvements::Column::Quantity,
+                                    ))
+                                    .mul(Expr::col((InvoiceItems, invoice_items::Column::Price))),
                                 )
                                 .into(),
                                 Expr::val(0.0f64).into(),
                             ]))
                             .inner_join(
                                 InvoiceItems,
-                                Expr::col(invoice_items::Column::InventoryId)
-                                    .equals(inventory_mouvements::Column::Id),
+                                Expr::col((InvoiceItems, invoice_items::Column::InvoiceId))
+                                    .equals((Invoices, invoices::Column::Id)),
                             )
                             .inner_join(
-                                InvoiceItems,
-                                Expr::col(invoices::Column::Id)
-                                    .equals(invoice_items::Column::InvoiceId),
+                                InventoryMouvements,
+                                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                                    .equals((InvoiceItems, invoice_items::Column::InventoryId)),
                             )
                             .cond_where(
                                 Cond::all().add(
@@ -204,8 +207,8 @@ impl QueriesService {
                                         .eq("PAID")
                                         .into_condition()
                                         .add(
-                                            Expr::col(invoices::Column::ClientId)
-                                                .equals(clients::Column::Id)
+                                            Expr::col((Invoices, invoices::Column::ClientId))
+                                                .equals((Clients, clients::Column::Id))
                                                 .into_condition(),
                                         ),
                                 ),
@@ -213,26 +216,20 @@ impl QueriesService {
                             .to_owned(),
                     )),
                 ),
-                Alias::new("stock"),
+                Alias::new("credi"),
             )
             .cond_where(
-                Cond::any()
-                    .add(
-                        Expr::col((Products, products::Column::Name))
-                            .like(format!("{}%", args.search))
-                            .into_condition(),
-                    )
-                    .add(
-                        Expr::col((Products, products::Column::Description))
-                            .like(format!("%{}%", args.search))
-                            .into_condition(),
-                    ),
+                Expr::col((Clients, clients::Column::FullName))
+                    .like(format!("{}%", args.search))
+                    .into_condition(),
             )
             .limit(args.limit)
             .offset((args.page - 1) * args.limit)
             .order_by(clients::Column::CreatedAt, Order::Desc)
             .to_owned()
             .build(SqliteQueryBuilder);
+
+        println!("{}", sql);
 
         let res = SelectClients::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,

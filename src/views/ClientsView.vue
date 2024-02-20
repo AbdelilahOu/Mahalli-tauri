@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import ClientsTable from "@/components/ClientsTable.vue";
-import type { clientT, withCount } from "@/types";
 import { Button } from "@/components/ui/button";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { Input } from "@/components/ui/input";
@@ -19,12 +18,13 @@ import {
   watch,
   ref,
 } from "vue";
+import type { ClientT } from "@/schemas/client.schema";
 
 const { t } = useI18n();
 const router = useRouter();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const clients = ref<clientT[]>([]);
+const clients = ref<ClientT[]>([]);
 const searchQuery = ref<string>("");
 const page = computed(() => Number(router.currentRoute.value.query.page));
 const refresh = computed(() => router.currentRoute.value.query.refresh);
@@ -48,12 +48,17 @@ onUnmounted(() => {
 
 const getClients = async (page: number = 1) => {
   try {
-    const res = await invoke<withCount<clientT[]>>("get_clients", {
-      page,
+    const res = await invoke<any>("list_clients", {
+      args: {
+        search: "",
+        page,
+        limit: 17,
+      },
     });
-    if (res?.data) {
-      clients.value = res.data;
-      totalRows.value = res.count;
+    if (!res?.error) {
+      console.log(res);
+      clients.value = res.data.clients;
+      totalRows.value = res.data.count;
       return;
     }
   } catch (error) {
