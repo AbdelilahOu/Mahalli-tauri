@@ -39,12 +39,13 @@ onMounted(() => {
   unwatch = watch(
     [page, refresh, searchQuery],
     ([p, _r, search], [_p, _, oldSearch]) => {
+      console.log(oldSearch);
       clearTimeout(timer);
       timer = setTimeout(
         () => {
           if (p && p > 0) getClients(search, p);
         },
-        search != oldSearch ? 500 : 0,
+        search != oldSearch && oldSearch ? 500 : 0,
       );
     },
     {

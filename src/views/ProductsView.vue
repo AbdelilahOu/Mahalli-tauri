@@ -44,7 +44,7 @@ onMounted(() => {
         () => {
           if (p && p > 0) listProducts(search, p);
         },
-        search != oldSearch ? 500 : 0,
+        search != oldSearch && oldSearch ? 500 : 0,
       );
     },
     {
