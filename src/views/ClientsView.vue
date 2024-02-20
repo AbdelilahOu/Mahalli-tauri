@@ -10,7 +10,6 @@ import { useI18n } from "vue-i18n";
 import { store } from "@/store";
 import {
   type WatchStopHandle,
-  onBeforeMount,
   onUnmounted,
   onMounted,
   computed,
@@ -30,33 +29,44 @@ const page = computed(() => Number(router.currentRoute.value.query.page));
 const refresh = computed(() => router.currentRoute.value.query.refresh);
 
 const totalRows = ref<number>(0);
-let unwatch: WatchStopHandle | null = null;
 
 provide("count", totalRows);
 
-onBeforeMount(() => getClients(page.value));
-
+//
+let timer: number | undefined;
+let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
-  unwatch = watch([page, refresh], ([p]) => {
-    if (p && p > 0) getClients(p);
-  });
+  unwatch = watch(
+    [page, refresh, searchQuery],
+    ([p, _r, search], [_p, _, oldSearch]) => {
+      clearTimeout(timer);
+      timer = setTimeout(
+        async () => {
+          if (p && p > 0) getClients(search, p);
+        },
+        search != oldSearch ? 500 : 0,
+      );
+    },
+    {
+      immediate: true,
+    },
+  );
 });
 
 onUnmounted(() => {
   if (unwatch) unwatch();
 });
 
-const getClients = async (page: number = 1) => {
+const getClients = async (search: string, page: number = 1) => {
   try {
     const res = await invoke<any>("list_clients", {
       args: {
-        search: "",
+        search,
         page,
         limit: 17,
       },
     });
     if (!res?.error) {
-      console.log(res);
       clients.value = res.data.clients;
       totalRows.value = res.data.count;
       return;
