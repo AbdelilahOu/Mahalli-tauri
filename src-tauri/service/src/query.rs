@@ -10,7 +10,7 @@ use sea_orm::{
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-use crate::SelectProducts;
+use crate::{SelectClients, SelectProducts};
 
 #[derive(Deserialize, Serialize)]
 pub struct ListArgs {
@@ -157,7 +157,7 @@ impl QueriesService {
 
         Ok(products)
     }
-    pub async fn list_clients(db: &DbConn, args: ListArgs) -> Result<Vec<JsonValue>, DbErr> {
+    pub async fn list_clients(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Clients::find()
             .filter(clients::Column::FullName.like(format!("{}%", args.search)))
             .count(db)
@@ -181,54 +181,38 @@ impl QueriesService {
                         Query::select()
                             .from(InventoryMouvements)
                             .expr(Func::coalesce([
-                                Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
+                                Func::sum(
+                                    Expr::col(inventory_mouvements::Column::Quantity)
+                                        .mul(Expr::col(invoice_items::Column::Price)),
+                                )
+                                .into(),
                                 Expr::val(0.0f64).into(),
                             ]))
+                            .inner_join(
+                                InvoiceItems,
+                                Expr::col(invoice_items::Column::InventoryId)
+                                    .equals(inventory_mouvements::Column::Id),
+                            )
+                            .inner_join(
+                                InvoiceItems,
+                                Expr::col(invoices::Column::Id)
+                                    .equals(invoice_items::Column::InvoiceId),
+                            )
                             .cond_where(
                                 Cond::all().add(
-                                    Expr::col((
-                                        InventoryMouvements,
-                                        inventory_mouvements::Column::ProductId,
-                                    ))
-                                    .equals((Products, products::Column::Id))
-                                    .into_condition()
-                                    .add(
-                                        inventory_mouvements::Column::MvmType
-                                            .eq("IN")
-                                            .into_condition(),
-                                    ),
+                                    Expr::col((Invoices, invoices::Column::Status))
+                                        .eq("PAID")
+                                        .into_condition()
+                                        .add(
+                                            Expr::col(invoices::Column::ClientId)
+                                                .equals(clients::Column::Id)
+                                                .into_condition(),
+                                        ),
                                 ),
                             )
                             .to_owned(),
                     )),
-                )
-                .sub(SimpleExpr::SubQuery(
-                    None,
-                    Box::new(SubQueryStatement::SelectStatement(
-                        Query::select()
-                            .from(InventoryMouvements)
-                            .expr(Func::coalesce([
-                                Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
-                                Expr::val(0.0f64).into(),
-                            ]))
-                            .cond_where(
-                                Cond::all().add(
-                                    Expr::col((
-                                        InventoryMouvements,
-                                        inventory_mouvements::Column::ProductId,
-                                    ))
-                                    .equals((Products, products::Column::Id))
-                                    .into_condition()
-                                    .add(
-                                        inventory_mouvements::Column::MvmType
-                                            .eq("OUT")
-                                            .into_condition(),
-                                    ),
-                                ),
-                            )
-                            .to_owned(),
-                    )),
-                )),
+                ),
                 Alias::new("stock"),
             )
             .cond_where(
@@ -246,11 +230,11 @@ impl QueriesService {
             )
             .limit(args.limit)
             .offset((args.page - 1) * args.limit)
-            .order_by(products::Column::CreatedAt, Order::Desc)
+            .order_by(clients::Column::CreatedAt, Order::Desc)
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        let res = SelectProducts::find_by_statement(Statement::from_sql_and_values(
+        let res = SelectClients::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
             sql,
             values,
@@ -262,13 +246,12 @@ impl QueriesService {
         res.into_iter().for_each(|row| {
             result.push(json!({
                 "id": row.id,
-                "name": row.name,
-                "description": row.description,
+                "fullname": row.full_name,
+                "address": row.address,
                 "image": row.image,
-                "price": row.price,
-                "minQuantity": row.min_quantity,
-                "stock": row.stock,
-                "createdAt": row.created_at,
+                "email": row.email,
+                "phoneNumber": row.phone_number,
+                "credi": row.credi,
             }));
         });
 
@@ -276,5 +259,16 @@ impl QueriesService {
             "count": count,
             "clients": result
         }))
+    }
+    pub async fn search_clients(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
+        let clients = Clients::find()
+            .select_column(clients::Column::FullName)
+            .select_column(clients::Column::Id)
+            .filter(clients::Column::FullName.like(format!("{}%", search)))
+            .into_json()
+            .all(db)
+            .await?;
+
+        Ok(clients)
     }
 }

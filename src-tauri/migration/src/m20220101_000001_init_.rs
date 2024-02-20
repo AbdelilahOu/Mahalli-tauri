@@ -190,6 +190,12 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(ColumnDef::new(Invoice::ClientId).string().not_null())
+                    .col(
+                        ColumnDef::new(Invoice::PaidAmount)
+                            .float()
+                            .not_null()
+                            .default(0),
+                    )
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_invoice_client_id")
@@ -410,6 +416,8 @@ pub enum Invoice {
     // status: paid, cancel, ongoing
     #[sea_orm(iden = "status")]
     Status,
+    #[sea_orm(iden = "paid_amount")]
+    PaidAmount,
 }
 
 #[derive(DeriveIden)]
