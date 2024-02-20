@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { invoke } from "@tauri-apps/api";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { store } from "@/store";
 import {
   type WatchStopHandle,
@@ -41,7 +41,7 @@ onMounted(() => {
     ([p, _r, search], [_p, _, oldSearch]) => {
       clearTimeout(timer);
       timer = setTimeout(
-        async () => {
+        () => {
           if (p && p > 0) listProducts(search, p);
         },
         search != oldSearch ? 500 : 0,
