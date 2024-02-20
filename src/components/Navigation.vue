@@ -5,18 +5,28 @@ import { useRoute } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
 import { computed } from "vue";
 import { store } from "@/store";
+import { cn } from "@/utils/shadcn";
+
+defineProps<{
+  isScrollDown: boolean;
+}>();
 
 const { t } = useI18n();
 const route = useRoute();
 const ActiveLink = computed(() =>
-  RouteLinks.find((link) => link.component === route.name)
+  RouteLinks.find((link) => link.component === route.name),
 );
 const User = computed(() => store.getters.getUser());
 </script>
 
 <template>
   <header
-    class="w-full h-full print:hidden sticky top-0 mb-2 z-50 overflow-hidden bg-slate-100"
+    :class="
+      cn(
+        'w-full h-full print:hidden sticky top-0 mb-2 z-50 overflow-hidden bg-slate-100',
+        isScrollDown ? 'border-b border-b-slate-100 shadow-sm' : '',
+      )
+    "
   >
     <div
       class="w-full h-full flex items-center py-3 px-2 bg-white justify-between"

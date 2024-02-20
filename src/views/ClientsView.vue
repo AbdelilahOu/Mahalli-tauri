@@ -41,7 +41,7 @@ onMounted(() => {
     ([p, _r, search], [_p, _, oldSearch]) => {
       clearTimeout(timer);
       timer = setTimeout(
-        async () => {
+        () => {
           if (p && p > 0) getClients(search, p);
         },
         search != oldSearch ? 500 : 0,
