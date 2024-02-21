@@ -376,4 +376,7 @@ impl QueriesService {
         Ok(suppliers)
     }
     //
+    pub async fn list_orders(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
+        todo!()
+    }
 }

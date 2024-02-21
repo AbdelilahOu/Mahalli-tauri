@@ -26,8 +26,6 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const rowsCount = inject<Ref<number>>("count");
 
-console.log(rowsCount?.value);
-
 const goBackward = () => {
   if (defaultPage.value > 1) {
     updateQueryParams({ page: defaultPage.value - 1 });
