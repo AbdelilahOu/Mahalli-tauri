@@ -10,7 +10,7 @@ use sea_orm::{
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-use crate::{SelectClients, SelectProducts};
+use crate::{SelectClients, SelectProducts, SelectSellers};
 
 #[derive(Deserialize, Serialize)]
 pub struct ListArgs {
@@ -170,7 +170,6 @@ impl QueriesService {
                 Expr::col((Clients, clients::Column::FullName)),
                 Expr::col((Clients, clients::Column::Address)),
                 Expr::col((Clients, clients::Column::PhoneNumber)),
-                Expr::col((Clients, clients::Column::CreatedAt)),
                 Expr::col((Clients, clients::Column::Image)),
                 Expr::col((Clients, clients::Column::Email)),
             ])
@@ -229,8 +228,6 @@ impl QueriesService {
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        println!("{}", sql);
-
         let res = SelectClients::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
             sql,
@@ -267,5 +264,115 @@ impl QueriesService {
             .await?;
 
         Ok(clients)
+    }
+    //
+    pub async fn list_sellers(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
+        let count = Sellers::find()
+            .filter(sellers::Column::FullName.like(format!("{}%", args.search)))
+            .count(db)
+            .await?;
+
+        let (sql, values) = Query::select()
+            .from(Sellers)
+            .exprs([
+                Expr::col((Sellers, sellers::Column::Id)),
+                Expr::col((Sellers, sellers::Column::FullName)),
+                Expr::col((Sellers, sellers::Column::Address)),
+                Expr::col((Sellers, sellers::Column::PhoneNumber)),
+                Expr::col((Sellers, sellers::Column::Image)),
+                Expr::col((Sellers, sellers::Column::Email)),
+            ])
+            .expr_as(
+                SimpleExpr::SubQuery(
+                    None,
+                    Box::new(SubQueryStatement::SelectStatement(
+                        Query::select()
+                            .from(Orders)
+                            .expr(Func::coalesce([
+                                Func::sum(
+                                    Expr::col((
+                                        InventoryMouvements,
+                                        inventory_mouvements::Column::Quantity,
+                                    ))
+                                    .mul(Expr::col((OrderItems, order_items::Column::Price))),
+                                )
+                                .into(),
+                                Expr::val(0.0f64).into(),
+                            ]))
+                            .inner_join(
+                                OrderItems,
+                                Expr::col((OrderItems, order_items::Column::OrderId))
+                                    .equals((Orders, orders::Column::Id)),
+                            )
+                            .inner_join(
+                                InventoryMouvements,
+                                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                                    .equals((OrderItems, order_items::Column::InventoryId)),
+                            )
+                            .cond_where(
+                                Cond::all().add(
+                                    Expr::col((Orders, orders::Column::Status))
+                                        .eq("PAID")
+                                        .into_condition()
+                                        .add(
+                                            Expr::col((Orders, orders::Column::SellerId))
+                                                .equals((Sellers, sellers::Column::Id))
+                                                .into_condition(),
+                                        ),
+                                ),
+                            )
+                            .to_owned(),
+                    )),
+                ),
+                Alias::new("credi"),
+            )
+            .cond_where(
+                Expr::col((Sellers, sellers::Column::FullName))
+                    .like(format!("{}%", args.search))
+                    .into_condition(),
+            )
+            .limit(args.limit)
+            .offset((args.page - 1) * args.limit)
+            .order_by(sellers::Column::CreatedAt, Order::Desc)
+            .to_owned()
+            .build(SqliteQueryBuilder);
+
+        let res = SelectSellers::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .all(db)
+        .await?;
+
+        let mut result = Vec::<JsonValue>::new();
+        res.into_iter().for_each(|row| {
+            result.push(json!({
+                "id": row.id,
+                "fullname": row.full_name,
+                "address": row.address,
+                "image": row.image,
+                "email": row.email,
+                "phoneNumber": row.phone_number,
+                "credi": row.credi,
+            }));
+        });
+
+        Ok(json!({
+            "count": count,
+            "sellers": result
+        }))
+    }
+    //
+    pub async fn search_sellers(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
+        let sellers = Sellers::find()
+            .select_column(sellers::Column::FullName)
+            .select_column(sellers::Column::Id)
+            .filter(sellers::Column::FullName.like(format!("{}%", search)))
+            .into_json()
+            .all(db)
+            .await?;
+
+        Ok(sellers)
     }
 }

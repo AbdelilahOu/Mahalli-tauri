@@ -6,7 +6,6 @@ import { ImagesFiles } from "@/constants/FileTypes";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
 import UiUploader from "./ui/UiUploader.vue";
-import type { newSellerT } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { useForm } from "vee-validate";
 import { saveFile } from "@/utils/fs";
@@ -14,20 +13,13 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
 import { ref } from "vue";
-import { z } from "zod";
+import { CreateSellerSchema, type SellerT } from "@/schemas/seller.schema";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
 const isLoading = ref<boolean>(false);
 
-const sellerSchema = toTypedSchema(
-  z.object({
-    name: z.string().min(2).max(50),
-    email: z.string().min(2).max(50),
-    phone: z.string().min(2).max(50),
-    address: z.string().min(2).max(50),
-  })
-);
+const sellerSchema = toTypedSchema(CreateSellerSchema);
 
 const imagePath = ref<string>();
 
@@ -35,25 +27,29 @@ const form = useForm({
   validationSchema: sellerSchema,
 });
 
-const createNewSeller = async (seller: newSellerT) => {
+const createNewSeller = async (seller: SellerT) => {
   isLoading.value = true;
-  if (seller.name !== "") {
-    try {
-      let image: string = await saveFile(seller.image as string, "Image");
-      await invoke("insert_seller", { seller: { ...seller, image } });
-      // toggle refresh
-      updateQueryParams({
-        refresh: "refresh-create-" + Math.random() * 9999,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      isLoading.value = false;
-      store.setters.updateStore({ key: "show", value: false });
-    }
-    return;
+  try {
+    let image: string = await saveFile(seller.image as string, "Image");
+    await invoke("create_seller", {
+      seller: {
+        full_name: seller.fullname,
+        email: seller.email,
+        phone_number: seller.phoneNumber,
+        address: seller.address,
+        image,
+      },
+    });
+    // toggle refresh
+    updateQueryParams({
+      refresh: "refresh-create-" + Math.random() * 9999,
+    });
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isLoading.value = false;
+    hideModal();
   }
-  isLoading.value = false;
 };
 
 const hideModal = () => {
@@ -81,7 +77,7 @@ const saveImage = (image: string) => {
           :extensions="ImagesFiles"
           @on:save="saveImage"
         />
-        <FormField v-slot="{ componentField }" name="name">
+        <FormField v-slot="{ componentField }" name="fullname">
           <FormItem>
             <FormLabel>{{ t("s.p.a") }}</FormLabel>
             <FormControl>
@@ -105,7 +101,7 @@ const saveImage = (image: string) => {
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="phone">
+        <FormField v-slot="{ componentField }" name="phoneNumber">
           <FormItem>
             <FormLabel>{{ t("s.p.c") }}</FormLabel>
             <FormControl>

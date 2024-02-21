@@ -4,13 +4,13 @@ import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
-import type { sellerT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import { ref } from "vue";
+import type { SellerT } from "@/schemas/seller.schema";
 
 defineProps<{
-  sellers: sellerT[];
+  sellers: SellerT[];
 }>();
 
 const { t } = useI18n();
@@ -23,7 +23,7 @@ const checkThisUser = (IsInclude: boolean, id: string) => {
     : checkedSellers.value.splice(checkedSellers.value.indexOf(id), 1);
 };
 
-const toggleThisSeller = (seller: sellerT, name: string) => {
+const toggleThisSeller = (seller: SellerT, name: string) => {
   store.setters.updateStore({ key: "row", value: seller });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
@@ -31,7 +31,7 @@ const toggleThisSeller = (seller: sellerT, name: string) => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full">
+  <div class="flex flex-col w-full gap-10">
     <table class="table-auto w-full">
       <thead
         class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
@@ -70,7 +70,7 @@ const toggleThisSeller = (seller: sellerT, name: string) => {
             </div>
           </td>
           <td class="p-2">
-            <div class="font-medium text-gray-800">{{ seller.name }}</div>
+            <div class="font-medium text-gray-800">{{ seller.fullname }}</div>
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
@@ -82,8 +82,10 @@ const toggleThisSeller = (seller: sellerT, name: string) => {
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="!seller.phone" class="text-red-400">No phone</span>
-              <span v-else>{{ seller.phone }}</span>
+              <span v-if="!seller.phoneNumber" class="text-red-400"
+                >No phone</span
+              >
+              <span v-else>{{ seller.phoneNumber }}</span>
             </div>
           </td>
           <td class="p-2">

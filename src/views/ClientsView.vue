@@ -39,7 +39,6 @@ onMounted(() => {
   unwatch = watch(
     [page, refresh, searchQuery],
     ([p, _r, search], [_p, _, oldSearch]) => {
-      console.log(oldSearch);
       clearTimeout(timer);
       timer = setTimeout(
         () => {

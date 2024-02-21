@@ -4,13 +4,13 @@ import { useI18n } from "vue-i18n";
 import { computed, onBeforeUnmount } from "vue";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
-import type { clientT } from "@/types";
 import { Button } from "./ui/button";
 import { store } from "@/store";
+import type { ClientT } from "@/schemas/client.schema";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const client = computed(() => store.getters.getSelectedRow<clientT>());
+const client = computed(() => store.getters.getSelectedRow<ClientT>());
 
 const deleteTheClient = async () => {
   const id = client.value?.id;
@@ -37,9 +37,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 </script>
 <template>
   <UiModalCard>
-    <template #title>
-      {{ t("c.d.title") }}
-    </template>
+    <template #title> {{ t("c.d.title") }} {{ client.fullname }} ? </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
         <Button class="col-span-2" @click="deleteTheClient">

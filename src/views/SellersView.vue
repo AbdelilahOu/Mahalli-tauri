@@ -4,14 +4,12 @@ import { useI18n } from "vue-i18n";
 import SellersTable from "@/components/SellersTable.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { sellerT, withCount } from "@/types";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { store } from "@/store";
 import { invoke } from "@tauri-apps/api";
 import { useRouter } from "vue-router";
 import {
   type WatchStopHandle,
-  onBeforeMount,
   onUnmounted,
   onMounted,
   computed,
@@ -20,46 +18,60 @@ import {
   watch,
   ref,
 } from "vue";
+import type { SellerT } from "@/schemas/seller.schema";
+import type { Res } from "@/types";
 
 const { t } = useI18n();
 const router = useRouter();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 //
-const sellers = ref<sellerT[]>([]);
+const sellers = ref<SellerT[]>([]);
 const searchQuery = ref<string>("");
 const totalRows = ref<number>(0);
-
-//
 const page = computed(() => Number(router.currentRoute.value.query.page));
 const refresh = computed(() => router.currentRoute.value.query.refresh);
-//
-let unwatch: WatchStopHandle | null = null;
 //
 provide("count", totalRows);
 
 //
-
-onBeforeMount(() => getSellers(page.value));
-//
+let timer: number | undefined;
+let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
-  unwatch = watch([page, refresh], ([p]) => {
-    if (p && p > 0) getSellers(p);
-  });
+  unwatch = watch(
+    [page, refresh, searchQuery],
+    ([p, _r, search], [_p, _, oldSearch]) => {
+      clearTimeout(timer);
+      timer = setTimeout(
+        () => {
+          if (p && p > 0) getSellers(search, p);
+        },
+        search != oldSearch && oldSearch ? 500 : 0,
+      );
+    },
+    {
+      immediate: true,
+    },
+  );
 });
+
 //
 onUnmounted(() => {
   if (unwatch) unwatch();
 });
 //
-async function getSellers(page: number = 1) {
+async function getSellers(search: string, page: number = 1) {
   try {
-    const res = await invoke<withCount<sellerT[]>>("get_sellers", {
-      page,
+    const res = await invoke<Res<any>>("list_sellers", {
+      args: {
+        search,
+        page,
+        limit: 17,
+      },
     });
-    if (res?.data) {
-      sellers.value = res.data;
-      totalRows.value = res.count;
+    if (!res?.error) {
+      sellers.value = res.data.sellers;
+      totalRows.value = res.data.count;
       return;
     }
   } catch (error) {
