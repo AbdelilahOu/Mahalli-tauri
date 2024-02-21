@@ -15,7 +15,7 @@ use sea_orm_migration::{prelude::*, sea_orm::Statement};
 use crate::{
     m20220101_000001_init_::{
         Client, InventoryMouvement, Invoice, InvoiceItem, Order, OrderItem, Product, Quote,
-        QuoteItem, Seller,
+        QuoteItem, Supplier,
     },
     utils::get_random_enum,
 };
@@ -60,13 +60,13 @@ impl MigrationTrait for Migration {
             let email: String = FreeEmail().fake();
             let phone: String = PhoneNumber().fake();
             let insert = Query::insert()
-                .into_table(Seller::Table)
+                .into_table(Supplier::Table)
                 .columns([
-                    Seller::Id,
-                    Seller::Fullname,
-                    Seller::Address,
-                    Seller::Email,
-                    Seller::Phone,
+                    Supplier::Id,
+                    Supplier::Fullname,
+                    Supplier::Address,
+                    Supplier::Email,
+                    Supplier::Phone,
                 ])
                 .values_panic([
                     id.to_string().into(),
@@ -147,12 +147,12 @@ impl MigrationTrait for Migration {
                 sea_orm::DatabaseBackend::Sqlite,
                 r#"
                 INSERT INTO 
-                    orders (id, status, seller_id)
+                    orders (id, status, supplier_id)
                 VALUES
                     (
                         $1, 
                         $2, 
-                        (SELECT id FROM sellers ORDER BY RANDOM() LIMIT 1)
+                        (SELECT id FROM suppliers ORDER BY RANDOM() LIMIT 1)
                     )
                 "#,
                 [id.to_string().into(), status_.into()],
@@ -300,7 +300,7 @@ impl MigrationTrait for Migration {
         let delete = Query::delete().from_table(Client::Table).to_owned();
         manager.exec_stmt(delete).await?;
 
-        let delete = Query::delete().from_table(Seller::Table).to_owned();
+        let delete = Query::delete().from_table(Supplier::Table).to_owned();
         manager.exec_stmt(delete).await?;
 
         Ok(())

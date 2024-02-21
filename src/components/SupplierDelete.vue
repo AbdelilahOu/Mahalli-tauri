@@ -6,18 +6,18 @@ import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import { store } from "@/store";
-import type { SellerT } from "@/schemas/seller.schema";
+import type { SupplierT } from "@/schemas/supplier.schema";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
 
-const seller = computed(() => store.getters.getSelectedRow<SellerT>());
+const supplier = computed(() => store.getters.getSelectedRow<SupplierT>());
 
-const deleteTheSeller = async () => {
-  let id = seller.value?.id;
+const deleteTheSupplier = async () => {
+  let id = supplier.value?.id;
   if (id) {
     try {
-      await invoke("delete_seller", { id });
+      await invoke("delete_supplier", { id });
       // toggle refresh
       updateQueryParams({
         refresh: "refresh-delete-" + Math.random() * 9999,
@@ -41,10 +41,10 @@ onBeforeUnmount(() => {
 
 <template>
   <UiModalCard>
-    <template #title> {{ t("s.d.title") }} {{ seller.fullname }} ? </template>
+    <template #title> {{ t("s.d.title") }} {{ supplier.fullname }} ? </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
-        <Button class="col-span-2" @click="deleteTheSeller">
+        <Button class="col-span-2" @click="deleteTheSupplier">
           {{ t("g.b.d") }}
         </Button>
         <Button variant="outline" @click="cancelDelete">

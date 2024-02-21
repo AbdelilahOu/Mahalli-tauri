@@ -3,7 +3,7 @@
     "s": "Suchen",
     "r": {
       "Clients": "Kunden",
-      "Sellers": "Verkäufer",
+      "Suppliers": "Verkäufer",
       "Products": "Produkte",
       "Orders": "Aufträge",
       "Invoices": "Rechnungen",
@@ -34,7 +34,7 @@
       "title": "In den letzten drei Monaten verkaufte und gekaufte Artikel",
       "labels": ["GEKAUFT", "VERKAUFT"],
       "b3c": "Beste Kunden basierend auf den Ausgaben",
-      "b3s": "Bestseller basierend auf den Ausgaben"
+      "b3s": "Bestsupplier basierend auf den Ausgaben"
     },
     "de": {
       "title": "Produkte, die in den letzten drei Monaten gekauft wurden"

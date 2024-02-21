@@ -28,6 +28,6 @@ pub use super::quote_items::{
 pub use super::quotes::{
     self, ActiveModel as QuoteActiveModel, Entity as Quotes, Model as QuoteModel,
 };
-pub use super::sellers::{
-    self, ActiveModel as SellerActiveModel, Entity as Sellers, Model as SellerModel,
+pub use super::suppliers::{
+    self, ActiveModel as SupplierActiveModel, Entity as Suppliers, Model as SupplierModel,
 };

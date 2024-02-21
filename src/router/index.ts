@@ -2,12 +2,12 @@ import { createRouter, createWebHistory } from "vue-router";
 import NotificationsView from "@/views/NotificationsView.vue";
 import InvoiceDetails from "@/views/InvoiceDetails.vue";
 import ClientDetails from "@/views/ClientDetails.vue";
-import SellerDetails from "@/views/SellerDetails.vue";
+import SupplierDetails from "@/views/SupplierDetails.vue";
 import OrdersDetails from "@/views/OrderDetails.vue";
 import ProductsView from "@/views/ProductsView.vue";
 import InvoicesView from "@/views/InvoicesView.vue";
 import CommenLayout from "@/layouts/CommenLayout.vue";
-import SellersView from "@/views/SellersView.vue";
+import SuppliersView from "@/views/SuppliersView.vue";
 import ClientsView from "@/views/ClientsView.vue";
 import OrdersView from "@/views/OrdersView.vue";
 import InventoryView from "@/views/InventoryView.vue";
@@ -52,19 +52,19 @@ const router = createRouter({
           ],
         },
         {
-          path: "Sellers",
-          name: "Sellers",
+          path: "Suppliers",
+          name: "Suppliers",
           component: CommenLayout,
           children: [
             {
               path: "all",
-              name: "Sellers",
-              component: SellersView,
+              name: "Suppliers",
+              component: SuppliersView,
             },
             {
-              path: "seller/:id",
-              name: "SellerDetails",
-              component: SellerDetails,
+              path: "supplier/:id",
+              name: "SupplierDetails",
+              component: SupplierDetails,
             },
           ],
         },

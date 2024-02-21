@@ -16,7 +16,7 @@ defineProps<{
 const { t } = useI18n();
 const checkedClients = ref<string[]>([]);
 
-const checkThisUser = (IsInclude: boolean, id: string) => {
+const checkThisClient = (IsInclude: boolean, id: string) => {
   IsInclude
     ? checkedClients.value.push(id)
     : checkedClients.value.splice(checkedClients.value.indexOf(id), 1);
@@ -53,7 +53,10 @@ const toggleThisClient = (client: ClientT, name: string) => {
         <tr v-for="(client, index) in clients" v-fade="index" :key="client.id">
           <td class="p-2">
             <span class="h-full w-full grid">
-              <Checkbox />
+              <Checkbox
+                :checked="checkedClients.includes(client.id!)"
+                @update:checked="(a) => checkThisClient(a, client.id!)"
+              />
             </span>
           </td>
           <td class="p-2">
@@ -65,7 +68,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
               />
               <span
                 v-else
-                class="rounded-full w-full h-full object-fill animate-pulse bg-slate-300 duration-150"
+                class="rounded-full w-full h-full block object-fill animate-pulse bg-slate-300 duration-1000"
               ></span>
             </div>
           </td>

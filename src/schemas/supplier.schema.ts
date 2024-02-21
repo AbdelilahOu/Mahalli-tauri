@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export let CreateSellerSchema = z.object({
+export let CreateSupplierSchema = z.object({
   id: z.string().optional(),
   fullname: z.string().min(2).max(50),
   email: z.string().optional(),
@@ -10,4 +10,4 @@ export let CreateSellerSchema = z.object({
   credi: z.number().optional(),
 });
 
-export type SellerT = z.infer<typeof CreateSellerSchema>;
+export type SupplierT = z.infer<typeof CreateSupplierSchema>;

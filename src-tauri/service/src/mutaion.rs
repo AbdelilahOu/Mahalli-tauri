@@ -81,39 +81,39 @@ impl MutationsService {
         }
     }
     //
-    pub async fn create_seller(db: &DbConn, seller: NewSeller) -> Result<String, DbErr> {
-        let seller = SellerActiveModel {
-            full_name: ActiveValue::Set(seller.full_name),
-            email: ActiveValue::Set(seller.email),
-            phone_number: ActiveValue::Set(seller.phone_number),
-            address: ActiveValue::Set(seller.address),
-            image: ActiveValue::Set(seller.image),
+    pub async fn create_supplier(db: &DbConn, supplier: NewSupplier) -> Result<String, DbErr> {
+        let supplier = SupplierActiveModel {
+            full_name: ActiveValue::Set(supplier.full_name),
+            email: ActiveValue::Set(supplier.email),
+            phone_number: ActiveValue::Set(supplier.phone_number),
+            address: ActiveValue::Set(supplier.address),
+            image: ActiveValue::Set(supplier.image),
             ..Default::default()
         };
-        match seller.insert(db).await {
+        match supplier.insert(db).await {
             Ok(p) => Ok(p.id),
             Err(err) => Err(err),
         }
     }
-    pub async fn update_seller(db: &DbConn, seller: Seller) -> Result<(), DbErr> {
-        let seller_model = Sellers::find_by_id(seller.id).one(db).await?;
-        let mut seller_active: SellerActiveModel = seller_model.unwrap().into();
-        seller_active.full_name = ActiveValue::Set(seller.full_name);
-        seller_active.email = ActiveValue::Set(seller.email);
-        seller_active.phone_number = ActiveValue::Set(seller.phone_number);
-        seller_active.address = ActiveValue::Set(seller.address);
-        seller_active.image = ActiveValue::Set(seller.image);
-        match seller_active.save(db).await {
+    pub async fn update_supplier(db: &DbConn, supplier: Supplier) -> Result<(), DbErr> {
+        let supplier_model = Suppliers::find_by_id(supplier.id).one(db).await?;
+        let mut supplier_active: SupplierActiveModel = supplier_model.unwrap().into();
+        supplier_active.full_name = ActiveValue::Set(supplier.full_name);
+        supplier_active.email = ActiveValue::Set(supplier.email);
+        supplier_active.phone_number = ActiveValue::Set(supplier.phone_number);
+        supplier_active.address = ActiveValue::Set(supplier.address);
+        supplier_active.image = ActiveValue::Set(supplier.image);
+        match supplier_active.save(db).await {
             Ok(_) => Ok(()),
             Err(err) => Err(err),
         }
     }
-    pub async fn delete_seller(db: &DbConn, id: String) -> Result<u64, DbErr> {
-        let seller_model = Sellers::find_by_id(id).one(db).await?;
-        match seller_model {
-            Some(seller_model) => {
-                let seller = seller_model.delete(db).await?;
-                Ok(seller.rows_affected)
+    pub async fn delete_supplier(db: &DbConn, id: String) -> Result<u64, DbErr> {
+        let supplier_model = Suppliers::find_by_id(id).one(db).await?;
+        match supplier_model {
+            Some(supplier_model) => {
+                let supplier = supplier_model.delete(db).await?;
+                Ok(supplier.rows_affected)
             }
             None => Ok(0),
         }

@@ -13,30 +13,33 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
 import { ref } from "vue";
-import { CreateSellerSchema, type SellerT } from "@/schemas/seller.schema";
+import {
+  CreateSupplierSchema,
+  type SupplierT,
+} from "@/schemas/supplier.schema";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
 const isLoading = ref<boolean>(false);
 
-const sellerSchema = toTypedSchema(CreateSellerSchema);
+const supplierSchema = toTypedSchema(CreateSupplierSchema);
 
 const imagePath = ref<string>();
 
 const form = useForm({
-  validationSchema: sellerSchema,
+  validationSchema: supplierSchema,
 });
 
-const createNewSeller = async (seller: SellerT) => {
+const createNewSupplier = async (supplier: SupplierT) => {
   isLoading.value = true;
   try {
-    let image: string = await saveFile(seller.image as string, "Image");
-    await invoke("create_seller", {
-      seller: {
-        full_name: seller.fullname,
-        email: seller.email,
-        phone_number: seller.phoneNumber,
-        address: seller.address,
+    let image: string = await saveFile(supplier.image as string, "Image");
+    await invoke("create_supplier", {
+      supplier: {
+        full_name: supplier.fullname,
+        email: supplier.email,
+        phone_number: supplier.phoneNumber,
+        address: supplier.address,
         image,
       },
     });
@@ -57,7 +60,7 @@ const hideModal = () => {
 };
 
 const onSubmit = form.handleSubmit((values) => {
-  createNewSeller(values);
+  createNewSupplier(values);
 });
 
 const saveImage = (image: string) => {
