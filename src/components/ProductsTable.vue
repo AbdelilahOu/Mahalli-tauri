@@ -6,6 +6,8 @@ import { Checkbox } from "./ui/checkbox";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import type { ProductT } from "@/schemas/products.schema";
+import { Badge } from "./ui/badge";
+import { cn } from "@/utils/shadcn";
 
 defineProps<{ products: ProductT[] }>();
 
@@ -80,7 +82,24 @@ const handleCheck = (product: ProductT, isChecked: boolean) => {
           </td>
           <td class="p-2">
             <div class="text-left">
-              {{ t("g.plrz.i", { n: product?.stock }) }}
+              <Badge
+                variant="default"
+                :class="
+                  cn(
+                    product.stock != undefined
+                      ? product?.stock < 0
+                        ? 'bg-red-500'
+                        : product?.stock < product.minQuantity
+                          ? 'bg-yellow-500'
+                          : product?.stock > product.minQuantity
+                            ? 'bg-green-500'
+                            : ''
+                      : '',
+                  )
+                "
+              >
+                {{ t("g.plrz.i", { n: product?.stock }) }}
+              </Badge>
             </div>
           </td>
           <td class="p-2">
