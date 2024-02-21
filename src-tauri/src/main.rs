@@ -47,13 +47,13 @@ async fn main() {
             commands::clients::update_client,
             commands::clients::delete_client,
             //
-            // sellers
+            // suppliers
             //
-            commands::sellers::list_sellers,
-            commands::sellers::search_sellers,
-            commands::sellers::create_seller,
-            commands::sellers::update_seller,
-            commands::sellers::delete_seller,
+            commands::suppliers::list_suppliers,
+            commands::suppliers::search_suppliers,
+            commands::suppliers::create_supplier,
+            commands::suppliers::update_supplier,
+            commands::suppliers::delete_supplier,
         ])
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())

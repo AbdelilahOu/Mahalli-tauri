@@ -3,7 +3,7 @@
     "s": "Search",
     "r": {
       "Clients": "Clients",
-      "Sellers": "Sellers",
+      "Suppliers": "Suppliers",
       "Products": "Products",
       "Orders": "Orders",
       "Invoices": "Invoices",
@@ -36,7 +36,7 @@
       "title": "Sold and bought items during the last three months",
       "labels": ["BOUGHT", "SOLD"],
       "b3c": "Best clients based on expenses",
-      "b3s": "Best sellers based on expenses"
+      "b3s": "Best suppliers based on expenses"
     },
     "de": {
       "title": "Products baught last three months"
@@ -71,17 +71,17 @@
       "d": "Address"
     },
     "i": {
-      "addButton": "Add new seller",
-      "feilds": ["seller name", "e-mail", "phone number", "address", "action"]
+      "addButton": "Add new supplier",
+      "feilds": ["supplier name", "e-mail", "phone number", "address", "action"]
     },
     "c": {
-      "title": "create a seller"
+      "title": "create a supplier"
     },
     "u": {
-      "title": "update seller"
+      "title": "update supplier"
     },
     "d": {
-      "title": "are you sure you wanna delete the seller"
+      "title": "are you sure you wanna delete the supplier"
     }
   },
   "p": {
@@ -118,14 +118,14 @@
   "o": {
     "i": {
       "addButton": "Add new order",
-      "feilds": ["id", "seller", "items", "STATUS", "Date", "action"]
+      "feilds": ["id", "supplier", "items", "STATUS", "Date", "action"]
     },
     "c": {
       "title": "create new order",
       "d": {
         "s": {
-          "title": "seller details",
-          "select": "Select a seller"
+          "title": "supplier details",
+          "select": "Select a supplier"
         },
         "o": {
           "title": "order details",
@@ -140,8 +140,8 @@
       "title": "update order",
       "d": {
         "s": {
-          "title": "seller details",
-          "select": "Select a seller"
+          "title": "supplier details",
+          "select": "Select a supplier"
         },
         "o": {
           "title": "order details",
@@ -171,7 +171,7 @@
         "status": "status"
       },
       "s": {
-        "title": "seller details",
+        "title": "supplier details",
         "id": "id",
         "name": "name",
         "phone": "phoner number",

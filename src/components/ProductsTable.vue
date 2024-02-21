@@ -8,10 +8,13 @@ import { store } from "@/store";
 import type { ProductT } from "@/schemas/products.schema";
 import { Badge } from "./ui/badge";
 import { cn } from "@/utils/shadcn";
+import { ref } from "vue";
 
 defineProps<{ products: ProductT[] }>();
 
 const { t } = useI18n();
+
+const checkedProducts = ref<string[]>([]);
 
 const toggleThisProduct = (product: ProductT, name: string) => {
   store.setters.updateStore({ key: "row", value: product });
@@ -19,8 +22,10 @@ const toggleThisProduct = (product: ProductT, name: string) => {
   store.setters.updateStore({ key: "show", value: true });
 };
 
-const handleCheck = (product: ProductT, isChecked: boolean) => {
-  console.log(product.name, isChecked ? "is checked" : "is unchecked");
+const checkThisProduct = (IsInclude: boolean, id: string) => {
+  IsInclude
+    ? checkedProducts.value.push(id)
+    : checkedProducts.value.splice(checkedProducts.value.indexOf(id), 1);
 };
 </script>
 
@@ -47,12 +52,15 @@ const handleCheck = (product: ProductT, isChecked: boolean) => {
       <tbody class="text-sm divide-y divide-gray-100">
         <tr
           v-for="(product, index) in products"
-          :key="(product.id as string) + index"
+          :key="product.id"
           v-fade="index"
         >
           <td class="p-2">
             <span class="h-full w-full grid">
-              <Checkbox />
+              <Checkbox
+                :checked="checkedProducts.includes(product.id!)"
+                @update:checked="(a) => checkThisProduct(a, product.id!)"
+              />
             </span>
           </td>
           <td class="p-2">
@@ -65,7 +73,7 @@ const handleCheck = (product: ProductT, isChecked: boolean) => {
               />
               <span
                 v-else
-                class="rounded-full w-full h-full object-fill animate-pulse bg-slate-300 duration-150"
+                class="rounded-full w-full h-full block object-fill animate-pulse bg-slate-300 duration-1000"
               />
             </div>
           </td>
@@ -83,16 +91,16 @@ const handleCheck = (product: ProductT, isChecked: boolean) => {
           <td class="p-2">
             <div class="text-left">
               <Badge
-                variant="default"
+                variant="outline"
                 :class="
                   cn(
                     product.stock != undefined
                       ? product?.stock < 0
-                        ? 'bg-red-500'
+                        ? 'bg-red-100 border-red-500 text-red-900'
                         : product?.stock < product.minQuantity
-                          ? 'bg-yellow-500'
+                          ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
                           : product?.stock > product.minQuantity
-                            ? 'bg-green-500'
+                            ? 'bg-green-100 border-green-500 text-green-900'
                             : ''
                       : '',
                   )

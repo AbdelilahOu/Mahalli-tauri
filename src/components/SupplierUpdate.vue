@@ -11,40 +11,40 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
 import { z } from "zod";
-import type { SellerT } from "@/schemas/seller.schema";
+import type { SupplierT } from "@/schemas/supplier.schema";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
 
-const SellerRow = computed(() => store.getters.getSelectedRow<SellerT>());
+const SupplierRow = computed(() => store.getters.getSelectedRow<SupplierT>());
 
 const isLoading = ref<boolean>(false);
 
-const sellerSchema = toTypedSchema(
+const supplierSchema = toTypedSchema(
   z.object({
-    fullname: z.string().min(2).max(50).default(SellerRow.value.fullname),
-    email: z.string().default(SellerRow.value.email ?? ""),
-    phoneNumber: z.string().default(SellerRow.value.phoneNumber ?? ""),
-    address: z.string().default(SellerRow.value.address ?? ""),
-    image: z.string().default(SellerRow.value.image ?? ""),
+    fullname: z.string().min(2).max(50).default(SupplierRow.value.fullname),
+    email: z.string().default(SupplierRow.value.email ?? ""),
+    phoneNumber: z.string().default(SupplierRow.value.phoneNumber ?? ""),
+    address: z.string().default(SupplierRow.value.address ?? ""),
+    image: z.string().default(SupplierRow.value.image ?? ""),
   }),
 );
 
 const form = useForm({
-  validationSchema: sellerSchema,
+  validationSchema: supplierSchema,
 });
 
-const updateTheSeller = async (seller: SellerT) => {
-  if (SellerRow.value.id) {
+const updateTheSupplier = async (supplier: SupplierT) => {
+  if (SupplierRow.value.id) {
     try {
-      await invoke("update_seller", {
-        seller: {
-          id: SellerRow.value.id,
-          full_name: seller.fullname,
-          email: seller.email,
-          phone_number: seller.phoneNumber,
-          address: seller.address,
-          image: seller.image,
+      await invoke("update_supplier", {
+        supplier: {
+          id: SupplierRow.value.id,
+          full_name: supplier.fullname,
+          email: supplier.email,
+          phone_number: supplier.phoneNumber,
+          address: supplier.address,
+          image: supplier.image,
         },
       });
       // toggle refresh
@@ -64,7 +64,7 @@ const hideModal = () => {
 };
 
 const onSubmit = form.handleSubmit((values) => {
-  updateTheSeller(values);
+  updateTheSupplier(values);
 });
 
 onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
@@ -127,7 +127,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("g.b.u", { name: SellerRow.fullname }) }}
+            {{ t("g.b.u", { name: SupplierRow.fullname }) }}
           </Button>
           <Button
             @click="hideModal"

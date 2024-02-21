@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
-import SellersTable from "@/components/SellersTable.vue";
+import SuppliersTable from "@/components/SuppliersTable.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
@@ -18,7 +18,7 @@ import {
   watch,
   ref,
 } from "vue";
-import type { SellerT } from "@/schemas/seller.schema";
+import type { SupplierT } from "@/schemas/supplier.schema";
 import type { Res } from "@/types";
 
 const { t } = useI18n();
@@ -26,7 +26,7 @@ const router = useRouter();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 //
-const sellers = ref<SellerT[]>([]);
+const suppliers = ref<SupplierT[]>([]);
 const searchQuery = ref<string>("");
 const totalRows = ref<number>(0);
 const page = computed(() => Number(router.currentRoute.value.query.page));
@@ -44,7 +44,7 @@ onMounted(() => {
       clearTimeout(timer);
       timer = setTimeout(
         () => {
-          if (p && p > 0) getSellers(search, p);
+          if (p && p > 0) getSuppliers(search, p);
         },
         search != oldSearch && oldSearch ? 500 : 0,
       );
@@ -60,9 +60,9 @@ onUnmounted(() => {
   if (unwatch) unwatch();
 });
 //
-async function getSellers(search: string, page: number = 1) {
+async function getSuppliers(search: string, page: number = 1) {
   try {
-    const res = await invoke<Res<any>>("list_sellers", {
+    const res = await invoke<Res<any>>("list_suppliers", {
       args: {
         search,
         page,
@@ -70,7 +70,7 @@ async function getSellers(search: string, page: number = 1) {
       },
     });
     if (!res?.error) {
-      sellers.value = res.data.sellers;
+      suppliers.value = res.data.suppliers;
       totalRows.value = res.data.count;
       return;
     }
@@ -82,7 +82,7 @@ async function getSellers(search: string, page: number = 1) {
 const uploadCSV = () => {
   store.setters.updateStore({ key: "name", value: "CsvUploader" });
   store.setters.updateStore({ key: "show", value: true });
-  updateQueryParams({ table: "sellers" });
+  updateQueryParams({ table: "suppliers" });
 };
 //
 const updateModal = (name: string) => {
@@ -121,7 +121,7 @@ const updateModal = (name: string) => {
                 </svg>
               </span>
             </Button>
-            <Button @click="updateModal('SellerCreate')">
+            <Button @click="updateModal('SupplierCreate')">
               <UiIcon
                 extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
@@ -132,7 +132,7 @@ const updateModal = (name: string) => {
         </div>
       </Transition>
       <Transition appear>
-        <SellersTable :sellers="sellers" />
+        <SuppliersTable :suppliers="suppliers" />
       </Transition>
     </div>
   </main>

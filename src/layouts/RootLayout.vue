@@ -48,7 +48,7 @@ onBeforeRouteUpdate((to: any, from: any) => {
         <div
           v-if="show"
           @click.self="hideModal"
-          class="w-full h-full flex items-center justify-center absolute bg-gray-400 z-50 top-0 left-0 bg-opacity-10"
+          class="w-full h-full flex items-center justify-center fixed bg-gray-400 z-50 top-0 left-0 bg-opacity-10"
         >
           <ModalComponentsRenderer :name="name" />
         </div>

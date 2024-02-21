@@ -7,24 +7,24 @@ import { RouterLink } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import { ref } from "vue";
-import type { SellerT } from "@/schemas/seller.schema";
+import type { SupplierT } from "@/schemas/supplier.schema";
 
 defineProps<{
-  sellers: SellerT[];
+  suppliers: SupplierT[];
 }>();
 
 const { t } = useI18n();
 
-const checkedSellers = ref<string[]>([]);
+const checkedSuppliers = ref<string[]>([]);
 
-const checkThisUser = (IsInclude: boolean, id: string) => {
+const checkThisSupplier = (IsInclude: boolean, id: string) => {
   IsInclude
-    ? checkedSellers.value.push(id)
-    : checkedSellers.value.splice(checkedSellers.value.indexOf(id), 1);
+    ? checkedSuppliers.value.push(id)
+    : checkedSuppliers.value.splice(checkedSuppliers.value.indexOf(id), 1);
 };
 
-const toggleThisSeller = (seller: SellerT, name: string) => {
-  store.setters.updateStore({ key: "row", value: seller });
+const toggleThisSupplier = (supplier: SupplierT, name: string) => {
+  store.setters.updateStore({ key: "row", value: supplier });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
 };
@@ -50,62 +50,69 @@ const toggleThisSeller = (seller: SellerT, name: string) => {
         </tr>
       </thead>
       <tbody class="text-sm divide-y divide-gray-100">
-        <tr v-fade="index" v-for="(seller, index) in sellers" :key="seller.id">
+        <tr
+          v-fade="index"
+          v-for="(supplier, index) in suppliers"
+          :key="supplier.id"
+        >
           <td class="p-2">
             <span class="h-full w-full grid">
-              <Checkbox />
+              <Checkbox
+                :checked="checkedSuppliers.includes(supplier.id!)"
+                @update:checked="(a) => checkThisSupplier(a, supplier.id!)"
+              />
             </span>
           </td>
           <td class="p-2">
             <div class="w-12 h-12 rounded-full overflow-hidden">
               <img
-                v-if="seller.image && seller.image !== ''"
+                v-if="supplier.image && supplier.image !== ''"
                 class="rounded-full w-full h-full object-cover"
-                :src="convertFileSrc(seller.image)"
+                :src="convertFileSrc(supplier.image)"
               />
               <span
                 v-else
-                class="rounded-full w-full h-full object-fill animate-pulse bg-slate-300 duration-150"
+                class="rounded-full w-full h-full block object-fill animate-pulse bg-slate-300 duration-1000"
               />
             </div>
           </td>
           <td class="p-2">
-            <div class="font-medium text-gray-800">{{ seller.fullname }}</div>
+            <div class="font-medium text-gray-800">{{ supplier.fullname }}</div>
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="!seller.email" class="text-red-400">No email</span>
+              <span v-if="!supplier.email" class="text-red-400">No email</span>
               <span v-else>
-                {{ seller.email }}
+                {{ supplier.email }}
               </span>
             </div>
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="!seller.phoneNumber" class="text-red-400"
+              <span v-if="!supplier.phoneNumber" class="text-red-400"
                 >No phone</span
               >
-              <span v-else>{{ seller.phoneNumber }}</span>
+              <span v-else>{{ supplier.phoneNumber }}</span>
             </div>
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="!seller.address" class="text-red-400"
+              <span v-if="!supplier.address" class="text-red-400"
                 >No address</span
               >
-              <span v-else>{{ seller.address }}</span>
+              <span v-else>{{ supplier.address }}</span>
             </div>
           </td>
           <td class="p-2">
             <div class="flex w-full justify-start gap-3">
-              <span @click="toggleThisSeller(seller, 'SellerDelete')">
+              <span @click="toggleThisSupplier(supplier, 'SupplierDelete')">
                 <UiIcon isStyled name="delete" />
               </span>
-              <span @click="toggleThisSeller(seller, 'SellerUpdate')">
+              <span @click="toggleThisSupplier(supplier, 'SupplierUpdate')">
                 <UiIcon isStyled name="edit" />
               </span>
               <RouterLink
-                :to="{ name: 'SellerDetails', params: { id: seller.id } }"
+                :to="{ name: 'SupplierDetails', params: { id: supplier.id } }"
               >
                 <UiIcon name="more" />
               </RouterLink>

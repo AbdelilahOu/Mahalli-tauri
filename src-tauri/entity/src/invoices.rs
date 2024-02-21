@@ -2,12 +2,14 @@
 
 use sea_orm::{entity::prelude::*, Set};
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = "invoices")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: String,
     pub client_id: String,
+    #[sea_orm(column_type = "Double")]
+    pub paid_amount: f64,
     pub status: String,
 }
 

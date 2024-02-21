@@ -30,20 +30,25 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(Seller::Table)
+                    .table(Supplier::Table)
                     .if_not_exists()
-                    .col(ColumnDef::new(Seller::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(Seller::Fullname).string().not_null())
                     .col(
-                        ColumnDef::new(Seller::CreatedAt)
+                        ColumnDef::new(Supplier::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
+                    .col(ColumnDef::new(Supplier::Fullname).string().not_null())
+                    .col(
+                        ColumnDef::new(Supplier::CreatedAt)
                             .date_time()
                             .not_null()
                             .default(Expr::current_timestamp()),
                     )
-                    .col(ColumnDef::new(Seller::Phone).string())
-                    .col(ColumnDef::new(Seller::Email).string())
-                    .col(ColumnDef::new(Seller::Address).string())
-                    .col(ColumnDef::new(Seller::Image).string())
+                    .col(ColumnDef::new(Supplier::Phone).string())
+                    .col(ColumnDef::new(Supplier::Email).string())
+                    .col(ColumnDef::new(Supplier::Address).string())
+                    .col(ColumnDef::new(Supplier::Image).string())
                     .to_owned(),
             )
             .await?;
@@ -128,12 +133,12 @@ impl MigrationTrait for Migration {
                     .table(Order::Table)
                     .if_not_exists()
                     .col(ColumnDef::new(Order::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(Order::SellerId).string().not_null())
+                    .col(ColumnDef::new(Order::SupplierId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_order_seller_id")
-                            .from(Order::Table, Order::SellerId)
-                            .to(Seller::Table, Seller::Id)
+                            .name("fk_order_supplier_id")
+                            .from(Order::Table, Order::SupplierId)
+                            .to(Supplier::Table, Supplier::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
                     .col(ColumnDef::new(Order::Status).string().not_null())
@@ -331,8 +336,8 @@ pub enum Client {
 }
 
 #[derive(DeriveIden)]
-pub enum Seller {
-    #[sea_orm(iden = "sellers")]
+pub enum Supplier {
+    #[sea_orm(iden = "suppliers")]
     Table,
     Id,
     #[sea_orm(iden = "full_name")]
@@ -386,8 +391,8 @@ pub enum Order {
     #[sea_orm(iden = "orders")]
     Table,
     Id,
-    #[sea_orm(iden = "seller_id")]
-    SellerId,
+    #[sea_orm(iden = "supplier_id")]
+    SupplierId,
     // status: delivered, cancel, ongoing
     #[sea_orm(iden = "status")]
     Status,

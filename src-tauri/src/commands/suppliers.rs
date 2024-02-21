@@ -1,5 +1,5 @@
 use serde_json::Value;
-use service::{ListArgs, MutationsService, NewSeller, QueriesService, Seller};
+use service::{ListArgs, MutationsService, NewSupplier, QueriesService, Supplier};
 use tauri::State;
 
 use crate::AppState;
@@ -7,9 +7,9 @@ use crate::AppState;
 use super::{Fail, SResult, Seccess};
 
 #[tauri::command]
-pub async fn list_sellers(state: State<'_, AppState>, args: ListArgs) -> SResult<Value> {
+pub async fn list_suppliers(state: State<'_, AppState>, args: ListArgs) -> SResult<Value> {
     let _ = state.db_conn;
-    let res = QueriesService::list_sellers(&state.db_conn, args).await;
+    let res = QueriesService::list_suppliers(&state.db_conn, args).await;
     match res {
         Ok(res) => Ok(Seccess {
             error: None,
@@ -27,9 +27,9 @@ pub async fn list_sellers(state: State<'_, AppState>, args: ListArgs) -> SResult
 }
 
 #[tauri::command]
-pub async fn search_sellers(state: State<'_, AppState>, search: String) -> SResult<Vec<Value>> {
+pub async fn search_suppliers(state: State<'_, AppState>, search: String) -> SResult<Vec<Value>> {
     let _ = state.db_conn;
-    let res = QueriesService::search_sellers(&state.db_conn, search).await;
+    let res = QueriesService::search_suppliers(&state.db_conn, search).await;
     match res {
         Ok(res) => Ok(Seccess {
             error: None,
@@ -47,13 +47,13 @@ pub async fn search_sellers(state: State<'_, AppState>, search: String) -> SResu
 }
 
 #[tauri::command]
-pub async fn create_seller(state: State<'_, AppState>, seller: NewSeller) -> SResult<String> {
+pub async fn create_supplier(state: State<'_, AppState>, supplier: NewSupplier) -> SResult<String> {
     let _ = state.db_conn;
-    let res = MutationsService::create_seller(&state.db_conn, seller).await;
+    let res = MutationsService::create_supplier(&state.db_conn, supplier).await;
     match res {
         Ok(id) => Ok(Seccess::<String> {
             error: None,
-            message: Option::Some(String::from("seller created successfully")),
+            message: Option::Some(String::from("supplier created successfully")),
             data: Some(id),
         }),
         Err(err) => {
@@ -67,9 +67,9 @@ pub async fn create_seller(state: State<'_, AppState>, seller: NewSeller) -> SRe
 }
 
 #[tauri::command]
-pub async fn delete_seller(state: State<'_, AppState>, id: String) -> SResult<u64> {
+pub async fn delete_supplier(state: State<'_, AppState>, id: String) -> SResult<u64> {
     let _ = state.db_conn;
-    let res = MutationsService::delete_seller(&state.db_conn, id).await;
+    let res = MutationsService::delete_supplier(&state.db_conn, id).await;
     match res {
         Ok(res) => Ok(Seccess {
             error: None,
@@ -87,13 +87,13 @@ pub async fn delete_seller(state: State<'_, AppState>, id: String) -> SResult<u6
 }
 
 #[tauri::command]
-pub async fn update_seller(state: State<'_, AppState>, seller: Seller) -> SResult<String> {
+pub async fn update_supplier(state: State<'_, AppState>, supplier: Supplier) -> SResult<String> {
     let _ = state.db_conn;
-    let res = MutationsService::update_seller(&state.db_conn, seller).await;
+    let res = MutationsService::update_supplier(&state.db_conn, supplier).await;
     match res {
         Ok(_) => Ok(Seccess::<String> {
             error: None,
-            message: Option::Some(String::from("update sellers success")),
+            message: Option::Some(String::from("update suppliers success")),
             data: None,
         }),
         Err(err) => {

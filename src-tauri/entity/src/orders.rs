@@ -7,7 +7,7 @@ use sea_orm::{entity::prelude::*, Set};
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: String,
-    pub seller_id: String,
+    pub supplier_id: String,
     pub status: String,
 }
 
@@ -16,13 +16,13 @@ pub enum Relation {
     #[sea_orm(has_many = "super::order_items::Entity")]
     OrderItems,
     #[sea_orm(
-        belongs_to = "super::sellers::Entity",
-        from = "Column::SellerId",
-        to = "super::sellers::Column::Id",
+        belongs_to = "super::suppliers::Entity",
+        from = "Column::SupplierId",
+        to = "super::suppliers::Column::Id",
         on_update = "NoAction",
         on_delete = "Cascade"
     )]
-    Sellers,
+    Suppliers,
 }
 
 impl Related<super::order_items::Entity> for Entity {
@@ -31,9 +31,9 @@ impl Related<super::order_items::Entity> for Entity {
     }
 }
 
-impl Related<super::sellers::Entity> for Entity {
+impl Related<super::suppliers::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Sellers.def()
+        Relation::Suppliers.def()
     }
 }
 

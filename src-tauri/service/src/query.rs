@@ -10,7 +10,7 @@ use sea_orm::{
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-use crate::{SelectClients, SelectProducts, SelectSellers};
+use crate::{SelectClients, SelectProducts, SelectSuppliers};
 
 #[derive(Deserialize, Serialize)]
 pub struct ListArgs {
@@ -157,6 +157,7 @@ impl QueriesService {
 
         Ok(products)
     }
+    //
     pub async fn list_clients(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Clients::find()
             .filter(clients::Column::FullName.like(format!("{}%", args.search)))
@@ -266,21 +267,21 @@ impl QueriesService {
         Ok(clients)
     }
     //
-    pub async fn list_sellers(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
-        let count = Sellers::find()
-            .filter(sellers::Column::FullName.like(format!("{}%", args.search)))
+    pub async fn list_suppliers(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
+        let count = Suppliers::find()
+            .filter(suppliers::Column::FullName.like(format!("{}%", args.search)))
             .count(db)
             .await?;
 
         let (sql, values) = Query::select()
-            .from(Sellers)
+            .from(Suppliers)
             .exprs([
-                Expr::col((Sellers, sellers::Column::Id)),
-                Expr::col((Sellers, sellers::Column::FullName)),
-                Expr::col((Sellers, sellers::Column::Address)),
-                Expr::col((Sellers, sellers::Column::PhoneNumber)),
-                Expr::col((Sellers, sellers::Column::Image)),
-                Expr::col((Sellers, sellers::Column::Email)),
+                Expr::col((Suppliers, suppliers::Column::Id)),
+                Expr::col((Suppliers, suppliers::Column::FullName)),
+                Expr::col((Suppliers, suppliers::Column::Address)),
+                Expr::col((Suppliers, suppliers::Column::PhoneNumber)),
+                Expr::col((Suppliers, suppliers::Column::Image)),
+                Expr::col((Suppliers, suppliers::Column::Email)),
             ])
             .expr_as(
                 SimpleExpr::SubQuery(
@@ -315,8 +316,8 @@ impl QueriesService {
                                         .eq("PAID")
                                         .into_condition()
                                         .add(
-                                            Expr::col((Orders, orders::Column::SellerId))
-                                                .equals((Sellers, sellers::Column::Id))
+                                            Expr::col((Orders, orders::Column::SupplierId))
+                                                .equals((Suppliers, suppliers::Column::Id))
                                                 .into_condition(),
                                         ),
                                 ),
@@ -327,17 +328,17 @@ impl QueriesService {
                 Alias::new("credi"),
             )
             .cond_where(
-                Expr::col((Sellers, sellers::Column::FullName))
+                Expr::col((Suppliers, suppliers::Column::FullName))
                     .like(format!("{}%", args.search))
                     .into_condition(),
             )
             .limit(args.limit)
             .offset((args.page - 1) * args.limit)
-            .order_by(sellers::Column::CreatedAt, Order::Desc)
+            .order_by(suppliers::Column::CreatedAt, Order::Desc)
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        let res = SelectSellers::find_by_statement(Statement::from_sql_and_values(
+        let res = SelectSuppliers::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
             sql,
             values,
@@ -360,19 +361,19 @@ impl QueriesService {
 
         Ok(json!({
             "count": count,
-            "sellers": result
+            "suppliers": result
         }))
     }
-    //
-    pub async fn search_sellers(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
-        let sellers = Sellers::find()
-            .select_column(sellers::Column::FullName)
-            .select_column(sellers::Column::Id)
-            .filter(sellers::Column::FullName.like(format!("{}%", search)))
+    pub async fn search_suppliers(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
+        let suppliers = Suppliers::find()
+            .select_column(suppliers::Column::FullName)
+            .select_column(suppliers::Column::Id)
+            .filter(suppliers::Column::FullName.like(format!("{}%", search)))
             .into_json()
             .all(db)
             .await?;
 
-        Ok(sellers)
+        Ok(suppliers)
     }
+    //
 }
