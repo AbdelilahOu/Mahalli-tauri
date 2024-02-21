@@ -1,8 +1,7 @@
 use ::entity::prelude::*;
 use sea_orm::*;
 
-use crate::{Client, NewClient, NewInventory, NewProduct, Product};
-
+use crate::models::*;
 pub struct MutationsService;
 
 impl MutationsService {
@@ -81,7 +80,44 @@ impl MutationsService {
             None => Ok(0),
         }
     }
-
+    //
+    pub async fn create_seller(db: &DbConn, seller: NewSeller) -> Result<String, DbErr> {
+        let seller = SellerActiveModel {
+            full_name: ActiveValue::Set(seller.full_name),
+            email: ActiveValue::Set(seller.email),
+            phone_number: ActiveValue::Set(seller.phone_number),
+            address: ActiveValue::Set(seller.address),
+            image: ActiveValue::Set(seller.image),
+            ..Default::default()
+        };
+        match seller.insert(db).await {
+            Ok(p) => Ok(p.id),
+            Err(err) => Err(err),
+        }
+    }
+    pub async fn update_seller(db: &DbConn, seller: Seller) -> Result<(), DbErr> {
+        let seller_model = Sellers::find_by_id(seller.id).one(db).await?;
+        let mut seller_active: SellerActiveModel = seller_model.unwrap().into();
+        seller_active.full_name = ActiveValue::Set(seller.full_name);
+        seller_active.email = ActiveValue::Set(seller.email);
+        seller_active.phone_number = ActiveValue::Set(seller.phone_number);
+        seller_active.address = ActiveValue::Set(seller.address);
+        seller_active.image = ActiveValue::Set(seller.image);
+        match seller_active.save(db).await {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err),
+        }
+    }
+    pub async fn delete_seller(db: &DbConn, id: String) -> Result<u64, DbErr> {
+        let seller_model = Sellers::find_by_id(id).one(db).await?;
+        match seller_model {
+            Some(seller_model) => {
+                let seller = seller_model.delete(db).await?;
+                Ok(seller.rows_affected)
+            }
+            None => Ok(0),
+        }
+    }
     //
     pub async fn create_inv_mvm(db: &DbConn, mvm: NewInventory) -> Result<String, DbErr> {
         let in_mvm = InventoryMouvementActiveModel {

@@ -4,14 +4,14 @@ import { useI18n } from "vue-i18n";
 import { computed, onBeforeUnmount } from "vue";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
-import type { sellerT } from "@/types";
 import { Button } from "./ui/button";
 import { store } from "@/store";
+import type { SellerT } from "@/schemas/seller.schema";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
 
-const seller = computed(() => store.getters.getSelectedRow<sellerT>());
+const seller = computed(() => store.getters.getSelectedRow<SellerT>());
 
 const deleteTheSeller = async () => {
   let id = seller.value?.id;
@@ -41,7 +41,7 @@ onBeforeUnmount(() => {
 
 <template>
   <UiModalCard>
-    <template #title> {{ t("s.d.title") }} {{ seller.name }} ? </template>
+    <template #title> {{ t("s.d.title") }} {{ seller.fullname }} ? </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
         <Button class="col-span-2" @click="deleteTheSeller">

@@ -13,7 +13,6 @@ import { Input } from "./ui/input";
 import { useI18n } from "vue-i18n";
 import { store } from "@/store";
 import { ref } from "vue";
-import { z } from "zod";
 import { CreateClientSchema, type ClientT } from "@/schemas/client.schema";
 
 const { t } = useI18n();
@@ -31,23 +30,27 @@ const isLoading = ref<boolean>(false);
 
 const createNewClient = async (client: ClientT) => {
   isLoading.value = true;
-  if (client.fullname !== "") {
-    try {
-      let image: string = await saveFile(client.image as string, "Image");
-      await invoke("insert_client", { client: { ...client, image } });
-      // toggle refresh
-      updateQueryParams({
-        refresh: "refresh-create-" + Math.random() * 9999,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      isLoading.value = false;
-      hideModal();
-    }
-    return;
+  try {
+    let image: string = await saveFile(client.image as string, "Image");
+    await invoke("create_client", {
+      client: {
+        full_name: client.fullname,
+        email: client.email,
+        phone_number: client.phoneNumber,
+        address: client.address,
+        image,
+      },
+    });
+    // toggle refresh
+    updateQueryParams({
+      refresh: "refresh-create-" + Math.random() * 9999,
+    });
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isLoading.value = false;
+    hideModal();
   }
-  isLoading.value = false;
 };
 
 const hideModal = () => {
@@ -99,7 +102,7 @@ const setImage = (imagePath: string) => {
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="phone">
+        <FormField v-slot="{ componentField }" name="phoneNumber">
           <FormItem>
             <FormLabel>{{ t("c.p.c") }}</FormLabel>
             <FormControl>

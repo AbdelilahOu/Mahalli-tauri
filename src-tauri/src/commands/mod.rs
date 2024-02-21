@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 pub mod clients;
 pub mod inventory;
 pub mod products;
+pub mod sellers;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Seccess<T> {

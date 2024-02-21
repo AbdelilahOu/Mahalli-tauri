@@ -2,7 +2,6 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useI18n } from "vue-i18n";
-import type { sellerT, updateSellerT } from "@/types";
 import { ref, computed, onBeforeUnmount } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
@@ -12,33 +11,41 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
 import { z } from "zod";
+import type { SellerT } from "@/schemas/seller.schema";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
 
-const SellerRow = computed(() => store.getters.getSelectedRow<sellerT>());
+const SellerRow = computed(() => store.getters.getSelectedRow<SellerT>());
 
 const isLoading = ref<boolean>(false);
 
 const sellerSchema = toTypedSchema(
   z.object({
-    name: z.string().min(2).max(50).default(SellerRow.value.name),
+    fullname: z.string().min(2).max(50).default(SellerRow.value.fullname),
     email: z.string().default(SellerRow.value.email ?? ""),
-    phone: z.string().default(SellerRow.value.phone ?? ""),
+    phoneNumber: z.string().default(SellerRow.value.phoneNumber ?? ""),
     address: z.string().default(SellerRow.value.address ?? ""),
-  })
+    image: z.string().default(SellerRow.value.image ?? ""),
+  }),
 );
 
 const form = useForm({
   validationSchema: sellerSchema,
 });
 
-const updateTheSeller = async (seller: updateSellerT) => {
+const updateTheSeller = async (seller: SellerT) => {
   if (SellerRow.value.id) {
     try {
       await invoke("update_seller", {
-        seller: { ...seller, image: SellerRow.value.image },
-        id: SellerRow.value.id,
+        seller: {
+          id: SellerRow.value.id,
+          full_name: seller.fullname,
+          email: seller.email,
+          phone_number: seller.phoneNumber,
+          address: seller.address,
+          image: seller.image,
+        },
       });
       // toggle refresh
       updateQueryParams({
@@ -94,7 +101,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="phone">
+        <FormField v-slot="{ componentField }" name="phoneNumber">
           <FormItem>
             <FormLabel>{{ t("c.p.c") }}</FormLabel>
             <FormControl>
@@ -120,7 +127,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("g.b.u", { name: SellerRow.name }) }}
+            {{ t("g.b.u", { name: SellerRow.fullname }) }}
           </Button>
           <Button
             @click="hideModal"
