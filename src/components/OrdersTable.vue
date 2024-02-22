@@ -3,12 +3,14 @@ import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
-import type { orderT } from "@/types";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import { ref } from "vue";
+import type { OrderT } from "@/schemas/order.schema";
+import { Badge } from "./ui/badge";
+import { cn } from "@/utils/shadcn";
 
-defineProps<{ orders: orderT[] }>();
+defineProps<{ orders: OrderT[] }>();
 
 const { t, d } = useI18n();
 const checkedOrders = ref<string[]>([]);
@@ -19,7 +21,7 @@ const checkThisOrders = (IsIncluded: boolean, id: string) => {
     : checkedOrders.value.splice(checkedOrders.value.indexOf(id), 1);
 };
 
-const toggleThisOrders = (Order: orderT, name: string) => {
+const toggleThisOrders = (Order: OrderT, name: string) => {
   store.setters.updateStore({ key: "row", value: Order });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
@@ -27,7 +29,7 @@ const toggleThisOrders = (Order: orderT, name: string) => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full h-full">
+  <div class="flex flex-col w-full h-full gap-10">
     <table class="table-auto w-full">
       <thead
         class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
@@ -56,18 +58,18 @@ const toggleThisOrders = (Order: orderT, name: string) => {
             <div class="text-left whitespace-nowrap overflow-ellipsis">
               <RouterLink
                 :to="{
-                  name: 'SellerDetails',
-                  params: { id: order.seller_id },
+                  name: 'SupplierDetails',
+                  params: { id: order.supplierId },
                 }"
               >
-                {{ order.seller.name }}
+                {{ order.fullname }}
               </RouterLink>
             </div>
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
               <span>
-                {{ t("g.plrz.p", { n: order.order_items?.length }) }}
+                {{ t("g.plrz.p", { n: order.products }) }}
               </span>
             </div>
           </td>
@@ -75,26 +77,29 @@ const toggleThisOrders = (Order: orderT, name: string) => {
             <div
               class="text-left font-medium uppercase whitespace-nowrap overflow-ellipsis"
             >
-              <span
-                v-if="order.status"
-                class="px-2 py-[1px] rounded-full"
-                :class="{
-                  'bg-yellow-300/60 text-yellow-800': order.status == 'pending',
-                  'bg-green-300/60 text-green-800': order.status == 'delivered',
-                  'bg-red-300/60 text-red-800':
-                    order.status != 'pending' && order.status != 'delivered',
-                }"
+              <Badge
+                variant="outline"
+                :class="
+                  cn(
+                    order?.status == 'CANCELED'
+                      ? 'bg-red-100 border-red-500 text-red-900'
+                      : order?.status == 'PENDING'
+                        ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
+                        : order?.status == 'DELIVERED'
+                          ? 'bg-green-100 border-green-500 text-green-900'
+                          : '',
+                  )
+                "
               >
                 {{ t(`o.s.${order.status.toLowerCase()}`) }}
-              </span>
-              <span v-else class="text-red-400">No status</span>
+              </Badge>
             </div>
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="!order.created_at" class="text-red-400">No date</span>
+              <span v-if="!order.createdAt" class="text-red-400">No date</span>
               <span v-else>
-                {{ d(new Date(order.created_at), "long") }}
+                {{ d(new Date(order.createdAt), "long") }}
               </span>
             </div>
           </td>

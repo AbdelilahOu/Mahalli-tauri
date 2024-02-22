@@ -5,12 +5,13 @@ use sea_orm::{
         SubQueryStatement,
     },
     ColumnTrait, Condition, DatabaseConnection as DbConn, DbBackend, DbErr, EntityTrait,
-    FromQueryResult, JsonValue, Order, PaginatorTrait, QueryFilter, SelectColumns, Statement,
+    FromQueryResult, JoinType, JsonValue, Order, PaginatorTrait, QueryFilter, SelectColumns,
+    Statement,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-use crate::{SelectClients, SelectProducts, SelectSuppliers};
+use crate::{SelectClients, SelectOrders, SelectProducts, SelectSuppliers};
 
 #[derive(Deserialize, Serialize)]
 pub struct ListArgs {
@@ -377,97 +378,80 @@ impl QueriesService {
     }
     //
     pub async fn list_orders(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
-        
         let (sql, values) = Query::select()
             .from(Orders)
             .exprs([
                 Expr::col((Orders, orders::Column::Id)),
                 Expr::col((Orders, orders::Column::Status)),
-                Expr::col((Orders, orders::Column::Status)),
+                Expr::col((Orders, orders::Column::CreatedAt)),
+                Expr::col((Orders, orders::Column::SupplierId)),
+                Expr::col((Suppliers, suppliers::Column::FullName)),
             ])
             .expr_as(
-                SimpleExpr::SubQuery(
-                    None,
-                    Box::new(SubQueryStatement::SelectStatement(
-                        Query::select()
-                            .from(InventoryMouvements)
-                            .expr(Func::coalesce([
-                                Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
-                                Expr::val(0.0f64).into(),
-                            ]))
-                            .cond_where(
-                                Cond::all().add(
-                                    Expr::col((
-                                        InventoryMouvements,
-                                        inventory_mouvements::Column::ProductId,
-                                    ))
-                                    .equals((Products, products::Column::Id))
-                                    .into_condition()
-                                    .add(
-                                        inventory_mouvements::Column::MvmType
-                                            .eq("IN")
-                                            .into_condition(),
-                                    ),
-                                ),
-                            )
-                            .to_owned(),
-                    )),
-                )
-                .sub(SimpleExpr::SubQuery(
-                    None,
-                    Box::new(SubQueryStatement::SelectStatement(
-                        Query::select()
-                            .from(InventoryMouvements)
-                            .expr(Func::coalesce([
-                                Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
-                                Expr::val(0.0f64).into(),
-                            ]))
-                            .cond_where(
-                                Cond::all().add(
-                                    Expr::col((
-                                        InventoryMouvements,
-                                        inventory_mouvements::Column::ProductId,
-                                    ))
-                                    .equals((Products, products::Column::Id))
-                                    .into_condition()
-                                    .add(
-                                        inventory_mouvements::Column::MvmType
-                                            .eq("OUT")
-                                            .into_condition(),
-                                    ),
-                                ),
-                            )
-                            .to_owned(),
-                    )),
-                )),
-                Alias::new("stock"),
+                Func::coalesce([
+                    Func::count(Expr::col(inventory_mouvements::Column::Quantity)).into(),
+                    Expr::val(0i64).into(),
+                ]),
+                Alias::new("products"),
             )
-            .cond_where(
-                Cond::any()
-                    .add(
-                        Expr::col((Products, products::Column::Name))
-                            .like(format!("{}%", args.search))
-                            .into_condition(),
+            .expr_as(
+                Func::coalesce([
+                    Func::sum(
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity))
+                            .mul(Expr::col((OrderItems, order_items::Column::Price))),
                     )
-                    .add(
-                        Expr::col((Products, products::Column::Description))
-                            .like(format!("%{}%", args.search))
-                            .into_condition(),
-                    ),
+                    .into(),
+                    Expr::val(0.0f64).into(),
+                ]),
+                Alias::new("total"),
+            )
+            .left_join(
+                OrderItems,
+                Expr::col((OrderItems, order_items::Column::OrderId))
+                    .equals((Orders, orders::Column::Id)),
+            )
+            .left_join(
+                InventoryMouvements,
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                    .equals((OrderItems, order_items::Column::InventoryId)),
+            )
+            .join(
+                JoinType::Join,
+                Suppliers,
+                Expr::col((Suppliers, suppliers::Column::Id))
+                    .equals((Orders, orders::Column::SupplierId)),
             )
             .limit(args.limit)
             .offset((args.page - 1) * args.limit)
-            .order_by(products::Column::CreatedAt, Order::Desc)
+            .order_by((Orders, orders::Column::CreatedAt), Order::Desc)
+            .group_by_col((Orders, orders::Column::Id))
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        let res = SelectProducts::find_by_statement(Statement::from_sql_and_values(
+        let res = SelectOrders::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
             sql,
             values,
         ))
         .all(db)
         .await?;
-        todo!()
+
+        let mut result = Vec::<JsonValue>::new();
+        res.into_iter().for_each(|row| {
+            result.push(json!({
+                "id": row.id,
+                "supplierId": row.supplier_id,
+                "createdAt": row.created_at,
+                "fullname": row.full_name,
+                "status": row.status,
+                "products": row.products,
+                "total": row.total,
+            }));
+        });
+
+        Ok(json!({
+            "count": 0,
+            "orders": result
+        }))
     }
 }

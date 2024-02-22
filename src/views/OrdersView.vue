@@ -12,20 +12,21 @@ import {
 } from "vue";
 import { invoke } from "@tauri-apps/api";
 import { useI18n } from "vue-i18n";
-import type { orderT, withCount } from "@/types";
 import { store } from "@/store";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import OrdersTable from "@/components/OrdersTable.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
+import type { Res } from "@/types";
+import type { OrderT } from "@/schemas/order.schema";
 
 const { t } = useI18n();
 const router = useRouter();
 const searchQuery = ref<string>("");
 const page = computed(() => Number(router.currentRoute.value.query.page));
 const refresh = computed(() => router.currentRoute.value.query.refresh);
-const orders = ref<orderT[]>([]);
+const orders = ref<OrderT[]>([]);
 const totalRows = ref<number>(0);
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -48,11 +49,16 @@ onMounted(() => {
 
 const getOrders = async (page = 1) => {
   try {
-    const res = await invoke<withCount<orderT[]>>("get_orders", {
-      page,
+    const res = await invoke<Res<any>>("list_orders", {
+      args: {
+        page,
+        search: "",
+        limit: 19,
+      },
     });
-    if (res?.data) {
-      orders.value = res.data;
+    console.log(res);
+    if (!res?.error) {
+      orders.value = res.data.orders;
       totalRows.value = res.count;
     }
   } catch (error) {
