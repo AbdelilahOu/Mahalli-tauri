@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CHART_OPTIONS, CHART_WO_TICKS } from "@/constants/defaultValues";
 import { groupBy, keys, mapValues, values } from "@/utils/lightLodash";
-import { defineComponent, onBeforeMount, reactive, ref } from "vue";
+import { onBeforeMount, reactive, ref } from "vue";
 import ChartHolder from "@/components/ChartHolder.vue";
 import { generateColor } from "@/utils/generateColor";
 import ChartLine from "@/components/ChartLine.vue";
@@ -9,14 +9,14 @@ import ChartBar from "@/components/ChartBar.vue";
 import UiCard from "@/components/ui/UiCard.vue";
 import { getWeekDay } from "@/utils/formatDate";
 import { invoke } from "@tauri-apps/api";
-import type { sellerT } from "@/types";
 import { useRoute } from "vue-router";
 import { store } from "@/store";
 import { useI18n } from "vue-i18n";
+import type { SupplierT } from "@/schemas/supplier.schema";
 
 const { t, d } = useI18n();
 const id = useRoute().params.id;
-const seller = ref<sellerT | null>(null);
+const seller = ref<SupplierT | null>(null);
 
 const ProductsStats = reactive({
   products: [] as { [key: string]: any; data: number[] }[],
@@ -116,7 +116,7 @@ onBeforeMount(async () => {
     };
   });
 });
-const toggleThisSeller = (seller: sellerT | null, name: string) => {
+const toggleThisSupplier = (seller: SupplierT | null, name: string) => {
   store.setters.updateStore({ key: "show", value: true });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "row", value: seller });
@@ -124,7 +124,7 @@ const toggleThisSeller = (seller: sellerT | null, name: string) => {
 
 onBeforeMount(async () => {
   try {
-    const res = await invoke<sellerT>("get_seller", { id });
+    const res = await invoke<SupplierT>("get_seller", { id });
     if (res.id) {
       seller.value = res;
     }
@@ -144,7 +144,7 @@ onBeforeMount(async () => {
       >
         <UiCard
           title="seller information"
-          @updateItem="() => toggleThisSeller(seller, 'SellerUpdate')"
+          @updateItem="() => toggleThisSupplier(seller, 'SupplierUpdate')"
           :item="seller!"
         />
         <div class="w-full flex items-end xl:items-start h-full">
