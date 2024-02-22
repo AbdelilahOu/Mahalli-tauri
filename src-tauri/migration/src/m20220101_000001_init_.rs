@@ -141,6 +141,12 @@ impl MigrationTrait for Migration {
                             .to(Supplier::Table, Supplier::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
+                    .col(
+                        ColumnDef::new(Order::CreatedAt)
+                            .date_time()
+                            .not_null()
+                            .default(Expr::current_timestamp()),
+                    )
                     .col(ColumnDef::new(Order::Status).string().not_null())
                     .to_owned(),
             )
@@ -209,6 +215,12 @@ impl MigrationTrait for Migration {
                             .on_delete(ForeignKeyAction::Cascade),
                     )
                     .col(ColumnDef::new(Invoice::Status).string().not_null())
+                    .col(
+                        ColumnDef::new(Invoice::CreatedAt)
+                            .date_time()
+                            .not_null()
+                            .default(Expr::current_timestamp()),
+                    )
                     .to_owned(),
             )
             .await?;
@@ -263,6 +275,12 @@ impl MigrationTrait for Migration {
                             .from(Quote::Table, Quote::ClientId)
                             .to(Client::Table, Client::Id)
                             .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .col(
+                        ColumnDef::new(Quote::CreatedAt)
+                            .date_time()
+                            .not_null()
+                            .default(Expr::current_timestamp()),
                     )
                     .to_owned(),
             )
@@ -396,6 +414,8 @@ pub enum Order {
     // status: delivered, cancel, ongoing
     #[sea_orm(iden = "status")]
     Status,
+    #[sea_orm(iden = "created_at")]
+    CreatedAt,
 }
 
 #[derive(DeriveIden)]
@@ -423,6 +443,8 @@ pub enum Invoice {
     Status,
     #[sea_orm(iden = "paid_amount")]
     PaidAmount,
+    #[sea_orm(iden = "created_at")]
+    CreatedAt,
 }
 
 #[derive(DeriveIden)]
@@ -445,6 +467,8 @@ pub enum Quote {
     Id,
     #[sea_orm(iden = "client_id")]
     ClientId,
+    #[sea_orm(iden = "created_at")]
+    CreatedAt,
 }
 
 #[derive(DeriveIden)]
