@@ -377,6 +377,97 @@ impl QueriesService {
     }
     //
     pub async fn list_orders(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
+        
+        let (sql, values) = Query::select()
+            .from(Orders)
+            .exprs([
+                Expr::col((Orders, orders::Column::Id)),
+                Expr::col((Orders, orders::Column::Status)),
+                Expr::col((Orders, orders::Column::Status)),
+            ])
+            .expr_as(
+                SimpleExpr::SubQuery(
+                    None,
+                    Box::new(SubQueryStatement::SelectStatement(
+                        Query::select()
+                            .from(InventoryMouvements)
+                            .expr(Func::coalesce([
+                                Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
+                                Expr::val(0.0f64).into(),
+                            ]))
+                            .cond_where(
+                                Cond::all().add(
+                                    Expr::col((
+                                        InventoryMouvements,
+                                        inventory_mouvements::Column::ProductId,
+                                    ))
+                                    .equals((Products, products::Column::Id))
+                                    .into_condition()
+                                    .add(
+                                        inventory_mouvements::Column::MvmType
+                                            .eq("IN")
+                                            .into_condition(),
+                                    ),
+                                ),
+                            )
+                            .to_owned(),
+                    )),
+                )
+                .sub(SimpleExpr::SubQuery(
+                    None,
+                    Box::new(SubQueryStatement::SelectStatement(
+                        Query::select()
+                            .from(InventoryMouvements)
+                            .expr(Func::coalesce([
+                                Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
+                                Expr::val(0.0f64).into(),
+                            ]))
+                            .cond_where(
+                                Cond::all().add(
+                                    Expr::col((
+                                        InventoryMouvements,
+                                        inventory_mouvements::Column::ProductId,
+                                    ))
+                                    .equals((Products, products::Column::Id))
+                                    .into_condition()
+                                    .add(
+                                        inventory_mouvements::Column::MvmType
+                                            .eq("OUT")
+                                            .into_condition(),
+                                    ),
+                                ),
+                            )
+                            .to_owned(),
+                    )),
+                )),
+                Alias::new("stock"),
+            )
+            .cond_where(
+                Cond::any()
+                    .add(
+                        Expr::col((Products, products::Column::Name))
+                            .like(format!("{}%", args.search))
+                            .into_condition(),
+                    )
+                    .add(
+                        Expr::col((Products, products::Column::Description))
+                            .like(format!("%{}%", args.search))
+                            .into_condition(),
+                    ),
+            )
+            .limit(args.limit)
+            .offset((args.page - 1) * args.limit)
+            .order_by(products::Column::CreatedAt, Order::Desc)
+            .to_owned()
+            .build(SqliteQueryBuilder);
+
+        let res = SelectProducts::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .all(db)
+        .await?;
         todo!()
     }
 }
