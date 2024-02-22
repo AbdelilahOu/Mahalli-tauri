@@ -36,7 +36,7 @@ onBeforeMount(async () => {
 });
 
 const updateInvoice = reactive<updateInvoiceT>(
-  invoiceRow.value ? invoiceRow.value : INVOICE_UPDATE
+  invoiceRow.value ? invoiceRow.value : INVOICE_UPDATE,
 );
 
 async function deleteOneinvoiceItem(id: string) {

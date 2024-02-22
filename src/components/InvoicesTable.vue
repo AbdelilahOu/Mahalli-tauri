@@ -94,8 +94,8 @@ const toggleThisInvoice = (Invoice: invoiceT, name: string) => {
                   Invoice.status === 'pending'
                     ? 'bg-yellow-300/60 text-yellow-800'
                     : Invoice.status === 'delivered'
-                    ? 'bg-green-300/60 text-green-800'
-                    : 'bg-red-300/60 text-red-800',
+                      ? 'bg-green-300/60 text-green-800'
+                      : 'bg-red-300/60 text-red-800',
                 ]"
                 >{{ t(`o.s.${Invoice.status.toLowerCase()}`) }}</span
               >

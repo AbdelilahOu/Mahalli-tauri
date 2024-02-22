@@ -213,7 +213,7 @@ const print = () => window.print();
                             curr.price === 0
                               ? curr.quantity * curr.price
                               : curr.quantity * curr.product.price),
-                        0
+                        0,
                       )
                       .toFixed(2)
                   }}

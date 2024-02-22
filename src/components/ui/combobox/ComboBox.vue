@@ -60,7 +60,7 @@ const open = ref(false);
               :class="
                 cn(
                   'mr-2 h-4 w-4',
-                  modelValue === item.value ? 'opacity-100' : 'opacity-0'
+                  modelValue === item.value ? 'opacity-100' : 'opacity-0',
                 )
               "
             />

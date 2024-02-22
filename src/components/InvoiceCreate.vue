@@ -23,7 +23,7 @@ const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
 const newInvoice = reactive<newInvoiceT>(Object.assign({}, INVOICE_CREATE));
 const invoice_items = ref<newInvoiceItemT[]>(
-  INVOICE_ITEM_CREATE.map((a) => Object.assign({}, a))
+  INVOICE_ITEM_CREATE.map((a) => Object.assign({}, a)),
 );
 const isLoading = ref<boolean>(false);
 
@@ -34,7 +34,7 @@ const invoiceSchema = z.object({
     z.object({
       product_id: z.string().uuid(),
       price: z.number().min(0),
-    })
+    }),
   ),
 });
 
@@ -62,7 +62,7 @@ const removeInvoiceItem = (index: number) => {
 const createNewInvoice = async () => {
   isLoading.value = true;
   newInvoice.invoice_items = invoice_items.value.filter(
-    (item) => item.product_id && item.quantity
+    (item) => item.product_id && item.quantity,
   );
   if (newInvoice.client_id && newInvoice.invoice_items.length !== 0) {
     try {

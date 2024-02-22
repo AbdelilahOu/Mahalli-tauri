@@ -28,7 +28,7 @@ const inventoryMvmSchema = toTypedSchema(
   z.object({
     product_id: z.string().uuid(),
     quantity: z.number().min(1),
-  })
+  }),
 );
 
 const { handleSubmit, setValues, values } = useForm({
@@ -90,14 +90,14 @@ const hideModal = () => {
                     :class="
                       cn(
                         'w-full justify-between',
-                        !values.product_id && 'text-muted-foreground'
+                        !values.product_id && 'text-muted-foreground',
                       )
                     "
                   >
                     {{
                       values.product_id
                         ? products.find(
-                            (product) => product.value === values.product_id
+                            (product) => product.value === values.product_id,
                           )?.label
                         : t("im.c.p.a")
                     }}
@@ -126,7 +126,7 @@ const hideModal = () => {
                             'mr-2 h-4 w-4',
                             product.value === values.product_id
                               ? 'opacity-100'
-                              : 'opacity-0'
+                              : 'opacity-0',
                           )
                         "
                       />

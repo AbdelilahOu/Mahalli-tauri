@@ -15,7 +15,7 @@ const props = defineProps<RadioGroupItemProps & { class?: string }>();
     :class="
       cn(
         'aspect-square h-4 w-4 rounded-full cursor-pointer flex justify-center items-center border border-primary disabled:cursor-not-allowed disabled:opacity-50',
-        props.class
+        props.class,
       )
     "
   >

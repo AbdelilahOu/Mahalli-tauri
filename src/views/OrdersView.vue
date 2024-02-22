@@ -59,7 +59,7 @@ const getOrders = async (page = 1) => {
     console.log(res);
     if (!res?.error) {
       orders.value = res.data.orders;
-      totalRows.value = res.count;
+      totalRows.value = res.data.count;
     }
   } catch (error) {
     console.log(error);

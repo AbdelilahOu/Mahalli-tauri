@@ -48,7 +48,7 @@ const getProductPerMonth = async (id: string) => {
       if (!pr) pr = [];
       pr.push(cr.quantity);
       return pr;
-    }, [] as number[])
+    }, [] as number[]),
   );
 
   return {
@@ -61,7 +61,7 @@ const getProductPerMonth = async (id: string) => {
 const getDailyExpenses = async (id: string) => {
   const result: { day: string; expense: number }[] = await invoke(
     "get_c_week_expenses",
-    { id }
+    { id },
   );
   const nextDay = new Date().getDay() === 6 ? 0 : new Date().getDay() + 1;
   const resultMap = new Map<string, number>();
@@ -77,7 +77,7 @@ const getDailyExpenses = async (id: string) => {
       new Date(day).toLocaleDateString("en-us", {
         weekday: "short",
       }),
-      expense
+      expense,
     );
   }
 
@@ -109,7 +109,7 @@ onBeforeMount(async () => {
 
   ProductsStats.data = productStats.data;
   ProductsStats.dates = productStats.dates.map((pDate) =>
-    d(new Date(pDate), "monthOnly")
+    d(new Date(pDate), "monthOnly"),
   );
   ProductsStats.products = productStats.products.map((product) => {
     const color = generateColor();

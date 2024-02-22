@@ -18,7 +18,7 @@ import { Separator } from "./ui/separator";
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const order_items = ref<newOrdersItemT[]>(
-  ORDER_ITEM_CREATE.map((a) => Object.assign({}, a))
+  ORDER_ITEM_CREATE.map((a) => Object.assign({}, a)),
 );
 const newOrder = reactive<newOrdersT>(Object.assign({}, ORDER_CREATE));
 const sellers = ref<{ label: string; value: string }[]>([]);
@@ -51,7 +51,7 @@ const removeOrderItem = (index: number) => {
 const createNewOrders = async () => {
   isLoading.value = true;
   newOrder.order_items = order_items.value.filter(
-    (item) => item.product_id && item.quantity
+    (item) => item.product_id && item.quantity,
   );
 
   if (newOrder.seller_id && newOrder.order_items.length !== 0) {
