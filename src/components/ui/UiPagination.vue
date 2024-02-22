@@ -62,7 +62,7 @@ const goToLast = () => {
         :sibling-count="1"
         show-edges
         :default-page="defaultPage"
-        :items-per-page="17"
+        :items-per-page="19"
       >
         <PaginationList v-slot="{ items }" class="flex items-center gap-1">
           <PaginationFirst @click="goToFirst" />
