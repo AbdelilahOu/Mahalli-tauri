@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 pub mod clients;
 pub mod inventory;
+pub mod orders;
 pub mod products;
 pub mod suppliers;
 

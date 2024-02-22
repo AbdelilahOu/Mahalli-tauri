@@ -54,6 +54,10 @@ async fn main() {
             commands::suppliers::create_supplier,
             commands::suppliers::update_supplier,
             commands::suppliers::delete_supplier,
+            //
+            // orders
+            //
+            commands::orders::list_orders,
         ])
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())

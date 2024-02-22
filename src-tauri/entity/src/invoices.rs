@@ -11,6 +11,7 @@ pub struct Model {
     #[sea_orm(column_type = "Double")]
     pub paid_amount: f64,
     pub status: String,
+    pub created_at: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
