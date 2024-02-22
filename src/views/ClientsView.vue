@@ -38,7 +38,7 @@ let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
   unwatch = watch(
     [page, refresh, searchQuery],
-    ([p, _r, search], [_p, _, oldSearch]) => {
+    ([p, , search], [, , oldSearch]) => {
       clearTimeout(timer);
       timer = setTimeout(
         () => {

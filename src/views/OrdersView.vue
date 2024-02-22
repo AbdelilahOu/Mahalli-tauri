@@ -2,7 +2,6 @@
 import { useRouter } from "vue-router";
 import {
   ref,
-  onBeforeMount,
   onMounted,
   onUnmounted,
   watch,
@@ -20,6 +19,13 @@ import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import type { Res } from "@/types";
 import type { OrderT } from "@/schemas/order.schema";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -28,23 +34,35 @@ const page = computed(() => Number(router.currentRoute.value.query.page));
 const refresh = computed(() => router.currentRoute.value.query.refresh);
 const orders = ref<OrderT[]>([]);
 const totalRows = ref<number>(0);
+const status = ref<string | undefined>(undefined);
+const createdAt = ref<string | number | undefined>(undefined);
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-let unwatch: WatchStopHandle | null = null;
-
 provide("count", totalRows);
-
-onBeforeMount(() => getOrders(page.value));
 
 onUnmounted(() => {
   if (unwatch) unwatch();
 });
 
+let timer: number | undefined;
+let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
-  unwatch = watch([page, refresh], ([p]) => {
-    if (p && p > 0) getOrders(p);
-  });
+  unwatch = watch(
+    [page, refresh, searchQuery, createdAt, status],
+    ([p, , search, ,], [, , oldSearch]) => {
+      clearTimeout(timer);
+      timer = setTimeout(
+        () => {
+          if (p && p > 0) getOrders(p);
+        },
+        search != oldSearch && oldSearch ? 500 : 0,
+      );
+    },
+    {
+      immediate: true,
+    },
+  );
 });
 
 const getOrders = async (page = 1) => {
@@ -52,8 +70,12 @@ const getOrders = async (page = 1) => {
     const res = await invoke<Res<any>>("list_orders", {
       args: {
         page,
-        search: "",
+        search: searchQuery.value,
         limit: 19,
+        status: status.value,
+        created_at: createdAt.value
+          ? new Date(createdAt.value).toISOString().slice(0, 10)
+          : null,
       },
     });
     console.log(res);
@@ -83,13 +105,27 @@ const updateModal = (name: string) => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
-          <div class="w-1/3">
+          <div class="w-fit flex gap-1">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
                 name="search"
               />
             </Input>
+            <Input v-model="createdAt" type="date" :placeHolder="t('g.s')" />
+            <Select v-model="status">
+              <SelectTrigger>
+                <SelectValue placeholder="Select a status" />
+              </SelectTrigger>
+              <SelectContent>
+                <!-- <SelectGroup> -->
+                <!-- <SelectLabel>Fruits</SelectLabel> -->
+                <SelectItem value="DELIVERED"> Delivered </SelectItem>
+                <SelectItem value="CANCELED"> Cancelled </SelectItem>
+                <SelectItem value="PENDING"> Pending </SelectItem>
+                <!-- </SelectGroup> -->
+              </SelectContent>
+            </Select>
           </div>
           <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
             <Button variant="ghost" @click="uploadCSV">
