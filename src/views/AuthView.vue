@@ -9,7 +9,7 @@ import { login } from "@/utils/Oauth";
 const { t } = useI18n();
 
 const checkForAuth = ref(
-  useRouter().currentRoute.value.query.checkAuth === "true"
+  useRouter().currentRoute.value.query.checkAuth === "true",
 );
 const shouldLogIn = ref(false);
 const isflash = ref(false);

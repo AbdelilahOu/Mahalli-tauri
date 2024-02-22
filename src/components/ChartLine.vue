@@ -31,7 +31,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   Filler,
-  Title
+  Title,
 );
 </script>
 

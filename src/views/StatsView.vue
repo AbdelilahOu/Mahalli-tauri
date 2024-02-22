@@ -49,11 +49,11 @@ async function getInventoryMouvementStats() {
 
 async function getBestThree(isClients = true) {
   const data: { name: string; amount: number }[] = await invoke(
-    isClients ? "get_b3_clients" : "get_b3_sellers"
+    isClients ? "get_b3_clients" : "get_b3_sellers",
   );
   //
   const result = mapValues(groupBy(data, "name"), (value: any[]) =>
-    value.reduce((pr, cr) => (pr += cr.amount), 0)
+    value.reduce((pr, cr) => (pr += cr.amount), 0),
   );
   //
   return { names: keys(result), result: values(result) };
@@ -72,7 +72,7 @@ onBeforeMount(async () => {
       borderColor: color.replace("0.2", "0.5"),
       data: InsOuts.months.map(
         // @ts-ignore
-        (month) => InsOuts.data[month][model] ?? 0
+        (month) => InsOuts.data[month][model] ?? 0,
       ),
       borderWidth: 2,
     };
@@ -122,7 +122,7 @@ onBeforeMount(async () => {
                   datasets: [
                     {
                       backgroundColor: BestThree.client.keys.map(() =>
-                        generateColor().replace('0.2', '0.5')
+                        generateColor().replace('0.2', '0.5'),
                       ),
                       data: BestThree.client.data,
                     },
@@ -151,7 +151,7 @@ onBeforeMount(async () => {
                   datasets: [
                     {
                       backgroundColor: BestThree.seller.keys.map(() =>
-                        generateColor().replace('0.2', '0.5')
+                        generateColor().replace('0.2', '0.5'),
                       ),
                       data: BestThree.seller.data,
                     },

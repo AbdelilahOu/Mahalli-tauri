@@ -3,14 +3,14 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
 import { computed, onBeforeUnmount } from "vue";
 import { invoke } from "@tauri-apps/api";
-import type { orderT } from "@/types";
 import { Button } from "./ui/button";
 import { store } from "@/store";
 import UiModalCard from "./ui/UiModalCard.vue";
+import type { OrderT } from "@/schemas/order.schema";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const order = computed(() => store.getters.getSelectedRow<orderT>());
+const order = computed(() => store.getters.getSelectedRow<OrderT>());
 
 const deleteTheOrders = async () => {
   const id = order.value?.id;

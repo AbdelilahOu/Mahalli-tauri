@@ -25,7 +25,7 @@ ChartJS.register(
   Legend,
   BarElement,
   CategoryScale,
-  LinearScale
+  LinearScale,
 );
 </script>
 

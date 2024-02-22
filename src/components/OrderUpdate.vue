@@ -24,7 +24,7 @@ const sellers = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
 
 const updateOrder = reactive<updateOrdersT>(
-  OrdersRow.value ? OrdersRow.value : ORDER_UPDATE
+  OrdersRow.value ? OrdersRow.value : ORDER_UPDATE,
 );
 
 onBeforeMount(async () => {

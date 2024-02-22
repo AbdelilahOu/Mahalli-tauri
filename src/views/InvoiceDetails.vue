@@ -235,7 +235,7 @@ const print = () => window.print();
                       invoice?.invoice_items.reduce(
                         (acc, curr) =>
                           (acc += curr.quantity * curr.product.price),
-                        0
+                        0,
                       ) ?? 0
                     ).toFixed(2)
                   }}

@@ -131,12 +131,12 @@ const getBytesArray = (file: File) => {
   //
   return new Promise((resolve) => {
     //
-    let reader = new FileReader();
+    const reader = new FileReader();
     //
     reader.readAsArrayBuffer(fileData);
     //
     reader.onload = () => {
-      let arrayBuffer = new Uint8Array(reader.result as ArrayBuffer);
+      const arrayBuffer = new Uint8Array(reader.result as ArrayBuffer);
       resolve(arrayBuffer);
     };
   });

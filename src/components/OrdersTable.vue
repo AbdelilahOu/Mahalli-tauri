@@ -5,7 +5,7 @@ import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
-import { ref } from "vue";
+// import { ref } from "vue";
 import type { OrderT } from "@/schemas/order.schema";
 import { Badge } from "./ui/badge";
 import { cn } from "@/utils/shadcn";
@@ -13,13 +13,13 @@ import { cn } from "@/utils/shadcn";
 defineProps<{ orders: OrderT[] }>();
 
 const { t, d } = useI18n();
-const checkedOrders = ref<string[]>([]);
+// const checkedOrders = ref<string[]>([]);
 
-const checkThisOrders = (IsIncluded: boolean, id: string) => {
-  IsIncluded
-    ? checkedOrders.value.push(id)
-    : checkedOrders.value.splice(checkedOrders.value.indexOf(id), 1);
-};
+// const _ = (IsIncluded: boolean, id: string) => {
+//   IsIncluded
+//     ? checkedOrders.value.push(id)
+//     : checkedOrders.value.splice(checkedOrders.value.indexOf(id), 1);
+// };
 
 const toggleThisOrders = (Order: OrderT, name: string) => {
   store.setters.updateStore({ key: "row", value: Order });
@@ -38,6 +38,7 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
           <th class="rounded-l-[4px]"></th>
           <th
             v-for="index in [1, 2, 3, 4, 5]"
+            :key="index"
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">
