@@ -5,19 +5,21 @@ use sea_orm::{
         SubQueryStatement,
     },
     ColumnTrait, Condition, DatabaseConnection as DbConn, DbBackend, DbErr, EntityTrait,
-    FromQueryResult, JoinType, JsonValue, Order, PaginatorTrait, QueryFilter, SelectColumns,
-    Statement,
+    FromQueryResult, JoinType, JsonValue, Order, PaginatorTrait, QueryFilter, QuerySelect,
+    QueryTrait, RelationTrait, SelectColumns, Statement,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 use crate::{SelectClients, SelectOrders, SelectProducts, SelectSuppliers};
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct ListArgs {
     pub page: u64,
     pub limit: u64,
     pub search: String,
+    pub status: Option<String>,
+    pub created_at: Option<String>,
 }
 
 pub struct QueriesService;
@@ -378,6 +380,25 @@ impl QueriesService {
     }
     //
     pub async fn list_orders(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
+        let count = Orders::find()
+            .apply_if(Some(args.search.clone()), |query, v| {
+                query.filter(
+                    Expr::col((Suppliers, suppliers::Column::FullName)).like(format!("{}%", v)),
+                )
+            })
+            .apply_if(args.status.clone(), |query, v| {
+                query.filter(Expr::col((Orders, orders::Column::Status)).eq(v))
+            })
+            .apply_if(args.created_at.clone(), |query, v| {
+                query.filter(Expr::cust_with_values(
+                    "strftime('%Y-%m-%d', orders.created_at) = ?",
+                    [v],
+                ))
+            })
+            .join(JoinType::Join, orders::Relation::Suppliers.def())
+            .count(db)
+            .await?;
+
         let (sql, values) = Query::select()
             .from(Orders)
             .exprs([
@@ -421,12 +442,35 @@ impl QueriesService {
                 Expr::col((Suppliers, suppliers::Column::Id))
                     .equals((Orders, orders::Column::SupplierId)),
             )
+            .cond_where(
+                Expr::col((Suppliers, suppliers::Column::FullName))
+                    .like(format!("{}%", args.search)),
+            )
+            .conditions(
+                args.status.clone().is_some(),
+                |x| {
+                    x.and_where(Expr::col((Orders, orders::Column::Status)).eq(args.status));
+                },
+                |_| {},
+            )
+            .conditions(
+                args.created_at.clone().is_some(),
+                |x| {
+                    x.and_where(Expr::cust_with_values(
+                        "strftime('%Y-%m-%d', orders.created_at) = ?",
+                        args.created_at,
+                    ));
+                },
+                |_| {},
+            )
             .limit(args.limit)
             .offset((args.page - 1) * args.limit)
             .order_by((Orders, orders::Column::CreatedAt), Order::Desc)
             .group_by_col((Orders, orders::Column::Id))
             .to_owned()
             .build(SqliteQueryBuilder);
+
+        println!("{:?},{}", sql.clone(), count.clone());
 
         let res = SelectOrders::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
@@ -450,7 +494,7 @@ impl QueriesService {
         });
 
         Ok(json!({
-            "count": 0,
+            "count": count,
             "orders": result
         }))
     }
