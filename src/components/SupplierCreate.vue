@@ -2,7 +2,6 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useI18n } from "vue-i18n";
-import { ImagesFiles } from "@/constants/FileTypes";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
 import UiUploader from "./ui/UiUploader.vue";
@@ -77,7 +76,7 @@ const saveImage = (image: string) => {
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
         <UiUploader
           name="Image"
-          :extensions="ImagesFiles"
+          :extensions="['png', 'jpeg', 'webp']"
           @on:save="saveImage"
         />
         <FormField v-slot="{ componentField }" name="fullname">

@@ -6,12 +6,14 @@ use sea_orm::{
     },
     ColumnTrait, Condition, DatabaseConnection as DbConn, DbBackend, DbErr, EntityTrait,
     FromQueryResult, JoinType, JsonValue, Order, PaginatorTrait, QueryFilter, QuerySelect,
-    QueryTrait, RelationTrait, SelectColumns, Statement,
+    QueryTrait, RelationTrait, Statement,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-use crate::{SelectClients, SelectOrders, SelectProducts, SelectSuppliers};
+use crate::{
+    SelectClients, SelectOrders, SelectOrdersItemsForUpdate, SelectProducts, SelectSuppliers,
+};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct ListArgs {
@@ -151,8 +153,9 @@ impl QueriesService {
     }
     pub async fn search_products(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
         let products = Products::find()
-            .select_column(products::Column::Name)
-            .select_column(products::Column::Id)
+            .select_only()
+            .expr_as_(Expr::col(products::Column::Name), "label")
+            .expr_as_(Expr::col(products::Column::Id), "value")
             .filter(products::Column::Name.like(format!("{}%", search)))
             .into_json()
             .all(db)
@@ -260,8 +263,9 @@ impl QueriesService {
     }
     pub async fn search_clients(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
         let clients = Clients::find()
-            .select_column(clients::Column::FullName)
-            .select_column(clients::Column::Id)
+            .select_only()
+            .expr_as_(Expr::col(clients::Column::FullName), "label")
+            .expr_as_(Expr::col(clients::Column::Id), "value")
             .filter(clients::Column::FullName.like(format!("{}%", search)))
             .into_json()
             .all(db)
@@ -369,8 +373,9 @@ impl QueriesService {
     }
     pub async fn search_suppliers(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
         let suppliers = Suppliers::find()
-            .select_column(suppliers::Column::FullName)
-            .select_column(suppliers::Column::Id)
+            .select_only()
+            .expr_as_(Expr::col(suppliers::Column::FullName), "label")
+            .expr_as_(Expr::col(suppliers::Column::Id), "value")
             .filter(suppliers::Column::FullName.like(format!("{}%", search)))
             .into_json()
             .all(db)
@@ -498,4 +503,65 @@ impl QueriesService {
             "orders": result
         }))
     }
+    pub async fn get_order(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
+        let order = Orders::find_by_id(id.clone()).one(db).await?;
+        match order {
+            Some(order) => {
+                let (sql, values) = Query::select()
+                    .exprs([
+                        Expr::col((OrderItems, order_items::Column::Id)),
+                        Expr::col((OrderItems, order_items::Column::InventoryId)),
+                        Expr::col((OrderItems, order_items::Column::Price)),
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
+                    ])
+                    .expr_as(
+                        Expr::col((Products, products::Column::Id)),
+                        Alias::new("product_id"),
+                    )
+                    .from(OrderItems)
+                    .join(
+                        JoinType::Join,
+                        InventoryMouvements,
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                            .equals((OrderItems, order_items::Column::InventoryId)),
+                    )
+                    .join(
+                        JoinType::Join,
+                        Products,
+                        Expr::col((Products, products::Column::Id))
+                            .equals((InventoryMouvements, inventory_mouvements::Column::ProductId)),
+                    )
+                    .cond_where(Expr::col((OrderItems, order_items::Column::OrderId)).eq(id))
+                    .to_owned()
+                    .build(SqliteQueryBuilder);
+
+                let items = SelectOrdersItemsForUpdate::find_by_statement(
+                    Statement::from_sql_and_values(DbBackend::Sqlite, sql, values),
+                )
+                .all(db)
+                .await?;
+
+                let mut result = Vec::<JsonValue>::new();
+                items.into_iter().for_each(|item| {
+                    result.push(json!({
+                        "id": item.id,
+                        "inventory_id": item.inventory_id,
+                        "product_id": item.product_id,
+                        "price": item.price,
+                        "quantity": item.quantity,
+                    }));
+                });
+
+                Ok(json!({
+                    "id": order.id,
+                    "supplierId": order.supplier_id,
+                    "createdAt": order.created_at,
+                    "status": order.status,
+                    "items": result,
+                }))
+            }
+            None => Err(DbErr::RecordNotFound(String::from("no order"))),
+        }
+    }
+    //
 }

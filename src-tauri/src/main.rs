@@ -58,6 +58,7 @@ async fn main() {
             // orders
             //
             commands::orders::list_orders,
+            commands::orders::get_order,
         ])
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())
