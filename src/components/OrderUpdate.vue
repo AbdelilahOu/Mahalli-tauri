@@ -3,7 +3,6 @@ import { ref, computed, reactive, onBeforeMount, onBeforeUnmount } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
 import { ORDER_UPDATE } from "@/constants/defaultValues";
-import type { orderT, updateOrdersT } from "@/types";
 import ComboBox from "./ui/combobox/ComboBox.vue";
 import { Checkbox } from "./ui/checkbox";
 import { invoke } from "@tauri-apps/api";
@@ -14,18 +13,17 @@ import { store } from "@/store";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
+import type { OrderT } from "@/schemas/order.schema";
+import { useRoute } from "vue-router";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
-
-const OrdersRow = computed(() => store.getters.getSelectedRow<orderT>());
+const route = useRoute();
 
 const sellers = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
 
-const updateOrder = reactive<updateOrdersT>(
-  OrdersRow.value ? OrdersRow.value : ORDER_UPDATE,
-);
+const updateOrder = reactive<any>({});
 
 onBeforeMount(async () => {
   // @ts-ignore
@@ -47,21 +45,19 @@ const addOrderItem = () => {
 };
 
 const updateTheOrders = async () => {
-  if (updateOrder.id) {
-    try {
-      await invoke("update_order", {
-        order: updateOrder,
-        id: updateOrder.id,
-      });
-      // toggle refresh
-      updateQueryParams({
-        refresh: "refresh-update-" + Math.random() * 9999,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      hideModal();
-    }
+  try {
+    await invoke("update_order", {
+      order: updateOrder,
+      id: route.query.id,
+    });
+    // toggle refresh
+    updateQueryParams({
+      refresh: "refresh-update-" + Math.random() * 9999,
+    });
+  } catch (error) {
+    console.log(error);
+  } finally {
+    hideModal();
   }
 };
 

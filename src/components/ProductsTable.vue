@@ -9,15 +9,23 @@ import type { ProductT } from "@/schemas/products.schema";
 import { Badge } from "./ui/badge";
 import { cn } from "@/utils/shadcn";
 import { ref } from "vue";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 
 defineProps<{ products: ProductT[] }>();
 
 const { t } = useI18n();
+const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const checkedProducts = ref<string[]>([]);
 
 const toggleThisProduct = (product: ProductT, name: string) => {
-  store.setters.updateStore({ key: "row", value: product });
+  updateQueryParams({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    description: product.description,
+    minQuantity: product.minQuantity,
+  });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
 };
