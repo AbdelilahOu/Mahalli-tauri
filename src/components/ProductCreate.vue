@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
-import { ImagesFiles } from "@/constants/FileTypes";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
 import UiUploader from "./ui/UiUploader.vue";
 import { invoke } from "@tauri-apps/api";
 import { Textarea } from "./ui/textarea";
 import { useForm } from "vee-validate";
-import { saveFile } from "@/utils/fs";
+// import { saveFile } from "@/utils/fs";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useI18n } from "vue-i18n";
@@ -85,7 +84,7 @@ const setImage = (path: string) => {
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
         <UiUploader
           name="Image"
-          :extensions="ImagesFiles"
+          :extensions="['png', 'jpeg', 'webp']"
           @on:save="setImage"
         />
         <FormField v-slot="{ componentField }" name="name">

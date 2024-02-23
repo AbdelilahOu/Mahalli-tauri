@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, reactive, onBeforeMount, onBeforeUnmount } from "vue";
+import { ref, reactive, onBeforeMount, onBeforeUnmount } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
-import { ORDER_UPDATE } from "@/constants/defaultValues";
 import ComboBox from "./ui/combobox/ComboBox.vue";
-import { Checkbox } from "./ui/checkbox";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import UiIcon from "./ui/UiIcon.vue";
@@ -13,31 +11,60 @@ import { store } from "@/store";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
-import type { OrderT } from "@/schemas/order.schema";
 import { useRoute } from "vue-router";
+import type { Res } from "@/types";
+import type { OrderForUpdateT } from "@/schemas/order.schema";
+import {
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+  SelectItem,
+  Select,
+} from "@/components/ui/select";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
 const route = useRoute();
 
-const sellers = ref<{ label: string; value: string }[]>([]);
+const suppliers = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
-
-const updateOrder = reactive<any>({});
+const order = reactive<OrderForUpdateT>({
+  id: "",
+  supplierId: "",
+  createdAt: "",
+  status: "",
+  items: [],
+});
 
 onBeforeMount(async () => {
   // @ts-ignore
   const res = await Promise.allSettled([
-    invoke<{ label: string; value: string }[]>("get_all_sellers"),
-    invoke<{ label: string; value: string }[]>("get_all_products"),
+    invoke<Res<{ label: string; value: string }[]>>("search_suppliers", {
+      search: "",
+    }),
+    invoke<Res<{ label: string; value: string }[]>>("search_products", {
+      search: "",
+    }),
+    invoke<Res<OrderForUpdateT>>("get_order", {
+      id: route.query.id,
+    }),
   ]);
 
-  if (res[0].status === "fulfilled") sellers.value = res[0].value;
-  if (res[1].status === "fulfilled") products.value = res[1].value;
+  console.log(res);
+
+  if (res[0].status === "fulfilled") suppliers.value = res[0].value.data;
+  if (res[1].status === "fulfilled") products.value = res[1].value.data;
+  if (res[2].status === "fulfilled") {
+    order.id = res[2].value.data.id;
+    order.supplierId = res[2].value.data.supplierId;
+    order.createdAt = res[2].value.data.createdAt;
+    order.status = res[2].value.data.status;
+    order.items = res[2].value.data.items;
+  }
 });
 
 const addOrderItem = () => {
-  updateOrder.order_items.push({
+  order?.items.push({
     product_id: undefined,
     quantity: undefined,
     price: undefined,
@@ -47,7 +74,7 @@ const addOrderItem = () => {
 const updateTheOrders = async () => {
   try {
     await invoke("update_order", {
-      order: updateOrder,
+      order: order,
       id: route.query.id,
     });
     // toggle refresh
@@ -74,7 +101,7 @@ async function deleteOneOrderItem(id: string) {
 }
 
 const deleteOrderItem = (index: number) => {
-  const item = updateOrder.order_items?.splice(index, 1)[0];
+  const item = order.items?.splice(index, 1)[0];
   if (item?.id) deleteOneOrderItem(item.id);
 };
 
@@ -85,59 +112,36 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
   <UiModalCard
     class="w-5/6 lg:w-1/2 relative h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
   >
-    <template #title> {{ t("o.u.title") }} N° {{ updateOrder.id }} </template>
+    <template #title> {{ t("o.u.title") }} N° {{ order?.id }} </template>
     <template #content>
       <div class="h-full w-full grid grid-cols-1 gap-2">
-        <div class="w-full h-full flex flex-col gap-1">
-          <Label for="seller_id">
-            {{ t("o.u.d.o.title") }}
-          </Label>
-          <span id="seller_id">
+        <div class="flex w-full h-fit gap-1">
+          <div class="w-full h-full flex flex-col gap-1">
+            <Label for="supplier_id">
+              {{ t("o.u.d.o.title") }}
+            </Label>
             <ComboBox
+              id="supplier_id"
+              v-if="order?.supplierId"
               :label="t('o.u.d.o.select')"
-              v-model="updateOrder.seller_id"
-              :items="sellers"
+              v-model="order.supplierId"
+              :items="suppliers"
             />
-          </span>
-        </div>
-        <Separator />
-        <div class="w-full h-full flex flex-col gap-1">
-          <Label for="status">
-            {{ t("o.u.d.o.title") }}
-          </Label>
-          <div id="status" class="w-full h-full flex flex-col mb-1 gap-1">
-            <div class="flex justify-between w-full">
-              <div
-                class="h-full w-full flex flex-row flex-nowrap items-center gap-2"
-              >
-                <Checkbox
-                  id="status_1"
-                  :checked="updateOrder.status === 'delivered'"
-                  @update:checked="() => (updateOrder.status = 'delivered')"
-                />
-                <Label for="status_1">{{ t("o.s.delivered") }}</Label>
-              </div>
-              <div
-                class="h-full w-full flex flex-row flex-nowrap items-center justify-center gap-2"
-              >
-                <Checkbox
-                  id="status_2"
-                  :checked="updateOrder.status === 'pending'"
-                  @update:checked="() => (updateOrder.status = 'pending')"
-                />
-                <Label for="status_2">{{ t("o.s.pending") }}</Label>
-              </div>
-              <div
-                class="h-full w-full flex flex-row justify-end flex-nowrap items-center gap-2"
-              >
-                <Checkbox
-                  id="status_3"
-                  :checked="updateOrder.status === 'canceled'"
-                  @update:checked="() => (updateOrder.status = 'canceled')"
-                />
-                <Label for="status_3">{{ t("o.s.canceled") }}</Label>
-              </div>
-            </div>
+          </div>
+          <div class="w-full h-full flex flex-col gap-1">
+            <Label for="status">
+              {{ t("o.u.d.o.title") }}
+            </Label>
+            <Select v-model="order.status">
+              <SelectTrigger>
+                <SelectValue placeholder="Select a status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="DELIVERED"> Delivered </SelectItem>
+                <SelectItem value="CANCELED"> Cancelled </SelectItem>
+                <SelectItem value="PENDING"> Pending </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         <Separator />
@@ -148,10 +152,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
           <div
             class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
-            <template
-              v-for="(item, index) in updateOrder.order_items"
-              :key="index"
-            >
+            <template v-for="(item, index) in order.items" :key="index">
               <ComboBox
                 :label="t('o.u.d.o.select')"
                 v-model="item.product_id"

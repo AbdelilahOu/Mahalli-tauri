@@ -40,7 +40,7 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
       >
         <tr>
           <th
-            v-for="index in [1, 2, 3, 4, 5]"
+            v-for="index in [1, 2, 3, 4, 5, 6]"
             :key="index"
             class="p-2 w-fit first:rounded-l-[4px] text-left last:rounded-r-[4px]"
           >
@@ -95,10 +95,14 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="!order.createdAt" class="text-red-400">No date</span>
-              <span v-else>
+              <span v-if="order.createdAt">
                 {{ d(new Date(order.createdAt), "long") }}
               </span>
+            </div>
+          </td>
+          <td class="p-2">
+            <div class="text-left whitespace-nowrap overflow-ellipsis">
+              <span> {{ order.total }} DH </span>
             </div>
           </td>
           <td class="p-2">
