@@ -19,7 +19,7 @@ const deleteTheProduct = async (id: string) => {
   } catch (error) {
     console.log(error);
   } finally {
-    store.setters.updateStore({ key: "show", value: false });
+    cancelDelete();
   }
 };
 

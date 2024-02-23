@@ -2,7 +2,7 @@
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
-import { ref, onBeforeUnmount } from "vue";
+import { ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
@@ -78,7 +78,7 @@ const updateTheProduct = async (product: ProductT) => {
   } catch (error) {
     console.log(error);
   } finally {
-    store.setters.updateStore({ key: "show", value: false });
+    hideModal();
   }
 };
 
@@ -88,10 +88,6 @@ const hideModal = () => {
 
 const onSubmit = form.handleSubmit((values) => {
   updateTheProduct(values);
-});
-
-onBeforeUnmount(() => {
-  store.setters.updateStore({ key: "row", value: null });
 });
 </script>
 

@@ -25,10 +25,10 @@ const form = useForm({
 
 const image = ref<string>();
 
-const isLoading = ref<boolean>(false);
+const isCreating = ref<boolean>(false);
 
 const createNewClient = async (client: ClientT) => {
-  isLoading.value = true;
+  isCreating.value = true;
   try {
     let image: string = await saveFile(client.image as string, "Image");
     await invoke("create_client", {
@@ -47,7 +47,7 @@ const createNewClient = async (client: ClientT) => {
   } catch (error) {
     console.log(error);
   } finally {
-    isLoading.value = false;
+    isCreating.value = false;
     hideModal();
   }
 };
@@ -126,13 +126,17 @@ const setImage = (imagePath: string) => {
           </FormItem>
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
-          <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
+          <Button
+            :disabled="isCreating"
+            type="submit"
+            class="w-full col-span-2"
+          >
             {{ t("g.b.c") }}
           </Button>
           <Button
             @click="hideModal"
             type="button"
-            :disabled="isLoading"
+            :disabled="isCreating"
             variant="outline"
           >
             {{ t("g.b.no") }}</Button

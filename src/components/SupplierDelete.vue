@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
-import { onBeforeUnmount } from "vue";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
@@ -20,17 +19,13 @@ const deleteTheSupplier = async (id: string) => {
   } catch (error) {
     console.log(error);
   } finally {
-    store.setters.updateStore({ key: "show", value: false });
+    cancelDelete();
   }
 };
 
 const cancelDelete = () => {
   store.setters.updateStore({ key: "show", value: false });
 };
-
-onBeforeUnmount(() => {
-  store.setters.updateStore({ key: "row", value: null });
-});
 </script>
 
 <template>

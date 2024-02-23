@@ -2,7 +2,7 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useI18n } from "vue-i18n";
-import { onBeforeUnmount, ref } from "vue";
+import { ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
@@ -18,7 +18,7 @@ const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const route = useRoute();
 
-const isLoading = ref<boolean>(false);
+const isUpdating = ref<boolean>(false);
 
 const clientSchema = toTypedSchema(
   z.object({
@@ -68,8 +68,6 @@ const hideModal = () => {
 const onSubmit = form.handleSubmit((values) => {
   updateTheClient(values);
 });
-
-onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 </script>
 
 <template>
@@ -128,13 +126,17 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
           </FormItem>
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
-          <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
+          <Button
+            :disabled="isUpdating"
+            type="submit"
+            class="w-full col-span-2"
+          >
             {{ t("g.b.u", { name: $route.query.fullname }) }}
           </Button>
           <Button
             type="button"
             @click="hideModal"
-            :disabled="isLoading"
+            :disabled="isUpdating"
             variant="outline"
           >
             {{ t("g.b.no") }}</Button
