@@ -5,28 +5,21 @@ import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import { store } from "@/store";
-import { computed } from "vue";
-import type { ProductT } from "@/schemas/products.schema";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
 
-const product = computed(() => store.getters.getSelectedRow<ProductT>());
-
-const deleteTheProduct = async () => {
-  const id = product.value?.id;
-  if (id) {
-    try {
-      await invoke("delete_product", { id });
-      // toggle refresh
-      updateQueryParams({
-        refresh: "refresh-delete-" + Math.random() * 9999,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      store.setters.updateStore({ key: "show", value: false });
-    }
+const deleteTheProduct = async (id: string) => {
+  try {
+    await invoke("delete_product", { id });
+    // toggle refresh
+    updateQueryParams({
+      refresh: "refresh-delete-" + Math.random() * 9999,
+    });
+  } catch (error) {
+    console.log(error);
+  } finally {
+    store.setters.updateStore({ key: "show", value: false });
   }
 };
 
@@ -37,10 +30,13 @@ const cancelDelete = () => {
 
 <template>
   <UiModalCard>
-    <template #title> {{ t("p.d.title") }} {{ product.name }} ? </template>
+    <template #title> {{ t("p.d.title") }} {{ $route.query.name }} ? </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
-        <Button class="col-span-2" @click="deleteTheProduct">
+        <Button
+          class="col-span-2"
+          @click="() => deleteTheProduct($route.query.id as string)"
+        >
           {{ t("g.b.d") }}
         </Button>
         <Button variant="outline" @click="cancelDelete">

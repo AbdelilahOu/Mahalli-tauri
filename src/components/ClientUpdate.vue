@@ -2,7 +2,7 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useI18n } from "vue-i18n";
-import { onBeforeUnmount, computed, ref } from "vue";
+import { onBeforeUnmount, ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
@@ -12,21 +12,25 @@ import { Input } from "./ui/input";
 import { store } from "@/store";
 import { z } from "zod";
 import type { ClientT } from "@/schemas/client.schema";
+import { useRoute } from "vue-router";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
-const ClientRow = computed(() => store.getters.getSelectedRow<ClientT>());
+const route = useRoute();
 
 const isLoading = ref<boolean>(false);
 
 const clientSchema = toTypedSchema(
   z.object({
-    fullname: z.string().min(2).max(50).default(ClientRow.value.fullname),
-    email: z.string().default(ClientRow.value.email ?? ""),
-    phoneNumber: z.string().default(ClientRow.value.phoneNumber ?? ""),
-    address: z.string().default(ClientRow.value.address ?? ""),
-    image: z.string().default(ClientRow.value.image ?? ""),
+    fullname: z
+      .string()
+      .min(2)
+      .max(50)
+      .default(route.query.fullname as string),
+    email: z.string().default((route.query.email as string) ?? ""),
+    phoneNumber: z.string().default((route.query.phoneNumber as string) ?? ""),
+    address: z.string().default((route.query.address as string) ?? ""),
+    image: z.string().default((route.query.image as string) ?? ""),
   }),
 );
 
@@ -38,7 +42,7 @@ const updateTheClient = async (client: ClientT) => {
   try {
     await invoke("update_client", {
       client: {
-        id: ClientRow.value.id,
+        id: route.query.id,
         full_name: client.fullname,
         email: client.email,
         phone_number: client.phoneNumber,
@@ -125,7 +129,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("g.b.u", { name: ClientRow.fullname }) }}
+            {{ t("g.b.u", { name: $route.query.fullname }) }}
           </Button>
           <Button
             type="button"

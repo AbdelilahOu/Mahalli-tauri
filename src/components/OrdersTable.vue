@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
-import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
@@ -9,6 +8,9 @@ import { store } from "@/store";
 import type { OrderT } from "@/schemas/order.schema";
 import { Badge } from "./ui/badge";
 import { cn } from "@/utils/shadcn";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+
+const { updateQueryParams } = useUpdateRouteQueryParams();
 
 defineProps<{ orders: OrderT[] }>();
 
@@ -22,7 +24,9 @@ const { t, d } = useI18n();
 // };
 
 const toggleThisOrders = (Order: OrderT, name: string) => {
-  store.setters.updateStore({ key: "row", value: Order });
+  updateQueryParams({
+    id: Order.id,
+  });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
 };
@@ -35,26 +39,19 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
         class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
       >
         <tr>
-          <th class="rounded-l-[4px]"></th>
           <th
             v-for="index in [1, 2, 3, 4, 5]"
             :key="index"
-            class="p-2 w-fit last:rounded-r-[4px]"
+            class="p-2 w-fit first:rounded-l-[4px] text-left last:rounded-r-[4px]"
           >
-            <div class="font-semibold text-left">
-              {{ t(`o.i.feilds[${index}]`) }}
-            </div>
+            {{ t(`o.i.feilds[${index}]`) }}
+            <!-- <div class="font-semibold text-left"> -->
+            <!-- </div> -->
           </th>
         </tr>
       </thead>
       <tbody class="text-sm divide-y divide-gray-100">
         <tr v-for="(order, index) in orders" v-fade="index" :key="order.id">
-          <td class="p-2">
-            <span class="h-full w-full grid">
-              <Checkbox />
-            </span>
-          </td>
-
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
               <RouterLink

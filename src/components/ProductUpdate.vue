@@ -2,7 +2,7 @@
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
-import { computed, ref, onBeforeUnmount } from "vue";
+import { ref, onBeforeUnmount } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
@@ -14,27 +14,32 @@ import { store } from "@/store";
 import { z } from "zod";
 import type { ProductT } from "@/schemas/products.schema";
 import type { Res } from "@/types";
+import { useRoute } from "vue-router";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
-
-const ProductRow = computed(() => store.getters.getSelectedRow<ProductT>());
+const route = useRoute();
 
 const isUpdating = ref<boolean>(false);
 const quantity = ref<number>(0);
 
 const productSchema = toTypedSchema(
   z.object({
-    name: z.string().min(2).max(50).default(ProductRow.value.name),
-    price: z.number().min(0).default(ProductRow.value.price),
+    name: z
+      .string()
+      .min(2)
+      .max(50)
+      .default(route.query.name as string),
+    price: z
+      .number()
+      .min(0)
+      .default(Number(route.query.price) ?? 0),
     description: z
       .string()
       .min(2)
-      .default(ProductRow.value.description ?? ""),
-    minQuantity: z
-      .number()
-      .min(0)
-      .default(ProductRow.value.minQuantity ?? 0),
+      .default((route.query.description as string) ?? ""),
+    image: z.string().default((route.query.image ?? "") as string),
+    minQuantity: z.number().default(Number(route.query.minQuantity) ?? 0),
   }),
 );
 
@@ -44,18 +49,18 @@ const form = useForm({
 
 const updateTheProduct = async (product: ProductT) => {
   try {
-    const id = ProductRow.value.id;
-    const updateRes = await invoke<Res<string>>("update_product", {
+    const id = route.query.id;
+    const _ = await invoke<Res<string>>("update_product", {
       product: {
         name: product.name,
         price: Number(product.price),
         description: product.description,
-        min_quantity: product.minQuantity,
-        image: ProductRow.value.image,
+        min_quantity: Number(product.minQuantity),
+        image: product.image,
         id,
       },
     });
-    console.log(updateRes, quantity.value);
+    console.log(_);
     if (quantity.value > 0) {
       const createMvmRes = await invoke("create_inventory", {
         mvm: {
@@ -167,7 +172,7 @@ onBeforeUnmount(() => {
             type="submit"
             class="w-full col-span-2"
           >
-            {{ t("g.b.u", { name: ProductRow.name }) }}
+            {{ t("g.b.u", { name: $route.query.name }) }}
           </Button>
           <Button
             @click="hideModal"

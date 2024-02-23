@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
-import { computed, onBeforeUnmount } from "vue";
+import { onBeforeUnmount } from "vue";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import { store } from "@/store";
 import UiModalCard from "./ui/UiModalCard.vue";
-import type { OrderT } from "@/schemas/order.schema";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const order = computed(() => store.getters.getSelectedRow<OrderT>());
 
-const deleteTheOrders = async () => {
-  const id = order.value?.id;
+const deleteTheOrders = async (id: string) => {
   if (id) {
     try {
       await invoke("delete_order", { id });
@@ -38,10 +35,15 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 
 <template>
   <UiModalCard>
-    <template #title> {{ t("o.d.title") }}n° {{ order?.id }} ? </template>
+    <template #title>
+      {{ t("o.d.title") }}n° {{ $route.query?.id }} ?
+    </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
-        <Button class="col-span-2" @click="deleteTheOrders()">
+        <Button
+          class="col-span-2"
+          @click="deleteTheOrders($route.query?.id as string)"
+        >
           {{ t("g.b.d") }}
         </Button>
         <Button variant="outline" @click="cancelDelete">

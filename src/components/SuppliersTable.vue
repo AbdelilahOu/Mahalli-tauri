@@ -8,12 +8,14 @@ import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import { ref } from "vue";
 import type { SupplierT } from "@/schemas/supplier.schema";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 
 defineProps<{
   suppliers: SupplierT[];
 }>();
 
 const { t } = useI18n();
+const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const checkedSuppliers = ref<string[]>([]);
 
@@ -24,7 +26,13 @@ const checkThisSupplier = (IsInclude: boolean, id: string) => {
 };
 
 const toggleThisSupplier = (supplier: SupplierT, name: string) => {
-  store.setters.updateStore({ key: "row", value: supplier });
+  updateQueryParams({
+    id: supplier.id,
+    fullname: supplier.fullname,
+    email: supplier.email,
+    phoneNumber: supplier.phoneNumber,
+    address: supplier.address,
+  });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
 };
@@ -41,6 +49,7 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
           <th class=""></th>
           <th
             v-for="index in [0, 1, 2, 3, 4]"
+            :key="index"
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">

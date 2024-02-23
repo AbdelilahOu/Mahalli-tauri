@@ -8,6 +8,7 @@ import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import { ref } from "vue";
 import type { ClientT } from "@/schemas/client.schema";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 
 defineProps<{
   clients: ClientT[];
@@ -15,6 +16,7 @@ defineProps<{
 
 const { t } = useI18n();
 const checkedClients = ref<string[]>([]);
+const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const checkThisClient = (IsInclude: boolean, id: string) => {
   IsInclude
@@ -23,7 +25,14 @@ const checkThisClient = (IsInclude: boolean, id: string) => {
 };
 
 const toggleThisClient = (client: ClientT, name: string) => {
-  store.setters.updateStore({ key: "row", value: client });
+  updateQueryParams({
+    id: client.id,
+    fullname: client.fullname,
+    email: client.email,
+    phoneNumber: client.phoneNumber,
+    address: client.address,
+  });
+  // store.setters.updateStore({ key: "row", value: client });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
 };
@@ -41,6 +50,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
 
           <th
             v-for="index in [0, 1, 2, 3, 4, 5]"
+            :key="index"
             class="p-2 w-fit last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">

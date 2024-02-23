@@ -2,7 +2,7 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useI18n } from "vue-i18n";
-import { ref, computed, onBeforeUnmount } from "vue";
+import { ref, onBeforeUnmount } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
@@ -12,21 +12,24 @@ import { Input } from "./ui/input";
 import { store } from "@/store";
 import { z } from "zod";
 import type { SupplierT } from "@/schemas/supplier.schema";
+import { useRoute } from "vue-router";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
-
-const SupplierRow = computed(() => store.getters.getSelectedRow<SupplierT>());
-
+const route = useRoute();
 const isLoading = ref<boolean>(false);
 
 const supplierSchema = toTypedSchema(
   z.object({
-    fullname: z.string().min(2).max(50).default(SupplierRow.value.fullname),
-    email: z.string().default(SupplierRow.value.email ?? ""),
-    phoneNumber: z.string().default(SupplierRow.value.phoneNumber ?? ""),
-    address: z.string().default(SupplierRow.value.address ?? ""),
-    image: z.string().default(SupplierRow.value.image ?? ""),
+    fullname: z
+      .string()
+      .min(2)
+      .max(50)
+      .default(route.query.fullname as string),
+    email: z.string().default((route.query.email as string) ?? ""),
+    phoneNumber: z.string().default((route.query.phoneNumber as string) ?? ""),
+    address: z.string().default((route.query.address as string) ?? ""),
+    image: z.string().default((route.query.image as string) ?? ""),
   }),
 );
 
@@ -35,27 +38,25 @@ const form = useForm({
 });
 
 const updateTheSupplier = async (supplier: SupplierT) => {
-  if (SupplierRow.value.id) {
-    try {
-      await invoke("update_supplier", {
-        supplier: {
-          id: SupplierRow.value.id,
-          full_name: supplier.fullname,
-          email: supplier.email,
-          phone_number: supplier.phoneNumber,
-          address: supplier.address,
-          image: supplier.image,
-        },
-      });
-      // toggle refresh
-      updateQueryParams({
-        refresh: "refresh-update-" + Math.random() * 9999,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      hideModal();
-    }
+  try {
+    await invoke("update_supplier", {
+      supplier: {
+        id: route.query.id,
+        full_name: supplier.fullname,
+        email: supplier.email,
+        phone_number: supplier.phoneNumber,
+        address: supplier.address,
+        image: supplier.image,
+      },
+    });
+    // toggle refresh
+    updateQueryParams({
+      refresh: "refresh-update-" + Math.random() * 9999,
+    });
+  } catch (error) {
+    console.log(error);
+  } finally {
+    hideModal();
   }
 };
 
@@ -127,7 +128,7 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("g.b.u", { name: SupplierRow.fullname }) }}
+            {{ t("g.b.u", { name: $route.query.fullname }) }}
           </Button>
           <Button
             @click="hideModal"
