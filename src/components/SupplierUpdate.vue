@@ -2,7 +2,7 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useI18n } from "vue-i18n";
-import { ref, onBeforeUnmount } from "vue";
+import { ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
@@ -67,8 +67,6 @@ const hideModal = () => {
 const onSubmit = form.handleSubmit((values) => {
   updateTheSupplier(values);
 });
-
-onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 </script>
 
 <template>
