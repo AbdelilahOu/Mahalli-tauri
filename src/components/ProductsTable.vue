@@ -38,7 +38,7 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
 </script>
 
 <template>
-  <div class="w-full flex flex-col gap-10">
+  <div class="w-full flex flex-col">
     <table class="table-auto w-full">
       <thead
         class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
@@ -131,7 +131,7 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
         </tr>
       </tbody>
     </table>
-    <div>
+    <div class="pt-12">
       <UiPagination v-if="products.length" />
     </div>
   </div>

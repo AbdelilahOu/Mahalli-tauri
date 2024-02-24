@@ -7,10 +7,6 @@ import { computed } from "vue";
 import { store } from "@/store";
 import { cn } from "@/utils/shadcn";
 
-defineProps<{
-  isScrollDown: boolean;
-}>();
-
 const { t } = useI18n();
 const route = useRoute();
 const ActiveLink = computed(() =>
@@ -21,12 +17,7 @@ const User = computed(() => store.getters.getUser());
 
 <template>
   <header
-    :class="
-      cn(
-        'w-full h-full print:hidden sticky top-0 mb-2 z-50 overflow-hidden bg-slate-100',
-        isScrollDown ? 'border-b border-b-slate-100 shadow-sm' : '',
-      )
-    "
+    class="w-full h-full print:hidden sticky top-0 mb-2 z-50 overflow-hidden bg-slate-100"
   >
     <div
       class="w-full h-full flex items-center py-3 px-2 bg-white justify-between"

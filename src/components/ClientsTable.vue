@@ -39,7 +39,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
 </script>
 
 <template>
-  <div class="flex flex-col h-full w-full gap-10">
+  <div class="flex flex-col h-full w-full">
     <table class="w-full">
       <thead
         class="text-xs h-9 bg-gray-300 max-w-lg w-fit font-semibold uppercase text-[rgba(25,23,17,0.6)]"
@@ -135,7 +135,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
         </tr>
       </tbody>
     </table>
-    <div>
+    <div class="pt-12">
       <UiPagination />
     </div>
   </div>
