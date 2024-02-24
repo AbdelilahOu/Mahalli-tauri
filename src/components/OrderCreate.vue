@@ -76,7 +76,7 @@ const searchProducts = async (search: string | number) => {
 
 const createOrder = async () => {
   isLoading.value = true;
-
+  console.log(order);
   if (order?.supplierId && order.items?.length !== 0) {
     try {
       await invoke("insert_order", {
