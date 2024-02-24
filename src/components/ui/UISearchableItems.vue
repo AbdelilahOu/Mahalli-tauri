@@ -52,6 +52,7 @@ const selectItem = (item: { label: string; value: string }) => {
         />
       </PopoverTrigger>
       <PopoverContent
+        class="p-1"
         @open-auto-focus="(e) => e.preventDefault()"
         @focus-outside="open = false"
       >
@@ -67,7 +68,7 @@ const selectItem = (item: { label: string; value: string }) => {
           "
         >
           <span
-            class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+            class="relative flex w-full hover:bg-slate-100 cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
             v-for="item in items"
             :key="item.value"
             @click="() => selectItem(item)"

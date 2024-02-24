@@ -1,7 +1,7 @@
 use ::entity::prelude::*;
 use sea_orm::*;
 
-use crate::models::*;
+use crate::{models::*, Order};
 pub struct MutationsService;
 
 impl MutationsService {
@@ -151,6 +151,40 @@ impl MutationsService {
         match mvm.save(db).await {
             Ok(_) => Ok(()),
             Err(err) => Err(err),
+        }
+    }
+    //
+    pub async fn create_order(db: &DbConn, order: NewOrder) -> Result<String, DbErr> {
+        let order = OrderActiveModel {
+            supplier_id: ActiveValue::Set(order.supplier_id),
+            status: ActiveValue::Set(order.status),
+            ..Default::default()
+        };
+        match order.insert(db).await {
+            Ok(o) => Ok(o.id),
+            Err(err) => Err(err),
+        }
+    }
+    //
+    pub async fn update_order(db: &DbConn, order: Order) -> Result<(), DbErr> {
+        let order_model = Orders::find_by_id(order.id).one(db).await?;
+        let mut order_active: OrderActiveModel = order_model.unwrap().into();
+        order_active.supplier_id = ActiveValue::Set(order.supplier_id);
+        order_active.status = ActiveValue::Set(order.status);
+        match order_active.save(db).await {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err),
+        }
+    }
+    //
+    pub async fn delete_order(db: &DbConn, id: String) -> Result<u64, DbErr> {
+        let order_model = Orders::find_by_id(id).one(db).await?;
+        match order_model {
+            Some(order_model) => {
+                let order = order_model.delete(db).await?;
+                Ok(order.rows_affected)
+            }
+            None => Ok(0),
         }
     }
 }
