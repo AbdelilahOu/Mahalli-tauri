@@ -45,8 +45,6 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
             class="p-2 w-fit first:rounded-l-[4px] text-left last:rounded-r-[4px]"
           >
             {{ t(`o.i.feilds[${index}]`) }}
-            <!-- <div class="font-semibold text-left"> -->
-            <!-- </div> -->
           </th>
         </tr>
       </thead>
@@ -102,7 +100,7 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span> {{ order.total }} DH </span>
+              <span> {{ order.total?.toFixed(2) }} DH </span>
             </div>
           </td>
           <td class="p-2">

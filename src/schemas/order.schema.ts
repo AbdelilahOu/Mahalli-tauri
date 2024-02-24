@@ -16,11 +16,23 @@ export type OrderT = z.infer<typeof CreateOrderSchema> & {
 export type OrderForUpdateT = {
   id: string;
   supplierId: string;
+  fullname: string;
   createdAt: string;
   status: string;
-  items: {
+  items?: {
     id?: string;
     inventory_id?: string;
+    name?: string;
+    product_id?: string;
+    quantity?: number;
+    price?: number;
+  }[];
+};
+
+export type OrderForCreateT = {
+  supplierId: string;
+  status: string;
+  items: {
     product_id?: string;
     quantity?: number;
     price?: number;

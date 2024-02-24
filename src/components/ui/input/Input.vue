@@ -6,7 +6,7 @@ import { ref } from "vue";
 const props = defineProps<{
   defaultValue?: string | number;
   modelValue?: string | number;
-  type: string;
+  type?: string;
   placeHolder: string;
 }>();
 
@@ -35,7 +35,7 @@ const isFocused = ref(false);
     <input
       @focusout="isFocused = false"
       @focus="isFocused = true"
-      :type="type"
+      :type="type ?? 'text'"
       v-model="modelValue"
       :placeholder="placeHolder"
       :class="

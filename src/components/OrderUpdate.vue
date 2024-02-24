@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref, reactive, onBeforeMount, onBeforeUnmount } from "vue";
+import { ref, reactive, onBeforeMount } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
-import ComboBox from "./ui/combobox/ComboBox.vue";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import UiIcon from "./ui/UiIcon.vue";
@@ -21,6 +20,7 @@ import {
   SelectItem,
   Select,
 } from "@/components/ui/select";
+import SearchableItems from "./ui/UISearchableItems.vue";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
@@ -31,6 +31,7 @@ const products = ref<{ label: string; value: string }[]>([]);
 const order = reactive<OrderForUpdateT>({
   id: "",
   supplierId: "",
+  fullname: "",
   createdAt: "",
   status: "",
   items: [],
@@ -38,36 +39,50 @@ const order = reactive<OrderForUpdateT>({
 
 onBeforeMount(async () => {
   // @ts-ignore
-  const res = await Promise.allSettled([
-    invoke<Res<{ label: string; value: string }[]>>("search_suppliers", {
-      search: "",
-    }),
-    invoke<Res<{ label: string; value: string }[]>>("search_products", {
-      search: "",
-    }),
-    invoke<Res<OrderForUpdateT>>("get_order", {
-      id: route.query.id,
-    }),
-  ]);
+  const res = await invoke<Res<OrderForUpdateT>>("get_order", {
+    id: route.query.id,
+  });
 
-  console.log(res);
-
-  if (res[0].status === "fulfilled") suppliers.value = res[0].value.data;
-  if (res[1].status === "fulfilled") products.value = res[1].value.data;
-  if (res[2].status === "fulfilled") {
-    order.id = res[2].value.data.id;
-    order.supplierId = res[2].value.data.supplierId;
-    order.createdAt = res[2].value.data.createdAt;
-    order.status = res[2].value.data.status;
-    order.items = res[2].value.data.items;
+  if (!res.error) {
+    order.id = res.data.id;
+    order.supplierId = res.data.supplierId;
+    order.createdAt = res.data.createdAt;
+    order.status = res.data.status;
+    order.fullname = res.data.fullname;
+    order.items = res.data.items;
   }
 });
 
+const searchSuppliers = async (search: string | number) => {
+  const res = await invoke<Res<{ label: string; value: string }[]>>(
+    "search_suppliers",
+    {
+      search,
+    },
+  );
+  if (!res.error) {
+    suppliers.value = res.data;
+  }
+};
+
+const searchProducts = async (search: string | number) => {
+  const res = await invoke<Res<{ label: string; value: string }[]>>(
+    "search_products",
+    {
+      search,
+    },
+  );
+  if (!res.error) {
+    products.value = res.data;
+  }
+};
+
 const addOrderItem = () => {
-  order?.items.push({
+  order.items?.push({
     product_id: undefined,
     quantity: undefined,
     price: undefined,
+    name: undefined,
   });
 };
 
@@ -104,8 +119,6 @@ const deleteOrderItem = (index: number) => {
   const item = order.items?.splice(index, 1)[0];
   if (item?.id) deleteOneOrderItem(item.id);
 };
-
-onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 </script>
 
 <template>
@@ -120,12 +133,12 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
             <Label for="supplier_id">
               {{ t("o.u.d.o.title") }}
             </Label>
-            <ComboBox
-              id="supplier_id"
-              v-if="order?.supplierId"
-              :label="t('o.u.d.o.select')"
-              v-model="order.supplierId"
+            <SearchableItems
+              v-if="order.fullname"
+              :defaultValue="order.fullname"
               :items="suppliers"
+              @update:items="(s) => searchSuppliers(s)"
+              @on:select="(id) => (order.supplierId = id)"
             />
           </div>
           <div class="w-full h-full flex flex-col gap-1">
@@ -153,10 +166,11 @@ onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
             class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <template v-for="(item, index) in order.items" :key="index">
-              <ComboBox
-                :label="t('o.u.d.o.select')"
-                v-model="item.product_id"
+              <SearchableItems
+                :defaultValue="item.name"
                 :items="products"
+                @update:items="(s) => searchProducts(s)"
+                @on:select="(id) => (item.product_id = id)"
               />
               <Input
                 v-model="item.quantity"
