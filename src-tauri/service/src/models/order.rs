@@ -16,6 +16,7 @@ pub struct SelectOrders {
 pub struct SelectOrdersItemsForUpdate {
     pub id: String,
     pub inventory_id: String,
+    pub name: String,
     pub price: f64,
     pub quantity: f64,
     pub product_id: String,

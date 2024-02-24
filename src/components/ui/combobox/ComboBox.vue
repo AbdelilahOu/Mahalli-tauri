@@ -4,15 +4,9 @@ import { Check, ChevronsUpDown } from "lucide-vue-next";
 import { cn, useEmitAsProps } from "@/utils/shadcn";
 import { Button } from "../button";
 import { ref } from "vue";
-import {
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  Command,
-} from "../command";
+import { CommandGroup, CommandItem, Command } from "../command";
 
-const props = defineProps<{
+defineProps<{
   items: { value: string; label: string }[];
   modelValue: any;
   label: string;

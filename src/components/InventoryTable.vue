@@ -21,6 +21,7 @@ defineProps<{
         <tr>
           <th
             v-for="index in [1, 2, 3, 4, 5, 6, 7]"
+            :key="index"
             class="p-2 first:rounded-l-[4px] last:rounded-r-[4px]"
           >
             <div class="font-semibold text-left">

@@ -504,7 +504,11 @@ impl QueriesService {
         }))
     }
     pub async fn get_order(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
-        let order = Orders::find_by_id(id.clone()).one(db).await?;
+        let order = Orders::find_by_id(id.clone())
+            .find_also_related(Suppliers)
+            .one(db)
+            .await?;
+
         match order {
             Some(order) => {
                 let (sql, values) = Query::select()
@@ -513,6 +517,7 @@ impl QueriesService {
                         Expr::col((OrderItems, order_items::Column::InventoryId)),
                         Expr::col((OrderItems, order_items::Column::Price)),
                         Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
+                        Expr::col((Products, products::Column::Name)),
                     ])
                     .expr_as(
                         Expr::col((Products, products::Column::Id)),
@@ -549,14 +554,16 @@ impl QueriesService {
                         "product_id": item.product_id,
                         "price": item.price,
                         "quantity": item.quantity,
+                        "name": item.name,
                     }));
                 });
 
                 Ok(json!({
-                    "id": order.id,
-                    "supplierId": order.supplier_id,
-                    "createdAt": order.created_at,
-                    "status": order.status,
+                    "id": order.0.id,
+                    "supplierId": order.0.supplier_id,
+                    "createdAt": order.0.created_at,
+                    "status": order.0.status,
+                    "fullname": order.1.unwrap().full_name,
                     "items": result,
                 }))
             }
