@@ -58,6 +58,20 @@ impl QueriesService {
                                 Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
                                 Expr::val(0.0f64).into(),
                             ]))
+                            .join(
+                                JoinType::Join,
+                                OrderItems,
+                                Expr::col((OrderItems, order_items::Column::InventoryId)).equals((
+                                    InventoryMouvements,
+                                    inventory_mouvements::Column::Id,
+                                )),
+                            )
+                            .join(
+                                JoinType::Join,
+                                Orders,
+                                Expr::col((Orders, orders::Column::Id))
+                                    .equals((OrderItems, order_items::Column::OrderId)),
+                            )
                             .cond_where(
                                 Cond::all().add(
                                     Expr::col((
@@ -67,9 +81,9 @@ impl QueriesService {
                                     .equals((Products, products::Column::Id))
                                     .into_condition()
                                     .add(
-                                        inventory_mouvements::Column::MvmType
-                                            .eq("IN")
-                                            .into_condition(),
+                                        Cond::any()
+                                            .add(orders::Column::Status.eq("PENDING"))
+                                            .add(orders::Column::Status.eq("DELIVERED")),
                                     ),
                                 ),
                             )
@@ -85,6 +99,21 @@ impl QueriesService {
                                 Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
                                 Expr::val(0.0f64).into(),
                             ]))
+                            .join(
+                                JoinType::Join,
+                                InvoiceItems,
+                                Expr::col((InvoiceItems, invoice_items::Column::InventoryId))
+                                    .equals((
+                                        InventoryMouvements,
+                                        inventory_mouvements::Column::Id,
+                                    )),
+                            )
+                            .join(
+                                JoinType::Join,
+                                Invoices,
+                                Expr::col((Invoices, invoices::Column::Id))
+                                    .equals((InvoiceItems, invoice_items::Column::InvoiceId)),
+                            )
                             .cond_where(
                                 Cond::all().add(
                                     Expr::col((
@@ -94,9 +123,9 @@ impl QueriesService {
                                     .equals((Products, products::Column::Id))
                                     .into_condition()
                                     .add(
-                                        inventory_mouvements::Column::MvmType
-                                            .eq("OUT")
-                                            .into_condition(),
+                                        Cond::any()
+                                            .add(invoices::Column::Status.eq("PENDING"))
+                                            .add(invoices::Column::Status.eq("PAID")),
                                     ),
                                 ),
                             )
@@ -123,6 +152,8 @@ impl QueriesService {
             .order_by(products::Column::CreatedAt, Order::Desc)
             .to_owned()
             .build(SqliteQueryBuilder);
+
+        println!("{}", sql);
 
         let res = SelectProducts::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
@@ -156,25 +187,13 @@ impl QueriesService {
             .select_only()
             .expr_as_(Expr::col(products::Column::Name), "label")
             .expr_as_(Expr::col(products::Column::Id), "value")
+            .expr(Expr::col(products::Column::Price))
             .filter(products::Column::Name.like(format!("{}%", search)))
             .into_json()
             .all(db)
             .await?;
 
         Ok(products)
-    }
-    pub async fn get_product_price(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
-        let price = Products::find_by_id(id)
-            .select_only()
-            .column(products::Column::Price)
-            .into_json()
-            .one(db)
-            .await?;
-
-        match price {
-            Some(price) => Ok(price),
-            None => Err(DbErr::RecordNotFound("Product not found".to_string())),
-        }
     }
     //
     pub async fn list_clients(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
