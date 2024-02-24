@@ -39,7 +39,7 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full gap-10">
+  <div class="flex flex-col w-full">
     <table class="table-auto w-full">
       <thead
         class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
@@ -130,7 +130,7 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
         </tr>
       </tbody>
     </table>
-    <div>
+    <div class="pt-12">
       <UiPagination />
     </div>
   </div>

@@ -9,8 +9,6 @@ import { ref } from "vue";
 import { cn } from "@/utils/shadcn";
 import { onClickOutside } from "@vueuse/core";
 
-const open = ref(false);
-const dropdownParent = ref<HTMLElement | null>(null);
 const props = defineProps<{
   defaultValue?: string;
   items: { label: string; value: string }[];
@@ -21,6 +19,8 @@ const emits = defineEmits<{
   (e: "on:select", s: string): () => void;
 }>();
 
+const open = ref(false);
+const dropdownParent = ref<HTMLElement | null>(null);
 const inputValue = ref<string | number>(props.defaultValue ?? "");
 
 let timer: number;
@@ -51,11 +51,7 @@ const selectItem = (item: { label: string; value: string }) => {
           placeHolder="search"
         />
       </PopoverTrigger>
-      <PopoverContent
-        class="p-1"
-        @open-auto-focus="(e) => e.preventDefault()"
-        @focus-outside="open = false"
-      >
+      <PopoverContent class="p-1" @open-auto-focus="(e) => e.preventDefault()">
         <div
           v-if="items.length > 0"
           :class="

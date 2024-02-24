@@ -5,14 +5,9 @@ import ModalComponentsRenderer from "@/components/ModalComponentsRenderer.vue";
 import Navigation from "@/components/Navigation.vue";
 import SideBar from "@/components/SideBar.vue";
 import { store } from "@/store";
-import { useScroll } from "@vueuse/core";
-
 const show = computed(() => store.getters.getModalVisibility());
 const name = computed(() => store.getters.getModalName());
 const isCollapse = ref<boolean>(true);
-const scroll = ref<HTMLElement | null>(null);
-
-const { y } = useScroll(scroll);
 
 const hideModal = () => {
   store.setters.updateStore({ key: "show", value: false });
@@ -24,10 +19,7 @@ onBeforeRouteUpdate((to: any, from: any) => {
 </script>
 
 <template>
-  <main
-    ref="scroll"
-    class="w-screen h-screen relative overflow-y-auto bg-white scrollbar-thin scrollbar-thumb-transparent flex"
-  >
+  <main class="w-screen h-screen relative bg-white flex">
     <div
       class="transition-all print:hidden sticky top-0 border-r-2 border-slate-100 z-50 flex justify-center duration-200"
       :class="{
@@ -41,9 +33,9 @@ onBeforeRouteUpdate((to: any, from: any) => {
       />
     </div>
     <div class="grid grid-rows-[50px_1fr] w-full">
-      <Navigation :isScrollDown="y > 0" />
+      <Navigation />
       <div
-        class="w-full h-full flex flex-col border-t-2 border-slate-100 items-center justify-center"
+        class="w-full h-[calc(100vh-50px)] flex flex-col border-t-2 border-slate-100 items-center justify-center overflow-y-auto scrollbar-thin scrollbar-thumb-transparent"
       >
         <div
           v-if="show"
