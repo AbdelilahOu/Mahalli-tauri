@@ -105,3 +105,23 @@ pub async fn update_product(state: State<'_, AppState>, product: Product) -> SRe
         }
     }
 }
+
+#[tauri::command]
+pub async fn get_product_price(state: State<'_, AppState>, id: String) -> SResult<Value> {
+    let _ = state.db_conn;
+    let res = QueriesService::get_product_price(&state.db_conn, id).await;
+    match res {
+        Ok(res) => Ok(Seccess {
+            error: None,
+            message: None,
+            data: Some(res),
+        }),
+        Err(err) => {
+            println!("Error: {}", err);
+            Err(Fail {
+                error: Some(err.to_string()),
+                message: None,
+            })
+        }
+    }
+}

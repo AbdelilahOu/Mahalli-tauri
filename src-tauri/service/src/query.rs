@@ -163,6 +163,19 @@ impl QueriesService {
 
         Ok(products)
     }
+    pub async fn get_product_price(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
+        let price = Products::find_by_id(id)
+            .select_only()
+            .column(products::Column::Price)
+            .into_json()
+            .one(db)
+            .await?;
+
+        match price {
+            Some(price) => Ok(price),
+            None => Err(DbErr::RecordNotFound("Product not found".to_string())),
+        }
+    }
     //
     pub async fn list_clients(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Clients::find()
