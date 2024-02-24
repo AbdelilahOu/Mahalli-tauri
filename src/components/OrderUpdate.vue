@@ -170,7 +170,9 @@ const deleteOrderItem = (index: number) => {
                 :defaultValue="item.name"
                 :items="products"
                 @update:items="(s) => searchProducts(s)"
-                @on:select="(id) => (item.product_id = id)"
+                @on:select="
+                  (id, price) => ((item.product_id = id), (item.price = price))
+                "
               />
               <Input
                 v-model="item.quantity"

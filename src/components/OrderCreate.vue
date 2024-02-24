@@ -151,7 +151,9 @@ const hideModal = () => {
               <SearchableItems
                 :items="products"
                 @update:items="(s) => searchProducts(s)"
-                @on:select="(id) => (item.product_id = id)"
+                @on:select="
+                  (id, price) => ((item.product_id = id), (item.price = price))
+                "
               />
               <Input
                 class="border-r-0"
