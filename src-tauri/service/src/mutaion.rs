@@ -208,5 +208,15 @@ impl MutationsService {
             Err(err) => Err(err),
         }
     }
+    pub async fn delete_order_item(db: &DbConn, id: String) -> Result<u64, DbErr> {
+        let order_item_model = OrderItems::find_by_id(id).one(db).await?;
+        match order_item_model {
+            Some(order_item_model) => {
+                let order_item = order_item_model.delete(db).await?;
+                Ok(order_item.rows_affected)
+            }
+            None => Ok(0),
+        }
+    }
     //
 }
