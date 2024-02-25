@@ -8,6 +8,7 @@ export const CreateProductSchema = z.object({
   description: z.string().optional(),
   minQuantity: z.number().min(0),
   stock: z.number().optional(),
+  createdAt: z.number().optional(),
 });
 
 export type ProductT = z.infer<typeof CreateProductSchema>;

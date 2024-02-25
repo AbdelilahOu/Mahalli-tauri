@@ -19,7 +19,7 @@ export type OrderForUpdateT = {
   fullname: string;
   createdAt: string;
   status: string;
-  items?: {
+  items: {
     id?: string;
     inventory_id?: string;
     name?: string;

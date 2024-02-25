@@ -1,4 +1,4 @@
-use service::{MutationsService, NewInventory};
+use service::{Inventory, MutationsService, NewInventory};
 use tauri::State;
 
 use crate::{commands::Fail, AppState};
@@ -46,9 +46,9 @@ pub async fn delete_inventory(state: State<'_, AppState>, id: String) -> SResult
 }
 
 #[tauri::command]
-pub async fn update_inventory(state: State<'_, AppState>, quantity: f64) -> SResult<String> {
+pub async fn update_inventory(state: State<'_, AppState>, mvm: Inventory) -> SResult<String> {
     let _ = state.db_conn;
-    let res = MutationsService::update_inv_mvm(&state.db_conn, quantity).await;
+    let res = MutationsService::update_inv_mvm(&state.db_conn, mvm).await;
     match res {
         Ok(_) => Ok(Seccess::<String> {
             error: None,

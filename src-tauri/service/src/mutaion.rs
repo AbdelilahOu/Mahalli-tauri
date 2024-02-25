@@ -141,14 +141,13 @@ impl MutationsService {
             None => Ok(0),
         }
     }
-    pub async fn update_inv_mvm(db: &DbConn, q: f64) -> Result<(), DbErr> {
-        // update only the quantity for now
-        let mvm = InventoryActiveModel {
-            quantity: ActiveValue::Set(q),
-            ..Default::default()
-        };
-
-        match mvm.save(db).await {
+    pub async fn update_inv_mvm(db: &DbConn, mvm: Inventory) -> Result<(), DbErr> {
+        let inventory_model = InventoryMouvements::find_by_id(mvm.id).one(db).await?;
+        let mut inventory_active: InventoryActiveModel = inventory_model.unwrap().into();
+        inventory_active.mvm_type = ActiveValue::Set(mvm.mvm_type);
+        inventory_active.quantity = ActiveValue::Set(mvm.quantity);
+        inventory_active.product_id = ActiveValue::Set(mvm.product_id);
+        match inventory_active.save(db).await {
             Ok(_) => Ok(()),
             Err(err) => Err(err),
         }

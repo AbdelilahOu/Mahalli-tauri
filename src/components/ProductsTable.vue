@@ -10,10 +10,17 @@ import { Badge } from "./ui/badge";
 import { cn } from "@/utils/shadcn";
 import { ref } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { Button } from "@/components/ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { CalendarDays } from "lucide-vue-next";
 
 defineProps<{ products: ProductT[] }>();
 
-const { t } = useI18n();
+const { t, d } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const checkedProducts = ref<string[]>([]);
@@ -89,8 +96,36 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
             <div class="font-medium text-gray-800">{{ product.name }}</div>
           </td>
           <td class="p-2">
-            <div class="font-medium text-gray-800">
-              {{ product.description?.substring(0, 50) + "..." }}
+            <div class="font-medium text-gray-800 flex items-center">
+              {{ product.description?.substring(0, 20) }}...
+              <HoverCard>
+                <HoverCardTrigger as-child>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    class="bg-slate-200 h-fit px-[2px]"
+                    >more
+                  </Button>
+                </HoverCardTrigger>
+                <HoverCardContent class="w-80">
+                  <div class="flex justify-between space-x-4">
+                    <div class="space-y-1">
+                      <h4 class="text-sm font-semibold">
+                        {{ product.name }}
+                      </h4>
+                      <p class="text-sm">
+                        {{ product.description }}
+                      </p>
+                      <div class="flex items-center pt-2">
+                        <CalendarDays class="mr-2 h-4 w-4 opacity-70" />
+                        <span class="text-xs text-muted-foreground">
+                          Created at {{ d(product.createdAt!, "short") }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
             </div>
           </td>
           <td class="p-2">

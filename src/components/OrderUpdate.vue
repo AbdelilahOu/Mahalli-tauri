@@ -82,16 +82,59 @@ const addOrderItem = () => {
     product_id: undefined,
     quantity: undefined,
     price: undefined,
-    name: undefined,
   });
 };
 
 const updateTheOrders = async () => {
   try {
-    await invoke("update_order", {
-      order: order,
-      id: route.query.id,
+    const orderRes = await invoke<Res<String>>("update_order", {
+      order: {
+        id: order.id,
+        supplier_id: order.supplierId,
+        status: order.status,
+      },
     });
+    if (!orderRes.error) {
+      for await (const item of order.items) {
+        if (!item.id) {
+          const invRes = await invoke<Res<string>>("create_inventory", {
+            mvm: {
+              mvm_type: "IN",
+              product_id: item.product_id,
+              quantity: item.quantity,
+            },
+          });
+          if (!invRes.error) {
+            await invoke<Res<string>>("create_order_item", {
+              item: {
+                order_id: order.id,
+                inventory_id: invRes.data,
+                price: item.price,
+              },
+            });
+          }
+        } else {
+          const invRes = await invoke<Res<string>>("update_inventory", {
+            mvm: {
+              id: item.inventory_id,
+              mvm_type: "IN",
+              product_id: item.product_id,
+              quantity: item.quantity,
+            },
+          });
+          if (!invRes.error) {
+            await invoke<Res<string>>("update_order_item", {
+              item: {
+                id: item.id,
+                order_id: order.id,
+                inventory_id: item.inventory_id,
+                price: item.price,
+              },
+            });
+          }
+        }
+      }
+    }
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
