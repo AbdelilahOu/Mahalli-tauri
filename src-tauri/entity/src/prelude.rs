@@ -4,8 +4,8 @@ pub use super::clients::{
     self, ActiveModel as ClientActiveModel, Entity as Clients, Model as ClientModel,
 };
 pub use super::inventory_mouvements::{
-    self, ActiveModel as InventoryMouvementActiveModel, Entity as InventoryMouvements,
-    Model as InventoryMouvementModel,
+    self, ActiveModel as InventoryActiveModel, Entity as InventoryMouvements,
+    Model as InventoryModel,
 };
 pub use super::invoice_items::{
     self, ActiveModel as InvoiceItemActiveModel, Entity as InvoiceItems, Model as InvoiceItemModel,

@@ -120,7 +120,7 @@ impl MutationsService {
     }
     //
     pub async fn create_inv_mvm(db: &DbConn, mvm: NewInventory) -> Result<String, DbErr> {
-        let in_mvm = InventoryMouvementActiveModel {
+        let in_mvm = InventoryActiveModel {
             mvm_type: ActiveValue::Set(mvm.mvm_type),
             quantity: ActiveValue::Set(mvm.quantity),
             product_id: ActiveValue::Set(mvm.product_id),
@@ -143,7 +143,7 @@ impl MutationsService {
     }
     pub async fn update_inv_mvm(db: &DbConn, q: f64) -> Result<(), DbErr> {
         // update only the quantity for now
-        let mvm = InventoryMouvementActiveModel {
+        let mvm = InventoryActiveModel {
             quantity: ActiveValue::Set(q),
             ..Default::default()
         };
@@ -165,7 +165,6 @@ impl MutationsService {
             Err(err) => Err(err),
         }
     }
-    //
     pub async fn update_order(db: &DbConn, order: Order) -> Result<(), DbErr> {
         let order_model = Orders::find_by_id(order.id).one(db).await?;
         let mut order_active: OrderActiveModel = order_model.unwrap().into();
@@ -176,7 +175,6 @@ impl MutationsService {
             Err(err) => Err(err),
         }
     }
-    //
     pub async fn delete_order(db: &DbConn, id: String) -> Result<u64, DbErr> {
         let order_model = Orders::find_by_id(id).one(db).await?;
         match order_model {
@@ -187,4 +185,29 @@ impl MutationsService {
             None => Ok(0),
         }
     }
+    //
+    pub async fn create_order_item(db: &DbConn, item: NewOrderItem) -> Result<String, DbErr> {
+        let order_item = OrderItemActiveModel {
+            order_id: ActiveValue::Set(item.order_id),
+            inventory_id: ActiveValue::Set(item.inventory_id),
+            price: ActiveValue::Set(item.price),
+            ..Default::default()
+        };
+        match order_item.insert(db).await {
+            Ok(o) => Ok(o.id),
+            Err(err) => Err(err),
+        }
+    }
+    pub async fn update_order_item(db: &DbConn, item: OrderItem) -> Result<(), DbErr> {
+        let order_item_model = OrderItems::find_by_id(item.id).one(db).await?;
+        let mut order_item_active: OrderItemActiveModel = order_item_model.unwrap().into();
+        order_item_active.order_id = ActiveValue::Set(item.order_id);
+        order_item_active.inventory_id = ActiveValue::Set(item.inventory_id);
+        order_item_active.price = ActiveValue::Set(item.price);
+        match order_item_active.save(db).await {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err),
+        }
+    }
+    //
 }
