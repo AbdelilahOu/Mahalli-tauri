@@ -153,8 +153,6 @@ impl QueriesService {
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        println!("{}", sql);
-
         let res = SelectProducts::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
             sql,
@@ -506,8 +504,6 @@ impl QueriesService {
             .group_by_col((Orders, orders::Column::Id))
             .to_owned()
             .build(SqliteQueryBuilder);
-
-        println!("{:?},{}", sql.clone(), count.clone());
 
         let res = SelectOrders::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
