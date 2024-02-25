@@ -12,16 +12,6 @@ pub struct SelectOrders {
     pub total: f64,
 }
 
-#[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
-pub struct SelectOrdersItemsForUpdate {
-    pub id: String,
-    pub inventory_id: String,
-    pub name: String,
-    pub price: f64,
-    pub quantity: f64,
-    pub product_id: String,
-}
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NewOrder {
     pub supplier_id: String,
