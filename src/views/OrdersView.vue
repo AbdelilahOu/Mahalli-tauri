@@ -118,12 +118,9 @@ const updateModal = (name: string) => {
                 <SelectValue placeholder="Select a status" />
               </SelectTrigger>
               <SelectContent>
-                <!-- <SelectGroup> -->
-                <!-- <SelectLabel>Fruits</SelectLabel> -->
                 <SelectItem value="DELIVERED"> Delivered </SelectItem>
                 <SelectItem value="CANCELED"> Cancelled </SelectItem>
                 <SelectItem value="PENDING"> Pending </SelectItem>
-                <!-- </SelectGroup> -->
               </SelectContent>
             </Select>
           </div>
