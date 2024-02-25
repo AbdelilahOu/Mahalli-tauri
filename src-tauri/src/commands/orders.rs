@@ -47,9 +47,9 @@ pub async fn create_order(state: State<'_, AppState>, order: NewOrder) -> SResul
 }
 
 #[tauri::command]
-pub async fn update_order(state: State<'_, AppState>, data: Order) -> SResult<()> {
+pub async fn update_order(state: State<'_, AppState>, order: Order) -> SResult<()> {
     let _ = state.db_conn;
-    let res = MutationsService::update_order(&state.db_conn, data).await;
+    let res = MutationsService::update_order(&state.db_conn, order).await;
     match res {
         Ok(_) => Ok(Seccess {
             error: None,
