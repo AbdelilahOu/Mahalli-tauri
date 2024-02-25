@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { invoke } from "@tauri-apps/api";
 import { useI18n } from "vue-i18n";
 import { store } from "@/store";
@@ -28,10 +28,10 @@ import {
 } from "vue";
 
 const { t } = useI18n();
-const router = useRouter();
+const route = useRoute();
 const searchQuery = ref<string>("");
-const page = computed(() => Number(router.currentRoute.value.query.page));
-const refresh = computed(() => router.currentRoute.value.query.refresh);
+const page = computed(() => Number(route.query.page));
+const refresh = computed(() => route.query.refresh);
 const orders = ref<OrderT[]>([]);
 const totalRows = ref<number>(0);
 const status = ref<string | undefined>(undefined);
@@ -49,12 +49,12 @@ let timer: number | undefined;
 let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
   unwatch = watch(
-    [page, refresh, searchQuery, createdAt, status],
-    ([p, , search, ,], [, , oldSearch]) => {
+    [searchQuery, page, refresh, createdAt, status],
+    ([search, p], [oldSearch]) => {
       clearTimeout(timer);
       timer = setTimeout(
         () => {
-          if (p && p > 0) getOrders(p);
+          if (p && p > 0) getOrders(search, p);
         },
         search != oldSearch && oldSearch ? 500 : 0,
       );
@@ -65,12 +65,12 @@ onMounted(() => {
   );
 });
 
-const getOrders = async (page = 1) => {
+const getOrders = async (search: string, page = 1) => {
   try {
     const res = await invoke<Res<any>>("list_orders", {
       args: {
         page,
-        search: searchQuery.value,
+        search,
         limit: 17,
         status: status.value,
         created_at: createdAt.value

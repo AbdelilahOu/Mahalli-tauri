@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { invoke } from "@tauri-apps/api";
-import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { store } from "@/store";
 import {
   type WatchStopHandle,
@@ -21,15 +21,15 @@ import {
 import type { ProductT } from "@/schemas/products.schema";
 
 const { t } = useI18n();
-const router = useRouter();
+const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 //
 const products = ref<ProductT[]>([]);
 const searchQuery = ref<string>("");
 const totalRows = ref<number>(0);
 //
-const page = computed(() => Number(router.currentRoute.value.query.page));
-const refresh = computed(() => router.currentRoute.value.query.refresh);
+const page = computed(() => Number(route.query.page));
+const refresh = computed(() => route.query.refresh);
 //
 provide("count", totalRows);
 //
@@ -37,8 +37,8 @@ let timer: number | undefined;
 let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
   unwatch = watch(
-    [page, refresh, searchQuery],
-    ([p, _r, search], [_p, _, oldSearch]) => {
+    [searchQuery, page, refresh],
+    ([search, p], [oldSearch]) => {
       clearTimeout(timer);
       timer = setTimeout(
         () => {

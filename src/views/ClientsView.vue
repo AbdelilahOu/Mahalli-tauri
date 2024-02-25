@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import { Input } from "@/components/ui/input";
 import { invoke } from "@tauri-apps/api";
-import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { store } from "@/store";
 import {
@@ -20,13 +20,13 @@ import {
 import type { ClientT } from "@/schemas/client.schema";
 
 const { t } = useI18n();
-const router = useRouter();
+const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const clients = ref<ClientT[]>([]);
 const searchQuery = ref<string>("");
-const page = computed(() => Number(router.currentRoute.value.query.page));
-const refresh = computed(() => router.currentRoute.value.query.refresh);
+const page = computed(() => Number(route.query.page));
+const refresh = computed(() => route.query.refresh);
 
 const totalRows = ref<number>(0);
 
@@ -37,8 +37,8 @@ let timer: number | undefined;
 let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
   unwatch = watch(
-    [page, refresh, searchQuery],
-    ([p, , search], [, , oldSearch]) => {
+    [searchQuery, page, refresh],
+    ([search, p], [oldSearch]) => {
       clearTimeout(timer);
       timer = setTimeout(
         () => {
@@ -128,7 +128,6 @@ const updateModal = (name: string) => {
           </div>
         </div>
       </Transition>
-
       <Transition appear>
         <ClientsTable :clients="clients" />
       </Transition>
