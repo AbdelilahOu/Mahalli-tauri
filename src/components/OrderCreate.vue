@@ -170,7 +170,7 @@ const hideModal = () => {
             {{ t("o.c.d.o.add") }}
           </Button>
           <div
-            class="w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
+            class="w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <template v-for="(item, index) in order.items" :key="index">
               <SearchableItems

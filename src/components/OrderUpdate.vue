@@ -152,7 +152,7 @@ const hideModal = () => {
 
 async function deleteOneOrderItem(id: string) {
   try {
-    await invoke("delete_order_items", { id });
+    await invoke("delete_order_item", { id });
   } catch (error) {
     console.log(error);
   }
@@ -206,7 +206,7 @@ const deleteOrderItem = (index: number) => {
             {{ t("o.u.d.o.add") }}
           </Button>
           <div
-            class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] pb-10 overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
+            class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <template v-for="(item, index) in order.items" :key="index">
               <SearchableItems
