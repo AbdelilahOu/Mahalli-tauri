@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { RouterView, useRouter } from "vue-router";
-import { onBeforeMount, Transition } from "vue";
+import { RouterView } from "vue-router";
+import { Transition } from "vue";
 // import "vue3-lottie/dist/style.css";
-onBeforeMount(() => useRouter().push("/Home"));
 </script>
 
 <template>
