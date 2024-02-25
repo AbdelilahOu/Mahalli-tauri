@@ -71,7 +71,7 @@ const getOrders = async (page = 1) => {
       args: {
         page,
         search: searchQuery.value,
-        limit: 19,
+        limit: 17,
         status: status.value,
         created_at: createdAt.value
           ? new Date(createdAt.value).toISOString().slice(0, 10)
