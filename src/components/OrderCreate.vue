@@ -76,12 +76,37 @@ const searchProducts = async (search: string | number) => {
 
 const createOrder = async () => {
   isLoading.value = true;
-  console.log(order);
   if (order?.supplierId && order.items?.length !== 0) {
     try {
-      await invoke("insert_order", {
-        order: order,
+      const orderRes = await invoke<Res<String>>("create_order", {
+        order: {
+          supplier_id: order.supplierId,
+          status: order.status,
+        },
       });
+      console.log(orderRes);
+      if (!orderRes.error) {
+        for await (const item of order.items) {
+          const invRes = await invoke<Res<string>>("create_inventory", {
+            mvm: {
+              mvm_type: "IN",
+              product_id: item.product_id,
+              quantity: item.quantity,
+            },
+          });
+          console.log(invRes);
+          if (!invRes.error) {
+            const itemRes = await invoke<Res<string>>("create_order_item", {
+              item: {
+                order_id: orderRes.data,
+                inventory_id: invRes.data,
+                price: item.price,
+              },
+            });
+            console.log(itemRes);
+          }
+        }
+      }
       // toggle refresh
       updateQueryParams({
         refresh: "refresh-create-" + Math.random() * 9999,

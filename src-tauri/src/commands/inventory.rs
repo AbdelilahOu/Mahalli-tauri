@@ -10,10 +10,10 @@ pub async fn create_inventory(state: State<'_, AppState>, mvm: NewInventory) -> 
     let _ = state.db_conn;
     let res = MutationsService::create_inv_mvm(&state.db_conn, mvm).await;
     match res {
-        Ok(_) => Ok(Seccess::<String> {
+        Ok(id) => Ok(Seccess::<String> {
             error: None,
             message: Option::Some(String::from("inventory created successfully")),
-            data: None,
+            data: Some(id),
         }),
         Err(err) => {
             println!("Error: {}", err);

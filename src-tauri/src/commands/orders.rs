@@ -27,14 +27,14 @@ pub async fn list_orders(state: State<'_, AppState>, args: ListArgs) -> SResult<
 }
 
 #[tauri::command]
-pub async fn create_order(state: State<'_, AppState>, data: NewOrder) -> SResult<String> {
+pub async fn create_order(state: State<'_, AppState>, order: NewOrder) -> SResult<String> {
     let _ = state.db_conn;
-    let res = MutationsService::create_order(&state.db_conn, data).await;
+    let res = MutationsService::create_order(&state.db_conn, order).await;
     match res {
-        Ok(res) => Ok(Seccess {
+        Ok(id) => Ok(Seccess {
             error: None,
             message: None,
-            data: Some(res),
+            data: Some(id),
         }),
         Err(err) => {
             println!("Error: {}", err);
