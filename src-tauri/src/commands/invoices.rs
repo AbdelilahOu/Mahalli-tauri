@@ -27,6 +27,26 @@ pub async fn list_invoices(state: State<'_, AppState>, args: ListArgs) -> SResul
 }
 
 #[tauri::command]
+pub async fn list_invoice_products(state: State<'_, AppState>, id: String) -> SResult<Vec<Value>> {
+    let _ = state.db_conn;
+    let res = QueriesService::list_invoice_products(&state.db_conn, id).await;
+    match res {
+        Ok(res) => Ok(Seccess {
+            error: None,
+            message: None,
+            data: Some(res),
+        }),
+        Err(err) => {
+            println!("Error: {}", err);
+            Err(Fail {
+                error: Some(err.to_string()),
+                message: None,
+            })
+        }
+    }
+}
+
+#[tauri::command]
 pub async fn create_invoice(state: State<'_, AppState>, invoice: NewInvoice) -> SResult<String> {
     let _ = state.db_conn;
     let res = MutationsService::create_invoice(&state.db_conn, invoice).await;

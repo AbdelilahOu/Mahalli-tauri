@@ -38,3 +38,9 @@ export type OrderForCreateT = {
     price?: number;
   }[];
 };
+
+export type OrderProductT = {
+  price: number;
+  name: string;
+  quantity: number;
+};

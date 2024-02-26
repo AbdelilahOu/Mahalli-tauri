@@ -599,6 +599,29 @@ impl QueriesService {
             None => Err(DbErr::RecordNotFound(String::from("no order"))),
         }
     }
+    pub async fn list_order_products(db: &DbConn, id: String) -> Result<Vec<JsonValue>, DbErr> {
+        let order_products = OrderItems::find()
+            .select_only()
+            .columns([order_items::Column::Price])
+            .exprs([
+                Expr::col((Products, products::Column::Name)),
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
+            ])
+            .join(
+                JoinType::Join,
+                order_items::Relation::InventoryMouvements.def(),
+            )
+            .join(
+                JoinType::Join,
+                inventory_mouvements::Relation::Products.def(),
+            )
+            .filter(Expr::col((OrderItems, order_items::Column::OrderId)).eq(id))
+            .into_json()
+            .all(db)
+            .await?;
+
+        Ok(order_products)
+    }
     //
     pub async fn list_invoices(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Invoices::find()
@@ -784,5 +807,28 @@ impl QueriesService {
             }
             None => Err(DbErr::RecordNotFound(String::from("no invoice"))),
         }
+    }
+    pub async fn list_invoice_products(db: &DbConn, id: String) -> Result<Vec<JsonValue>, DbErr> {
+        let invoice_products = InvoiceItems::find()
+            .select_only()
+            .columns([invoice_items::Column::Price])
+            .exprs([
+                Expr::col((Products, products::Column::Name)),
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
+            ])
+            .join(
+                JoinType::Join,
+                invoice_items::Relation::InventoryMouvements.def(),
+            )
+            .join(
+                JoinType::Join,
+                inventory_mouvements::Relation::Products.def(),
+            )
+            .filter(Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).eq(id))
+            .into_json()
+            .all(db)
+            .await?;
+
+        Ok(invoice_products)
     }
 }

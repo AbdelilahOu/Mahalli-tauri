@@ -27,6 +27,26 @@ pub async fn list_orders(state: State<'_, AppState>, args: ListArgs) -> SResult<
 }
 
 #[tauri::command]
+pub async fn list_order_products(state: State<'_, AppState>, id: String) -> SResult<Vec<Value>> {
+    let _ = state.db_conn;
+    let res = QueriesService::list_order_products(&state.db_conn, id).await;
+    match res {
+        Ok(res) => Ok(Seccess {
+            error: None,
+            message: None,
+            data: Some(res),
+        }),
+        Err(err) => {
+            println!("Error: {}", err);
+            Err(Fail {
+                error: Some(err.to_string()),
+                message: None,
+            })
+        }
+    }
+}
+
+#[tauri::command]
 pub async fn create_order(state: State<'_, AppState>, order: NewOrder) -> SResult<String> {
     let _ = state.db_conn;
     let res = MutationsService::create_order(&state.db_conn, order).await;
