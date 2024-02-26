@@ -65,7 +65,7 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <HoverCard>
+              <HoverCard v-if="order.products && order.products > 0">
                 <HoverCardTrigger as-child>
                   <Button
                     @mouseenter="$emit('listOrderProducts', order.id)"
@@ -102,6 +102,9 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
                   </table>
                 </HoverCardContent>
               </HoverCard>
+              <span v-else>
+                {{ t("g.plrz.p", { n: order.products }) }}
+              </span>
             </div>
           </td>
           <td class="p-2">
