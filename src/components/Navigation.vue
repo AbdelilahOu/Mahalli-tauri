@@ -44,11 +44,11 @@ const User = computed(() => store.getters.getUser());
           </svg>
         </span>
         <span class="pb-[3px] text-gray-700 flex items-center">
-          <button @click="$router.push('/Home')">
+          <RouterLink to="/">
             <span class="w-full h-full cursor-pointer bg-white">
               <UiIcon IsStyled="true" class="text-gray-700" name="Home" />
             </span>
-          </button>
+          </RouterLink>
           <span v-if="route.fullPath !== '/'" class="flex items-center">
             <span class="flex items-center">
               {{ ActiveLink && " / " }}

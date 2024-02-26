@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 
 pub mod clients;
 pub mod inventory;
+pub mod invoice_items;
+pub mod invoices;
 pub mod order_items;
 pub mod orders;
 pub mod products;

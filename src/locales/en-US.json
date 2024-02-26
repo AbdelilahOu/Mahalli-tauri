@@ -249,7 +249,7 @@
       "no": "Cancel"
     },
     "s": {
-      "delivered": "Delivered",
+      "paid": "Paid",
       "pending": "Pending",
       "canceled": "Canceled"
     }

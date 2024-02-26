@@ -5,6 +5,7 @@ import ModalComponentsRenderer from "@/components/ModalComponentsRenderer.vue";
 import Navigation from "@/components/Navigation.vue";
 import SideBar from "@/components/SideBar.vue";
 import { store } from "@/store";
+import { ScrollArea } from "@/components/ui/scroll-area";
 const show = computed(() => store.getters.getModalVisibility());
 const name = computed(() => store.getters.getModalName());
 const isCollapse = ref<boolean>(true);
@@ -34,7 +35,7 @@ onBeforeRouteUpdate((to: any, from: any) => {
     </div>
     <div class="grid grid-rows-[50px_1fr] w-full">
       <Navigation />
-      <div
+      <ScrollArea
         class="w-full h-[calc(100vh-50px)] flex flex-col border-t-2 border-slate-100 items-center justify-center overflow-y-auto scrollbar-thin scrollbar-thumb-transparent"
       >
         <div
@@ -47,7 +48,7 @@ onBeforeRouteUpdate((to: any, from: any) => {
         <div class="w-full bg-white p-2 rounded-[4px] h-full">
           <RouterView></RouterView>
         </div>
-      </div>
+      </ScrollArea>
     </div>
   </main>
 </template>
