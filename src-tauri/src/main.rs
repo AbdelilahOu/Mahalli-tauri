@@ -68,6 +68,20 @@ async fn main() {
             commands::order_items::create_order_item,
             commands::order_items::update_order_item,
             commands::order_items::delete_order_item,
+            //
+            // invoices
+            //
+            commands::invoices::list_invoices,
+            commands::invoices::get_invoice,
+            commands::invoices::create_invoice,
+            commands::invoices::update_invoice,
+            commands::invoices::delete_invoice,
+            //
+            // invoice items
+            //
+            commands::invoice_items::create_invoice_item,
+            commands::invoice_items::update_invoice_item,
+            commands::invoice_items::delete_invoice_item,
         ])
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())

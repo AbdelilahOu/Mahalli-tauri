@@ -190,19 +190,22 @@ impl MigrationTrait for Migration {
         for _ in 0..150 {
             let id = uuid::Uuid::new_v4();
             let status_ = get_random_enum(status.clone());
+            let paid: u8 = Faker.fake();
             let insert_invoice = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,
                 r#"
                 INSERT INTO 
-                    invoices (id, status, client_id)
+                    invoices (id, status, client_id, paid_amount)
                 VALUES
                     (
                         $1, 
                         $2, 
-                        (SELECT id FROM clients ORDER BY RANDOM() LIMIT 1)
+                        (SELECT id FROM clients ORDER BY RANDOM() LIMIT 1),
+                        $3
+
                     )
                 "#,
-                [id.to_string().into(), status_.into()],
+                [id.to_string().into(), status_.into(), paid.into()],
             );
             db.execute(insert_invoice).await?;
         }

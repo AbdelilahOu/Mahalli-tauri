@@ -219,4 +219,73 @@ impl MutationsService {
         }
     }
     //
+    //
+    pub async fn create_invoice(db: &DbConn, invoice: NewInvoice) -> Result<String, DbErr> {
+        let invoice = InvoiceActiveModel {
+            client_id: ActiveValue::Set(invoice.client_id),
+            status: ActiveValue::Set(invoice.status),
+            paid_amount: ActiveValue::Set(invoice.paid_amount),
+            ..Default::default()
+        };
+        match invoice.insert(db).await {
+            Ok(o) => Ok(o.id),
+            Err(err) => Err(err),
+        }
+    }
+    pub async fn update_invoice(db: &DbConn, invoice: Invoice) -> Result<(), DbErr> {
+        let invoice_model = Invoices::find_by_id(invoice.id).one(db).await?;
+        let mut invoice_active: InvoiceActiveModel = invoice_model.unwrap().into();
+        invoice_active.client_id = ActiveValue::Set(invoice.client_id);
+        invoice_active.status = ActiveValue::Set(invoice.status);
+        invoice_active.paid_amount = ActiveValue::Set(invoice.paid_amount);
+        match invoice_active.save(db).await {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err),
+        }
+    }
+    pub async fn delete_invoice(db: &DbConn, id: String) -> Result<u64, DbErr> {
+        let invoice_model = Invoices::find_by_id(id).one(db).await?;
+        match invoice_model {
+            Some(invoice_model) => {
+                let invoice = invoice_model.delete(db).await?;
+                Ok(invoice.rows_affected)
+            }
+            None => Ok(0),
+        }
+    }
+    //
+    pub async fn create_invoice_item(db: &DbConn, item: NewInvoiceItem) -> Result<String, DbErr> {
+        let invoice_item = InvoiceItemActiveModel {
+            invoice_id: ActiveValue::Set(item.invoice_id),
+            inventory_id: ActiveValue::Set(item.inventory_id),
+            price: ActiveValue::Set(item.price),
+            ..Default::default()
+        };
+        match invoice_item.insert(db).await {
+            Ok(o) => Ok(o.id),
+            Err(err) => Err(err),
+        }
+    }
+    pub async fn update_invoice_item(db: &DbConn, item: InvoiceItem) -> Result<(), DbErr> {
+        let invoice_item_model = InvoiceItems::find_by_id(item.id).one(db).await?;
+        let mut invoice_item_active: InvoiceItemActiveModel = invoice_item_model.unwrap().into();
+        invoice_item_active.invoice_id = ActiveValue::Set(item.invoice_id);
+        invoice_item_active.inventory_id = ActiveValue::Set(item.inventory_id);
+        invoice_item_active.price = ActiveValue::Set(item.price);
+        match invoice_item_active.save(db).await {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err),
+        }
+    }
+    pub async fn delete_invoice_item(db: &DbConn, id: String) -> Result<u64, DbErr> {
+        let invoice_item_model = InvoiceItems::find_by_id(id).one(db).await?;
+        match invoice_item_model {
+            Some(invoice_item_model) => {
+                let invoice_item = invoice_item_model.delete(db).await?;
+                Ok(invoice_item.rows_affected)
+            }
+            None => Ok(0),
+        }
+    }
+    //
 }

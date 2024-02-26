@@ -12,7 +12,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 use crate::{
-    SelectClients, SelectOrders, SelectOrdersItemsForUpdate, SelectProducts, SelectSuppliers,
+    SelectClients, SelectInvoices, SelectInvoicesItemsForUpdate, SelectOrders,
+    SelectOrdersItemsForUpdate, SelectProducts, SelectSuppliers,
 };
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -599,4 +600,189 @@ impl QueriesService {
         }
     }
     //
+    pub async fn list_invoices(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
+        let count = Invoices::find()
+            .apply_if(Some(args.search.clone()), |query, v| {
+                query
+                    .filter(Expr::col((Clients, clients::Column::FullName)).like(format!("{}%", v)))
+            })
+            .apply_if(args.status.clone(), |query, v| {
+                query.filter(Expr::col((Invoices, invoices::Column::Status)).eq(v))
+            })
+            .apply_if(args.created_at.clone(), |query, v| {
+                query.filter(Expr::cust_with_values(
+                    "strftime('%Y-%m-%d', invoices.created_at) = ?",
+                    [v],
+                ))
+            })
+            .join(JoinType::Join, invoices::Relation::Clients.def())
+            .count(db)
+            .await?;
+
+        let (sql, values) = Query::select()
+            .from(Invoices)
+            .exprs([
+                Expr::col((Invoices, invoices::Column::Id)),
+                Expr::col((Invoices, invoices::Column::Status)),
+                Expr::col((Invoices, invoices::Column::CreatedAt)),
+                Expr::col((Invoices, invoices::Column::ClientId)),
+                Expr::col((Invoices, invoices::Column::PaidAmount)),
+                Expr::col((Clients, clients::Column::FullName)),
+            ])
+            .expr_as(
+                Func::coalesce([
+                    Func::count(Expr::col(inventory_mouvements::Column::Quantity)).into(),
+                    Expr::val(0i64).into(),
+                ]),
+                Alias::new("products"),
+            )
+            .expr_as(
+                Func::coalesce([
+                    Func::sum(
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity))
+                            .mul(Expr::col((InvoiceItems, invoice_items::Column::Price))),
+                    )
+                    .into(),
+                    Expr::val(0.0f64).into(),
+                ]),
+                Alias::new("total"),
+            )
+            .left_join(
+                InvoiceItems,
+                Expr::col((InvoiceItems, invoice_items::Column::InvoiceId))
+                    .equals((Invoices, invoices::Column::Id)),
+            )
+            .left_join(
+                InventoryMouvements,
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                    .equals((InvoiceItems, invoice_items::Column::InventoryId)),
+            )
+            .join(
+                JoinType::Join,
+                Clients,
+                Expr::col((Clients, clients::Column::Id))
+                    .equals((Invoices, invoices::Column::ClientId)),
+            )
+            .cond_where(
+                Expr::col((Clients, clients::Column::FullName)).like(format!("{}%", args.search)),
+            )
+            .conditions(
+                args.status.clone().is_some(),
+                |x| {
+                    x.and_where(Expr::col((Invoices, invoices::Column::Status)).eq(args.status));
+                },
+                |_| {},
+            )
+            .conditions(
+                args.created_at.clone().is_some(),
+                |x| {
+                    x.and_where(Expr::cust_with_values(
+                        "strftime('%Y-%m-%d', invoices.created_at) = ?",
+                        args.created_at,
+                    ));
+                },
+                |_| {},
+            )
+            .limit(args.limit)
+            .offset((args.page - 1) * args.limit)
+            .order_by((Invoices, invoices::Column::CreatedAt), Order::Desc)
+            .group_by_col((Invoices, invoices::Column::Id))
+            .to_owned()
+            .build(SqliteQueryBuilder);
+
+        let res = SelectInvoices::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .all(db)
+        .await?;
+
+        let mut result = Vec::<JsonValue>::new();
+        res.into_iter().for_each(|row| {
+            result.push(json!({
+                "id": row.id,
+                "clientId": row.client_id,
+                "paidAmount": row.paid_amount,
+                "createdAt": row.created_at,
+                "fullname": row.full_name,
+                "status": row.status,
+                "products": row.products,
+                "total": row.total,
+            }));
+        });
+
+        Ok(json!({
+            "count": count,
+            "invoices": result
+        }))
+    }
+    pub async fn get_invoice(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
+        let invoice = Invoices::find_by_id(id.clone())
+            .find_also_related(Clients)
+            .one(db)
+            .await?;
+
+        match invoice {
+            Some(invoice) => {
+                let (sql, values) = Query::select()
+                    .exprs([
+                        Expr::col((InvoiceItems, invoice_items::Column::Id)),
+                        Expr::col((InvoiceItems, invoice_items::Column::InventoryId)),
+                        Expr::col((InvoiceItems, invoice_items::Column::Price)),
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
+                        Expr::col((Products, products::Column::Name)),
+                    ])
+                    .expr_as(
+                        Expr::col((Products, products::Column::Id)),
+                        Alias::new("product_id"),
+                    )
+                    .from(InvoiceItems)
+                    .join(
+                        JoinType::Join,
+                        InventoryMouvements,
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                            .equals((InvoiceItems, invoice_items::Column::InventoryId)),
+                    )
+                    .join(
+                        JoinType::Join,
+                        Products,
+                        Expr::col((Products, products::Column::Id))
+                            .equals((InventoryMouvements, inventory_mouvements::Column::ProductId)),
+                    )
+                    .cond_where(Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).eq(id))
+                    .to_owned()
+                    .build(SqliteQueryBuilder);
+
+                let items = SelectInvoicesItemsForUpdate::find_by_statement(
+                    Statement::from_sql_and_values(DbBackend::Sqlite, sql, values),
+                )
+                .all(db)
+                .await?;
+
+                let mut result = Vec::<JsonValue>::new();
+                items.into_iter().for_each(|item| {
+                    result.push(json!({
+                        "id": item.id,
+                        "inventory_id": item.inventory_id,
+                        "product_id": item.product_id,
+                        "price": item.price,
+                        "quantity": item.quantity,
+                        "name": item.name,
+                    }));
+                });
+
+                Ok(json!({
+                    "id": invoice.0.id,
+                    "clientId": invoice.0.client_id,
+                    "paidAmount": invoice.0.paid_amount,
+                    "createdAt": invoice.0.created_at,
+                    "status": invoice.0.status,
+                    "fullname": invoice.1.unwrap().full_name,
+                    "items": result,
+                }))
+            }
+            None => Err(DbErr::RecordNotFound(String::from("no invoice"))),
+        }
+    }
 }

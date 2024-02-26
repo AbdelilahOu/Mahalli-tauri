@@ -117,16 +117,6 @@ const router = createRouter({
           name: "Notifications",
           component: NotificationsView,
         },
-        // {
-        //   path: "Payment",
-        //   name: "Payment",
-        //   component: PaymentView,
-        // },
-        // {
-        //   path: "Upcomings",
-        //   name: "Upcomings",
-        //   component: UpcomingsView,
-        // },
       ],
     },
     {
