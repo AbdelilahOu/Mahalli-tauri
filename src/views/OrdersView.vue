@@ -104,7 +104,7 @@ const listOrderProduct = (id?: string) => {
     } catch (error) {
       console.log(error);
     }
-  }, 200);
+  }, 300);
 };
 
 const cancelOrderProducts = () => clearInterval(orderProductsTimer);
