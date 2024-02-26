@@ -72,7 +72,7 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
                     @mouseleave="$emit('cancelOrderProducts')"
                     size="sm"
                     variant="link"
-                    class="underline"
+                    class="underline px-0"
                   >
                     {{ t("g.plrz.p", { n: order.products }) }}
                   </Button>
