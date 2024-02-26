@@ -4,7 +4,6 @@ import UiPagination from "./ui/UiPagination.vue";
 import { RouterLink } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
-// import { ref } from "vue";
 import type { OrderProductT, OrderT } from "@/schemas/order.schema";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
