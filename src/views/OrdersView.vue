@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import type { Res } from "@/types";
-import type { OrderT } from "@/schemas/order.schema";
+import type { OrderProductT, OrderT } from "@/schemas/order.schema";
 import {
   SelectContent,
   SelectTrigger,
@@ -36,6 +36,7 @@ const orders = ref<OrderT[]>([]);
 const totalRows = ref<number>(0);
 const status = ref<string | undefined>(undefined);
 const createdAt = ref<string | number | undefined>(undefined);
+const orderProducts = ref<OrderProductT[]>([]);
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -87,6 +88,26 @@ const getOrders = async (search: string, page = 1) => {
     console.log(error);
   }
 };
+
+let orderProductsTimer: number;
+const listOrderProduct = (id?: string) => {
+  clearTimeout(orderProductsTimer);
+  orderProductsTimer = setTimeout(async () => {
+    try {
+      const res = await invoke<Res<any>>("list_order_products", {
+        id,
+      });
+      if (!res?.error) {
+        console.log(res);
+        orderProducts.value = res.data;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, 200);
+};
+
+const cancelOrderProducts = () => clearInterval(orderProductsTimer);
 
 const uploadCSV = () => {
   store.setters.updateStore({ key: "name", value: "CsvUploader" });
@@ -152,7 +173,12 @@ const updateModal = (name: string) => {
         </div>
       </Transition>
       <Transition appear>
-        <OrdersTable :orders="orders" />
+        <OrdersTable
+          @listOrderProducts="listOrderProduct"
+          @cancelOrderProducts="cancelOrderProducts"
+          :orders="orders"
+          :orderProducts="orderProducts"
+        />
       </Transition>
     </div>
   </main>

@@ -5,23 +5,25 @@ import { RouterLink } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 // import { ref } from "vue";
-import type { OrderT } from "@/schemas/order.schema";
+import type { OrderProductT, OrderT } from "@/schemas/order.schema";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 import { cn } from "@/utils/shadcn";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
-defineProps<{ orders: OrderT[] }>();
-
 const { t, d } = useI18n();
-// const checkedOrders = ref<string[]>([]);
 
-// const _ = (IsIncluded: boolean, id: string) => {
-//   IsIncluded
-//     ? checkedOrders.value.push(id)
-//     : checkedOrders.value.splice(checkedOrders.value.indexOf(id), 1);
-// };
+defineProps<{ orders: OrderT[]; orderProducts: OrderProductT[] }>();
+defineEmits<{
+  (e: "listOrderProducts", id?: string): void;
+  (e: "cancelOrderProducts"): void;
+}>();
 
 const toggleThisOrders = (Order: OrderT, name: string) => {
   updateQueryParams({
@@ -64,9 +66,43 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span>
-                {{ t("g.plrz.p", { n: order.products }) }}
-              </span>
+              <HoverCard>
+                <HoverCardTrigger as-child>
+                  <Button
+                    @mouseenter="$emit('listOrderProducts', order.id)"
+                    @mouseleave="$emit('cancelOrderProducts')"
+                    size="sm"
+                    variant="link"
+                    class="underline"
+                  >
+                    {{ t("g.plrz.p", { n: order.products }) }}
+                  </Button>
+                </HoverCardTrigger>
+                <HoverCardContent class="min-w-[13rem] p-2">
+                  <table class="w-full">
+                    <thead>
+                      <tr>
+                        <th v-for="index in 3" :key="index"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(orderProduct, index) in orderProducts"
+                        :key="index"
+                        class="space-y-1 text-sm flex justify-between w-full items-center"
+                      >
+                        <td class="underline w-1/2">{{ orderProduct.name }}</td>
+                        <td class="w-1/4 text-end">
+                          {{ orderProduct.price }} Dh
+                        </td>
+                        <td class="w-1/4 text-slate-700 text-end">
+                          x{{ orderProduct.quantity }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </HoverCardContent>
+              </HoverCard>
             </div>
           </td>
           <td class="p-2">
