@@ -96,8 +96,11 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
             <div class="font-medium text-gray-800">{{ product.name }}</div>
           </td>
           <td class="p-2">
-            <div class="font-medium text-gray-800 flex items-center">
-              {{ product.description?.substring(0, 20) }}...
+            <div
+              v-if="product.description && product.description?.length > 30"
+              class="font-medium text-gray-800 flex items-center"
+            >
+              {{ product.description?.substring(0, 30) }}...
               <HoverCard>
                 <HoverCardTrigger as-child>
                   <Button
@@ -126,6 +129,9 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
                   </div>
                 </HoverCardContent>
               </HoverCard>
+            </div>
+            <div v-else class="font-medium text-gray-800 flex items-center">
+              {{ product.description }}
             </div>
           </td>
           <td class="p-2">
