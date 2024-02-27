@@ -9,6 +9,7 @@ import { store } from "@/store";
 import { ref } from "vue";
 import type { SupplierT } from "@/schemas/supplier.schema";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { Skeleton } from "./ui/skeleton";
 
 defineProps<{
   suppliers: SupplierT[];
@@ -82,15 +83,15 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
           </td>
           <td class="p-2">
             <div class="w-12 h-12 rounded-full overflow-hidden">
-              <img
-                v-if="supplier.image && supplier.image !== ''"
-                class="rounded-full w-full h-full object-cover"
-                :src="convertFileSrc(supplier.image)"
-              />
-              <span
-                v-else
+              <Skeleton
                 class="rounded-full w-full h-full block object-fill animate-pulse bg-slate-300 duration-1000"
-              />
+              >
+                <img
+                  v-if="supplier.image && supplier.image !== ''"
+                  class="rounded-full w-full h-full object-cover"
+                  :src="convertFileSrc(supplier.image)"
+                />
+              </Skeleton>
             </div>
           </td>
           <td class="p-2">

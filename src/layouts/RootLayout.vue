@@ -6,6 +6,8 @@ import Navigation from "@/components/Navigation.vue";
 import SideBar from "@/components/SideBar.vue";
 import { store } from "@/store";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/utils/shadcn";
+
 const show = computed(() => store.getters.getModalVisibility());
 const name = computed(() => store.getters.getModalName());
 const isCollapse = ref<boolean>(true);
@@ -22,16 +24,14 @@ onBeforeRouteUpdate((to: any, from: any) => {
 <template>
   <main class="w-screen h-screen relative bg-white flex">
     <div
-      class="transition-all print:hidden sticky top-0 border-r-2 border-slate-100 z-50 flex justify-center duration-200"
-      :class="{
-        'w-12 min-w-[48px]': isCollapse,
-        'w-52 min-w-[12rem]': !isCollapse,
-      }"
+      :class="
+        cn(
+          'transition-all print:hidden sticky top-0 border-r-2 border-slate-100 z-50 flex justify-center duration-200',
+          isCollapse ? 'w-12 min-w-[48px]' : 'w-52 min-w-[12rem]',
+        )
+      "
     >
-      <SideBar
-        :isCollapse="isCollapse"
-        @toggle:collapse="isCollapse = !isCollapse"
-      />
+      <SideBar v-model:collapse="isCollapse" />
     </div>
     <div class="grid grid-rows-[50px_1fr] w-full">
       <Navigation />
