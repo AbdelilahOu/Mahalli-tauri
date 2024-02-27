@@ -24,15 +24,15 @@ import type { Res } from "@/types";
 const { t } = useI18n();
 const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
+//
 const inventoryMouvements = ref<InventoryT[]>([]);
 const searchQuery = ref<string>("");
 const page = computed(() => Number(route.query.page));
 const refresh = computed(() => route.query.refresh);
 const totalRows = ref<number>(0);
-
+//
 provide("count", totalRows);
-
+//
 let timer: number | undefined;
 let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
@@ -66,7 +66,6 @@ async function getInventory(search: string, page: number = 1) {
         limit: 17,
       },
     });
-    console.log(res);
     if (!res?.error) {
       inventoryMouvements.value = res.data.inventory;
       totalRows.value = res.data.count;

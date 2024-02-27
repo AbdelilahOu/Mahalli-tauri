@@ -68,7 +68,6 @@ async function listProducts(search: string, page: number = 1) {
     });
     if (!res?.error) {
       products.value = res.data.products;
-      console.log(res.data.products);
       totalRows.value = res.data.count;
       return;
     }

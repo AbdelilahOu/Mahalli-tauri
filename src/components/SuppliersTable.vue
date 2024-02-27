@@ -74,7 +74,9 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
             <span class="h-full w-full grid">
               <Checkbox
                 :checked="checkedSuppliers.includes(supplier.id!)"
-                @update:checked="(a) => checkThisSupplier(a, supplier.id!)"
+                @update:checked="
+                  (check) => checkThisSupplier(check, supplier.id!)
+                "
               />
             </span>
           </td>

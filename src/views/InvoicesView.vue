@@ -79,7 +79,6 @@ const getInvoices = async (search: string, page = 1) => {
           : null,
       },
     });
-    console.log(res);
     if (!res?.error) {
       invoices.value = res.data.invoices;
       totalRows.value = res.data.count;
