@@ -82,8 +82,7 @@ const setImage = (imagePath: string) => {
             <FormLabel>{{ t("g.fields.fullname") }}</FormLabel>
             <FormControl>
               <Input
-                type="text"
-                :placeHolder="t('g.fields.fullname')"
+                :placeholder="t('g.fields.fullname')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -93,11 +92,7 @@ const setImage = (imagePath: string) => {
           <FormItem>
             <FormLabel>{{ t("g.fields.email") }}</FormLabel>
             <FormControl>
-              <Input
-                type="text"
-                placeHolder="example@gmail.com"
-                v-bind="componentField"
-              />
+              <Input placeholder="example@gmail.com" v-bind="componentField" />
             </FormControl>
           </FormItem>
         </FormField>
@@ -105,11 +100,7 @@ const setImage = (imagePath: string) => {
           <FormItem>
             <FormLabel>{{ t("g.fields.phone") }}</FormLabel>
             <FormControl>
-              <Input
-                type="text"
-                placeHolder="+2126********"
-                v-bind="componentField"
-              />
+              <Input placeholder="+2126********" v-bind="componentField" />
             </FormControl>
           </FormItem>
         </FormField>
@@ -118,8 +109,7 @@ const setImage = (imagePath: string) => {
             <FormLabel>{{ t("g.fields.address") }}</FormLabel>
             <FormControl>
               <Input
-                type="text"
-                :placeHolder="t('g.fields.address')"
+                :placeholder="t('g.fields.address')"
                 v-bind="componentField"
               />
             </FormControl>

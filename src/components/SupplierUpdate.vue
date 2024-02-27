@@ -78,11 +78,10 @@ const onSubmit = form.handleSubmit((values) => {
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
         <FormField v-slot="{ componentField }" name="fullname">
           <FormItem>
-            <FormLabel>{{ t("c.p.a") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.fullname") }}</FormLabel>
             <FormControl>
               <Input
-                type="text"
-                placeHolder="full name"
+                :placeholder="t('g.fields.fullname')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -90,35 +89,26 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="email">
           <FormItem>
-            <FormLabel>{{ t("c.p.b") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.email") }}</FormLabel>
             <FormControl>
-              <Input
-                type="text"
-                placeHolder="example@gmail.com"
-                v-bind="componentField"
-              />
+              <Input placeholder="example@gmail.com" v-bind="componentField" />
             </FormControl>
           </FormItem>
         </FormField>
         <FormField v-slot="{ componentField }" name="phoneNumber">
           <FormItem>
-            <FormLabel>{{ t("c.p.c") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.phone") }}</FormLabel>
             <FormControl>
-              <Input
-                type="text"
-                placeHolder="+2126********"
-                v-bind="componentField"
-              />
+              <Input placeholder="+2126********" v-bind="componentField" />
             </FormControl>
           </FormItem>
         </FormField>
         <FormField v-slot="{ componentField }" name="address">
           <FormItem>
-            <FormLabel>{{ t("c.p.d") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.address") }}</FormLabel>
             <FormControl>
               <Input
-                type="text"
-                placeHolder="Address"
+                :placeholder="t('g.fields.address')"
                 v-bind="componentField"
               />
             </FormControl>

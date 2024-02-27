@@ -81,11 +81,10 @@ const saveImage = (image: string) => {
         />
         <FormField v-slot="{ componentField }" name="fullname">
           <FormItem>
-            <FormLabel>{{ t("s.p.a") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.fullname") }}</FormLabel>
             <FormControl>
               <Input
-                type="text"
-                placeHolder="full name"
+                :placeholder="t('g.fields.fullname')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -93,35 +92,26 @@ const saveImage = (image: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="email">
           <FormItem>
-            <FormLabel>{{ t("s.p.b") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.email") }}</FormLabel>
             <FormControl>
-              <Input
-                type="text"
-                placeHolder="example@gmail.com"
-                v-bind="componentField"
-              />
+              <Input placeholder="example@gmail.com" v-bind="componentField" />
             </FormControl>
           </FormItem>
         </FormField>
         <FormField v-slot="{ componentField }" name="phoneNumber">
           <FormItem>
-            <FormLabel>{{ t("s.p.c") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.phone") }}</FormLabel>
             <FormControl>
-              <Input
-                type="text"
-                placeHolder="+2126********"
-                v-bind="componentField"
-              />
+              <Input placeholder="+2126********" v-bind="componentField" />
             </FormControl>
           </FormItem>
         </FormField>
         <FormField v-slot="{ componentField }" name="address">
           <FormItem>
-            <FormLabel>{{ t("s.p.d") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.address") }}</FormLabel>
             <FormControl>
               <Input
-                type="text"
-                placeHolder="Address"
+                :placeholder="t('g.fields.address')"
                 v-bind="componentField"
               />
             </FormControl>

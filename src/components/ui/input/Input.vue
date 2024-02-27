@@ -6,8 +6,6 @@ import { ref } from "vue";
 const props = defineProps<{
   defaultValue?: string | number;
   modelValue?: string | number;
-  type?: string;
-  placeHolder: string;
 }>();
 
 const emits = defineEmits<{
@@ -35,9 +33,8 @@ const isFocused = ref(false);
     <input
       @focusout="isFocused = false"
       @focus="isFocused = true"
-      :type="type ?? 'text'"
+      v-bind="$attrs"
       v-model="modelValue"
-      :placeholder="placeHolder"
       :class="
         cn(
           'flex h-10 w-full border pr-2 focus-visible:border-2 focus-visible:border-black focus:outline-0 rounded-md border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 transform transition-color duration-100',

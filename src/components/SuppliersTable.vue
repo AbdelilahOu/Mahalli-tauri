@@ -44,17 +44,23 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
       <thead
         class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
       >
-        <tr class="">
+        <tr>
           <th class="rounded-l-[4px]"></th>
-          <th class=""></th>
-          <th
-            v-for="index in [0, 1, 2, 3, 4]"
-            :key="index"
-            class="p-2 w-fit last:rounded-r-[4px]"
-          >
-            <div class="font-semibold text-left">
-              {{ t(`s.i.feilds[${index}]`) }}
-            </div>
+          <th class="p-2"></th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.fullname") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.email") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.phone") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.address") }}
+          </th>
+          <th class="rounded-r-[4px]">
+            {{ t("g.fields.actions") }}
           </th>
         </tr>
       </thead>
