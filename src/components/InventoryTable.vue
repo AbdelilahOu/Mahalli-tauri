@@ -45,7 +45,9 @@ defineProps<{
             <div class="text-left">{{ mvm?.price?.toFixed(2) }} DH</div>
           </td>
           <td class="p-2">
-            <div class="text-left">{{ mvm.quantity }}</div>
+            <div class="text-left">
+              {{ t("g.plrz.i", { n: mvm.quantity }) }}
+            </div>
           </td>
           <td class="p-2">
             <div
@@ -61,7 +63,7 @@ defineProps<{
                   )
                 "
               >
-                {{ mvm?.mvmType == "IN" ? "bought" : "sold" }}
+                {{ t("g.status." + mvm?.mvmType.toLowerCase()) }}
               </Badge>
             </div>
           </td>

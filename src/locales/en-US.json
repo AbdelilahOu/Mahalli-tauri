@@ -46,6 +46,14 @@
       "min-quantity": "Minimum Quantity",
       "quantity": "Quantity",
       "credit": "Credit"
+    },
+    "status": {
+      "delivered": "Delivered",
+      "pending": "Pending",
+      "canceled": "Canceled",
+      "paid": "Paid",
+      "in": "Sold",
+      "out": "Bought"
     }
   },
   "csv": {
@@ -106,8 +114,7 @@
   },
   "o": {
     "i": {
-      "addButton": "Add new order",
-      "feilds": ["id", "supplier", "items", "STATUS", "Date", "action"]
+      "addButton": "Add new order"
     },
     "c": {
       "title": "create new order",
@@ -144,11 +151,6 @@
       "title": "are you sure you wanna delete the order ",
       "yes": "Confirme",
       "no": "Cancel"
-    },
-    "s": {
-      "delivered": "Delivered",
-      "pending": "Pending",
-      "canceled": "Canceled"
     }
   },
   "od": {
@@ -198,8 +200,7 @@
   },
   "i": {
     "i": {
-      "addButton": "Add new invoice",
-      "feilds": ["id", "client", "items", "total", "status", "Date", "action"]
+      "addButton": "Add new invoice"
     },
     "c": {
       "title": "create new invoice",
@@ -245,17 +246,7 @@
   },
   "im": {
     "i": {
-      "addButton": "Add to Inventory",
-      "feilds": [
-        "id",
-        "product name",
-        "product price",
-        "sold price",
-        "quantity",
-        "mouvement type",
-        "date",
-        ""
-      ]
+      "addButton": "Add to Inventory"
     },
     "c": {
       "title": "add items to inventory",
