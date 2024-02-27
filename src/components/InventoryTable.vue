@@ -42,11 +42,6 @@ defineProps<{
             <div class="text-left">{{ mvm.quantity }}</div>
           </td>
           <td class="p-2">
-            <div class="text-left">
-              {{ d(new Date(mvm.createdAt), "long") }}
-            </div>
-          </td>
-          <td class="p-2">
             <div
               class="flex justify-start gap-3 uppercase font-bold text-xl h-8 p-1"
             >
@@ -62,6 +57,11 @@ defineProps<{
               >
                 {{ mvm?.mvmType == "IN" ? "bought" : "sold" }}
               </Badge>
+            </div>
+          </td>
+          <td class="p-2">
+            <div class="text-left">
+              {{ d(new Date(mvm.createdAt), "long") }}
             </div>
           </td>
         </tr>

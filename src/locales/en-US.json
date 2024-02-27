@@ -26,6 +26,18 @@
     "plrz": {
       "i": "no items | {n} item | {n} items",
       "p": "no products | {n} product | {n} products"
+    },
+    "fields": {
+      "fullname": "Fullname",
+      "name": "name",
+      "email": "e-mail",
+      "phone": "phoner number",
+      "address": "address",
+      "action": "action",
+      "description": "description",
+      "price": "price",
+      "inventory": "inventory",
+      "init-quantity": "Initiale Quantity"
     }
   },
   "csv": {
@@ -43,15 +55,8 @@
     }
   },
   "c": {
-    "p": {
-      "a": "Full name",
-      "b": "E-mail",
-      "c": "Phone number",
-      "d": "Address"
-    },
     "i": {
-      "addButton": "Add new client",
-      "feilds": ["client name", "e-mail", "phone number", "address", "action"]
+      "addButton": "Add new client"
     },
     "c": {
       "title": "create a client"
@@ -64,15 +69,8 @@
     }
   },
   "s": {
-    "p": {
-      "a": "Full name",
-      "b": "E-mail",
-      "c": "Phone number",
-      "d": "Address"
-    },
     "i": {
-      "addButton": "Add new supplier",
-      "feilds": ["supplier name", "e-mail", "phone number", "address", "action"]
+      "addButton": "Add new supplier"
     },
     "c": {
       "title": "create a supplier"
@@ -86,24 +84,7 @@
   },
   "p": {
     "i": {
-      "addButton": "Add new product",
-      "feilds": [
-        "id",
-        "product name",
-        "description",
-        "price",
-        "TVA",
-        "inventory",
-        "action"
-      ],
-      "types": ["Product", "Service"]
-    },
-    "p": {
-      "a": "Name",
-      "b": "Price",
-      "c": "TVA",
-      "d": "Initiale Quantity",
-      "e": "Description"
+      "addButton": "Add new product"
     },
     "c": {
       "title": "create a product"
