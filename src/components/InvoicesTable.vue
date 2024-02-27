@@ -86,8 +86,10 @@ const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
               <HoverCard v-if="invoice.products && invoice.products > 0">
                 <HoverCardTrigger as-child>
                   <Button
-                    @mouseenter="$emit('listInvoiceProducts', invoice.id)"
-                    @mouseleave="$emit('cancelInvoiceProducts')"
+                    @mouseenter.passive="
+                      $emit('listInvoiceProducts', invoice.id)
+                    "
+                    @mouseleave.passive="$emit('cancelInvoiceProducts')"
                     size="sm"
                     variant="link"
                     class="underline px-0"
@@ -145,7 +147,7 @@ const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
                   )
                 "
               >
-                {{ t(`i.s.${invoice.status.toLowerCase()}`) }}
+                {{ t(`g.status.${invoice.status.toLowerCase()}`) }}
               </Badge>
             </div>
           </td>

@@ -79,8 +79,8 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
               <HoverCard v-if="order.products && order.products > 0">
                 <HoverCardTrigger as-child>
                   <Button
-                    @mouseenter="$emit('listOrderProducts', order.id)"
-                    @mouseleave="$emit('cancelOrderProducts')"
+                    @mouseenter.passive="$emit('listOrderProducts', order.id)"
+                    @mouseleave.passive="$emit('cancelOrderProducts')"
                     size="sm"
                     variant="link"
                     class="underline px-0"
@@ -136,7 +136,7 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
                   )
                 "
               >
-                {{ t(`o.s.${order.status.toLowerCase()}`) }}
+                {{ t(`g.status.${order.status.toLowerCase()}`) }}
               </Badge>
             </div>
           </td>
