@@ -73,7 +73,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
             <span class="h-full w-full grid">
               <Checkbox
                 :checked="checkedClients.includes(client.id!)"
-                @update:checked="(a) => checkThisClient(a, client.id!)"
+                @update:checked="(check) => checkThisClient(check, client.id!)"
               />
             </span>
           </td>

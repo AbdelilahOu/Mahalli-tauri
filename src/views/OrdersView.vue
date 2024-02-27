@@ -79,7 +79,6 @@ const getOrders = async (search: string, page = 1) => {
           : null,
       },
     });
-    console.log(res);
     if (!res?.error) {
       orders.value = res.data.orders;
       totalRows.value = res.data.count;
