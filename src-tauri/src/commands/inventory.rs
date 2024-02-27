@@ -1,9 +1,30 @@
-use service::{Inventory, MutationsService, NewInventory};
+use serde_json::Value;
+use service::{Inventory, ListArgs, MutationsService, NewInventory, QueriesService};
 use tauri::State;
 
 use crate::{commands::Fail, AppState};
 
 use super::{SResult, Seccess};
+
+#[tauri::command]
+pub async fn list_inventory(state: State<'_, AppState>, args: ListArgs) -> SResult<Value> {
+    let _ = state.db_conn;
+    let res = QueriesService::list_inventory(&state.db_conn, args).await;
+    match res {
+        Ok(res) => Ok(Seccess {
+            error: None,
+            message: None,
+            data: Some(res),
+        }),
+        Err(err) => {
+            println!("Error: {}", err);
+            Err(Fail {
+                error: Some(err.to_string()),
+                message: None,
+            })
+        }
+    }
+}
 
 #[tauri::command]
 pub async fn create_inventory(state: State<'_, AppState>, mvm: NewInventory) -> SResult<String> {

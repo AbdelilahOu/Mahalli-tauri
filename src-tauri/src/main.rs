@@ -35,6 +35,7 @@ async fn main() {
             //
             // inventory
             //
+            commands::inventory::list_inventory,
             commands::inventory::create_inventory,
             commands::inventory::update_inventory,
             commands::inventory::delete_inventory,

@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 use crate::{
-    SelectClients, SelectInvoices, SelectInvoicesItemsForUpdate, SelectOrders,
+    SelectClients, SelectInventory, SelectInvoices, SelectInvoicesItemsForUpdate, SelectOrders,
     SelectOrdersItemsForUpdate, SelectProducts, SelectSuppliers,
 };
 
@@ -830,5 +830,97 @@ impl QueriesService {
             .await?;
 
         Ok(invoice_products)
+    }
+    //
+    pub async fn list_inventory(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
+        let (sql, values) = Query::select()
+            .from(InventoryMouvements)
+            .exprs([
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id)),
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
+                Expr::col((Products, products::Column::Name)),
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::MvmType)),
+            ])
+            .expr_as(
+                Func::coalesce([
+                    Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
+                    Expr::col((Orders, orders::Column::CreatedAt)).into(),
+                ]),
+                Alias::new("created_at"),
+            )
+            .expr_as(
+                Func::coalesce([
+                    Expr::col((OrderItems, order_items::Column::Price)).into(),
+                    Expr::col((InvoiceItems, invoice_items::Column::Price)).into(),
+                ]),
+                Alias::new("price"),
+            )
+            .join(
+                JoinType::Join,
+                Products,
+                Expr::col((Products, products::Column::Id))
+                    .equals((InventoryMouvements, inventory_mouvements::Column::ProductId)),
+            )
+            .join(
+                JoinType::LeftJoin,
+                OrderItems,
+                Expr::col((OrderItems, order_items::Column::InventoryId))
+                    .equals((InventoryMouvements, inventory_mouvements::Column::Id)),
+            )
+            .join(
+                JoinType::LeftJoin,
+                InvoiceItems,
+                Expr::col((InvoiceItems, invoice_items::Column::InventoryId))
+                    .equals((InventoryMouvements, inventory_mouvements::Column::Id)),
+            )
+            .join(
+                JoinType::LeftJoin,
+                Orders,
+                Expr::col((Orders, orders::Column::Id))
+                    .equals((OrderItems, order_items::Column::OrderId)),
+            )
+            .join(
+                JoinType::LeftJoin,
+                Invoices,
+                Expr::col((Invoices, invoices::Column::Id))
+                    .equals((InvoiceItems, invoice_items::Column::InvoiceId)),
+            )
+            .order_by_expr(
+                Func::coalesce([
+                    Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
+                    Expr::col((Orders, orders::Column::CreatedAt)).into(),
+                ])
+                .into(),
+                Order::Desc,
+            )
+            // .order_by(Expr::expr("created_at"), Order::Desc)
+            .limit(args.limit)
+            .offset((args.page - 1) * args.limit)
+            .to_owned()
+            .build(SqliteQueryBuilder);
+        //
+        let res = SelectInventory::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .all(db)
+        .await?;
+
+        let mut result = Vec::<JsonValue>::new();
+        res.into_iter().for_each(|row| {
+            result.push(json!({
+                "id": row.id,
+                "name": row.name,
+                "price": row.price,
+                "createdAt": row.created_at,
+                "quantity": row.quantity,
+                "mvmType": row.mvm_type,
+            }));
+        });
+
+        Ok(json!({
+            "inventory": result
+        }))
     }
 }
