@@ -22,7 +22,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
 const isFocused = ref(false);
 </script>
 <template>
-  <div class="w-full h-fit flex">
+  <div :class="cn('w-full h-fit flex', ($attrs.class as String) ?? '')">
     <div
       v-if="$slots.default"
       :class="[
@@ -41,7 +41,7 @@ const isFocused = ref(false);
       :class="
         cn(
           'flex h-10 w-full border pr-2 focus-visible:border-2 focus-visible:border-black focus:outline-0 rounded-md border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 transform transition-color duration-100',
-          ($attrs.class as String) ?? '',
+
           $slots.default
             ? 'rounded-l-none border-l-0 focus-visible:border-l-0 pl-0'
             : 'pl-2',

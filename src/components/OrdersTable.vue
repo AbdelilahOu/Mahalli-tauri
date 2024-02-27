@@ -95,7 +95,7 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
                           {{ orderProduct.price }} Dh
                         </td>
                         <td class="w-1/4 text-slate-700 text-end">
-                          x{{ orderProduct.quantity }}
+                          <i> x{{ orderProduct.quantity }} </i>
                         </td>
                       </tr>
                     </tbody>

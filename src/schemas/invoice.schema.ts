@@ -41,3 +41,9 @@ export type InvoiceForCreateT = {
     price?: number;
   }[];
 };
+
+export type InvoiceProductT = {
+  price: number;
+  name: string;
+  quantity: number;
+};
