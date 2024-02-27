@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { invoke } from "@tauri-apps/api";
 import { useI18n } from "vue-i18n";
 import InventoryTable from "@/components/InventoryTable.vue";
-import type { inventoryMvmT, withCount } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
@@ -13,48 +12,64 @@ import { Transition } from "vue";
 import {
   ref,
   computed,
-  onBeforeMount,
   onUnmounted,
   onMounted,
   provide,
   watch,
   type WatchStopHandle,
 } from "vue";
+import type { InventoryT } from "@/schemas/inventory.schema";
+import type { Res } from "@/types";
 
 const { t } = useI18n();
+const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const inventoryMouvements = ref<inventoryMvmT[]>([]);
+const inventoryMouvements = ref<InventoryT[]>([]);
 const searchQuery = ref<string>("");
-const router = useRouter();
-const page = computed(() => Number(router.currentRoute.value.query.page));
-const refresh = computed(() => router.currentRoute.value.query.refresh);
-let unwatch: WatchStopHandle | null = null;
+const page = computed(() => Number(route.query.page));
+const refresh = computed(() => route.query.refresh);
 const totalRows = ref<number>(0);
 
 provide("count", totalRows);
 
-onBeforeMount(() => getInventory(page.value));
-
+let timer: number | undefined;
+let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
-  unwatch = watch([page, refresh], ([p]) => {
-    if (p && p > 0) getInventory(p);
-  });
+  unwatch = watch(
+    [searchQuery, page, refresh],
+    ([search, p], [oldSearch]) => {
+      clearTimeout(timer);
+      timer = setTimeout(
+        () => {
+          if (p && p > 0) getInventory(search, p);
+        },
+        search != oldSearch && oldSearch ? 500 : 0,
+      );
+    },
+    {
+      immediate: true,
+    },
+  );
 });
 
 onUnmounted(() => {
   if (unwatch) unwatch();
 });
 
-async function getInventory(page: number = 1) {
+async function getInventory(search: string, page: number = 1) {
   try {
-    const res = await invoke<withCount<inventoryMvmT[]>>("get_inventory_mvms", {
-      page,
+    const res = await invoke<Res<any>>("list_inventory", {
+      args: {
+        page,
+        search,
+        limit: 17,
+      },
     });
-
-    if (res?.data) {
-      inventoryMouvements.value = res.data;
-      totalRows.value = res.count;
+    console.log(res);
+    if (!res?.error) {
+      inventoryMouvements.value = res.data.inventory;
+      totalRows.value = res.data.count;
     }
   } catch (error) {
     console.log(error);

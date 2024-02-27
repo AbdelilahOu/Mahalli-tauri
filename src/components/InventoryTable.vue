@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
-import type { inventoryMvmT } from "@/types";
-import { RouterLink } from "vue-router";
-import UiIcon from "./ui/UiIcon.vue";
+import type { InventoryT } from "@/schemas/inventory.schema";
+import { cn } from "@/utils/shadcn";
+import { Badge } from "./ui/badge";
 
 const { t, d } = useI18n();
 
 defineProps<{
-  inventory: inventoryMvmT[];
+  inventory: InventoryT[];
 }>();
 </script>
 
@@ -20,7 +20,7 @@ defineProps<{
       >
         <tr>
           <th
-            v-for="index in [1, 2, 3, 4, 5, 6, 7]"
+            v-for="index in [1, 2, 3, 4, 6, 7]"
             :key="index"
             class="p-2 first:rounded-l-[4px] last:rounded-r-[4px]"
           >
@@ -33,64 +33,35 @@ defineProps<{
       <tbody class="text-sm divide-y divide-gray-100">
         <tr v-fade="index" v-for="(mvm, index) in inventory" :key="mvm.id">
           <td class="p-2">
-            <div class="text-left font-medium">{{ mvm.product?.name }}</div>
+            <div class="text-left font-medium">{{ mvm?.name }}</div>
           </td>
           <td class="p-2">
-            <div class="text-left">{{ mvm.product?.price?.toFixed(2) }} DH</div>
+            <div class="text-left">{{ mvm?.price?.toFixed(2) }} DH</div>
           </td>
           <td class="p-2">
-            <div class="text-left">
-              {{
-                mvm.orderItem?.price && mvm.orderItem?.price > 0
-                  ? mvm.orderItem?.price?.toFixed(2)
-                  : mvm.product?.price?.toFixed(2)
-              }}
-              DH
-            </div>
-          </td>
-          <td class="p-2">
-            <div class="text-left">{{ Math.abs(mvm.quantity) }}</div>
-          </td>
-          <td class="p-2">
-            <div class="text-left font-medium">
-              <RouterLink
-                v-if="mvm.orderItem?.order_id"
-                :to="{
-                  name: 'OrdersDetails',
-                  params: { id: mvm.orderItem?.order_id },
-                }"
-              >
-                <span
-                  class="px-3 py-[1px] h-full flex w-fit items-center justify-center gap-2 rounded-full bg-sky-300/60 text-sky-800"
-                >
-                  <span>order</span>
-                </span>
-              </RouterLink>
-              <RouterLink
-                v-if="mvm.invoiceItem?.invoice_id"
-                class="w-full"
-                :to="{
-                  name: 'InvoiceDetails',
-                  params: { id: mvm.invoiceItem?.invoice_id },
-                }"
-              >
-                <span
-                  class="px-3 py-[1px] h-full flex w-fit items-center justify-center gap-2 rounded-full bg-sky-300/60 text-sky-800"
-                >
-                  <span>invoice</span>
-                </span>
-              </RouterLink>
-            </div>
+            <div class="text-left">{{ mvm.quantity }}</div>
           </td>
           <td class="p-2">
             <div class="text-left">
-              {{ d(new Date(mvm.date), "long") }}
+              {{ d(new Date(mvm.createdAt), "long") }}
             </div>
           </td>
           <td class="p-2">
-            <div class="flex justify-start gap-3 font-bold text-xl h-8 p-1">
-              <UiIcon v-if="mvm.model == 'IN'" name="chartUp" />
-              <UiIcon v-else name="chartDown" />
+            <div
+              class="flex justify-start gap-3 uppercase font-bold text-xl h-8 p-1"
+            >
+              <Badge
+                variant="outline"
+                :class="
+                  cn(
+                    mvm?.mvmType == 'IN'
+                      ? 'bg-green-100 border-green-500 text-green-900'
+                      : 'bg-sky-100 border-sky-500 text-sky-900',
+                  )
+                "
+              >
+                {{ mvm?.mvmType == "IN" ? "bought" : "sold" }}
+              </Badge>
             </div>
           </td>
         </tr>
