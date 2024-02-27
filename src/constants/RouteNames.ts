@@ -1,4 +1,9 @@
-import type { RouteLinksTypeT } from "../types";
+interface RouteLinksTypeT {
+  path: string;
+  name: string;
+  component: string;
+  display: boolean;
+}
 
 // Routes
 export const RouteLinks: RouteLinksTypeT[] = [
