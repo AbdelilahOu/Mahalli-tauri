@@ -1,4 +1,3 @@
-import type { storeState, Args, locale } from "@/types";
 import { reactive } from "vue";
 
 const locale = localStorage.getItem("locale");
@@ -42,7 +41,6 @@ export const store = {
   state: reactive<storeState>(DEFAULT_STORE),
   getters: {
     getModalVisibility: () => store.state.show,
-    getSelectedRow: <T>() => store.state.row as T,
     getModalName: () => store.state.name,
     getCurrentLocale: () => store.state.currentLocale,
     getLocales: () => store.state.availableLocals,
@@ -58,3 +56,57 @@ export const store = {
     },
   },
 };
+
+interface args1 {
+  key: "show";
+  value: boolean;
+}
+
+interface args2 {
+  key: "name";
+  value:
+    | "TranslationModal"
+    | "InventoryCreate"
+    | "ProductUpdate"
+    | "ProductDelete"
+    | "ProductCreate"
+    | "InvoiceCreate"
+    | "InvoiceUpdate"
+    | "InvoiceDelete"
+    | "SellerCreate"
+    | "SellerDelete"
+    | "SellerUpdate"
+    | "ClientDelete"
+    | "ClientUpdate"
+    | "ClientCreate"
+    | "OrderCreate"
+    | "OrderDelete"
+    | "OrderUpdate"
+    | "CsvUploader"
+    | "Sittings"
+    | string;
+}
+
+interface args4 {
+  key: "currentLocale";
+  value: locale;
+}
+
+interface args5 {
+  key: "user";
+  value: any;
+}
+
+export type Args = args1 | args2 | args4 | args5;
+
+export interface storeState
+  extends Record<"availableLocals", locale[]>,
+    Record<"currentLocale", locale>,
+    Record<"show", boolean>,
+    Record<"name", string>,
+    Record<"user", any> {}
+
+export interface locale {
+  key: string;
+  text: string;
+}

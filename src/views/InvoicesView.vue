@@ -97,7 +97,7 @@ const listInvoiceProduct = (id?: string) => {
         id,
       });
       if (!res?.error) {
-        console.log(res);
+        console.log("preview invoice products", res.data);
         invoiceProducts.value = res.data;
       }
     } catch (error) {

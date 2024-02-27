@@ -97,7 +97,7 @@ const listOrderProduct = (id?: string) => {
         id,
       });
       if (!res?.error) {
-        console.log(res);
+        console.log("preview order products", res.data);
         orderProducts.value = res.data;
       }
     } catch (error) {
