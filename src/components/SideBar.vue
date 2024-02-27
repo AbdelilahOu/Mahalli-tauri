@@ -5,15 +5,9 @@ import UiSideLink from "./ui/UiSideLink.vue";
 import { RouterLink } from "vue-router";
 import { store } from "@/store";
 import { computed } from "vue";
+import { cn } from "@/utils/shadcn";
 
-defineProps<{
-  isCollapse: boolean;
-}>();
-
-defineEmits<{
-  (e: "toggle:collapse"): void;
-}>();
-
+const collapse = defineModel<boolean>("collapse", { required: true });
 const { t } = useI18n();
 
 const locale = computed(() => store.getters.getCurrentLocale());
@@ -40,22 +34,23 @@ const openSettingsModal = () => {
         class="w-full h-full px-1 grid grid-cols-1 items-center justify-start"
       >
         <span
-          class="font-medium text-black flex items-center px-1"
-          :class="{
-            'justify-around': isCollapse,
-            'justify-between': !isCollapse,
-          }"
+          :class="
+            cn(
+              'font-medium text-black flex items-center px-1',
+              collapse ? 'justify-around' : 'justify-between',
+            )
+          "
         >
           <span
-            v-if="!isCollapse"
+            v-if="!collapse"
             class="whitespace-nowrap pl-2 text-gray-800 overflow-hidden"
           >
             The Inventoryer
           </span>
           <span
-            @click="$emit('toggle:collapse')"
+            @click="collapse = !collapse"
             class="transition-all duration-200 cursor-pointer transform hover:fill-sky-400 fill-gray-800"
-            :class="{ 'rotate-180': isCollapse }"
+            :class="{ 'rotate-180': collapse }"
           >
             <svg
               viewBox="0 0 16 16"
@@ -85,7 +80,7 @@ const openSettingsModal = () => {
               :to="{ path: link.path, query: { page: 1 } }"
             >
               <UiSideLink
-                :isText="!isCollapse"
+                :isText="!collapse"
                 :icon="link.name"
                 :linkText="t(`g.r.${link.name}`)"
               />
@@ -94,21 +89,17 @@ const openSettingsModal = () => {
         </div>
         <RouterLink to="/Notifications">
           <UiSideLink
-            :isText="!isCollapse"
+            :isText="!collapse"
             icon="Notifications"
             :linkText="t('g.r.Notifications')"
           />
         </RouterLink>
         <div class="w-full cursor-pointer" @click="openTranslationModal">
-          <UiSideLink
-            :isText="!isCollapse"
-            icon="Lang"
-            :linkText="locale.text"
-          />
+          <UiSideLink :isText="!collapse" icon="Lang" :linkText="locale.text" />
         </div>
         <div class="w-full cursor-pointer" @click="openSettingsModal">
           <UiSideLink
-            :isText="!isCollapse"
+            :isText="!collapse"
             icon="sittings"
             :linkText="t('g.r.Sittings')"
           />

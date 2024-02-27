@@ -17,6 +17,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { CalendarDays } from "lucide-vue-next";
+import { Skeleton } from "./ui/skeleton";
 
 defineProps<{ products: ProductT[] }>();
 
@@ -86,16 +87,16 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
           </td>
           <td class="p-2">
             <div class="w-12 h-12 rounded-full overflow-hidden">
-              <img
-                v-if="product.image && product.image !== ''"
-                class="rounded-full w-full h-full object-cover"
-                :src="convertFileSrc(product.image)"
-                alt=""
-              />
-              <span
-                v-else
+              <Skeleton
                 class="rounded-full w-full h-full block object-fill animate-pulse bg-slate-300 duration-1000"
-              />
+              >
+                <img
+                  v-if="product.image && product.image !== ''"
+                  class="rounded-full w-full h-full object-cover"
+                  :src="convertFileSrc(product.image)"
+                  alt=""
+                />
+              </Skeleton>
             </div>
           </td>
           <td class="p-2">
