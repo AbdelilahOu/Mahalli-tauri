@@ -32,7 +32,6 @@ const toggleThisClient = (client: ClientT, name: string) => {
     phoneNumber: client.phoneNumber,
     address: client.address,
   });
-  // store.setters.updateStore({ key: "row", value: client });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
 };

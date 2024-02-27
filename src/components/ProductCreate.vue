@@ -114,11 +114,11 @@ const setImage = (path: string) => {
         </FormField>
         <FormField name="">
           <FormItem>
-            <FormLabel>{{ t("g.fields.quantity") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.init-quantity") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
-                :placeholder="t('g.fields.quantity')"
+                :placeholder="t('g.fields.init-quantity')"
                 v-model="quantity"
               >
                 <template #unite> Item </template>
