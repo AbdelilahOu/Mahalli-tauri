@@ -47,15 +47,23 @@ const toggleThisClient = (client: ClientT, name: string) => {
         <tr>
           <th class="rounded-l-[4px]"></th>
           <th class="p-2"></th>
-
-          <th
-            v-for="index in [0, 1, 2, 3, 4, 5]"
-            :key="index"
-            class="p-2 w-fit last:rounded-r-[4px]"
-          >
-            <div class="font-semibold text-left">
-              {{ t(`c.i.feilds[${index}]`) }}
-            </div>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.fullname") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.email") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.phone") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.address") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.credit") }}
+          </th>
+          <th class="rounded-r-[4px]">
+            {{ t("g.fields.actions") }}
           </th>
         </tr>
       </thead>

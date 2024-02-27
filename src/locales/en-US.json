@@ -29,15 +29,17 @@
     },
     "fields": {
       "fullname": "Fullname",
-      "name": "name",
-      "email": "e-mail",
-      "phone": "phoner number",
-      "address": "address",
-      "action": "action",
-      "description": "description",
-      "price": "price",
-      "inventory": "inventory",
-      "init-quantity": "Initiale Quantity"
+      "name": "Name",
+      "email": "E-mail",
+      "phone": "Phoner number",
+      "address": "Address",
+      "actions": "Actions",
+      "description": "Description",
+      "price": "Price",
+      "inventory": "Inventory",
+      "init-quantity": "Initiale Quantity",
+      "quantity": "Quantity",
+      "credit": "Credit"
     }
   },
   "csv": {
