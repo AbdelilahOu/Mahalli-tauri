@@ -40,12 +40,23 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
         class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
       >
         <tr>
-          <th
-            v-for="index in [1, 2, 3, 4, 5, 6]"
-            :key="index"
-            class="p-2 w-fit first:rounded-l-[4px] text-left last:rounded-r-[4px]"
-          >
-            {{ t(`o.i.feilds[${index}]`) }}
+          <th class="rounded-l-[4px] p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.fullname") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.items") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.status") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.date") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.total") }}
+          </th>
+          <th class="rounded-r-[4px]">
+            {{ t("g.fields.actions") }}
           </th>
         </tr>
       </thead>

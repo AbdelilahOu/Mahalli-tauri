@@ -52,15 +52,21 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
       >
         <tr>
           <th class="rounded-l-[4px]"></th>
-          <th class="p-2 w-fit"></th>
-          <th
-            v-for="index in [1, 2, 3, 5, 6]"
-            :key="index"
-            class="p-2 w-fit last:rounded-r-[4px]"
-          >
-            <div class="font-semibold text-left">
-              {{ t(`p.i.feilds[${index}]`) }}
-            </div>
+          <th class="p-2"></th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.name") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.description") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.price") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.inventory") }}
+          </th>
+          <th class="rounded-r-[4px]">
+            {{ t("g.fields.actions") }}
           </th>
         </tr>
       </thead>

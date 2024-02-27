@@ -29,15 +29,21 @@
     },
     "fields": {
       "fullname": "Fullname",
-      "name": "Name",
+      "name": "Product name",
       "email": "E-mail",
       "phone": "Phoner number",
       "address": "Address",
       "actions": "Actions",
       "description": "Description",
+      "status": "Status",
       "price": "Price",
+      "date": "Date",
+      "paid": "Avance",
+      "items": "Items",
+      "total": "Total",
       "inventory": "Inventory",
       "init-quantity": "Initiale Quantity",
+      "min-quantity": "Minimum Quantity",
       "quantity": "Quantity",
       "credit": "Credit"
     }

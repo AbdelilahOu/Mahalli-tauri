@@ -100,11 +100,10 @@ const onSubmit = form.handleSubmit((values) => {
       <form class="h-full w-full flex flex-col gap-2" @submit="onSubmit">
         <FormField v-slot="{ componentField }" name="name">
           <FormItem>
-            <FormLabel>{{ t("p.p.a") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.name") }}</FormLabel>
             <FormControl>
               <Input
-                type="text"
-                placeHolder="Product name"
+                :placeholder="t('g.fields.name')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -112,11 +111,11 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="price">
           <FormItem>
-            <FormLabel>{{ t("p.p.b") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.price") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
-                placeHolder="Product price"
+                :placeholder="t('g.fields.price')"
                 v-bind="componentField"
               >
                 <template #unite> DH </template>
@@ -126,9 +125,13 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
         <FormField name="">
           <FormItem>
-            <FormLabel>{{ t("p.p.d") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.quantity") }}</FormLabel>
             <FormControl>
-              <Input type="number" placeHolder="Quantity" v-model="quantity">
+              <Input
+                type="number"
+                :placeholder="t('g.fields.quantity')"
+                v-model="quantity"
+              >
                 <template #unite> Item </template>
               </Input>
             </FormControl>
@@ -136,11 +139,11 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="minQuantity">
           <FormItem>
-            <FormLabel>{{ t("p.p.d") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.min-quantity") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
-                placeHolder="Quantity"
+                :placeholder="t('g.fields.min-quantity')"
                 v-bind="componentField"
               >
                 <template #unite> Item </template>
@@ -151,12 +154,11 @@ const onSubmit = form.handleSubmit((values) => {
         <FormField v-slot="{ componentField }" name="description">
           <FormItem>
             <FormLabel>
-              {{ t("p.p.e") }}
+              {{ t("g.fields.description") }}
             </FormLabel>
             <FormControl>
               <Textarea
-                type="text"
-                placeholder="Description"
+                :placeholder="t('g.fields.description')"
                 v-bind="componentField"
               ></Textarea>
             </FormControl>
