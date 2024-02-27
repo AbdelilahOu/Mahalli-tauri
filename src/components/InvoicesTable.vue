@@ -1,27 +1,28 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
+import type { InvoiceProductT, InvoiceT } from "@/schemas/invoice.schema";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import UiPagination from "./ui/UiPagination.vue";
 import { RouterLink } from "vue-router";
 import UiIcon from "./ui/UiIcon.vue";
+import { useI18n } from "vue-i18n";
 import { store } from "@/store";
-// import { ref } from "vue";
-import type { InvoiceT } from "@/schemas/invoice.schema";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 import { cn } from "@/utils/shadcn";
-import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
-defineProps<{ invoices: InvoiceT[] }>();
-
 const { t, d } = useI18n();
-// const checkedInvoices = ref<string[]>([]);
 
-// const _ = (IsIncluded: boolean, id: string) => {
-//   IsIncluded
-//     ? checkedInvoices.value.push(id)
-//     : checkedInvoices.value.splice(checkedInvoices.value.indexOf(id), 1);
-// };
+defineProps<{ invoices: InvoiceT[]; invoiceProducts: InvoiceProductT[] }>();
+defineEmits<{
+  (e: "listInvoiceProducts", id?: string): void;
+  (e: "cancelInvoiceProducts"): void;
+}>();
 
 const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
   updateQueryParams({
@@ -68,7 +69,46 @@ const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
           </td>
           <td class="p-2">
             <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span>
+              <HoverCard v-if="invoice.products && invoice.products > 0">
+                <HoverCardTrigger as-child>
+                  <Button
+                    @mouseenter="$emit('listInvoiceProducts', invoice.id)"
+                    @mouseleave="$emit('cancelInvoiceProducts')"
+                    size="sm"
+                    variant="link"
+                    class="underline px-0"
+                  >
+                    {{ t("g.plrz.p", { n: invoice.products }) }}
+                  </Button>
+                </HoverCardTrigger>
+                <HoverCardContent class="min-w-[13rem] p-2">
+                  <table class="w-full">
+                    <thead>
+                      <tr>
+                        <th v-for="index in 3" :key="index"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(invoiceProduct, index) in invoiceProducts"
+                        :key="index"
+                        class="space-y-1 text-sm flex justify-between w-full items-center"
+                      >
+                        <td class="underline w-1/2">
+                          {{ invoiceProduct.name }}
+                        </td>
+                        <td class="w-1/4 text-end">
+                          {{ invoiceProduct.price }} Dh
+                        </td>
+                        <td class="w-1/4 text-slate-700 text-end">
+                          <i> x{{ invoiceProduct.quantity }} </i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </HoverCardContent>
+              </HoverCard>
+              <span v-else>
                 {{ t("g.plrz.p", { n: invoice.products }) }}
               </span>
             </div>

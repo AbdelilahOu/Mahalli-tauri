@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
 import type { Res } from "@/types";
-import type { InvoiceT } from "@/schemas/invoice.schema";
+import type { InvoiceProductT, InvoiceT } from "@/schemas/invoice.schema";
 import {
   SelectContent,
   SelectTrigger,
@@ -36,6 +36,7 @@ const invoices = ref<InvoiceT[]>([]);
 const totalRows = ref<number>(0);
 const status = ref<string | undefined>(undefined);
 const createdAt = ref<string | number | undefined>(undefined);
+const invoiceProducts = ref<InvoiceProductT[]>([]);
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
@@ -87,6 +88,26 @@ const getInvoices = async (search: string, page = 1) => {
     console.log(error);
   }
 };
+
+let invoiceProductsTimer: number;
+const listInvoiceProduct = (id?: string) => {
+  clearTimeout(invoiceProductsTimer);
+  invoiceProductsTimer = setTimeout(async () => {
+    try {
+      const res = await invoke<Res<any>>("list_invoice_products", {
+        id,
+      });
+      if (!res?.error) {
+        console.log(res);
+        invoiceProducts.value = res.data;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, 300);
+};
+
+const cancelInvoiceProducts = () => clearInterval(invoiceProductsTimer);
 
 const uploadCSV = () => {
   store.setters.updateStore({ key: "name", value: "CsvUploader" });
@@ -152,7 +173,12 @@ const updateModal = (name: string) => {
         </div>
       </Transition>
       <Transition appear>
-        <InvoicesTable :invoices="invoices" />
+        <InvoicesTable
+          @listInvoiceProducts="listInvoiceProduct"
+          @cancelInvoiceProducts="cancelInvoiceProducts"
+          :invoices="invoices"
+          :invoiceProducts="invoiceProducts"
+        />
       </Transition>
     </div>
   </main>

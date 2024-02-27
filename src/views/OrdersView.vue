@@ -126,14 +126,19 @@ const updateModal = (name: string) => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
-          <div class="w-full max-w-[50%] flex gap-1">
+          <div class="w-full max-w-[50%] grid grid-cols-3 gap-1">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
                 name="search"
               />
             </Input>
-            <Input v-model="createdAt" type="date" :placeHolder="t('g.s')" />
+            <Input
+              class="w-full"
+              v-model="createdAt"
+              type="date"
+              :placeHolder="t('g.s')"
+            ></Input>
             <Select v-model="status">
               <SelectTrigger>
                 <SelectValue placeholder="Select a status" />
