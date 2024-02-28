@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { CHART_OPTIONS, CHART_WO_TICKS } from "@/constants/defaultValues";
 import { groupBy, keys, mapValues, values } from "@/utils/lightLodash";
 import { onBeforeMount, reactive, ref } from "vue";
 import ChartHolder from "@/components/ChartHolder.vue";
 import { generateColor } from "@/utils/generateColor";
-import ChartLine from "@/components/ChartLine.vue";
-import ChartBar from "@/components/ChartBar.vue";
 import UiCard from "@/components/ui/UiCard.vue";
 import { getWeekDay } from "@/utils/formatDate";
 import { invoke } from "@tauri-apps/api";
@@ -119,7 +116,6 @@ onBeforeMount(async () => {
 const toggleThisSupplier = (seller: SupplierT | null, name: string) => {
   store.setters.updateStore({ key: "show", value: true });
   store.setters.updateStore({ key: "name", value: name });
-  store.setters.updateStore({ key: "row", value: seller });
 };
 
 onBeforeMount(async () => {
@@ -147,41 +143,12 @@ onBeforeMount(async () => {
           @updateItem="() => toggleThisSupplier(seller, 'SupplierUpdate')"
           :item="seller!"
         />
-        <div class="w-full flex items-end xl:items-start h-full">
-          <ChartLine
-            id="sjdlsdksd"
-            :chartData="{
-              labels: DailyStats.keys,
-              datasets: [
-                {
-                  label: 'daily expenses',
-                  backgroundColor: getGradientBackground,
-                  borderColor: DailyStats.color.replace('0.2', '0.5'),
-                  data: DailyStats.data,
-                  borderWidth: 2,
-                  lineTension: 0.4,
-                  pointRadius: 1,
-                  fill: true,
-                },
-              ],
-            }"
-            :chartOptions="CHART_WO_TICKS"
-          />
-        </div>
+        <div class="w-full flex items-end xl:items-start h-full"></div>
       </div>
       <div class="xl:border-l-2 border-b-2"></div>
       <div class="w-full">
         <ChartHolder>
-          <template #default>
-            <ChartBar
-              id="inventory-mouvements-for-past-three-months"
-              :chartData="{
-                labels: ProductsStats.dates,
-                datasets: ProductsStats.products,
-              }"
-              :chartOptions="CHART_OPTIONS"
-            />
-          </template>
+          <template #default> </template>
           <template #title?>
             <h1 class="m-2 w-full text-center text-base font-medium">
               <i>
