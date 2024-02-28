@@ -849,11 +849,22 @@ impl QueriesService {
             .join(JoinType::LeftJoin, invoice_items::Relation::Invoices.def())
             .join(JoinType::LeftJoin, order_items::Relation::Orders.def())
             .filter(
-                Expr::expr(Func::coalesce([
-                    Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
-                    Expr::col((Orders, orders::Column::CreatedAt)).into(),
-                ]))
-                .is_not_null(),
+                Cond::all()
+                    .add(
+                        Expr::expr(Func::coalesce([
+                            Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
+                            Expr::col((Orders, orders::Column::CreatedAt)).into(),
+                        ]))
+                        .is_not_null(),
+                    )
+                    .add(
+                        Expr::expr(Func::coalesce([
+                            Expr::col((Invoices, invoices::Column::Status)).into(),
+                            Expr::col((Orders, orders::Column::Status)).into(),
+                        ]))
+                        .eq("CANCELED")
+                        .not(),
+                    ),
             )
             .apply_if(Some(args.search.clone()), |query, v| {
                 query.filter(Expr::col((Products, products::Column::Name)).like(format!("{}%", v)))
@@ -923,17 +934,26 @@ impl QueriesService {
                 Invoices,
                 Expr::col((Invoices, invoices::Column::Id))
                     .equals((InvoiceItems, invoice_items::Column::InvoiceId)),
+            ).cond_where(
+      Cond::all()
+                    .add(
+                        Expr::expr(Func::coalesce([
+                            Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
+                            Expr::col((Orders, orders::Column::CreatedAt)).into(),
+                        ]))
+                        .is_not_null(),
+                    )
+                    .add(
+                        Expr::expr(Func::coalesce([
+                            Expr::col((Invoices, invoices::Column::Status)).into(),
+                            Expr::col((Orders, orders::Column::Status)).into(),
+                        ]))
+                        .eq("CANCELED")
+                        .not(),
+                    )
             )
             .and_where(
                 Expr::col((Products, products::Column::Name)).like(format!("{}%", args.search)),
-            )
-            .and_where(
-                Expr::expr(
-                    Func::coalesce([
-                        Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
-                        Expr::col((Orders, orders::Column::CreatedAt)).into()
-                    ])
-                ).is_not_null()
             )
             .conditions(
                 args.status.clone().is_some(),
