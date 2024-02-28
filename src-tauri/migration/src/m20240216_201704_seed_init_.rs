@@ -1,5 +1,12 @@
 use std::ops::Range;
 
+use crate::{
+    m20220101_000001_init_::{
+        Client, InventoryMouvement, Invoice, InvoiceItem, Order, OrderItem, Product, Quote,
+        QuoteItem, Supplier,
+    },
+    utils::get_random_enum,
+};
 use fake::{
     faker::{
         address::en::SecondaryAddress,
@@ -12,14 +19,6 @@ use fake::{
 };
 use sea_orm_migration::{prelude::*, sea_orm::Statement};
 
-use crate::{
-    m20220101_000001_init_::{
-        Client, InventoryMouvement, Invoice, InvoiceItem, Order, OrderItem, Product, Quote,
-        QuoteItem, Supplier,
-    },
-    utils::get_random_enum,
-};
-
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
@@ -27,7 +26,7 @@ pub struct Migration;
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         for _ in 0..200 {
-            let id = uuid::Uuid::new_v4();
+            let id = uuid::Uuid::now_v7();
             let fullname: String = Name().fake();
             let address: String = SecondaryAddress().fake();
             let email: String = FreeEmail().fake();
@@ -54,7 +53,7 @@ impl MigrationTrait for Migration {
         }
 
         for _ in 0..200 {
-            let id = uuid::Uuid::new_v4();
+            let id = uuid::Uuid::now_v7();
             let fullname: String = Name().fake();
             let address: String = SecondaryAddress().fake();
             let email: String = FreeEmail().fake();
@@ -81,7 +80,7 @@ impl MigrationTrait for Migration {
         }
 
         for _ in 0..400 {
-            let id = uuid::Uuid::new_v4();
+            let id = uuid::Uuid::now_v7();
             let name: String = Word().fake();
             let rand: u8 = Faker.fake();
             let address: String = Sentence(Range { start: 5, end: 10 }).fake();
@@ -110,38 +109,14 @@ impl MigrationTrait for Migration {
 
         let db = manager.get_connection();
 
-        let mvm_type = vec![String::from("IN"), String::from("OUT")];
-
-        for _ in 0..1000 {
-            let id = uuid::Uuid::new_v4();
-            let mvm = get_random_enum(mvm_type.clone());
-            let quantity: u8 = Faker.fake();
-            let insert_inventory = Statement::from_sql_and_values(
-                sea_orm::DatabaseBackend::Sqlite,
-                r#"
-                INSERT INTO 
-                    inventory_mouvements (id, mvm_type, quantity, product_id)
-                VALUES
-                    (
-                        $1, 
-                        $2, 
-                        $3,
-                        (SELECT id FROM products ORDER BY RANDOM() LIMIT 1)
-                    )
-                "#,
-                [id.to_string().into(), mvm.into(), quantity.into()],
-            );
-            db.execute(insert_inventory).await?;
-        }
-
         let status = vec![
             String::from("DELIVERED"),
             String::from("CANCELED"),
             String::from("PENDING"),
         ];
 
-        for _ in 0..150 {
-            let id = uuid::Uuid::new_v4();
+        for _ in 0..100 {
+            let id = uuid::Uuid::now_v7();
             let status_ = get_random_enum(status.clone());
             let insert_order = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,
@@ -161,7 +136,30 @@ impl MigrationTrait for Migration {
         }
 
         for _ in 0..1000 {
-            let id = uuid::Uuid::new_v4();
+            let _id = uuid::Uuid::now_v7();
+            let quantity: u8 = Faker.fake();
+            let insert_inventory = Statement::from_sql_and_values(
+                sea_orm::DatabaseBackend::Sqlite,
+                r#"
+                INSERT INTO 
+                    inventory_mouvements (id, mvm_type, quantity, product_id)
+                VALUES
+                    (
+                        $1, 
+                        $2, 
+                        $3,
+                        (SELECT id FROM products ORDER BY RANDOM() LIMIT 1)
+                    )
+                "#,
+                [
+                    _id.to_string().into(),
+                    String::from("IN").into(),
+                    quantity.into(),
+                ],
+            );
+            db.execute(insert_inventory).await?;
+            //
+            let id = uuid::Uuid::now_v7();
             let price: u8 = Faker.fake();
             let insert_order = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,
@@ -173,10 +171,10 @@ impl MigrationTrait for Migration {
                         $1, 
                         $2, 
                         (SELECT id FROM orders ORDER BY RANDOM() LIMIT 1),
-                        (SELECT id FROM inventory_mouvements ORDER BY RANDOM() LIMIT 1)
+                        $3
                     )
                 "#,
-                [id.to_string().into(), price.into()],
+                [id.to_string().into(), price.into(), _id.to_string().into()],
             );
             db.execute(insert_order).await?;
         }
@@ -187,8 +185,8 @@ impl MigrationTrait for Migration {
             String::from("PENDING"),
         ];
 
-        for _ in 0..150 {
-            let id = uuid::Uuid::new_v4();
+        for _ in 0..100 {
+            let id = uuid::Uuid::now_v7();
             let status_ = get_random_enum(status.clone());
             let paid: u8 = Faker.fake();
             let insert_invoice = Statement::from_sql_and_values(
@@ -211,7 +209,30 @@ impl MigrationTrait for Migration {
         }
 
         for _ in 0..1000 {
-            let id = uuid::Uuid::new_v4();
+            let _id = uuid::Uuid::now_v7();
+            let quantity: u8 = Faker.fake();
+            let insert_inventory = Statement::from_sql_and_values(
+                sea_orm::DatabaseBackend::Sqlite,
+                r#"
+                INSERT INTO 
+                    inventory_mouvements (id, mvm_type, quantity, product_id)
+                VALUES
+                    (
+                        $1, 
+                        $2, 
+                        $3,
+                        (SELECT id FROM products ORDER BY RANDOM() LIMIT 1)
+                    )
+                "#,
+                [
+                    _id.to_string().into(),
+                    String::from("OUT").into(),
+                    quantity.into(),
+                ],
+            );
+            db.execute(insert_inventory).await?;
+
+            let id = uuid::Uuid::now_v7();
             let price: u8 = Faker.fake();
             let insert_invoice = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,
@@ -223,16 +244,16 @@ impl MigrationTrait for Migration {
                         $1, 
                         $2, 
                         (SELECT id FROM invoices ORDER BY RANDOM() LIMIT 1),
-                        (SELECT id FROM inventory_mouvements ORDER BY RANDOM() LIMIT 1)
+                        $3
                     )
                 "#,
-                [id.to_string().into(), price.into()],
+                [id.to_string().into(), price.into(), _id.to_string().into()],
             );
             db.execute(insert_invoice).await?;
         }
 
         for _ in 0..150 {
-            let id = uuid::Uuid::new_v4();
+            let id = uuid::Uuid::now_v7();
             let insert_quote = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,
                 r#"
@@ -250,7 +271,7 @@ impl MigrationTrait for Migration {
         }
 
         for _ in 0..1000 {
-            let id = uuid::Uuid::new_v4();
+            let id = uuid::Uuid::now_v7();
             let price: u8 = Faker.fake();
             let insert_quote = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,

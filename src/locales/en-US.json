@@ -52,8 +52,8 @@
       "pending": "Pending",
       "canceled": "Canceled",
       "paid": "Paid",
-      "in": "Sold",
-      "out": "Bought"
+      "in": "Bought",
+      "out": "Sold"
     }
   },
   "csv": {

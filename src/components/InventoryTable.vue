@@ -57,7 +57,7 @@ defineProps<{
                 variant="outline"
                 :class="
                   cn(
-                    mvm?.mvmType == 'IN'
+                    mvm?.mvmType == 'OUT'
                       ? 'bg-green-100 border-green-500 text-green-900'
                       : 'bg-sky-100 border-sky-500 text-sky-900',
                   )
@@ -75,7 +75,7 @@ defineProps<{
         </tr>
       </tbody>
     </table>
-    <div>
+    <div class="pt-12">
       <UiPagination />
     </div>
   </div>

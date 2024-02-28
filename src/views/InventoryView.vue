@@ -20,6 +20,13 @@ import {
 } from "vue";
 import type { InventoryT } from "@/schemas/inventory.schema";
 import type { Res } from "@/types";
+import {
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+  SelectItem,
+  Select,
+} from "@/components/ui/select";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -29,6 +36,8 @@ const inventoryMouvements = ref<InventoryT[]>([]);
 const searchQuery = ref<string>("");
 const page = computed(() => Number(route.query.page));
 const refresh = computed(() => route.query.refresh);
+const status = ref<string | undefined>(undefined);
+const createdAt = ref<string | number | undefined>(undefined);
 const totalRows = ref<number>(0);
 //
 provide("count", totalRows);
@@ -37,7 +46,7 @@ let timer: number | undefined;
 let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
   unwatch = watch(
-    [searchQuery, page, refresh],
+    [searchQuery, page, refresh, createdAt, status],
     ([search, p], [oldSearch]) => {
       clearTimeout(timer);
       timer = setTimeout(
@@ -58,12 +67,21 @@ onUnmounted(() => {
 });
 
 async function getInventory(search: string, page: number = 1) {
+  console.log(
+    createdAt.value
+      ? new Date(createdAt.value).toISOString().slice(0, 10)
+      : null,
+  );
   try {
     const res = await invoke<Res<any>>("list_inventory", {
       args: {
         page,
         search,
         limit: 17,
+        status: status.value,
+        created_at: createdAt.value
+          ? new Date(createdAt.value).toISOString().slice(0, 10)
+          : null,
       },
     });
     if (!res?.error) {
@@ -92,13 +110,28 @@ const uploadCSV = () => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
-          <div class="w-1/3">
+          <div class="w-full max-w-[50%] grid grid-cols-3 gap-1">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
                 name="search"
               />
             </Input>
+            <Input
+              class="w-full"
+              v-model="createdAt"
+              type="date"
+              :placeHolder="t('g.s')"
+            ></Input>
+            <Select v-model="status">
+              <SelectTrigger>
+                <SelectValue placeholder="Select a status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="OUT"> Sold </SelectItem>
+                <SelectItem value="IN"> Bought </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
             <Button variant="ghost" @click="uploadCSV">

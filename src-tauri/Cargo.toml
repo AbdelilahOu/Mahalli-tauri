@@ -37,7 +37,12 @@ tauri-plugin-oauth = { git = "https://github.com/FabianLars/tauri-plugin-oauth",
 tokio = { version = "1", features = ["full"] }
 chrono = { version = "0.4", features = ["serde"] }
 libsqlite3-sys = { version = "^0", features = ["bundled"] }
-uuid = { version = "1.2.1", features = ["v4", "fast-rng", "macro-diagnostics"] }
+uuid = { version = "1.7.0", features = [
+  "v7",
+  "std",
+  "fast-rng",
+  "macro-diagnostics",
+] }
 dotenvy = "0.15.7"
 migration = { path = "./migration" }
 service = { path = "./service" }
