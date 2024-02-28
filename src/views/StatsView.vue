@@ -2,6 +2,7 @@
 import ChartHolder from "@/components/ChartHolder.vue";
 import { onBeforeMount } from "vue";
 import { useI18n } from "vue-i18n";
+import { VisXYContainer, VisLine, VisAxis } from "@unovis/vue";
 
 const { t, d } = useI18n();
 
