@@ -29,6 +29,8 @@ import {
 
 const { t } = useI18n();
 const route = useRoute();
+const { updateQueryParams } = useUpdateRouteQueryParams();
+//
 const searchQuery = ref<string>("");
 const page = computed(() => Number(route.query.page));
 const refresh = computed(() => route.query.refresh);
@@ -37,11 +39,9 @@ const totalRows = ref<number>(0);
 const status = ref<string | undefined>(undefined);
 const createdAt = ref<string | number | undefined>(undefined);
 const orderProducts = ref<OrderProductT[]>([]);
-
-const { updateQueryParams } = useUpdateRouteQueryParams();
-
+//
 provide("count", totalRows);
-
+//
 onUnmounted(() => {
   if (unwatch) unwatch();
 });

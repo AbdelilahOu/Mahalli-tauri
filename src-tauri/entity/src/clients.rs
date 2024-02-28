@@ -38,7 +38,7 @@ impl Related<super::quotes::Entity> for Entity {
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {
         Self {
-            id: Set(Uuid::new_v4().to_string()),
+            id: Set(Uuid::now_v7().to_string()),
             ..ActiveModelTrait::default()
         }
     }

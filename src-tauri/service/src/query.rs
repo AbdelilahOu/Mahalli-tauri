@@ -833,6 +833,45 @@ impl QueriesService {
     }
     //
     pub async fn list_inventory(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
+        let count = InventoryMouvements::find()
+            .join(
+                JoinType::Join,
+                inventory_mouvements::Relation::Products.def(),
+            )
+            .join(
+                JoinType::LeftJoin,
+                inventory_mouvements::Relation::OrderItems.def(),
+            )
+            .join(
+                JoinType::LeftJoin,
+                inventory_mouvements::Relation::InvoiceItems.def(),
+            )
+            .join(JoinType::LeftJoin, invoice_items::Relation::Invoices.def())
+            .join(JoinType::LeftJoin, order_items::Relation::Orders.def())
+            .filter(
+                Expr::expr(Func::coalesce([
+                    Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
+                    Expr::col((Orders, orders::Column::CreatedAt)).into(),
+                ]))
+                .is_not_null(),
+            )
+            .apply_if(Some(args.search.clone()), |query, v| {
+                query.filter(Expr::col((Products, products::Column::Name)).like(format!("{}%", v)))
+            })
+            .apply_if(args.status.clone(), |query, v| {
+                query.filter(
+                    Expr::col((InventoryMouvements, inventory_mouvements::Column::MvmType)).eq(v),
+                )
+            })
+            .apply_if(args.created_at.clone(), |query, v| {
+                query.filter(Expr::cust_with_values(
+                    "COALESCE(invoices.created_at, orders.created_at) = ?",
+                    [v],
+                ))
+            })
+            .count(db)
+            .await?;
+        //
         let (sql, values) = Query::select()
             .from(InventoryMouvements)
             .exprs([
@@ -885,6 +924,34 @@ impl QueriesService {
                 Expr::col((Invoices, invoices::Column::Id))
                     .equals((InvoiceItems, invoice_items::Column::InvoiceId)),
             )
+            .and_where(
+                Expr::col((Products, products::Column::Name)).like(format!("{}%", args.search)),
+            )
+            .and_where(
+                Expr::expr(
+                    Func::coalesce([
+                        Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
+                        Expr::col((Orders, orders::Column::CreatedAt)).into()
+                    ])
+                ).is_not_null()
+            )
+            .conditions(
+                args.status.clone().is_some(),
+                |x| {
+                    x.and_where(Expr::col((InventoryMouvements, inventory_mouvements::Column::MvmType)).eq(args.status));
+                },
+                |_| {},
+            )
+            .conditions(
+                args.created_at.clone().is_some(),
+                |x| {
+                    x.and_where(Expr::cust_with_values(
+                        "strftime('%Y-%m-%d', COALESCE(invoices.created_at, orders.created_at)) = ?",
+                        args.created_at,
+                    ));
+                },
+                |_| {},
+            )
             .order_by_expr(
                 Func::coalesce([
                     Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
@@ -893,7 +960,6 @@ impl QueriesService {
                 .into(),
                 Order::Desc,
             )
-            // .order_by(Expr::expr("created_at"), Order::Desc)
             .limit(args.limit)
             .offset((args.page - 1) * args.limit)
             .to_owned()
@@ -920,6 +986,7 @@ impl QueriesService {
         });
 
         Ok(json!({
+            "count": count,
             "inventory": result
         }))
     }
