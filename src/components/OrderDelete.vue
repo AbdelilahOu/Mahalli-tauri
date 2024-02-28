@@ -29,8 +29,6 @@ const deleteTheOrders = async (id: string) => {
 const cancelDelete = () => {
   store.setters.updateStore({ key: "show", value: false });
 };
-
-onBeforeUnmount(() => store.setters.updateStore({ key: "row", value: null }));
 </script>
 
 <template>

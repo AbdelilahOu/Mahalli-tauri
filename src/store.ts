@@ -66,7 +66,6 @@ interface args2 {
   key: "name";
   value:
     | "TranslationModal"
-    | "InventoryCreate"
     | "ProductUpdate"
     | "ProductDelete"
     | "ProductCreate"
