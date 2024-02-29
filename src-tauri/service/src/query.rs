@@ -12,8 +12,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 use crate::{
-    SelectClients, SelectInventory, SelectInvoices, SelectInvoicesItemsForUpdate, SelectOrders,
-    SelectOrdersItemsForUpdate, SelectProducts, SelectSuppliers,
+    SelectClients, SelectInventory, SelectInvoices, SelectInvoicesItemsForUpdate, SelectMvm,
+    SelectOrders, SelectOrdersItemsForUpdate, SelectProducts, SelectSuppliers,
 };
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -935,7 +935,7 @@ impl QueriesService {
                 Expr::col((Invoices, invoices::Column::Id))
                     .equals((InvoiceItems, invoice_items::Column::InvoiceId)),
             ).cond_where(
-      Cond::all()
+                Cond::all()
                     .add(
                         Expr::expr(Func::coalesce([
                             Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
@@ -1009,5 +1009,117 @@ impl QueriesService {
             "count": count,
             "inventory": result
         }))
+    }
+    //
+    pub async fn list_mvm_stats(db: &DbConn) -> Result<Vec<JsonValue>, DbErr> {
+        let (sql, values) = Query::select()
+            .from(InventoryMouvements)
+            .exprs([Expr::col((
+                InventoryMouvements,
+                inventory_mouvements::Column::MvmType,
+            ))])
+            .expr_as(
+                Func::sum(Expr::col((
+                    InventoryMouvements,
+                    inventory_mouvements::Column::Quantity,
+                ))),
+                Alias::new("quantity"),
+            )
+            .expr_as(
+                Func::coalesce([
+                    Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
+                    Expr::col((Orders, orders::Column::CreatedAt)).into(),
+                ]),
+                Alias::new("created_at"),
+            )
+            .expr_as(
+                Func::sum(
+                    Expr::expr(Func::coalesce([
+                        Expr::col((OrderItems, order_items::Column::Price)).into(),
+                        Expr::col((InvoiceItems, invoice_items::Column::Price)).into(),
+                    ])).mul(
+                        Expr::col((
+                        InventoryMouvements,
+                        inventory_mouvements::Column::Quantity,
+                    ))
+                )),
+                Alias::new("price"),
+            )
+            .join(
+                JoinType::Join,
+                Products,
+                Expr::col((Products, products::Column::Id))
+                    .equals((InventoryMouvements, inventory_mouvements::Column::ProductId)),
+            )
+            .join(
+                JoinType::LeftJoin,
+                OrderItems,
+                Expr::col((OrderItems, order_items::Column::InventoryId))
+                    .equals((InventoryMouvements, inventory_mouvements::Column::Id)),
+            )
+            .join(
+                JoinType::LeftJoin,
+                InvoiceItems,
+                Expr::col((InvoiceItems, invoice_items::Column::InventoryId))
+                    .equals((InventoryMouvements, inventory_mouvements::Column::Id)),
+            )
+            .join(
+                JoinType::LeftJoin,
+                Orders,
+                Expr::col((Orders, orders::Column::Id))
+                    .equals((OrderItems, order_items::Column::OrderId)),
+            )
+            .join(
+                JoinType::LeftJoin,
+                Invoices,
+                Expr::col((Invoices, invoices::Column::Id))
+                    .equals((InvoiceItems, invoice_items::Column::InvoiceId)),
+            )
+            .cond_where(
+                Cond::all()
+                    .add(
+                        Expr::expr(Func::coalesce([
+                            Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
+                            Expr::col((Orders, orders::Column::CreatedAt)).into(),
+                        ]))
+                        .is_not_null(),
+                    )
+                    .add(
+                        Expr::expr(Func::coalesce([
+                            Expr::col((Invoices, invoices::Column::Status)).into(),
+                            Expr::col((Orders, orders::Column::Status)).into(),
+                        ]))
+                        .eq("CANCELED")
+                        .not(),
+                    ).add(
+                Expr::cust("COALESCE(invoices.created_at, orders.created_at) >= DATETIME('now', '-3 month')"),
+                    ),
+            )
+            .add_group_by([
+                Expr::cust("strftime('%Y-%m', COALESCE(invoices.created_at, orders.created_at))"),
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::MvmType)).into(),
+            ])
+            .to_owned()
+            .build(SqliteQueryBuilder);
+        //
+        let res = SelectMvm::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .all(db)
+        .await?;
+
+        let mut result = Vec::<JsonValue>::new();
+        res.into_iter().for_each(|row| {
+            result.push(json!({
+                "price": row.price,
+                "createdAt": row.created_at,
+                "quantity": row.quantity,
+                "mvmType": row.mvm_type,
+            }));
+        });
+
+        Ok(result)
     }
 }

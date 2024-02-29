@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 pub mod clients;
+pub mod dashboard;
 pub mod inventory;
 pub mod invoice_items;
 pub mod invoices;

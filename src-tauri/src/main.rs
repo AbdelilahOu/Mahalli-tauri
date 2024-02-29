@@ -20,7 +20,6 @@ async fn main() {
     let db_conn = establish_connection().await;
     // run migrations
     Migrator::up(&db_conn, None).await.unwrap();
-    //
     tauri::Builder::default()
         .manage(AppState { db_conn })
         .invoke_handler(tauri::generate_handler![
@@ -85,6 +84,10 @@ async fn main() {
             commands::invoice_items::create_invoice_item,
             commands::invoice_items::update_invoice_item,
             commands::invoice_items::delete_invoice_item,
+            //
+            // dashboard
+            //
+            commands::dashboard::list_mvm_stats
         ])
         .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())

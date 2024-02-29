@@ -11,7 +11,7 @@ import SuppliersView from "@/views/SuppliersView.vue";
 import ClientsView from "@/views/ClientsView.vue";
 import OrdersView from "@/views/OrdersView.vue";
 import InventoryView from "@/views/InventoryView.vue";
-import StatsView from "@/views/StatsView.vue";
+import DashboardView from "@/views/DashboardView.vue";
 import HomeView from "@/views/HomeView.vue";
 import RootLayout from "@/layouts/RootLayout.vue";
 import AuthView from "@/views/AuthView.vue";
@@ -91,9 +91,9 @@ const router = createRouter({
           ],
         },
         {
-          path: "Stats",
-          name: "Stats",
-          component: StatsView,
+          path: "Dashboard",
+          name: "Dashboard",
+          component: DashboardView,
         },
         {
           path: "Invoices/",

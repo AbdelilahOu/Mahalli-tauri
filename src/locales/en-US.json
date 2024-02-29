@@ -8,7 +8,7 @@
       "Orders": "Orders",
       "Invoices": "Invoices",
       "Inventory": "Inventory",
-      "Statistics": "Statistics",
+      "Dashboard": "Dashboard",
       "Payment": "Paymentt",
       "Sittings": "Sittings",
       "Notifications": "Notifications"
@@ -59,7 +59,7 @@
   "csv": {
     "title": "Upload csv files"
   },
-  "stats": {
+  "dashboard": {
     "i": {
       "title": "Sold and bought items during the last three months",
       "labels": ["BOUGHT", "SOLD"],
