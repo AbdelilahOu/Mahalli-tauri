@@ -153,7 +153,7 @@ onBeforeMount(async () => {
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
               <i>
-                {{ t("stats.de.title") }}
+                {{ t("dashboard.de.title") }}
               </i>
             </h1>
           </template>

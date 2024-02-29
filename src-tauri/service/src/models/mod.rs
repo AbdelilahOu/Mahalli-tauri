@@ -1,4 +1,5 @@
 mod client;
+mod dashboard;
 mod inventory;
 mod invoice;
 mod invoice_item;
@@ -8,6 +9,7 @@ mod product;
 mod supplier;
 
 pub use client::*;
+pub use dashboard::*;
 pub use inventory::*;
 pub use invoice::*;
 pub use invoice_item::*;

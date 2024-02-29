@@ -2,15 +2,37 @@
 import ChartHolder from "@/components/ChartHolder.vue";
 import { onBeforeMount } from "vue";
 import { useI18n } from "vue-i18n";
-import { VisXYContainer, VisLine, VisAxis } from "@unovis/vue";
+import { VisXYContainer, VisGroupedBar, VisAxis } from "@unovis/vue";
+
+import { invoke } from "@tauri-apps/api";
+import { ref } from "vue";
+import type { DataRecord } from "@/types";
 
 const { t, d } = useI18n();
 
-async function getInventoryMouvementStats() {}
+const mouvements = ref<any[]>();
+const x = (d: any) => {
+  console.log(d);
+  return d.createdAt;
+};
+const y = [(d: any) => d.price, (d: any) => d.quantity];
 
-async function getBestThree(isClients = true) {}
+async function getInventoryMouvementStats() {
+  try {
+    const res = await invoke<any>("list_mvm_stats");
+    if (!res?.error) {
+      console.log(res);
+      mouvements.value = res.data;
+      return;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-onBeforeMount(async () => {});
+onBeforeMount(async () => {
+  getInventoryMouvementStats();
+});
 </script>
 
 <template>
@@ -18,10 +40,16 @@ onBeforeMount(async () => {});
     <div class="w-full h-full flex flex-col gap-4">
       <div class="w-full h-fit">
         <ChartHolder>
-          <template #default> </template>
+          <template #default>
+            <VisXYContainer :height="500">
+              <VisGroupedBar :data="mouvements" :x="x" :y="y" />
+              <VisAxis type="x" label="Election Year" />
+              <VisAxis type="y" label="Number of Votes (millions)" />
+            </VisXYContainer>
+          </template>
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>{{ t("stats.i.title") }}</i>
+              <i>{{ t("dashboard.i.title") }}</i>
             </h1>
           </template>
         </ChartHolder>
@@ -32,7 +60,7 @@ onBeforeMount(async () => {});
             <template #default> </template>
             <template #title>
               <h1 class="m-2 w-full text-center text-base font-medium">
-                <i>{{ t("stats.i.b3c") }}</i>
+                <i>{{ t("dashboard.i.b3c") }}</i>
               </h1>
             </template>
           </ChartHolder>
@@ -43,7 +71,7 @@ onBeforeMount(async () => {});
             <template #title>
               <h1 class="m-2 w-full text-center text-base font-medium">
                 <i>
-                  {{ t("stats.i.b3s") }}
+                  {{ t("dashboard.i.b3s") }}
                 </i>
               </h1>
             </template>

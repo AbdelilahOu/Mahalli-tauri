@@ -35,9 +35,9 @@ const pages = ref([
     path: "/Inventory",
   },
   {
-    image: "/stats.jpg",
-    text: "Statistics",
-    path: "/Stats",
+    image: "/dashboard.jpg",
+    text: "Dashboard",
+    path: "/Dashboard",
   },
 ]);
 </script>
