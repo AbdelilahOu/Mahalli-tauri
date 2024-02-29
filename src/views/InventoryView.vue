@@ -110,7 +110,7 @@ const uploadCSV = () => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
-          <div class="w-full max-w-[50%] grid grid-cols-3 gap-1">
+          <div class="w-full lg:max-w-[50%] max-w-[70%] grid grid-cols-3 gap-1">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
@@ -133,7 +133,7 @@ const uploadCSV = () => {
               </SelectContent>
             </Select>
           </div>
-          <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
+          <div class="grid grid-cols-[60px_1fr] gap-1">
             <Button variant="ghost" @click="uploadCSV">
               <span
                 class="text-sky-400 transition-all duration-200 scale-[0.8] group-hover:fill-sky-600"
@@ -149,14 +149,6 @@ const uploadCSV = () => {
                   />
                 </svg>
               </span>
-            </Button>
-
-            <Button class="w-full" @click="updateModal('InventoryCreate')">
-              <UiIcon
-                extraStyle="fill-white cursor-default hover:bg-transparent"
-                name="add"
-              />
-              {{ t("im.i.addButton") }}
             </Button>
           </div>
         </div>
