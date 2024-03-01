@@ -102,7 +102,6 @@ async fn main() {
             commands::dashboard::list_top_clients,
             commands::dashboard::list_top_suppliers
         ])
-        .plugin(tauri_plugin_oauth::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
