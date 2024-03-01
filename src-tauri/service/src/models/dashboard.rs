@@ -8,3 +8,10 @@ pub struct SelectMvm {
     pub quantity: f64,
     pub mvm_type: String,
 }
+
+#[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
+pub struct SelectTops {
+    pub full_name: String,
+    pub price: f64,
+    pub quantity: f64,
+}

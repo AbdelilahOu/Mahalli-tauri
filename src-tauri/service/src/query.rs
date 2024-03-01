@@ -13,7 +13,7 @@ use serde_json::json;
 
 use crate::{
     SelectClients, SelectInventory, SelectInvoices, SelectInvoicesItemsForUpdate, SelectMvm,
-    SelectOrders, SelectOrdersItemsForUpdate, SelectProducts, SelectSuppliers,
+    SelectOrders, SelectOrdersItemsForUpdate, SelectProducts, SelectSuppliers, SelectTops,
 };
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -1115,6 +1115,169 @@ impl QueriesService {
                 "createdAt": row.created_at,
                 "quantity": row.quantity,
                 "mvmType": row.mvm_type,
+            }));
+        });
+
+        Ok(result)
+    }
+    // 
+    pub async fn list_top_clients(db: &DbConn) -> Result<Vec<JsonValue>, DbErr> {
+        let (sql, values) = Query::select()
+            .from(Clients)
+            .column(
+                (
+                Clients,
+                clients::Column::FullName,
+            )
+            )
+            .expr_as(
+                Func::sum(Expr::col((
+                    InventoryMouvements,
+                    inventory_mouvements::Column::Quantity,
+                ))),
+                Alias::new("quantity"),
+            )
+            .expr_as(
+                Func::sum(
+                    Expr::col((InvoiceItems, invoice_items::Column::Price)).mul(Expr::col((
+                        InventoryMouvements,
+                        inventory_mouvements::Column::Quantity,
+                    ))
+                )),
+                Alias::new("price"),
+            )
+            .join(
+                JoinType::Join,
+                Invoices,
+                Expr::col((Invoices, invoices::Column::ClientId))
+                    .equals((Clients, clients::Column::Id)),
+            )
+            .join(
+                JoinType::Join,
+                InvoiceItems,
+                Expr::col((InvoiceItems, invoice_items::Column::InvoiceId))
+                    .equals((Invoices, invoices::Column::Id)),
+            )
+            .join(
+                JoinType::Join, InventoryMouvements, 
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                    .equals((InvoiceItems, invoice_items::Column::InventoryId)))
+            .cond_where(
+                Cond::all()
+                    .add(
+                        Expr::expr(Expr::col((Invoices, invoices::Column::Status)))
+                        .eq("CANCELED")
+                        .not(),
+                    ),
+            )
+            .add_group_by([
+                Expr::col((Clients, clients::Column::Id)).into(),
+            ])
+            .order_by_expr(Func::sum(
+                    Expr::col((InvoiceItems, invoice_items::Column::Price)).mul(Expr::col((
+                        InventoryMouvements,
+                        inventory_mouvements::Column::Quantity,
+                    ))
+                )).into(), Order::Desc)
+            .limit(5)
+            .to_owned()
+            .build(SqliteQueryBuilder);
+        //
+        let res = SelectTops::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .all(db)
+        .await?;
+
+        let mut result = Vec::<JsonValue>::new();
+        res.into_iter().for_each(|row| {
+            result.push(json!({
+                "price": row.price,
+                "Fullname": row.full_name,
+                "quantity": row.quantity,
+            }));
+        });
+
+        Ok(result)
+    }
+    pub async fn list_top_suppliers(db: &DbConn) -> Result<Vec<JsonValue>, DbErr> {
+        let (sql, values) = Query::select()
+            .from(Suppliers)
+            .column(
+                (
+                Suppliers,
+                suppliers::Column::FullName,
+            )
+            )
+            .expr_as(
+                Func::sum(Expr::col((
+                    InventoryMouvements,
+                    inventory_mouvements::Column::Quantity,
+                ))),
+                Alias::new("quantity"),
+            )
+            .expr_as(
+                Func::sum(
+                    Expr::col((OrderItems, order_items::Column::Price)).mul(Expr::col((
+                        InventoryMouvements,
+                        inventory_mouvements::Column::Quantity,
+                    ))
+                )),
+                Alias::new("price"),
+            )
+            .join(
+                JoinType::Join,
+                Orders,
+                Expr::col((Orders, orders::Column::SupplierId))
+                    .equals((Suppliers, suppliers::Column::Id)),
+            )
+            .join(
+                JoinType::Join,
+                OrderItems,
+                Expr::col((OrderItems, order_items::Column::OrderId))
+                    .equals((Orders, orders::Column::Id)),
+            )
+            .join(
+                JoinType::Join, InventoryMouvements, 
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                    .equals((OrderItems, order_items::Column::InventoryId)))
+            .cond_where(
+                Cond::all()
+                    .add(
+                        Expr::expr(Expr::col((Orders, orders::Column::Status)))
+                        .eq("CANCELED")
+                        .not(),
+                    ),
+            )
+            .add_group_by([
+                Expr::col((Suppliers, suppliers::Column::Id)).into(),
+            ])
+            .order_by_expr(Func::sum(
+                    Expr::col((OrderItems, order_items::Column::Price)).mul(Expr::col((
+                        InventoryMouvements,
+                        inventory_mouvements::Column::Quantity,
+                    ))
+                )).into(), Order::Desc)
+            .limit(5)
+            .to_owned()
+            .build(SqliteQueryBuilder);
+        //
+        let res = SelectTops::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .all(db)
+        .await?;
+
+        let mut result = Vec::<JsonValue>::new();
+        res.into_iter().for_each(|row| {
+            result.push(json!({
+                "price": row.price,
+                "Fullname": row.full_name,
+                "quantity": row.quantity,
             }));
         });
 
