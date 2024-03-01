@@ -13,6 +13,8 @@ import { useI18n } from "vue-i18n";
 import { store } from "@/store";
 import { ref } from "vue";
 import { CreateClientSchema, type ClientT } from "@/schemas/client.schema";
+import { info, error } from "tauri-plugin-log-api";
+import type { Res } from "@/types";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -31,7 +33,7 @@ const createNewClient = async (client: ClientT) => {
   isCreating.value = true;
   try {
     let image: string = await saveFile(client.image as string, "Image");
-    await invoke("create_client", {
+    let res = await invoke<Res<null>>("create_client", {
       client: {
         full_name: client.fullname,
         email: client.email,
@@ -40,12 +42,19 @@ const createNewClient = async (client: ClientT) => {
         image,
       },
     });
+    if (res.error) {
+      throw new Error(res.error);
+    }
+    //
+    info(
+      `CREATE CLIENT: { full_name: ${client.fullname}, email: ${client.email}, phone_number: ${client.phoneNumber}, address: ${client.address} }`,
+    );
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-create-" + Math.random() * 9999,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("ERROR: error creating client : " + err);
   } finally {
     isCreating.value = false;
     hideModal();

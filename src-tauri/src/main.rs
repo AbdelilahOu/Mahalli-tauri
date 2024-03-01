@@ -9,6 +9,7 @@ mod db;
 use db::establish_connection;
 use migration::{Migrator, MigratorTrait};
 use service::sea_orm::DatabaseConnection;
+use tauri_plugin_log::LogTarget;
 
 pub struct AppState {
     db_conn: DatabaseConnection,
@@ -22,6 +23,16 @@ async fn main() {
     Migrator::up(&db_conn, None).await.unwrap();
     tauri::Builder::default()
         .manage(AppState { db_conn })
+        .plugin(
+            tauri_plugin_log::Builder::default()
+                .targets([LogTarget::LogDir, LogTarget::Stdout])
+                .level_for("tauri", log::LevelFilter::Error)
+                .level_for("hyper", log::LevelFilter::Off)
+                .level_for("tracing", log::LevelFilter::Off)
+                .level_for("sea_orm", log::LevelFilter::Off)
+                .level_for("sqlx", log::LevelFilter::Debug)
+                .build(),
+        )
         .invoke_handler(tauri::generate_handler![
             //
             // products
