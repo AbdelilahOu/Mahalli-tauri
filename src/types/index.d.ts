@@ -3,8 +3,3 @@ export type Res<T> = {
   message?: string;
   data: T;
 };
-
-export type DataRecord = {
-  x: number;
-  y: number;
-};
