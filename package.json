@@ -27,6 +27,7 @@
     "radix-vue": "^1.4.3",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log#v1",
     "v-calendar": "^3.1.2",
     "vee-validate": "^4.12.5",
     "vite-svg-loader": "^5.1.0",
