@@ -1026,10 +1026,8 @@ impl QueriesService {
                 Alias::new("quantity"),
             )
             .expr_as(
-                Func::coalesce([
-                    Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
-                    Expr::col((Orders, orders::Column::CreatedAt)).into(),
-                ]),
+                Expr::cust("strftime('%Y-%m-01', COALESCE(invoices.created_at, orders.created_at))"),
+                
                 Alias::new("created_at"),
             )
             .expr_as(

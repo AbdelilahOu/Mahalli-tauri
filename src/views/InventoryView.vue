@@ -93,11 +93,6 @@ async function getInventory(search: string, page: number = 1) {
   }
 }
 
-const updateModal = (name: string) => {
-  store.setters.updateStore({ key: "show", value: true });
-  store.setters.updateStore({ key: "name", value: name });
-};
-
 const uploadCSV = () => {
   store.setters.updateStore({ key: "name", value: "CsvUploader" });
   store.setters.updateStore({ key: "show", value: true });
