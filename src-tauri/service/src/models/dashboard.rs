@@ -15,3 +15,9 @@ pub struct SelectTops {
     pub price: f64,
     pub quantity: f64,
 }
+
+#[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
+pub struct SelectStatusCount {
+    pub status: String,
+    pub status_count: i64,
+}

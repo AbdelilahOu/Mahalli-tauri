@@ -8,12 +8,18 @@ mod db;
 
 use db::establish_connection;
 use migration::{Migrator, MigratorTrait};
-use service::sea_orm::DatabaseConnection;
+use service::{sea_orm::DatabaseConnection, QueriesService};
 use tauri_plugin_log::LogTarget;
 
 pub struct AppState {
     db_conn: DatabaseConnection,
 }
+
+#[cfg(debug_assertions)]
+const LOG_TARGETS: [LogTarget; 2] = [LogTarget::LogDir, LogTarget::Stdout];
+
+#[cfg(not(debug_assertions))]
+const LOG_TARGETS: [LogTarget; 1] = [LogTarget::LogDir];
 
 #[tokio::main]
 async fn main() {
@@ -21,11 +27,12 @@ async fn main() {
     let db_conn = establish_connection().await;
     // run migrations
     Migrator::up(&db_conn, None).await.unwrap();
+    //
     tauri::Builder::default()
         .manage(AppState { db_conn })
         .plugin(
             tauri_plugin_log::Builder::default()
-                .targets([LogTarget::LogDir, LogTarget::Stdout])
+                .targets(LOG_TARGETS)
                 .level_for("tauri", log::LevelFilter::Error)
                 .level_for("hyper", log::LevelFilter::Off)
                 .level_for("tracing", log::LevelFilter::Off)
@@ -100,7 +107,8 @@ async fn main() {
             //
             commands::dashboard::list_mvm_stats,
             commands::dashboard::list_top_clients,
-            commands::dashboard::list_top_suppliers
+            commands::dashboard::list_top_suppliers,
+            commands::dashboard::list_status_count
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

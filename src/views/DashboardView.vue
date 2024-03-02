@@ -96,6 +96,7 @@ async function getBestClients() {
 const bestSuppliers = ref<any[]>();
 async function getBestSuppliers() {
   try {
+    console.log(await invoke<Res<any[]>>("list_status_count"));
     const res = await invoke<Res<any[]>>("list_top_suppliers");
     if (!res?.error) {
       bestSuppliers.value = res.data;

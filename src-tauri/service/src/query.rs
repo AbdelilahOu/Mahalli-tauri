@@ -12,8 +12,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 use crate::{
-    SelectClients, SelectInventory, SelectInvoices, SelectInvoicesItemsForUpdate, SelectMvm,
-    SelectOrders, SelectOrdersItemsForUpdate, SelectProducts, SelectSuppliers, SelectTops,
+    SelectClients, SelectInventory, SelectInvoices, SelectInvoicesItemsForUpdate, SelectMvm, SelectOrders, SelectOrdersItemsForUpdate, SelectProducts, SelectStatusCount, SelectSuppliers, SelectTops
 };
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -1120,7 +1119,6 @@ impl QueriesService {
 
         Ok(result)
     }
-    // 
     pub async fn list_top_clients(db: &DbConn) -> Result<Vec<JsonValue>, DbErr> {
         let (sql, values) = Query::select()
             .from(Clients)
@@ -1282,5 +1280,43 @@ impl QueriesService {
         });
 
         Ok(result)
+    }
+    pub async fn list_status_count(db: &DbConn) -> Result<JsonValue,DbErr> {
+        let (order_sql,order_values) = Query::select()
+            .from(Orders)
+            .column(orders::Column::Status)
+            .expr_as(Func::count(Expr::col((Orders, orders::Column::Id))), Alias::new("status_count"))
+            .group_by_col(orders::Column::Status)
+            .to_owned()
+            .build(SqliteQueryBuilder);
+
+        let (invoice_sql,invoice_values)  = Query::select()
+            .from(Invoices)
+            .column(invoices::Column::Status)
+            .expr_as(Func::count(Expr::col((Invoices, invoices::Column::Id))), Alias::new("status_count"))
+            .group_by_col(invoices::Column::Status)
+            .to_owned()
+            .build(SqliteQueryBuilder);
+
+        let order_res = SelectStatusCount::find_by_statement(Statement::from_sql_and_values(
+                DbBackend::Sqlite,
+                order_sql,
+                order_values,
+            ))
+            .all(db)
+            .await?;
+
+        let invoice_res = SelectStatusCount::find_by_statement(Statement::from_sql_and_values(
+                DbBackend::Sqlite,
+                invoice_sql,
+                invoice_values,
+            ))
+            .all(db)
+            .await?;
+
+        Ok(json!({
+            "orders": order_res,
+            "invoices": invoice_res,
+        }))
     }
 }
