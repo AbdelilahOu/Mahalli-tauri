@@ -12,17 +12,6 @@
   },
   "tauri": {
     "allowlist": {
-      "shell": {
-        "open": true,
-        "sidecar": true,
-        "scope": [
-          {
-            "name": "./bin/csv-to-excel-go",
-            "sidecar": true,
-            "args": true
-          }
-        ]
-      },
       "dialog": {
         "open": true
       },
@@ -49,7 +38,7 @@
       "deb": {
         "depends": []
       },
-      "externalBin": ["./bin/csv-to-excel-go"],
+      "externalBin": [],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
