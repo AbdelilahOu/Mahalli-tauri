@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
 import { useRoute } from "vue-router";
+import { ref, onBeforeMount } from "vue";
 import { invoke } from "@tauri-apps/api";
 import { useI18n } from "vue-i18n";
-import type { invoiceDetailsT } from "@/types";
 import { Button } from "@/components/ui/button";
 
 const { t, d } = useI18n();
+
 const id = useRoute().params.id;
-const invoice = ref<invoiceDetailsT | null>(null);
+const order = ref<any | null>(null);
 
 onBeforeMount(async () => {
   try {
-    const res = await invoke<invoiceDetailsT>("get_invoice", {
+    const res = await invoke<any>("get_order", {
       id,
     });
-    if (res.id) {
-      invoice.value = res;
+    if (res?.id) {
+      order.value = res;
     }
   } catch (error) {
     console.log(error);
@@ -28,13 +28,13 @@ const print = () => window.print();
 
 <template>
   <main class="w-full h-full">
-    <div class="w-full h-full flex justify-center text-black print:pr-12">
+    <!-- <div class="w-full h-full text-black flex justify-center print:pr-12">
       <div
         class="w-full h-full max-w-4xl grid-rows-[230px_1fr] grid grid-cols-2"
       >
         <div class="w-full h-full flex-col flex">
           <h1 class="uppercase font-semibold mb-1">
-            {{ t("id.d.i.title") }}
+            {{ t("od.d.o.title") }}
           </h1>
           <table class="table-auto rounded-[4px] overflow-hidden w-full">
             <tbody class="text-sm divide-y divide-gray-100">
@@ -43,12 +43,26 @@ const print = () => window.print();
                   class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
                 >
                   <span class="h-full w-full grid">
-                    {{ t("id.d.i.date") }}
+                    {{ t("od.d.o.date") }}
                   </span>
                 </td>
                 <td class="p-2">
                   <span class="h-full w-full grid">
-                    {{ d(new Date(invoice?.created_at ?? new Date()), "long") }}
+                    {{ d(new Date(order?.created_at ?? new Date()), "long") }}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
+                >
+                  <span class="h-full w-full grid">
+                    {{ t("od.d.o.status") }}
+                  </span>
+                </td>
+                <td class="p-2">
+                  <span class="h-full w-full grid">
+                    {{ order?.status }}
                   </span>
                 </td>
               </tr>
@@ -57,7 +71,7 @@ const print = () => window.print();
         </div>
         <div class="w-full h-full flex flex-col">
           <h1 class="uppercase font-semibold mb-1">
-            {{ t("id.d.c.title") }}
+            {{ t("od.d.s.title") }}
           </h1>
           <table class="table-auto rounded-[4px] overflow-hidden w-full">
             <tbody class="text-sm divide-y divide-gray-100">
@@ -66,12 +80,12 @@ const print = () => window.print();
                   class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
                 >
                   <span class="h-full w-full grid">
-                    {{ t("id.d.c.name") }}
+                    {{ t("od.d.s.name") }}
                   </span>
                 </td>
                 <td class="p-2">
                   <span class="h-full w-full grid">
-                    {{ invoice?.client.fullname }}
+                    {{ order?.seller.name }}
                   </span>
                 </td>
               </tr>
@@ -80,12 +94,12 @@ const print = () => window.print();
                   class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
                 >
                   <span class="h-full w-full grid">
-                    {{ t("id.d.c.phone") }}
+                    {{ t("od.d.s.phone") }}
                   </span>
                 </td>
                 <td class="p-2">
                   <span class="h-full w-full grid">
-                    {{ invoice?.client.phone }}
+                    {{ order?.seller.phone }}
                   </span>
                 </td>
               </tr>
@@ -94,12 +108,12 @@ const print = () => window.print();
                   class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
                 >
                   <span class="h-full w-full grid">
-                    {{ t("id.d.c.email") }}
+                    {{ t("od.d.s.email") }}
                   </span>
                 </td>
                 <td class="p-2">
                   <span class="h-full w-full grid">
-                    {{ invoice?.client.email }}
+                    {{ order?.seller.email }}
                   </span>
                 </td>
               </tr>
@@ -108,12 +122,12 @@ const print = () => window.print();
                   class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
                 >
                   <span class="h-full w-full grid">
-                    {{ t("id.d.c.address") }}
+                    {{ t("od.d.s.address") }}
                   </span>
                 </td>
                 <td class="p-2">
                   <span class="h-full w-full grid">
-                    {{ invoice?.client.address }}
+                    {{ order?.seller.address }}
                   </span>
                 </td>
               </tr>
@@ -122,7 +136,7 @@ const print = () => window.print();
         </div>
         <div class="w-full h-full col-span-2 row-span-2 text-black">
           <h1 class="uppercase font-semibold mb-1">
-            {{ t("id.d.i.title") }}
+            {{ t("od.d.i.title") }}
           </h1>
           <table class="table-auto rounded-[4px] overflow-hidden w-full">
             <thead
@@ -132,27 +146,27 @@ const print = () => window.print();
                 <th></th>
                 <th v-for="index in 5" :key="index" class="p-2">
                   <div class="font-semibold text-left">
-                    {{ t(`id.d.it.fields[${index - 1}]`) }}
+                    {{ t(`od.d.i.fields[${index - 1}]`) }}
                   </div>
                 </th>
                 <th></th>
               </tr>
             </thead>
             <tbody class="text-sm divide-y divide-gray-100">
-              <tr v-for="item in invoice?.invoice_items" :key="item.id">
+              <tr v-for="item in order?.order_items" :key="item.id">
                 <td class="p-2">
                   <span class="h-full w-full grid"></span>
                 </td>
                 <td class="p-2">
-                  <span class="h-full w-full grid">{{
-                    item.product.name
-                  }}</span>
+                  <span class="h-full w-full grid">
+                    {{ item.product.name }}
+                  </span>
                 </td>
                 <td class="p-2">
                   <div
                     class="font-medium text-gray-800 max-w-[120px] overflow-hidden"
                   >
-                    {{ item.product.description }}
+                    {{ item.product?.description }}
                   </div>
                 </td>
                 <td class="p-2">
@@ -160,84 +174,47 @@ const print = () => window.print();
                 </td>
                 <td class="p-2">
                   <div class="text-left">
-                    {{ item.product.price.toFixed(2) }}
-                  </div>
-                </td>
-                <!-- <td class="p-2">
-                  <div class="text-left">
-                    {{ item.product.tva.toFixed(2) }} %
-                  </div>
-                </td> -->
-                <!-- <td class="p-2">
-                  <div class="flex justify-start gap-3">
                     {{
-                      (
-                        item.product.price *
-                        (item.product.tva / 100) *
-                        item.quantity
-                      ).toFixed(2)
+                      item.price
+                        ? item.price?.toFixed(2)
+                        : item.product.price?.toFixed(2)
                     }}
                     DH
                   </div>
-                </td> -->
+                </td>
                 <td class="p-2">
                   <div class="flex justify-start gap-3">
-                    {{ (item.product.price * item.quantity).toFixed(2) }} DH
+                    {{
+                      (item.price
+                        ? item.price * item.quantity
+                        : item.product.price * item.quantity
+                      ).toFixed(2)
+                    }}
+                    DH
                   </div>
                 </td>
                 <td class="p-2">
                   <div class="flex justify-start gap-3"></div>
                 </td>
               </tr>
-              <!-- <tr>
-                <td v-for="index in 6" :key="index"></td>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td class="p-2 font-semibold">
                   {{
-                    (
-                      invoice?.invoice_items.reduce(
+                    order?.order_items
+                      .reduce(
                         (acc, curr) =>
                           (acc +=
-                            curr.quantity *
-                            curr.product.price *
-                            (curr.product.tva / 100)),
-                        0
-                      ) ?? 0
-                    ).toFixed(2)
-                  }}
-                  DH
-                </td> 
-                <td class="p-2 font-semibold">
-                  {{
-                    (
-                      invoice?.invoice_items.reduce(
-                        (acc, curr) =>
-                          (acc += curr.quantity * curr.product.price),
-                        0
-                      ) ?? 0
-                    ).toFixed(2)
-                  }}
-                  DH
-                </td>
-              </tr> -->
-              <tr>
-                <td v-for="index in 5" :key="index"></td>
-                <td class="p-2 font-semibold">
-                  {{
-                    // (invoice?.invoice_items.reduce(
-                    //   (acc, curr) =>
-                    //     (acc +=
-                    //       curr.quantity *
-                    //       curr.product.price *
-                    //       (curr.product.tva / 100)),
-                    //   0
-                    // ) ?? 0) +
-                    (
-                      invoice?.invoice_items.reduce(
-                        (acc, curr) =>
-                          (acc += curr.quantity * curr.product.price),
+                            curr.price === 0
+                              ? curr.quantity * curr.price
+                              : curr.quantity * curr.product.price),
                         0,
-                      ) ?? 0
-                    ).toFixed(2)
+                      )
+                      .toFixed(2)
                   }}
                   DH
                 </td>
@@ -245,14 +222,14 @@ const print = () => window.print();
             </tbody>
           </table>
           <div class="w-full flex items-center justify-center">
-            <div class="w-1/3 flex justify-center">
+            <div class="w-1/3 flex items-center justify-center">
               <Button @click="print">
-                {{ t("id.d.button") }}
+                {{ t("od.d.button") }}
               </Button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </main>
 </template>

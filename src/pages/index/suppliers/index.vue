@@ -1,39 +1,41 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import ClientsTable from "@/components/ClientsTable.vue";
+import { useI18n } from "vue-i18n";
+import SuppliersTable from "@/components/SuppliersTable.vue";
 import { Button } from "@/components/ui/button";
-import UiIcon from "@/components/ui/UiIcon.vue";
 import { Input } from "@/components/ui/input";
+import UiIcon from "@/components/ui/UiIcon.vue";
+import { store } from "@/store";
 import { invoke } from "@tauri-apps/api";
 import { useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
-import { store } from "@/store";
 import {
   type WatchStopHandle,
   onUnmounted,
   onMounted,
   computed,
+  Transition,
   provide,
   watch,
   ref,
 } from "vue";
-import type { ClientT } from "@/schemas/client.schema";
+import type { SupplierT } from "@/schemas/supplier.schema";
+import type { Res } from "@/types";
 
 const { t } = useI18n();
 const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
-const clients = ref<ClientT[]>([]);
+//
+const suppliers = ref<SupplierT[]>([]);
 const searchQuery = ref<string>("");
+const totalRows = ref<number>(0);
+//
 const page = computed(() => Number(route.query.page));
 const refresh = computed(() => route.query.refresh);
-
-const totalRows = ref<number>(0);
-
+//
 provide("count", totalRows);
 
 //
-let timer: number | undefined;
+let timer: any;
 let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
   unwatch = watch(
@@ -42,7 +44,7 @@ onMounted(() => {
       clearTimeout(timer);
       timer = setTimeout(
         () => {
-          if (p && p > 0) getClients(search, p);
+          if (p && p > 0) getSuppliers(search, p);
         },
         search != oldSearch && oldSearch ? 500 : 0,
       );
@@ -53,13 +55,14 @@ onMounted(() => {
   );
 });
 
+//
 onUnmounted(() => {
   if (unwatch) unwatch();
 });
-
-const getClients = async (search: string, page: number = 1) => {
+//
+async function getSuppliers(search: string, page: number = 1) {
   try {
-    const res = await invoke<any>("list_clients", {
+    const res = await invoke<Res<any>>("list_suppliers", {
       args: {
         search,
         page,
@@ -67,21 +70,21 @@ const getClients = async (search: string, page: number = 1) => {
       },
     });
     if (!res?.error) {
-      clients.value = res.data.clients;
+      suppliers.value = res.data.suppliers;
       totalRows.value = res.data.count;
       return;
     }
   } catch (error) {
     console.log(error);
   }
-};
+}
 
 const uploadCSV = () => {
   store.setters.updateStore({ key: "name", value: "CsvUploader" });
   store.setters.updateStore({ key: "show", value: true });
-  updateQueryParams({ table: "clients" });
+  updateQueryParams({ table: "suppliers" });
 };
-
+//
 const updateModal = (name: string) => {
   store.setters.updateStore({ key: "show", value: true });
   store.setters.updateStore({ key: "name", value: name });
@@ -118,18 +121,18 @@ const updateModal = (name: string) => {
                 </svg>
               </span>
             </Button>
-            <Button @click="updateModal('ClientCreate')">
+            <Button @click="updateModal('SupplierCreate')">
               <UiIcon
                 extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
               />
-              {{ t("c.i.addButton") }}
+              {{ t("s.i.addButton") }}
             </Button>
           </div>
         </div>
       </Transition>
       <Transition appear>
-        <ClientsTable :clients="clients" />
+        <SuppliersTable :suppliers="suppliers" />
       </Transition>
     </div>
   </main>

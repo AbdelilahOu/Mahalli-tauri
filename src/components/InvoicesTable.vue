@@ -73,8 +73,7 @@ const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
             <div class="text-left whitespace-nowrap overflow-ellipsis">
               <RouterLink
                 :to="{
-                  name: 'ClientDetails',
-                  params: { id: invoice.clientId },
+                  path: '/clients/' + invoice.clientId,
                 }"
               >
                 {{ invoice.fullname }}
@@ -178,8 +177,7 @@ const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
               </span>
               <RouterLink
                 :to="{
-                  name: 'InvoiceDetails',
-                  params: { id: invoice.id },
+                  path: '/invoices/' + invoice.id,
                 }"
               >
                 <UiIcon name="print" />

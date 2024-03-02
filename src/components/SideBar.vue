@@ -87,13 +87,13 @@ const openSettingsModal = () => {
             </RouterLink>
           </template>
         </div>
-        <RouterLink to="/Notifications">
+        <!-- <RouterLink to="/Notifications">
           <UiSideLink
             :isText="!collapse"
             icon="Notifications"
             :linkText="t('g.r.Notifications')"
           />
-        </RouterLink>
+        </RouterLink> -->
         <div class="w-full cursor-pointer" @click="openTranslationModal">
           <UiSideLink :isText="!collapse" icon="Lang" :linkText="locale.text" />
         </div>

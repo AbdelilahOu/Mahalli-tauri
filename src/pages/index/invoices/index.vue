@@ -1,50 +1,61 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { useRoute } from "vue-router";
+import { invoke } from "@tauri-apps/api";
 import { useI18n } from "vue-i18n";
-import SuppliersTable from "@/components/SuppliersTable.vue";
+import { store } from "@/store";
+import InvoicesTable from "@/components/InvoicesTable.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
-import { store } from "@/store";
-import { invoke } from "@tauri-apps/api";
-import { useRoute } from "vue-router";
+import type { Res } from "@/types";
+import type { InvoiceProductT, InvoiceT } from "@/schemas/invoice.schema";
+import {
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+  SelectItem,
+  Select,
+} from "@/components/ui/select";
 import {
   type WatchStopHandle,
   onUnmounted,
   onMounted,
   computed,
-  Transition,
   provide,
   watch,
   ref,
 } from "vue";
-import type { SupplierT } from "@/schemas/supplier.schema";
-import type { Res } from "@/types";
 
 const { t } = useI18n();
 const route = useRoute();
-const { updateQueryParams } = useUpdateRouteQueryParams();
-//
-const suppliers = ref<SupplierT[]>([]);
 const searchQuery = ref<string>("");
-const totalRows = ref<number>(0);
-//
 const page = computed(() => Number(route.query.page));
 const refresh = computed(() => route.query.refresh);
-//
+const invoices = ref<InvoiceT[]>([]);
+const totalRows = ref<number>(0);
+const status = ref<string | undefined>(undefined);
+const createdAt = ref<string | number | undefined>(undefined);
+const invoiceProducts = ref<InvoiceProductT[]>([]);
+
+const { updateQueryParams } = useUpdateRouteQueryParams();
+
 provide("count", totalRows);
 
-//
-let timer: number | undefined;
+onUnmounted(() => {
+  if (unwatch) unwatch();
+});
+
+let timer: any;
 let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
   unwatch = watch(
-    [searchQuery, page, refresh],
+    [searchQuery, page, refresh, createdAt, status],
     ([search, p], [oldSearch]) => {
       clearTimeout(timer);
       timer = setTimeout(
         () => {
-          if (p && p > 0) getSuppliers(search, p);
+          if (p && p > 0) getInvoices(search, p);
         },
         search != oldSearch && oldSearch ? 500 : 0,
       );
@@ -55,36 +66,54 @@ onMounted(() => {
   );
 });
 
-//
-onUnmounted(() => {
-  if (unwatch) unwatch();
-});
-//
-async function getSuppliers(search: string, page: number = 1) {
+const getInvoices = async (search: string, page = 1) => {
   try {
-    const res = await invoke<Res<any>>("list_suppliers", {
+    const res = await invoke<Res<any>>("list_invoices", {
       args: {
-        search,
         page,
+        search,
         limit: 17,
+        status: status.value,
+        created_at: createdAt.value
+          ? new Date(createdAt.value).toISOString().slice(0, 10)
+          : null,
       },
     });
     if (!res?.error) {
-      suppliers.value = res.data.suppliers;
+      invoices.value = res.data.invoices;
       totalRows.value = res.data.count;
-      return;
     }
   } catch (error) {
     console.log(error);
   }
-}
+};
+
+let invoiceProductsTimer: any;
+const listInvoiceProduct = (id?: string) => {
+  clearTimeout(invoiceProductsTimer);
+  invoiceProductsTimer = setTimeout(async () => {
+    try {
+      const res = await invoke<Res<any>>("list_invoice_products", {
+        id,
+      });
+      if (!res?.error) {
+        console.log("preview invoice products", res.data);
+        invoiceProducts.value = res.data;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, 300);
+};
+
+const cancelInvoiceProducts = () => clearInterval(invoiceProductsTimer);
 
 const uploadCSV = () => {
   store.setters.updateStore({ key: "name", value: "CsvUploader" });
   store.setters.updateStore({ key: "show", value: true });
-  updateQueryParams({ table: "suppliers" });
+  updateQueryParams({ table: "invoices" });
 };
-//
+
 const updateModal = (name: string) => {
   store.setters.updateStore({ key: "show", value: true });
   store.setters.updateStore({ key: "name", value: name });
@@ -96,13 +125,24 @@ const updateModal = (name: string) => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
-          <div class="w-1/3">
+          <div class="w-full max-w-[50%] flex gap-1">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
                 name="search"
               />
             </Input>
+            <Input v-model="createdAt" type="date" :placeHolder="t('g.s')" />
+            <Select v-model="status">
+              <SelectTrigger>
+                <SelectValue placeholder="Select a status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="PAID"> Paid </SelectItem>
+                <SelectItem value="CANCELED"> Cancelled </SelectItem>
+                <SelectItem value="PENDING"> Pending </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
             <Button variant="ghost" @click="uploadCSV">
@@ -121,18 +161,23 @@ const updateModal = (name: string) => {
                 </svg>
               </span>
             </Button>
-            <Button @click="updateModal('SupplierCreate')">
+            <Button @click="updateModal('InvoiceCreate')">
               <UiIcon
                 extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
               />
-              {{ t("s.i.addButton") }}
+              {{ t("o.i.addButton") }}
             </Button>
           </div>
         </div>
       </Transition>
       <Transition appear>
-        <SuppliersTable :suppliers="suppliers" />
+        <InvoicesTable
+          @listInvoiceProducts="listInvoiceProduct"
+          @cancelInvoiceProducts="cancelInvoiceProducts"
+          :invoices="invoices"
+          :invoiceProducts="invoiceProducts"
+        />
       </Transition>
     </div>
   </main>

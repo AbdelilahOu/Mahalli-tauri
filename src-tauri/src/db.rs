@@ -1,6 +1,12 @@
-use dotenvy::dotenv;
 use migration::sea_orm::Database;
 use migration::sea_orm::DatabaseConnection;
+
+#[cfg(not(debug_assertions))]
+use std::fs;
+
+#[cfg(debug_assertions)]
+use dotenvy::dotenv;
+#[cfg(debug_assertions)]
 use std::env;
 
 pub async fn establish_connection() -> DatabaseConnection {
@@ -8,16 +14,25 @@ pub async fn establish_connection() -> DatabaseConnection {
     dotenv().ok();
 
     #[cfg(debug_assertions)]
-    let database_url = &env::var("DATABASE_URL").unwrap();
+    let db_url = env::var("DATABASE_URL").unwrap();
 
     #[cfg(not(debug_assertions))]
-    let database_url = path::Path::new(&tauri::api::path::data_dir().unwrap())
-        .join(".stocker")
-        .join("stocker.db");
+    let home_dir = match tauri::api::path::data_dir() {
+        Some(val) => val,
+        None => panic!("Could not get home directory"),
+    };
 
-    let database_url = database_url.as_str();
+    #[cfg(not(debug_assertions))]
+    let data_dir = home_dir.join(".stocker/data");
+    #[cfg(not(debug_assertions))]
+    if let Err(_) = fs::metadata(&data_dir) {
+        fs::create_dir_all(&data_dir).expect("Could not create data directory");
+    }
 
-    Database::connect(database_url)
+    #[cfg(not(debug_assertions))]
+    let db_url = "sqlite://".to_string() + data_dir.to_str().unwrap() + "/db.sqlite?mode=rwc";
+
+    Database::connect(&db_url)
         .await
-        .expect(&format!("Error connecting to {}", &database_url))
+        .expect(&format!("Error connecting to {}", &db_url))
 }

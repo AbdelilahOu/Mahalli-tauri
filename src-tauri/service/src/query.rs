@@ -1124,9 +1124,9 @@ impl QueriesService {
             .from(Clients)
             .column(
                 (
-                Clients,
-                clients::Column::FullName,
-            )
+                    Clients,
+                    clients::Column::FullName,
+                )
             )
             .expr_as(
                 Func::sum(Expr::col((

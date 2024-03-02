@@ -1,61 +1,48 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { useRoute } from "vue-router";
-import { invoke } from "@tauri-apps/api";
+import ProductsTable from "@/components/ProductsTable.vue";
 import { useI18n } from "vue-i18n";
-import { store } from "@/store";
-import OrdersTable from "@/components/OrdersTable.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UiIcon from "@/components/ui/UiIcon.vue";
-import type { Res } from "@/types";
-import type { OrderProductT, OrderT } from "@/schemas/order.schema";
-import {
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-  SelectItem,
-  Select,
-} from "@/components/ui/select";
+import { invoke } from "@tauri-apps/api";
+import { useRoute } from "vue-router";
+import { store } from "@/store";
 import {
   type WatchStopHandle,
   onUnmounted,
+  Transition,
   onMounted,
   computed,
   provide,
   watch,
   ref,
 } from "vue";
+import type { ProductT } from "@/schemas/products.schema";
 
 const { t } = useI18n();
 const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 //
+const products = ref<ProductT[]>([]);
 const searchQuery = ref<string>("");
+const totalRows = ref<number>(0);
+//
 const page = computed(() => Number(route.query.page));
 const refresh = computed(() => route.query.refresh);
-const orders = ref<OrderT[]>([]);
-const totalRows = ref<number>(0);
-const status = ref<string | undefined>(undefined);
-const createdAt = ref<string | number | undefined>(undefined);
-const orderProducts = ref<OrderProductT[]>([]);
 //
 provide("count", totalRows);
 //
-onUnmounted(() => {
-  if (unwatch) unwatch();
-});
-
-let timer: number | undefined;
+let timer: any;
 let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
   unwatch = watch(
-    [searchQuery, page, refresh, createdAt, status],
+    [searchQuery, page, refresh],
     ([search, p], [oldSearch]) => {
       clearTimeout(timer);
       timer = setTimeout(
         () => {
-          if (p && p > 0) getOrders(search, p);
+          if (p && p > 0) listProducts(search, p);
         },
         search != oldSearch && oldSearch ? 500 : 0,
       );
@@ -65,59 +52,40 @@ onMounted(() => {
     },
   );
 });
-
-const getOrders = async (search: string, page = 1) => {
+//
+onUnmounted(() => {
+  if (unwatch) unwatch();
+});
+//
+async function listProducts(search: string, page: number = 1) {
   try {
-    const res = await invoke<Res<any>>("list_orders", {
+    const res = await invoke<any>("list_products", {
       args: {
-        page,
         search,
+        page,
         limit: 17,
-        status: status.value,
-        created_at: createdAt.value
-          ? new Date(createdAt.value).toISOString().slice(0, 10)
-          : null,
       },
     });
     if (!res?.error) {
-      orders.value = res.data.orders;
+      products.value = res.data.products;
       totalRows.value = res.data.count;
+      return;
     }
   } catch (error) {
     console.log(error);
   }
-};
-
-let orderProductsTimer: number;
-const listOrderProduct = (id?: string) => {
-  clearTimeout(orderProductsTimer);
-  orderProductsTimer = setTimeout(async () => {
-    try {
-      const res = await invoke<Res<any>>("list_order_products", {
-        id,
-      });
-      if (!res?.error) {
-        console.log("preview order products", res.data);
-        orderProducts.value = res.data;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, 300);
-};
-
-const cancelOrderProducts = () => clearInterval(orderProductsTimer);
-
+}
 const uploadCSV = () => {
   store.setters.updateStore({ key: "name", value: "CsvUploader" });
   store.setters.updateStore({ key: "show", value: true });
-  updateQueryParams({ table: "orders" });
+  updateQueryParams({ table: "products" });
 };
-
+//
 const updateModal = (name: string) => {
   store.setters.updateStore({ key: "show", value: true });
   store.setters.updateStore({ key: "name", value: name });
 };
+//
 </script>
 
 <template>
@@ -125,29 +93,13 @@ const updateModal = (name: string) => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
-          <div class="w-full max-w-[50%] grid grid-cols-3 gap-1">
+          <div class="w-1/3">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
                 name="search"
               />
             </Input>
-            <Input
-              class="w-full"
-              v-model="createdAt"
-              type="date"
-              :placeHolder="t('g.s')"
-            ></Input>
-            <Select v-model="status">
-              <SelectTrigger>
-                <SelectValue placeholder="Select a status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="DELIVERED"> Delivered </SelectItem>
-                <SelectItem value="CANCELED"> Cancelled </SelectItem>
-                <SelectItem value="PENDING"> Pending </SelectItem>
-              </SelectContent>
-            </Select>
           </div>
           <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
             <Button variant="ghost" @click="uploadCSV">
@@ -166,23 +118,18 @@ const updateModal = (name: string) => {
                 </svg>
               </span>
             </Button>
-            <Button @click="updateModal('OrderCreate')">
+            <Button @click="updateModal('ProductCreate')">
               <UiIcon
                 extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
               />
-              {{ t("o.i.addButton") }}
+              {{ t("p.i.addButton") }}
             </Button>
           </div>
         </div>
       </Transition>
       <Transition appear>
-        <OrdersTable
-          @listOrderProducts="listOrderProduct"
-          @cancelOrderProducts="cancelOrderProducts"
-          :orders="orders"
-          :orderProducts="orderProducts"
-        />
+        <ProductsTable :products="products" />
       </Transition>
     </div>
   </main>

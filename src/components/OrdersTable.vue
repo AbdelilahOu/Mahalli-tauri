@@ -66,8 +66,7 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
             <div class="text-left whitespace-nowrap overflow-ellipsis">
               <RouterLink
                 :to="{
-                  name: 'SupplierDetails',
-                  params: { id: order.supplierId },
+                  path: '/suppliers/' + order.supplierId,
                 }"
               >
                 {{ order.fullname }}
@@ -162,8 +161,7 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
               </span>
               <RouterLink
                 :to="{
-                  name: 'OrdersDetails',
-                  params: { id: order.id },
+                  path: '/orders/' + order.id,
                 }"
               >
                 <UiIcon name="print" />
