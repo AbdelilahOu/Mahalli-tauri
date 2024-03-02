@@ -23,7 +23,7 @@ const open = ref(false);
 const dropdownParent = ref<HTMLElement | null>(null);
 const inputValue = ref<string | number>(props.defaultValue ?? "");
 
-let timer: number;
+let timer: any;
 const updateInput = (s: string | number) => {
   clearTimeout(timer);
   timer = setTimeout(() => {

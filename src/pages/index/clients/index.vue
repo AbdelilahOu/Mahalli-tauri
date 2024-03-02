@@ -1,22 +1,13 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { useRoute } from "vue-router";
+import ClientsTable from "@/components/ClientsTable.vue";
+import { Button } from "@/components/ui/button";
+import UiIcon from "@/components/ui/UiIcon.vue";
+import { Input } from "@/components/ui/input";
 import { invoke } from "@tauri-apps/api";
+import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { store } from "@/store";
-import InvoicesTable from "@/components/InvoicesTable.vue";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import UiIcon from "@/components/ui/UiIcon.vue";
-import type { Res } from "@/types";
-import type { InvoiceProductT, InvoiceT } from "@/schemas/invoice.schema";
-import {
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-  SelectItem,
-  Select,
-} from "@/components/ui/select";
 import {
   type WatchStopHandle,
   onUnmounted,
@@ -26,36 +17,32 @@ import {
   watch,
   ref,
 } from "vue";
+import type { ClientT } from "@/schemas/client.schema";
 
 const { t } = useI18n();
 const route = useRoute();
+const { updateQueryParams } = useUpdateRouteQueryParams();
+
+const clients = ref<ClientT[]>([]);
 const searchQuery = ref<string>("");
 const page = computed(() => Number(route.query.page));
 const refresh = computed(() => route.query.refresh);
-const invoices = ref<InvoiceT[]>([]);
-const totalRows = ref<number>(0);
-const status = ref<string | undefined>(undefined);
-const createdAt = ref<string | number | undefined>(undefined);
-const invoiceProducts = ref<InvoiceProductT[]>([]);
 
-const { updateQueryParams } = useUpdateRouteQueryParams();
+const totalRows = ref<number>(0);
 
 provide("count", totalRows);
 
-onUnmounted(() => {
-  if (unwatch) unwatch();
-});
-
-let timer: number | undefined;
+//
+let timer: any;
 let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
   unwatch = watch(
-    [searchQuery, page, refresh, createdAt, status],
+    [searchQuery, page, refresh],
     ([search, p], [oldSearch]) => {
       clearTimeout(timer);
       timer = setTimeout(
         () => {
-          if (p && p > 0) getInvoices(search, p);
+          if (p && p > 0) getClients(search, p);
         },
         search != oldSearch && oldSearch ? 500 : 0,
       );
@@ -66,52 +53,33 @@ onMounted(() => {
   );
 });
 
-const getInvoices = async (search: string, page = 1) => {
+onUnmounted(() => {
+  if (unwatch) unwatch();
+});
+
+const getClients = async (search: string, page: number = 1) => {
   try {
-    const res = await invoke<Res<any>>("list_invoices", {
+    const res = await invoke<any>("list_clients", {
       args: {
-        page,
         search,
+        page,
         limit: 17,
-        status: status.value,
-        created_at: createdAt.value
-          ? new Date(createdAt.value).toISOString().slice(0, 10)
-          : null,
       },
     });
     if (!res?.error) {
-      invoices.value = res.data.invoices;
+      clients.value = res.data.clients;
       totalRows.value = res.data.count;
+      return;
     }
   } catch (error) {
     console.log(error);
   }
 };
 
-let invoiceProductsTimer: number;
-const listInvoiceProduct = (id?: string) => {
-  clearTimeout(invoiceProductsTimer);
-  invoiceProductsTimer = setTimeout(async () => {
-    try {
-      const res = await invoke<Res<any>>("list_invoice_products", {
-        id,
-      });
-      if (!res?.error) {
-        console.log("preview invoice products", res.data);
-        invoiceProducts.value = res.data;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, 300);
-};
-
-const cancelInvoiceProducts = () => clearInterval(invoiceProductsTimer);
-
 const uploadCSV = () => {
   store.setters.updateStore({ key: "name", value: "CsvUploader" });
   store.setters.updateStore({ key: "show", value: true });
-  updateQueryParams({ table: "invoices" });
+  updateQueryParams({ table: "clients" });
 };
 
 const updateModal = (name: string) => {
@@ -125,24 +93,13 @@ const updateModal = (name: string) => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
-          <div class="w-full max-w-[50%] flex gap-1">
+          <div class="w-1/3">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
                 name="search"
               />
             </Input>
-            <Input v-model="createdAt" type="date" :placeHolder="t('g.s')" />
-            <Select v-model="status">
-              <SelectTrigger>
-                <SelectValue placeholder="Select a status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="PAID"> Paid </SelectItem>
-                <SelectItem value="CANCELED"> Cancelled </SelectItem>
-                <SelectItem value="PENDING"> Pending </SelectItem>
-              </SelectContent>
-            </Select>
           </div>
           <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
             <Button variant="ghost" @click="uploadCSV">
@@ -161,23 +118,18 @@ const updateModal = (name: string) => {
                 </svg>
               </span>
             </Button>
-            <Button @click="updateModal('InvoiceCreate')">
+            <Button @click="updateModal('ClientCreate')">
               <UiIcon
                 extraStyle="fill-white cursor-default hover:bg-transparent"
                 name="add"
               />
-              {{ t("o.i.addButton") }}
+              {{ t("c.i.addButton") }}
             </Button>
           </div>
         </div>
       </Transition>
       <Transition appear>
-        <InvoicesTable
-          @listInvoiceProducts="listInvoiceProduct"
-          @cancelInvoiceProducts="cancelInvoiceProducts"
-          :invoices="invoices"
-          :invoiceProducts="invoiceProducts"
-        />
+        <ClientsTable :clients="clients" />
       </Transition>
     </div>
   </main>

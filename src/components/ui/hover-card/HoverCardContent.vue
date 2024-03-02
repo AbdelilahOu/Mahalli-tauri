@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { type HTMLAttributes, computed } from 'vue'
+import { type HTMLAttributes, computed } from "vue";
 import {
   HoverCardContent,
   type HoverCardContentProps,
   HoverCardPortal,
   useForwardProps,
-} from 'radix-vue'
-import { cn } from '@/utils/shadcn'
+} from "radix-vue";
+import { cn } from "@/utils/shadcn";
 
 const props = withDefaults(
-  defineProps<HoverCardContentProps & { class?: HTMLAttributes['class'] }>(),
+  defineProps<HoverCardContentProps & { class?: HTMLAttributes["class"] }>(),
   {
     sideOffset: 4,
   },
-)
+);
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  const { class: _, ...delegated } = props;
 
-  return delegated
-})
+  return delegated;
+});
 
-const forwardedProps = useForwardProps(delegatedProps)
+const forwardedProps = useForwardProps(delegatedProps);
 </script>
 
 <template>

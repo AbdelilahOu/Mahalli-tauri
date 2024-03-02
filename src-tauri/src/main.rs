@@ -8,7 +8,7 @@ mod db;
 
 use db::establish_connection;
 use migration::{Migrator, MigratorTrait};
-use service::{sea_orm::DatabaseConnection, QueriesService};
+use service::sea_orm::DatabaseConnection;
 use tauri_plugin_log::LogTarget;
 
 pub struct AppState {

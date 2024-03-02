@@ -129,9 +129,7 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
               <span @click="toggleThisSupplier(supplier, 'SupplierUpdate')">
                 <UiIcon isStyled name="edit" />
               </span>
-              <RouterLink
-                :to="{ name: 'SupplierDetails', params: { id: supplier.id } }"
-              >
+              <RouterLink :to="{ path: '/suppliers/' + supplier.id }">
                 <UiIcon name="more" />
               </RouterLink>
             </div>

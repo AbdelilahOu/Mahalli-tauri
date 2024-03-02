@@ -8,43 +8,43 @@ interface RouteLinksTypeT {
 // Routes
 export const RouteLinks: RouteLinksTypeT[] = [
   {
-    path: "/Clients/all",
+    path: "/clients/",
     component: "Clients",
     name: "Clients",
     display: true,
   },
   {
-    path: "/Suppliers/all",
+    path: "/suppliers/",
     component: "Suppliers",
     name: "Suppliers",
     display: true,
   },
   {
-    path: "/Products",
+    path: "/products/",
     component: "Products",
     name: "Products",
     display: true,
   },
   {
-    path: "/Orders/all",
+    path: "/orders/",
     component: "Orders",
     name: "Orders",
     display: true,
   },
   {
-    path: "/Invoices/all",
+    path: "/invoices/",
     component: "Invoices",
     name: "Invoices",
     display: true,
   },
   {
-    path: "/Inventory",
+    path: "/inventory/",
     component: "Inventory",
     name: "Inventory",
     display: true,
   },
   {
-    path: "/Dashboard",
+    path: "/dashboard/",
     component: "Dashboard",
     name: "Dashboard",
     display: true,

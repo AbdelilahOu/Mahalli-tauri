@@ -7,37 +7,37 @@ const pages = ref([
   {
     image: "/clients.jpg",
     text: "Clients",
-    path: "/Clients/all",
+    path: "/clients/",
   },
   {
     image: "/products.jpg",
     text: "Products",
-    path: "/Products",
+    path: "/products",
   },
   {
     image: "/suppliers.jpeg",
     text: "Suppliers",
-    path: "/Suppliers/all",
+    path: "/suppliers/",
   },
   {
     image: "/orders.jpg",
     text: "Orders",
-    path: "/Orders/all",
+    path: "/orders/",
   },
   {
     image: "/invoices.jpg",
     text: "Invoices",
-    path: "/Invoices/all",
+    path: "/invoices/",
   },
   {
     image: "/inventory.jpg",
     text: "Inventory",
-    path: "/Inventory",
+    path: "/inventory",
   },
   {
     image: "/dashboard.jpg",
     text: "Dashboard",
-    path: "/Dashboard",
+    path: "/dashboard",
   },
 ]);
 </script>

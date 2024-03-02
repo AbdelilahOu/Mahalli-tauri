@@ -30,7 +30,6 @@ tauri = { version = "1.5.4", features = [
   "protocol-all",
   "shell-open",
   "shell-sidecar",
-  "updater",
 ] }
 csv = "1.1"
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }

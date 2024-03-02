@@ -132,8 +132,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
               </span>
               <RouterLink
                 :to="{
-                  name: 'ClientDetails',
-                  params: { id: client.id },
+                  path: '/clients/' + client.id,
                 }"
               >
                 <UiIcon name="more" />

@@ -79,6 +79,7 @@ const upload = async () => {
       <div v-if="filesData.length" class="w-full h-fit flex flex-col gap-2">
         <div
           v-for="(file, i) in filesData"
+          :key="i"
           class="grid grid-cols-[30px_1fr_80px_30px] w-full gap-3 h-10 items-center px-1 rounded-[4px] bg-sky-100 text-black fill-black border-sky-300 border-2"
         >
           <svg

@@ -42,7 +42,7 @@ const totalRows = ref<number>(0);
 //
 provide("count", totalRows);
 //
-let timer: number | undefined;
+let timer: any;
 let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
   unwatch = watch(
