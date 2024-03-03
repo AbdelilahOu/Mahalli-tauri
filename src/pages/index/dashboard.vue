@@ -59,6 +59,11 @@ const barPriceTriggers = {
     return "<span>" + d[mvmType].price.toFixed(2) + " DH</span>";
   },
 };
+function numberToK(num: number) {
+  return Math.abs(num) > 999
+    ? (Math.abs(num) / 1000).toFixed(1) + "K"
+    : Math.abs(num);
+}
 async function getInventoryMouvementStats() {
   try {
     const res = await invoke<Res<mouvementsT[]>>("list_mvm_stats");
@@ -209,33 +214,29 @@ onBeforeMount(async () => {
         <div class="w-1/2 h-full">
           <ChartHolder>
             <template #default>
-              <VisBulletLegend
-                class="text-left my-2"
-                :items="
-                  ['in', 'out'].map((a) => ({
-                    name: t('g.status.' + a),
-                  }))
-                "
-              />
-              <VisSingleContainer v-if="bestClients" :data="bestClients">
-                <VisDonut
-                  :cornerRadius="5"
-                  :padAngle="0.01"
-                  :value="(d: any) => d.price"
-                  :events="{
-                    [Donut.selectors.segment]: {
-                      mouseover: (d: any) => console.log(d),
-                    },
-                  }"
-                />
-                <!-- <VisBulletLegend
+              <div v-if="bestClients" class="w-full h-full flex flex-col gap-2">
+                <VisBulletLegend
+                  class="text-left my-2"
                   :items="
-                    bestSuppliers?.map((a) => ({
-                      name: a.Fullname + ' : ' + a.price,
+                    bestClients?.map((a) => ({
+                      name: a.Fullname + ' : ' + numberToK(a.price) + ' DH',
                     }))
                   "
-                /> -->
-              </VisSingleContainer>
+                />
+
+                <VisSingleContainer :data="bestClients">
+                  <VisDonut
+                    :cornerRadius="5"
+                    :padAngle="0.01"
+                    :value="(d: any) => d.price"
+                    :events="{
+                      [Donut.selectors.segment]: {
+                        mouseover: (d: any) => '<span>' + 50 + ' DH</span>',
+                      },
+                    }"
+                  />
+                </VisSingleContainer>
+              </div>
             </template>
             <template #title>
               <h1 class="m-2 w-full text-center text-base font-medium">
@@ -247,13 +248,26 @@ onBeforeMount(async () => {
         <div class="w-1/2 h-full">
           <ChartHolder>
             <template #default>
-              <VisSingleContainer v-if="bestSuppliers" :data="bestSuppliers">
-                <VisDonut
-                  :cornerRadius="5"
-                  :padAngle="0.01"
-                  :value="(d: any) => d.price"
+              <div
+                v-if="bestSuppliers"
+                class="w-full h-full flex flex-col gap-2"
+              >
+                <VisBulletLegend
+                  class="text-left my-2"
+                  :items="
+                    bestSuppliers?.map((a) => ({
+                      name: a.Fullname + ' : ' + numberToK(a.price) + ' DH',
+                    }))
+                  "
                 />
-              </VisSingleContainer>
+                <VisSingleContainer v-if="bestSuppliers" :data="bestSuppliers">
+                  <VisDonut
+                    :cornerRadius="5"
+                    :padAngle="0.01"
+                    :value="(d: any) => d.price"
+                  />
+                </VisSingleContainer>
+              </div>
             </template>
             <template #title>
               <h1 class="m-2 w-full text-center text-base font-medium">
