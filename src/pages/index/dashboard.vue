@@ -12,6 +12,8 @@ import {
   VisBulletLegend,
 } from "@unovis/vue";
 import { Donut, GroupedBar } from "@unovis/ts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { invoke } from "@tauri-apps/api";
 import { ref } from "vue";
 import type { Res } from "@/types";
@@ -129,16 +131,145 @@ async function getBestSuppliers() {
   }
 }
 
+const statusCounts = ref<any>();
+async function getStatusCounts() {
+  try {
+    const res = await invoke<Res<any[]>>("list_status_count");
+    if (!res?.error) {
+      statusCounts.value = res.data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 onBeforeMount(async () => {
   getInventoryMouvementStats();
   getBestClients();
   getBestSuppliers();
+  getStatusCounts();
 });
 </script>
 
 <template>
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col lg:grid lg:grid-cols-2 gap-4">
+      <div class="grid grid-cols-2 lg:grid-cols-4 col-span-2 gap-4">
+        <Card>
+          <CardHeader
+            class="flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <CardTitle class="text-sm font-medium"> Total Revenue </CardTitle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              class="h-4 w-4 text-muted-foreground"
+            >
+              <path
+                d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+              />
+            </svg>
+          </CardHeader>
+          <CardContent>
+            <div class="text-2xl font-bold">$45,231.89</div>
+            <p class="text-xs text-muted-foreground">+20.1% from last month</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader
+            class="flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <CardTitle class="text-sm font-medium"> Orders </CardTitle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              class="h-4 w-4 text-muted-foreground"
+            >
+              <path
+                d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+              />
+            </svg>
+          </CardHeader>
+          <CardContent class="flex justify-start gap-2">
+            <Badge
+              v-for="(status, index) in statusCounts.orders"
+              :key="index"
+              variant="secondary"
+              class="rounded-sm h-8 w-full"
+            >
+              {{ status.status_count }}
+              {{ t("g.status." + status.status.toLowerCase()) }}
+            </Badge>
+          </CardContent>
+        </Card>
+        <Card class="lg:order-4">
+          <CardHeader
+            class="flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <CardTitle class="text-sm font-medium"> Invoices </CardTitle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              class="h-4 w-4 text-muted-foreground"
+            >
+              <path
+                d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+              />
+            </svg>
+          </CardHeader>
+          <CardContent class="flex justify-start gap-2">
+            <Badge
+              v-for="(status, index) in statusCounts.invoices"
+              :key="index"
+              variant="secondary"
+              class="rounded-sm h-8 w-full"
+            >
+              {{ status.status_count }}
+              {{ t("g.status." + status.status.toLowerCase()) }}
+            </Badge>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader
+            class="flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <CardTitle class="text-sm font-medium"> Total Revenue </CardTitle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              class="h-4 w-4 text-muted-foreground"
+            >
+              <path
+                d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+              />
+            </svg>
+          </CardHeader>
+          <CardContent>
+            <div class="text-2xl font-bold">$45,231.89</div>
+            <p class="text-xs text-muted-foreground">+20.1% from last month</p>
+          </CardContent>
+        </Card>
+      </div>
       <div class="w-full h-fit">
         <ChartHolder>
           <template #default>
