@@ -11,7 +11,7 @@ import {
   VisTooltip,
   VisBulletLegend,
 } from "@unovis/vue";
-import { Donut, GroupedBar, StackedBar } from "@unovis/ts";
+import { Donut, GroupedBar } from "@unovis/ts";
 import { invoke } from "@tauri-apps/api";
 import { ref } from "vue";
 import type { Res } from "@/types";
@@ -150,13 +150,10 @@ onBeforeMount(async () => {
               <VisGroupedBar
                 :barPadding="0.1"
                 :x="(d: any, index: number) => index"
-                :y="[
-                  (d: any) => d.IN.quantity / 100,
-                  (d: any) => d.OUT.quantity / 100,
-                ]"
+                :y="[(d: any) => d.IN.quantity, (d: any) => d.OUT.quantity]"
               />
               <VisAxis type="x" label="months" :tickFormat="tickFormatToDate" />
-              <VisAxis type="y" label="quantity 100 item" />
+              <VisAxis type="y" label="quantity" />
               <VisTooltip :triggers="barQuantityTriggers" />
               <VisBulletLegend
                 :items="
@@ -185,13 +182,10 @@ onBeforeMount(async () => {
               <VisGroupedBar
                 :barPadding="0.1"
                 :x="(d: any, index: number) => index"
-                :y="[
-                  (d: any) => d.IN.price / 1000,
-                  (d: any) => d.OUT.price / 1000,
-                ]"
+                :y="[(d: any) => d.IN.price, (d: any) => d.OUT.price]"
               />
               <VisAxis type="x" label="months" :tickFormat="tickFormatToDate" />
-              <VisAxis type="y" label="price in 1000 DH" />
+              <VisAxis type="y" label="price in DH" />
               <VisTooltip :triggers="barPriceTriggers" />
               <VisBulletLegend
                 class="text-left my-2"
