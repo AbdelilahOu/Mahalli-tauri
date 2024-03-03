@@ -19,5 +19,9 @@ build:
 check:
 	cd src-tauri && cargo check
 
+lint:
+	npx eslint src/**/** --fix
+	
+
 migration: 
 	cd src-tauri && sea-orm-cli migrate generate $(name)

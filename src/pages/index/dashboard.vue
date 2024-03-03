@@ -8,8 +8,10 @@ import {
   VisAxis,
   VisDonut,
   VisSingleContainer,
+  VisTooltip,
+  VisBulletLegend,
 } from "@unovis/vue";
-import { Donut } from "@unovis/ts";
+import { Donut, GroupedBar, StackedBar } from "@unovis/ts";
 import { invoke } from "@tauri-apps/api";
 import { ref } from "vue";
 import type { Res } from "@/types";
@@ -40,6 +42,22 @@ const mouvementsLabels = ref<string[]>([]);
 const tickFormatToDate = (i: number) => {
   if (i % 1 != 0) return "";
   return new Date(mouvementsLabels.value[i]).toLocaleDateString("fr-fr", {});
+};
+const barQuantityTriggers = {
+  [GroupedBar.selectors.bar]: (d: groupedMvm[string], i: number) => {
+    let mvmType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
+    return (
+      "<span>" +
+      t("g.plrz.i", { n: d[mvmType].quantity.toFixed(2) }) +
+      "</span>"
+    );
+  },
+};
+const barPriceTriggers = {
+  [GroupedBar.selectors.bar]: (d: groupedMvm[string], i: number) => {
+    let mvmType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
+    return "<span>" + d[mvmType].price.toFixed(2) + " DH</span>";
+  },
 };
 async function getInventoryMouvementStats() {
   try {
@@ -117,9 +135,13 @@ onBeforeMount(async () => {
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col lg:grid lg:grid-cols-2 gap-4">
       <div class="w-full h-fit">
-        <ChartHolder v-if="mouvements">
+        <ChartHolder>
           <template #default>
-            <VisXYContainer :data="Object.values(mouvements)" :height="500">
+            <VisXYContainer
+              v-if="mouvements"
+              :data="Object.values(mouvements)"
+              :height="500"
+            >
               <VisGroupedBar
                 :barPadding="0.1"
                 :x="(d: any, index: number) => index"
@@ -130,6 +152,14 @@ onBeforeMount(async () => {
               />
               <VisAxis type="x" label="months" :tickFormat="tickFormatToDate" />
               <VisAxis type="y" label="quantity 100 item" />
+              <VisTooltip :triggers="barQuantityTriggers" />
+              <VisBulletLegend
+                :items="
+                  ['in', 'out'].map((a) => ({
+                    name: t('g.status.' + a),
+                  }))
+                "
+              />
             </VisXYContainer>
           </template>
           <template #title>
@@ -140,9 +170,13 @@ onBeforeMount(async () => {
         </ChartHolder>
       </div>
       <div class="w-full h-fit">
-        <ChartHolder v-if="mouvements">
+        <ChartHolder>
           <template #default>
-            <VisXYContainer :data="Object.values(mouvements)" :height="500">
+            <VisXYContainer
+              v-if="mouvements"
+              :data="Object.values(mouvements)"
+              :height="500"
+            >
               <VisGroupedBar
                 :barPadding="0.1"
                 :x="(d: any, index: number) => index"
@@ -153,6 +187,15 @@ onBeforeMount(async () => {
               />
               <VisAxis type="x" label="months" :tickFormat="tickFormatToDate" />
               <VisAxis type="y" label="price in 1000 DH" />
+              <VisTooltip :triggers="barPriceTriggers" />
+              <VisBulletLegend
+                class="text-left my-2"
+                :items="
+                  ['in', 'out'].map((a) => ({
+                    name: t('g.status.' + a),
+                  }))
+                "
+              />
             </VisXYContainer>
           </template>
           <template #title>
@@ -164,9 +207,17 @@ onBeforeMount(async () => {
       </div>
       <div class="w-full flex gap-4 h-full">
         <div class="w-1/2 h-full">
-          <ChartHolder v-if="bestClients">
+          <ChartHolder>
             <template #default>
-              <VisSingleContainer :data="bestClients">
+              <VisBulletLegend
+                class="text-left my-2"
+                :items="
+                  ['in', 'out'].map((a) => ({
+                    name: t('g.status.' + a),
+                  }))
+                "
+              />
+              <VisSingleContainer v-if="bestClients" :data="bestClients">
                 <VisDonut
                   :cornerRadius="5"
                   :padAngle="0.01"
@@ -177,6 +228,13 @@ onBeforeMount(async () => {
                     },
                   }"
                 />
+                <!-- <VisBulletLegend
+                  :items="
+                    bestSuppliers?.map((a) => ({
+                      name: a.Fullname + ' : ' + a.price,
+                    }))
+                  "
+                /> -->
               </VisSingleContainer>
             </template>
             <template #title>
@@ -189,7 +247,7 @@ onBeforeMount(async () => {
         <div class="w-1/2 h-full">
           <ChartHolder>
             <template #default>
-              <VisSingleContainer :data="bestSuppliers">
+              <VisSingleContainer v-if="bestSuppliers" :data="bestSuppliers">
                 <VisDonut
                   :cornerRadius="5"
                   :padAngle="0.01"
