@@ -37,7 +37,8 @@ async fn main() {
                 .level_for("hyper", log::LevelFilter::Off)
                 .level_for("tracing", log::LevelFilter::Off)
                 .level_for("sea_orm", log::LevelFilter::Off)
-                .level_for("sqlx", log::LevelFilter::Debug)
+                .level_for("sqlx", log::LevelFilter::Off)
+                .level_for("tao", log::LevelFilter::Off)
                 .build(),
         )
         .invoke_handler(tauri::generate_handler![

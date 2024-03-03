@@ -117,6 +117,10 @@
   @apply text-primary;
 }
 
+.custom-vis:hover {
+  --vis-xy-label-fill-opacity: 0.8;
+}
+
 * {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */

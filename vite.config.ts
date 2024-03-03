@@ -48,6 +48,11 @@ export default defineConfig({
       ],
     }),
   ],
+  server: {
+    watch: {
+      ignored: ["**/src-tauri/**"],
+    },
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
