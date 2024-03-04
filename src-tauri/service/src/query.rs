@@ -12,7 +12,9 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 use crate::{
-    SelectClients, SelectInventory, SelectInvoices, SelectInvoicesItemsForUpdate, SelectMvm, SelectOrders, SelectOrdersItemsForUpdate, SelectProducts, SelectStatusCount, SelectSuppliers, SelectTops
+    SelectClients, SelectExpenses, SelectInventory, SelectInvoices, SelectInvoicesItemsForUpdate,
+    SelectMvm, SelectOrders, SelectOrdersItemsForUpdate, SelectProducts, SelectRevenue,
+    SelectStatusCount, SelectSuppliers, SelectTops,
 };
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -1026,7 +1028,6 @@ impl QueriesService {
             )
             .expr_as(
                 Expr::cust("strftime('%Y-%m-01', COALESCE(invoices.created_at, orders.created_at))"),
-                
                 Alias::new("created_at"),
             )
             .expr_as(
@@ -1120,66 +1121,59 @@ impl QueriesService {
         Ok(result)
     }
     pub async fn list_top_clients(db: &DbConn) -> Result<Vec<JsonValue>, DbErr> {
-        let (sql, values) = Query::select()
-            .from(Clients)
-            .column(
-                (
-                    Clients,
-                    clients::Column::FullName,
+        let (sql, values) =
+            Query::select()
+                .from(Clients)
+                .column((Clients, clients::Column::FullName))
+                .expr_as(
+                    Func::sum(Expr::col((
+                        InventoryMouvements,
+                        inventory_mouvements::Column::Quantity,
+                    ))),
+                    Alias::new("quantity"),
                 )
-            )
-            .expr_as(
-                Func::sum(Expr::col((
+                .expr_as(
+                    Func::sum(Expr::col((InvoiceItems, invoice_items::Column::Price)).mul(
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
+                    )),
+                    Alias::new("price"),
+                )
+                .join(
+                    JoinType::Join,
+                    Invoices,
+                    Expr::col((Invoices, invoices::Column::ClientId))
+                        .equals((Clients, clients::Column::Id)),
+                )
+                .join(
+                    JoinType::Join,
+                    InvoiceItems,
+                    Expr::col((InvoiceItems, invoice_items::Column::InvoiceId))
+                        .equals((Invoices, invoices::Column::Id)),
+                )
+                .join(
+                    JoinType::Join,
                     InventoryMouvements,
-                    inventory_mouvements::Column::Quantity,
-                ))),
-                Alias::new("quantity"),
-            )
-            .expr_as(
-                Func::sum(
-                    Expr::col((InvoiceItems, invoice_items::Column::Price)).mul(Expr::col((
-                        InventoryMouvements,
-                        inventory_mouvements::Column::Quantity,
-                    ))
-                )),
-                Alias::new("price"),
-            )
-            .join(
-                JoinType::Join,
-                Invoices,
-                Expr::col((Invoices, invoices::Column::ClientId))
-                    .equals((Clients, clients::Column::Id)),
-            )
-            .join(
-                JoinType::Join,
-                InvoiceItems,
-                Expr::col((InvoiceItems, invoice_items::Column::InvoiceId))
-                    .equals((Invoices, invoices::Column::Id)),
-            )
-            .join(
-                JoinType::Join, InventoryMouvements, 
-                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
-                    .equals((InvoiceItems, invoice_items::Column::InventoryId)))
-            .cond_where(
-                Cond::all()
-                    .add(
+                    Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                        .equals((InvoiceItems, invoice_items::Column::InventoryId)),
+                )
+                .cond_where(
+                    Cond::all().add(
                         Expr::expr(Expr::col((Invoices, invoices::Column::Status)))
-                        .eq("CANCELED")
-                        .not(),
+                            .eq("CANCELED")
+                            .not(),
                     ),
-            )
-            .add_group_by([
-                Expr::col((Clients, clients::Column::Id)).into(),
-            ])
-            .order_by_expr(Func::sum(
-                    Expr::col((InvoiceItems, invoice_items::Column::Price)).mul(Expr::col((
-                        InventoryMouvements,
-                        inventory_mouvements::Column::Quantity,
+                )
+                .add_group_by([Expr::col((Clients, clients::Column::Id)).into()])
+                .order_by_expr(
+                    Func::sum(Expr::col((InvoiceItems, invoice_items::Column::Price)).mul(
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
                     ))
-                )).into(), Order::Desc)
-            .limit(5)
-            .to_owned()
-            .build(SqliteQueryBuilder);
+                    .into(),
+                    Order::Desc,
+                )
+                .limit(5)
+                .to_owned()
+                .build(SqliteQueryBuilder);
         //
         let res = SelectTops::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
@@ -1203,12 +1197,7 @@ impl QueriesService {
     pub async fn list_top_suppliers(db: &DbConn) -> Result<Vec<JsonValue>, DbErr> {
         let (sql, values) = Query::select()
             .from(Suppliers)
-            .column(
-                (
-                Suppliers,
-                suppliers::Column::FullName,
-            )
-            )
+            .column((Suppliers, suppliers::Column::FullName))
             .expr_as(
                 Func::sum(Expr::col((
                     InventoryMouvements,
@@ -1221,8 +1210,8 @@ impl QueriesService {
                     Expr::col((OrderItems, order_items::Column::Price)).mul(Expr::col((
                         InventoryMouvements,
                         inventory_mouvements::Column::Quantity,
-                    ))
-                )),
+                    ))),
+                ),
                 Alias::new("price"),
             )
             .join(
@@ -1238,26 +1227,29 @@ impl QueriesService {
                     .equals((Orders, orders::Column::Id)),
             )
             .join(
-                JoinType::Join, InventoryMouvements, 
+                JoinType::Join,
+                InventoryMouvements,
                 Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
-                    .equals((OrderItems, order_items::Column::InventoryId)))
+                    .equals((OrderItems, order_items::Column::InventoryId)),
+            )
             .cond_where(
-                Cond::all()
-                    .add(
-                        Expr::expr(Expr::col((Orders, orders::Column::Status)))
+                Cond::all().add(
+                    Expr::expr(Expr::col((Orders, orders::Column::Status)))
                         .eq("CANCELED")
                         .not(),
-                    ),
+                ),
             )
-            .add_group_by([
-                Expr::col((Suppliers, suppliers::Column::Id)).into(),
-            ])
-            .order_by_expr(Func::sum(
+            .add_group_by([Expr::col((Suppliers, suppliers::Column::Id)).into()])
+            .order_by_expr(
+                Func::sum(
                     Expr::col((OrderItems, order_items::Column::Price)).mul(Expr::col((
                         InventoryMouvements,
                         inventory_mouvements::Column::Quantity,
-                    ))
-                )).into(), Order::Desc)
+                    ))),
+                )
+                .into(),
+                Order::Desc,
+            )
             .limit(5)
             .to_owned()
             .build(SqliteQueryBuilder);
@@ -1281,42 +1273,214 @@ impl QueriesService {
 
         Ok(result)
     }
-    pub async fn list_status_count(db: &DbConn) -> Result<JsonValue,DbErr> {
-        let (order_sql,order_values) = Query::select()
+    pub async fn list_status_count(db: &DbConn) -> Result<JsonValue, DbErr> {
+        let (order_sql, order_values) = Query::select()
             .from(Orders)
             .column(orders::Column::Status)
-            .expr_as(Func::count(Expr::col((Orders, orders::Column::Id))), Alias::new("status_count"))
+            .expr_as(
+                Func::count(Expr::col((Orders, orders::Column::Id))),
+                Alias::new("status_count"),
+            )
             .group_by_col(orders::Column::Status)
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        let (invoice_sql,invoice_values)  = Query::select()
+        let (invoice_sql, invoice_values) = Query::select()
             .from(Invoices)
             .column(invoices::Column::Status)
-            .expr_as(Func::count(Expr::col((Invoices, invoices::Column::Id))), Alias::new("status_count"))
+            .expr_as(
+                Func::count(Expr::col((Invoices, invoices::Column::Id))),
+                Alias::new("status_count"),
+            )
             .group_by_col(invoices::Column::Status)
             .to_owned()
             .build(SqliteQueryBuilder);
 
         let order_res = SelectStatusCount::find_by_statement(Statement::from_sql_and_values(
-                DbBackend::Sqlite,
-                order_sql,
-                order_values,
-            ))
-            .all(db)
-            .await?;
+            DbBackend::Sqlite,
+            order_sql,
+            order_values,
+        ))
+        .all(db)
+        .await?;
 
         let invoice_res = SelectStatusCount::find_by_statement(Statement::from_sql_and_values(
-                DbBackend::Sqlite,
-                invoice_sql,
-                invoice_values,
-            ))
-            .all(db)
-            .await?;
+            DbBackend::Sqlite,
+            invoice_sql,
+            invoice_values,
+        ))
+        .all(db)
+        .await?;
 
         Ok(json!({
             "orders": order_res,
             "invoices": invoice_res,
+        }))
+    }
+    pub async fn list_revenue(db: &DbConn) -> Result<JsonValue, DbErr> {
+        let (sql, values) = Query::select()
+            .from(Invoices)
+            .expr_as(
+                Func::coalesce([
+                    Func::sum(
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity))
+                            .mul(Expr::col((InvoiceItems, invoice_items::Column::Price))),
+                    )
+                    .into(),
+                    Expr::val(0.0f64).into(),
+                ]),
+                Alias::new("current_revenue"),
+            )
+            .expr_as(
+                Expr::expr(SimpleExpr::SubQuery(
+                    None,
+                    Box::new(SubQueryStatement::SelectStatement(
+                        Query::select()
+                            .from(Invoices)
+                            .expr(Func::coalesce([
+                                Func::sum(
+                                    Expr::col((
+                                        InventoryMouvements,
+                                        inventory_mouvements::Column::Quantity,
+                                    ))
+                                    .mul(Expr::col((InvoiceItems, invoice_items::Column::Price))),
+                                )
+                                .into(),
+                                Expr::val(0.0f64).into(),
+                            ]))
+                            .join(
+                                JoinType::Join,
+                                InvoiceItems,
+                                Expr::col((InvoiceItems, invoice_items::Column::InvoiceId))
+                                    .equals((Invoices, invoices::Column::Id)),
+                            )
+                            .join(
+                                JoinType::Join,
+                                InventoryMouvements,
+                                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                                    .equals((InvoiceItems, invoice_items::Column::InventoryId)),
+                            )
+                            .and_where(Expr::col((Invoices, invoices::Column::Status)).eq("PAID"))
+                            .and_where(Expr::cust(
+                                "invoices.created_at < strftime('%Y-%m-01', CURRENT_DATE)",
+                            ))
+                            .to_owned(),
+                    )),
+                )),
+                Alias::new("last_month_revenue"),
+            )
+            .join(
+                JoinType::Join,
+                InvoiceItems,
+                Expr::col((InvoiceItems, invoice_items::Column::InvoiceId))
+                    .equals((Invoices, invoices::Column::Id)),
+            )
+            .join(
+                JoinType::Join,
+                InventoryMouvements,
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                    .equals((InvoiceItems, invoice_items::Column::InventoryId)),
+            )
+            .and_where(Expr::col((Invoices, invoices::Column::Status)).eq("PAID"))
+            .to_owned()
+            .build(SqliteQueryBuilder);
+
+        let res = SelectRevenue::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .all(db)
+        .await?;
+
+        Ok(json!({
+            "revenue": res.into_iter().map(|r| json!({
+                "currentRevenue": r.current_revenue,
+                "lastMonthRevenue": r.last_month_revenue,
+            })).collect::<Vec<JsonValue>>()
+        }))
+    }
+    pub async fn list_expenses(db: &DbConn) -> Result<JsonValue, DbErr> {
+        let (sql, values) = Query::select()
+            .from(Orders)
+            .expr_as(
+                Func::coalesce([
+                    Func::sum(
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity))
+                            .mul(Expr::col((OrderItems, order_items::Column::Price))),
+                    )
+                    .into(),
+                    Expr::val(0.0).into(),
+                ]),
+                Alias::new("current_expenses"),
+            )
+            .expr_as(
+                Expr::expr(SimpleExpr::SubQuery(
+                    None,
+                    Box::new(SubQueryStatement::SelectStatement(
+                        Query::select()
+                            .from(Orders)
+                            .expr(Func::coalesce([
+                                Func::sum(
+                                    Expr::col((
+                                        InventoryMouvements,
+                                        inventory_mouvements::Column::Quantity,
+                                    ))
+                                    .mul(Expr::col((OrderItems, order_items::Column::Price))),
+                                )
+                                .into(),
+                                Expr::val(0.0).into(),
+                            ]))
+                            .join(
+                                JoinType::Join,
+                                OrderItems,
+                                Expr::col((OrderItems, order_items::Column::OrderId))
+                                    .equals((Orders, orders::Column::Id)),
+                            )
+                            .join(
+                                JoinType::Join,
+                                InventoryMouvements,
+                                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                                    .equals((OrderItems, order_items::Column::InventoryId)),
+                            )
+                            .and_where(Expr::col((Orders, orders::Column::Status)).eq("DELIVERED"))
+                            .and_where(Expr::cust(
+                                "orders.created_at < strftime('%Y-%m-01', CURRENT_DATE)",
+                            ))
+                            .to_owned(),
+                    )),
+                )),
+                Alias::new("last_month_expenses"),
+            )
+            .join(
+                JoinType::Join,
+                OrderItems,
+                Expr::col((OrderItems, order_items::Column::OrderId))
+                    .equals((Orders, orders::Column::Id)),
+            )
+            .join(
+                JoinType::Join,
+                InventoryMouvements,
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                    .equals((OrderItems, order_items::Column::InventoryId)),
+            )
+            .and_where(Expr::col((Orders, orders::Column::Status)).eq("DELIVERED"))
+            .to_owned()
+            .build(SqliteQueryBuilder);
+
+        let res = SelectExpenses::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .all(db)
+        .await?;
+
+        Ok(json!({
+            "expenses": res.into_iter().map(|r| json!({
+                "currentExpenses": r.current_expenses,
+                "lastMonthExpenses": r.last_month_expenses,
+            })).collect::<Vec<JsonValue>>()
         }))
     }
 }

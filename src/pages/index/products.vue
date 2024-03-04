@@ -70,8 +70,8 @@ async function listProducts(search: string, page: number = 1) {
     if (res.error) throw new Error(res.error);
     products.value = res.data.products;
     totalRows.value = res.data.count;
-  } catch (err) {
-    error("LIST PRODUCTS: " + err);
+  } catch (err: any) {
+    error("LIST PRODUCTS: " + err.error);
   }
 }
 const uploadCSV = () => {

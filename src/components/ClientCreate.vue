@@ -49,8 +49,8 @@ const createNewClient = async (client: ClientT) => {
     updateQueryParams({
       refresh: "refresh-create-" + Math.random() * 9999,
     });
-  } catch (err) {
-    error("CREATE CLIENT: " + err);
+  } catch (err: any) {
+    error("CREATE CLIENT: " + err.error);
   } finally {
     isCreating.value = false;
     hideModal();

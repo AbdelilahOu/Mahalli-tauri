@@ -80,8 +80,8 @@ export const uploadCSVfiles = async ({ file }: { file: File }) => {
     });
     // return final path
     return path;
-  } catch (err) {
-    error("Error creating client : " + err);
+  } catch (err: any) {
+    error("Error creating client : " + err.error);
   }
 };
 
@@ -99,7 +99,7 @@ export const uploadImagefiles = async (file: File) => {
     });
     // return final path
     return path;
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
     return "";
   }
@@ -120,7 +120,7 @@ export const deleteTempFolder = async () => {
     removeDir("tempo", {
       dir: BaseDirectory.AppData,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
   }
 };

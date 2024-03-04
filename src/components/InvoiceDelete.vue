@@ -21,8 +21,8 @@ const deleteTheInvoice = async (id: string) => {
     updateQueryParams({
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
-  } catch (err) {
-    error("DELETE INVOICE: " + err);
+  } catch (err: any) {
+    error("DELETE INVOICE: " + err.error);
   } finally {
     store.setters.updateStore({ key: "show", value: false });
   }

@@ -100,8 +100,8 @@ async function getInventoryMouvementStats() {
     mouvements.value = result;
     let mouvementLabelsSet = new Set<string>(Object.keys(mouvements.value));
     mouvementsLabels.value = [...mouvementLabelsSet];
-  } catch (err) {
-    error("STATS INVENTORY MOUVEMENTS: " + err);
+  } catch (err: any) {
+    error("STATS INVENTORY MOUVEMENTS: " + err.error);
   }
 }
 
@@ -111,8 +111,8 @@ async function getBestClients() {
     const res = await invoke<Res<any[]>>("list_top_clients");
     if (res.error) throw new Error(res.error);
     bestClients.value = res.data;
-  } catch (err) {
-    error("STATS BEST CLIENTS: " + err);
+  } catch (err: any) {
+    error("STATS BEST CLIENTS: " + err.error);
   }
 }
 
@@ -122,8 +122,8 @@ async function getBestSuppliers() {
     const res = await invoke<Res<any[]>>("list_top_suppliers");
     if (res.error) throw new Error(res.error);
     bestSuppliers.value = res.data;
-  } catch (err) {
-    error("STATS BEST SUPPLIERS: " + err);
+  } catch (err: any) {
+    error("STATS BEST SUPPLIERS: " + err.error);
   }
 }
 
@@ -133,23 +133,68 @@ async function getStatusCounts() {
     const res = await invoke<Res<any[]>>("list_status_count");
     if (res.error) throw new Error(res.error);
     statusCounts.value = res.data;
-  } catch (err) {
-    error("STATS STATUS COUNT: " + err);
+  } catch (err: any) {
+    error("STATS STATUS COUNT: " + err.error);
+  }
+}
+
+const revenue = ref<any>();
+async function getRevenue() {
+  try {
+    const res = await invoke<Res<any>>("list_revenue");
+    if (res.error) throw new Error(res.error);
+    let data = res.data.revenue[0];
+    let percentageDeff = (
+      ((data?.currentRevenue - data?.lastMonthRevenue) /
+        data?.lastMonthRevenue) *
+      100
+    ).toFixed(2);
+    if (!data?.lastMonthRevenue) percentageDeff = "0";
+    revenue.value = {
+      percentageDeff,
+      currentRevenue: data.currentRevenue,
+    };
+  } catch (err: any) {
+    error("STATS REVENUE: " + err.error);
+  }
+}
+
+const expenses = ref<any>();
+async function getExpenses() {
+  try {
+    const res = await invoke<Res<any>>("list_expenses");
+    let data = res.data.expenses[0];
+    let percentageDeff = (
+      ((data?.currentExpenses - data?.lastMonthExpenses) /
+        data?.lastMonthExpenses) *
+      100
+    )?.toFixed(2);
+    if (!data?.lastMonthExpenses) percentageDeff = "0";
+    expenses.value = {
+      percentageDeff,
+      currentExpenses: data.currentExpenses,
+    };
+  } catch (err: any) {
+    error("STATS EXPENSES: " + err.error);
   }
 }
 
 onBeforeMount(async () => {
-  getInventoryMouvementStats();
-  getBestClients();
-  getBestSuppliers();
-  getStatusCounts();
+  await Promise.all([
+    getRevenue(),
+    getExpenses(),
+    getInventoryMouvementStats(),
+    getBestClients(),
+    getBestSuppliers(),
+    // getStatusCounts(),
+  ]);
 });
 </script>
 
 <template>
   <main class="w-full h-full">
-    <div class="w-full h-full flex flex-col lg:grid lg:grid-cols-2 gap-4">
-      <div class="grid grid-cols-2 lg:grid-cols-4 col-span-2 gap-4">
+    <div class="w-full h-full flex flex-col lg:grid lg:grid-cols-2 gap-2">
+      <div class="grid grid-cols-2 lg:grid-cols-4 col-span-2 gap-2">
         <Card>
           <CardHeader
             class="flex flex-row items-center justify-between space-y-0 pb-2"
@@ -171,11 +216,16 @@ onBeforeMount(async () => {
             </svg>
           </CardHeader>
           <CardContent>
-            <div class="text-2xl font-bold">$45,231.89</div>
-            <p class="text-xs text-muted-foreground">+20.1% from last month</p>
+            <div class="text-2xl font-bold">
+              {{ revenue?.currentRevenue.toFixed(2) }} DH
+            </div>
+            <p class="text-xs text-muted-foreground">
+              {{ revenue?.percentageDeff < 0 ? "-" : "+"
+              }}{{ revenue?.percentageDeff }}% from last month
+            </p>
           </CardContent>
         </Card>
-        <Card>
+        <!-- <Card>
           <CardHeader
             class="flex flex-row items-center justify-between space-y-0 pb-2"
           >
@@ -206,8 +256,8 @@ onBeforeMount(async () => {
               {{ t("g.status." + status.status.toLowerCase()) }}
             </Badge>
           </CardContent>
-        </Card>
-        <Card class="lg:order-4">
+        </Card> -->
+        <!-- <Card class="lg:order-4">
           <CardHeader
             class="flex flex-row items-center justify-between space-y-0 pb-2"
           >
@@ -238,12 +288,12 @@ onBeforeMount(async () => {
               {{ t("g.status." + status.status.toLowerCase()) }}
             </Badge>
           </CardContent>
-        </Card>
+        </Card> -->
         <Card>
           <CardHeader
             class="flex flex-row items-center justify-between space-y-0 pb-2"
           >
-            <CardTitle class="text-sm font-medium"> Total Revenue </CardTitle>
+            <CardTitle class="text-sm font-medium"> Total Expenses </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -260,8 +310,13 @@ onBeforeMount(async () => {
             </svg>
           </CardHeader>
           <CardContent>
-            <div class="text-2xl font-bold">$45,231.89</div>
-            <p class="text-xs text-muted-foreground">+20.1% from last month</p>
+            <div class="text-2xl font-bold">
+              {{ expenses?.currentExpenses.toFixed(2) }} DH
+            </div>
+            <p class="text-xs text-muted-foreground">
+              {{ expenses?.percentageDeff < 0 ? "-" : "+"
+              }}{{ expenses?.percentageDeff }}% from last month
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -330,7 +385,7 @@ onBeforeMount(async () => {
           </template>
         </ChartHolder>
       </div>
-      <div class="w-full flex gap-4 h-full">
+      <div class="w-full flex gap-2 h-full">
         <div class="w-1/2 h-full">
           <ChartHolder>
             <template #default>

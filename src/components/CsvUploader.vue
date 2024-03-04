@@ -36,8 +36,8 @@ const upload = async () => {
         csvPath: await uploadCSVfiles({ file: file }),
         table: route.query.table,
       });
-    } catch (err) {
-      error("Error upload csv : " + err);
+    } catch (err: any) {
+      error("Error upload csv : " + err.error);
     } finally {
       updateQueryParams({
         refresh: "refresh-upload-" + Math.random() * 9999,

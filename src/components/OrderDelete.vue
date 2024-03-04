@@ -24,8 +24,8 @@ const deleteTheOrders = async (id: string) => {
       updateQueryParams({
         refresh: "refresh-delete-" + Math.random() * 9999,
       });
-    } catch (err) {
-      error("DELETE ORDER: " + err);
+    } catch (err: any) {
+      error("DELETE ORDER: " + err.error);
     } finally {
       store.setters.updateStore({ key: "show", value: false });
     }

@@ -126,8 +126,8 @@ onBeforeMount(async () => {
     if (res.id) {
       client.value = res;
     }
-  } catch (err) {
-    error("Error creating client : " + err);
+  } catch (err: any) {
+    error("Error creating client : " + err.error);
   }
 });
 </script>

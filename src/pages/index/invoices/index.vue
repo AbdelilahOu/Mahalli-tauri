@@ -83,8 +83,8 @@ const getInvoices = async (search: string, page = 1) => {
     if (res.error) throw new Error(res.error);
     invoices.value = res.data.invoices;
     totalRows.value = res.data.count;
-  } catch (err) {
-    error("LIST INVOICES " + err);
+  } catch (err: any) {
+    error("LIST INVOICES " + err.error);
   }
 };
 
@@ -98,8 +98,8 @@ const listInvoiceProduct = (id?: string) => {
       });
       if (res.error) throw new Error(res.error);
       invoiceProducts.value = res.data;
-    } catch (err) {
-      error("ERROR LIST INVOICE PRODUCTS: " + err);
+    } catch (err: any) {
+      error("ERROR LIST INVOICE PRODUCTS: " + err.error);
     }
   }, 300);
 };
