@@ -27,6 +27,7 @@ import {
   SelectItem,
   Select,
 } from "@/components/ui/select";
+import { error } from "tauri-plugin-log-api";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -84,12 +85,11 @@ async function getInventory(search: string, page: number = 1) {
           : null,
       },
     });
-    if (!res?.error) {
-      inventoryMouvements.value = res.data.inventory;
-      totalRows.value = res.data.count;
-    }
-  } catch (error) {
-    console.log(error);
+    if (res.error) throw new Error(res.error);
+    inventoryMouvements.value = res.data.inventory;
+    totalRows.value = res.data.count;
+  } catch (err) {
+    error("LIST INVENTORY MOUVEMENTS: " + err);
   }
 }
 

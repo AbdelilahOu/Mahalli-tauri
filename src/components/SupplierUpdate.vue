@@ -13,6 +13,8 @@ import { store } from "@/store";
 import { z } from "zod";
 import type { SupplierT } from "@/schemas/supplier.schema";
 import { useRoute } from "vue-router";
+import type { Res } from "@/types";
+import { error, info } from "tauri-plugin-log-api";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
@@ -39,7 +41,7 @@ const form = useForm({
 
 const updateTheSupplier = async (supplier: SupplierT) => {
   try {
-    await invoke("update_supplier", {
+    const res = await invoke<Res<any>>("update_supplier", {
       supplier: {
         id: route.query.id,
         full_name: supplier.fullname,
@@ -49,12 +51,23 @@ const updateTheSupplier = async (supplier: SupplierT) => {
         image: supplier.image,
       },
     });
+    if (res.error) throw new Error(res.error);
+    info(
+      `UPDATE SUPPLIER: ${JSON.stringify({
+        id: route.query.id,
+        full_name: supplier.fullname,
+        email: supplier.email,
+        phone_number: supplier.phoneNumber,
+        address: supplier.address,
+        image: supplier.image,
+      })}`,
+    );
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("UPDATE SUPPLIER: " + err);
   } finally {
     hideModal();
   }

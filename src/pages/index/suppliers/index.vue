@@ -20,6 +20,7 @@ import {
 } from "vue";
 import type { SupplierT } from "@/schemas/supplier.schema";
 import type { Res } from "@/types";
+import { error } from "tauri-plugin-log-api";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -69,13 +70,11 @@ async function getSuppliers(search: string, page: number = 1) {
         limit: 17,
       },
     });
-    if (!res?.error) {
-      suppliers.value = res.data.suppliers;
-      totalRows.value = res.data.count;
-      return;
-    }
-  } catch (error) {
-    console.log(error);
+    if (res.error) throw new Error(res.error);
+    suppliers.value = res.data.suppliers;
+    totalRows.value = res.data.count;
+  } catch (err) {
+    error("LIST SUPPLIERS: " + err);
   }
 }
 

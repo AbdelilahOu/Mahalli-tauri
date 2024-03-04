@@ -18,8 +18,8 @@ onBeforeMount(async () => {
     if (res?.id) {
       order.value = res;
     }
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("Error creating client : " + err);
   }
 });
 

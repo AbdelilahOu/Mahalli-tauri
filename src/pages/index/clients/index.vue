@@ -18,6 +18,8 @@ import {
   ref,
 } from "vue";
 import type { ClientT } from "@/schemas/client.schema";
+import { error } from "tauri-plugin-log-api";
+import type { Res } from "@/types";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -59,20 +61,18 @@ onUnmounted(() => {
 
 const getClients = async (search: string, page: number = 1) => {
   try {
-    const res = await invoke<any>("list_clients", {
+    const res = await invoke<Res<any>>("list_clients", {
       args: {
         search,
         page,
         limit: 17,
       },
     });
-    if (!res?.error) {
-      clients.value = res.data.clients;
-      totalRows.value = res.data.count;
-      return;
-    }
-  } catch (error) {
-    console.log(error);
+    if (res.error) throw new Error(res.error);
+    clients.value = res.data.clients;
+    totalRows.value = res.data.count;
+  } catch (err) {
+    error("LIST CLIENTS " + err);
   }
 };
 

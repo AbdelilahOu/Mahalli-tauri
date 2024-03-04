@@ -16,6 +16,8 @@ import {
   CreateSupplierSchema,
   type SupplierT,
 } from "@/schemas/supplier.schema";
+import { error, info } from "tauri-plugin-log-api";
+import type { Res } from "@/types";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
@@ -33,7 +35,7 @@ const createNewSupplier = async (supplier: SupplierT) => {
   isLoading.value = true;
   try {
     let image: string = await saveFile(supplier.image as string, "Image");
-    await invoke("create_supplier", {
+    const res = await invoke<Res<string>>("create_supplier", {
       supplier: {
         full_name: supplier.fullname,
         email: supplier.email,
@@ -42,12 +44,22 @@ const createNewSupplier = async (supplier: SupplierT) => {
         image,
       },
     });
+    if (res.error) throw new Error(res.error);
+    info(
+      `CREATE SUPPLIER: ${JSON.stringify({
+        full_name: supplier.fullname,
+        email: supplier.email,
+        phone_number: supplier.phoneNumber,
+        address: supplier.address,
+        image,
+      })}`,
+    );
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-create-" + Math.random() * 9999,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("CREATE SUPPLIER: " + err);
   } finally {
     isLoading.value = false;
     hideModal();

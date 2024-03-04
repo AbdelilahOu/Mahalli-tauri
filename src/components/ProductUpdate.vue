@@ -15,6 +15,7 @@ import { z } from "zod";
 import type { ProductT } from "@/schemas/products.schema";
 import type { Res } from "@/types";
 import { useRoute } from "vue-router";
+import { error, info } from "tauri-plugin-log-api";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
@@ -50,7 +51,7 @@ const form = useForm({
 const updateTheProduct = async (product: ProductT) => {
   try {
     const id = route.query.id;
-    const _ = await invoke<Res<string>>("update_product", {
+    const res = await invoke<Res<string>>("update_product", {
       product: {
         name: product.name,
         price: Number(product.price),
@@ -60,23 +61,33 @@ const updateTheProduct = async (product: ProductT) => {
         id,
       },
     });
-    console.log(_);
+    if (res.error) throw new Error(res.error);
     if (quantity.value > 0) {
-      const createMvmRes = await invoke("create_inventory", {
+      const createMvmRes = await invoke<Res<any>>("create_inventory", {
         mvm: {
           mvm_type: "IN",
           product_id: id,
           quantity: Number(quantity.value),
         },
       });
-      console.log(createMvmRes);
+      if (createMvmRes.error) throw new Error(createMvmRes.error);
     }
+    info(
+      `UPDATE PRODUCT: ${JSON.stringify({
+        name: product.name,
+        price: Number(product.price),
+        description: product.description,
+        min_quantity: Number(product.minQuantity),
+        image: product.image,
+        id,
+      })}`,
+    );
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("UPDATE PRODUCT: " + err);
   } finally {
     hideModal();
   }

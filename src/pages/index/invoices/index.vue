@@ -26,6 +26,7 @@ import {
   watch,
   ref,
 } from "vue";
+import { error } from "tauri-plugin-log-api";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -79,12 +80,11 @@ const getInvoices = async (search: string, page = 1) => {
           : null,
       },
     });
-    if (!res?.error) {
-      invoices.value = res.data.invoices;
-      totalRows.value = res.data.count;
-    }
-  } catch (error) {
-    console.log(error);
+    if (res.error) throw new Error(res.error);
+    invoices.value = res.data.invoices;
+    totalRows.value = res.data.count;
+  } catch (err) {
+    error("LIST INVOICES " + err);
   }
 };
 
@@ -96,12 +96,10 @@ const listInvoiceProduct = (id?: string) => {
       const res = await invoke<Res<any>>("list_invoice_products", {
         id,
       });
-      if (!res?.error) {
-        console.log("preview invoice products", res.data);
-        invoiceProducts.value = res.data;
-      }
-    } catch (error) {
-      console.log(error);
+      if (res.error) throw new Error(res.error);
+      invoiceProducts.value = res.data;
+    } catch (err) {
+      error("ERROR LIST INVOICE PRODUCTS: " + err);
     }
   }, 300);
 };

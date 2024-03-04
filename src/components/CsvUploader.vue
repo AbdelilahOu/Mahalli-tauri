@@ -10,6 +10,7 @@ import { store } from "@/store";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import UiModalCard from "./ui/UiModalCard.vue";
+import { error } from "tauri-plugin-log-api";
 
 const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -35,8 +36,8 @@ const upload = async () => {
         csvPath: await uploadCSVfiles({ file: file }),
         table: route.query.table,
       });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      error("Error upload csv : " + err);
     } finally {
       updateQueryParams({
         refresh: "refresh-upload-" + Math.random() * 9999,

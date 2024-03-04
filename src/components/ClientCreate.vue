@@ -42,19 +42,15 @@ const createNewClient = async (client: ClientT) => {
         image,
       },
     });
-    if (res.error) {
-      throw new Error(res.error);
-    }
+    if (res.error) throw new Error(res.error);
     //
-    info(
-      `CREATE CLIENT: { full_name: ${client.fullname}, email: ${client.email}, phone_number: ${client.phoneNumber}, address: ${client.address} }`,
-    );
+    info(`CREATE CLIENT: ${JSON.stringify({ ...client, image })}`);
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-create-" + Math.random() * 9999,
     });
   } catch (err) {
-    error("ERROR: error creating client : " + err);
+    error("CREATE CLIENT: " + err);
   } finally {
     isCreating.value = false;
     hideModal();

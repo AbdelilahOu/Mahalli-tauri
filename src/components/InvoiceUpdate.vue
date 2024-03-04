@@ -21,6 +21,7 @@ import {
   Select,
 } from "@/components/ui/select";
 import SearchableItems from "./ui/UISearchableItems.vue";
+import { error, info } from "tauri-plugin-log-api";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
@@ -97,6 +98,9 @@ const updateTheInvoices = async () => {
         paid_amount: invoice.paidAmount,
       },
     });
+    //
+    if (invoiceRes.error) throw new Error(invoiceRes.error);
+    //
     if (!invoiceRes.error) {
       for await (const item of invoice.items) {
         if (!item.id) {
@@ -107,15 +111,15 @@ const updateTheInvoices = async () => {
               quantity: item.quantity,
             },
           });
-          if (!invRes.error) {
-            await invoke<Res<string>>("create_invoice_item", {
-              item: {
-                invoice_id: invoice.id,
-                inventory_id: invRes.data,
-                price: item.price,
-              },
-            });
-          }
+          if (invRes.error) throw new Error(invRes.error);
+          const itemRes = await invoke<Res<string>>("create_invoice_item", {
+            item: {
+              invoice_id: invoice.id,
+              inventory_id: invRes.data,
+              price: item.price,
+            },
+          });
+          if (itemRes.error) throw new Error(itemRes.error);
         } else {
           const invRes = await invoke<Res<string>>("update_inventory", {
             mvm: {
@@ -125,25 +129,27 @@ const updateTheInvoices = async () => {
               quantity: item.quantity,
             },
           });
-          if (!invRes.error) {
-            await invoke<Res<string>>("update_invoice_item", {
-              item: {
-                id: item.id,
-                invoice_id: invoice.id,
-                inventory_id: item.inventory_id,
-                price: item.price,
-              },
-            });
-          }
+          if (invRes.error) throw new Error(invRes.error);
+          const itemRes = await invoke<Res<string>>("update_invoice_item", {
+            item: {
+              id: item.id,
+              invoice_id: invoice.id,
+              inventory_id: item.inventory_id,
+              price: item.price,
+            },
+          });
+          if (itemRes.error) throw new Error(itemRes.error);
         }
       }
     }
+    //
+    info(`UPDATE INVOICE: ${JSON.stringify(invoice)}`);
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("UPDATE INVOICE: " + err);
   } finally {
     hideModal();
   }
@@ -156,8 +162,8 @@ const hideModal = () => {
 async function deleteOneInvoiceItem(id: string) {
   try {
     await invoke("delete_invoice_item", { id });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("Error creating client : " + err);
   }
 }
 

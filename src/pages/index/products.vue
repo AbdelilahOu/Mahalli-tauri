@@ -19,6 +19,7 @@ import {
   ref,
 } from "vue";
 import type { ProductT } from "@/schemas/products.schema";
+import { error } from "tauri-plugin-log-api";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -66,13 +67,11 @@ async function listProducts(search: string, page: number = 1) {
         limit: 17,
       },
     });
-    if (!res?.error) {
-      products.value = res.data.products;
-      totalRows.value = res.data.count;
-      return;
-    }
-  } catch (error) {
-    console.log(error);
+    if (res.error) throw new Error(res.error);
+    products.value = res.data.products;
+    totalRows.value = res.data.count;
+  } catch (err) {
+    error("LIST PRODUCTS: " + err);
   }
 }
 const uploadCSV = () => {

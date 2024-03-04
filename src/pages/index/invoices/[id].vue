@@ -17,8 +17,8 @@ onBeforeMount(async () => {
     if (res.id) {
       invoice.value = res;
     }
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("Error creating client : " + err);
   }
 });
 

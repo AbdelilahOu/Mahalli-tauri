@@ -15,6 +15,7 @@ import { store } from "@/store";
 import { ref } from "vue";
 import type { Res } from "@/types";
 import { CreateProductSchema, type ProductT } from "@/schemas/products.schema";
+import { error, info } from "tauri-plugin-log-api";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -41,21 +42,24 @@ const createNewProduct = async (product: ProductT) => {
         image: "",
       },
     });
-    if (!createRes.error) {
-      await invoke("create_inventory", {
-        mvm: {
-          mvm_type: "IN",
-          product_id: createRes.data,
-          quantity: Number(quantity.value),
-        },
-      });
-    }
+    if (createRes.error) throw new Error(createRes.error);
+    const inventoryRes = await invoke<Res<string>>("create_inventory", {
+      mvm: {
+        mvm_type: "IN",
+        product_id: createRes.data,
+        quantity: Number(quantity.value),
+      },
+    });
+    if (inventoryRes.error) throw new Error(inventoryRes.error);
+    info(
+      `CREATE PRODUCT: ${JSON.stringify({ ...product, quantity: quantity.value })}`,
+    );
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-create-" + Math.random() * 9999,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("CREATE PRODUCT: " + err);
   } finally {
     isCreating.value = false;
     hideModal();
