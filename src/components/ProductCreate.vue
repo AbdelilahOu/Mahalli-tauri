@@ -58,8 +58,8 @@ const createNewProduct = async (product: ProductT) => {
     updateQueryParams({
       refresh: "refresh-create-" + Math.random() * 9999,
     });
-  } catch (err) {
-    error("CREATE PRODUCT: " + err);
+  } catch (err: any) {
+    error("CREATE PRODUCT: " + err.error);
   } finally {
     isCreating.value = false;
     hideModal();

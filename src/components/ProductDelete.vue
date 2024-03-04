@@ -20,8 +20,8 @@ const deleteTheProduct = async (id: string) => {
     updateQueryParams({
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
-  } catch (err) {
-    error("DELETE PRODUCT: " + err);
+  } catch (err: any) {
+    error("DELETE PRODUCT: " + err.error);
   } finally {
     cancelDelete();
   }

@@ -69,8 +69,8 @@ const updateTheClient = async (client: ClientT) => {
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
     });
-  } catch (err) {
-    error("UPDATE CLIENT: " + err);
+  } catch (err: any) {
+    error("UPDATE CLIENT: " + err.error);
   } finally {
     hideModal();
   }

@@ -86,8 +86,8 @@ const updateTheProduct = async (product: ProductT) => {
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
     });
-  } catch (err) {
-    error("UPDATE PRODUCT: " + err);
+  } catch (err: any) {
+    error("UPDATE PRODUCT: " + err.error);
   } finally {
     hideModal();
   }

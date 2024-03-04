@@ -20,8 +20,8 @@ const deleteTheSupplier = async (id: string) => {
     updateQueryParams({
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
-  } catch (err) {
-    error("DELETE SUPPLIER: " + err);
+  } catch (err: any) {
+    error("DELETE SUPPLIER: " + err.error);
   } finally {
     cancelDelete();
   }

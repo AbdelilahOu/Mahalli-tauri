@@ -110,8 +110,8 @@ const createOrder = async () => {
       updateQueryParams({
         refresh: "refresh-create-" + Math.random() * 9999,
       });
-    } catch (err) {
-      error("CREATE ORDER: " + err);
+    } catch (err: any) {
+      error("CREATE ORDER: " + err.error);
     } finally {
       isLoading.value = false;
       hideModal();

@@ -118,8 +118,8 @@ const createInvoice = async () => {
       updateQueryParams({
         refresh: "refresh-create-" + Math.random() * 9999,
       });
-    } catch (err) {
-      error("CREATE INVOICE: " + err);
+    } catch (err: any) {
+      error("CREATE INVOICE: " + err.error);
     } finally {
       isLoading.value = false;
       hideModal();

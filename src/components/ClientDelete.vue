@@ -22,8 +22,8 @@ const deleteTheClient = async (id: string) => {
     updateQueryParams({
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
-  } catch (err) {
-    error("DELETE CLIENT: " + err);
+  } catch (err: any) {
+    error("DELETE CLIENT: " + err.error);
   } finally {
     cancelDelete();
   }

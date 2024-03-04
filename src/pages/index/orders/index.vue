@@ -83,8 +83,8 @@ const getOrders = async (search: string, page = 1) => {
     if (res.error) throw new Error(res.error);
     orders.value = res.data.orders;
     totalRows.value = res.data.count;
-  } catch (err) {
-    error("LIST ORDERS: " + err);
+  } catch (err: any) {
+    error("LIST ORDERS: " + err.error);
   }
 };
 
@@ -98,8 +98,8 @@ const listOrderProduct = (id?: string) => {
       });
       if (res.error) throw new Error(res.error);
       orderProducts.value = res.data;
-    } catch (err) {
-      error("LIST ORDER PRODUCTS: " + err);
+    } catch (err: any) {
+      error("LIST ORDER PRODUCTS: " + err.error);
     }
   }, 300);
 };

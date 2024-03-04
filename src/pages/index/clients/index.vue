@@ -71,8 +71,8 @@ const getClients = async (search: string, page: number = 1) => {
     if (res.error) throw new Error(res.error);
     clients.value = res.data.clients;
     totalRows.value = res.data.count;
-  } catch (err) {
-    error("LIST CLIENTS " + err);
+  } catch (err: any) {
+    error("LIST CLIENTS " + err.error);
   }
 };
 

@@ -73,8 +73,8 @@ async function getSuppliers(search: string, page: number = 1) {
     if (res.error) throw new Error(res.error);
     suppliers.value = res.data.suppliers;
     totalRows.value = res.data.count;
-  } catch (err) {
-    error("LIST SUPPLIERS: " + err);
+  } catch (err: any) {
+    error("LIST SUPPLIERS: " + err.error);
   }
 }
 

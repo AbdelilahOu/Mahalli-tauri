@@ -12,8 +12,8 @@ const exportDatabase = async () => {
   // isLoading.value = true;
   // try {
   //   await invoke("export_db_csv");
-  // } catch (err) {
-  //   error("Error creating client : " + err);
+  // } catch (err:any) {
+  //   error("Error creating client : " + err.error);
   // } finally {
   //   isLoading.value = false;
   //   store.setters.updateStore({ key: "show", value: false });
@@ -24,8 +24,8 @@ const importDatabase = async () => {
   // isLoading.value = true;
   // try {
   //   await invoke("seed_db");
-  // } catch (err) {
-  //   error("Error creating client : " + err);
+  // } catch (err:any) {
+  //   error("Error creating client : " + err.error);
   // } finally {
   //   isLoading.value = false;
   //   store.setters.updateStore({ key: "show", value: false });

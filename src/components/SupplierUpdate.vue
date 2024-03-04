@@ -66,8 +66,8 @@ const updateTheSupplier = async (supplier: SupplierT) => {
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
     });
-  } catch (err) {
-    error("UPDATE SUPPLIER: " + err);
+  } catch (err: any) {
+    error("UPDATE SUPPLIER: " + err.error);
   } finally {
     hideModal();
   }

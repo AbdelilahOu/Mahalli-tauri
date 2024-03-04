@@ -141,8 +141,8 @@ const updateTheOrders = async () => {
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
     });
-  } catch (err) {
-    error("UPDATE ORDER: " + err);
+  } catch (err: any) {
+    error("UPDATE ORDER: " + err.error);
   } finally {
     hideModal();
   }
@@ -155,8 +155,8 @@ const hideModal = () => {
 async function deleteOneOrderItem(id: string) {
   try {
     await invoke("delete_order_item", { id });
-  } catch (err) {
-    error("Error creating client : " + err);
+  } catch (err: any) {
+    error("Error creating client : " + err.error);
   }
 }
 
