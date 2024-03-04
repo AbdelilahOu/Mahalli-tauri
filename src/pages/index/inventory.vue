@@ -68,11 +68,6 @@ onUnmounted(() => {
 });
 
 async function getInventory(search: string, page: number = 1) {
-  console.log(
-    createdAt.value
-      ? new Date(createdAt.value).toISOString().slice(0, 10)
-      : null,
-  );
   try {
     const res = await invoke<Res<any>>("list_inventory", {
       args: {

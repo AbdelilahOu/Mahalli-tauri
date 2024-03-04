@@ -6,10 +6,6 @@ import { Transition } from "vue";
 
 <template>
   <div class="w-screen overflow-x-hidden h-screen bg-slate-50">
-    <RouterView v-slot="{ Component }">
-      <Transition name="router" :appear="true">
-        <component :is="Component" />
-      </Transition>
-    </RouterView>
+    <RouterView />
   </div>
 </template>
