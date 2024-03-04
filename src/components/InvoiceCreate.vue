@@ -20,6 +20,7 @@ import {
   Select,
 } from "@/components/ui/select";
 import SearchableItems from "./ui/UISearchableItems.vue";
+import { error, info } from "tauri-plugin-log-api";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -86,7 +87,8 @@ const createInvoice = async () => {
           paid_amount: invoice.paidAmount,
         },
       });
-      console.log(invoiceRes);
+      if (invoiceRes.error) throw new Error(invoiceRes.error);
+      //
       if (!invoiceRes.error) {
         for await (const item of invoice.items) {
           const invRes = await invoke<Res<string>>("create_inventory", {
@@ -96,7 +98,8 @@ const createInvoice = async () => {
               quantity: item.quantity,
             },
           });
-          console.log(invRes);
+          if (invRes.error) throw new Error(invRes.error);
+
           if (!invRes.error) {
             const itemRes = await invoke<Res<string>>("create_invoice_item", {
               item: {
@@ -105,16 +108,18 @@ const createInvoice = async () => {
                 price: item.price,
               },
             });
-            console.log(itemRes);
+            if (itemRes.error) throw new Error(itemRes.error);
           }
         }
       }
+      //
+      info(`CREATE INVOICE: ${JSON.stringify(invoice)}`);
       // toggle refresh
       updateQueryParams({
         refresh: "refresh-create-" + Math.random() * 9999,
       });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      error("CREATE INVOICE: " + err);
     } finally {
       isLoading.value = false;
       hideModal();

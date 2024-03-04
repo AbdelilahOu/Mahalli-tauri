@@ -80,8 +80,8 @@ export const uploadCSVfiles = async ({ file }: { file: File }) => {
     });
     // return final path
     return path;
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("Error creating client : " + err);
   }
 };
 

@@ -10,6 +10,7 @@ import ChartHolder from "@/components/ChartHolder.vue";
 import UiCard from "@/components/ui/UiCard.vue";
 import { useI18n } from "vue-i18n";
 import type { ClientT } from "@/schemas/client.schema";
+import { error } from "tauri-plugin-log-api";
 
 const { t, d } = useI18n();
 const { id } = useRoute().params;
@@ -125,8 +126,8 @@ onBeforeMount(async () => {
     if (res.id) {
       client.value = res;
     }
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("Error creating client : " + err);
   }
 });
 </script>

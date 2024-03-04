@@ -13,6 +13,8 @@ import { store } from "@/store";
 import { z } from "zod";
 import type { ClientT } from "@/schemas/client.schema";
 import { useRoute } from "vue-router";
+import { error, info } from "tauri-plugin-log-api";
+import type { Res } from "@/types";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -40,7 +42,7 @@ const form = useForm({
 
 const updateTheClient = async (client: ClientT) => {
   try {
-    await invoke("update_client", {
+    const res = await invoke<Res<any>>("update_client", {
       client: {
         id: route.query.id,
         full_name: client.fullname,
@@ -50,12 +52,25 @@ const updateTheClient = async (client: ClientT) => {
         image: client.image,
       },
     });
+    //
+    if (res.error) throw new Error(res.error);
+    //
+    info(
+      `UPDATE CLIENT: ${JSON.stringify({
+        id: route.query.id,
+        full_name: client.fullname,
+        email: client.email,
+        phone_number: client.phoneNumber,
+        address: client.address,
+        image: client.image,
+      })}`,
+    );
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("UPDATE CLIENT: " + err);
   } finally {
     hideModal();
   }

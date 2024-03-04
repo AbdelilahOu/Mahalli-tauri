@@ -6,6 +6,8 @@ import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import { store } from "@/store";
 import UiModalCard from "./ui/UiModalCard.vue";
+import { error, info } from "tauri-plugin-log-api";
+import type { Res } from "@/types";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -13,13 +15,17 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 const deleteTheOrders = async (id: string) => {
   if (id) {
     try {
-      await invoke("delete_order", { id });
+      const res = await invoke<Res<any>>("delete_order", { id });
+      //
+      if (res.error) throw new Error(res.error);
+      //
+      info(`DELETE ORDER: ${id}`);
       // toggle refresh
       updateQueryParams({
         refresh: "refresh-delete-" + Math.random() * 9999,
       });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      error("DELETE ORDER: " + err);
     } finally {
       store.setters.updateStore({ key: "show", value: false });
     }

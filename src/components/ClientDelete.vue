@@ -5,19 +5,25 @@ import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import { store } from "@/store";
+import { error, info } from "tauri-plugin-log-api";
+import type { Res } from "@/types";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const deleteTheClient = async (id: string) => {
   try {
-    await invoke("delete_client", { id });
+    const res = await invoke<Res<any>>("delete_client", { id });
+    //
+    if (res.error) throw new Error(res.error);
+    //
+    info(`DELETE CLIENT: ${id}`);
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("DELETE CLIENT: " + err);
   } finally {
     cancelDelete();
   }

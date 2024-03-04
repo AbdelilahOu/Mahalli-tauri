@@ -20,6 +20,7 @@ import {
   Select,
 } from "@/components/ui/select";
 import SearchableItems from "./ui/UISearchableItems.vue";
+import { error, info } from "tauri-plugin-log-api";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -84,35 +85,33 @@ const createOrder = async () => {
           status: order.status,
         },
       });
-      console.log(orderRes);
-      if (!orderRes.error) {
-        for await (const item of order.items) {
-          const invRes = await invoke<Res<string>>("create_inventory", {
-            mvm: {
-              mvm_type: "IN",
-              product_id: item.product_id,
-              quantity: item.quantity,
-            },
-          });
-          console.log(invRes);
-          if (!invRes.error) {
-            const itemRes = await invoke<Res<string>>("create_order_item", {
-              item: {
-                order_id: orderRes.data,
-                inventory_id: invRes.data,
-                price: item.price,
-              },
-            });
-            console.log(itemRes);
-          }
-        }
+      if (orderRes.error) throw new Error(orderRes.error);
+      for await (const item of order.items) {
+        const invRes = await invoke<Res<string>>("create_inventory", {
+          mvm: {
+            mvm_type: "IN",
+            product_id: item.product_id,
+            quantity: item.quantity,
+          },
+        });
+        if (invRes.error) throw new Error(invRes.error);
+        const itemRes = await invoke<Res<string>>("create_order_item", {
+          item: {
+            order_id: orderRes.data,
+            inventory_id: invRes.data,
+            price: item.price,
+          },
+        });
+        if (itemRes.error) throw new Error(itemRes.error);
       }
+      //
+      info(`CREATE ORDER: ${JSON.stringify(order)}`);
       // toggle refresh
       updateQueryParams({
         refresh: "refresh-create-" + Math.random() * 9999,
       });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      error("CREATE ORDER: " + err);
     } finally {
       isLoading.value = false;
       hideModal();

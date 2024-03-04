@@ -5,19 +5,24 @@ import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import { store } from "@/store";
 import UiModalCard from "./ui/UiModalCard.vue";
+import { error, info } from "tauri-plugin-log-api";
+import type { Res } from "@/types";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
 
 const deleteTheInvoice = async (id: string) => {
   try {
-    await invoke("delete_invoice", { id });
+    const res = await invoke<Res<any>>("delete_invoice", { id });
+    //
+    if (res.error) throw new Error(res.error);
+    info(`DELETE INVOICE: ${id}`);
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("DELETE INVOICE: " + err);
   } finally {
     store.setters.updateStore({ key: "show", value: false });
   }

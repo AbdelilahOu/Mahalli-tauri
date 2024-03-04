@@ -21,6 +21,7 @@ import {
   Select,
 } from "@/components/ui/select";
 import SearchableItems from "./ui/UISearchableItems.vue";
+import { error, info } from "tauri-plugin-log-api";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
@@ -94,53 +95,54 @@ const updateTheOrders = async () => {
         status: order.status,
       },
     });
-    if (!orderRes.error) {
-      for await (const item of order.items) {
-        if (!item.id) {
-          const invRes = await invoke<Res<string>>("create_inventory", {
-            mvm: {
-              mvm_type: "IN",
-              product_id: item.product_id,
-              quantity: item.quantity,
-            },
-          });
-          if (!invRes.error) {
-            await invoke<Res<string>>("create_order_item", {
-              item: {
-                order_id: order.id,
-                inventory_id: invRes.data,
-                price: item.price,
-              },
-            });
-          }
-        } else {
-          const invRes = await invoke<Res<string>>("update_inventory", {
-            mvm: {
-              id: item.inventory_id,
-              mvm_type: "IN",
-              product_id: item.product_id,
-              quantity: item.quantity,
-            },
-          });
-          if (!invRes.error) {
-            await invoke<Res<string>>("update_order_item", {
-              item: {
-                id: item.id,
-                order_id: order.id,
-                inventory_id: item.inventory_id,
-                price: item.price,
-              },
-            });
-          }
-        }
+    if (orderRes.error) throw new Error(orderRes.error);
+    for await (const item of order.items) {
+      if (!item.id) {
+        const invRes = await invoke<Res<string>>("create_inventory", {
+          mvm: {
+            mvm_type: "IN",
+            product_id: item.product_id,
+            quantity: item.quantity,
+          },
+        });
+        if (invRes.error) throw new Error(invRes.error);
+        const itemRes = await invoke<Res<string>>("create_order_item", {
+          item: {
+            order_id: order.id,
+            inventory_id: invRes.data,
+            price: item.price,
+          },
+        });
+        if (itemRes.error) throw new Error(itemRes.error);
+      } else {
+        const invRes = await invoke<Res<string>>("update_inventory", {
+          mvm: {
+            id: item.inventory_id,
+            mvm_type: "IN",
+            product_id: item.product_id,
+            quantity: item.quantity,
+          },
+        });
+        if (invRes.error) throw new Error(invRes.error);
+        const itemRes = await invoke<Res<string>>("update_order_item", {
+          item: {
+            id: item.id,
+            order_id: order.id,
+            inventory_id: item.inventory_id,
+            price: item.price,
+          },
+        });
+        if (itemRes.error) throw new Error(itemRes.error);
       }
     }
+    //
+    info(`UPDATE ORDER: ${JSON.stringify(order)}`);
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("UPDATE ORDER: " + err);
   } finally {
     hideModal();
   }
@@ -153,8 +155,8 @@ const hideModal = () => {
 async function deleteOneOrderItem(id: string) {
   try {
     await invoke("delete_order_item", { id });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error("Error creating client : " + err);
   }
 }
 

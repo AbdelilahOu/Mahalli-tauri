@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { invoke } from "@tauri-apps/api";
 import { ref } from "vue";
 import type { Res } from "@/types";
+import { error } from "tauri-plugin-log-api";
 
 const { t, d } = useI18n();
 
@@ -69,40 +70,38 @@ function numberToK(num: number) {
 async function getInventoryMouvementStats() {
   try {
     const res = await invoke<Res<mouvementsT[]>>("list_mvm_stats");
-    if (!res?.error) {
-      const result = res.data.reduce((acc, item) => {
-        const { createdAt, mvmType, quantity, price } = item;
+    if (res.error) throw new Error(res.error);
+    const result = res.data.reduce((acc, item) => {
+      const { createdAt, mvmType, quantity, price } = item;
 
-        if (!acc[createdAt]) {
-          acc[createdAt] = {
-            IN: {
-              quantity: 0,
-              price: 0,
-            },
-            OUT: {
-              quantity: 0,
-              price: 0,
-            },
-          };
-        }
+      if (!acc[createdAt]) {
+        acc[createdAt] = {
+          IN: {
+            quantity: 0,
+            price: 0,
+          },
+          OUT: {
+            quantity: 0,
+            price: 0,
+          },
+        };
+      }
 
-        if (!acc[createdAt][mvmType]) {
-          acc[createdAt][mvmType] = { quantity, price };
-        } else {
-          acc[createdAt][mvmType].quantity += quantity;
-          acc[createdAt][mvmType].price += price;
-        }
+      if (!acc[createdAt][mvmType]) {
+        acc[createdAt][mvmType] = { quantity, price };
+      } else {
+        acc[createdAt][mvmType].quantity += quantity;
+        acc[createdAt][mvmType].price += price;
+      }
 
-        return acc;
-      }, {} as groupedMvm);
+      return acc;
+    }, {} as groupedMvm);
 
-      mouvements.value = result;
-      let mouvementLabelsSet = new Set<string>(Object.keys(mouvements.value));
-      mouvementsLabels.value = [...mouvementLabelsSet];
-      return;
-    }
-  } catch (error) {
-    console.log(error);
+    mouvements.value = result;
+    let mouvementLabelsSet = new Set<string>(Object.keys(mouvements.value));
+    mouvementsLabels.value = [...mouvementLabelsSet];
+  } catch (err) {
+    error("STATS INVENTORY MOUVEMENTS: " + err);
   }
 }
 
@@ -110,24 +109,21 @@ const bestClients = ref<any[]>();
 async function getBestClients() {
   try {
     const res = await invoke<Res<any[]>>("list_top_clients");
-    if (!res?.error) {
-      bestClients.value = res.data;
-    }
-  } catch (error) {
-    console.log(error);
+    if (res.error) throw new Error(res.error);
+    bestClients.value = res.data;
+  } catch (err) {
+    error("STATS BEST CLIENTS: " + err);
   }
 }
 
 const bestSuppliers = ref<any[]>();
 async function getBestSuppliers() {
   try {
-    console.log(await invoke<Res<any[]>>("list_status_count"));
     const res = await invoke<Res<any[]>>("list_top_suppliers");
-    if (!res?.error) {
-      bestSuppliers.value = res.data;
-    }
-  } catch (error) {
-    console.log(error);
+    if (res.error) throw new Error(res.error);
+    bestSuppliers.value = res.data;
+  } catch (err) {
+    error("STATS BEST SUPPLIERS: " + err);
   }
 }
 
@@ -135,11 +131,10 @@ const statusCounts = ref<any>();
 async function getStatusCounts() {
   try {
     const res = await invoke<Res<any[]>>("list_status_count");
-    if (!res?.error) {
-      statusCounts.value = res.data;
-    }
-  } catch (error) {
-    console.log(error);
+    if (res.error) throw new Error(res.error);
+    statusCounts.value = res.data;
+  } catch (err) {
+    error("STATS STATUS COUNT: " + err);
   }
 }
 
