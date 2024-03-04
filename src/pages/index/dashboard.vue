@@ -197,7 +197,7 @@ onBeforeMount(async () => {
           </CardHeader>
           <CardContent class="flex justify-start gap-2">
             <Badge
-              v-for="(status, index) in statusCounts.orders"
+              v-for="(status, index) in statusCounts?.orders"
               :key="index"
               variant="secondary"
               class="rounded-sm h-8 w-full"
@@ -229,7 +229,7 @@ onBeforeMount(async () => {
           </CardHeader>
           <CardContent class="flex justify-start gap-2">
             <Badge
-              v-for="(status, index) in statusCounts.invoices"
+              v-for="(status, index) in statusCounts?.invoices"
               :key="index"
               variant="secondary"
               class="rounded-sm h-8 w-full"
