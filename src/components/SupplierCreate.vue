@@ -130,9 +130,6 @@ const saveImage = (image: string) => {
           </FormItem>
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
-          <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("g.b.c") }}
-          </Button>
           <Button
             @click="hideModal"
             type="button"
@@ -140,6 +137,9 @@ const saveImage = (image: string) => {
             variant="outline"
           >
             {{ t("g.b.no") }}
+          </Button>
+          <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
+            {{ t("g.b.c") }}
           </Button>
         </div>
       </form>

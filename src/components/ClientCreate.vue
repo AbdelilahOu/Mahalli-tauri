@@ -121,13 +121,6 @@ const setImage = (imagePath: string) => {
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button
-            :disabled="isCreating"
-            type="submit"
-            class="w-full col-span-2"
-          >
-            {{ t("g.b.c") }}
-          </Button>
-          <Button
             @click="hideModal"
             type="button"
             :disabled="isCreating"
@@ -135,6 +128,13 @@ const setImage = (imagePath: string) => {
           >
             {{ t("g.b.no") }}</Button
           >
+          <Button
+            :disabled="isCreating"
+            type="submit"
+            class="w-full col-span-2"
+          >
+            {{ t("g.b.c") }}
+          </Button>
         </div>
       </form>
     </template>

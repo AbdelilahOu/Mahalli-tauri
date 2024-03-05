@@ -243,11 +243,11 @@ const deleteOrderItem = (index: number) => {
     </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
-        <Button class="col-span-2" @click="updateTheOrders">
-          {{ t("g.b.d") }}
-        </Button>
         <Button variant="outline" @click="hideModal">
           {{ t("g.b.no") }}
+        </Button>
+        <Button class="col-span-2" @click="updateTheOrders">
+          {{ t("g.b.d") }}
         </Button>
       </div>
     </template>

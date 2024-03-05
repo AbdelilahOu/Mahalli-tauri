@@ -128,9 +128,6 @@ const onSubmit = form.handleSubmit((values) => {
           </FormItem>
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
-          <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
-            {{ t("g.b.u", { name: $route.query.fullname }) }}
-          </Button>
           <Button
             @click="hideModal"
             type="button"
@@ -138,6 +135,9 @@ const onSubmit = form.handleSubmit((values) => {
             variant="outline"
           >
             {{ t("g.b.no") }}
+          </Button>
+          <Button :disabled="isLoading" type="submit" class="w-full col-span-2">
+            {{ t("g.b.u", { name: $route.query.fullname }) }}
           </Button>
         </div>
       </form>
