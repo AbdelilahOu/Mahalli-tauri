@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { RouterView, onBeforeRouteUpdate } from "vue-router";
+import { RouterView } from "vue-router";
 import ModalComponentsRenderer from "@/components/ModalComponentsRenderer.vue";
 import Navigation from "@/components/Navigation.vue";
 import SideBar from "@/components/SideBar.vue";
@@ -12,13 +12,12 @@ const show = computed(() => store.getters.getModalVisibility());
 const name = computed(() => store.getters.getModalName());
 const isCollapse = ref<boolean>(true);
 
-const hideModal = () => {
+const hideModal = () =>
   store.setters.updateStore({ key: "show", value: false });
-};
 
-onBeforeRouteUpdate((to: any, from: any) => {
-  if (to.path !== from.path) hideModal();
-});
+// onBeforeRouteUpdate((to: any, from: any) => {
+//   if (to.path !== from.path) hideModal();
+// });
 </script>
 
 <template>
