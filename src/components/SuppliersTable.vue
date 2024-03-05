@@ -105,7 +105,7 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
             {{ supplier.address }}
           </td>
           <td class="p-2">
-            <div class="flex w-full justify-start gap-3">
+            <div class="flex w-full justify-center gap-3">
               <span @click="toggleThisSupplier(supplier, 'SupplierDelete')">
                 <UiIcon isStyled name="delete" />
               </span>

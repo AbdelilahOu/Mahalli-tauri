@@ -102,7 +102,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
           </td>
           <td class="p-2 whitespace-nowrap">{{ client.credi }} DH</td>
           <td class="p-2">
-            <div class="flex justify-start gap-3">
+            <div class="flex justify-center gap-3">
               <span @click="toggleThisClient(client, 'ClientDelete')">
                 <UiIcon isStyled name="delete" />
               </span>
