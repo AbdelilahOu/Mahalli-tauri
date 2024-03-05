@@ -58,7 +58,7 @@ const upload = async () => {
         <div
           ref="dropZone"
           :class="[
-            'w-full relative rounded-[4px] transition-all duration-200 transform z-50 h-28 border-2 border-dashed border-spacing-4 flex items-center justify-center',
+            'w-full relative rounded-md transition-all duration-200 transform z-50 h-28 border-2 border-dashed border-spacing-4 flex items-center justify-center',
 
             isOverDropZone
               ? 'fill-sky-500 border-sky-500 bg-sky-200'
@@ -81,7 +81,7 @@ const upload = async () => {
         <div
           v-for="(file, i) in filesData"
           :key="i"
-          class="grid grid-cols-[30px_1fr_80px_30px] w-full gap-3 h-10 items-center px-1 rounded-[4px] bg-sky-100 text-black fill-black border-sky-300 border-2"
+          class="grid grid-cols-[30px_1fr_80px_30px] w-full gap-3 h-10 items-center px-1 rounded-md bg-sky-100 text-black fill-black border-sky-300 border-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

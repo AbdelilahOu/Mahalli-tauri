@@ -7,7 +7,7 @@ import { cn } from "@/utils/shadcn";
     :class="[
       cn(
         ($attrs.class as string) ??
-          'w-1/2 h-fit z-50 gap-3 rounded-[4px] flex flex-col bg-white p-2 min-w-[350px]',
+          'w-1/2 h-fit z-50 gap-3 rounded-md flex flex-col bg-white p-2 min-w-[350px]',
       ),
     ]"
   >

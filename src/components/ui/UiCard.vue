@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
   <div
-    class="w-full flex xl:sticky shadow-sm xl:top-[54px] z-20 pb-1 rounded-[4px] gap-2 flex-col"
+    class="w-full flex xl:sticky shadow-sm xl:top-[54px] z-20 pb-1 rounded-md gap-2 flex-col"
   >
     <div class="text-2xl font-sans py-1 flex items-center font-medium">
       <img

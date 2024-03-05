@@ -25,7 +25,7 @@ const openSettingsModal = () => {
 
 <template>
   <aside
-    class="w-full rounded-[4px] h-full overflow-hidden sticky top-0 z-50 bg-white"
+    class="w-full rounded-md h-full overflow-hidden sticky top-0 z-50 bg-white"
   >
     <div
       class="w-full h-screen print:hidden sticky top-0 bg-white z-50 grid grid-rows-[50px_1fr] gap-[2px]"

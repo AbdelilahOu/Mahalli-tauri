@@ -35,7 +35,7 @@ const print = () => window.print();
           <h1 class="uppercase font-semibold mb-1">
             {{ t("id.d.i.title") }}
           </h1>
-          <table class="table-auto rounded-[4px] overflow-hidden w-full">
+          <table class="table-auto rounded-md overflow-hidden w-full">
             <tbody class="text-sm divide-y divide-gray-100">
               <tr>
                 <td
@@ -58,7 +58,7 @@ const print = () => window.print();
           <h1 class="uppercase font-semibold mb-1">
             {{ t("id.d.c.title") }}
           </h1>
-          <table class="table-auto rounded-[4px] overflow-hidden w-full">
+          <table class="table-auto rounded-md overflow-hidden w-full">
             <tbody class="text-sm divide-y divide-gray-100">
               <tr>
                 <td
@@ -123,9 +123,9 @@ const print = () => window.print();
           <h1 class="uppercase font-semibold mb-1">
             {{ t("id.d.i.title") }}
           </h1>
-          <table class="table-auto rounded-[4px] overflow-hidden w-full">
+          <table class="table-auto rounded-md overflow-hidden w-full">
             <thead
-              class="text-xs h-9 rounded-[4px] font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
+              class="text-xs h-9 rounded-md font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
             >
               <tr>
                 <th></th>

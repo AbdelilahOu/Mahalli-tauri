@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-import { Transition } from "vue";
-// import "vue3-lottie/dist/style.css";
 </script>
 
 <template>
