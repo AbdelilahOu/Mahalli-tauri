@@ -877,7 +877,7 @@ impl QueriesService {
             })
             .apply_if(args.created_at.clone(), |query, v| {
                 query.filter(Expr::cust_with_values(
-                    "COALESCE(invoices.created_at, orders.created_at) = ?",
+                    "strftime('%Y-%m-%d', COALESCE(invoices.created_at, orders.created_at)) = ?",
                     [v],
                 ))
             })
