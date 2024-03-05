@@ -45,7 +45,7 @@ onBeforeRouteUpdate((to: any, from: any) => {
         >
           <ModalComponentsRenderer :name="name" />
         </div>
-        <div class="w-full bg-white p-2 rounded-[4px] h-full">
+        <div class="w-full bg-white p-2 rounded-md h-full">
           <RouterView></RouterView>
         </div>
       </ScrollArea>

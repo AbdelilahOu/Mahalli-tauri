@@ -163,7 +163,7 @@ const deleteOrderItem = (index: number) => {
 
 <template>
   <UiModalCard
-    class="w-5/6 lg:w-1/2 relative h-fit rounded-[4px] z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
+    class="w-5/6 lg:w-1/2 relative h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
   >
     <template #title> {{ t("o.u.title") }} N° {{ order?.id }} </template>
     <template #content>
@@ -232,7 +232,7 @@ const deleteOrderItem = (index: number) => {
               </Input>
               <div
                 @click="deleteOrderItem(index)"
-                class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
+                class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-md items-center w-full h-full"
               >
                 <UiIcon name="delete" />
               </div>

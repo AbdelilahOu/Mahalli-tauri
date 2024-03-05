@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'w-full h-full grid overflow-hidden gap-1 grid-cols-1  rounded-[4px] shadow-sm',
+      'w-full h-full grid overflow-hidden gap-1 grid-cols-1 border rounded-md shadow-sm',
       $slots.title ? 'grid-rows-[50px_1fr]' : 'grid-rows-1',
     ]"
   >

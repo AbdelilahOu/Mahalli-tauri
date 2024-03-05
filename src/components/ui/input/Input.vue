@@ -56,7 +56,7 @@ const isFocused = ref(false);
       ]"
     >
       <span
-        class="h-full text-gray-400 rounded-[4px] px-2 flex items-center justify-center"
+        class="h-full text-gray-400 rounded-md px-2 flex items-center justify-center"
       >
         <slot name="unite"></slot>
       </span>

@@ -126,7 +126,7 @@ const hideModal = () => {
 
 <template>
   <UiModalCard
-    class="w-5/6 lg:w-1/2 rounded-[4px] relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
+    class="w-5/6 lg:w-1/2 rounded-md relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
   >
     <template #title>
       {{ t("o.c.title") }}
@@ -194,7 +194,7 @@ const hideModal = () => {
               </Input>
               <div
                 @click="removeOrderItem(index)"
-                class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-[4px] items-center w-full h-full"
+                class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-md items-center w-full h-full"
               >
                 <UiIcon isStyled name="delete" />
               </div>
