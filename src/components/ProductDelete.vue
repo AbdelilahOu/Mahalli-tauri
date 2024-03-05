@@ -13,8 +13,7 @@ const { t } = useI18n();
 
 const deleteTheProduct = async (id: string) => {
   try {
-    const res = await invoke<Res<string>>("delete_product", { id });
-    if (res.error) throw new Error(res.error);
+    await invoke<Res<string>>("delete_product", { id });
     info(`DELETE PRODUCT: ${id}`);
     // toggle refresh
     updateQueryParams({

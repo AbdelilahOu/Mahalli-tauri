@@ -13,22 +13,18 @@ const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const deleteTheOrders = async (id: string) => {
-  if (id) {
-    try {
-      const res = await invoke<Res<any>>("delete_order", { id });
-      //
-      if (res.error) throw new Error(res.error);
-      //
-      info(`DELETE ORDER: ${id}`);
-      // toggle refresh
-      updateQueryParams({
-        refresh: "refresh-delete-" + Math.random() * 9999,
-      });
-    } catch (err: any) {
-      error("DELETE ORDER: " + err.error);
-    } finally {
-      store.setters.updateStore({ key: "show", value: false });
-    }
+  try {
+    await invoke<Res<any>>("delete_order", { id });
+    //
+    info(`DELETE ORDER: ${id}`);
+    // toggle refresh
+    updateQueryParams({
+      refresh: "refresh-delete-" + Math.random() * 9999,
+    });
+  } catch (err: any) {
+    error("DELETE ORDER: " + err.error);
+  } finally {
+    store.setters.updateStore({ key: "show", value: false });
   }
 };
 

@@ -70,7 +70,7 @@ function numberToK(num: number) {
 async function getInventoryMouvementStats() {
   try {
     const res = await invoke<Res<mouvementsT[]>>("list_mvm_stats");
-    if (res.error) throw new Error(res.error);
+
     const result = res.data.reduce((acc, item) => {
       const { createdAt, mvmType, quantity, price } = item;
 
@@ -109,7 +109,7 @@ const bestClients = ref<any[]>();
 async function getBestClients() {
   try {
     const res = await invoke<Res<any[]>>("list_top_clients");
-    if (res.error) throw new Error(res.error);
+    //
     bestClients.value = res.data;
   } catch (err: any) {
     error("STATS BEST CLIENTS: " + err.error);
@@ -120,7 +120,7 @@ const bestSuppliers = ref<any[]>();
 async function getBestSuppliers() {
   try {
     const res = await invoke<Res<any[]>>("list_top_suppliers");
-    if (res.error) throw new Error(res.error);
+    //
     bestSuppliers.value = res.data;
   } catch (err: any) {
     error("STATS BEST SUPPLIERS: " + err.error);
@@ -131,7 +131,7 @@ const statusCounts = ref<any>();
 async function getStatusCounts() {
   try {
     const res = await invoke<Res<any[]>>("list_status_count");
-    if (res.error) throw new Error(res.error);
+    //
     statusCounts.value = res.data;
   } catch (err: any) {
     error("STATS STATUS COUNT: " + err.error);
@@ -142,7 +142,7 @@ const revenue = ref<any>();
 async function getRevenue() {
   try {
     const res = await invoke<Res<any>>("list_revenue");
-    if (res.error) throw new Error(res.error);
+
     let data = res.data.revenue[0];
     let percentageDeff = (
       ((data?.currentRevenue - data?.lastMonthRevenue) /

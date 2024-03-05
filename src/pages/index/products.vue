@@ -67,7 +67,7 @@ async function listProducts(search: string, page: number = 1) {
         limit: 17,
       },
     });
-    if (res.error) throw new Error(res.error);
+    //
     products.value = res.data.products;
     totalRows.value = res.data.count;
   } catch (err: any) {

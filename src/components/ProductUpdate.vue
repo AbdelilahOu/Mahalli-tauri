@@ -51,7 +51,7 @@ const form = useForm({
 const updateTheProduct = async (product: ProductT) => {
   try {
     const id = route.query.id;
-    const res = await invoke<Res<string>>("update_product", {
+    await invoke<Res<string>>("update_product", {
       product: {
         name: product.name,
         price: Number(product.price),
@@ -61,16 +61,15 @@ const updateTheProduct = async (product: ProductT) => {
         id,
       },
     });
-    if (res.error) throw new Error(res.error);
+
     if (quantity.value > 0) {
-      const createMvmRes = await invoke<Res<any>>("create_inventory", {
+      await invoke<Res<any>>("create_inventory", {
         mvm: {
           mvm_type: "IN",
           product_id: id,
           quantity: Number(quantity.value),
         },
       });
-      if (createMvmRes.error) throw new Error(createMvmRes.error);
     }
     info(
       `UPDATE PRODUCT: ${JSON.stringify({

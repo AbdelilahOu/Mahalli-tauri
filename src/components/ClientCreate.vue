@@ -42,7 +42,6 @@ const createNewClient = async (client: ClientT) => {
         image,
       },
     });
-    if (res.error) throw new Error(res.error);
     //
     info(`CREATE CLIENT: ${JSON.stringify({ ...client, image })}`);
     // toggle refresh

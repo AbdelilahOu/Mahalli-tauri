@@ -42,7 +42,7 @@ const form = useForm({
 
 const updateTheClient = async (client: ClientT) => {
   try {
-    const res = await invoke<Res<any>>("update_client", {
+    await invoke<Res<any>>("update_client", {
       client: {
         id: route.query.id,
         full_name: client.fullname,
@@ -52,8 +52,6 @@ const updateTheClient = async (client: ClientT) => {
         image: client.image,
       },
     });
-    //
-    if (res.error) throw new Error(res.error);
     //
     info(
       `UPDATE CLIENT: ${JSON.stringify({

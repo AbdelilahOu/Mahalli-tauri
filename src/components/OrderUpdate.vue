@@ -88,14 +88,13 @@ const addOrderItem = () => {
 
 const updateTheOrders = async () => {
   try {
-    const orderRes = await invoke<Res<String>>("update_order", {
+    await invoke<Res<String>>("update_order", {
       order: {
         id: order.id,
         supplier_id: order.supplierId,
         status: order.status,
       },
     });
-    if (orderRes.error) throw new Error(orderRes.error);
     for await (const item of order.items) {
       if (!item.id) {
         const invRes = await invoke<Res<string>>("create_inventory", {
@@ -105,17 +104,15 @@ const updateTheOrders = async () => {
             quantity: item.quantity,
           },
         });
-        if (invRes.error) throw new Error(invRes.error);
-        const itemRes = await invoke<Res<string>>("create_order_item", {
+        await invoke<Res<string>>("create_order_item", {
           item: {
             order_id: order.id,
             inventory_id: invRes.data,
             price: item.price,
           },
         });
-        if (itemRes.error) throw new Error(itemRes.error);
       } else {
-        const invRes = await invoke<Res<string>>("update_inventory", {
+        await invoke<Res<string>>("update_inventory", {
           mvm: {
             id: item.inventory_id,
             mvm_type: "IN",
@@ -123,8 +120,7 @@ const updateTheOrders = async () => {
             quantity: item.quantity,
           },
         });
-        if (invRes.error) throw new Error(invRes.error);
-        const itemRes = await invoke<Res<string>>("update_order_item", {
+        await invoke<Res<string>>("update_order_item", {
           item: {
             id: item.id,
             order_id: order.id,
@@ -132,7 +128,6 @@ const updateTheOrders = async () => {
             price: item.price,
           },
         });
-        if (itemRes.error) throw new Error(itemRes.error);
       }
     }
     //

@@ -80,7 +80,7 @@ const getInvoices = async (search: string, page = 1) => {
           : null,
       },
     });
-    if (res.error) throw new Error(res.error);
+
     invoices.value = res.data.invoices;
     totalRows.value = res.data.count;
   } catch (err: any) {
@@ -96,7 +96,7 @@ const listInvoiceProduct = (id?: string) => {
       const res = await invoke<Res<any>>("list_invoice_products", {
         id,
       });
-      if (res.error) throw new Error(res.error);
+      //
       invoiceProducts.value = res.data;
     } catch (err: any) {
       error("ERROR LIST INVOICE PRODUCTS: " + err.error);

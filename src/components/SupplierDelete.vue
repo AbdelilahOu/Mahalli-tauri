@@ -13,8 +13,8 @@ const { t } = useI18n();
 
 const deleteTheSupplier = async (id: string) => {
   try {
-    const res = await invoke<Res<string>>("delete_supplier", { id });
-    if (res.error) throw new Error(res.error);
+    await invoke<Res<string>>("delete_supplier", { id });
+    //
     info(`DELETE SUPPLIER: ${id}`);
     // toggle refresh
     updateQueryParams({

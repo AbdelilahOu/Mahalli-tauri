@@ -13,9 +13,8 @@ const { t } = useI18n();
 
 const deleteTheInvoice = async (id: string) => {
   try {
-    const res = await invoke<Res<any>>("delete_invoice", { id });
+    await invoke<Res<any>>("delete_invoice", { id });
     //
-    if (res.error) throw new Error(res.error);
     info(`DELETE INVOICE: ${id}`);
     // toggle refresh
     updateQueryParams({

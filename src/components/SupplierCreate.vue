@@ -35,7 +35,7 @@ const createNewSupplier = async (supplier: SupplierT) => {
   isLoading.value = true;
   try {
     let image: string = await saveFile(supplier.image as string, "Image");
-    const res = await invoke<Res<string>>("create_supplier", {
+    await invoke<Res<string>>("create_supplier", {
       supplier: {
         full_name: supplier.fullname,
         email: supplier.email,
@@ -44,7 +44,7 @@ const createNewSupplier = async (supplier: SupplierT) => {
         image,
       },
     });
-    if (res.error) throw new Error(res.error);
+    //
     info(
       `CREATE SUPPLIER: ${JSON.stringify({
         full_name: supplier.fullname,

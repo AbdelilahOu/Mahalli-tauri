@@ -13,9 +13,7 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const deleteTheClient = async (id: string) => {
   try {
-    const res = await invoke<Res<any>>("delete_client", { id });
-    //
-    if (res.error) throw new Error(res.error);
+    await invoke<Res<any>>("delete_client", { id });
     //
     info(`DELETE CLIENT: ${id}`);
     // toggle refresh
