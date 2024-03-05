@@ -90,7 +90,7 @@ const addInvoiceItem = () => {
 
 const updateTheInvoices = async () => {
   try {
-    const invoiceRes = await invoke<Res<String>>("update_invoice", {
+    await invoke<Res<String>>("update_invoice", {
       invoice: {
         id: invoice.id,
         client_id: invoice.clientId,
@@ -99,47 +99,39 @@ const updateTheInvoices = async () => {
       },
     });
     //
-    if (invoiceRes.error) throw new Error(invoiceRes.error);
-    //
-    if (!invoiceRes.error) {
-      for await (const item of invoice.items) {
-        if (!item.id) {
-          const invRes = await invoke<Res<string>>("create_inventory", {
-            mvm: {
-              mvm_type: "OUT",
-              product_id: item.product_id,
-              quantity: item.quantity,
-            },
-          });
-          if (invRes.error) throw new Error(invRes.error);
-          const itemRes = await invoke<Res<string>>("create_invoice_item", {
-            item: {
-              invoice_id: invoice.id,
-              inventory_id: invRes.data,
-              price: item.price,
-            },
-          });
-          if (itemRes.error) throw new Error(itemRes.error);
-        } else {
-          const invRes = await invoke<Res<string>>("update_inventory", {
-            mvm: {
-              id: item.inventory_id,
-              mvm_type: "OUT",
-              product_id: item.product_id,
-              quantity: item.quantity,
-            },
-          });
-          if (invRes.error) throw new Error(invRes.error);
-          const itemRes = await invoke<Res<string>>("update_invoice_item", {
-            item: {
-              id: item.id,
-              invoice_id: invoice.id,
-              inventory_id: item.inventory_id,
-              price: item.price,
-            },
-          });
-          if (itemRes.error) throw new Error(itemRes.error);
-        }
+    for await (const item of invoice.items) {
+      if (!item.id) {
+        const invRes = await invoke<Res<string>>("create_inventory", {
+          mvm: {
+            mvm_type: "OUT",
+            product_id: item.product_id,
+            quantity: item.quantity,
+          },
+        });
+        await invoke<Res<string>>("create_invoice_item", {
+          item: {
+            invoice_id: invoice.id,
+            inventory_id: invRes.data,
+            price: item.price,
+          },
+        });
+      } else {
+        await invoke<Res<string>>("update_inventory", {
+          mvm: {
+            id: item.inventory_id,
+            mvm_type: "OUT",
+            product_id: item.product_id,
+            quantity: item.quantity,
+          },
+        });
+        await invoke<Res<string>>("update_invoice_item", {
+          item: {
+            id: item.id,
+            invoice_id: invoice.id,
+            inventory_id: item.inventory_id,
+            price: item.price,
+          },
+        });
       }
     }
     //

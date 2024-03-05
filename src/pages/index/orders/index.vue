@@ -80,7 +80,7 @@ const getOrders = async (search: string, page = 1) => {
           : null,
       },
     });
-    if (res.error) throw new Error(res.error);
+
     orders.value = res.data.orders;
     totalRows.value = res.data.count;
   } catch (err: any) {
@@ -96,7 +96,7 @@ const listOrderProduct = (id?: string) => {
       const res = await invoke<Res<any>>("list_order_products", {
         id,
       });
-      if (res.error) throw new Error(res.error);
+      //
       orderProducts.value = res.data;
     } catch (err: any) {
       error("LIST ORDER PRODUCTS: " + err.error);

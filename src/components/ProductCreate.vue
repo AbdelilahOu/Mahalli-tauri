@@ -42,7 +42,6 @@ const createNewProduct = async (product: ProductT) => {
         image: "",
       },
     });
-    if (createRes.error) throw new Error(createRes.error);
     const inventoryRes = await invoke<Res<string>>("create_inventory", {
       mvm: {
         mvm_type: "IN",
@@ -50,7 +49,6 @@ const createNewProduct = async (product: ProductT) => {
         quantity: Number(quantity.value),
       },
     });
-    if (inventoryRes.error) throw new Error(inventoryRes.error);
     info(
       `CREATE PRODUCT: ${JSON.stringify({ ...product, quantity: quantity.value })}`,
     );

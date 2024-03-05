@@ -70,7 +70,7 @@ async function getSuppliers(search: string, page: number = 1) {
         limit: 17,
       },
     });
-    if (res.error) throw new Error(res.error);
+    //
     suppliers.value = res.data.suppliers;
     totalRows.value = res.data.count;
   } catch (err: any) {

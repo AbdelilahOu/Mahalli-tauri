@@ -85,7 +85,6 @@ const createOrder = async () => {
           status: order.status,
         },
       });
-      if (orderRes.error) throw new Error(orderRes.error);
       for await (const item of order.items) {
         const invRes = await invoke<Res<string>>("create_inventory", {
           mvm: {
@@ -94,15 +93,13 @@ const createOrder = async () => {
             quantity: item.quantity,
           },
         });
-        if (invRes.error) throw new Error(invRes.error);
-        const itemRes = await invoke<Res<string>>("create_order_item", {
+        await invoke<Res<string>>("create_order_item", {
           item: {
             order_id: orderRes.data,
             inventory_id: invRes.data,
             price: item.price,
           },
         });
-        if (itemRes.error) throw new Error(itemRes.error);
       }
       //
       info(`CREATE ORDER: ${JSON.stringify(order)}`);

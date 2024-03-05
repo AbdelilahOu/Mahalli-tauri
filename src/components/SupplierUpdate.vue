@@ -41,7 +41,7 @@ const form = useForm({
 
 const updateTheSupplier = async (supplier: SupplierT) => {
   try {
-    const res = await invoke<Res<any>>("update_supplier", {
+    await invoke<Res<any>>("update_supplier", {
       supplier: {
         id: route.query.id,
         full_name: supplier.fullname,
@@ -51,7 +51,7 @@ const updateTheSupplier = async (supplier: SupplierT) => {
         image: supplier.image,
       },
     });
-    if (res.error) throw new Error(res.error);
+    //
     info(
       `UPDATE SUPPLIER: ${JSON.stringify({
         id: route.query.id,

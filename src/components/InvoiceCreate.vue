@@ -87,30 +87,23 @@ const createInvoice = async () => {
           paid_amount: invoice.paidAmount,
         },
       });
-      if (invoiceRes.error) throw new Error(invoiceRes.error);
       //
-      if (!invoiceRes.error) {
-        for await (const item of invoice.items) {
-          const invRes = await invoke<Res<string>>("create_inventory", {
-            mvm: {
-              mvm_type: "OUT",
-              product_id: item.product_id,
-              quantity: item.quantity,
-            },
-          });
-          if (invRes.error) throw new Error(invRes.error);
+      for await (const item of invoice.items) {
+        const invRes = await invoke<Res<string>>("create_inventory", {
+          mvm: {
+            mvm_type: "OUT",
+            product_id: item.product_id,
+            quantity: item.quantity,
+          },
+        });
 
-          if (!invRes.error) {
-            const itemRes = await invoke<Res<string>>("create_invoice_item", {
-              item: {
-                invoice_id: invoiceRes.data,
-                inventory_id: invRes.data,
-                price: item.price,
-              },
-            });
-            if (itemRes.error) throw new Error(itemRes.error);
-          }
-        }
+        await invoke<Res<string>>("create_invoice_item", {
+          item: {
+            invoice_id: invoiceRes.data,
+            inventory_id: invRes.data,
+            price: item.price,
+          },
+        });
       }
       //
       info(`CREATE INVOICE: ${JSON.stringify(invoice)}`);

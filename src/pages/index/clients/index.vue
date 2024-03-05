@@ -68,7 +68,7 @@ const getClients = async (search: string, page: number = 1) => {
         limit: 17,
       },
     });
-    if (res.error) throw new Error(res.error);
+    //
     clients.value = res.data.clients;
     totalRows.value = res.data.count;
   } catch (err: any) {

@@ -80,7 +80,7 @@ async function getInventory(search: string, page: number = 1) {
           : null,
       },
     });
-    if (res.error) throw new Error(res.error);
+    //
     inventoryMouvements.value = res.data.inventory;
     totalRows.value = res.data.count;
   } catch (err: any) {
