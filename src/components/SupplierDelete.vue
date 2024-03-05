@@ -39,14 +39,14 @@ const cancelDelete = () => {
     </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
+        <Button variant="outline" @click="cancelDelete">
+          {{ t("g.b.no") }}
+        </Button>
         <Button
           class="col-span-2"
           @click="() => deleteTheSupplier($route.query.id as string)"
         >
           {{ t("g.b.d") }}
-        </Button>
-        <Button variant="outline" @click="cancelDelete">
-          {{ t("g.b.no") }}
         </Button>
       </div>
     </template>

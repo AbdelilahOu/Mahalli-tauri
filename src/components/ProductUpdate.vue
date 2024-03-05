@@ -176,19 +176,19 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
         <div class="w-full grid grid-cols-3 gap-2">
           <Button
-            :disabled="isUpdating"
-            type="submit"
-            class="w-full col-span-2"
-          >
-            {{ t("g.b.u", { name: $route.query.name }) }}
-          </Button>
-          <Button
             @click="hideModal"
             type="button"
             :disabled="isUpdating"
             variant="outline"
           >
             {{ t("g.b.no") }}
+          </Button>
+          <Button
+            :disabled="isUpdating"
+            type="submit"
+            class="w-full col-span-2"
+          >
+            {{ t("g.b.u", { name: $route.query.name }) }}
           </Button>
         </div>
       </form>

@@ -215,11 +215,11 @@ const hideModal = () => {
     </template>
     <template #footer>
       <div class="grid w-full grid-cols-3 gap-2">
-        <Button class="col-span-2" @click="createInvoice()">
-          {{ t("g.b.c") }}
-        </Button>
         <Button @click="hideModal" variant="outline">
           {{ t("g.b.no") }}
+        </Button>
+        <Button class="col-span-2" @click="createInvoice()">
+          {{ t("g.b.c") }}
         </Button>
       </div>
     </template>
