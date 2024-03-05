@@ -132,7 +132,7 @@ const updateModal = (name: string) => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
-          <div class="w-full max-w-[50%] grid grid-cols-3 gap-1">
+          <div class="w-2/3 lg:max-w-[50%] grid grid-cols-3 gap-1">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
               <UiIcon
                 extraStyle="fill-gray-400 cursor-default hover:bg-white"
