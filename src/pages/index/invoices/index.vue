@@ -26,6 +26,14 @@ import {
   watch,
   ref,
 } from "vue";
+import { Calendar as CalendarIcon } from "lucide-vue-next";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/utils/shadcn";
 import { error } from "tauri-plugin-log-api";
 
 const { t } = useI18n();
@@ -130,7 +138,29 @@ const updateModal = (name: string) => {
                 name="search"
               />
             </Input>
-            <Input v-model="createdAt" type="date" :placeHolder="t('g.s')" />
+            <Popover>
+              <PopoverTrigger as-child>
+                <Button
+                  variant="outline"
+                  :class="
+                    cn(
+                      'w-full justify-start text-left font-normal',
+                      !createdAt && 'text-muted-foreground',
+                    )
+                  "
+                >
+                  <CalendarIcon class="mr-2 h-4 w-4" />
+                  <span>{{
+                    createdAt
+                      ? new Date(createdAt).toLocaleDateString("fr-fr")
+                      : "Pick a date"
+                  }}</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent class="w-auto p-0">
+                <Calendar v-model="createdAt" />
+              </PopoverContent>
+            </Popover>
             <Select v-model="status">
               <SelectTrigger>
                 <SelectValue placeholder="Select a status" />
