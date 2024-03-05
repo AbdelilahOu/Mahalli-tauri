@@ -14,6 +14,9 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { invoke } from "@tauri-apps/api";
+import { error, info } from "tauri-plugin-log-api";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t, d } = useI18n();
@@ -30,6 +33,23 @@ const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
   });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
+};
+
+const updateInvoiceStatus = async (invoice: any) => {
+  try {
+    await invoke("update_invoice", {
+      invoice,
+    });
+    //
+    info(`UPDATE INVOICE STATUS: ${JSON.stringify(invoice)}`);
+    // toggle refresh
+    updateQueryParams({
+      refresh: "refresh-update-" + Math.random() * 9999,
+    });
+  } catch (err: any) {
+    console.log(err);
+    error("UPDATE INVOICE STATUS: " + err.error);
+  }
 };
 </script>
 
@@ -70,103 +90,141 @@ const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
           :key="invoice.id"
         >
           <td class="p-2">
-            <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <RouterLink
-                :to="{
-                  path: '/clients/' + invoice.clientId,
-                }"
-              >
-                {{ invoice.fullname }}
-              </RouterLink>
-            </div>
-          </td>
-          <td class="p-2">
-            <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <HoverCard v-if="invoice.products && invoice.products > 0">
-                <HoverCardTrigger as-child>
-                  <Button
-                    @mouseenter.passive="
-                      $emit('listInvoiceProducts', invoice.id)
-                    "
-                    @mouseleave.passive="$emit('cancelInvoiceProducts')"
-                    size="sm"
-                    variant="link"
-                    class="underline px-0"
-                  >
-                    {{ t("g.plrz.p", { n: invoice.products }) }}
-                  </Button>
-                </HoverCardTrigger>
-                <HoverCardContent class="min-w-[13rem] p-2">
-                  <table class="w-full">
-                    <thead>
-                      <tr>
-                        <th v-for="index in 3" :key="index"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        v-for="(invoiceProduct, index) in invoiceProducts"
-                        :key="index"
-                        class="space-y-1 text-sm flex justify-between w-full items-center"
-                      >
-                        <td class="underline w-1/2">
-                          {{ invoiceProduct.name }}
-                        </td>
-                        <td class="w-1/4 text-end">
-                          {{ invoiceProduct.price }} Dh
-                        </td>
-                        <td class="w-1/4 text-slate-700 text-end">
-                          <i> x{{ invoiceProduct.quantity }} </i>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </HoverCardContent>
-              </HoverCard>
-              <span v-else>
-                {{ t("g.plrz.p", { n: invoice.products }) }}
-              </span>
-            </div>
-          </td>
-          <td class="p-2">
-            <div
-              class="text-left font-medium uppercase whitespace-nowrap overflow-ellipsis"
+            <RouterLink
+              :to="{
+                path: '/clients/' + invoice.clientId,
+              }"
             >
-              <Badge
-                variant="outline"
-                :class="
-                  cn(
-                    invoice?.status == 'CANCELED'
-                      ? 'bg-red-100 border-red-500 text-red-900'
-                      : invoice?.status == 'PENDING'
-                        ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
-                        : invoice?.status == 'PAID'
-                          ? 'bg-green-100 border-green-500 text-green-900'
-                          : '',
-                  )
-                "
-              >
-                {{ t(`g.status.${invoice.status.toLowerCase()}`) }}
-              </Badge>
-            </div>
+              {{ invoice.fullname }}
+            </RouterLink>
           </td>
           <td class="p-2">
-            <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="invoice.createdAt">
-                {{ d(new Date(invoice.createdAt), "long") }}
-              </span>
-            </div>
+            <HoverCard v-if="invoice.products && invoice.products > 0">
+              <HoverCardTrigger as-child>
+                <Button
+                  @mouseenter.passive="$emit('listInvoiceProducts', invoice.id)"
+                  @mouseleave.passive="$emit('cancelInvoiceProducts')"
+                  size="sm"
+                  variant="link"
+                  class="underline px-0"
+                >
+                  {{ t("g.plrz.p", { n: invoice.products }) }}
+                </Button>
+              </HoverCardTrigger>
+              <HoverCardContent class="min-w-[13rem] p-2">
+                <table class="w-full">
+                  <thead>
+                    <tr>
+                      <th v-for="index in 3" :key="index"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(invoiceProduct, index) in invoiceProducts"
+                      :key="index"
+                      class="space-y-1 text-sm flex justify-between w-full items-center"
+                    >
+                      <td class="underline w-1/2">
+                        {{ invoiceProduct.name }}
+                      </td>
+                      <td class="w-1/4 text-end">
+                        {{ invoiceProduct.price }} Dh
+                      </td>
+                      <td class="w-1/4 text-slate-700 text-end">
+                        <i> x{{ invoiceProduct.quantity }} </i>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </HoverCardContent>
+            </HoverCard>
+            <template v-else>
+              {{ t("g.plrz.p", { n: invoice.products }) }}
+            </template>
           </td>
           <td class="p-2">
-            <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span> {{ invoice.total?.toFixed(2) }} DH </span>
-            </div>
+            <Popover>
+              <PopoverTrigger as-child>
+                <Badge
+                  variant="outline"
+                  :class="
+                    cn(
+                      'cursor-pointer',
+                      invoice?.status == 'CANCELED'
+                        ? 'bg-red-100 border-red-500 text-red-900'
+                        : invoice?.status == 'PENDING'
+                          ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
+                          : invoice?.status == 'PAID'
+                            ? 'bg-green-100 border-green-500 text-green-900'
+                            : '',
+                    )
+                  "
+                >
+                  {{ t(`g.status.${invoice.status.toLowerCase()}`) }}
+                </Badge>
+              </PopoverTrigger>
+              <PopoverContent class="w-40 p-1 flex flex-col gap-1">
+                <Button
+                  type="button"
+                  @click="
+                    () =>
+                      updateInvoiceStatus({
+                        id: invoice.id,
+                        client_id: invoice.clientId,
+                        status: 'PAID',
+                        paid_amount: invoice.paidAmount,
+                      })
+                  "
+                  variant="secondary"
+                  size="sm"
+                  class="border bg-green-100 w-full border-green-500 text-green-900"
+                >
+                  {{ t(`g.status.paid`) }}
+                </Button>
+                <Button
+                  type="button"
+                  @click="
+                    () =>
+                      updateInvoiceStatus({
+                        id: invoice.id,
+                        client_id: invoice.clientId,
+                        status: 'PENDING',
+                        paid_amount: invoice.paidAmount,
+                      })
+                  "
+                  variant="secondary"
+                  size="sm"
+                  class="border bg-yellow-100 w-full border-yellow-500 text-yellow-900"
+                >
+                  {{ t(`g.status.pending`) }}
+                </Button>
+                <Button
+                  type="button"
+                  @click="
+                    () =>
+                      updateInvoiceStatus({
+                        id: invoice.id,
+                        client_id: invoice.clientId,
+                        status: 'CANCELED',
+                        paid_amount: invoice.paidAmount,
+                      })
+                  "
+                  variant="secondary"
+                  size="sm"
+                  class="border bg-red-100 w-full border-red-500 text-red-900"
+                >
+                  {{ t(`g.status.canceled`) }}
+                </Button>
+              </PopoverContent>
+            </Popover>
           </td>
           <td class="p-2">
-            <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span> {{ invoice.paidAmount?.toFixed(2) }} DH </span>
-            </div>
+            {{
+              invoice.createdAt ? d(new Date(invoice.createdAt), "long") : ""
+            }}
           </td>
+          <td class="p-2">{{ invoice.total?.toFixed(2) }} DH</td>
+          <td class="p-2">{{ invoice.paidAmount?.toFixed(2) }} DH</td>
           <td class="p-2">
             <div class="flex justify-start gap-3">
               <span @click="toggleThisInvoices(invoice, 'InvoiceDelete')">
