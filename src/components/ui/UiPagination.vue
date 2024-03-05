@@ -25,6 +25,7 @@ const defaultPage = computed(() =>
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const rowsCount = inject<Ref<number>>("count");
+const itemsCount = inject<Ref<number>>("itemsCount");
 
 const goBackward = () => {
   if (defaultPage.value > 1) {
@@ -62,7 +63,7 @@ const goToLast = () => {
         :sibling-count="1"
         show-edges
         :default-page="defaultPage"
-        :items-per-page="19"
+        :items-per-page="itemsCount ?? 1"
       >
         <PaginationList v-slot="{ items }" class="flex items-center gap-1">
           <PaginationFirst @click="goToFirst" />

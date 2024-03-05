@@ -70,12 +70,10 @@ const toggleThisClient = (client: ClientT, name: string) => {
       <tbody class="text-sm divide-y divide-gray-100">
         <tr v-for="(client, index) in clients" v-fade="index" :key="client.id">
           <td class="p-2">
-            <span class="h-full w-full grid">
-              <Checkbox
-                :checked="checkedClients.includes(client.id!)"
-                @update:checked="(check) => checkThisClient(check, client.id!)"
-              />
-            </span>
+            <Checkbox
+              :checked="checkedClients.includes(client.id!)"
+              @update:checked="(check) => checkThisClient(check, client.id!)"
+            />
           </td>
           <td class="p-2">
             <div class="w-12 h-12 rounded-full overflow-hidden">
@@ -90,38 +88,19 @@ const toggleThisClient = (client: ClientT, name: string) => {
               </Skeleton>
             </div>
           </td>
-          <td class="p-2">
-            <div class="font-medium text-gray-800">
-              {{ client?.fullname }}
-            </div>
+          <td class="p-2 whitespace-nowrap">
+            {{ client?.fullname }}
           </td>
           <td class="p-2">
-            <div class="text-left whitespace-nowrap overflow-ellipsis">
-              {{ client.email }}
-              <span v-if="!client.email" class="text-red-400">No email</span>
-            </div>
+            {{ client.email }}
           </td>
-          <td class="p-2">
-            <div class="text-left whitespace-nowrap overflow-ellipsis">
-              {{ client.phoneNumber }}
-              <span v-if="!client.phoneNumber" class="text-red-400"
-                >No phone</span
-              >
-            </div>
+          <td class="p-2 whitespace-nowrap">
+            {{ client.phoneNumber }}
           </td>
-          <td class="p-2">
-            <div class="text-left whitespace-nowrap overflow-ellipsis">
-              {{ client.address }}
-              <span v-if="!client.address" class="text-red-400"
-                >No address</span
-              >
-            </div>
+          <td class="p-2 whitespace-nowrap">
+            {{ client.address }}
           </td>
-          <td class="p-2">
-            <div class="text-left whitespace-nowrap overflow-ellipsis">
-              {{ client.credi }} DH
-            </div>
-          </td>
+          <td class="p-2 whitespace-nowrap">{{ client.credi }} DH</td>
           <td class="p-2">
             <div class="flex justify-start gap-3">
               <span @click="toggleThisClient(client, 'ClientDelete')">

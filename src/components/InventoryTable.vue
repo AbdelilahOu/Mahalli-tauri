@@ -39,38 +39,28 @@ defineProps<{
       <tbody class="text-sm divide-y divide-gray-100">
         <tr v-fade="index" v-for="(mvm, index) in inventory" :key="mvm.id">
           <td class="p-2">
-            <div class="text-left font-medium">{{ mvm?.name }}</div>
+            {{ mvm?.name }}
+          </td>
+          <td class="p-2">{{ mvm?.price?.toFixed(2) }} DH</td>
+          <td class="p-2">
+            {{ t("g.plrz.i", { n: mvm.quantity }) }}
           </td>
           <td class="p-2">
-            <div class="text-left">{{ mvm?.price?.toFixed(2) }} DH</div>
-          </td>
-          <td class="p-2">
-            <div class="text-left">
-              {{ t("g.plrz.i", { n: mvm.quantity }) }}
-            </div>
-          </td>
-          <td class="p-2">
-            <div
-              class="flex justify-start gap-3 uppercase font-bold text-xl h-8 p-1"
+            <Badge
+              variant="outline"
+              :class="
+                cn(
+                  mvm?.mvmType == 'OUT'
+                    ? 'bg-green-100 border-green-500 text-green-900'
+                    : 'bg-sky-100 border-sky-500 text-sky-900',
+                )
+              "
             >
-              <Badge
-                variant="outline"
-                :class="
-                  cn(
-                    mvm?.mvmType == 'OUT'
-                      ? 'bg-green-100 border-green-500 text-green-900'
-                      : 'bg-sky-100 border-sky-500 text-sky-900',
-                  )
-                "
-              >
-                {{ t("g.status." + mvm?.mvmType.toLowerCase()) }}
-              </Badge>
-            </div>
+              {{ t("g.status." + mvm?.mvmType.toLowerCase()) }}
+            </Badge>
           </td>
           <td class="p-2">
-            <div class="text-left">
-              {{ d(new Date(mvm.createdAt), "long") }}
-            </div>
+            {{ d(new Date(mvm.createdAt), "long") }}
           </td>
         </tr>
       </tbody>

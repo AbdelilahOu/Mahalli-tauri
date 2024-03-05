@@ -33,6 +33,7 @@ const page = computed(() => Number(route.query.page));
 const refresh = computed(() => route.query.refresh);
 //
 provide("count", totalRows);
+provide("itemsCount", 17);
 //
 let timer: any;
 let unwatch: WatchStopHandle | null = null;

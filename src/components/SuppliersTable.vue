@@ -72,14 +72,12 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
           :key="supplier.id"
         >
           <td class="p-2">
-            <span class="h-full w-full grid">
-              <Checkbox
-                :checked="checkedSuppliers.includes(supplier.id!)"
-                @update:checked="
-                  (check) => checkThisSupplier(check, supplier.id!)
-                "
-              />
-            </span>
+            <Checkbox
+              :checked="checkedSuppliers.includes(supplier.id!)"
+              @update:checked="
+                (check) => checkThisSupplier(check, supplier.id!)
+              "
+            />
           </td>
           <td class="p-2">
             <div class="w-12 h-12 rounded-full overflow-hidden">
@@ -94,32 +92,17 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
               </Skeleton>
             </div>
           </td>
-          <td class="p-2">
-            <div class="font-medium text-gray-800">{{ supplier.fullname }}</div>
+          <td class="p-2 whitespace-nowrap">
+            {{ supplier.fullname }}
           </td>
-          <td class="p-2">
-            <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="!supplier.email" class="text-red-400">No email</span>
-              <span v-else>
-                {{ supplier.email }}
-              </span>
-            </div>
+          <td class="p-2 whitespace-nowrap">
+            {{ supplier.email }}
           </td>
-          <td class="p-2">
-            <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="!supplier.phoneNumber" class="text-red-400"
-                >No phone</span
-              >
-              <span v-else>{{ supplier.phoneNumber }}</span>
-            </div>
+          <td class="p-2 whitespace-nowrap">
+            {{ supplier.phoneNumber }}
           </td>
-          <td class="p-2">
-            <div class="text-left whitespace-nowrap overflow-ellipsis">
-              <span v-if="!supplier.address" class="text-red-400"
-                >No address</span
-              >
-              <span v-else>{{ supplier.address }}</span>
-            </div>
+          <td class="p-2 whitespace-nowrap">
+            {{ supplier.address }}
           </td>
           <td class="p-2">
             <div class="flex w-full justify-start gap-3">

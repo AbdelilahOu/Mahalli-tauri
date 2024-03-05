@@ -78,12 +78,10 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
           v-fade="index"
         >
           <td class="p-2">
-            <span class="h-full w-full grid">
-              <Checkbox
-                :checked="checkedProducts.includes(product.id!)"
-                @update:checked="(a) => checkThisProduct(a, product.id!)"
-              />
-            </span>
+            <Checkbox
+              :checked="checkedProducts.includes(product.id!)"
+              @update:checked="(a) => checkThisProduct(a, product.id!)"
+            />
           </td>
           <td class="p-2">
             <div class="w-12 h-12 rounded-full overflow-hidden">
@@ -100,12 +98,11 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
             </div>
           </td>
           <td class="p-2">
-            <div class="font-medium text-gray-800">{{ product.name }}</div>
+            {{ product.name }}
           </td>
           <td class="p-2">
-            <div
+            <template
               v-if="product.description && product.description?.length > 30"
-              class="font-medium text-gray-800 flex items-center"
             >
               {{ product.description?.substring(0, 30) }}...
               <HoverCard>
@@ -136,35 +133,31 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
                   </div>
                 </HoverCardContent>
               </HoverCard>
-            </div>
-            <div v-else class="font-medium text-gray-800 flex items-center">
+            </template>
+            <template v-else>
               {{ product.description }}
-            </div>
+            </template>
           </td>
+          <td class="p-2">{{ product.price.toFixed(2) }} DH</td>
           <td class="p-2">
-            <div class="text-left">{{ product.price.toFixed(2) }} DH</div>
-          </td>
-          <td class="p-2">
-            <div class="text-left">
-              <Badge
-                variant="outline"
-                :class="
-                  cn(
-                    product.stock != undefined
-                      ? product?.stock < 0
-                        ? 'bg-red-100 border-red-500 text-red-900'
-                        : product?.stock < product.minQuantity
-                          ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
-                          : product?.stock > product.minQuantity
-                            ? 'bg-green-100 border-green-500 text-green-900'
-                            : ''
-                      : '',
-                  )
-                "
-              >
-                {{ t("g.plrz.i", { n: product?.stock }) }}
-              </Badge>
-            </div>
+            <Badge
+              variant="outline"
+              :class="
+                cn(
+                  product.stock != undefined
+                    ? product?.stock < 0
+                      ? 'bg-red-100 border-red-500 text-red-900'
+                      : product?.stock < product.minQuantity
+                        ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
+                        : product?.stock > product.minQuantity
+                          ? 'bg-green-100 border-green-500 text-green-900'
+                          : ''
+                    : '',
+                )
+              "
+            >
+              {{ t("g.plrz.i", { n: product?.stock }) }}
+            </Badge>
           </td>
           <td class="p-2">
             <div class="flex justify-start gap-3">

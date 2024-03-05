@@ -50,6 +50,7 @@ const createdAt = ref<string | number | undefined>(undefined);
 const orderProducts = ref<OrderProductT[]>([]);
 //
 provide("count", totalRows);
+provide("itemsCount", 17);
 //
 onUnmounted(() => {
   if (unwatch) unwatch();

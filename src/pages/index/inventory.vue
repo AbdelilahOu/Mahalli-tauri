@@ -27,6 +27,14 @@ import {
   SelectItem,
   Select,
 } from "@/components/ui/select";
+import { Calendar as CalendarIcon } from "lucide-vue-next";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/utils/shadcn";
 import { error } from "tauri-plugin-log-api";
 
 const { t } = useI18n();
@@ -42,6 +50,7 @@ const createdAt = ref<string | number | undefined>(undefined);
 const totalRows = ref<number>(0);
 //
 provide("count", totalRows);
+provide("itemsCount", 30);
 //
 let timer: any;
 let unwatch: WatchStopHandle | null = null;
@@ -73,7 +82,7 @@ async function getInventory(search: string, page: number = 1) {
       args: {
         page,
         search,
-        limit: 17,
+        limit: 30,
         status: status.value,
         created_at: createdAt.value
           ? new Date(createdAt.value).toISOString().slice(0, 10)
@@ -107,12 +116,29 @@ const uploadCSV = () => {
                 name="search"
               />
             </Input>
-            <Input
-              class="w-full"
-              v-model="createdAt"
-              type="date"
-              :placeHolder="t('g.s')"
-            ></Input>
+            <Popover>
+              <PopoverTrigger as-child>
+                <Button
+                  variant="outline"
+                  :class="
+                    cn(
+                      'w-full justify-start text-left font-normal',
+                      !createdAt && 'text-muted-foreground',
+                    )
+                  "
+                >
+                  <CalendarIcon class="mr-2 h-4 w-4" />
+                  <span>{{
+                    createdAt
+                      ? new Date(createdAt).toLocaleDateString("fr-fr")
+                      : "Pick a date"
+                  }}</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent class="w-auto p-0">
+                <Calendar v-model="createdAt" />
+              </PopoverContent>
+            </Popover>
             <Select v-model="status">
               <SelectTrigger>
                 <SelectValue placeholder="Select a status" />

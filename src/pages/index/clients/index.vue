@@ -33,6 +33,7 @@ const refresh = computed(() => route.query.refresh);
 const totalRows = ref<number>(0);
 
 provide("count", totalRows);
+provide("itemsCount", 17);
 
 //
 let timer: any;
