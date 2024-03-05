@@ -33,7 +33,7 @@ const createNewClient = async (client: ClientT) => {
   isCreating.value = true;
   try {
     let image: string = await saveFile(client.image as string, "Image");
-    let res = await invoke<Res<null>>("create_client", {
+    await invoke<Res<null>>("create_client", {
       client: {
         full_name: client.fullname,
         email: client.email,

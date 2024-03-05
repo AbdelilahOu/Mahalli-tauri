@@ -42,7 +42,7 @@ const createNewProduct = async (product: ProductT) => {
         image: "",
       },
     });
-    const inventoryRes = await invoke<Res<string>>("create_inventory", {
+    await invoke<Res<string>>("create_inventory", {
       mvm: {
         mvm_type: "IN",
         product_id: createRes.data,
