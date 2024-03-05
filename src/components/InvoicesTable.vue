@@ -226,7 +226,7 @@ const updateInvoiceStatus = async (invoice: any) => {
           <td class="p-2">{{ invoice.total?.toFixed(2) }} DH</td>
           <td class="p-2">{{ invoice.paidAmount?.toFixed(2) }} DH</td>
           <td class="p-2">
-            <div class="flex justify-start gap-3">
+            <div class="flex justify-center gap-3">
               <span @click="toggleThisInvoices(invoice, 'InvoiceDelete')">
                 <UiIcon isStyled name="delete" />
               </span>

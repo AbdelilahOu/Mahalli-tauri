@@ -160,7 +160,7 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
             </Badge>
           </td>
           <td class="p-2">
-            <div class="flex justify-start gap-3">
+            <div class="flex justify-center gap-3">
               <span @click="toggleThisProduct(product, 'ProductDelete')">
                 <UiIcon isStyled name="delete" />
               </span>

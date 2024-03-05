@@ -211,7 +211,7 @@ const updateOrderStatus = async (order: any) => {
           </td>
           <td class="p-2">{{ order.total?.toFixed(2) }} DH</td>
           <td class="p-2">
-            <div class="flex justify-start gap-3">
+            <div class="flex justify-center gap-3">
               <span @click="toggleThisOrders(order, 'OrderDelete')">
                 <UiIcon isStyled name="delete" />
               </span>
