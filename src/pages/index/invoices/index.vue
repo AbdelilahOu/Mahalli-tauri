@@ -50,6 +50,7 @@ const invoiceProducts = ref<InvoiceProductT[]>([]);
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 provide("count", totalRows);
+provide("itemsCount", 17);
 
 onUnmounted(() => {
   if (unwatch) unwatch();
