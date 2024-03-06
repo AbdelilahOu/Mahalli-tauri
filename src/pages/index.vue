@@ -7,13 +7,14 @@ import SideBar from "@/components/SideBar.vue";
 import { store } from "@/store";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/utils/shadcn";
+import { Toaster } from "@/components/ui/sonner";
 
 const show = computed(() => store.getters.getModalVisibility());
 const name = computed(() => store.getters.getModalName());
 const isCollapse = ref<boolean>(true);
 
-const hideModal = () =>
-  store.setters.updateStore({ key: "show", value: false });
+// const hideModal = () =>
+//   store.setters.updateStore({ key: "show", value: false });
 
 // onBeforeRouteUpdate((to: any, from: any) => {
 //   if (to.path !== from.path) hideModal();
@@ -45,9 +46,10 @@ const hideModal = () =>
           <ModalComponentsRenderer :name="name" />
         </div>
         <div class="w-full bg-white p-2 rounded-md h-full">
-          <RouterView></RouterView>
+          <RouterView />
         </div>
       </ScrollArea>
     </div>
+    <Toaster position="top-center" />
   </main>
 </template>
