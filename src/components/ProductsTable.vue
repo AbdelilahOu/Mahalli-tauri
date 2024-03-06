@@ -61,6 +61,9 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
             {{ t("g.fields.description") }}
           </th>
           <th class="p-2 w-fit font-semibold text-left">
+            {{ t("g.fields.threshold") }}
+          </th>
+          <th class="p-2 w-fit font-semibold text-left">
             {{ t("g.fields.price") }}
           </th>
           <th class="p-2 w-fit font-semibold text-left">
@@ -98,46 +101,33 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
             </div>
           </td>
           <td class="p-2">
-            {{ product.name }}
-          </td>
-          <td class="p-2">
-            <template
-              v-if="product.description && product.description?.length > 30"
-            >
-              {{ product.description?.substring(0, 30) }}...
-              <HoverCard>
-                <HoverCardTrigger as-child>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    class="bg-slate-200 h-fit px-[2px]"
-                    >more
-                  </Button>
-                </HoverCardTrigger>
-                <HoverCardContent class="w-80">
-                  <div class="flex justify-between space-x-4">
-                    <div class="space-y-1">
-                      <h4 class="text-sm font-semibold">
-                        {{ product.name }}
-                      </h4>
-                      <p class="text-sm">
-                        {{ product.description }}
-                      </p>
-                      <div class="flex items-center pt-2">
-                        <CalendarDays class="mr-2 h-4 w-4 opacity-70" />
-                        <span class="text-xs text-muted-foreground">
-                          Created at {{ d(product.createdAt!, "short") }}
-                        </span>
-                      </div>
+            <HoverCard>
+              <HoverCardTrigger as-child>
+                <span class="underline font-medium">
+                  {{ product.name }}
+                </span>
+              </HoverCardTrigger>
+              <HoverCardContent class="w-80">
+                <div class="flex justify-between space-x-4">
+                  <div class="space-y-1">
+                    <h4 class="text-sm font-semibold">
+                      {{ product.name }}
+                    </h4>
+                    <p class="text-sm">
+                      {{ product.description ?? "" }}
+                    </p>
+                    <div class="flex items-center pt-2">
+                      <CalendarDays class="mr-2 h-4 w-4 opacity-70" />
+                      <span class="text-xs text-muted-foreground">
+                        Created at {{ d(product.createdAt!, "short") }}
+                      </span>
                     </div>
                   </div>
-                </HoverCardContent>
-              </HoverCard>
-            </template>
-            <template v-else>
-              {{ product.description }}
-            </template>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
           </td>
+          <td class="p-2">{{ product.minQuantity.toFixed(2) }}</td>
           <td class="p-2">{{ product.price.toFixed(2) }} DH</td>
           <td class="p-2">
             <Badge
@@ -145,7 +135,7 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
               :class="
                 cn(
                   product.stock != undefined
-                    ? product?.stock < 0
+                    ? product?.stock <= 0
                       ? 'bg-red-100 border-red-500 text-red-900'
                       : product?.stock < product.minQuantity
                         ? 'bg-yellow-100 border-yellow-500 text-yellow-900'

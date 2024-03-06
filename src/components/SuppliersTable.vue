@@ -92,7 +92,7 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
               </Skeleton>
             </div>
           </td>
-          <td class="p-2 whitespace-nowrap">
+          <td class="p-2 whitespace-nowrap font-medium">
             {{ supplier.fullname }}
           </td>
           <td class="p-2 whitespace-nowrap">

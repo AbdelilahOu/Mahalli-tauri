@@ -38,7 +38,7 @@ defineProps<{
       </thead>
       <tbody class="text-sm divide-y divide-gray-100">
         <tr v-fade="index" v-for="(mvm, index) in inventory" :key="mvm.id">
-          <td class="p-2">
+          <td class="p-2 font-medium">
             {{ mvm?.name }}
           </td>
           <td class="p-2">{{ mvm?.price?.toFixed(2) }} DH</td>
