@@ -15,7 +15,7 @@
     },
     "b": {
       "no": "Cancel",
-      "c": "Create",
+      "c": "Add",
       "d": "Confirme",
       "u": "Update {name}",
       "a": "Add",
@@ -75,7 +75,7 @@
       "addButton": "Add new client"
     },
     "c": {
-      "title": "create a client"
+      "title": "add a client"
     },
     "u": {
       "title": "update client"
@@ -89,7 +89,7 @@
       "addButton": "Add new supplier"
     },
     "c": {
-      "title": "create a supplier"
+      "title": "add a supplier"
     },
     "u": {
       "title": "update supplier"
@@ -103,7 +103,7 @@
       "addButton": "Add new product"
     },
     "c": {
-      "title": "create a product"
+      "title": "add a product"
     },
     "u": {
       "title": "UPDATE product"
@@ -117,7 +117,7 @@
       "addButton": "Add new order"
     },
     "c": {
-      "title": "create new order",
+      "title": "add new order",
       "d": {
         "s": {
           "title": "supplier details",
@@ -130,7 +130,7 @@
           "placeholder": ["Product quantity", "New price"]
         }
       },
-      "button": "Create a Orders"
+      "button": "Add a Orders"
     },
     "u": {
       "title": "update order",
@@ -203,7 +203,7 @@
       "addButton": "Add new invoice"
     },
     "c": {
-      "title": "create new invoice",
+      "title": "add new invoice",
       "d": {
         "c": {
           "title": "client details",
@@ -216,7 +216,7 @@
           "placeholder": ["Product quantity", "New Price"]
         }
       },
-      "button": "Create a Invoice"
+      "button": "Add a Invoice"
     },
     "u": {
       "title": "update invoice",
