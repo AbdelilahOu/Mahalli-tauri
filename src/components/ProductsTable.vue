@@ -58,9 +58,6 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
             {{ t("g.fields.name") }}
           </th>
           <th class="p-2 w-fit font-semibold text-left">
-            {{ t("g.fields.description") }}
-          </th>
-          <th class="p-2 w-fit font-semibold text-left">
             {{ t("g.fields.threshold") }}
           </th>
           <th class="p-2 w-fit font-semibold text-left">
