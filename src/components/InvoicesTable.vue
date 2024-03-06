@@ -91,6 +91,7 @@ const updateInvoiceStatus = async (invoice: any) => {
         >
           <td class="p-2">
             <RouterLink
+              class="font-medium"
               :to="{
                 path: '/clients/' + invoice.clientId,
               }"

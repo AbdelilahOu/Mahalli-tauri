@@ -88,7 +88,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
               </Skeleton>
             </div>
           </td>
-          <td class="p-2 whitespace-nowrap">
+          <td class="p-2 whitespace-nowrap font-medium">
             {{ client?.fullname }}
           </td>
           <td class="p-2">

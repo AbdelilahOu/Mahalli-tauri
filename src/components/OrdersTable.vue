@@ -84,6 +84,7 @@ const updateOrderStatus = async (order: any) => {
         <tr v-for="(order, index) in orders" v-fade="index" :key="order.id">
           <td class="p-2">
             <RouterLink
+              class="font-medium"
               :to="{
                 path: '/suppliers/' + order.supplierId,
               }"

@@ -45,7 +45,8 @@
       "init-quantity": "Initiale Quantity",
       "min-quantity": "Minimum Quantity",
       "quantity": "Quantity",
-      "credit": "Credit"
+      "credit": "Credit",
+      "threshold": "Threshold"
     },
     "status": {
       "delivered": "Delivered",
