@@ -41,7 +41,7 @@ const isCollapse = ref<boolean>(true);
         <!-- @click.self="hideModal" -->
         <div
           v-if="show"
-          class="w-full h-full flex items-center justify-center fixed bg-black z-50 top-0 left-0 bg-opacity-50"
+          class="w-full h-full flex items-center justify-center fixed bg-black z-50 top-0 left-0 bg-opacity-30"
         >
           <ModalComponentsRenderer :name="name" />
         </div>
