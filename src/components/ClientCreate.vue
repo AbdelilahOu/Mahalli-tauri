@@ -15,6 +15,7 @@ import { ref } from "vue";
 import { CreateClientSchema, type ClientT } from "@/schemas/client.schema";
 import { info, error } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
+import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -44,6 +45,11 @@ const createNewClient = async (client: ClientT) => {
     });
     //
     info(`CREATE CLIENT: ${JSON.stringify({ ...client, image })}`);
+    //
+    toast("Newc client added successfully", {
+      description: "Client " + client.fullname + " has been added",
+      closeButton: true,
+    });
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-create-" + Math.random() * 9999,

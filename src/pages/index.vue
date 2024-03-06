@@ -36,7 +36,7 @@ const isCollapse = ref<boolean>(true);
     <div class="grid grid-rows-[50px_1fr] w-full">
       <Navigation />
       <ScrollArea
-        class="w-full h-[calc(100vh-50px)] flex flex-col border-t-2 border-slate-100 items-center justify-center overflow-y-auto scrollbar-thin scrollbar-thumb-transparent"
+        class="w-full h-[calc(100vh-50px)] flex flex-col border-t-2 border-slate-100"
       >
         <!-- @click.self="hideModal" -->
         <div
