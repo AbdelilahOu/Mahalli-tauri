@@ -194,7 +194,7 @@ onBeforeMount(async () => {
 <template>
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col lg:grid lg:grid-cols-2 gap-2">
-      <div class="grid grid-cols-2 lg:grid-cols-4 col-span-2 gap-2">
+      <div class="grid grid-cols-2 col-span-2 gap-2">
         <Card>
           <CardHeader
             class="flex flex-row items-center justify-between space-y-0 pb-2"
@@ -337,6 +337,7 @@ onBeforeMount(async () => {
               <VisAxis type="y" label="quantity" />
               <VisTooltip :triggers="barQuantityTriggers" />
               <VisBulletLegend
+                class="text-left my-2"
                 :items="
                   ['in', 'out'].map((a) => ({
                     name: t('g.status.' + a),
@@ -385,7 +386,7 @@ onBeforeMount(async () => {
           </template>
         </ChartHolder>
       </div>
-      <div class="w-full flex gap-2 h-full">
+      <div class="w-full flex col-span-2 gap-2 h-full">
         <div class="w-1/2 h-full">
           <ChartHolder>
             <template #default>
