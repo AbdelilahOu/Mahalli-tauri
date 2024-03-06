@@ -20,6 +20,7 @@ import {
 import type { ClientT } from "@/schemas/client.schema";
 import { error } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
+import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -42,6 +43,15 @@ onMounted(() => {
   unwatch = watch(
     [searchQuery, page, refresh],
     ([search, p], [oldSearch]) => {
+      toast("Event has been created", {
+        description: "Sunday, December 03, 2023 at 9:00 AM",
+        action: {
+          label: "Undo",
+          onClick: () => console.log("Undo"),
+        },
+        // closeButton: true,
+        position: "top-center",
+      });
       clearTimeout(timer);
       timer = setTimeout(
         () => {
