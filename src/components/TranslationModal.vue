@@ -14,6 +14,10 @@ const changeLocale = (locale: { key: string; text: string }) => {
   store.setters.updateStore({ key: "currentLocale", value: locale });
   store.setters.updateStore({ key: "show", value: false });
 };
+
+const hideModal = () => {
+  store.setters.updateStore({ key: "show", value: false });
+};
 </script>
 
 <template>
@@ -37,6 +41,13 @@ const changeLocale = (locale: { key: string; text: string }) => {
             </span>
             {{ item.text }}
           </span>
+        </Button>
+      </div>
+    </template>
+    <template #footer>
+      <div class="w-full grid grid-cols-1 gap-2">
+        <Button @click="hideModal" type="button" variant="outline">
+          {{ i18n.t("g.b.no") }}
         </Button>
       </div>
     </template>

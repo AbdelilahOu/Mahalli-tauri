@@ -5,8 +5,14 @@ import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import { ref } from "vue";
 import UiModalCard from "./ui/UiModalCard.vue";
+import { useI18n } from "vue-i18n";
 
 const isLoading = ref<boolean>(false);
+const { t } = useI18n();
+
+const hideModal = () => {
+  store.setters.updateStore({ key: "show", value: false });
+};
 
 const exportDatabase = async () => {
   // isLoading.value = true;
@@ -64,6 +70,11 @@ const importDatabase = async () => {
             name="export"
           /> -->
             Use
+          </Button>
+        </div>
+        <div class="w-full grid grid-cols-1 gap-2">
+          <Button @click="hideModal" type="button" variant="outline">
+            {{ t("g.b.no") }}
           </Button>
         </div>
       </div>
