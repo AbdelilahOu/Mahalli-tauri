@@ -99,12 +99,12 @@ const updateModal = (name: string) => {
           <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
             <Button variant="ghost" @click="uploadCSV">
               <span
-                class="text-sky-400 transition-all duration-200 scale-[0.8] group-hover:fill-sky-600"
+                class="text-sky-400 transition-all duration-200 group-hover:fill-sky-600"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="32"
-                  height="32"
+                  width="24"
+                  height="24"
                   viewBox="0 0 256 256"
                 >
                   <path
