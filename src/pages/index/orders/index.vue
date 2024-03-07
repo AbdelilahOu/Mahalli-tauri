@@ -7,7 +7,6 @@ import { store } from "@/store";
 import OrdersTable from "@/components/OrdersTable.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import UiIcon from "@/components/ui/UiIcon.vue";
 import type { Res } from "@/types";
 import type { OrderProductT, OrderT } from "@/schemas/order.schema";
 import {
@@ -35,6 +34,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/utils/shadcn";
 import { error } from "tauri-plugin-log-api";
+import { PlusCircleIcon } from "lucide-vue-next";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -133,12 +133,8 @@ const updateModal = (name: string) => {
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
           <div class="w-2/3 lg:max-w-[50%] grid grid-cols-3 gap-1">
-            <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
-              <UiIcon
-                extraStyle="fill-gray-400 cursor-default hover:bg-white"
-                name="search"
-              />
-            </Input>
+            <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')" />
+
             <Popover>
               <PopoverTrigger as-child>
                 <Button
@@ -190,11 +186,9 @@ const updateModal = (name: string) => {
                 </svg>
               </span>
             </Button>
-            <Button @click="updateModal('OrderCreate')">
-              <UiIcon
-                extraStyle="fill-white cursor-default hover:bg-transparent"
-                name="add"
-              />
+            <Button class="gap-2" @click="updateModal('OrderCreate')">
+              <PlusCircleIcon />
+
               {{ t("o.i.addButton") }}
             </Button>
           </div>

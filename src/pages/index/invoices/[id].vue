@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import { invoke } from "@tauri-apps/api";
 import { useI18n } from "vue-i18n";
 import { Button } from "@/components/ui/button";
+import { error } from "tauri-plugin-log-api";
 
 const { t, d } = useI18n();
 const id = useRoute().params.id;

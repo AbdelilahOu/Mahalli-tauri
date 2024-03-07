@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { convertFileSrc } from "@tauri-apps/api/tauri";
-import UiIcon from "@/components/ui/UiIcon.vue";
 
 defineProps<{
   title: string;
@@ -24,7 +23,7 @@ defineProps<{
       ></span>
       <h1 class="flex whitespace-nowrap overflow-ellipsis">
         <span class="h-full flex items-center justify-center pt-1">
-          <UiIcon name="tag" />
+          <!-- <UiIcon name="tag" /> -->
         </span>
         <span class="flex whitespace-nowrap">
           {{ item?.name ?? item?.fullname }}
@@ -35,21 +34,21 @@ defineProps<{
       <div class="w-full flex justify-between border-b-2 pb-1 border-gray-500">
         <h1 class="text-xl px-1 font-semibold font-sans">{{ title }}</h1>
         <span @click="$emit('updateItem')">
-          <UiIcon name="edit_2" />
+          <!-- <UiIcon name="edit_2" /> -->
         </span>
       </div>
     </div>
     <div class="w-full h-full px-2">
       <div class="flex fill-gray-700 gap-2 items-center">
-        <UiIcon name="email" />
+        <!-- <UiIcon name="email" /> -->
         <span class="">{{ item?.email }}</span>
       </div>
       <div class="flex fill-gray-700 gap-2 items-center">
-        <UiIcon name="phone" />
+        <!-- <UiIcon name="phone" /> -->
         <span class="">{{ item?.phone }}</span>
       </div>
       <div class="flex fill-gray-700 gap-2 items-center">
-        <UiIcon name="location" />
+        <!-- <UiIcon name="location" /> -->
         <span class="">{{ item?.address }}</span>
       </div>
     </div>

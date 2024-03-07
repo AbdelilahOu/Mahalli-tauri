@@ -2,7 +2,6 @@
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import ClientsTable from "@/components/ClientsTable.vue";
 import { Button } from "@/components/ui/button";
-import UiIcon from "@/components/ui/UiIcon.vue";
 import { Input } from "@/components/ui/input";
 import { invoke } from "@tauri-apps/api";
 import { useRoute } from "vue-router";
@@ -20,6 +19,7 @@ import {
 import type { ClientT } from "@/schemas/client.schema";
 import { error } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
+import { PlusCircleIcon } from "lucide-vue-next";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -95,12 +95,7 @@ const updateModal = (name: string) => {
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
           <div class="w-1/3">
-            <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
-              <UiIcon
-                extraStyle="fill-gray-400 cursor-default hover:bg-white"
-                name="search"
-              />
-            </Input>
+            <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')" />
           </div>
           <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
             <Button variant="ghost" @click="uploadCSV">
@@ -119,11 +114,9 @@ const updateModal = (name: string) => {
                 </svg>
               </span>
             </Button>
-            <Button @click="updateModal('ClientCreate')">
-              <UiIcon
-                extraStyle="fill-white cursor-default hover:bg-transparent"
-                name="add"
-              />
+            <Button class="gap-2" @click="updateModal('ClientCreate')">
+              <PlusCircleIcon />
+
               {{ t("c.i.addButton") }}
             </Button>
           </div>
