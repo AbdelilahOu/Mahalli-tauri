@@ -4,7 +4,7 @@ import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
-import UiIcon from "./ui/UiIcon.vue";
+import { FilePenLine, BookUser, Trash2 } from "lucide-vue-next";
 import { store } from "@/store";
 import { ref } from "vue";
 import type { ClientT } from "@/schemas/client.schema";
@@ -103,18 +103,22 @@ const toggleThisClient = (client: ClientT, name: string) => {
           <td class="p-2 whitespace-nowrap">{{ client.credi }} DH</td>
           <td class="p-2">
             <div class="flex justify-center gap-3">
-              <span @click="toggleThisClient(client, 'ClientDelete')">
-                <UiIcon isStyled name="delete" />
-              </span>
-              <span @click="toggleThisClient(client, 'ClientUpdate')">
-                <UiIcon isStyled name="edit" />
-              </span>
+              <Trash2
+                @click="toggleThisClient(client, 'ClientDelete')"
+                class="cursor-pointer"
+                :size="22"
+              />
+              <FilePenLine
+                @click="toggleThisClient(client, 'ClientUpdate')"
+                class="cursor-pointer"
+                :size="22"
+              />
               <RouterLink
                 :to="{
                   path: '/clients/' + client.id,
                 }"
               >
-                <UiIcon name="more" />
+                <BookUser :size="22" />
               </RouterLink>
             </div>
           </td>

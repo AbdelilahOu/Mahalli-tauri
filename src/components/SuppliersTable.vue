@@ -4,7 +4,7 @@ import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
-import UiIcon from "./ui/UiIcon.vue";
+import { FilePenLine, BookUser, Trash2 } from "lucide-vue-next";
 import { store } from "@/store";
 import { ref } from "vue";
 import type { SupplierT } from "@/schemas/supplier.schema";
@@ -106,14 +106,22 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
           </td>
           <td class="p-2">
             <div class="flex w-full justify-center gap-3">
-              <span @click="toggleThisSupplier(supplier, 'SupplierDelete')">
-                <UiIcon isStyled name="delete" />
-              </span>
-              <span @click="toggleThisSupplier(supplier, 'SupplierUpdate')">
-                <UiIcon isStyled name="edit" />
-              </span>
-              <RouterLink :to="{ path: '/suppliers/' + supplier.id }">
-                <UiIcon name="more" />
+              <Trash2
+                @click="toggleThisSupplier(supplier, 'SupplierDelete')"
+                class="cursor-pointer"
+                :size="22"
+              />
+              <FilePenLine
+                @click="toggleThisSupplier(supplier, 'SupplierUpdate')"
+                class="cursor-pointer"
+                :size="22"
+              />
+              <RouterLink
+                :to="{
+                  path: '/suppliers/' + supplier.id,
+                }"
+              >
+                <BookUser :size="22" />
               </RouterLink>
             </div>
           </td>

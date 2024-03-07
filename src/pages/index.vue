@@ -26,7 +26,7 @@ const isCollapse = ref<boolean>(true);
     <div
       :class="
         cn(
-          'transition-all print:hidden sticky top-0 border-r-2 border-slate-100 z-50 flex justify-center duration-200',
+          'transition-all print:hidden sticky h-screen top-0 border-r-2 border-slate-100 z-50 flex justify-center duration-200',
           isCollapse ? 'w-12 min-w-[48px]' : 'w-52 min-w-[12rem]',
         )
       "

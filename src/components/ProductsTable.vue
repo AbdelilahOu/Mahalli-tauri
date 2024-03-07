@@ -3,7 +3,7 @@ import { useI18n } from "vue-i18n";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
 import { Checkbox } from "./ui/checkbox";
-import UiIcon from "./ui/UiIcon.vue";
+import { FilePenLine, Printer, Trash2 } from "lucide-vue-next";
 import { store } from "@/store";
 import type { ProductT } from "@/schemas/products.schema";
 import { Badge } from "./ui/badge";
@@ -148,12 +148,16 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
           </td>
           <td class="p-2">
             <div class="flex justify-center gap-3">
-              <span @click="toggleThisProduct(product, 'ProductDelete')">
-                <UiIcon isStyled name="delete" />
-              </span>
-              <span @click="toggleThisProduct(product, 'ProductUpdate')">
-                <UiIcon isStyled name="edit" />
-              </span>
+              <Trash2
+                @click="toggleThisProduct(product, 'ProductDelete')"
+                class="cursor-pointer"
+                :size="22"
+              />
+              <FilePenLine
+                @click="toggleThisProduct(product, 'ProductUpdate')"
+                class="cursor-pointer"
+                :size="22"
+              />
             </div>
           </td>
         </tr>

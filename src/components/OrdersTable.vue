@@ -2,7 +2,6 @@
 import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
 import { RouterLink } from "vue-router";
-import UiIcon from "./ui/UiIcon.vue";
 import { store } from "@/store";
 import type { OrderProductT, OrderT } from "@/schemas/order.schema";
 import { Badge } from "./ui/badge";
@@ -17,6 +16,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { invoke } from "@tauri-apps/api";
 import { error, info } from "tauri-plugin-log-api";
+import { FilePenLine, Printer, Trash2 } from "lucide-vue-next";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t, d } = useI18n();
@@ -212,19 +212,21 @@ const updateOrderStatus = async (order: any) => {
           </td>
           <td class="p-2">{{ order.total?.toFixed(2) }} DH</td>
           <td class="p-2">
-            <div class="flex justify-center gap-3">
-              <span @click="toggleThisOrders(order, 'OrderDelete')">
-                <UiIcon isStyled name="delete" />
-              </span>
-              <span @click="toggleThisOrders(order, 'OrderUpdate')">
-                <UiIcon isStyled name="edit" />
-              </span>
+            <div class="flex justify-center items-center gap-3">
+              <Trash2
+                @click="toggleThisOrders(order, 'OrderDelete')"
+                :size="22"
+              />
+              <FilePenLine
+                @click="toggleThisOrders(order, 'OrderUpdate')"
+                :size="22"
+              />
               <RouterLink
                 :to="{
                   path: '/orders/' + order.id,
                 }"
               >
-                <UiIcon name="print" />
+                <Printer :size="22" />
               </RouterLink>
             </div>
           </td>

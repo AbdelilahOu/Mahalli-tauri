@@ -4,7 +4,7 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
-import UiIcon from "./ui/UiIcon.vue";
+import { Trash2 } from "lucide-vue-next";
 import { Input } from "./ui/input";
 import { store } from "@/store";
 import UiModalCard from "./ui/UiModalCard.vue";
@@ -203,7 +203,7 @@ const deleteOrderItem = (index: number) => {
             {{ t("o.u.d.o.add") }}
           </Button>
           <div
-            class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
+            class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] items-center overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <template v-for="(item, index) in order.items" :key="index">
               <SearchableItems
@@ -230,12 +230,11 @@ const deleteOrderItem = (index: number) => {
               >
                 <template #unite> DH </template>
               </Input>
-              <div
+              <Trash2
                 @click="deleteOrderItem(index)"
-                class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-md items-center w-full h-full"
-              >
-                <UiIcon name="delete" />
-              </div>
+                class="cursor-pointer"
+                :size="22"
+              />
             </template>
           </div>
         </div>

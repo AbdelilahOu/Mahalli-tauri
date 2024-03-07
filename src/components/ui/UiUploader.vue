@@ -5,7 +5,7 @@ import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { open } from "@tauri-apps/api/dialog";
 import { useDropZone } from "@vueuse/core";
 import { ref, onBeforeUnmount } from "vue";
-import UiIcon from "./UiIcon.vue";
+import { Trash2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 
 const { name, extensions } = defineProps<{
@@ -65,7 +65,7 @@ onBeforeUnmount(() => {
       v-if="selectedFile"
       class="absolute w-8 h-8 bg-white rounded-bl-md rounded-tr-md hover:bg-gray-100 cursor-pointer transition-all duration-150 -top-0 -right-0 z-[90]"
     >
-      <UiIcon name="delete" />
+      <Trash2 :size="22" />
     </span>
     <img
       v-if="name == 'Image' && selectedFile"

@@ -4,7 +4,7 @@ import { uploadCSVfiles } from "@/utils/fs";
 import { useDropZone } from "@vueuse/core";
 import { invoke } from "@tauri-apps/api";
 import { useRoute } from "vue-router";
-import UiIcon from "./ui/UiIcon.vue";
+import { Trash2 } from "lucide-vue-next";
 import { Button } from "./ui/button";
 import { store } from "@/store";
 import { ref } from "vue";
@@ -95,9 +95,7 @@ const upload = async () => {
           </svg>
           <span>{{ file.name }}</span>
           <div class="w-full text-end">{{ file.size }} bytes</div>
-          <span @click="filesData.splice(i, 1)">
-            <UiIcon IsStyled name="delete" />
-          </span>
+          <Trash2 class="cursor-pointer" @click="filesData.splice(i, 1)" />
         </div>
         <Button @click="upload">
           {{ t("g.b.csv", { table: route.query.table }) }}

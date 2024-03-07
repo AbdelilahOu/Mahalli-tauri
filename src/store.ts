@@ -15,24 +15,6 @@ const DEFAULT_STORE = {
   row: null,
   // i18n
   currentLocale,
-  availableLocals: [
-    {
-      key: "en-US",
-      text: "English",
-    },
-    {
-      key: "fr-FR",
-      text: "Francais",
-    },
-    {
-      key: "ar-AE",
-      text: "Arabic",
-    },
-    {
-      key: "de-DE",
-      text: "German",
-    },
-  ],
   // auth,
   user: null,
 };
@@ -43,7 +25,6 @@ export const store = {
     getModalVisibility: () => store.state.show,
     getModalName: () => store.state.name,
     getCurrentLocale: () => store.state.currentLocale,
-    getLocales: () => store.state.availableLocals,
     getUser: () => store.state.user,
   },
   setters: {
@@ -72,9 +53,9 @@ interface args2 {
     | "InvoiceCreate"
     | "InvoiceUpdate"
     | "InvoiceDelete"
-    | "SellerCreate"
-    | "SellerDelete"
-    | "SellerUpdate"
+    | "SupplierCreate"
+    | "SupplierDelete"
+    | "SupplierUpdate"
     | "ClientDelete"
     | "ClientUpdate"
     | "ClientCreate"
@@ -82,7 +63,6 @@ interface args2 {
     | "OrderDelete"
     | "OrderUpdate"
     | "CsvUploader"
-    | "Sittings"
     | string;
 }
 
@@ -99,8 +79,7 @@ interface args5 {
 export type Args = args1 | args2 | args4 | args5;
 
 export interface storeState
-  extends Record<"availableLocals", locale[]>,
-    Record<"currentLocale", locale>,
+  extends Record<"currentLocale", locale>,
     Record<"show", boolean>,
     Record<"name", string>,
     Record<"user", any> {}

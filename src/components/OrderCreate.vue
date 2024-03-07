@@ -3,7 +3,7 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
 import { ref, reactive } from "vue";
 import { invoke } from "@tauri-apps/api";
-import UiIcon from "./ui/UiIcon.vue";
+import { Trash2 } from "lucide-vue-next";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
@@ -47,7 +47,7 @@ const addOrderItem = () => {
   });
 };
 
-const removeOrderItem = (index: number) => {
+const deleteOrderItem = (index: number) => {
   order.items?.splice(index, 1);
 };
 
@@ -166,7 +166,7 @@ const hideModal = () => {
             {{ t("o.c.d.o.add") }}
           </Button>
           <div
-            class="w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
+            class="w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] items-center overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <template v-for="(item, index) in order.items" :key="index">
               <SearchableItems
@@ -192,12 +192,11 @@ const hideModal = () => {
               >
                 <template #unite> DH </template>
               </Input>
-              <div
-                @click="removeOrderItem(index)"
-                class="flex justify-center bg-gray-100 hover:bg-gray-300 transition-all duration-200 rounded-md items-center w-full h-full"
-              >
-                <UiIcon isStyled name="delete" />
-              </div>
+              <Trash2
+                @click="deleteOrderItem(index)"
+                class="cursor-pointer"
+                :size="22"
+              />
             </template>
           </div>
         </div>

@@ -6,7 +6,6 @@ import { useI18n } from "vue-i18n";
 import InventoryTable from "@/components/InventoryTable.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import UiIcon from "@/components/ui/UiIcon.vue";
 import { store } from "@/store";
 import { Transition } from "vue";
 import {
@@ -116,12 +115,8 @@ const uploadCSV = () => {
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-1">
           <div class="w-full lg:max-w-[50%] max-w-[70%] grid grid-cols-3 gap-1">
-            <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')">
-              <UiIcon
-                extraStyle="fill-gray-400 cursor-default hover:bg-white"
-                name="search"
-              />
-            </Input>
+            <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')" />
+
             <Popover>
               <PopoverTrigger as-child>
                 <Button
