@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useVModel } from "@vueuse/core";
 import { cn } from "@/utils/shadcn";
-import { ref } from "vue";
 
 const props = defineProps<{
   defaultValue?: string | number;
