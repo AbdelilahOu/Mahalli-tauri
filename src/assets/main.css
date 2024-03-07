@@ -109,16 +109,17 @@
 }
 
 .router-link-active {
-  @apply bg-slate-100 transition-colors rounded-md transform duration-200;
+  @apply bg-white transition-colors rounded-md transform duration-200;
 }
 
-.router-link-active > span > span,
+.router-link-active > span,
 .router-link-active > span > svg {
   @apply text-primary;
 }
 
-.custom-vis:hover {
-  --vis-xy-label-fill-opacity: 0.8;
+div:has(> input:focus-visible) > div {
+  border: 2px black solid;
+  border-left: 0px;
 }
 
 * {

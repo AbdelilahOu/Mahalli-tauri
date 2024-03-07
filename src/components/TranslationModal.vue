@@ -24,7 +24,10 @@ const hideModal = () => {
     </template>
     <template #content>
       <div class="grid grid-cols-2 gap-2">
-        <Button variant="ghost" @click="changeLocale({ key: '', text: '' })">
+        <Button
+          variant="ghost"
+          @click="changeLocale({ key: 'en-US', text: 'English' })"
+        >
           <span
             class="w-3/5 items-center h-full text-start flex justify-center gap-2"
           >
