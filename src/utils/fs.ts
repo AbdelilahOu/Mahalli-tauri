@@ -9,7 +9,7 @@ import {
   removeFile,
 } from "@tauri-apps/api/fs";
 import { appDataDir, sep, join } from "@tauri-apps/api/path";
-
+import { error } from "tauri-plugin-log-api";
 // C:\Users\abdel\AppData\Roaming\whatisthis
 
 export const saveFile = async (path: string, name: string) => {
