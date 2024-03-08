@@ -13,7 +13,7 @@ import {
   Package,
   Settings,
   Truck,
-  Users,
+  Contact,
 } from "lucide-vue-next";
 
 const collapse = defineModel<boolean>("collapse", { required: true });
@@ -60,7 +60,7 @@ const openTranslationModal = () => {
           :to="{ path: '/clients/', query: { page: 1 } }"
         >
           <span class="w-8 min-w-[30px] max-w-[30px]">
-            <Users
+            <Contact
               class="m-auto text-gray-700 group-hover:text-black"
               :size="22"
             />
@@ -77,7 +77,7 @@ const openTranslationModal = () => {
           :to="{ path: '/suppliers/', query: { page: 1 } }"
         >
           <span class="w-8 min-w-[30px] max-w-[30px]">
-            <Users
+            <Contact
               class="m-auto text-gray-700 group-hover:text-black"
               :size="22"
             />

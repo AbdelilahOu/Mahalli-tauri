@@ -94,10 +94,10 @@ const toggleThisClient = (client: ClientT, name: string) => {
           <td class="p-2">
             {{ client.email }}
           </td>
-          <td class="p-2 whitespace-nowrap">
+          <td class="p-2">
             {{ client.phoneNumber }}
           </td>
-          <td class="p-2 whitespace-nowrap">
+          <td class="p-2">
             {{ client.address }}
           </td>
           <td class="p-2 whitespace-nowrap">{{ client.credi }} DH</td>
