@@ -58,7 +58,7 @@ const isCollapse = ref<boolean>(true);
           </div>
         </ScrollArea>
       </div>
-      <SheetContent class="w-[400px] sm:w-[540px]">
+      <SheetContent class="w-1/2 max-w-[540px]">
         <SheetHeader>
           <SheetTitle>Are you sure absolutely sure?</SheetTitle>
           <SheetDescription>

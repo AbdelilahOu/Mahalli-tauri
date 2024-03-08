@@ -2,11 +2,9 @@
 import { useI18n } from "vue-i18n";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
-import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
 import { FilePenLine, BookUser, Trash2 } from "lucide-vue-next";
 import { store } from "@/store";
-import { ref } from "vue";
 import type { SupplierT } from "@/schemas/supplier.schema";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { Skeleton } from "./ui/skeleton";
@@ -17,14 +15,6 @@ defineProps<{
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
-const checkedSuppliers = ref<string[]>([]);
-
-const checkThisSupplier = (IsInclude: boolean, id: string) => {
-  IsInclude
-    ? checkedSuppliers.value.push(id)
-    : checkedSuppliers.value.splice(checkedSuppliers.value.indexOf(id), 1);
-};
 
 const toggleThisSupplier = (supplier: SupplierT, name: string) => {
   updateQueryParams({
@@ -70,14 +60,6 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
           v-for="(supplier, index) in suppliers"
           :key="supplier.id"
         >
-          <!-- <td class="p-2">
-            <Checkbox
-              :checked="checkedSuppliers.includes(supplier.id!)"
-              @update:checked="
-                (check) => checkThisSupplier(check, supplier.id!)
-              "
-            />
-          </td> -->
           <td class="p-2">
             <div class="w-12 h-12 rounded-full overflow-hidden">
               <Skeleton

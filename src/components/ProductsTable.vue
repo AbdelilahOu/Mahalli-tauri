@@ -2,15 +2,12 @@
 import { useI18n } from "vue-i18n";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
-import { Checkbox } from "./ui/checkbox";
-import { FilePenLine, Printer, Trash2 } from "lucide-vue-next";
+import { FilePenLine, Trash2 } from "lucide-vue-next";
 import { store } from "@/store";
 import type { ProductT } from "@/schemas/products.schema";
 import { Badge } from "./ui/badge";
 import { cn } from "@/utils/shadcn";
-import { ref } from "vue";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { Button } from "@/components/ui/button";
 import {
   HoverCard,
   HoverCardContent,
@@ -24,8 +21,6 @@ defineProps<{ products: ProductT[] }>();
 const { t, d } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const checkedProducts = ref<string[]>([]);
-
 const toggleThisProduct = (product: ProductT, name: string) => {
   updateQueryParams({
     id: product.id,
@@ -36,12 +31,6 @@ const toggleThisProduct = (product: ProductT, name: string) => {
   });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
-};
-
-const checkThisProduct = (IsInclude: boolean, id: string) => {
-  IsInclude
-    ? checkedProducts.value.push(id)
-    : checkedProducts.value.splice(checkedProducts.value.indexOf(id), 1);
 };
 </script>
 
@@ -77,12 +66,6 @@ const checkThisProduct = (IsInclude: boolean, id: string) => {
           :key="product.id"
           v-fade="index"
         >
-          <!-- <td class="p-2">
-            <Checkbox
-              :checked="checkedProducts.includes(product.id!)"
-              @update:checked="(a) => checkThisProduct(a, product.id!)"
-            />
-          </td> -->
           <td class="p-2">
             <div class="w-12 h-12 rounded-full overflow-hidden">
               <Skeleton

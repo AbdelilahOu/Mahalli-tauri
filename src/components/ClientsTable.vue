@@ -2,11 +2,9 @@
 import { useI18n } from "vue-i18n";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
-import { Checkbox } from "./ui/checkbox";
 import { RouterLink } from "vue-router";
 import { FilePenLine, BookUser, Trash2 } from "lucide-vue-next";
 import { store } from "@/store";
-import { ref } from "vue";
 import type { ClientT } from "@/schemas/client.schema";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { Skeleton } from "./ui/skeleton";
@@ -16,14 +14,7 @@ defineProps<{
 }>();
 
 const { t } = useI18n();
-const checkedClients = ref<string[]>([]);
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
-const checkThisClient = (IsInclude: boolean, id: string) => {
-  IsInclude
-    ? checkedClients.value.push(id)
-    : checkedClients.value.splice(checkedClients.value.indexOf(id), 1);
-};
 
 const toggleThisClient = (client: ClientT, name: string) => {
   updateQueryParams({
@@ -45,7 +36,6 @@ const toggleThisClient = (client: ClientT, name: string) => {
         class="text-xs h-9 bg-gray-300 max-w-lg w-fit font-semibold uppercase text-[rgba(25,23,17,0.6)]"
       >
         <tr>
-          <!-- <th class=""></th> -->
           <th class="p-2 rounded-l-md"></th>
           <th class="p-2 w-fit font-semibold text-left">
             {{ t("g.fields.fullname") }}
@@ -69,12 +59,6 @@ const toggleThisClient = (client: ClientT, name: string) => {
       </thead>
       <tbody class="text-sm divide-y divide-gray-100">
         <tr v-for="(client, index) in clients" v-fade="index" :key="client.id">
-          <!-- <td class="p-2">
-            <Checkbox
-              :checked="checkedClients.includes(client.id!)"
-              @update:checked="(check) => checkThisClient(check, client.id!)"
-            />
-          </td> -->
           <td class="p-2">
             <div class="w-12 h-12 rounded-full overflow-hidden">
               <Skeleton
