@@ -19,7 +19,7 @@ defineProps<{
         class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
       >
         <tr>
-          <th class="rounded-l-[4px] p-2 text-left">
+          <th class="rounded-l-md p-2 text-left">
             {{ t("g.fields.name") }}
           </th>
           <th class="p-2 text-left">
@@ -31,7 +31,7 @@ defineProps<{
           <th class="p-2 text-left">
             {{ t("g.fields.status") }}
           </th>
-          <th class="rounded-r-[4px] p-2 w-52 text-left">
+          <th class="rounded-r-md p-2 w-52 text-left">
             {{ t("g.fields.date") }}
           </th>
         </tr>
