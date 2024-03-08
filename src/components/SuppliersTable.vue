@@ -46,8 +46,7 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
         class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
       >
         <tr>
-          <th class="rounded-l-[4px]"></th>
-          <th class="p-2"></th>
+          <th class="p-2 rounded-l-md"></th>
           <th class="p-2 w-fit font-semibold text-left">
             {{ t("g.fields.fullname") }}
           </th>
@@ -60,7 +59,7 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
           <th class="p-2 w-fit font-semibold text-left">
             {{ t("g.fields.address") }}
           </th>
-          <th class="rounded-r-[4px]">
+          <th class="rounded-r-md">
             {{ t("g.fields.actions") }}
           </th>
         </tr>
@@ -71,14 +70,14 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
           v-for="(supplier, index) in suppliers"
           :key="supplier.id"
         >
-          <td class="p-2">
+          <!-- <td class="p-2">
             <Checkbox
               :checked="checkedSuppliers.includes(supplier.id!)"
               @update:checked="
                 (check) => checkThisSupplier(check, supplier.id!)
               "
             />
-          </td>
+          </td> -->
           <td class="p-2">
             <div class="w-12 h-12 rounded-full overflow-hidden">
               <Skeleton

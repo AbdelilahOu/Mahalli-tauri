@@ -45,8 +45,8 @@ const toggleThisClient = (client: ClientT, name: string) => {
         class="text-xs h-9 bg-gray-300 max-w-lg w-fit font-semibold uppercase text-[rgba(25,23,17,0.6)]"
       >
         <tr>
-          <th class="rounded-l-[4px]"></th>
-          <th class="p-2"></th>
+          <!-- <th class=""></th> -->
+          <th class="p-2 rounded-l-md"></th>
           <th class="p-2 w-fit font-semibold text-left">
             {{ t("g.fields.fullname") }}
           </th>
@@ -62,19 +62,19 @@ const toggleThisClient = (client: ClientT, name: string) => {
           <th class="p-2 w-fit font-semibold text-left">
             {{ t("g.fields.credit") }}
           </th>
-          <th class="rounded-r-[4px]">
+          <th class="rounded-r-md">
             {{ t("g.fields.actions") }}
           </th>
         </tr>
       </thead>
       <tbody class="text-sm divide-y divide-gray-100">
         <tr v-for="(client, index) in clients" v-fade="index" :key="client.id">
-          <td class="p-2">
+          <!-- <td class="p-2">
             <Checkbox
               :checked="checkedClients.includes(client.id!)"
               @update:checked="(check) => checkThisClient(check, client.id!)"
             />
-          </td>
+          </td> -->
           <td class="p-2">
             <div class="w-12 h-12 rounded-full overflow-hidden">
               <Skeleton

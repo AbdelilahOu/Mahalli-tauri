@@ -60,7 +60,7 @@ const updateOrderStatus = async (order: any) => {
         class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
       >
         <tr>
-          <th class="rounded-l-[4px] p-2 w-fit font-semibold text-left">
+          <th class="rounded-l-md p-2 w-fit font-semibold text-left">
             {{ t("g.fields.fullname") }}
           </th>
           <th class="p-2 w-fit font-semibold text-left">
@@ -75,7 +75,7 @@ const updateOrderStatus = async (order: any) => {
           <th class="p-2 w-fit font-semibold text-left">
             {{ t("g.fields.total") }}
           </th>
-          <th class="rounded-r-[4px]">
+          <th class="rounded-r-md">
             {{ t("g.fields.actions") }}
           </th>
         </tr>
