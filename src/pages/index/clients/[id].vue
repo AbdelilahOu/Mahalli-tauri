@@ -2,12 +2,8 @@
 import { onBeforeMount, reactive, ref } from "vue";
 import { invoke } from "@tauri-apps/api";
 import { useRoute } from "vue-router";
-import { generateColor } from "@/utils/generateColor";
-import { getWeekDay } from "@/utils/formatDate";
-import { groupBy, keys, mapValues, values } from "@/utils/lightLodash";
 import { store } from "@/store";
 import ChartHolder from "@/components/ChartHolder.vue";
-import UiCard from "@/components/ui/UiCard.vue";
 import { useI18n } from "vue-i18n";
 import type { ClientT } from "@/schemas/client.schema";
 import { error } from "tauri-plugin-log-api";
@@ -15,121 +11,6 @@ import { error } from "tauri-plugin-log-api";
 const { t, d } = useI18n();
 const { id } = useRoute().params;
 const client = ref<ClientT | null>(null);
-
-const ProductsStats = reactive({
-  products: [] as { [key: string]: any; data: number[] }[],
-  dates: [] as string[],
-  data: {} as Record<string, number[]>,
-});
-
-const DailyStats = reactive({
-  data: [] as number[],
-  keys: [] as string[],
-  color: generateColor(),
-});
-
-const getGradientBackground = (ctx: any) => {
-  const canvas = ctx.chart.ctx;
-  const gradient = canvas.createLinearGradient(0, 0, 0, 160);
-  gradient.addColorStop(0, DailyStats.color.replace("0.2", "0.4"));
-  gradient.addColorStop(1, DailyStats.color.replace("0.2", "0.07"));
-  return gradient;
-};
-
-const getProductPerMonth = async (id: string) => {
-  const data: any[] = await invoke("get_c_product_month", { id });
-
-  const existingDates = keys(groupBy(data, "month"));
-  const existingProducts = keys(groupBy(data, "name"));
-  const dataPerProduct = mapValues(groupBy(data, "name"), (value: any[]) =>
-    value.reduce((pr, cr) => {
-      if (!pr) pr = [];
-      pr.push(cr.quantity);
-      return pr;
-    }, [] as number[]),
-  );
-
-  return {
-    data: dataPerProduct,
-    dates: existingDates,
-    products: existingProducts,
-  };
-};
-
-const getDailyExpenses = async (id: string) => {
-  const result: { day: string; expense: number }[] = await invoke(
-    "get_c_week_expenses",
-    { id },
-  );
-  const nextDay = new Date().getDay() === 6 ? 0 : new Date().getDay() + 1;
-  const resultMap = new Map<string, number>();
-
-  const weekDays = [0, 1, 2, 3, 4, 5, 6];
-
-  for (const index of weekDays) {
-    resultMap.set(getWeekDay(index), 0);
-  }
-
-  for (const { day, expense } of result) {
-    resultMap.set(
-      new Date(day).toLocaleDateString("en-us", {
-        weekday: "short",
-      }),
-      expense,
-    );
-  }
-
-  // @ts-ignore
-  const K = keys(Object.fromEntries(resultMap));
-  // @ts-ignore
-  const V = values(Object.fromEntries(resultMap));
-  const rearrangedKeys = K.slice(nextDay).concat(K.slice(0, nextDay));
-  const rearrangedValues = V.slice(nextDay).concat(V.slice(0, nextDay));
-
-  return {
-    keys: rearrangedKeys,
-    values: rearrangedValues,
-  };
-};
-
-const toggleThisClient = (client: ClientT | null, name: string) => {
-  store.setters.updateStore({ key: "show", value: true });
-  store.setters.updateStore({ key: "name", value: name });
-};
-
-onBeforeMount(async () => {
-  const productStats = await getProductPerMonth(id as string);
-  const dailyStats = await getDailyExpenses(id as string);
-
-  DailyStats.keys = dailyStats.keys;
-  DailyStats.data = dailyStats.values;
-
-  ProductsStats.data = productStats.data;
-  ProductsStats.dates = productStats.dates.map((pDate) =>
-    d(new Date(pDate), "monthOnly"),
-  );
-  ProductsStats.products = productStats.products.map((product) => {
-    const color = generateColor();
-    return {
-      label: product,
-      backgroundColor: color,
-      borderColor: color.replace("0.2", "0.5"),
-      data: ProductsStats.data[product],
-      borderWidth: 2,
-    };
-  });
-});
-
-onBeforeMount(async () => {
-  try {
-    const res = await invoke<ClientT>("get_client", { id });
-    if (res.id) {
-      client.value = res;
-    }
-  } catch (err: any) {
-    error("Error creating client : " + err.error);
-  }
-});
 </script>
 
 <template>
@@ -140,11 +21,6 @@ onBeforeMount(async () => {
       <div
         class="w-full grid-cols-[400px_1fr] xl:grid-rows-[258px_1fr] xl:grid-cols-1 items-start justify-start gap-3 grid"
       >
-        <UiCard
-          title="Client information"
-          @updateItem="toggleThisClient(client, 'ClientUpdate')"
-          :item="client"
-        />
         <div class="w-full flex items-end xl:items-start h-fit"></div>
       </div>
       <div class="xl:border-l-2 border-b-2"></div>

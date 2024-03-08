@@ -1,133 +1,16 @@
 <script setup lang="ts">
-import { groupBy, keys, mapValues, values } from "@/utils/lightLodash";
 import { onBeforeMount, reactive, ref } from "vue";
-import ChartHolder from "@/components/ChartHolder.vue";
-import { generateColor } from "@/utils/generateColor";
-import UiCard from "@/components/ui/UiCard.vue";
-import { getWeekDay } from "@/utils/formatDate";
 import { invoke } from "@tauri-apps/api";
 import { useRoute } from "vue-router";
 import { store } from "@/store";
+import ChartHolder from "@/components/ChartHolder.vue";
 import { useI18n } from "vue-i18n";
 import type { SupplierT } from "@/schemas/supplier.schema";
+import { error } from "tauri-plugin-log-api";
 
 const { t, d } = useI18n();
-const id = useRoute().params.id;
-const seller = ref<SupplierT | null>(null);
-
-const ProductsStats = reactive({
-  products: [] as { [key: string]: any; data: number[] }[],
-  dates: [] as string[],
-  data: {} as { [key: string]: number[] },
-});
-
-const DailyStats = reactive({
-  data: [] as number[],
-  keys: [] as string[],
-  color: generateColor(),
-});
-
-const getGradientBackground = (ctx: any) => {
-  const canvas = ctx.chart.ctx;
-  const gradient = canvas.createLinearGradient(0, 0, 0, 160);
-  gradient.addColorStop(0, DailyStats.color.replace("0.2", "0.4"));
-  gradient.addColorStop(1, DailyStats.color.replace("0.2", "0.07"));
-  return gradient;
-};
-
-async function getProductPerMonth(id: string) {
-  const data: any[] = await invoke("get_s_product_month", { id });
-
-  const existingDates = keys(groupBy(data, "month"));
-  const existingProducts = keys(groupBy(data, "name"));
-  const dataPerProduct = mapValues(groupBy(data, "name"), (value: any[]) =>
-    value.reduce((pr, cr) => {
-      if (!pr) pr = [];
-      pr.push(cr.quantity);
-      return pr;
-    }, [] as number[]),
-  );
-
-  return {
-    data: dataPerProduct,
-    dates: existingDates,
-    products: existingProducts,
-  };
-}
-
-async function getDailyExpenses(id: string) {
-  const result: { day: string; expense: number }[] = await invoke(
-    "get_s_week_expenses",
-    { id },
-  );
-  // date related
-  const nextDay = new Date().getDay() == 6 ? 0 : new Date().getDay() + 1;
-  const resultMap = new Map<string, number>();
-  const weekDays = [0, 1, 2, 3, 4, 5, 6];
-
-  for (const index of weekDays) {
-    resultMap.set(getWeekDay(index), 0);
-  }
-
-  for (const { day, expense } of result) {
-    resultMap.set(
-      new Date(day).toLocaleDateString("en-us", {
-        weekday: "short",
-      }),
-      expense,
-    );
-  }
-
-  // @ts-ignore
-  const K = keys(Object.fromEntries(resultMap));
-  // @ts-ignore
-  const V = values(Object.fromEntries(resultMap));
-  const rearrangedKeys = K.slice(nextDay).concat(K.slice(0, nextDay));
-  const rearrangedValues = V.slice(nextDay).concat(V.slice(0, nextDay));
-
-  return {
-    keys: rearrangedKeys,
-    values: rearrangedValues,
-  };
-}
-
-onBeforeMount(async () => {
-  const productStats = await getProductPerMonth(id as string);
-  const dailyStats = await getDailyExpenses(id as string);
-
-  DailyStats.keys = dailyStats.keys;
-  DailyStats.data = dailyStats.values;
-
-  ProductsStats.data = productStats.data;
-  ProductsStats.dates = productStats.dates.map((pDate) =>
-    d(new Date(pDate), "monthOnly"),
-  );
-  ProductsStats.products = productStats.products.map((product) => {
-    const color = generateColor();
-    return {
-      label: product,
-      backgroundColor: color,
-      borderColor: color.replace("0.2", "0.5"),
-      data: ProductsStats.data[product],
-      borderWidth: 2,
-    };
-  });
-});
-const toggleThisSupplier = (seller: SupplierT | null, name: string) => {
-  store.setters.updateStore({ key: "show", value: true });
-  store.setters.updateStore({ key: "name", value: name });
-};
-
-onBeforeMount(async () => {
-  try {
-    const res = await invoke<SupplierT>("get_seller", { id });
-    if (res.id) {
-      seller.value = res;
-    }
-  } catch (err: any) {
-    error("Error creating client : " + err.error);
-  }
-});
+const { id } = useRoute().params;
+const supplier = ref<SupplierT | null>(null);
 </script>
 
 <template>
@@ -138,18 +21,13 @@ onBeforeMount(async () => {
       <div
         class="w-full grid-cols-[400px_1fr] xl:grid-rows-[258px_1fr] xl:grid-cols-1 items-start justify-start gap-3 grid"
       >
-        <UiCard
-          title="seller information"
-          @updateItem="() => toggleThisSupplier(seller, 'SupplierUpdate')"
-          :item="seller!"
-        />
-        <div class="w-full flex items-end xl:items-start h-full"></div>
+        <div class="w-full flex items-end xl:items-start h-fit"></div>
       </div>
       <div class="xl:border-l-2 border-b-2"></div>
       <div class="w-full">
         <ChartHolder>
           <template #default> </template>
-          <template #title?>
+          <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
               <i>
                 {{ t("dashboard.de.title") }}
