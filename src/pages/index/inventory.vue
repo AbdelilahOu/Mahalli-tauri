@@ -150,7 +150,7 @@ const uploadCSV = () => {
               </SelectContent>
             </Select>
           </div>
-          <div class="grid grid-cols-[60px_1fr] gap-1">
+          <div>
             <Button variant="ghost" @click="uploadCSV">
               <span
                 class="text-sky-400 transition-all duration-200 scale-[0.8] group-hover:fill-sky-600"
