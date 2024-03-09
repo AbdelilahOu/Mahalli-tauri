@@ -19,7 +19,7 @@ import { ref } from "vue";
 import type { Res } from "@/types";
 import { error } from "tauri-plugin-log-api";
 
-const { t, d } = useI18n();
+const { t, locale } = useI18n();
 
 interface mouvementsT {
   createdAt: string;
@@ -63,7 +63,7 @@ const barPriceTriggers = {
   },
 };
 function numberToK(num: number) {
-  return Intl.NumberFormat("us-US", { notation: "compact" }).format(num);
+  return Intl.NumberFormat(locale.value, { notation: "compact" }).format(num);
 }
 async function getInventoryMouvementStats() {
   try {
