@@ -99,7 +99,7 @@ const updateModal = (name: string) => {
           <div class="w-1/3">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')" />
           </div>
-          <div class="w-1/3 grid grid-cols-[60px_1fr] gap-2">
+          <div class="w-fit flex gap-2">
             <Button variant="ghost" @click="uploadCSV">
               <span
                 class="text-sky-400 transition-all duration-200 scale-[0.8] group-hover:fill-sky-600"
@@ -116,7 +116,7 @@ const updateModal = (name: string) => {
                 </svg>
               </span>
             </Button>
-            <Button class="gap-2" @click="updateModal('SupplierCreate')">
+            <Button class="gap-2 w-fit" @click="updateModal('SupplierCreate')">
               <PlusCircleIcon />
 
               {{ t("s.i.addButton") }}

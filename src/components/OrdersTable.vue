@@ -36,7 +36,6 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
 };
 
 const updateOrderStatus = async (order: any) => {
-  console.log(order);
   try {
     await invoke("update_order", {
       order,
