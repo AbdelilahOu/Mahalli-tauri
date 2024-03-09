@@ -93,11 +93,11 @@ const updateModal = (name: string) => {
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col items-start justify-start">
       <Transition appear>
-        <div class="flex justify-between w-full gap-9 mb-1">
+        <div class="flex justify-between w-full gap-9 mb-2">
           <div class="w-1/3">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')" />
           </div>
-          <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
+          <div class="w-1/3 grid grid-cols-[60px_1fr] gap-2">
             <Button variant="ghost" @click="uploadCSV">
               <span
                 class="text-sky-400 transition-all duration-200 scale-[0.8] group-hover:fill-sky-600"
