@@ -63,9 +63,7 @@ const barPriceTriggers = {
   },
 };
 function numberToK(num: number) {
-  return Math.abs(num) > 999
-    ? (Math.abs(num) / 1000).toFixed(1) + "K"
-    : Math.abs(num);
+  return Intl.NumberFormat("us-US", { notation: "compact" }).format(num);
 }
 async function getInventoryMouvementStats() {
   try {
