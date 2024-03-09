@@ -5,7 +5,7 @@ import { store } from "@/store";
 import { computed } from "vue";
 import { cn } from "@/utils/shadcn";
 import {
-  Blocks,
+  Archive,
   BarChartBig,
   ChevronsLeft,
   Languages,
@@ -145,7 +145,7 @@ const openTranslationModal = () => {
           :to="{ path: '/inventory/', query: { page: 1 } }"
         >
           <span class="w-8 min-w-[30px] max-w-[30px]">
-            <Blocks
+            <Archive
               class="m-auto text-gray-700 group-hover:text-black"
               :size="22"
             />
