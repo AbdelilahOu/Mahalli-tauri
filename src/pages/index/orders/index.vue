@@ -187,7 +187,7 @@ const updateModal = (name: string) => {
               </span>
             </Button>
             <Button class="gap-2 w-fit" @click="updateModal('OrderCreate')">
-              <PlusCircleIcon />
+              <PlusCircleIcon :size="22" />
 
               {{ t("o.i.addButton") }}
             </Button>
