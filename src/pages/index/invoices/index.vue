@@ -131,8 +131,8 @@ const updateModal = (name: string) => {
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col items-start justify-start">
       <Transition appear>
-        <div class="flex justify-between w-full gap-9 mb-1">
-          <div class="w-2/3 lg:max-w-[50%] flex gap-1">
+        <div class="flex justify-between w-full gap-9 mb-2">
+          <div class="w-2/3 lg:max-w-[50%] flex gap-2">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')" />
 
             <Popover>
