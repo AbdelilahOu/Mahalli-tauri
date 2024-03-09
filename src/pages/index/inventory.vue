@@ -88,12 +88,6 @@ async function getInventory(search: string, page: number = 1) {
           : null,
       },
     });
-    console.log({
-      created_at: createdAt.value
-        ? new Date(createdAt.value).toISOString().slice(0, 10)
-        : null,
-    });
-    console.log(res);
     //
     inventoryMouvements.value = res.data.inventory;
     totalRows.value = res.data.count;

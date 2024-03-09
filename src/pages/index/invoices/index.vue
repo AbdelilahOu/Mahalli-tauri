@@ -169,7 +169,7 @@ const updateModal = (name: string) => {
               </SelectContent>
             </Select>
           </div>
-          <div class="w-1/3 grid grid-cols-[60px_1fr] gap-1">
+          <div class="w-fit flex gap-1">
             <Button variant="ghost" @click="uploadCSV">
               <span
                 class="text-sky-400 transition-all duration-200 scale-[0.8] group-hover:fill-sky-600"
@@ -186,7 +186,7 @@ const updateModal = (name: string) => {
                 </svg>
               </span>
             </Button>
-            <Button class="gap-2" @click="updateModal('InvoiceCreate')">
+            <Button class="gap-2 w-fit" @click="updateModal('InvoiceCreate')">
               <PlusCircleIcon />
 
               {{ t("i.i.addButton") }}
