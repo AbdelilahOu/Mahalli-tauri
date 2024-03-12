@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
+import { Sheet } from "@/components/ui/sheet";
 </script>
 
 <template>
-  <RouterView />
+  <Sheet>
+    <RouterView />
+  </Sheet>
 </template>

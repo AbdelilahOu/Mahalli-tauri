@@ -8,6 +8,7 @@ import { store } from "@/store";
 import type { ClientT } from "@/schemas/client.schema";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { Skeleton } from "./ui/skeleton";
+import { SheetTrigger } from "@/components/ui/sheet";
 
 defineProps<{
   clients: ClientT[];
@@ -97,13 +98,16 @@ const toggleThisClient = (client: ClientT, name: string) => {
                 class="cursor-pointer"
                 :size="22"
               />
-              <RouterLink
+              <!-- <RouterLink
                 :to="{
                   path: '/clients/' + client.id,
                 }"
-              >
+              > -->
+              <SheetTrigger @click="(e) => console.log(e)">
                 <BookUser :size="22" />
-              </RouterLink>
+              </SheetTrigger>
+
+              <!-- </RouterLink> -->
             </div>
           </td>
         </tr>
