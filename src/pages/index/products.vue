@@ -20,7 +20,6 @@ import {
 import type { ProductT } from "@/schemas/products.schema";
 import { error } from "tauri-plugin-log-api";
 import { PlusCircleIcon } from "lucide-vue-next";
-import { SheetTrigger } from "@/components/ui/sheet";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -97,7 +96,6 @@ const updateModal = (name: string) => {
           <div class="w-1/3">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')" />
           </div>
-          <SheetTrigger> Hi </SheetTrigger>
           <div class="w-fit flex gap-2">
             <Button variant="ghost" @click="uploadCSV">
               <span

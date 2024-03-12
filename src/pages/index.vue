@@ -8,13 +8,6 @@ import { store } from "@/store";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/utils/shadcn";
 import { Toaster } from "@/components/ui/sonner";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 
 const show = computed(() => store.getters.getModalVisibility());
 const name = computed(() => store.getters.getModalName());
@@ -29,7 +22,7 @@ const isCollapse = ref<boolean>(true);
 </script>
 
 <template>
-  <main class="w-screen h-screen relative bg-white flex">
+  <main class="w-screen h-screen fixed top-0 left-0 bg-white flex">
     <div
       :class="
         cn(
@@ -40,34 +33,23 @@ const isCollapse = ref<boolean>(true);
     >
       <SideBar v-model:collapse="isCollapse" />
     </div>
-    <Sheet>
-      <div class="grid grid-rows-[50px_1fr] w-full">
-        <Navigation />
-        <ScrollArea
-          class="w-full scroll-smooth h-[calc(100vh-50px)] flex flex-col border-t-2 border-slate-100"
+    <div class="grid grid-rows-[50px_1fr] w-full">
+      <Navigation />
+      <ScrollArea
+        class="w-full scroll-smooth h-[calc(100vh-50px)] flex flex-col border-t-2 border-slate-100"
+      >
+        <div
+          v-if="show"
+          class="w-full h-full flex items-center justify-center fixed bg-black z-50 top-0 left-0 bg-opacity-30"
         >
-          <!-- @click.self="hideModal" -->
-          <div
-            v-if="show"
-            class="w-full h-full flex items-center justify-center fixed bg-black z-50 top-0 left-0 bg-opacity-30"
-          >
-            <ModalComponentsRenderer :name="name" />
-          </div>
-          <div class="w-full bg-white p-2 rounded-md h-full">
-            <RouterView />
-          </div>
-        </ScrollArea>
-      </div>
-      <SheetContent class="w-1/2 max-w-[540px]">
-        <SheetHeader>
-          <SheetTitle>Are you sure absolutely sure?</SheetTitle>
-          <SheetDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </SheetDescription>
-        </SheetHeader>
-      </SheetContent>
-    </Sheet>
+          <ModalComponentsRenderer :name="name" />
+        </div>
+        <div class="w-full bg-white p-2 rounded-md h-full">
+          <RouterView />
+        </div>
+      </ScrollArea>
+    </div>
+    <ModalComponentsRenderer name="ClientDetails" />
     <Toaster position="top-center" />
   </main>
 </template>
