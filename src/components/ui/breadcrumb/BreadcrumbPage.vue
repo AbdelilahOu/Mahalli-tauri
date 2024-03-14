@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/utils/shadcn'
 
@@ -8,9 +8,12 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div
-    :class="cn('flex flex-col gap-y-1.5 text-center sm:text-left', props.class)"
+  <span
+    role="link"
+    aria-disabled="true"
+    aria-current="page"
+    :class="cn('font-normal text-foreground', props.class)"
   >
     <slot />
-  </div>
+  </span>
 </template>

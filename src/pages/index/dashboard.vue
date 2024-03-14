@@ -390,7 +390,7 @@ onBeforeMount(async () => {
             <template #default>
               <div v-if="bestClients" class="w-full h-full flex flex-col gap-2">
                 <VisBulletLegend
-                  class="text-left my-2"
+                  class="text-left my-2 [&>*]:grid [&>*]:grid-cols-2"
                   :items="
                     bestClients?.map((a) => ({
                       name: a.Fullname + ' : ' + numberToK(a.price) + ' DH',
@@ -427,7 +427,7 @@ onBeforeMount(async () => {
                 class="w-full h-full flex flex-col gap-2"
               >
                 <VisBulletLegend
-                  class="text-left my-2"
+                  class="text-left my-2 [&>*]:grid [&>*]:grid-cols-2"
                   :items="
                     bestSuppliers?.map((a) => ({
                       name: a.Fullname + ' : ' + numberToK(a.price) + ' DH',
