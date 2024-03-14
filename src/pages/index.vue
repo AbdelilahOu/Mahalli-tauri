@@ -49,7 +49,7 @@ const isCollapse = ref<boolean>(true);
         </div>
       </ScrollArea>
     </div>
-    <ModalComponentsRenderer name="ClientDetails" />
+    <ModalComponentsRenderer name="ClientProfile" />
     <Toaster position="top-center" />
   </main>
 </template>
