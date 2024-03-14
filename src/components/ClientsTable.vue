@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
-import { RouterLink } from "vue-router";
 import { FilePenLine, BookUser, Trash2 } from "lucide-vue-next";
 import { store } from "@/store";
 import type { ClientT } from "@/schemas/client.schema";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { Skeleton } from "./ui/skeleton";
 import { SheetTrigger } from "@/components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 defineProps<{
   clients: ClientT[];
@@ -28,6 +26,16 @@ const toggleThisClient = (client: ClientT, name: string) => {
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
 };
+
+const toggleCLientProfile = (client: ClientT) => {
+  updateQueryParams({
+    id: client.id,
+    fullname: client.fullname,
+    email: client.email,
+    phoneNumber: client.phoneNumber,
+    address: client.address,
+  });
+};
 </script>
 
 <template>
@@ -37,7 +45,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
         class="text-xs h-9 bg-gray-300 max-w-lg w-fit font-semibold uppercase text-[rgba(25,23,17,0.6)]"
       >
         <tr>
-          <th class="p-2 rounded-l-md"></th>
+          <th class="rounded-l-md w-20"></th>
           <th class="p-2 w-fit font-semibold text-left">
             {{ t("g.fields.fullname") }}
           </th>
@@ -60,18 +68,13 @@ const toggleThisClient = (client: ClientT, name: string) => {
       </thead>
       <tbody class="text-sm divide-y divide-gray-100">
         <tr v-for="(client, index) in clients" v-fade="index" :key="client.id">
-          <td class="p-2">
-            <div class="w-12 h-12 rounded-full overflow-hidden">
-              <Skeleton
-                class="rounded-full w-full h-full block object-fill animate-pulse bg-slate-300 duration-1000"
-              >
-                <img
-                  v-if="client.image"
-                  class="rounded-full w-full h-full object-cover"
-                  :src="convertFileSrc(client.image)"
-                />
-              </Skeleton>
-            </div>
+          <td class="p-1 flex justify-center">
+            <Avatar>
+              <AvatarImage :src="client.image ?? ''" />
+              <AvatarFallback class="text-xs">
+                {{ client.fullname.substring(0, 5) }}
+              </AvatarFallback>
+            </Avatar>
           </td>
           <td class="p-2 whitespace-nowrap font-medium">
             {{ client?.fullname }}
@@ -98,16 +101,9 @@ const toggleThisClient = (client: ClientT, name: string) => {
                 class="cursor-pointer"
                 :size="22"
               />
-              <!-- <RouterLink
-                :to="{
-                  path: '/clients/' + client.id,
-                }"
-              > -->
-              <SheetTrigger @click="(e) => console.log(e)">
+              <SheetTrigger @click="(e) => toggleCLientProfile(client)">
                 <BookUser :size="22" />
               </SheetTrigger>
-
-              <!-- </RouterLink> -->
             </div>
           </td>
         </tr>

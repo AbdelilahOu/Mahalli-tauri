@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import { convertFileSrc } from "@tauri-apps/api/tauri";
 import UiPagination from "./ui/UiPagination.vue";
 import { RouterLink } from "vue-router";
 import { FilePenLine, BookUser, Trash2 } from "lucide-vue-next";
 import { store } from "@/store";
 import type { SupplierT } from "@/schemas/supplier.schema";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { Skeleton } from "./ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 defineProps<{
   suppliers: SupplierT[];
@@ -36,7 +35,7 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
         class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
       >
         <tr>
-          <th class="p-2 rounded-l-md"></th>
+          <th class="rounded-l-md w-20"></th>
           <th class="p-2 w-fit font-semibold text-left">
             {{ t("g.fields.fullname") }}
           </th>
@@ -60,18 +59,13 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
           v-for="(supplier, index) in suppliers"
           :key="supplier.id"
         >
-          <td class="p-2">
-            <div class="w-12 h-12 rounded-full overflow-hidden">
-              <Skeleton
-                class="rounded-full w-full h-full block object-fill animate-pulse bg-slate-300 duration-1000"
-              >
-                <img
-                  v-if="supplier.image && supplier.image !== ''"
-                  class="rounded-full w-full h-full object-cover"
-                  :src="convertFileSrc(supplier.image)"
-                />
-              </Skeleton>
-            </div>
+          <td class="p-1 flex justify-center">
+            <Avatar>
+              <AvatarImage :src="supplier.image ?? ''" />
+              <AvatarFallback class="text-xs">
+                {{ supplier.fullname.substring(0, 5) }}
+              </AvatarFallback>
+            </Avatar>
           </td>
           <td class="p-2 font-medium">
             {{ supplier.fullname }}
