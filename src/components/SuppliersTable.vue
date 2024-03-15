@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
-import { RouterLink } from "vue-router";
 import { FilePenLine, BookUser, Trash2 } from "lucide-vue-next";
 import { store } from "@/store";
 import type { SupplierT } from "@/schemas/supplier.schema";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { SheetTrigger } from "./ui/sheet";
 
 defineProps<{
   suppliers: SupplierT[];
@@ -26,40 +26,55 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
 };
+
+const toggleSupplierProfile = (supplier: SupplierT) => {
+  updateQueryParams({
+    id: supplier.id,
+    fullname: supplier.fullname,
+    email: supplier.email,
+    phoneNumber: supplier.phoneNumber,
+    address: supplier.address,
+  });
+};
 </script>
 
 <template>
-  <div class="flex flex-col w-full">
-    <table class="table-auto w-full">
+  <div
+    class="flex flex-col mb-14 h-full w-full rounded-md overflow-hidden border border-gray-200"
+  >
+    <table class="w-full">
       <thead
-        class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
+        class="text-xs h-10 bg-gray-100 max-w-lg w-fit font-semibold text-[rgba(25,23,17,0.6)]"
       >
-        <tr>
-          <th class="rounded-l-md w-20"></th>
-          <th class="p-2 w-fit font-semibold text-left">
+        <tr class="[&>*]:border-x first:[&>th]:border-0 last:[&>th]:border-0">
+          <th
+            class="font-semibold w-4 text-left p-2 first-letter:capitalize"
+          ></th>
+          <th class="font-semibold text-left p-2 first-letter:capitalize">
             {{ t("g.fields.fullname") }}
           </th>
-          <th class="p-2 w-fit font-semibold text-left">
+          <th class="font-semibold text-left p-2 first-letter:capitalize">
             {{ t("g.fields.email") }}
           </th>
-          <th class="p-2 w-fit font-semibold text-left">
+          <th class="font-semibold text-left p-2 first-letter:capitalize">
             {{ t("g.fields.phone") }}
           </th>
-          <th class="p-2 w-fit font-semibold text-left">
+          <th class="font-semibold text-left p-2 first-letter:capitalize">
             {{ t("g.fields.address") }}
           </th>
-          <th class="rounded-r-md">
+          <th class="font-semibold text-left p-2 first-letter:capitalize w-11">
             {{ t("g.fields.actions") }}
           </th>
         </tr>
       </thead>
-      <tbody class="text-sm divide-y divide-gray-100">
+      <tbody class="text-sm divide-y divide-gray-200">
         <tr
-          v-fade="index"
+          class="[&>*]:border-x first:[&>td]:border-0 last:[&>td]:border-0"
           v-for="(supplier, index) in suppliers"
+          v-fade="index"
           :key="supplier.id"
         >
-          <td class="p-1 flex justify-center">
+          <td class="p-2 flex justify-center">
             <Avatar>
               <AvatarImage :src="supplier.image ?? ''" />
               <AvatarFallback class="text-xs">
@@ -67,8 +82,8 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
               </AvatarFallback>
             </Avatar>
           </td>
-          <td class="p-2 font-medium">
-            {{ supplier.fullname }}
+          <td class="p-2 whitespace-nowrap font-medium">
+            {{ supplier?.fullname }}
           </td>
           <td class="p-2">
             {{ supplier.email }}
@@ -80,31 +95,25 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
             {{ supplier.address }}
           </td>
           <td class="p-2">
-            <div class="flex w-full justify-center gap-3">
+            <div class="flex space-x-3">
               <Trash2
-                @click="toggleThisSupplier(supplier, 'SupplierDelete')"
-                class="cursor-pointer"
+                @click="toggleThisSupplier(supplier, 'supplierDelete')"
+                class="cursor-pointer text-gray-800"
                 :size="22"
               />
               <FilePenLine
-                @click="toggleThisSupplier(supplier, 'SupplierUpdate')"
-                class="cursor-pointer"
+                @click="toggleThisSupplier(supplier, 'supplierUpdate')"
+                class="cursor-pointer text-gray-800"
                 :size="22"
               />
-              <RouterLink
-                :to="{
-                  path: '/suppliers/' + supplier.id,
-                }"
-              >
-                <BookUser :size="22" />
-              </RouterLink>
+              <SheetTrigger @click="(e) => toggleSupplierProfile(supplier)">
+                <BookUser class="text-gray-800" :size="22" />
+              </SheetTrigger>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-    <div class="pt-12">
-      <UiPagination />
-    </div>
+    <UiPagination />
   </div>
 </template>

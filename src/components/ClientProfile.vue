@@ -13,7 +13,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
     <ScrollArea class="h-screen">
       <div class="w-full h-48 bg-gray-50 flex items-center justify-center">
         <Avatar size="lg">
-          <AvatarImage :src="$route.query.image" alt="@shadcn" />
+          <AvatarImage
+            :src="($route.query.image as string) ?? ''"
+            alt="@shadcn"
+          />
           <AvatarFallback class="text-sm">
             {{ $route.query.fullname }}
           </AvatarFallback>

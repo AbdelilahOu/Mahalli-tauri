@@ -28,7 +28,7 @@
       "p": "no products | {n} product | {n} products"
     },
     "fields": {
-      "fullname": "Fullname",
+      "fullname": "Full name",
       "name": "Product name",
       "email": "E-mail",
       "phone": "Phoner number",
