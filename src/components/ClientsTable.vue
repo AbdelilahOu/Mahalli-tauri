@@ -39,36 +39,45 @@ const toggleCLientProfile = (client: ClientT) => {
 </script>
 
 <template>
-  <div class="flex flex-col h-full w-full">
+  <div
+    class="flex flex-col h-full w-full mb-14 rounded-md overflow-hidden border border-gray-200"
+  >
     <table class="w-full">
       <thead
-        class="text-xs h-9 bg-gray-300 max-w-lg w-fit font-semibold uppercase text-[rgba(25,23,17,0.6)]"
+        class="text-xs h-10 bg-gray-100 max-w-lg w-fit font-semibold text-[rgba(25,23,17,0.6)]"
       >
-        <tr>
-          <th class="rounded-l-md w-20"></th>
-          <th class="p-2 w-fit font-semibold text-left">
+        <tr class="[&>*]:border-x first:[&>th]:border-0 last:[&>th]:border-0">
+          <th
+            class="font-semibold text-left p-2 first-letter:capitalize w-4"
+          ></th>
+          <th class="font-semibold text-left p-2 first-letter:capitalize">
             {{ t("g.fields.fullname") }}
           </th>
-          <th class="p-2 w-fit font-semibold text-left">
+          <th class="font-semibold text-left p-2 first-letter:capitalize">
             {{ t("g.fields.email") }}
           </th>
-          <th class="p-2 w-fit font-semibold text-left">
+          <th class="font-semibold text-left p-2 first-letter:capitalize">
             {{ t("g.fields.phone") }}
           </th>
-          <th class="p-2 w-fit font-semibold text-left">
+          <th class="font-semibold text-left p-2 first-letter:capitalize">
             {{ t("g.fields.address") }}
           </th>
-          <th class="p-2 w-fit font-semibold text-left">
+          <th class="font-semibold text-left p-2 first-letter:capitalize">
             {{ t("g.fields.credit") }}
           </th>
-          <th class="rounded-r-md">
+          <th class="font-semibold text-left p-2 first-letter:capitalize w-11">
             {{ t("g.fields.actions") }}
           </th>
         </tr>
       </thead>
-      <tbody class="text-sm divide-y divide-gray-100">
-        <tr v-for="(client, index) in clients" v-fade="index" :key="client.id">
-          <td class="p-1 flex justify-center">
+      <tbody class="text-sm divide-y divide-gray-200">
+        <tr
+          class="[&>*]:border-x first:[&>td]:border-0 last:[&>td]:border-0"
+          v-for="(client, index) in clients"
+          v-fade="index"
+          :key="client.id"
+        >
+          <td class="p-2 flex justify-center">
             <Avatar>
               <AvatarImage :src="client.image ?? ''" />
               <AvatarFallback class="text-xs">
@@ -90,27 +99,25 @@ const toggleCLientProfile = (client: ClientT) => {
           </td>
           <td class="p-2 whitespace-nowrap">{{ client.credi }} DH</td>
           <td class="p-2">
-            <div class="flex justify-center gap-3">
+            <div class="flex space-x-3">
               <Trash2
                 @click="toggleThisClient(client, 'ClientDelete')"
-                class="cursor-pointer"
+                class="cursor-pointer text-gray-800"
                 :size="22"
               />
               <FilePenLine
                 @click="toggleThisClient(client, 'ClientUpdate')"
-                class="cursor-pointer"
+                class="cursor-pointer text-gray-800"
                 :size="22"
               />
               <SheetTrigger @click="(e) => toggleCLientProfile(client)">
-                <BookUser :size="22" />
+                <BookUser class="text-gray-800" :size="22" />
               </SheetTrigger>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-    <div class="pt-12">
-      <UiPagination />
-    </div>
+    <UiPagination />
   </div>
 </template>

@@ -7,7 +7,6 @@ export const CreateSupplierSchema = z.object({
   phoneNumber: z.string().optional(),
   address: z.string().optional(),
   image: z.string().optional(),
-  credi: z.number().optional(),
 });
 
 export type SupplierT = z.infer<typeof CreateSupplierSchema>;
