@@ -39,37 +39,20 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
 </script>
 
 <template>
-  <div
-    class="flex flex-col mb-14 h-full w-full rounded-md overflow-hidden border border-gray-200"
-  >
-    <table class="w-full">
-      <thead
-        class="text-xs h-10 bg-gray-100 max-w-lg w-fit font-semibold text-[rgba(25,23,17,0.6)]"
-      >
-        <tr class="[&>*]:border-x first:[&>th]:border-0 last:[&>th]:border-0">
-          <th
-            class="font-semibold w-4 text-left p-2 first-letter:capitalize"
-          ></th>
-          <th class="font-semibold text-left p-2 first-letter:capitalize">
-            {{ t("g.fields.fullname") }}
-          </th>
-          <th class="font-semibold text-left p-2 first-letter:capitalize">
-            {{ t("g.fields.email") }}
-          </th>
-          <th class="font-semibold text-left p-2 first-letter:capitalize">
-            {{ t("g.fields.phone") }}
-          </th>
-          <th class="font-semibold text-left p-2 first-letter:capitalize">
-            {{ t("g.fields.address") }}
-          </th>
-          <th class="font-semibold text-left p-2 first-letter:capitalize w-11">
-            {{ t("g.fields.actions") }}
-          </th>
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <th class="small"></th>
+          <th>{{ t("g.fields.fullname") }}</th>
+          <th>{{ t("g.fields.email") }}</th>
+          <th>{{ t("g.fields.phone") }}</th>
+          <th>{{ t("g.fields.address") }}</th>
+          <th class="small">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
-      <tbody class="text-sm divide-y divide-gray-200">
+      <tbody>
         <tr
-          class="[&>*]:border-x first:[&>td]:border-0 last:[&>td]:border-0"
           v-for="(supplier, index) in suppliers"
           v-fade="index"
           :key="supplier.id"

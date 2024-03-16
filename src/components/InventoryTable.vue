@@ -13,30 +13,18 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex flex-col w-full h-fit">
-    <table class="table-auto w-full">
-      <thead
-        class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
-      >
+  <div>
+    <table>
+      <thead>
         <tr>
-          <th class="rounded-l-md p-2 text-left">
-            {{ t("g.fields.name") }}
-          </th>
-          <th class="p-2 text-left">
-            {{ t("g.fields.price") }}
-          </th>
-          <th class="p-2 text-left">
-            {{ t("g.fields.quantity") }}
-          </th>
-          <th class="p-2 text-left">
-            {{ t("g.fields.status") }}
-          </th>
-          <th class="rounded-r-md p-2 w-52 text-left">
-            {{ t("g.fields.date") }}
-          </th>
+          <th>{{ t("g.fields.name") }}</th>
+          <th>{{ t("g.fields.price") }}</th>
+          <th>{{ t("g.fields.quantity") }}</th>
+          <th>{{ t("g.fields.status") }}</th>
+          <th>{{ t("g.fields.date") }}</th>
         </tr>
       </thead>
-      <tbody class="text-sm divide-y divide-gray-100">
+      <tbody>
         <tr v-fade="index" v-for="(mvm, index) in inventory" :key="mvm.id">
           <td class="p-2 font-medium">
             {{ mvm?.name }}
@@ -65,8 +53,6 @@ defineProps<{
         </tr>
       </tbody>
     </table>
-    <div class="pt-12">
-      <UiPagination />
-    </div>
+    <UiPagination />
   </div>
 </template>

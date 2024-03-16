@@ -42,3 +42,10 @@ const modelValue = useVModel(props, "modelValue", emits, {
     </div>
   </div>
 </template>
+
+<style>
+div:has(> input:focus-visible) > div {
+  border: 2px black solid;
+  border-left: 0px;
+}
+</style>

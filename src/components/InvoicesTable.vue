@@ -53,40 +53,21 @@ const updateInvoiceStatus = async (invoice: any) => {
 </script>
 
 <template>
-  <div
-    class="flex flex-col w-full mb-14 h-full rounded-md overflow-hidden border border-gray-200"
-  >
-    <table class="table-auto w-full">
-      <thead
-        class="text-xs h-10 bg-gray-100 max-w-lg w-fit font-semibold text-[rgba(25,23,17,0.6)]"
-      >
-        <tr class="[&>*]:border-x first:[&>th]:border-0 last:[&>th]:border-0">
-          <th class="font-semibold text-left p-2 first-letter:capitalize">
-            {{ t("g.fields.fullname") }}
-          </th>
-          <th class="font-semibold text-left p-2 first-letter:capitalize">
-            {{ t("g.fields.items") }}
-          </th>
-          <th class="font-semibold text-left p-2 first-letter:capitalize w-10">
-            {{ t("g.fields.status") }}
-          </th>
-          <th class="font-semibold text-left p-2 first-letter:capitalize">
-            {{ t("g.fields.date") }}
-          </th>
-          <th class="font-semibold text-left p-2 first-letter:capitalize">
-            {{ t("g.fields.total") }}
-          </th>
-          <th class="font-semibold text-left p-2 first-letter:capitalize">
-            {{ t("g.fields.paid") }}
-          </th>
-          <th class="font-semibold text-left p-2 first-letter:capitalize w-11">
-            {{ t("g.fields.actions") }}
-          </th>
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <th>{{ t("g.fields.fullname") }}</th>
+          <th>{{ t("g.fields.items") }}</th>
+          <th class="small">{{ t("g.fields.status") }}</th>
+          <th>{{ t("g.fields.date") }}</th>
+          <th>{{ t("g.fields.total") }}</th>
+          <th>{{ t("g.fields.paid") }}</th>
+          <th class="small">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
-      <tbody class="text-sm divide-y divide-gray-200">
+      <tbody>
         <tr
-          class="[&>*]:border-x first:[&>td]:border-0 last:[&>td]:border-0"
           v-for="(invoice, index) in invoices"
           v-fade="index"
           :key="invoice.id"
@@ -115,7 +96,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                 </Button>
               </HoverCardTrigger>
               <HoverCardContent class="min-w-[13rem] p-2">
-                <table class="w-full">
+                <table class="w-full not-default">
                   <thead>
                     <tr>
                       <th v-for="index in 3" :key="index"></th>

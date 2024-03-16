@@ -67,7 +67,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
           >
             {{ t("g.r.Clients") }}
           </span>
@@ -84,7 +84,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
           >
             {{ t("g.r.Suppliers") }}
           </span>
@@ -101,7 +101,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
           >
             {{ t("g.r.Products") }}
           </span>
@@ -118,7 +118,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
           >
             {{ t("g.r.Orders") }}
           </span>
@@ -135,7 +135,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
           >
             {{ t("g.r.Invoices") }}
           </span>
@@ -152,7 +152,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
           >
             {{ t("g.r.Inventory") }}
           </span>
@@ -169,7 +169,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
           >
             {{ t("g.r.Dashboard") }}
           </span>
@@ -187,7 +187,7 @@ const openTranslationModal = () => {
         </span>
         <span
           v-if="!collapse"
-          class="text-gray-500 ml-1 text-sm group-hover:text-primary"
+          class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
         >
           {{ locale.text }}
         </span>
@@ -204,7 +204,7 @@ const openTranslationModal = () => {
         </span>
         <span
           v-if="!collapse"
-          class="text-gray-500 ml-1 text-sm group-hover:text-primary"
+          class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
         >
           {{ t("g.r.Sittings") }}
         </span>
