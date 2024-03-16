@@ -53,33 +53,19 @@ const updateOrderStatus = async (order: any) => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full h-full">
-    <table class="table-auto w-full">
-      <thead
-        class="text-xs h-9 font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
-      >
+  <div>
+    <table>
+      <thead>
         <tr>
-          <th class="rounded-l-md p-2 w-fit font-semibold text-left">
-            {{ t("g.fields.fullname") }}
-          </th>
-          <th class="p-2 w-fit font-semibold text-left">
-            {{ t("g.fields.items") }}
-          </th>
-          <th class="p-2 w-fit font-semibold text-left">
-            {{ t("g.fields.status") }}
-          </th>
-          <th class="p-2 w-fit font-semibold text-left">
-            {{ t("g.fields.date") }}
-          </th>
-          <th class="p-2 w-fit font-semibold text-left">
-            {{ t("g.fields.total") }}
-          </th>
-          <th class="rounded-r-md">
-            {{ t("g.fields.actions") }}
-          </th>
+          <th>{{ t("g.fields.fullname") }}</th>
+          <th>{{ t("g.fields.items") }}</th>
+          <th class="small">{{ t("g.fields.status") }}</th>
+          <th>{{ t("g.fields.date") }}</th>
+          <th>{{ t("g.fields.total") }}</th>
+          <th class="small">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
-      <tbody class="text-sm divide-y divide-gray-100">
+      <tbody>
         <tr v-for="(order, index) in orders" v-fade="index" :key="order.id">
           <td class="p-2">
             <RouterLink
@@ -105,7 +91,7 @@ const updateOrderStatus = async (order: any) => {
                 </Button>
               </HoverCardTrigger>
               <HoverCardContent class="min-w-[13rem] p-2">
-                <table class="w-full">
+                <table class="w-full not-default">
                   <thead>
                     <tr>
                       <th v-for="index in 3" :key="index"></th>
@@ -232,8 +218,6 @@ const updateOrderStatus = async (order: any) => {
         </tr>
       </tbody>
     </table>
-    <div class="pt-12">
-      <UiPagination />
-    </div>
+    <UiPagination />
   </div>
 </template>

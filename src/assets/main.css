@@ -68,13 +68,15 @@
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+* {
+  @apply border-border;
+}
+
+body {
+  @apply bg-background text-foreground;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 .v-enter-active,
@@ -117,13 +119,34 @@
   @apply text-primary;
 }
 
-div:has(> input:focus-visible) > div {
-  border: 2px black solid;
-  border-left: 0px;
+div:has(> table:not(.not-default)) {
+  @apply flex flex-col h-full w-full mb-14 rounded-md overflow-hidden border border-gray-200;
 }
 
-* {
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
+table:not(.not-default) {
+  @apply w-full table-auto;
+}
+
+table:not(.not-default) > thead {
+  @apply text-xs h-10 bg-gray-100 max-w-lg w-fit font-semibold text-[rgba(25,23,17,0.6)];
+}
+
+table:not(.not-default) > thead > tr {
+  @apply [&>*]:border-x first:[&>th]:border-0 last:[&>th]:border-0;
+}
+
+table:not(.not-default) > thead > tr > th {
+  @apply font-semibold text-left p-2 first-letter:capitalize;
+}
+
+table:not(.not-default) > thead > tr > .small {
+  @apply font-semibold text-left p-2 first-letter:capitalize w-11;
+}
+
+table:not(.not-default) > tbody {
+  @apply text-sm divide-y divide-gray-200;
+}
+
+table:not(.not-default) > tbody > tr {
+  @apply [&>*]:border-x first:[&>td]:border-0 last:[&>td]:border-0;
 }
