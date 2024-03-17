@@ -26,7 +26,7 @@ const isCollapse = ref<boolean>(true);
     <div
       :class="
         cn(
-          'transition-all print:hidden sticky h-screen top-0 border-r-2 border-slate-100 z-50 flex justify-center duration-200',
+          'transition-all print:hidden sticky h-screen top-0 border-r border-slate-100 z-50 flex justify-center duration-200',
           isCollapse ? 'w-12 min-w-[48px]' : 'w-52 min-w-[12rem]',
         )
       "
@@ -36,7 +36,7 @@ const isCollapse = ref<boolean>(true);
     <div class="grid grid-rows-[50px_1fr] w-full">
       <Navigation />
       <ScrollArea
-        class="w-full scroll-smooth h-[calc(100vh-50px)] flex flex-col border-t-2 border-slate-100"
+        class="w-full scroll-smooth h-[calc(100vh-50px)] flex flex-col border-t border-slate-100"
       >
         <div
           v-if="show"
