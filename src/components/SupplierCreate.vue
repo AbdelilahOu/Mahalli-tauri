@@ -7,7 +7,7 @@ import UiModalCard from "./ui/UiModalCard.vue";
 import UiUploader from "./ui/UiUploader.vue";
 import { invoke } from "@tauri-apps/api";
 import { useForm } from "vee-validate";
-import { saveFile } from "@/utils/fs";
+import { getFileBytes } from "@/utils/fs";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { store } from "@/store";
@@ -34,24 +34,21 @@ const form = useForm({
 const createNewSupplier = async (supplier: SupplierT) => {
   isLoading.value = true;
   try {
-    let image: string = await saveFile(supplier.image as string, "Image");
+    let imageBase64 = await getFileBytes(imagePath.value);
     await invoke<Res<string>>("create_supplier", {
       supplier: {
         full_name: supplier.fullname,
         email: supplier.email,
         phone_number: supplier.phoneNumber,
         address: supplier.address,
-        image,
+        image: `data:image/png;base64,${imageBase64}`,
       },
     });
     //
     info(
       `CREATE SUPPLIER: ${JSON.stringify({
-        full_name: supplier.fullname,
-        email: supplier.email,
-        phone_number: supplier.phoneNumber,
-        address: supplier.address,
-        image,
+        ...supplier,
+        image: `data:image/png;base64,${imageBase64}`,
       })}`,
     );
     // toggle refresh

@@ -26,14 +26,14 @@ const form = useForm({
   validationSchema: clientSchema,
 });
 
-const image = ref<string>();
+const imagePath = ref<string>();
 
 const isCreating = ref<boolean>(false);
 
 const createNewClient = async (client: ClientT) => {
   isCreating.value = true;
   try {
-    let imageBase64 = await getFileBytes(image.value);
+    let imageBase64 = await getFileBytes(imagePath.value);
     await invoke<Res<null>>("create_client", {
       client: {
         full_name: client.fullname,
@@ -44,7 +44,12 @@ const createNewClient = async (client: ClientT) => {
       },
     });
     //
-    info(`CREATE CLIENT: ${JSON.stringify({ ...client, image })}`);
+    info(
+      `CREATE CLIENT: ${JSON.stringify({
+        ...client,
+        image: `data:image/png;base64,${imageBase64}`,
+      })}`,
+    );
     //
     toast("Newc client added successfully", {
       description: "Client " + client.fullname + " has been added",
@@ -70,8 +75,8 @@ const onSubmit = form.handleSubmit((values) => {
   createNewClient(values);
 });
 
-const setImage = (imagePath: string) => {
-  image.value = imagePath;
+const setImage = (image: string) => {
+  imagePath.value = image;
 };
 </script>
 
