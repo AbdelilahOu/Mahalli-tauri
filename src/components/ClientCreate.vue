@@ -6,7 +6,7 @@ import UiModalCard from "./ui/UiModalCard.vue";
 import UiUploader from "./ui/UiUploader.vue";
 import { invoke } from "@tauri-apps/api";
 import { useForm } from "vee-validate";
-import { saveFile } from "@/utils/fs";
+import { getFileBytes } from "@/utils/fs";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useI18n } from "vue-i18n";
@@ -33,14 +33,14 @@ const isCreating = ref<boolean>(false);
 const createNewClient = async (client: ClientT) => {
   isCreating.value = true;
   try {
-    let image: string = await saveFile(client.image as string, "Image");
+    let imageBase64 = await getFileBytes(image.value);
     await invoke<Res<null>>("create_client", {
       client: {
         full_name: client.fullname,
         email: client.email,
         phone_number: client.phoneNumber,
         address: client.address,
-        image,
+        image: `data:image/png;base64,${imageBase64}`,
       },
     });
     //

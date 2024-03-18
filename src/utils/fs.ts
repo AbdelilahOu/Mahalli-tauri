@@ -1,36 +1,25 @@
 import {
   BaseDirectory,
   createDir,
-  copyFile,
   exists,
   writeBinaryFile,
   removeDir,
   readDir,
   removeFile,
+  readBinaryFile,
 } from "@tauri-apps/api/fs";
 import { appDataDir, sep, join } from "@tauri-apps/api/path";
 import { error } from "tauri-plugin-log-api";
 // C:\Users\abdel\AppData\Roaming\whatisthis
 
-export const saveFile = async (path: string, name: string) => {
-  if (!path) return "";
-  const RightFolder = name === "Image" ? "Images" : "Docs";
+export const getFileBytes = async (path?: string) => {
+  if (!path) return null;
   try {
-    // get the file name
-    const fileName = path.split(sep)[path.split(sep).length - 1];
-    // create images folder
-    await createFolder(RightFolder);
-    // get final path of the image
-    const filePath = await join(await appDataDir(), RightFolder, fileName);
-    // copy the image to images folder
-    await copyFile(path, filePath, {
-      dir: BaseDirectory.AppData,
-    });
-    // return file path
-    return filePath;
+    const content = await readBinaryFile(path);
+    return btoa(String.fromCharCode(...content));
   } catch (error) {
     console.log("sth went wrong", error);
-    return "";
+    return null;
   }
 };
 
