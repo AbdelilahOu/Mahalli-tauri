@@ -47,6 +47,7 @@ declare global {
   const generateColor: typeof import('./src/utils/generateColor')['generateColor']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
+  const getFileBytes: typeof import('./src/utils/fs')['getFileBytes']
   const getWeekDay: typeof import('./src/utils/formatDate')['getWeekDay']
   const googleSignIn: typeof import('./src/utils/Oauth')['googleSignIn']
   const groupBy: typeof import('./src/utils/lightLodash')['groupBy']
