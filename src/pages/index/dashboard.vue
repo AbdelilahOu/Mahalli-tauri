@@ -13,7 +13,6 @@ import {
 } from "@unovis/vue";
 import { Donut, GroupedBar } from "@unovis/ts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { invoke } from "@tauri-apps/api";
 import { ref } from "vue";
 import type { Res } from "@/types";
