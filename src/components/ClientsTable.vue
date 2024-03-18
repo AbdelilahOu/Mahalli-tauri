@@ -34,6 +34,7 @@ const toggleCLientProfile = (client: ClientT) => {
     email: client.email,
     phoneNumber: client.phoneNumber,
     address: client.address,
+    // image: client.image,
   });
 };
 </script>
