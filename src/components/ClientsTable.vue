@@ -45,24 +45,12 @@ const toggleCLientProfile = (client: ClientT) => {
       <thead>
         <tr>
           <th class="small"></th>
-          <th>
-            {{ t("g.fields.fullname") }}
-          </th>
-          <th>
-            {{ t("g.fields.email") }}
-          </th>
-          <th>
-            {{ t("g.fields.phone") }}
-          </th>
-          <th>
-            {{ t("g.fields.address") }}
-          </th>
-          <th>
-            {{ t("g.fields.credit") }}
-          </th>
-          <th class="small">
-            {{ t("g.fields.actions") }}
-          </th>
+          <th>{{ t("g.fields.fullname") }}</th>
+          <th>{{ t("g.fields.email") }}</th>
+          <th>{{ t("g.fields.phone") }}</th>
+          <th>{{ t("g.fields.address") }}</th>
+          <th>{{ t("g.fields.credit") }}</th>
+          <th class="small">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
       <tbody>
@@ -100,9 +88,9 @@ const toggleCLientProfile = (client: ClientT) => {
                 class="cursor-pointer text-gray-800"
                 :size="22"
               />
-              <SheetTrigger @click="(e) => toggleCLientProfile(client)">
+              <!-- <SheetTrigger @click="(e) => toggleCLientProfile(client)">
                 <BookUser class="text-gray-800" :size="22" />
-              </SheetTrigger>
+              </SheetTrigger> -->
             </div>
           </td>
         </tr>

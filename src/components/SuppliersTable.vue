@@ -89,9 +89,9 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
                 class="cursor-pointer text-gray-800"
                 :size="22"
               />
-              <SheetTrigger @click="(e) => toggleSupplierProfile(supplier)">
+              <!-- <SheetTrigger @click="(e) => toggleSupplierProfile(supplier)">
                 <BookUser class="text-gray-800" :size="22" />
-              </SheetTrigger>
+              </SheetTrigger> -->
             </div>
           </td>
         </tr>

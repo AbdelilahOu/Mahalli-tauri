@@ -22,7 +22,7 @@ const isCollapse = ref<boolean>(true);
 </script>
 
 <template>
-  <main class="w-screen h-screen fixed top-0 left-0 bg-white flex">
+  <main class="w-screen h-screen fixed top-0 left-0 bg-[#FFFAFA] flex">
     <div
       :class="
         cn(
@@ -44,7 +44,7 @@ const isCollapse = ref<boolean>(true);
         >
           <ModalComponentsRenderer :name="name" />
         </div>
-        <div class="w-full bg-white p-2 rounded-md h-full">
+        <div class="w-full bg-[#FFFAFA] p-2 rounded-md h-full">
           <RouterView />
         </div>
       </ScrollArea>
