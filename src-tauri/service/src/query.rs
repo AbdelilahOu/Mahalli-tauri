@@ -623,6 +623,78 @@ impl QueriesService {
 
         Ok(order_products)
     }
+    pub async fn get_order_details(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
+        let order = Orders::find_by_id(id.clone())
+            .find_also_related(Suppliers)
+            .one(db)
+            .await?;
+
+        match order {
+            Some(order) => {
+                let (sql, values) = Query::select()
+                    .exprs([
+                        Expr::col((OrderItems, order_items::Column::Id)),
+                        Expr::col((OrderItems, order_items::Column::InventoryId)),
+                        Expr::col((OrderItems, order_items::Column::Price)),
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
+                        Expr::col((Products, products::Column::Name)),
+                    ])
+                    .expr_as(
+                        Expr::col((Products, products::Column::Id)),
+                        Alias::new("product_id"),
+                    )
+                    .from(OrderItems)
+                    .join(
+                        JoinType::Join,
+                        InventoryMouvements,
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                            .equals((OrderItems, order_items::Column::InventoryId)),
+                    )
+                    .join(
+                        JoinType::Join,
+                        Products,
+                        Expr::col((Products, products::Column::Id))
+                            .equals((InventoryMouvements, inventory_mouvements::Column::ProductId)),
+                    )
+                    .cond_where(Expr::col((OrderItems, order_items::Column::OrderId)).eq(id))
+                    .to_owned()
+                    .build(SqliteQueryBuilder);
+
+                let items = SelectOrdersItemsForUpdate::find_by_statement(
+                    Statement::from_sql_and_values(DbBackend::Sqlite, sql, values),
+                )
+                .all(db)
+                .await?;
+
+                let mut result = Vec::<JsonValue>::new();
+                items.into_iter().for_each(|item| {
+                    result.push(json!({
+                        "id": item.id,
+                        "inventory_id": item.inventory_id,
+                        "product_id": item.product_id,
+                        "price": item.price,
+                        "quantity": item.quantity,
+                        "name": item.name,
+                    }));
+                });
+
+                Ok(json!({
+                    "id": order.0.id,
+                    "supplierId": order.0.supplier_id,
+                    "createdAt": order.0.created_at,
+                    "status": order.0.status,
+                    "supplier": json!({
+                        "fullname": order.1.clone().unwrap().full_name,
+                        "email": order.1.clone().unwrap().email,
+                        "address":order.1.clone().unwrap().address,
+                        "phoneNumber":order.1.clone().unwrap().phone_number,
+                    }),
+                    "items": result,
+                }))
+            }
+            None => Err(DbErr::RecordNotFound(String::from("no order"))),
+        }
+    }
     //
     pub async fn list_invoices(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Invoices::find()
@@ -832,6 +904,80 @@ impl QueriesService {
 
         Ok(invoice_products)
     }
+    pub async fn get_invoice_details(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
+        let invoice = Invoices::find_by_id(id.clone())
+            .find_also_related(Clients)
+            .one(db)
+            .await?;
+
+        match invoice {
+            Some(invoice) => {
+                let (sql, values) = Query::select()
+                    .exprs([
+                        Expr::col((InvoiceItems, invoice_items::Column::Id)),
+                        Expr::col((InvoiceItems, invoice_items::Column::InventoryId)),
+                        Expr::col((InvoiceItems, invoice_items::Column::Price)),
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
+                        Expr::col((Products, products::Column::Name)),
+                    ])
+                    .expr_as(
+                        Expr::col((Products, products::Column::Id)),
+                        Alias::new("product_id"),
+                    )
+                    .from(InvoiceItems)
+                    .join(
+                        JoinType::Join,
+                        InventoryMouvements,
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                            .equals((InvoiceItems, invoice_items::Column::InventoryId)),
+                    )
+                    .join(
+                        JoinType::Join,
+                        Products,
+                        Expr::col((Products, products::Column::Id))
+                            .equals((InventoryMouvements, inventory_mouvements::Column::ProductId)),
+                    )
+                    .cond_where(Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).eq(id))
+                    .to_owned()
+                    .build(SqliteQueryBuilder);
+
+                let items = SelectInvoicesItemsForUpdate::find_by_statement(
+                    Statement::from_sql_and_values(DbBackend::Sqlite, sql, values),
+                )
+                .all(db)
+                .await?;
+
+                let mut result = Vec::<JsonValue>::new();
+                items.into_iter().for_each(|item| {
+                    result.push(json!({
+                        "id": item.id,
+                        "inventory_id": item.inventory_id,
+                        "product_id": item.product_id,
+                        "price": item.price,
+                        "quantity": item.quantity,
+                        "name": item.name,
+                    }));
+                });
+
+                Ok(json!({
+                    "id": invoice.0.id,
+                    "clientId": invoice.0.client_id,
+                    "paidAmount": invoice.0.paid_amount,
+                    "createdAt": invoice.0.created_at,
+                    "status": invoice.0.status,
+                    "client": json!({
+                        "fullname": invoice.1.clone().unwrap().full_name,
+                        "email": invoice.1.clone().unwrap().email,
+                        "address":invoice.1.clone().unwrap().address,
+                        "phoneNumber":invoice.1.clone().unwrap().phone_number,
+                    }),
+                    "items": result,
+                }))
+            }
+            None => Err(DbErr::RecordNotFound(String::from("no invoice"))),
+        }
+    }
+
     //
     pub async fn list_inventory(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = InventoryMouvements::find()

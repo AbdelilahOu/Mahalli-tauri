@@ -78,6 +78,7 @@ async fn main() {
             //
             commands::orders::list_orders,
             commands::orders::get_order,
+            commands::orders::get_order_details,
             commands::orders::create_order,
             commands::orders::update_order,
             commands::orders::delete_order,
@@ -93,6 +94,7 @@ async fn main() {
             //
             commands::invoices::list_invoices,
             commands::invoices::get_invoice,
+            commands::invoices::get_invoice_details,
             commands::invoices::create_invoice,
             commands::invoices::update_invoice,
             commands::invoices::delete_invoice,

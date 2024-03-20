@@ -28,9 +28,7 @@ const openTranslationModal = () => {
 </script>
 
 <template>
-  <aside
-    class="w-full h-screen sticky top-0 z-50 flex flex-col gap-3 bg-[#F8F8FF]"
-  >
+  <aside class="w-full h-screen sticky top-0 z-50 flex flex-col gap-3 bg-white">
     <div class="w-full h-[50px]">
       <div
         :class="
