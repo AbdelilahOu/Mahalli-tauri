@@ -12,13 +12,6 @@ import { Toaster } from "@/components/ui/sonner";
 const show = computed(() => store.getters.getModalVisibility());
 const name = computed(() => store.getters.getModalName());
 const isCollapse = ref<boolean>(true);
-
-// const hideModal = () =>
-//   store.setters.updateStore({ key: "show", value: false });
-
-// onBeforeRouteUpdate((to: any, from: any) => {
-//   if (to.path !== from.path) hideModal();
-// });
 </script>
 
 <template>

@@ -51,15 +51,52 @@ const generatePdf = async () => {
     x: width - 190,
     y: height - 70,
     font: HelveticaFont,
-    size: 15,
+    size: 13,
     color: rgb(0.34, 0.34, 0.34),
   });
-  page.drawText("Status: " + invoice.value.status ?? "", {
+  page.drawText("Status: " + invoice.value.status.toLowerCase() ?? "", {
     x: width - 190,
     y: height - 90,
     font: HelveticaFont,
-    size: 15,
+    size: 13,
     color: rgb(0.34, 0.34, 0.34),
+  });
+  //
+  page.drawText("Client: " + invoice.value.client.fullname ?? "", {
+    x: 20,
+    y: height - 70,
+    font: HelveticaFont,
+    size: 13,
+    color: rgb(0.34, 0.34, 0.34),
+  });
+  page.drawText("Address: " + invoice.value.client.address ?? "", {
+    x: 20,
+    y: height - 90,
+    font: HelveticaFont,
+    size: 13,
+    color: rgb(0.34, 0.34, 0.34),
+  });
+  page.drawText("Phone number: " + invoice.value.client.phoneNumber ?? "", {
+    x: 20,
+    y: height - 110,
+    font: HelveticaFont,
+    size: 13,
+    color: rgb(0.34, 0.34, 0.34),
+  });
+  page.drawText("Email: " + invoice.value.client.email ?? "", {
+    x: 20,
+    y: height - 130,
+    font: HelveticaFont,
+    size: 13,
+    color: rgb(0.34, 0.34, 0.34),
+  });
+  //
+  page.drawLine({
+    start: { x: 20, y: height - 170 },
+    end: { x: width - 20, y: height - 170 },
+    thickness: 1,
+    color: rgb(0.34, 0.34, 0.34),
+    opacity: 0.75,
   });
   const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
   pdfRef.value?.setAttribute("src", pdfDataUri);
