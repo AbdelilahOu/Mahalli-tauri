@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import type { HTMLAttributes } from 'vue'
-import type { PrimitiveProps } from 'radix-vue'
-import { cn } from '@/utils/shadcn'
+import type { HTMLAttributes } from "vue";
+import type { PrimitiveProps } from "radix-vue";
+import { cn } from "@/utils/shadcn";
 
 interface Props extends PrimitiveProps {
-  as?: string
-  class?: HTMLAttributes['class']
+  as?: string;
+  class?: HTMLAttributes["class"];
 }
 const props = withDefaults(defineProps<Props>(), {
-  as: 'a',
-})
+  as: "a",
+});
 </script>
 
 <template>

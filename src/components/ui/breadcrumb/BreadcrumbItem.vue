@@ -1,16 +1,14 @@
 <script lang="ts" setup>
-import type { HTMLAttributes } from 'vue'
-import { cn } from '@/utils/shadcn'
+import type { HTMLAttributes } from "vue";
+import { cn } from "@/utils/shadcn";
 
 const props = defineProps<{
-  class?: HTMLAttributes['class']
-}>()
+  class?: HTMLAttributes["class"];
+}>();
 </script>
 
 <template>
-  <li
-    :class="cn('inline-flex items-center gap-1.5', props.class)"
-  >
+  <li :class="cn('inline-flex items-center gap-1.5', props.class)">
     <slot />
   </li>
 </template>
