@@ -11,6 +11,13 @@ pub struct SelectOrdersItemsForUpdate {
     pub product_id: String,
 }
 
+#[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
+pub struct SelectOrdersItems {
+    pub name: String,
+    pub price: f64,
+    pub quantity: f64,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NewOrderItem {
     pub order_id: String,
