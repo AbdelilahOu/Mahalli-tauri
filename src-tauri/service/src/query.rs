@@ -14,7 +14,7 @@ use serde_json::json;
 use crate::{
     SelectClients, SelectExpenses, SelectInventory, SelectInvoices, SelectInvoicesItemsForUpdate,
     SelectMvm, SelectOrders, SelectOrdersItemsForUpdate, SelectProducts, SelectRevenue,
-    SelectStatusCount, SelectSuppliers, SelectTops,
+    SelectStatusCount, SelectSuppliers, SelectTops,SelectInvoicesItems,SelectOrdersItems
 };
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -633,16 +633,10 @@ impl QueriesService {
             Some(order) => {
                 let (sql, values) = Query::select()
                     .exprs([
-                        Expr::col((OrderItems, order_items::Column::Id)),
-                        Expr::col((OrderItems, order_items::Column::InventoryId)),
                         Expr::col((OrderItems, order_items::Column::Price)),
                         Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
                         Expr::col((Products, products::Column::Name)),
                     ])
-                    .expr_as(
-                        Expr::col((Products, products::Column::Id)),
-                        Alias::new("product_id"),
-                    )
                     .from(OrderItems)
                     .join(
                         JoinType::Join,
@@ -660,7 +654,7 @@ impl QueriesService {
                     .to_owned()
                     .build(SqliteQueryBuilder);
 
-                let items = SelectOrdersItemsForUpdate::find_by_statement(
+                let items = SelectOrdersItems::find_by_statement(
                     Statement::from_sql_and_values(DbBackend::Sqlite, sql, values),
                 )
                 .all(db)
@@ -669,9 +663,6 @@ impl QueriesService {
                 let mut result = Vec::<JsonValue>::new();
                 items.into_iter().for_each(|item| {
                     result.push(json!({
-                        "id": item.id,
-                        "inventory_id": item.inventory_id,
-                        "product_id": item.product_id,
                         "price": item.price,
                         "quantity": item.quantity,
                         "name": item.name,
@@ -914,16 +905,10 @@ impl QueriesService {
             Some(invoice) => {
                 let (sql, values) = Query::select()
                     .exprs([
-                        Expr::col((InvoiceItems, invoice_items::Column::Id)),
-                        Expr::col((InvoiceItems, invoice_items::Column::InventoryId)),
                         Expr::col((InvoiceItems, invoice_items::Column::Price)),
                         Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
                         Expr::col((Products, products::Column::Name)),
                     ])
-                    .expr_as(
-                        Expr::col((Products, products::Column::Id)),
-                        Alias::new("product_id"),
-                    )
                     .from(InvoiceItems)
                     .join(
                         JoinType::Join,
@@ -941,7 +926,7 @@ impl QueriesService {
                     .to_owned()
                     .build(SqliteQueryBuilder);
 
-                let items = SelectInvoicesItemsForUpdate::find_by_statement(
+                let items = SelectInvoicesItems::find_by_statement(
                     Statement::from_sql_and_values(DbBackend::Sqlite, sql, values),
                 )
                 .all(db)
@@ -950,9 +935,6 @@ impl QueriesService {
                 let mut result = Vec::<JsonValue>::new();
                 items.into_iter().for_each(|item| {
                     result.push(json!({
-                        "id": item.id,
-                        "inventory_id": item.inventory_id,
-                        "product_id": item.product_id,
                         "price": item.price,
                         "quantity": item.quantity,
                         "name": item.name,

@@ -22,6 +22,7 @@ onBeforeMount(async () => {
       id,
     });
     invoice.value = res.data;
+    console.log(res.data);
     resolveWaitForFetch();
   } catch (err: any) {
     console.log(err);
@@ -98,6 +99,86 @@ const generatePdf = async () => {
     color: rgb(0.34, 0.34, 0.34),
     opacity: 0.75,
   });
+  page.drawText("Product name", {
+    x: 25,
+    y: height - 190,
+    font: HelveticaFont,
+    size: 13,
+    color: rgb(0.34, 0.34, 0.34),
+  });
+  page.drawText("Price", {
+    x: 25 + width / 4,
+    y: height - 190,
+    font: HelveticaFont,
+    size: 13,
+    color: rgb(0.34, 0.34, 0.34),
+  });
+
+  page.drawText("Quantity", {
+    x: 25 + width / 2,
+    y: height - 190,
+    font: HelveticaFont,
+    size: 13,
+    color: rgb(0.34, 0.34, 0.34),
+  });
+
+  page.drawText("Total", {
+    x: 25 + (width * 3) / 4,
+    y: height - 190,
+    font: HelveticaFont,
+    size: 13,
+    color: rgb(0.34, 0.34, 0.34),
+  });
+
+  page.drawLine({
+    start: { x: 20, y: height - 200 },
+    end: { x: width - 20, y: height - 200 },
+    thickness: 1,
+    color: rgb(0.34, 0.34, 0.34),
+    opacity: 0.75,
+  });
+
+  for (let [index, item] of invoice.value.items.entries()) {
+    page.drawText(item.name, {
+      x: 25,
+      y: height - 220 - index * 30,
+      font: HelveticaFont,
+      size: 13,
+      color: rgb(0.34, 0.34, 0.34),
+    });
+    page.drawText("DH " + item.price.toFixed(2), {
+      x: 25 + width / 4,
+      y: height - 220 - index * 30,
+      font: HelveticaFont,
+      size: 13,
+      color: rgb(0.34, 0.34, 0.34),
+    });
+
+    page.drawText(item.quantity.toFixed(2), {
+      x: 25 + width / 2,
+      y: height - 220 - index * 30,
+      font: HelveticaFont,
+      size: 13,
+      color: rgb(0.34, 0.34, 0.34),
+    });
+
+    page.drawText("DH " + String(item.price * item.quantity), {
+      x: 25 + (width * 3) / 4,
+      y: height - 220 - index * 30,
+      font: HelveticaFont,
+      size: 13,
+      color: rgb(0.34, 0.34, 0.34),
+    });
+
+    page.drawLine({
+      start: { x: 20, y: height - 230 - index * 30 },
+      end: { x: width - 20, y: height - 230 - index * 30 },
+      thickness: 1,
+      color: rgb(0.34, 0.34, 0.34),
+      opacity: 0.75,
+    });
+  }
+
   const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
   pdfRef.value?.setAttribute("src", pdfDataUri);
 };
