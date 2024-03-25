@@ -1,235 +1,274 @@
 <script setup lang="ts">
+import { onBeforeMount, ref } from "vue";
 import { useRoute } from "vue-router";
-import { ref, onBeforeMount } from "vue";
 import { invoke } from "@tauri-apps/api";
 import { useI18n } from "vue-i18n";
-import { Button } from "@/components/ui/button";
+import { error } from "tauri-plugin-log-api";
+import type { Res } from "@/types";
+import {
+  PDFDocument,
+  StandardFonts,
+  rgb,
+  PageSizes,
+  PDFPage,
+  PDFFont,
+  type RGB,
+} from "pdf-lib";
+import { onMounted } from "vue";
 
 const { t, d } = useI18n();
-
 const id = useRoute().params.id;
 const order = ref<any | null>(null);
+const pdfRef = ref<HTMLIFrameElement | null>();
+//
+let resolveWaitForFetch: (value?: unknown) => void;
+let waitForFetch = new Promise((r) => (resolveWaitForFetch = r));
+let pdfDoc: PDFDocument;
+let font: PDFFont;
+let color: RGB;
 
 onBeforeMount(async () => {
   try {
-    const res = await invoke<any>("get_order", {
+    const res = await invoke<Res<any>>("get_order_details", {
       id,
     });
-    if (res?.id) {
-      order.value = res;
-    }
+    order.value = res.data;
+    resolveWaitForFetch();
   } catch (err: any) {
-    error("Error creating client : " + err.error);
+    console.log(err);
+    error("Error creating supplier : " + err.error);
   }
 });
 
-const print = () => window.print();
+onMounted(async () => {
+  await waitForFetch;
+  pdfDoc = await PDFDocument.create();
+  font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  color = rgb(0.34, 0.34, 0.34);
+  generatePdf();
+});
+
+const generatePdf = async () => {
+  const page = pdfDoc.addPage();
+  page.setSize(...PageSizes.A4);
+  const { width, height } = page.getSize();
+
+  drawInvoiceHeader(page, width, height, order.value);
+
+  page.drawLine({
+    start: { x: 20, y: height - 200 },
+    end: { x: width - 20, y: height - 200 },
+    thickness: 1,
+    color,
+    opacity: 0.75,
+  });
+
+  const items = [...order.value.items];
+  drawInvoiceItems(page, width, height, items, 210);
+
+  const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
+  pdfRef.value?.setAttribute("src", pdfDataUri);
+};
+
+const drawInvoiceHeader = (
+  page: PDFPage,
+  width: number,
+  height: number,
+  order: any,
+) => {
+  page.drawText("O R D E R", {
+    x: width - 190,
+    y: height - 40,
+    font,
+    size: 30,
+    color,
+  });
+  page.drawText(t("g.fields.date") + " : " + order.createdAt ?? "", {
+    x: width - 190,
+    y: height - 70,
+    font,
+    size: 13,
+    color,
+  });
+  page.drawText(
+    t("g.fields.status") + " : " + order.status.toLowerCase() ?? "",
+    {
+      x: width - 190,
+      y: height - 90,
+      font,
+      size: 13,
+      color,
+    },
+  );
+  //
+  page.drawText(
+    t("g.fields.fullname") + " : " + order.supplier.fullname ?? "",
+    {
+      x: 20,
+      y: height - 70,
+      font,
+      size: 13,
+      color,
+    },
+  );
+  page.drawText(t("g.fields.address") + " : " + order.supplier.address ?? "", {
+    x: 20,
+    y: height - 90,
+    font,
+    size: 13,
+    color,
+  });
+  page.drawText(
+    t("g.fields.phone") + " : " + order.supplier.phoneNumber ?? "",
+    {
+      x: 20,
+      y: height - 110,
+      font,
+      size: 13,
+      color,
+    },
+  );
+  page.drawText(t("g.fields.email") + " : " + order.supplier.email ?? "", {
+    x: 20,
+    y: height - 130,
+    font,
+    size: 13,
+    color,
+  });
+  //
+  page.drawLine({
+    start: { x: 20, y: height - 170 },
+    end: { x: width - 20, y: height - 170 },
+    thickness: 1,
+    color,
+    opacity: 0.75,
+  });
+  page.drawText(t("g.fields.name"), {
+    x: 25,
+    y: height - 190,
+    font,
+    size: 14,
+    color,
+  });
+  page.drawText(t("g.fields.price"), {
+    x: 25 + width / 4,
+    y: height - 190,
+    font,
+    size: 14,
+    color,
+  });
+
+  page.drawText(t("g.fields.quantity"), {
+    x: 25 + width / 2,
+    y: height - 190,
+    font,
+    size: 14,
+    color,
+  });
+
+  page.drawText(t("g.fields.total"), {
+    x: 25 + (width * 3) / 4,
+    y: height - 190,
+    font,
+    size: 14,
+    color,
+  });
+};
+
+const drawInvoiceItems = (
+  page: PDFPage,
+  width: number,
+  height: number,
+  items: any[],
+  currentY: number,
+) => {
+  if (items.length === 0) {
+    drawSummary(page, width, height, currentY);
+    return;
+  }
+
+  const item = items.shift();
+  page.drawText(item.name, {
+    x: 25,
+    y: height - currentY - 10,
+    font,
+    size: 12,
+    color,
+  });
+  page.drawText("DH " + item.price.toFixed(2), {
+    x: 25 + width / 4,
+    y: height - currentY - 10,
+    font,
+    size: 12,
+    color,
+  });
+  page.drawText(item.quantity.toFixed(0), {
+    x: 25 + width / 2,
+    y: height - currentY - 10,
+    font,
+    size: 12,
+    color,
+  });
+  page.drawText("DH " + (item.price * item.quantity).toFixed(2), {
+    x: 25 + (width * 3) / 4,
+    y: height - currentY - 10,
+    font,
+    size: 12,
+    color,
+  });
+  page.drawLine({
+    start: { x: 20, y: height - currentY - 20 },
+    end: { x: width - 20, y: height - currentY - 20 },
+    thickness: 1,
+    color,
+    opacity: 0.75,
+  });
+
+  const lineHeight = 30; // Assuming a line height for each item
+  const remainingHeight = height - currentY - lineHeight;
+  if (remainingHeight < lineHeight + 30) {
+    // Not enough space, create a new page and continue
+    const newPage = pdfDoc.addPage();
+    drawInvoiceItems(newPage, width, height, items, lineHeight);
+  } else {
+    // Enough space, continue drawing on current page
+    drawInvoiceItems(page, width, height, items, currentY + lineHeight);
+  }
+};
+
+const drawSummary = (
+  page: PDFPage,
+  width: number,
+  height: number,
+  currentY: number,
+) => {
+  page.drawText("DH " + order.value.total.toFixed(2), {
+    x: 25 + (width * 3) / 4,
+    y: height - currentY - 10,
+    font,
+    size: 12,
+    color,
+  });
+
+  page.drawText(t("g.fields.total"), {
+    x: 100 + (width * 2) / 4,
+    y: height - currentY - 10,
+    font,
+    size: 12,
+    color,
+  });
+  page.drawLine({
+    start: { x: 90 + (width * 2) / 4, y: height - currentY - 20 },
+    end: { x: width - 20, y: height - currentY - 20 },
+    thickness: 1,
+    color,
+    opacity: 0.75,
+  });
+};
 </script>
 
 <template>
-  <main class="w-full h-full">
-    <!-- <div class="w-full h-full text-black flex justify-center print:pr-12">
-      <div
-        class="w-full h-full max-w-4xl grid-rows-[230px_1fr] grid grid-cols-2"
-      >
-        <div class="w-full h-full flex-col flex">
-          <h1 class="uppercase font-semibold mb-1">
-            {{ t("od.d.o.title") }}
-          </h1>
-          <table class="table-auto rounded-md overflow-hidden w-full">
-            <tbody class="text-sm divide-y divide-gray-100">
-              <tr>
-                <td
-                  class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
-                >
-                  <span class="h-full w-full grid">
-                    {{ t("od.d.o.date") }}
-                  </span>
-                </td>
-                <td class="p-2">
-                  <span class="h-full w-full grid">
-                    {{ d(new Date(order?.created_at ?? new Date()), "long") }}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td
-                  class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
-                >
-                  <span class="h-full w-full grid">
-                    {{ t("od.d.o.status") }}
-                  </span>
-                </td>
-                <td class="p-2">
-                  <span class="h-full w-full grid">
-                    {{ order?.status }}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="w-full h-full flex flex-col">
-          <h1 class="uppercase font-semibold mb-1">
-            {{ t("od.d.s.title") }}
-          </h1>
-          <table class="table-auto rounded-md overflow-hidden w-full">
-            <tbody class="text-sm divide-y divide-gray-100">
-              <tr>
-                <td
-                  class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
-                >
-                  <span class="h-full w-full grid">
-                    {{ t("od.d.s.name") }}
-                  </span>
-                </td>
-                <td class="p-2">
-                  <span class="h-full w-full grid">
-                    {{ order?.seller.name }}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td
-                  class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
-                >
-                  <span class="h-full w-full grid">
-                    {{ t("od.d.s.phone") }}
-                  </span>
-                </td>
-                <td class="p-2">
-                  <span class="h-full w-full grid">
-                    {{ order?.seller.phone }}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td
-                  class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
-                >
-                  <span class="h-full w-full grid">
-                    {{ t("od.d.s.email") }}
-                  </span>
-                </td>
-                <td class="p-2">
-                  <span class="h-full w-full grid">
-                    {{ order?.seller.email }}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td
-                  class="p-2 bg-gray-300 font-semibold uppercase text-[rgba(25,23,17,0.6)]"
-                >
-                  <span class="h-full w-full grid">
-                    {{ t("od.d.s.address") }}
-                  </span>
-                </td>
-                <td class="p-2">
-                  <span class="h-full w-full grid">
-                    {{ order?.seller.address }}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="w-full h-full col-span-2 row-span-2 text-black">
-          <h1 class="uppercase font-semibold mb-1">
-            {{ t("od.d.i.title") }}
-          </h1>
-          <table class="table-auto rounded-md overflow-hidden w-full">
-            <thead
-              class="text-xs h-9 rounded-md font-semibold uppercase text-[rgba(25,23,17,0.6)] bg-gray-300"
-            >
-              <tr>
-                <th></th>
-                <th v-for="index in 5" :key="index" class="p-2">
-                  <div class="font-semibold text-left">
-                    {{ t(`od.d.i.fields[${index - 1}]`) }}
-                  </div>
-                </th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody class="text-sm divide-y divide-gray-100">
-              <tr v-for="item in order?.order_items" :key="item.id">
-                <td class="p-2">
-                  <span class="h-full w-full grid"></span>
-                </td>
-                <td class="p-2">
-                  <span class="h-full w-full grid">
-                    {{ item.product.name }}
-                  </span>
-                </td>
-                <td class="p-2">
-                  <div
-                    class="font-medium text-gray-800 max-w-[120px] overflow-hidden"
-                  >
-                    {{ item.product?.description }}
-                  </div>
-                </td>
-                <td class="p-2">
-                  <div class="text-left">{{ item.quantity }}</div>
-                </td>
-                <td class="p-2">
-                  <div class="text-left">
-                    {{
-                      item.price
-                        ? item.price?.toFixed(2)
-                        : item.product.price?.toFixed(2)
-                    }}
-                    DH
-                  </div>
-                </td>
-                <td class="p-2">
-                  <div class="flex justify-start gap-3">
-                    {{
-                      (item.price
-                        ? item.price * item.quantity
-                        : item.product.price * item.quantity
-                      ).toFixed(2)
-                    }}
-                    DH
-                  </div>
-                </td>
-                <td class="p-2">
-                  <div class="flex justify-start gap-3"></div>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="p-2 font-semibold">
-                  {{
-                    order?.order_items
-                      .reduce(
-                        (acc, curr) =>
-                          (acc +=
-                            curr.price === 0
-                              ? curr.quantity * curr.price
-                              : curr.quantity * curr.product.price),
-                        0,
-                      )
-                      .toFixed(2)
-                  }}
-                  DH
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="w-full flex items-center justify-center">
-            <div class="w-1/3 flex items-center justify-center">
-              <Button @click="print">
-                {{ t("od.d.button") }}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
+  <main class="w-full h-screen">
+    <iframe ref="pdfRef" style="width: 100%; height: 100%" />
   </main>
 </template>

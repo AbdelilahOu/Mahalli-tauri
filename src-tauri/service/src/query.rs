@@ -12,9 +12,10 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 use crate::{
-    SelectClients, SelectExpenses, SelectInventory, SelectInvoices, SelectInvoicesItemsForUpdate,
-    SelectMvm, SelectOrders, SelectOrdersItemsForUpdate, SelectProducts, SelectRevenue,
-    SelectStatusCount, SelectSuppliers, SelectTops,SelectInvoicesItems,SelectOrdersItems
+    SelectClients, SelectExpenses, SelectInventory, SelectInvoiceDetails, SelectInvoices,
+    SelectInvoicesItems, SelectInvoicesItemsForUpdate, SelectMvm, SelectOrderDetails, SelectOrders,
+    SelectOrdersItems, SelectOrdersItemsForUpdate, SelectProducts, SelectRevenue,
+    SelectStatusCount, SelectSuppliers, SelectTops,
 };
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -624,10 +625,55 @@ impl QueriesService {
         Ok(order_products)
     }
     pub async fn get_order_details(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
-        let order = Orders::find_by_id(id.clone())
-            .find_also_related(Suppliers)
-            .one(db)
-            .await?;
+        let (sql, values) = Query::select()
+            .from(Orders)
+            .exprs([
+                Expr::col((Suppliers, suppliers::Column::FullName)),
+                Expr::col((Suppliers, suppliers::Column::Address)),
+                Expr::col((Suppliers, suppliers::Column::PhoneNumber)),
+                Expr::col((Suppliers, suppliers::Column::Email)),
+                Expr::col((Orders, orders::Column::Id)),
+                Expr::col((Orders, orders::Column::Status)),
+                Expr::col((Orders, orders::Column::CreatedAt)),
+            ])
+            .expr_as(
+                Func::coalesce([
+                    Func::sum(
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity))
+                            .mul(Expr::col((OrderItems, order_items::Column::Price))),
+                    )
+                    .into(),
+                    Expr::val(0.0f64).into(),
+                ]),
+                Alias::new("total"),
+            )
+            .left_join(
+                OrderItems,
+                Expr::col((OrderItems, order_items::Column::OrderId))
+                    .equals((Orders, orders::Column::Id)),
+            )
+            .left_join(
+                InventoryMouvements,
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                    .equals((OrderItems, order_items::Column::InventoryId)),
+            )
+            .join(
+                JoinType::Join,
+                Suppliers,
+                Expr::col((Suppliers, suppliers::Column::Id))
+                    .equals((Orders, orders::Column::SupplierId)),
+            )
+            .cond_where(Expr::col((Orders, orders::Column::Id)).eq(id.clone()))
+            .to_owned()
+            .build(SqliteQueryBuilder);
+
+        let order = SelectOrderDetails::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .one(db)
+        .await?;
 
         match order {
             Some(order) => {
@@ -654,9 +700,11 @@ impl QueriesService {
                     .to_owned()
                     .build(SqliteQueryBuilder);
 
-                let items = SelectOrdersItems::find_by_statement(
-                    Statement::from_sql_and_values(DbBackend::Sqlite, sql, values),
-                )
+                let items = SelectOrdersItems::find_by_statement(Statement::from_sql_and_values(
+                    DbBackend::Sqlite,
+                    sql,
+                    values,
+                ))
                 .all(db)
                 .await?;
 
@@ -670,15 +718,15 @@ impl QueriesService {
                 });
 
                 Ok(json!({
-                    "id": order.0.id,
-                    "supplierId": order.0.supplier_id,
-                    "createdAt": order.0.created_at,
-                    "status": order.0.status,
+                    "id": order.id,
+                    "createdAt": order.created_at,
+                    "status": order.status,
+                    "total": order.total,
                     "supplier": json!({
-                        "fullname": order.1.clone().unwrap().full_name,
-                        "email": order.1.clone().unwrap().email,
-                        "address":order.1.clone().unwrap().address,
-                        "phoneNumber":order.1.clone().unwrap().phone_number,
+                        "fullname": order.full_name,
+                        "email": order.email,
+                        "address":order.address,
+                        "phoneNumber":order.phone_number,
                     }),
                     "items": result,
                 }))
@@ -896,10 +944,56 @@ impl QueriesService {
         Ok(invoice_products)
     }
     pub async fn get_invoice_details(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
-        let invoice = Invoices::find_by_id(id.clone())
-            .find_also_related(Clients)
-            .one(db)
-            .await?;
+        let (sql, values) = Query::select()
+            .from(Invoices)
+            .exprs([
+                Expr::col((Clients, clients::Column::FullName)),
+                Expr::col((Clients, clients::Column::Address)),
+                Expr::col((Clients, clients::Column::PhoneNumber)),
+                Expr::col((Clients, clients::Column::Email)),
+                Expr::col((Invoices, invoices::Column::Id)),
+                Expr::col((Invoices, invoices::Column::Status)),
+                Expr::col((Invoices, invoices::Column::PaidAmount)),
+                Expr::col((Invoices, invoices::Column::CreatedAt)),
+            ])
+            .expr_as(
+                Func::coalesce([
+                    Func::sum(
+                        Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity))
+                            .mul(Expr::col((InvoiceItems, invoice_items::Column::Price))),
+                    )
+                    .into(),
+                    Expr::val(0.0f64).into(),
+                ]),
+                Alias::new("total"),
+            )
+            .left_join(
+                InvoiceItems,
+                Expr::col((InvoiceItems, invoice_items::Column::InvoiceId))
+                    .equals((Invoices, invoices::Column::Id)),
+            )
+            .left_join(
+                InventoryMouvements,
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Id))
+                    .equals((InvoiceItems, invoice_items::Column::InventoryId)),
+            )
+            .join(
+                JoinType::Join,
+                Clients,
+                Expr::col((Clients, clients::Column::Id))
+                    .equals((Invoices, invoices::Column::ClientId)),
+            )
+            .cond_where(Expr::col((Invoices, invoices::Column::Id)).eq(id.clone()))
+            .to_owned()
+            .build(SqliteQueryBuilder);
+
+        let invoice = SelectInvoiceDetails::find_by_statement(Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            sql,
+            values,
+        ))
+        .one(db)
+        .await?;
 
         match invoice {
             Some(invoice) => {
@@ -926,9 +1020,11 @@ impl QueriesService {
                     .to_owned()
                     .build(SqliteQueryBuilder);
 
-                let items = SelectInvoicesItems::find_by_statement(
-                    Statement::from_sql_and_values(DbBackend::Sqlite, sql, values),
-                )
+                let items = SelectInvoicesItems::find_by_statement(Statement::from_sql_and_values(
+                    DbBackend::Sqlite,
+                    sql,
+                    values,
+                ))
                 .all(db)
                 .await?;
 
@@ -942,16 +1038,16 @@ impl QueriesService {
                 });
 
                 Ok(json!({
-                    "id": invoice.0.id,
-                    "clientId": invoice.0.client_id,
-                    "paidAmount": invoice.0.paid_amount,
-                    "createdAt": invoice.0.created_at,
-                    "status": invoice.0.status,
+                    "id": invoice.id,
+                    "paidAmount": invoice.paid_amount,
+                    "createdAt": invoice.created_at,
+                    "status": invoice.status,
+                    "total": invoice.total,
                     "client": json!({
-                        "fullname": invoice.1.clone().unwrap().full_name,
-                        "email": invoice.1.clone().unwrap().email,
-                        "address":invoice.1.clone().unwrap().address,
-                        "phoneNumber":invoice.1.clone().unwrap().phone_number,
+                        "fullname": invoice.full_name,
+                        "email": invoice.email,
+                        "address":invoice.address,
+                        "phoneNumber":invoice.phone_number,
                     }),
                     "items": result,
                 }))
