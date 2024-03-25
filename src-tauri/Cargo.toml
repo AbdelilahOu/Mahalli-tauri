@@ -40,13 +40,11 @@ uuid = { version = "1.7.0", features = [
   "fast-rng",
   "macro-diagnostics",
 ] }
+dotenvy = "0.15.7"
 log = "^0.4"
 migration = { path = "./migration" }
 service = { path = "./service" }
 entity = { path = "./entity" }
-
-[dev-dependencies]
-dotenvy = "0.15.7"
 
 [features]
 # by default Tauri runs in production mode
