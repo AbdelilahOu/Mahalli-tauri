@@ -5,7 +5,15 @@ import { invoke } from "@tauri-apps/api";
 import { useI18n } from "vue-i18n";
 import { error } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
-import { PDFDocument, StandardFonts, rgb, PageSizes } from "pdf-lib";
+import {
+  PDFDocument,
+  StandardFonts,
+  rgb,
+  PageSizes,
+  PDFPage,
+  PDFFont,
+  type RGB,
+} from "pdf-lib";
 import { onMounted } from "vue";
 
 const { t, d } = useI18n();
@@ -15,6 +23,7 @@ const pdfRef = ref<HTMLIFrameElement | null>();
 //
 let resolveWaitForFetch: (value?: unknown) => void;
 let waitForFetch = new Promise((r) => (resolveWaitForFetch = r));
+let pdfDoc: PDFDocument;
 
 onBeforeMount(async () => {
   try {
@@ -22,7 +31,6 @@ onBeforeMount(async () => {
       id,
     });
     invoice.value = res.data;
-    console.log(res.data);
     resolveWaitForFetch();
   } catch (err: any) {
     console.log(err);
@@ -32,160 +40,220 @@ onBeforeMount(async () => {
 
 onMounted(async () => {
   await waitForFetch;
+  pdfDoc = await PDFDocument.create();
   generatePdf();
 });
 
 const generatePdf = async () => {
-  const pdfDoc = await PDFDocument.create();
+  const mainColor = rgb(0.34, 0.34, 0.34);
   const page = pdfDoc.addPage();
   const HelveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
   page.setSize(...PageSizes.A4);
   const { width, height } = page.getSize();
+
+  drawInvoiceHeader(
+    page,
+    width,
+    height,
+    HelveticaFont,
+    mainColor,
+    invoice.value,
+  );
+
+  page.drawLine({
+    start: { x: 20, y: height - 200 },
+    end: { x: width - 20, y: height - 200 },
+    thickness: 1,
+    color: mainColor,
+    opacity: 0.75,
+  });
+
+  const items = [...invoice.value.items];
+  drawInvoiceItems(page, width, height, HelveticaFont, mainColor, items, 210);
+
+  const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
+  pdfRef.value?.setAttribute("src", pdfDataUri);
+};
+
+const drawInvoiceHeader = (
+  page: PDFPage,
+  width: number,
+  height: number,
+  font: PDFFont,
+  color: RGB,
+  invoice: any,
+) => {
   page.drawText("I N V O I C E", {
     x: width - 190,
     y: height - 40,
-    font: HelveticaFont,
+    font,
     size: 30,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
   });
-  page.drawText("Date: " + invoice.value.createdAt ?? "", {
+  page.drawText("Date: " + invoice.createdAt ?? "", {
     x: width - 190,
     y: height - 70,
-    font: HelveticaFont,
+    font,
     size: 13,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
   });
-  page.drawText("Status: " + invoice.value.status.toLowerCase() ?? "", {
+  page.drawText("Status: " + invoice.status.toLowerCase() ?? "", {
     x: width - 190,
     y: height - 90,
-    font: HelveticaFont,
+    font,
     size: 13,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
   });
   //
-  page.drawText("Client: " + invoice.value.client.fullname ?? "", {
+  page.drawText("Client: " + invoice.client.fullname ?? "", {
     x: 20,
     y: height - 70,
-    font: HelveticaFont,
+    font,
     size: 13,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
   });
-  page.drawText("Address: " + invoice.value.client.address ?? "", {
+  page.drawText("Address: " + invoice.client.address ?? "", {
     x: 20,
     y: height - 90,
-    font: HelveticaFont,
+    font,
     size: 13,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
   });
-  page.drawText("Phone number: " + invoice.value.client.phoneNumber ?? "", {
+  page.drawText("Phone number: " + invoice.client.phoneNumber ?? "", {
     x: 20,
     y: height - 110,
-    font: HelveticaFont,
+    font,
     size: 13,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
   });
-  page.drawText("Email: " + invoice.value.client.email ?? "", {
+  page.drawText("Email: " + invoice.client.email ?? "", {
     x: 20,
     y: height - 130,
-    font: HelveticaFont,
+    font,
     size: 13,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
   });
   //
   page.drawLine({
     start: { x: 20, y: height - 170 },
     end: { x: width - 20, y: height - 170 },
     thickness: 1,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
     opacity: 0.75,
   });
   page.drawText("Product name", {
     x: 25,
     y: height - 190,
-    font: HelveticaFont,
+    font,
     size: 14,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
   });
   page.drawText("Price", {
     x: 25 + width / 4,
     y: height - 190,
-    font: HelveticaFont,
+    font,
     size: 14,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
   });
 
   page.drawText("Quantity", {
     x: 25 + width / 2,
     y: height - 190,
-    font: HelveticaFont,
+    font,
     size: 14,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
   });
 
   page.drawText("Total", {
     x: 25 + (width * 3) / 4,
     y: height - 190,
-    font: HelveticaFont,
+    font,
     size: 14,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
   });
+};
 
+const drawInvoiceItems = (
+  page: PDFPage,
+  width: number,
+  height: number,
+  font: PDFFont,
+  color: RGB,
+  items: any[],
+  currentY: number,
+) => {
+  if (items.length === 0) {
+    drawSummary(page, width, height, currentY);
+    return;
+  }
+
+  const item = items.shift();
+  page.drawText(item.name, {
+    x: 25,
+    y: height - currentY - 10,
+    font,
+    size: 12,
+    color,
+  });
+  page.drawText("DH " + item.price.toFixed(2), {
+    x: 25 + width / 4,
+    y: height - currentY - 10,
+    font,
+    size: 12,
+    color,
+  });
+  page.drawText(item.quantity.toFixed(2), {
+    x: 25 + width / 2,
+    y: height - currentY - 10,
+    font,
+    size: 12,
+    color,
+  });
+  page.drawText("DH " + String(item.price * item.quantity), {
+    x: 25 + (width * 3) / 4,
+    y: height - currentY - 10,
+    font,
+    size: 12,
+    color,
+  });
   page.drawLine({
-    start: { x: 20, y: height - 200 },
-    end: { x: width - 20, y: height - 200 },
+    start: { x: 20, y: height - currentY - 20 },
+    end: { x: width - 20, y: height - currentY - 20 },
     thickness: 1,
-    color: rgb(0.34, 0.34, 0.34),
+    color,
     opacity: 0.75,
   });
 
-  for (let [index, item] of invoice.value.items.entries()) {
-    page.drawText(item.name, {
-      x: 25,
-      y: height - 220 - index * 30,
-      font: HelveticaFont,
-      size: 12,
-      color: rgb(0.34, 0.34, 0.34),
-    });
-    page.drawText("DH " + item.price.toFixed(2), {
-      x: 25 + width / 4,
-      y: height - 220 - index * 30,
-      font: HelveticaFont,
-      size: 12,
-      color: rgb(0.34, 0.34, 0.34),
-    });
-
-    page.drawText(item.quantity.toFixed(2), {
-      x: 25 + width / 2,
-      y: height - 220 - index * 30,
-      font: HelveticaFont,
-      size: 12,
-      color: rgb(0.34, 0.34, 0.34),
-    });
-
-    page.drawText("DH " + String(item.price * item.quantity), {
-      x: 25 + (width * 3) / 4,
-      y: height - 220 - index * 30,
-      font: HelveticaFont,
-      size: 12,
-      color: rgb(0.34, 0.34, 0.34),
-    });
-
-    page.drawLine({
-      start: { x: 20, y: height - 230 - index * 30 },
-      end: { x: width - 20, y: height - 230 - index * 30 },
-      thickness: 1,
-      color: rgb(0.34, 0.34, 0.34),
-      opacity: 0.75,
-    });
+  const lineHeight = 30; // Assuming a line height for each item
+  const remainingHeight = height - currentY - lineHeight;
+  if (remainingHeight < lineHeight + 30) {
+    // Not enough space, create a new page and continue
+    const newPage = pdfDoc.addPage();
+    drawInvoiceItems(newPage, width, height, font, color, items, lineHeight);
+  } else {
+    // Enough space, continue drawing on current page
+    drawInvoiceItems(
+      page,
+      width,
+      height,
+      font,
+      color,
+      items,
+      currentY + lineHeight,
+    );
   }
-
-  const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
-  pdfRef.value?.setAttribute("src", pdfDataUri);
 };
+
+const drawSummary = (
+  page: PDFPage,
+  width: number,
+  height: number,
+  currentY: number,
+) => {};
 </script>
 
 <template>
   <main class="w-full h-screen">
-    <iframe ref="pdfRef" style="width: 100%; height: 100%"></iframe>
+    <iframe ref="pdfRef" style="width: 100%; height: 100%" />
   </main>
 </template>
