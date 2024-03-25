@@ -7,7 +7,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "client",
+    "productName": "Mahali",
     "version": "0.2.0"
   },
   "tauri": {
@@ -46,7 +46,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "whatisthis",
+      "identifier": ".stocker",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
