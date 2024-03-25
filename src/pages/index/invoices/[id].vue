@@ -103,14 +103,14 @@ const generatePdf = async () => {
     x: 25,
     y: height - 190,
     font: HelveticaFont,
-    size: 13,
+    size: 14,
     color: rgb(0.34, 0.34, 0.34),
   });
   page.drawText("Price", {
     x: 25 + width / 4,
     y: height - 190,
     font: HelveticaFont,
-    size: 13,
+    size: 14,
     color: rgb(0.34, 0.34, 0.34),
   });
 
@@ -118,7 +118,7 @@ const generatePdf = async () => {
     x: 25 + width / 2,
     y: height - 190,
     font: HelveticaFont,
-    size: 13,
+    size: 14,
     color: rgb(0.34, 0.34, 0.34),
   });
 
@@ -126,7 +126,7 @@ const generatePdf = async () => {
     x: 25 + (width * 3) / 4,
     y: height - 190,
     font: HelveticaFont,
-    size: 13,
+    size: 14,
     color: rgb(0.34, 0.34, 0.34),
   });
 
@@ -143,14 +143,14 @@ const generatePdf = async () => {
       x: 25,
       y: height - 220 - index * 30,
       font: HelveticaFont,
-      size: 13,
+      size: 12,
       color: rgb(0.34, 0.34, 0.34),
     });
     page.drawText("DH " + item.price.toFixed(2), {
       x: 25 + width / 4,
       y: height - 220 - index * 30,
       font: HelveticaFont,
-      size: 13,
+      size: 12,
       color: rgb(0.34, 0.34, 0.34),
     });
 
@@ -158,7 +158,7 @@ const generatePdf = async () => {
       x: 25 + width / 2,
       y: height - 220 - index * 30,
       font: HelveticaFont,
-      size: 13,
+      size: 12,
       color: rgb(0.34, 0.34, 0.34),
     });
 
@@ -166,7 +166,7 @@ const generatePdf = async () => {
       x: 25 + (width * 3) / 4,
       y: height - 220 - index * 30,
       font: HelveticaFont,
-      size: 13,
+      size: 12,
       color: rgb(0.34, 0.34, 0.34),
     });
 
