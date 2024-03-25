@@ -51,7 +51,10 @@ const hideModal = () => {
             English
           </span>
         </Button>
-        <Button variant="ghost" @click="changeLocale({ key: '', text: '' })">
+        <Button
+          variant="ghost"
+          @click="changeLocale({ key: 'fr-FR', text: 'Français ' })"
+        >
           <span
             class="w-3/5 items-center h-full text-start flex justify-center gap-2"
           >
@@ -71,7 +74,10 @@ const hideModal = () => {
             Francais
           </span>
         </Button>
-        <Button variant="ghost" @click="changeLocale({ key: '', text: '' })">
+        <Button
+          variant="ghost"
+          @click="changeLocale({ key: 'ar-AE', text: 'Arabic' })"
+        >
           <span
             class="w-3/5 items-center h-full text-start flex justify-center gap-2"
           >
@@ -90,7 +96,10 @@ const hideModal = () => {
             Arabic
           </span>
         </Button>
-        <Button variant="ghost" @click="changeLocale({ key: '', text: '' })">
+        <Button
+          variant="ghost"
+          @click="changeLocale({ key: 'de-DE', text: 'German' })"
+        >
           <span
             class="w-3/5 items-center h-full text-start flex justify-center gap-2"
           >
