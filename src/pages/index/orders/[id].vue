@@ -83,52 +83,43 @@ const drawInvoiceHeader = (
     size: 30,
     color,
   });
-  page.drawText(t("g.fields.date") + " : " + order.createdAt ?? "", {
+  page.drawText(t("g.fields.date") + " : " + order.createdAt, {
     x: width - 190,
     y: height - 70,
     font,
     size: 13,
     color,
   });
-  page.drawText(
-    t("g.fields.status") + " : " + order.status.toLowerCase() ?? "",
-    {
-      x: width - 190,
-      y: height - 90,
-      font,
-      size: 13,
-      color,
-    },
-  );
+  page.drawText(t("g.fields.status") + " : " + order.status.toLowerCase(), {
+    x: width - 190,
+    y: height - 90,
+    font,
+    size: 13,
+    color,
+  });
   //
-  page.drawText(
-    t("g.fields.fullname") + " : " + order.supplier.fullname ?? "",
-    {
-      x: 20,
-      y: height - 70,
-      font,
-      size: 13,
-      color,
-    },
-  );
-  page.drawText(t("g.fields.address") + " : " + order.supplier.address ?? "", {
+  page.drawText(t("g.fields.fullname") + " : " + order.supplier.fullname, {
+    x: 20,
+    y: height - 70,
+    font,
+    size: 13,
+    color,
+  });
+  page.drawText(t("g.fields.address") + " : " + order.supplier.address, {
     x: 20,
     y: height - 90,
     font,
     size: 13,
     color,
   });
-  page.drawText(
-    t("g.fields.phone") + " : " + order.supplier.phoneNumber ?? "",
-    {
-      x: 20,
-      y: height - 110,
-      font,
-      size: 13,
-      color,
-    },
-  );
-  page.drawText(t("g.fields.email") + " : " + order.supplier.email ?? "", {
+  page.drawText(t("g.fields.phone") + " : " + order.supplier.phoneNumber, {
+    x: 20,
+    y: height - 110,
+    font,
+    size: 13,
+    color,
+  });
+  page.drawText(t("g.fields.email") + " : " + order.supplier.email, {
     x: 20,
     y: height - 130,
     font,
