@@ -39,6 +39,7 @@
       "price": "Price",
       "date": "Date",
       "paid": "Avance",
+      "rest": "Rest",
       "items": "Items",
       "total": "Total",
       "inventory": "Inventory",
