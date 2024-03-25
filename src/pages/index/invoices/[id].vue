@@ -83,52 +83,43 @@ const drawInvoiceHeader = (
     size: 30,
     color,
   });
-  page.drawText(t("g.fields.date") + " : " + invoice.createdAt ?? "", {
+  page.drawText(t("g.fields.date") + " : " + invoice.createdAt, {
     x: width - 190,
     y: height - 70,
     font,
     size: 13,
     color,
   });
-  page.drawText(
-    t("g.fields.status") + " : " + invoice.status.toLowerCase() ?? "",
-    {
-      x: width - 190,
-      y: height - 90,
-      font,
-      size: 13,
-      color,
-    },
-  );
+  page.drawText(t("g.fields.status") + " : " + invoice.status.toLowerCase(), {
+    x: width - 190,
+    y: height - 90,
+    font,
+    size: 13,
+    color,
+  });
   //
-  page.drawText(
-    t("g.fields.fullname") + " : " + invoice.client.fullname ?? "",
-    {
-      x: 20,
-      y: height - 70,
-      font,
-      size: 13,
-      color,
-    },
-  );
-  page.drawText(t("g.fields.address") + " : " + invoice.client.address ?? "", {
+  page.drawText(t("g.fields.fullname") + " : " + invoice.client.fullname, {
+    x: 20,
+    y: height - 70,
+    font,
+    size: 13,
+    color,
+  });
+  page.drawText(t("g.fields.address") + " : " + invoice.client.address, {
     x: 20,
     y: height - 90,
     font,
     size: 13,
     color,
   });
-  page.drawText(
-    t("g.fields.phone") + " : " + invoice.client.phoneNumber ?? "",
-    {
-      x: 20,
-      y: height - 110,
-      font,
-      size: 13,
-      color,
-    },
-  );
-  page.drawText(t("g.fields.email") + " : " + invoice.client.email ?? "", {
+  page.drawText(t("g.fields.phone") + " : " + invoice.client.phoneNumber, {
+    x: 20,
+    y: height - 110,
+    font,
+    size: 13,
+    color,
+  });
+  page.drawText(t("g.fields.email") + " : " + invoice.client.email, {
     x: 20,
     y: height - 130,
     font,
