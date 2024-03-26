@@ -23,7 +23,7 @@ pub async fn establish_connection() -> DatabaseConnection {
     };
 
     #[cfg(not(debug_assertions))]
-    let data_dir = home_dir.join(".stocker/data");
+    let data_dir = home_dir.join(".mahali/data");
     #[cfg(not(debug_assertions))]
     if let Err(_) = fs::metadata(&data_dir) {
         fs::create_dir_all(&data_dir).expect("Could not create data directory");
