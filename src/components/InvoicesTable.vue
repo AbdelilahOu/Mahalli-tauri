@@ -133,7 +133,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                   variant="outline"
                   :class="
                     cn(
-                      'cursor-pointer',
+                      'cursor-pointer whitespace-nowrap',
                       invoice?.status == 'CANCELED'
                         ? 'bg-red-100 border-red-500 text-red-900'
                         : invoice?.status == 'PENDING'
