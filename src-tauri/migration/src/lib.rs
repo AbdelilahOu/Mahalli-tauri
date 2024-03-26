@@ -9,7 +9,7 @@ pub struct Migrator;
 
 #[async_trait::async_trait]
 impl MigratorTrait for Migrator {
-    #[cfg(debug_assertions)]
+    // #[cfg(debug_assertions)]
     fn migrations() -> Vec<Box<dyn MigrationTrait>> {
         vec![
             Box::new(m20220101_000001_init_::Migration),
@@ -18,11 +18,11 @@ impl MigratorTrait for Migrator {
         ]
     }
     //
-    #[cfg(not(debug_assertions))]
-    fn migrations() -> Vec<Box<dyn MigrationTrait>> {
-        vec![
-            Box::new(m20220101_000001_init_::Migration),
-            Box::new(m20240224_175322_status_index_::Migration),
-        ]
-    }
+    // #[cfg(not(debug_assertions))]
+    // fn migrations() -> Vec<Box<dyn MigrationTrait>> {
+    //     vec![
+    //         Box::new(m20220101_000001_init_::Migration),
+    //         Box::new(m20240224_175322_status_index_::Migration),
+    //     ]
+    // }
 }

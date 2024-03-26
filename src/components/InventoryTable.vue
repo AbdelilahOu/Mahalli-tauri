@@ -38,6 +38,7 @@ defineProps<{
               variant="outline"
               :class="
                 cn(
+                  'cursor-pointer whitespace-nowrap',
                   mvm?.mvmType == 'OUT'
                     ? 'bg-green-100 border-green-500 text-green-900'
                     : 'bg-sky-100 border-sky-500 text-sky-900',

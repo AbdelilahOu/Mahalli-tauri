@@ -126,7 +126,7 @@ const updateOrderStatus = async (order: any) => {
                   variant="outline"
                   :class="
                     cn(
-                      'cursor-pointer',
+                      'cursor-pointer whitespace-nowrap',
                       order?.status == 'CANCELED'
                         ? 'bg-red-100 border-red-500 text-red-900'
                         : order?.status == 'PENDING'
