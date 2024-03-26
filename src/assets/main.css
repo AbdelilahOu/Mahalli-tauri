@@ -132,11 +132,11 @@ table:not(.not-default) > thead {
 }
 
 table:not(.not-default) > thead > tr {
-  @apply [&>*]:border-x first:[&>th]:border-0 last:[&>th]:border-0;
+  @apply [&>*]:border-x whitespace-nowrap first:[&>th]:border-0 last:[&>th]:border-0;
 }
 
 table:not(.not-default) > thead > tr > th {
-  @apply font-semibold text-left p-2 first-letter:capitalize;
+  @apply font-semibold text-left whitespace-nowrap p-2 first-letter:capitalize;
 }
 
 table:not(.not-default) > thead > tr > .small {
