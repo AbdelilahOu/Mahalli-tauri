@@ -15,6 +15,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
     "@tauri-apps/api": "^1.5.3",
     "@unovis/ts": "^1.3.5",
     "@unovis/vue": "^1.3.5",

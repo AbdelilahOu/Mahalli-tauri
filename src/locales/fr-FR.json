@@ -1,1 +1,220 @@
-{"g":{"s":"Rechercher","r":{"Clients":"Clientèle","Suppliers":"Fournisseurs","Products":"Produits","Orders":"Ordres","Invoices":"Factures","Inventory":"Inventaire","Dashboard":"Tableau de bord","Payment":"Paymentt","Sittings":"Séances","Notifications":"Notifications"},"b":{"no":"Annuler","c":"Ajouter","d":"Confirmer","u":"Mise à jour {name}","a":"Ajouter","csv":"Télécharger sur {table}"},"translationTitle":"Changer la langue","dropZone":"Glisser-déposer ou sélectionner votre image","plrz":{"i":"Pas d’articles | {n} article | {n} articles","p":"Aucun produit | {n} produit | {n} produits"},"fields":{"fullname":"Nom complet","name":"Nom du produit","email":"Courriel","phone":"Numéro de téléphone","address":"Adresse","actions":"Actions","description":"Description","status":"Statut","price":"Prix","date":"Date","paid":"Avance","rest":"Se reposer","items":"Articles","total":"Total","inventory":"Inventaire","init-quantity":"Quantité initiale","min-quantity":"Quantité minimale","quantity":"Quantité","credit":"Crédit","threshold":"Seuil"},"status":{"delivered":"Livré","pending":"En instance","canceled":"Annulé","paid":"Payé","in":"Acheté","out":"Vendu"}},"csv":{"title":"Télécharger des fichiers csv"},"dashboard":{"i":{"title":"Articles vendus et achetés au cours des trois derniers mois","labels":["ACHETÉ","VENDU"],"b3c":"Meilleurs clients en fonction des dépenses","b3s":"Meilleurs fournisseurs en fonction des dépenses"},"de":{"title":"Produits achetés au cours des trois derniers mois"}},"c":{"i":{"addButton":"Ajouter un nouveau client"},"c":{"title":"Ajouter un client"},"u":{"title":"Mettre à jour le client"},"d":{"title":"Voulez-vous vraiment supprimer le client ?"}},"s":{"i":{"addButton":"Ajouter un nouveau fournisseur"},"c":{"title":"Ajouter un fournisseur"},"u":{"title":"Mettre à jour le fournisseur"},"d":{"title":"Voulez-vous vraiment supprimer le fournisseur ?"}},"p":{"i":{"addButton":"Ajouter un nouveau produit"},"c":{"title":"Ajouter un produit"},"u":{"title":"MISE À JOUR du produit"},"d":{"title":"Voulez-vous vraiment supprimer le produit ?"}},"o":{"i":{"addButton":"Ajouter une nouvelle commande"},"c":{"title":"Ajouter une nouvelle commande","d":{"s":{"title":"Détails du fournisseur","select":"Sélectionner un fournisseur"},"o":{"title":"Détails de la commande","add":"Ajouter un produit","select":"Sélectionner un produit","placeholder":["Quantité de produit","Nouveau prix"]}},"button":"Ajouter une commande"},"u":{"title":"Mettre à jour l’ordre","d":{"s":{"title":"Détails du fournisseur","select":"Sélectionner un fournisseur"},"o":{"title":"Détails de la commande","select":"Sélectionner un produit","add":"Ajouter un produit"}},"button":"Mettre à jour les commandes"},"d":{"title":"Voulez-vous vraiment supprimer la commande ?","yes":"Confirmer","no":"Annuler"}},"od":{"d":{"o":{"title":"Détails de la commande","id":"id","date":"date","status":"statut"},"s":{"title":"Détails du fournisseur","id":"id","name":"nom","phone":"Numéro de téléphone","email":"Messagerie électronique","address":"adresse"},"i":{"title":"Détails des articles de commande","fields":["nom","description","quantité","prix","total"]},"button":"imprimer"}},"id":{"d":{"i":{"title":"Détails de la facture","id":"id","date":"date"},"c":{"title":"Détails du client","id":"id","name":"nom","phone":"Numéro de téléphone","email":"Messagerie électronique","address":"adresse"},"it":{"title":"Détails des postes de facture","fields":["nom","description","quantité","prix","total"]},"button":"imprimer"}},"i":{"i":{"addButton":"Ajouter une nouvelle facture"},"c":{"title":"Ajouter une nouvelle facture","d":{"c":{"title":"Détails du client","select":"Sélectionner un client"},"i":{"title":"Détails de la facture","add":"Ajouter un produit","select":"Sélectionner un produit","placeholder":["Quantité de produit","Nouveau prix"]}},"button":"Ajouter une facture"},"u":{"title":"Mettre à jour la facture","d":{"c":{"title":"Détails du client","select":"--"},"i":{"title":"Détails de la facture","add":"Ajouter un produit","select":"--"}},"button":"Mettre à jour la facture"},"d":{"title":"Voulez-vous vraiment supprimer la facture ?","yes":"Confirmer","no":"Annuler"},"s":{"paid":"Payé","pending":"En instance","canceled":"Annulé"}},"im":{"i":{"addButton":"Ajouter à l’inventaire"},"c":{"title":"Ajouter des articles à l’inventaire","l":{"a":"Produit","b":"Quantité"},"p":{"a":"Sélectionner un produit","b":"Quantité"}}},"auth":{"title":"S'identifier","username":"Nom d’utilisateur","email":"Messagerie électronique","password":"Mot de passe"}}
+{
+  "g": {
+    "s": "Rechercher",
+    "r": {
+      "Clients": "Clientèle",
+      "Suppliers": "Fournisseurs",
+      "Products": "Produits",
+      "Orders": "Ordres",
+      "Invoices": "Factures",
+      "Inventory": "Inventaire",
+      "Dashboard": "Tableau de bord",
+      "Payment": "Paymentt",
+      "Settings": "Paramètres",
+      "Notifications": "Notifications"
+    },
+    "b": {
+      "no": "Annuler",
+      "c": "Ajouter",
+      "d": "Confirmer",
+      "u": "Mise à jour {name}",
+      "a": "Ajouter",
+      "csv": "Télécharger sur {table}"
+    },
+    "translationTitle": "Changer la langue",
+    "dropZone": "Glisser-déposer ou sélectionner votre image",
+    "plrz": {
+      "i": "Pas d’articles | {n} article | {n} articles",
+      "p": "Aucun produit | {n} produit | {n} produits"
+    },
+    "fields": {
+      "fullname": "Nom complet",
+      "name": "Nom du produit",
+      "email": "Courriel",
+      "phone": "Numéro de téléphone",
+      "address": "Adresse",
+      "actions": "Actions",
+      "description": "Description",
+      "status": "Statut",
+      "price": "Prix",
+      "date": "Date",
+      "paid": "Avance",
+      "rest": "Se reposer",
+      "items": "Articles",
+      "total": "Total",
+      "inventory": "Inventaire",
+      "init-quantity": "Quantité initiale",
+      "min-quantity": "Quantité minimale",
+      "quantity": "Quantité",
+      "credit": "Crédit",
+      "threshold": "Seuil"
+    },
+    "status": {
+      "delivered": "Livré",
+      "pending": "En instance",
+      "canceled": "Annulé",
+      "paid": "Payé",
+      "in": "Acheté",
+      "out": "Vendu"
+    }
+  },
+  "csv": { "title": "Télécharger des fichiers csv" },
+  "dashboard": {
+    "i": {
+      "title": "Articles vendus et achetés au cours des trois derniers mois",
+      "labels": ["ACHETÉ", "VENDU"],
+      "b3c": "Meilleurs clients en fonction des dépenses",
+      "b3s": "Meilleurs fournisseurs en fonction des dépenses"
+    },
+    "de": { "title": "Produits achetés au cours des trois derniers mois" }
+  },
+  "c": {
+    "i": { "addButton": "Ajouter un nouveau client" },
+    "c": { "title": "Ajouter un client" },
+    "u": { "title": "Mettre à jour le client" },
+    "d": { "title": "Voulez-vous vraiment supprimer le client ?" }
+  },
+  "s": {
+    "i": { "addButton": "Ajouter un nouveau fournisseur" },
+    "c": { "title": "Ajouter un fournisseur" },
+    "u": { "title": "Mettre à jour le fournisseur" },
+    "d": { "title": "Voulez-vous vraiment supprimer le fournisseur ?" }
+  },
+  "p": {
+    "i": { "addButton": "Ajouter un nouveau produit" },
+    "c": { "title": "Ajouter un produit" },
+    "u": { "title": "MISE À JOUR du produit" },
+    "d": { "title": "Voulez-vous vraiment supprimer le produit ?" }
+  },
+  "o": {
+    "i": { "addButton": "Ajouter une nouvelle commande" },
+    "c": {
+      "title": "Ajouter une nouvelle commande",
+      "d": {
+        "s": {
+          "title": "Détails du fournisseur",
+          "select": "Sélectionner un fournisseur"
+        },
+        "o": {
+          "title": "Détails de la commande",
+          "add": "Ajouter un produit",
+          "select": "Sélectionner un produit",
+          "placeholder": ["Quantité de produit", "Nouveau prix"]
+        }
+      },
+      "button": "Ajouter une commande"
+    },
+    "u": {
+      "title": "Mettre à jour l’ordre",
+      "d": {
+        "s": {
+          "title": "Détails du fournisseur",
+          "select": "Sélectionner un fournisseur"
+        },
+        "o": {
+          "title": "Détails de la commande",
+          "select": "Sélectionner un produit",
+          "add": "Ajouter un produit"
+        }
+      },
+      "button": "Mettre à jour les commandes"
+    },
+    "d": {
+      "title": "Voulez-vous vraiment supprimer la commande ?",
+      "yes": "Confirmer",
+      "no": "Annuler"
+    }
+  },
+  "od": {
+    "d": {
+      "o": {
+        "title": "Détails de la commande",
+        "id": "id",
+        "date": "date",
+        "status": "statut"
+      },
+      "s": {
+        "title": "Détails du fournisseur",
+        "id": "id",
+        "name": "nom",
+        "phone": "Numéro de téléphone",
+        "email": "Messagerie électronique",
+        "address": "adresse"
+      },
+      "i": {
+        "title": "Détails des articles de commande",
+        "fields": ["nom", "description", "quantité", "prix", "total"]
+      },
+      "button": "imprimer"
+    }
+  },
+  "id": {
+    "d": {
+      "i": { "title": "Détails de la facture", "id": "id", "date": "date" },
+      "c": {
+        "title": "Détails du client",
+        "id": "id",
+        "name": "nom",
+        "phone": "Numéro de téléphone",
+        "email": "Messagerie électronique",
+        "address": "adresse"
+      },
+      "it": {
+        "title": "Détails des postes de facture",
+        "fields": ["nom", "description", "quantité", "prix", "total"]
+      },
+      "button": "imprimer"
+    }
+  },
+  "i": {
+    "i": { "addButton": "Ajouter une nouvelle facture" },
+    "c": {
+      "title": "Ajouter une nouvelle facture",
+      "d": {
+        "c": {
+          "title": "Détails du client",
+          "select": "Sélectionner un client"
+        },
+        "i": {
+          "title": "Détails de la facture",
+          "add": "Ajouter un produit",
+          "select": "Sélectionner un produit",
+          "placeholder": ["Quantité de produit", "Nouveau prix"]
+        }
+      },
+      "button": "Ajouter une facture"
+    },
+    "u": {
+      "title": "Mettre à jour la facture",
+      "d": {
+        "c": { "title": "Détails du client", "select": "--" },
+        "i": {
+          "title": "Détails de la facture",
+          "add": "Ajouter un produit",
+          "select": "--"
+        }
+      },
+      "button": "Mettre à jour la facture"
+    },
+    "d": {
+      "title": "Voulez-vous vraiment supprimer la facture ?",
+      "yes": "Confirmer",
+      "no": "Annuler"
+    },
+    "s": { "paid": "Payé", "pending": "En instance", "canceled": "Annulé" }
+  },
+  "im": {
+    "i": { "addButton": "Ajouter à l’inventaire" },
+    "c": {
+      "title": "Ajouter des articles à l’inventaire",
+      "l": { "a": "Produit", "b": "Quantité" },
+      "p": { "a": "Sélectionner un produit", "b": "Quantité" }
+    }
+  },
+  "auth": {
+    "title": "S'identifier",
+    "username": "Nom d’utilisateur",
+    "email": "Messagerie électronique",
+    "password": "Mot de passe"
+  }
+}

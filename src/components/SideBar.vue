@@ -204,7 +204,7 @@ const openTranslationModal = () => {
           v-if="!collapse"
           class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
         >
-          {{ t("g.r.Sittings") }}
+          {{ t("g.r.Settings") }}
         </span>
       </RouterLink>
     </div>

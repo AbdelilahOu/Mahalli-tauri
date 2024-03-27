@@ -14,9 +14,11 @@ import {
   PDFFont,
   type RGB,
 } from "pdf-lib";
+import fontkit from "@pdf-lib/fontkit";
 import { onMounted } from "vue";
+import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 
-const { t, d } = useI18n();
+const { t, d, locale } = useI18n();
 const id = useRoute().params.id;
 const invoice = ref<any | null>(null);
 const pdfRef = ref<HTMLIFrameElement | null>();
@@ -41,11 +43,22 @@ onBeforeMount(async () => {
 });
 
 onMounted(async () => {
-  await waitForFetch;
-  pdfDoc = await PDFDocument.create();
-  font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  color = rgb(0.34, 0.34, 0.34);
-  generatePdf();
+  try {
+    await waitForFetch;
+    pdfDoc = await PDFDocument.create();
+    pdfDoc.registerFontkit(fontkit);
+    if (locale.value == "ar-AE") {
+      const res = await fetch(CairoRegular);
+      const fontBytes = await res.arrayBuffer();
+      font = await pdfDoc.embedFont(fontBytes);
+    } else {
+      font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    }
+    color = rgb(0.34, 0.34, 0.34);
+    generatePdf();
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 const generatePdf = async () => {
@@ -83,20 +96,25 @@ const drawInvoiceHeader = (
     size: 30,
     color,
   });
-  page.drawText(t("g.fields.date") + " : " + invoice.createdAt, {
+  page.drawText(t("g.fields.date") + " : " + d(invoice.createdAt, "short"), {
     x: width - 190,
     y: height - 70,
     font,
     size: 13,
     color,
   });
-  page.drawText(t("g.fields.status") + " : " + invoice.status.toLowerCase(), {
-    x: width - 190,
-    y: height - 90,
-    font,
-    size: 13,
-    color,
-  });
+  page.drawText(
+    t("g.fields.status") +
+      " : " +
+      t("g.status." + invoice.status.toLowerCase()),
+    {
+      x: width - 190,
+      y: height - 90,
+      font,
+      size: 13,
+      color,
+    },
+  );
   //
   page.drawText(t("g.fields.fullname") + " : " + invoice.client.fullname, {
     x: 20,
