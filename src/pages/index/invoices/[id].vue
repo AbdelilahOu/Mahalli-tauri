@@ -82,7 +82,6 @@ const generatePdf = async () => {
   const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
   pdfRef.value?.setAttribute("src", pdfDataUri);
 };
-
 const drawInvoiceHeader = (
   page: PDFPage,
   width: number,
@@ -96,50 +95,52 @@ const drawInvoiceHeader = (
     size: 30,
     color,
   });
-  page.drawText(t("g.fields.date") + " : " + d(invoice.createdAt, "short"), {
+  page.drawText(invoice.createdAt.split(" ")[0], {
     x: width - 190,
     y: height - 70,
     font,
     size: 13,
     color,
   });
-  page.drawText(
-    t("g.fields.status") +
-      " : " +
-      t("g.status." + invoice.status.toLowerCase()),
-    {
-      x: width - 190,
-      y: height - 90,
-      font,
-      size: 13,
-      color,
-    },
-  );
-  //
-  page.drawText(t("g.fields.fullname") + " : " + invoice.client.fullname, {
-    x: 20,
-    y: height - 70,
+  page.drawText(t("g.status." + invoice.status.toLowerCase()), {
+    x: width - 190,
+    y: height - 90,
     font,
     size: 13,
     color,
   });
-  page.drawText(t("g.fields.address") + " : " + invoice.client.address, {
+  //
+  page.drawText(t("o.u.d.s.title"), {
+    x: 20,
+    y: height - 70,
+    font,
+    size: 14,
+    color,
+  });
+  page.drawText(invoice.client.fullname, {
     x: 20,
     y: height - 90,
     font,
     size: 13,
     color,
   });
-  page.drawText(t("g.fields.phone") + " : " + invoice.client.phoneNumber, {
+  page.drawText(invoice.client.address, {
     x: 20,
     y: height - 110,
     font,
     size: 13,
     color,
   });
-  page.drawText(t("g.fields.email") + " : " + invoice.client.email, {
+  page.drawText(invoice.client.phoneNumber, {
     x: 20,
     y: height - 130,
+    font,
+    size: 13,
+    color,
+  });
+  page.drawText(invoice.client.email, {
+    x: 20,
+    y: height - 150,
     font,
     size: 13,
     color,
