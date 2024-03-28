@@ -68,6 +68,33 @@
     },
     "de": { "title": "Produits achetés au cours des trois derniers mois" }
   },
+  "notifications": {
+    "product": {
+      "created": "Le produit {name} a été ajouté",
+      "updated": "Le produit {name} a été mis à jour",
+      "deleted": "Le produit {name} a été supprimé"
+    },
+    "client": {
+      "created": "Le client {name} a été ajouté",
+      "updated": "Le client {name} a été mis à jour",
+      "deleted": "Le client {name} a été supprimé"
+    },
+    "supplier": {
+      "created": "Le fournisseur {name} a été ajouté",
+      "updated": "Le fournisseur {name} a été mis à jour",
+      "deleted": "Le fournisseur {name} a été supprimé"
+    },
+    "order": {
+      "created": "Une commande a été ajouté",
+      "updated": "La commande a été mise à jour",
+      "deleted": "La commande a été supprimée"
+    },
+    "invoice": {
+      "created": "Une facture a été ajouté",
+      "updated": "La facture a été mise à jour",
+      "deleted": "La facture a été supprimée"
+    }
+  },
   "c": {
     "i": { "addButton": "Ajouter un nouveau client" },
     "c": { "title": "Ajouter un client" },
@@ -210,11 +237,5 @@
       "l": { "a": "Produit", "b": "Quantité" },
       "p": { "a": "Sélectionner un produit", "b": "Quantité" }
     }
-  },
-  "auth": {
-    "title": "S'identifier",
-    "username": "Nom d’utilisateur",
-    "email": "Messagerie électronique",
-    "password": "Mot de passe"
   }
 }

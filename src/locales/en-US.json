@@ -72,6 +72,33 @@
       "title": "Products baught last three months"
     }
   },
+  "notifications": {
+    "product": {
+      "created": "Product {name} has been added",
+      "updated": "Product {name} has been updated",
+      "deleted": "Product {name} has been deleted"
+    },
+    "client": {
+      "created": "Client {name} has been added",
+      "updated": "Client {name} has been updated",
+      "deleted": "Client {name} has been deleted"
+    },
+    "supplier": {
+      "created": "Supplier {name} has been added",
+      "updated": "Supplier {name} has been updated",
+      "deleted": "Supplier {name} has been deleted"
+    },
+    "order": {
+      "created": "An Order has been created",
+      "updated": "The Order has been updated",
+      "deleted": "The Order has been deleted"
+    },
+    "invoice": {
+      "created": "An Invoice has been created",
+      "updated": "The Invoice has been updated",
+      "deleted": "The Invoice has been deleted"
+    }
+  },
   "c": {
     "i": {
       "addButton": "Add new client"
@@ -261,11 +288,5 @@
         "b": "Quantity"
       }
     }
-  },
-  "auth": {
-    "title": "Log in",
-    "username": "Username",
-    "email": "Email",
-    "password": "Password"
   }
 }
