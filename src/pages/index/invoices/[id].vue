@@ -110,7 +110,7 @@ const drawInvoiceHeader = (
     color,
   });
   //
-  page.drawText(t("o.u.d.s.title"), {
+  page.drawText(t("o.u.d.s.title").toUpperCase(), {
     x: 20,
     y: height - 70,
     font,

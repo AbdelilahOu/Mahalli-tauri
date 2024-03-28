@@ -111,7 +111,7 @@ const drawOrderHeader = (
     color,
   });
   //
-  page.drawText(t("i.u.d.c.title"), {
+  page.drawText(t("i.u.d.c.title").toUpperCase(), {
     x: 20,
     y: height - 70,
     font,
