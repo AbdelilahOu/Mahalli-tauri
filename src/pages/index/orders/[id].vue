@@ -66,7 +66,7 @@ const generatePdf = async () => {
   page.setSize(...PageSizes.A4);
   const { width, height } = page.getSize();
 
-  drawInvoiceHeader(page, width, height, order.value);
+  drawOrderHeader(page, width, height, order.value);
 
   page.drawLine({
     start: { x: 20, y: height - 200 },
@@ -77,13 +77,13 @@ const generatePdf = async () => {
   });
 
   const items = [...order.value.items];
-  drawInvoiceItems(page, width, height, items, 210);
+  drawOrderItems(page, width, height, items, 210);
 
   const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
   pdfRef.value?.setAttribute("src", pdfDataUri);
 };
 
-const drawInvoiceHeader = (
+const drawOrderHeader = (
   page: PDFPage,
   width: number,
   height: number,
@@ -96,48 +96,52 @@ const drawInvoiceHeader = (
     size: 30,
     color,
   });
-  page.drawText(t("g.fields.date") + " : " + d(order.createdAt, "short"), {
+  page.drawText(order.createdAt.split(" ")[0], {
     x: width - 190,
     y: height - 70,
     font,
     size: 13,
     color,
   });
-  page.drawText(
-    t("g.fields.status") + " : " + t("g.status." + order.status.toLowerCase()),
-    {
-      x: width - 190,
-      y: height - 90,
-      font,
-      size: 13,
-      color,
-    },
-  );
-  //
-  page.drawText(t("g.fields.fullname") + " : " + order.supplier.fullname, {
-    x: 20,
-    y: height - 70,
+  page.drawText(t("g.status." + order.status.toLowerCase()), {
+    x: width - 190,
+    y: height - 90,
     font,
     size: 13,
     color,
   });
-  page.drawText(t("g.fields.address") + " : " + order.supplier.address, {
+  //
+  page.drawText(t("i.u.d.c.title"), {
+    x: 20,
+    y: height - 70,
+    font,
+    size: 14,
+    color,
+  });
+  page.drawText(order.supplier.fullname, {
     x: 20,
     y: height - 90,
     font,
     size: 13,
     color,
   });
-  page.drawText(t("g.fields.phone") + " : " + order.supplier.phoneNumber, {
+  page.drawText(order.supplier.address, {
     x: 20,
     y: height - 110,
     font,
     size: 13,
     color,
   });
-  page.drawText(t("g.fields.email") + " : " + order.supplier.email, {
+  page.drawText(order.supplier.phoneNumber, {
     x: 20,
     y: height - 130,
+    font,
+    size: 13,
+    color,
+  });
+  page.drawText(order.supplier.email, {
+    x: 20,
+    y: height - 150,
     font,
     size: 13,
     color,
@@ -182,7 +186,7 @@ const drawInvoiceHeader = (
   });
 };
 
-const drawInvoiceItems = (
+const drawOrderItems = (
   page: PDFPage,
   width: number,
   height: number,
@@ -236,10 +240,10 @@ const drawInvoiceItems = (
   if (remainingHeight < lineHeight + 30) {
     // Not enough space, create a new page and continue
     const newPage = pdfDoc.addPage();
-    drawInvoiceItems(newPage, width, height, items, lineHeight);
+    drawOrderItems(newPage, width, height, items, lineHeight);
   } else {
     // Enough space, continue drawing on current page
-    drawInvoiceItems(page, width, height, items, currentY + lineHeight);
+    drawOrderItems(page, width, height, items, currentY + lineHeight);
   }
 };
 
