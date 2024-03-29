@@ -16,6 +16,7 @@ import type { ProductT } from "@/schemas/products.schema";
 import type { Res } from "@/types";
 import { useRoute } from "vue-router";
 import { error, info } from "tauri-plugin-log-api";
+import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
@@ -81,6 +82,10 @@ const updateTheProduct = async (product: ProductT) => {
         id,
       })}`,
     );
+    //
+    toast(t("notifications.product.updated", { name: product.name }), {
+      closeButton: true,
+    });
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,

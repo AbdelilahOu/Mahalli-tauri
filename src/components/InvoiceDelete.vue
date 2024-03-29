@@ -7,6 +7,7 @@ import { store } from "@/store";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { error, info } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
+import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
@@ -16,6 +17,10 @@ const deleteTheInvoice = async (id: string) => {
     await invoke<Res<any>>("delete_invoice", { id });
     //
     info(`DELETE INVOICE: ${id}`);
+    //
+    toast(t("notifications.invoice.deleted"), {
+      closeButton: true,
+    });
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-delete-" + Math.random() * 9999,

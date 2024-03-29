@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
-import { onBeforeUnmount } from "vue";
 import { invoke } from "@tauri-apps/api";
 import { Button } from "./ui/button";
 import { store } from "@/store";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { error, info } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
+import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -17,6 +17,10 @@ const deleteTheOrders = async (id: string) => {
     await invoke<Res<any>>("delete_order", { id });
     //
     info(`DELETE ORDER: ${id}`);
+    //
+    toast(t("notifications.order.deleted"), {
+      closeButton: true,
+    });
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-delete-" + Math.random() * 9999,

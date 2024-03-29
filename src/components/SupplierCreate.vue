@@ -18,6 +18,7 @@ import {
 } from "@/schemas/supplier.schema";
 import { error, info } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
+import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
@@ -51,6 +52,10 @@ const createNewSupplier = async (supplier: SupplierT) => {
         image: `data:image/png;base64,${imageBase64}`,
       })}`,
     );
+    //
+    toast(t("notifications.supplier.created", { name: supplier.fullname }), {
+      closeButton: true,
+    });
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-create-" + Math.random() * 9999,

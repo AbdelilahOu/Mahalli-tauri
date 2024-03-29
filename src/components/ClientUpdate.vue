@@ -15,6 +15,7 @@ import type { ClientT } from "@/schemas/client.schema";
 import { useRoute } from "vue-router";
 import { error, info } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
+import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -63,6 +64,10 @@ const updateTheClient = async (client: ClientT) => {
         image: client.image,
       })}`,
     );
+    //
+    toast(t("notifications.client.updated", { name: client.fullname }), {
+      closeButton: true,
+    });
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
