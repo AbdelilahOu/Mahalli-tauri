@@ -16,6 +16,7 @@ import { ref } from "vue";
 import type { Res } from "@/types";
 import { CreateProductSchema, type ProductT } from "@/schemas/products.schema";
 import { error, info } from "tauri-plugin-log-api";
+import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -56,6 +57,10 @@ const createNewProduct = async (product: ProductT) => {
         quantity: quantity.value,
       })}`,
     );
+    //
+    toast(t("notifications.product.created", { name: product.name }), {
+      closeButton: true,
+    });
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-create-" + Math.random() * 9999,

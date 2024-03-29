@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import SearchableItems from "./ui/UISearchableItems.vue";
 import { error, info } from "tauri-plugin-log-api";
+import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -107,6 +108,10 @@ const createInvoice = async () => {
       }
       //
       info(`CREATE INVOICE: ${JSON.stringify(invoice)}`);
+      //
+      toast(t("notifications.invoice.created"), {
+        closeButton: true,
+      });
       // toggle refresh
       updateQueryParams({
         refresh: "refresh-create-" + Math.random() * 9999,

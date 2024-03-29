@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import SearchableItems from "./ui/UISearchableItems.vue";
 import { error, info } from "tauri-plugin-log-api";
+import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
@@ -132,6 +133,10 @@ const updateTheOrders = async () => {
     }
     //
     info(`UPDATE ORDER: ${JSON.stringify(order)}`);
+    //
+    toast(t("notifications.invoice.updated"), {
+      closeButton: true,
+    });
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,

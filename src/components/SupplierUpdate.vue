@@ -15,6 +15,7 @@ import type { SupplierT } from "@/schemas/supplier.schema";
 import { useRoute } from "vue-router";
 import type { Res } from "@/types";
 import { error, info } from "tauri-plugin-log-api";
+import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
@@ -62,6 +63,10 @@ const updateTheSupplier = async (supplier: SupplierT) => {
         image: supplier.image,
       })}`,
     );
+    //
+    toast(t("notifications.supplier.updated", { name: supplier.fullname }), {
+      closeButton: true,
+    });
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,

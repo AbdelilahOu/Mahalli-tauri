@@ -51,8 +51,7 @@ const createNewClient = async (client: ClientT) => {
       })}`,
     );
     //
-    toast("New client added successfully", {
-      description: "Client " + client.fullname + " has been added",
+    toast(t("notifications.client.created", { name: client.fullname }), {
       closeButton: true,
     });
     // toggle refresh
