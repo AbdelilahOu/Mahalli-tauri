@@ -3,30 +3,31 @@ import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { useI18n } from "vue-i18n";
 import UiModalCard from "./ui/UiModalCard.vue";
 import { invoke } from "@tauri-apps/api";
-import type { productT } from "@/types";
 import { Button } from "./ui/button";
 import { store } from "@/store";
-import { computed } from "vue";
+import { error, info } from "tauri-plugin-log-api";
+import type { Res } from "@/types";
+import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
 
-const product = computed(() => store.getters.getSelectedRow<productT>());
-
-const deleteTheProduct = async () => {
-  const id = product.value?.id;
-  if (id) {
-    try {
-      await invoke("delete_product", { id });
-      // toggle refresh
-      updateQueryParams({
-        refresh: "refresh-delete-" + Math.random() * 9999,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      store.setters.updateStore({ key: "show", value: false });
-    }
+const deleteTheProduct = async (id: string, name: string) => {
+  try {
+    await invoke<Res<string>>("delete_product", { id });
+    info(`DELETE PRODUCT: ${id}`);
+    //
+    toast(t("notifications.product.deleted", { name }), {
+      closeButton: true,
+    });
+    // toggle refresh
+    updateQueryParams({
+      refresh: "refresh-delete-" + Math.random() * 9999,
+    });
+  } catch (err: any) {
+    error("DELETE PRODUCT: " + err.error);
+  } finally {
+    cancelDelete();
   }
 };
 
@@ -37,14 +38,23 @@ const cancelDelete = () => {
 
 <template>
   <UiModalCard>
-    <template #title> {{ t("p.d.title") }} {{ product.name }} ? </template>
+    <template #title> {{ t("p.d.title") }} {{ $route.query.name }} ? </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">
-        <Button class="col-span-2" @click="deleteTheProduct">
-          {{ t("g.b.d") }}
-        </Button>
         <Button variant="outline" @click="cancelDelete">
           {{ t("g.b.no") }}
+        </Button>
+        <Button
+          class="col-span-2"
+          @click="
+            () =>
+              deleteTheProduct(
+                $route.query.id as string,
+                $route.query.name as string,
+              )
+          "
+        >
+          {{ t("g.b.d") }}
         </Button>
       </div>
     </template>
