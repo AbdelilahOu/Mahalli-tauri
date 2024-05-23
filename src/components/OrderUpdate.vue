@@ -28,11 +28,11 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t } = useI18n();
 const route = useRoute();
 
-const suppliers = ref<{ label: string; value: string }[]>([]);
+const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
 const order = reactive<OrderForUpdateT>({
   id: "",
-  supplierId: "",
+  clientId: "",
   fullname: "",
   createdAt: "",
   status: "",
@@ -47,7 +47,7 @@ onBeforeMount(async () => {
 
   if (!res.error) {
     order.id = res.data.id;
-    order.supplierId = res.data.supplierId;
+    order.clientId = res.data.clientId;
     order.createdAt = res.data.createdAt;
     order.status = res.data.status;
     order.fullname = res.data.fullname;
@@ -55,15 +55,15 @@ onBeforeMount(async () => {
   }
 });
 
-const searchSuppliers = async (search: string | number) => {
+const searchClients = async (search: string | number) => {
   const res = await invoke<Res<{ label: string; value: string }[]>>(
-    "search_suppliers",
+    "search_clients",
     {
       search,
     },
   );
   if (!res.error) {
-    suppliers.value = res.data;
+    clients.value = res.data;
   }
 };
 
@@ -92,7 +92,7 @@ const updateTheOrders = async () => {
     await invoke<Res<String>>("update_order", {
       order: {
         id: order.id,
-        supplier_id: order.supplierId,
+        client_id: order.clientId,
         status: order.status,
       },
     });
@@ -175,15 +175,15 @@ const deleteOrderItem = (index: number) => {
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="flex w-full h-fit gap-1">
           <div class="w-full h-full flex flex-col gap-1">
-            <Label for="supplier_id">
+            <Label for="client_id">
               {{ t("o.u.d.o.title") }}
             </Label>
             <SearchableItems
               v-if="order.fullname"
               :defaultValue="order.fullname"
-              :items="suppliers"
-              @update:items="(s) => searchSuppliers(s)"
-              @on:select="(id) => (order.supplierId = id)"
+              :items="clients"
+              @update:items="(s) => searchClients(s)"
+              @on:select="(id) => (order.clientId = id)"
             />
           </div>
           <div class="w-full h-full flex flex-col gap-1">
