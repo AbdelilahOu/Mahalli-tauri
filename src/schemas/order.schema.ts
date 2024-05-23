@@ -3,7 +3,7 @@ import { z } from "zod";
 export const CreateOrderSchema = z.object({
   id: z.string().optional(),
   status: z.string().min(2).max(50),
-  supplierId: z.string().optional(),
+  clientId: z.string().optional(),
 });
 
 export type OrderT = z.infer<typeof CreateOrderSchema> & {
@@ -15,7 +15,7 @@ export type OrderT = z.infer<typeof CreateOrderSchema> & {
 
 export type OrderForUpdateT = {
   id: string;
-  supplierId: string;
+  clientId: string;
   fullname: string;
   createdAt: string;
   status: string;
@@ -30,7 +30,7 @@ export type OrderForUpdateT = {
 };
 
 export type OrderForCreateT = {
-  supplierId: string;
+  clientId: string;
   status: string;
   items: {
     product_id?: string;

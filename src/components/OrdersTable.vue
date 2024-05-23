@@ -71,7 +71,7 @@ const updateOrderStatus = async (order: any) => {
             <RouterLink
               class="font-medium"
               :to="{
-                path: '/suppliers/' + order.supplierId,
+                path: '/clients/' + order.clientId,
               }"
             >
               {{ order.fullname }}
@@ -147,7 +147,7 @@ const updateOrderStatus = async (order: any) => {
                     () =>
                       updateOrderStatus({
                         id: order.id,
-                        supplier_id: order.supplierId,
+                        client_id: order.clientId,
                         status: 'DELIVERED',
                       })
                   "
@@ -163,7 +163,7 @@ const updateOrderStatus = async (order: any) => {
                     () =>
                       updateOrderStatus({
                         id: order.id,
-                        supplier_id: order.supplierId,
+                        client_id: order.clientId,
                         status: 'PENDING',
                       })
                   "
@@ -179,7 +179,7 @@ const updateOrderStatus = async (order: any) => {
                     () =>
                       updateOrderStatus({
                         id: order.id,
-                        supplier_id: order.supplierId,
+                        client_id: order.clientId,
                         status: 'CANCELED',
                       })
                   "

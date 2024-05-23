@@ -25,11 +25,11 @@ import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const suppliers = ref<{ label: string; value: string }[]>([]);
+const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
 const isLoading = ref<boolean>(false);
 const order = reactive<OrderForCreateT>({
-  supplierId: "",
+  clientId: "",
   status: "",
   items: [
     {
@@ -52,15 +52,15 @@ const deleteOrderItem = (index: number) => {
   order.items?.splice(index, 1);
 };
 
-const searchSuppliers = async (search: string | number) => {
+const searchClients = async (search: string | number) => {
   const res = await invoke<Res<{ label: string; value: string }[]>>(
-    "search_suppliers",
+    "search_clients",
     {
       search,
     },
   );
   if (!res.error) {
-    suppliers.value = res.data;
+    clients.value = res.data;
   }
 };
 
@@ -78,11 +78,11 @@ const searchProducts = async (search: string | number) => {
 
 const createOrder = async () => {
   isLoading.value = true;
-  if (order?.supplierId && order.items?.length !== 0) {
+  if (order?.clientId && order.items?.length !== 0) {
     try {
       const orderRes = await invoke<Res<String>>("create_order", {
         order: {
-          supplier_id: order.supplierId,
+          client_id: order.clientId,
           status: order.status,
         },
       });
@@ -140,13 +140,13 @@ const hideModal = () => {
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="flex w-full h-fit gap-1">
           <div class="w-full h-full flex flex-col gap-1">
-            <Label for="supplier_id">
+            <Label for="client_id">
               {{ t("o.c.d.s.title") }}
             </Label>
             <SearchableItems
-              :items="suppliers"
-              @update:items="(s) => searchSuppliers(s)"
-              @on:select="(id) => (order.supplierId = id)"
+              :items="clients"
+              @update:items="(s) => searchClients(s)"
+              @on:select="(id) => (order.clientId = id)"
             />
           </div>
           <div class="w-full h-full flex flex-col gap-1">
