@@ -155,7 +155,7 @@ impl MutationsService {
     //
     pub async fn create_order(db: &DbConn, order: NewOrder) -> Result<String, DbErr> {
         let order = OrderActiveModel {
-            supplier_id: ActiveValue::Set(order.supplier_id),
+            client_id: ActiveValue::Set(order.client_id),
             status: ActiveValue::Set(order.status),
             ..Default::default()
         };
@@ -167,7 +167,7 @@ impl MutationsService {
     pub async fn update_order(db: &DbConn, order: Order) -> Result<(), DbErr> {
         let order_model = Orders::find_by_id(order.id).one(db).await?;
         let mut order_active: OrderActiveModel = order_model.unwrap().into();
-        order_active.supplier_id = ActiveValue::Set(order.supplier_id);
+        order_active.client_id = ActiveValue::Set(order.client_id);
         order_active.status = ActiveValue::Set(order.status);
         match order_active.save(db).await {
             Ok(_) => Ok(()),

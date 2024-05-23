@@ -32,12 +32,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Supplier::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(Supplier::Id)
-                            .string()
-                            .not_null()
-                            .primary_key(),
-                    )
+                    .col(ColumnDef::new(Supplier::Id).string().not_null().primary_key())
                     .col(ColumnDef::new(Supplier::Fullname).string().not_null())
                     .col(
                         ColumnDef::new(Supplier::CreatedAt)
@@ -58,12 +53,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Product::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(Product::Id)
-                            .string()
-                            .not_null()
-                            .primary_key(),
-                    )
+                    .col(ColumnDef::new(Product::Id).string().not_null().primary_key())
                     .col(ColumnDef::new(Product::Name).string().not_null())
                     .col(
                         ColumnDef::new(Product::CreatedAt)
@@ -72,18 +62,8 @@ impl MigrationTrait for Migration {
                             .default(Expr::current_timestamp()),
                     )
                     .col(ColumnDef::new(Product::Description).string())
-                    .col(
-                        ColumnDef::new(Product::Price)
-                            .float()
-                            .not_null()
-                            .default(0.0f32),
-                    )
-                    .col(
-                        ColumnDef::new(Product::MinQuantity)
-                            .float()
-                            .not_null()
-                            .default(0.0f32),
-                    )
+                    .col(ColumnDef::new(Product::Price).float().not_null().default(0.0f32))
+                    .col(ColumnDef::new(Product::MinQuantity).float().not_null().default(0.0f32))
                     .col(ColumnDef::new(Product::Image).string())
                     .to_owned(),
             )
@@ -94,28 +74,10 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(InventoryMouvement::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(InventoryMouvement::Id)
-                            .string()
-                            .not_null()
-                            .primary_key(),
-                    )
-                    .col(
-                        ColumnDef::new(InventoryMouvement::MvmType)
-                            .string()
-                            .not_null(),
-                    )
-                    .col(
-                        ColumnDef::new(InventoryMouvement::Quantity)
-                            .float()
-                            .not_null()
-                            .default(0.0f32),
-                    )
-                    .col(
-                        ColumnDef::new(InventoryMouvement::ProductId)
-                            .string()
-                            .not_null(),
-                    )
+                    .col(ColumnDef::new(InventoryMouvement::Id).string().not_null().primary_key())
+                    .col(ColumnDef::new(InventoryMouvement::MvmType).string().not_null())
+                    .col(ColumnDef::new(InventoryMouvement::Quantity).float().not_null().default(0.0f32))
+                    .col(ColumnDef::new(InventoryMouvement::ProductId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_inventory_mvm_product_id")
@@ -133,20 +95,15 @@ impl MigrationTrait for Migration {
                     .table(Order::Table)
                     .if_not_exists()
                     .col(ColumnDef::new(Order::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(Order::SupplierId).string().not_null())
+                    .col(ColumnDef::new(Order::ClientId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_order_supplier_id")
-                            .from(Order::Table, Order::SupplierId)
-                            .to(Supplier::Table, Supplier::Id)
+                            .name("fk_order_client_id")
+                            .from(Order::Table, Order::ClientId)
+                            .to(Client::Table, Client::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    .col(
-                        ColumnDef::new(Order::CreatedAt)
-                            .date_time()
-                            .not_null()
-                            .default(Expr::current_timestamp()),
-                    )
+                    .col(ColumnDef::new(Order::CreatedAt).date_time().not_null().default(Expr::current_timestamp()))
                     .col(ColumnDef::new(Order::Status).string().not_null())
                     .to_owned(),
             )
@@ -157,18 +114,8 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(OrderItem::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(OrderItem::Id)
-                            .string()
-                            .not_null()
-                            .primary_key(),
-                    )
-                    .col(
-                        ColumnDef::new(OrderItem::Price)
-                            .float()
-                            .not_null()
-                            .default(0.0f32),
-                    )
+                    .col(ColumnDef::new(OrderItem::Id).string().not_null().primary_key())
+                    .col(ColumnDef::new(OrderItem::Price).float().not_null().default(0.0f32))
                     .col(ColumnDef::new(OrderItem::OrderId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
@@ -177,12 +124,7 @@ impl MigrationTrait for Migration {
                             .to(Order::Table, Order::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    .col(
-                        ColumnDef::new(OrderItem::InventoryId)
-                            .string()
-                            .not_null()
-                            .unique_key(),
-                    )
+                    .col(ColumnDef::new(OrderItem::InventoryId).string().not_null().unique_key())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_order_item_inventory_id")
@@ -199,19 +141,9 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Invoice::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(Invoice::Id)
-                            .string()
-                            .not_null()
-                            .primary_key(),
-                    )
+                    .col(ColumnDef::new(Invoice::Id).string().not_null().primary_key())
                     .col(ColumnDef::new(Invoice::ClientId).string().not_null())
-                    .col(
-                        ColumnDef::new(Invoice::PaidAmount)
-                            .float()
-                            .not_null()
-                            .default(0),
-                    )
+                    .col(ColumnDef::new(Invoice::PaidAmount).float().not_null().default(0))
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_invoice_client_id")
@@ -235,18 +167,8 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(InvoiceItem::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(InvoiceItem::Id)
-                            .string()
-                            .not_null()
-                            .primary_key(),
-                    )
-                    .col(
-                        ColumnDef::new(InvoiceItem::Price)
-                            .float()
-                            .not_null()
-                            .default(0.0f32),
-                    )
+                    .col(ColumnDef::new(InvoiceItem::Id).string().not_null().primary_key())
+                    .col(ColumnDef::new(InvoiceItem::Price).float().not_null().default(0.0f32))
                     .col(ColumnDef::new(InvoiceItem::InvoiceId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
@@ -255,12 +177,7 @@ impl MigrationTrait for Migration {
                             .to(Invoice::Table, Invoice::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    .col(
-                        ColumnDef::new(InvoiceItem::InventoryId)
-                            .string()
-                            .not_null()
-                            .unique_key(),
-                    )
+                    .col(ColumnDef::new(InvoiceItem::InventoryId).string().not_null().unique_key())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_invoice_item_inventory_id")
@@ -286,12 +203,7 @@ impl MigrationTrait for Migration {
                             .to(Client::Table, Client::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    .col(
-                        ColumnDef::new(Quote::CreatedAt)
-                            .date_time()
-                            .not_null()
-                            .default(Expr::current_timestamp()),
-                    )
+                    .col(ColumnDef::new(Quote::CreatedAt).date_time().not_null().default(Expr::current_timestamp()))
                     .to_owned(),
             )
             .await?;
@@ -301,18 +213,8 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(QuoteItem::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(QuoteItem::Id)
-                            .string()
-                            .not_null()
-                            .primary_key(),
-                    )
-                    .col(
-                        ColumnDef::new(QuoteItem::Price)
-                            .float()
-                            .not_null()
-                            .default(0.0f32),
-                    )
+                    .col(ColumnDef::new(QuoteItem::Id).string().not_null().primary_key())
+                    .col(ColumnDef::new(QuoteItem::Price).float().not_null().default(0.0f32))
                     .col(ColumnDef::new(QuoteItem::ProductId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
@@ -337,9 +239,7 @@ impl MigrationTrait for Migration {
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        manager
-            .drop_table(Table::drop().table(Client::Table).to_owned())
-            .await?;
+        manager.drop_table(Table::drop().table(Client::Table).to_owned()).await?;
         Ok(())
     }
 }
@@ -415,12 +315,36 @@ pub enum InventoryMouvement {
 }
 
 #[derive(DeriveIden)]
+pub enum Quote {
+    #[sea_orm(iden = "quotes")]
+    Table,
+    Id,
+    #[sea_orm(iden = "client_id")]
+    ClientId,
+    #[sea_orm(iden = "created_at")]
+    CreatedAt,
+}
+
+#[derive(DeriveIden)]
+pub enum QuoteItem {
+    #[sea_orm(iden = "quote_items")]
+    Table,
+    Id,
+    #[sea_orm(iden = "product_id")]
+    ProductId,
+    #[sea_orm(iden = "quote_id")]
+    QuoteId,
+    #[sea_orm(iden = "price")]
+    Price,
+}
+
+#[derive(DeriveIden)]
 pub enum Order {
     #[sea_orm(iden = "orders")]
     Table,
     Id,
-    #[sea_orm(iden = "supplier_id")]
-    SupplierId,
+    #[sea_orm(iden = "client_id")]
+    ClientId,
     // status: delivered, cancel, ongoing
     #[sea_orm(iden = "status")]
     Status,
@@ -466,30 +390,6 @@ pub enum InvoiceItem {
     InvoiceId,
     #[sea_orm(iden = "inventory_id")]
     InventoryId,
-    #[sea_orm(iden = "price")]
-    Price,
-}
-
-#[derive(DeriveIden)]
-pub enum Quote {
-    #[sea_orm(iden = "quotes")]
-    Table,
-    Id,
-    #[sea_orm(iden = "client_id")]
-    ClientId,
-    #[sea_orm(iden = "created_at")]
-    CreatedAt,
-}
-
-#[derive(DeriveIden)]
-pub enum QuoteItem {
-    #[sea_orm(iden = "quote_items")]
-    Table,
-    Id,
-    #[sea_orm(iden = "product_id")]
-    ProductId,
-    #[sea_orm(iden = "quote_id")]
-    QuoteId,
     #[sea_orm(iden = "price")]
     Price,
 }

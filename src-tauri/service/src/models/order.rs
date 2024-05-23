@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 pub struct SelectOrders {
     pub id: String,
     pub created_at: String,
-    pub supplier_id: String,
+    pub client_id: String,
     pub full_name: String,
     pub status: String,
     pub products: i64,
@@ -26,13 +26,13 @@ pub struct SelectOrderDetails {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NewOrder {
-    pub supplier_id: String,
+    pub client_id: String,
     pub status: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Order {
     pub id: String,
-    pub supplier_id: String,
+    pub client_id: String,
     pub status: String,
 }
