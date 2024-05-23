@@ -1,10 +1,7 @@
 use std::ops::Range;
 
 use crate::{
-    m20220101_000001_init_::{
-        Client, InventoryMouvement, Invoice, InvoiceItem, Order, OrderItem, Product, Quote,
-        QuoteItem, Supplier,
-    },
+    m20220101_000001_init_::{Client, InventoryMouvement, Invoice, InvoiceItem, Order, OrderItem, Product, Quote, QuoteItem, Supplier},
     utils::get_random_enum,
 };
 use fake::{
@@ -33,20 +30,8 @@ impl MigrationTrait for Migration {
             let phone: String = PhoneNumber().fake();
             let insert = Query::insert()
                 .into_table(Client::Table)
-                .columns([
-                    Client::Id,
-                    Client::Fullname,
-                    Client::Address,
-                    Client::Email,
-                    Client::Phone,
-                ])
-                .values_panic([
-                    id.to_string().into(),
-                    fullname.into(),
-                    address.into(),
-                    email.into(),
-                    phone.into(),
-                ])
+                .columns([Client::Id, Client::Fullname, Client::Address, Client::Email, Client::Phone])
+                .values_panic([id.to_string().into(), fullname.into(), address.into(), email.into(), phone.into()])
                 .to_owned();
 
             manager.exec_stmt(insert).await?;
@@ -60,20 +45,8 @@ impl MigrationTrait for Migration {
             let phone: String = PhoneNumber().fake();
             let insert = Query::insert()
                 .into_table(Supplier::Table)
-                .columns([
-                    Supplier::Id,
-                    Supplier::Fullname,
-                    Supplier::Address,
-                    Supplier::Email,
-                    Supplier::Phone,
-                ])
-                .values_panic([
-                    id.to_string().into(),
-                    fullname.into(),
-                    address.into(),
-                    email.into(),
-                    phone.into(),
-                ])
+                .columns([Supplier::Id, Supplier::Fullname, Supplier::Address, Supplier::Email, Supplier::Phone])
+                .values_panic([id.to_string().into(), fullname.into(), address.into(), email.into(), phone.into()])
                 .to_owned();
 
             manager.exec_stmt(insert).await?;
@@ -88,13 +61,7 @@ impl MigrationTrait for Migration {
             let quantity: u8 = Faker.fake();
             let insert = Query::insert()
                 .into_table(Product::Table)
-                .columns([
-                    Product::Id,
-                    Product::Name,
-                    Product::Description,
-                    Product::Price,
-                    Product::MinQuantity,
-                ])
+                .columns([Product::Id, Product::Name, Product::Description, Product::Price, Product::MinQuantity])
                 .values_panic([
                     id.to_string().into(),
                     format!("{}-{}", name, rand).into(),
@@ -109,11 +76,7 @@ impl MigrationTrait for Migration {
 
         let db = manager.get_connection();
 
-        let status = vec![
-            String::from("DELIVERED"),
-            String::from("CANCELED"),
-            String::from("PENDING"),
-        ];
+        let status = vec![String::from("DELIVERED"), String::from("CANCELED"), String::from("PENDING")];
 
         for _ in 0..100 {
             let id = uuid::Uuid::now_v7();
@@ -122,12 +85,12 @@ impl MigrationTrait for Migration {
                 sea_orm::DatabaseBackend::Sqlite,
                 r#"
                 INSERT INTO 
-                    orders (id, status, supplier_id)
+                    orders (id, status, client_id)
                 VALUES
                     (
                         $1, 
                         $2, 
-                        (SELECT id FROM suppliers ORDER BY RANDOM() LIMIT 1)
+                        (SELECT id FROM clients ORDER BY RANDOM() LIMIT 1)
                     )
                 "#,
                 [id.to_string().into(), status_.into()],
@@ -151,11 +114,7 @@ impl MigrationTrait for Migration {
                         (SELECT id FROM products ORDER BY RANDOM() LIMIT 1)
                     )
                 "#,
-                [
-                    _id.to_string().into(),
-                    String::from("IN").into(),
-                    quantity.into(),
-                ],
+                [_id.to_string().into(), String::from("IN").into(), quantity.into()],
             );
             db.execute(insert_inventory).await?;
             //
@@ -179,11 +138,7 @@ impl MigrationTrait for Migration {
             db.execute(insert_order).await?;
         }
 
-        let status = vec![
-            String::from("PAID"),
-            String::from("CANCELED"),
-            String::from("PENDING"),
-        ];
+        let status = vec![String::from("PAID"), String::from("CANCELED"), String::from("PENDING")];
 
         for _ in 0..100 {
             let id = uuid::Uuid::now_v7();
@@ -224,11 +179,7 @@ impl MigrationTrait for Migration {
                         (SELECT id FROM products ORDER BY RANDOM() LIMIT 1)
                     )
                 "#,
-                [
-                    _id.to_string().into(),
-                    String::from("OUT").into(),
-                    quantity.into(),
-                ],
+                [_id.to_string().into(), String::from("OUT").into(), quantity.into()],
             );
             db.execute(insert_inventory).await?;
 
@@ -313,9 +264,7 @@ impl MigrationTrait for Migration {
         let delete = Query::delete().from_table(Quote::Table).to_owned();
         manager.exec_stmt(delete).await?;
 
-        let delete = Query::delete()
-            .from_table(InventoryMouvement::Table)
-            .to_owned();
+        let delete = Query::delete().from_table(InventoryMouvement::Table).to_owned();
         manager.exec_stmt(delete).await?;
 
         let delete = Query::delete().from_table(Product::Table).to_owned();

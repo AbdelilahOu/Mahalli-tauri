@@ -1,10 +1,10 @@
-migrationup:
+migrationsup:
 	cd src-tauri && sea-orm-cli migrate up
 
-migrationlast:
+migrationslast:
 	cd src-tauri && sea-orm-cli migrate down
 
-migrationdown:
+migrationsdown:
 	cd src-tauri && sea-orm-cli migrate fresh
 
 entity:
