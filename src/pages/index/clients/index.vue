@@ -114,8 +114,11 @@ const updateModal = (name: string) => {
                 </svg>
               </span>
             </Button>
-            <Button class="gap-2 w-fit" @click="updateModal('ClientCreate')">
-              <PlusCircleIcon :size="22" />
+            <Button
+              class="gap-2 w-fit font-medium text-sm"
+              @click="updateModal('ClientCreate')"
+            >
+              <PlusCircleIcon :size="20" />
 
               {{ t("c.i.addButton") }}
             </Button>

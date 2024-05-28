@@ -163,9 +163,15 @@ const updateModal = (name: string) => {
                 <SelectValue placeholder="Select a status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="DELIVERED"> Delivered </SelectItem>
-                <SelectItem value="CANCELED"> Cancelled </SelectItem>
-                <SelectItem value="PENDING"> Pending </SelectItem>
+                <SelectItem value="DELIVERED">
+                  {{ t("g.status.delivered") }}
+                </SelectItem>
+                <SelectItem value="CANCELED">
+                  {{ t("g.status.cancelled") }}
+                </SelectItem>
+                <SelectItem value="PENDING">
+                  {{ t("g.status.pending") }}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -186,8 +192,11 @@ const updateModal = (name: string) => {
                 </svg>
               </span>
             </Button>
-            <Button class="gap-2 w-fit" @click="updateModal('OrderCreate')">
-              <PlusCircleIcon :size="22" />
+            <Button
+              class="gap-2 w-fit font-medium text-sm"
+              @click="updateModal('OrderCreate')"
+            >
+              <PlusCircleIcon :size="20" />
 
               {{ t("o.i.addButton") }}
             </Button>

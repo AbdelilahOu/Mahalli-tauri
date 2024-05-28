@@ -927,7 +927,6 @@ impl QueriesService {
             None => Err(DbErr::RecordNotFound(String::from("no invoice"))),
         }
     }
-
     //
     pub async fn list_inventory(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = InventoryMouvements::find()

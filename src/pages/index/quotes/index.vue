@@ -4,11 +4,11 @@ import { useRoute } from "vue-router";
 import { invoke } from "@tauri-apps/api";
 import { useI18n } from "vue-i18n";
 import { store } from "@/store";
-import InvoicesTable from "@/components/InvoicesTable.vue";
+import QuotesTable from "@/components/QuotesTable.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Res } from "@/types";
-import type { InvoiceProductT, InvoiceT } from "@/schemas/invoice.schema";
+import type { QuoteProductT, QuoteT } from "@/schemas/quote.schema";
 import {
   SelectContent,
   SelectTrigger,
@@ -38,20 +38,20 @@ import { PlusCircleIcon } from "lucide-vue-next";
 
 const { t } = useI18n();
 const route = useRoute();
+const { updateQueryParams } = useUpdateRouteQueryParams();
+//
 const searchQuery = ref<string>("");
 const page = computed(() => Number(route.query.page));
 const refresh = computed(() => route.query.refresh);
-const invoices = ref<InvoiceT[]>([]);
+const quotes = ref<QuoteT[]>([]);
 const totalRows = ref<number>(0);
 const status = ref<string | undefined>(undefined);
 const createdAt = ref<string | number | undefined>(undefined);
-const invoiceProducts = ref<InvoiceProductT[]>([]);
-
-const { updateQueryParams } = useUpdateRouteQueryParams();
-
+const quoteProducts = ref<QuoteProductT[]>([]);
+//
 provide("count", totalRows);
 provide("itemsCount", 17);
-
+//
 onUnmounted(() => {
   if (unwatch) unwatch();
 });
@@ -65,7 +65,7 @@ onMounted(() => {
       clearTimeout(timer);
       timer = setTimeout(
         () => {
-          if (p && p > 0) getInvoices(search, p);
+          if (p && p > 0) getQuotes(search, p);
         },
         search != oldSearch && oldSearch ? 500 : 0,
       );
@@ -76,9 +76,9 @@ onMounted(() => {
   );
 });
 
-const getInvoices = async (search: string, page = 1) => {
+const getQuotes = async (search: string, page = 1) => {
   try {
-    const res = await invoke<Res<any>>("list_invoices", {
+    const res = await invoke<Res<any>>("list_quotes", {
       args: {
         page,
         search,
@@ -90,35 +90,35 @@ const getInvoices = async (search: string, page = 1) => {
       },
     });
 
-    invoices.value = res.data.invoices;
+    quotes.value = res.data.quotes;
     totalRows.value = res.data.count;
   } catch (err: any) {
-    error("LIST INVOICES " + err.error);
+    error("LIST ORDERS: " + err.error);
   }
 };
 
-let invoiceProductsTimer: any;
-const listInvoiceProduct = (id?: string) => {
-  clearTimeout(invoiceProductsTimer);
-  invoiceProductsTimer = setTimeout(async () => {
+let quoteProductsTimer: any;
+const listQuoteProduct = (id?: string) => {
+  clearTimeout(quoteProductsTimer);
+  quoteProductsTimer = setTimeout(async () => {
     try {
-      const res = await invoke<Res<any>>("list_invoice_products", {
+      const res = await invoke<Res<any>>("list_quote_products", {
         id,
       });
       //
-      invoiceProducts.value = res.data;
+      quoteProducts.value = res.data;
     } catch (err: any) {
-      error("ERROR LIST INVOICE PRODUCTS: " + err.error);
+      error("LIST ORDER PRODUCTS: " + err.error);
     }
   }, 300);
 };
 
-const cancelInvoiceProducts = () => clearInterval(invoiceProductsTimer);
+const cancelQuoteProducts = () => clearInterval(quoteProductsTimer);
 
 const uploadCSV = () => {
   store.setters.updateStore({ key: "name", value: "CsvUploader" });
   store.setters.updateStore({ key: "show", value: true });
-  updateQueryParams({ table: "invoices" });
+  updateQueryParams({ table: "quotes" });
 };
 
 const updateModal = (name: string) => {
@@ -132,7 +132,7 @@ const updateModal = (name: string) => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <Transition appear>
         <div class="flex justify-between w-full gap-9 mb-2">
-          <div class="w-2/3 lg:max-w-[50%] flex gap-2">
+          <div class="w-2/3 lg:max-w-[50%] grid grid-cols-3 gap-2">
             <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')" />
 
             <Popover>
@@ -163,8 +163,8 @@ const updateModal = (name: string) => {
                 <SelectValue placeholder="Select a status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="PAID">
-                  {{ t("g.status.paid") }}
+                <SelectItem value="DELIVERED">
+                  {{ t("g.status.delivered") }}
                 </SelectItem>
                 <SelectItem value="CANCELED">
                   {{ t("g.status.cancelled") }}
@@ -194,21 +194,21 @@ const updateModal = (name: string) => {
             </Button>
             <Button
               class="gap-2 w-fit font-medium text-sm"
-              @click="updateModal('InvoiceCreate')"
+              @click="updateModal('QuoteCreate')"
             >
               <PlusCircleIcon :size="20" />
 
-              {{ t("i.i.addButton") }}
+              {{ t("o.i.addButton") }}
             </Button>
           </div>
         </div>
       </Transition>
       <Transition appear>
-        <InvoicesTable
-          @listInvoiceProducts="listInvoiceProduct"
-          @cancelInvoiceProducts="cancelInvoiceProducts"
-          :invoices="invoices"
-          :invoiceProducts="invoiceProducts"
+        <QuotesTable
+          @listQuoteProducts="listQuoteProduct"
+          @cancelQuoteProducts="cancelQuoteProducts"
+          :quotes="quotes"
+          :quoteProducts="quoteProducts"
         />
       </Transition>
     </div>

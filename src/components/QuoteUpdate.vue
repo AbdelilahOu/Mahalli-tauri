@@ -12,14 +12,7 @@ import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { useRoute } from "vue-router";
 import type { Res } from "@/types";
-import type { OrderForUpdateT } from "@/schemas/order.schema";
-import {
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-  SelectItem,
-  Select,
-} from "@/components/ui/select";
+import type { QuoteForUpdateT } from "@/schemas/quote.schema";
 import SearchableItems from "./ui/UISearchableItems.vue";
 import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
@@ -30,28 +23,26 @@ const route = useRoute();
 
 const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
-const order = reactive<OrderForUpdateT>({
+const quote = reactive<QuoteForUpdateT>({
   id: "",
   clientId: "",
   fullname: "",
   createdAt: "",
-  status: "",
   items: [],
 });
 
 onBeforeMount(async () => {
   // @ts-ignore
-  const res = await invoke<Res<OrderForUpdateT>>("get_order", {
+  const res = await invoke<Res<QuoteForUpdateT>>("get_quote", {
     id: route.query.id,
   });
 
   if (!res.error) {
-    order.id = res.data.id;
-    order.clientId = res.data.clientId;
-    order.createdAt = res.data.createdAt;
-    order.status = res.data.status;
-    order.fullname = res.data.fullname;
-    order.items = res.data.items;
+    quote.id = res.data.id;
+    quote.clientId = res.data.clientId;
+    quote.createdAt = res.data.createdAt;
+    quote.fullname = res.data.fullname;
+    quote.items = res.data.items;
   }
 });
 
@@ -79,24 +70,23 @@ const searchProducts = async (search: string | number) => {
   }
 };
 
-const addOrderItem = () => {
-  order.items?.push({
+const addQuoteItem = () => {
+  quote.items?.push({
     product_id: undefined,
     quantity: undefined,
     price: undefined,
   });
 };
 
-const updateTheOrders = async () => {
+const updateTheQuotes = async () => {
   try {
-    await invoke<Res<String>>("update_order", {
-      order: {
-        id: order.id,
-        client_id: order.clientId,
-        status: order.status,
+    await invoke<Res<String>>("update_quote", {
+      quote: {
+        id: quote.id,
+        client_id: quote.clientId,
       },
     });
-    for await (const item of order.items) {
+    for await (const item of quote.items) {
       if (!item.id) {
         const invRes = await invoke<Res<string>>("create_inventory", {
           mvm: {
@@ -105,9 +95,9 @@ const updateTheOrders = async () => {
             quantity: item.quantity,
           },
         });
-        await invoke<Res<string>>("create_order_item", {
+        await invoke<Res<string>>("create_quote_item", {
           item: {
-            order_id: order.id,
+            quote_id: quote.id,
             inventory_id: invRes.data,
             price: item.price,
           },
@@ -121,10 +111,10 @@ const updateTheOrders = async () => {
             quantity: item.quantity,
           },
         });
-        await invoke<Res<string>>("update_order_item", {
+        await invoke<Res<string>>("update_quote_item", {
           item: {
             id: item.id,
-            order_id: order.id,
+            quote_id: quote.id,
             inventory_id: item.inventory_id,
             price: item.price,
           },
@@ -132,7 +122,7 @@ const updateTheOrders = async () => {
       }
     }
     //
-    info(`UPDATE ORDER: ${JSON.stringify(order)}`);
+    info(`UPDATE QUOTE: ${JSON.stringify(quote)}`);
     //
     toast(t("notifications.invoice.updated"), {
       closeButton: true,
@@ -142,7 +132,7 @@ const updateTheOrders = async () => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE ORDER: " + err.error);
+    error("UPDATE QUOTE: " + err.error);
   } finally {
     hideModal();
   }
@@ -152,17 +142,17 @@ const hideModal = () => {
   store.setters.updateStore({ key: "show", value: false });
 };
 
-async function deleteOneOrderItem(id: string) {
+async function deleteOneQuoteItem(id: string) {
   try {
-    await invoke("delete_order_item", { id });
+    await invoke("delete_quote_item", { id });
   } catch (err: any) {
     error("Error creating client : " + err.error);
   }
 }
 
-const deleteOrderItem = (index: number) => {
-  const item = order.items?.splice(index, 1)[0];
-  if (item?.id) deleteOneOrderItem(item.id);
+const deleteQuoteItem = (index: number) => {
+  const item = quote.items?.splice(index, 1)[0];
+  if (item?.id) deleteOneQuoteItem(item.id);
 };
 </script>
 
@@ -170,7 +160,7 @@ const deleteOrderItem = (index: number) => {
   <UiModalCard
     class="w-5/6 lg:w-1/2 relative h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
   >
-    <template #title> {{ t("o.u.title") }} N° {{ order?.id }} </template>
+    <template #title> {{ t("o.u.title") }} N° {{ quote?.id }} </template>
     <template #content>
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="flex w-full h-fit gap-1">
@@ -179,44 +169,23 @@ const deleteOrderItem = (index: number) => {
               {{ t("o.u.d.o.title") }}
             </Label>
             <SearchableItems
-              v-if="order.fullname"
-              :defaultValue="order.fullname"
+              v-if="quote.fullname"
+              :defaultValue="quote.fullname"
               :items="clients"
               @update:items="(s) => searchClients(s)"
-              @on:select="(id) => (order.clientId = id)"
+              @on:select="(id) => (quote.clientId = id)"
             />
-          </div>
-          <div class="w-full h-full flex flex-col gap-1">
-            <Label for="status">
-              {{ t("o.u.d.o.title") }}
-            </Label>
-            <Select v-model="order.status">
-              <SelectTrigger>
-                <SelectValue placeholder="Select a status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="DELIVERED">
-                  {{ t("g.status.delivered") }}
-                </SelectItem>
-                <SelectItem value="CANCELED">
-                  {{ t("g.status.cancelled") }}
-                </SelectItem>
-                <SelectItem value="PENDING">
-                  {{ t("g.status.pending") }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
-          <Button @click="addOrderItem">
+          <Button @click="addQuoteItem">
             {{ t("o.u.d.o.add") }}
           </Button>
           <div
             class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] items-center overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
-            <template v-for="(item, index) in order.items" :key="index">
+            <template v-for="(item, index) in quote.items" :key="index">
               <SearchableItems
                 :defaultValue="item.name"
                 :items="products"
@@ -227,7 +196,7 @@ const deleteOrderItem = (index: number) => {
               />
               <Input
                 v-model="item.quantity"
-                class="border-r-0"
+                class="order-r-0"
                 :placeHolder="t('o.c.d.o.placeholder[0]')"
                 type="number"
               >
@@ -235,14 +204,14 @@ const deleteOrderItem = (index: number) => {
               </Input>
               <Input
                 v-model="item.price"
-                class="border-r-0"
+                class="order-r-0"
                 :placeHolder="t('o.c.d.o.placeholder[1]')"
                 type="number"
               >
                 <template #unite> DH </template>
               </Input>
               <Trash2
-                @click="deleteOrderItem(index)"
+                @click="deleteQuoteItem(index)"
                 class="cursor-pointer"
                 :size="22"
               />
@@ -256,7 +225,7 @@ const deleteOrderItem = (index: number) => {
         <Button variant="outline" @click="hideModal">
           {{ t("g.b.no") }}
         </Button>
-        <Button class="col-span-2" @click="updateTheOrders">
+        <Button class="col-span-2" @click="updateTheQuotes">
           {{ t("g.b.d") }}
         </Button>
       </div>
