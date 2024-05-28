@@ -10,6 +10,7 @@ declare global {
   const CreateInvoiceSchema: typeof import('./src/schemas/invoice.schema')['CreateInvoiceSchema']
   const CreateOrderSchema: typeof import('./src/schemas/order.schema')['CreateOrderSchema']
   const CreateProductSchema: typeof import('./src/schemas/products.schema')['CreateProductSchema']
+  const CreateQuoteSchema: typeof import('./src/schemas/quote.schema')['CreateQuoteSchema']
   const CreateSupplierSchema: typeof import('./src/schemas/supplier.schema')['CreateSupplierSchema']
   const EffectScope: typeof import('vue')['EffectScope']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']

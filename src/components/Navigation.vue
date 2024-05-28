@@ -20,10 +20,18 @@ const { t } = useI18n();
       class="w-full h-full flex items-center py-3 px-2 bg-white justify-between"
     >
       <div class="text-black flex items-center justify-center gap-2">
-        <ChevronLeft class="cursor-pointer" @click="$router.back()" />
-        <ChevronRight class="cursor-pointer" @click="$router.forward()" />
+        <ChevronLeft
+          :size="20"
+          class="cursor-pointer"
+          @click="$router.back()"
+        />
+        <ChevronRight
+          :size="20"
+          class="cursor-pointer"
+          @click="$router.forward()"
+        />
         <RouterLink to="/">
-          <HomeIcon :size="22" class="bg-white" />
+          <HomeIcon :size="18" class="bg-white" />
         </RouterLink>
         <!-- <span class="pb-[3px] text-gray-700 flex items-center"> -->
         <!-- <span v-if="route.fullPath !== '/'" class="flex items-center">

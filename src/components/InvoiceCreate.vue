@@ -162,9 +162,15 @@ const hideModal = () => {
                 <SelectValue placeholder="Select a status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="PAID"> Paid </SelectItem>
-                <SelectItem value="CANCELED"> Cancelled </SelectItem>
-                <SelectItem value="PENDING"> Pending </SelectItem>
+                <SelectItem value="PAID">
+                  {{ t("g.status.paid") }}
+                </SelectItem>
+                <SelectItem value="CANCELED">
+                  {{ t("g.status.cancelled") }}
+                </SelectItem>
+                <SelectItem value="PENDING">
+                  {{ t("g.status.pending") }}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>

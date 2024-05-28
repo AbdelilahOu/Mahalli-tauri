@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import type { OrderForCreateT } from "@/schemas/order.schema";
+import type { QuoteForCreateT } from "@/schemas/quote.schema";
 import { store } from "@/store";
 import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
@@ -28,9 +28,8 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
 const isLoading = ref<boolean>(false);
-const order = reactive<OrderForCreateT>({
+const quote = reactive<QuoteForCreateT>({
   clientId: "",
-  status: "",
   items: [
     {
       product_id: undefined,
@@ -40,16 +39,16 @@ const order = reactive<OrderForCreateT>({
   ],
 });
 
-const addOrderItem = () => {
-  order.items?.push({
+const addQuoteItem = () => {
+  quote.items?.push({
     product_id: undefined,
     quantity: undefined,
     price: undefined,
   });
 };
 
-const deleteOrderItem = (index: number) => {
-  order.items?.splice(index, 1);
+const deleteQuoteItem = (index: number) => {
+  quote.items?.splice(index, 1);
 };
 
 const searchClients = async (search: string | number) => {
@@ -76,17 +75,16 @@ const searchProducts = async (search: string | number) => {
   }
 };
 
-const createOrder = async () => {
+const createQuote = async () => {
   isLoading.value = true;
-  if (order?.clientId && order.items?.length !== 0) {
+  if (quote?.clientId && quote.items?.length !== 0) {
     try {
-      const orderRes = await invoke<Res<String>>("create_order", {
-        order: {
-          client_id: order.clientId,
-          status: order.status,
+      const quoteRes = await invoke<Res<String>>("create_quote", {
+        quote: {
+          client_id: quote.clientId,
         },
       });
-      for await (const item of order.items) {
+      for await (const item of quote.items) {
         const invRes = await invoke<Res<string>>("create_inventory", {
           mvm: {
             mvm_type: "OUT",
@@ -94,18 +92,18 @@ const createOrder = async () => {
             quantity: item.quantity,
           },
         });
-        await invoke<Res<string>>("create_order_item", {
+        await invoke<Res<string>>("create_quote_item", {
           item: {
-            order_id: orderRes.data,
+            quote_id: quoteRes.data,
             inventory_id: invRes.data,
             price: item.price,
           },
         });
       }
       //
-      info(`CREATE ORDER: ${JSON.stringify(order)}`);
+      info(`CREATE QUOTE: ${JSON.stringify(quote)}`);
       //
-      toast(t("notifications.order.created"), {
+      toast(t("notifications.quote.created"), {
         closeButton: true,
       });
       // toggle refresh
@@ -113,7 +111,7 @@ const createOrder = async () => {
         refresh: "refresh-create-" + Math.random() * 9999,
       });
     } catch (err: any) {
-      error("CREATE ORDER: " + err.error);
+      error("CREATE QUOTE: " + err.error);
     } finally {
       isLoading.value = false;
       hideModal();
@@ -146,29 +144,8 @@ const hideModal = () => {
             <SearchableItems
               :items="clients"
               @update:items="(s) => searchClients(s)"
-              @on:select="(id) => (order.clientId = id)"
+              @on:select="(id) => (quote.clientId = id)"
             />
-          </div>
-          <div class="w-full h-full flex flex-col gap-1">
-            <Label for="status">
-              {{ t("o.u.d.o.title") }}
-            </Label>
-            <Select v-model="order.status">
-              <SelectTrigger>
-                <SelectValue placeholder="Select a status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="DELIVERED">
-                  {{ t("g.status.delivered") }}
-                </SelectItem>
-                <SelectItem value="CANCELED">
-                  {{ t("g.status.cancelled") }}
-                </SelectItem>
-                <SelectItem value="PENDING">
-                  {{ t("g.status.pending") }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
         <Separator />
@@ -176,13 +153,13 @@ const hideModal = () => {
           <Label for="products">
             {{ t("o.c.d.o.products") }}
           </Label>
-          <Button @click="addOrderItem">
+          <Button @click="addQuoteItem">
             {{ t("o.c.d.o.add") }}
           </Button>
           <div
             class="products w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] items-center overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
-            <template v-for="(item, index) in order.items" :key="index">
+            <template v-for="(item, index) in quote.items" :key="index">
               <SearchableItems
                 :items="products"
                 @update:items="(s) => searchProducts(s)"
@@ -207,7 +184,7 @@ const hideModal = () => {
                 <template #unite> DH </template>
               </Input>
               <Trash2
-                @click="deleteOrderItem(index)"
+                @click="deleteQuoteItem(index)"
                 class="cursor-pointer"
                 :size="22"
               />
@@ -221,7 +198,7 @@ const hideModal = () => {
         <Button @click="hideModal" variant="outline">
           {{ t("g.b.no") }}
         </Button>
-        <Button class="col-span-2" @click="createOrder()">
+        <Button class="col-span-2" @click="createQuote()">
           {{ t("g.b.c") }}
         </Button>
       </div>

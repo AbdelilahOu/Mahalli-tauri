@@ -317,6 +317,7 @@
     "watchTriggerable": true,
     "watchWithFilter": true,
     "whenever": true,
-    "getFileBytes": true
+    "getFileBytes": true,
+    "CreateQuoteSchema": true
   }
 }

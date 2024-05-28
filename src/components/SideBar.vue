@@ -46,8 +46,11 @@ const openTranslationModal = () => {
         </span>
         <ChevronsLeft
           @click="collapse = !collapse"
-          class="transition-all duration-200 cursor-pointer transform"
-          :class="{ 'rotate-180': collapse }"
+          :size="22"
+          :class="{
+            'rotate-180': collapse,
+            'transition-all duration-200 cursor-pointer transform': true,
+          }"
         />
       </div>
     </div>
@@ -60,12 +63,12 @@ const openTranslationModal = () => {
           <span class="w-8 min-w-[30px] max-w-[30px]">
             <Contact
               class="m-auto text-gray-700 group-hover:text-black"
-              :size="22"
+              :size="20"
             />
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
           >
             {{ t("g.r.Clients") }}
           </span>
@@ -77,12 +80,12 @@ const openTranslationModal = () => {
           <span class="w-8 min-w-[30px] max-w-[30px]">
             <Contact
               class="m-auto text-gray-700 group-hover:text-black"
-              :size="22"
+              :size="20"
             />
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
           >
             {{ t("g.r.Suppliers") }}
           </span>
@@ -94,12 +97,12 @@ const openTranslationModal = () => {
           <span class="w-8 min-w-[30px] max-w-[30px]">
             <Package
               class="m-auto text-gray-700 group-hover:text-black"
-              :size="22"
+              :size="20"
             />
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
           >
             {{ t("g.r.Products") }}
           </span>
@@ -111,12 +114,12 @@ const openTranslationModal = () => {
           <span class="w-8 min-w-[30px] max-w-[30px]">
             <Truck
               class="m-auto text-gray-700 group-hover:text-black"
-              :size="22"
+              :size="20"
             />
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
           >
             {{ t("g.r.Orders") }}
           </span>
@@ -128,12 +131,12 @@ const openTranslationModal = () => {
           <span class="w-8 min-w-[30px] max-w-[30px]">
             <NotepadText
               class="m-auto text-gray-700 group-hover:text-black"
-              :size="22"
+              :size="20"
             />
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
           >
             {{ t("g.r.Invoices") }}
           </span>
@@ -145,12 +148,12 @@ const openTranslationModal = () => {
           <span class="w-8 min-w-[30px] max-w-[30px]">
             <Archive
               class="m-auto text-gray-700 group-hover:text-black"
-              :size="22"
+              :size="20"
             />
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
           >
             {{ t("g.r.Inventory") }}
           </span>
@@ -162,12 +165,12 @@ const openTranslationModal = () => {
           <span class="w-8 min-w-[30px] max-w-[30px]">
             <BarChartBig
               class="m-auto text-gray-700 group-hover:text-black"
-              :size="22"
+              :size="20"
             />
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
           >
             {{ t("g.r.Dashboard") }}
           </span>
@@ -180,12 +183,12 @@ const openTranslationModal = () => {
         <span class="w-8 min-w-[30px] max-w-[30px]">
           <Languages
             class="m-auto text-gray-700 group-hover:text-black"
-            :size="22"
+            :size="20"
           />
         </span>
         <span
           v-if="!collapse"
-          class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
+          class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
         >
           {{ locale.text }}
         </span>
@@ -197,12 +200,12 @@ const openTranslationModal = () => {
         <span class="w-8 min-w-[30px] max-w-[30px]">
           <Settings
             class="m-auto text-gray-700 group-hover:text-black"
-            :size="22"
+            :size="20"
           />
         </span>
         <span
           v-if="!collapse"
-          class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden"
+          class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
         >
           {{ t("g.r.Settings") }}
         </span>
