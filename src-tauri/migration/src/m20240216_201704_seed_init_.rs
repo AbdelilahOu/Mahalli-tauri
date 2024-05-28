@@ -72,6 +72,26 @@ impl MigrationTrait for Migration {
                 .to_owned();
 
             manager.exec_stmt(insert).await?;
+
+            let inventory_id = uuid::Uuid::now_v7();
+            let inventory_quantity: u8 = Faker.fake();
+            let insert_stock = Query::insert()
+                .into_table(InventoryMouvement::Table)
+                .columns([
+                    InventoryMouvement::Id,
+                    InventoryMouvement::ProductId,
+                    InventoryMouvement::Quantity,
+                    InventoryMouvement::MvmType,
+                ])
+                .values_panic([
+                    inventory_id.to_string().into(),
+                    id.to_string().into(),
+                    inventory_quantity.into(),
+                    String::from("IN").into(),
+                ])
+                .to_owned();
+
+            manager.exec_stmt(insert_stock).await?;
         }
 
         let db = manager.get_connection();
@@ -114,7 +134,7 @@ impl MigrationTrait for Migration {
                         (SELECT id FROM products ORDER BY RANDOM() LIMIT 1)
                     )
                 "#,
-                [_id.to_string().into(), String::from("IN").into(), quantity.into()],
+                [_id.to_string().into(), String::from("OUT").into(), quantity.into()],
             );
             db.execute(insert_inventory).await?;
             //

@@ -78,6 +78,12 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(InventoryMouvement::MvmType).string().not_null())
                     .col(ColumnDef::new(InventoryMouvement::Quantity).float().not_null().default(0.0f32))
                     .col(ColumnDef::new(InventoryMouvement::ProductId).string().not_null())
+                    .col(
+                        ColumnDef::new(InventoryMouvement::CreatedAt)
+                            .date_time()
+                            .not_null()
+                            .default(Expr::current_timestamp()),
+                    )
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_inventory_mvm_product_id")
@@ -142,14 +148,22 @@ impl MigrationTrait for Migration {
                     .table(Invoice::Table)
                     .if_not_exists()
                     .col(ColumnDef::new(Invoice::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(Invoice::ClientId).string().not_null())
                     .col(ColumnDef::new(Invoice::PaidAmount).float().not_null().default(0))
+                    .col(ColumnDef::new(Invoice::ClientId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_invoice_client_id")
                             .from(Invoice::Table, Invoice::ClientId)
                             .to(Client::Table, Client::Id)
                             .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .col(ColumnDef::new(Invoice::OrderId).string())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_invoice_order_id")
+                            .from(Invoice::Table, Invoice::OrderId)
+                            .to(Order::Table, Order::Id)
+                            .on_delete(ForeignKeyAction::SetNull),
                     )
                     .col(ColumnDef::new(Invoice::Status).string().not_null())
                     .col(
@@ -312,6 +326,8 @@ pub enum InventoryMouvement {
     Quantity,
     #[sea_orm(iden = "product_id")]
     ProductId,
+    #[sea_orm(iden = "created_at")]
+    CreatedAt,
 }
 
 #[derive(DeriveIden)]
@@ -372,6 +388,8 @@ pub enum Invoice {
     Id,
     #[sea_orm(iden = "client_id")]
     ClientId,
+    #[sea_orm(iden = "order_id")]
+    OrderId,
     // status: paid, cancel, ongoing
     #[sea_orm(iden = "status")]
     Status,

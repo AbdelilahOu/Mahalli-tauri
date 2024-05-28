@@ -149,14 +149,15 @@
       "title": "add new order",
       "d": {
         "s": {
-          "title": "supplier details",
-          "select": "Select a supplier"
+          "title": "Client",
+          "select": "Search for client"
         },
         "o": {
-          "title": "order details",
+          "title": "Order status",
+          "products": "Products",
           "add": "Add a product",
           "select": "Select a product",
-          "placeholder": ["Product quantity", "New price"]
+          "placeholder": ["Product quantity", "New price", "Select a status"]
         }
       },
       "button": "Add a Orders"
@@ -165,8 +166,8 @@
       "title": "update order",
       "d": {
         "s": {
-          "title": "supplier details",
-          "select": "Select a supplier"
+          "title": "client details",
+          "select": "Select a client"
         },
         "o": {
           "title": "order details",
@@ -191,7 +192,7 @@
         "status": "status"
       },
       "s": {
-        "title": "supplier details",
+        "title": "client details",
         "id": "id",
         "name": "name",
         "phone": "phoner number",

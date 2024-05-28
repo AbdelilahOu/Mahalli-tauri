@@ -2,9 +2,10 @@ import { z } from "zod";
 
 export const CreateInvoiceSchema = z.object({
   id: z.string().optional(),
-  status: z.string().min(2).max(50),
+  status: z.enum(["CANCELED", "PENDING", "PAID"]),
   paidAmount: z.number(),
   clientId: z.string().optional(),
+  orderId: z.string().optional(),
 });
 
 export type InvoiceT = z.infer<typeof CreateInvoiceSchema> & {

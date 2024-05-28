@@ -1,22 +1,28 @@
 <script setup lang="ts">
-import type { InvoiceProductT, InvoiceT } from "@/schemas/invoice.schema";
-import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import UiPagination from "./ui/UiPagination.vue";
-import { RouterLink } from "vue-router";
-import { useI18n } from "vue-i18n";
-import { store } from "@/store";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import { cn } from "@/utils/shadcn";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import type { InvoiceProductT, InvoiceT } from "@/schemas/invoice.schema";
+import { store } from "@/store";
+import { cn } from "@/utils/shadcn";
 import { invoke } from "@tauri-apps/api";
+import { FilePenLine, GripHorizontal, Printer, Trash2 } from "lucide-vue-next";
 import { error, info } from "tauri-plugin-log-api";
-import { Trash2, Printer, FilePenLine } from "lucide-vue-next";
+import { useI18n } from "vue-i18n";
+import { RouterLink } from "vue-router";
+import UiPagination from "./ui/UiPagination.vue";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t, d } = useI18n();
@@ -26,6 +32,12 @@ defineEmits<{
   (e: "listInvoiceProducts", id?: string): void;
   (e: "cancelInvoiceProducts"): void;
 }>();
+
+const STATUS_COLORS = {
+  CANCELED: "bg-red-100 border-red-500 text-red-900",
+  PENDING: "bg-yellow-100 border-yellow-500 text-yellow-900",
+  PAID: "bg-green-100 border-green-500 text-green-900",
+} as const;
 
 const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
   updateQueryParams({
@@ -71,6 +83,7 @@ const updateInvoiceStatus = async (invoice: any) => {
           v-for="(invoice, index) in invoices"
           v-fade="index"
           :key="invoice.id"
+          :class="{ 'animate-highlight-row': invoice.id == $route.query.id }"
         >
           <td class="p-2">
             <RouterLink
@@ -134,13 +147,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                   :class="
                     cn(
                       'cursor-pointer whitespace-nowrap',
-                      invoice?.status == 'CANCELED'
-                        ? 'bg-red-100 border-red-500 text-red-900'
-                        : invoice?.status == 'PENDING'
-                          ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
-                          : invoice?.status == 'PAID'
-                            ? 'bg-green-100 border-green-500 text-green-900'
-                            : '',
+                      STATUS_COLORS[invoice?.status!],
                     )
                   "
                 >
@@ -211,23 +218,43 @@ const updateInvoiceStatus = async (invoice: any) => {
           <td class="p-2">{{ invoice.paidAmount?.toFixed(2) }} DH</td>
           <td class="p-2">
             <div class="flex justify-center gap-3">
-              <Trash2
-                class="text-gray-800 cursor-pointer"
-                @click="toggleThisInvoices(invoice, 'InvoiceDelete')"
-                :size="22"
-              />
-              <FilePenLine
-                class="text-gray-800 cursor-pointer"
-                @click="toggleThisInvoices(invoice, 'InvoiceUpdate')"
-                :size="22"
-              />
-              <RouterLink
-                :to="{
-                  path: '/invoices/' + invoice.id,
-                }"
-              >
-                <Printer class="text-gray-800" :size="22" />
-              </RouterLink>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <GripHorizontal class="text-slate-800 inline" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <!-- <DropdownMenuLabel>My Account</DropdownMenuLabel> -->
+                  <DropdownMenuItem
+                    @click="toggleThisInvoices(invoice, 'InvoiceDelete')"
+                  >
+                    <Trash2 :size="20" class="text-slate-800 inline mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    @click="toggleThisInvoices(invoice, 'InvoiceUpdate')"
+                  >
+                    <FilePenLine
+                      :size="20"
+                      class="text-slate-800 inline mr-2"
+                    />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <RouterLink
+                      :to="{
+                        path: '/invoices/' + invoice.id,
+                      }"
+                    >
+                      <Printer
+                        :size="20"
+                        class="text-slate-800 inline mr-2"
+                      />Print
+                    </RouterLink>
+                  </DropdownMenuItem>
+                  <!-- <DropdownMenuSeparator />
+                  <DropdownMenuItem>Subscription</DropdownMenuItem> -->
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </td>
         </tr>

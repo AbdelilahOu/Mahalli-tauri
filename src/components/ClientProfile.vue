@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { SheetContent } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Mail, User, Phone, MapPin } from "lucide-vue-next";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { SheetContent } from "@/components/ui/sheet";
+import { Mail, MapPin, Phone, User } from "lucide-vue-next";
 </script>
 
 <template>

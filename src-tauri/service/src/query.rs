@@ -56,6 +56,21 @@ impl QueriesService {
                                 Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
                                 Expr::val(0.0f64).into(),
                             ]))
+                            .cond_where(Cond::all().add(inventory_mouvements::Column::MvmType.eq(String::from("IN"))).add(
+                                Expr::col((InventoryMouvements, inventory_mouvements::Column::ProductId)).equals((Products, products::Column::Id)),
+                            ))
+                            .to_owned(),
+                    )),
+                )
+                .sub(SimpleExpr::SubQuery(
+                    None,
+                    Box::new(SubQueryStatement::SelectStatement(
+                        Query::select()
+                            .from(InventoryMouvements)
+                            .expr(Func::coalesce([
+                                Func::sum(Expr::col(inventory_mouvements::Column::Quantity)).into(),
+                                Expr::val(0.0f64).into(),
+                            ]))
                             .join(
                                 JoinType::Join,
                                 OrderItems,
@@ -68,20 +83,16 @@ impl QueriesService {
                                 Expr::col((Orders, orders::Column::Id)).equals((OrderItems, order_items::Column::OrderId)),
                             )
                             .cond_where(
-                                Cond::all().add(
-                                    Expr::col((InventoryMouvements, inventory_mouvements::Column::ProductId))
-                                        .equals((Products, products::Column::Id))
-                                        .into_condition()
-                                        .add(
-                                            Cond::any()
-                                                .add(orders::Column::Status.eq("PENDING"))
-                                                .add(orders::Column::Status.eq("DELIVERED")),
-                                        ),
-                                ),
+                                Cond::all()
+                                    .add(
+                                        Expr::col((InventoryMouvements, inventory_mouvements::Column::ProductId))
+                                            .equals((Products, products::Column::Id)),
+                                    )
+                                    .add(orders::Column::Status.eq("CANCELED").not()),
                             )
                             .to_owned(),
                     )),
-                )
+                ))
                 .sub(SimpleExpr::SubQuery(
                     None,
                     Box::new(SubQueryStatement::SelectStatement(
@@ -103,16 +114,13 @@ impl QueriesService {
                                 Expr::col((Invoices, invoices::Column::Id)).equals((InvoiceItems, invoice_items::Column::InvoiceId)),
                             )
                             .cond_where(
-                                Cond::all().add(
-                                    Expr::col((InventoryMouvements, inventory_mouvements::Column::ProductId))
-                                        .equals((Products, products::Column::Id))
-                                        .into_condition()
-                                        .add(
-                                            Cond::any()
-                                                .add(invoices::Column::Status.eq("PENDING"))
-                                                .add(invoices::Column::Status.eq("PAID")),
-                                        ),
-                                ),
+                                Cond::all()
+                                    .add(Expr::col((Invoices, invoices::Column::OrderId)).is_null())
+                                    .add(
+                                        Expr::col((InventoryMouvements, inventory_mouvements::Column::ProductId))
+                                            .equals((Products, products::Column::Id)),
+                                    )
+                                    .add(invoices::Column::Status.eq("CANCELED").not()),
                             )
                             .to_owned(),
                     )),
@@ -929,22 +937,15 @@ impl QueriesService {
             .join(JoinType::LeftJoin, invoice_items::Relation::Invoices.def())
             .join(JoinType::LeftJoin, order_items::Relation::Orders.def())
             .filter(
-                Cond::all()
-                    .add(
-                        Expr::expr(Func::coalesce([
-                            Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
-                            Expr::col((Orders, orders::Column::CreatedAt)).into(),
-                        ]))
-                        .is_not_null(),
-                    )
-                    .add(
-                        Expr::expr(Func::coalesce([
-                            Expr::col((Invoices, invoices::Column::Status)).into(),
-                            Expr::col((Orders, orders::Column::Status)).into(),
-                        ]))
-                        .eq("CANCELED")
-                        .not(),
-                    ),
+                Cond::all().add(Expr::col((Invoices, invoices::Column::OrderId)).is_null()).add(
+                    Expr::expr(Func::coalesce([
+                        Expr::col((Invoices, invoices::Column::Status)).into(),
+                        Expr::col((Orders, orders::Column::Status)).into(),
+                        Expr::expr("PENDING").into(),
+                    ]))
+                    .eq("CANCELED")
+                    .not(),
+                ),
             )
             .apply_if(Some(args.search.clone()), |query, v| {
                 query.filter(Expr::col((Products, products::Column::Name)).like(format!("{}%", v)))
@@ -953,10 +954,7 @@ impl QueriesService {
                 query.filter(Expr::col((InventoryMouvements, inventory_mouvements::Column::MvmType)).eq(v))
             })
             .apply_if(args.created_at.clone(), |query, v| {
-                query.filter(Expr::cust_with_values(
-                    "strftime('%Y-%m-%d', COALESCE(invoices.created_at, orders.created_at)) = ?",
-                    [v],
-                ))
+                query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', inventory_mouvements.created_at) = ?", [v]))
             })
             .count(db)
             .await?;
@@ -968,18 +966,13 @@ impl QueriesService {
                 Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)),
                 Expr::col((Products, products::Column::Name)),
                 Expr::col((InventoryMouvements, inventory_mouvements::Column::MvmType)),
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::CreatedAt)),
             ])
-            .expr_as(
-                Func::coalesce([
-                    Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
-                    Expr::col((Orders, orders::Column::CreatedAt)).into(),
-                ]),
-                Alias::new("created_at"),
-            )
             .expr_as(
                 Func::coalesce([
                     Expr::col((OrderItems, order_items::Column::Price)).into(),
                     Expr::col((InvoiceItems, invoice_items::Column::Price)).into(),
+                    Expr::col((Products, products::Column::Price)).into(),
                 ]),
                 Alias::new("price"),
             )
@@ -1009,22 +1002,15 @@ impl QueriesService {
                 Expr::col((Invoices, invoices::Column::Id)).equals((InvoiceItems, invoice_items::Column::InvoiceId)),
             )
             .cond_where(
-                Cond::all()
-                    .add(
-                        Expr::expr(Func::coalesce([
-                            Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
-                            Expr::col((Orders, orders::Column::CreatedAt)).into(),
-                        ]))
-                        .is_not_null(),
-                    )
-                    .add(
-                        Expr::expr(Func::coalesce([
-                            Expr::col((Invoices, invoices::Column::Status)).into(),
-                            Expr::col((Orders, orders::Column::Status)).into(),
-                        ]))
-                        .eq("CANCELED")
-                        .not(),
-                    ),
+                Cond::all().add(Expr::col((Invoices, invoices::Column::OrderId)).is_null()).add(
+                    Expr::expr(Func::coalesce([
+                        Expr::col((Invoices, invoices::Column::Status)).into(),
+                        Expr::col((Orders, orders::Column::Status)).into(),
+                        Expr::expr("PENDING").into(),
+                    ]))
+                    .eq("CANCELED")
+                    .not(),
+                ),
             )
             .and_where(Expr::col((Products, products::Column::Name)).like(format!("{}%", args.search)))
             .conditions(
@@ -1038,18 +1024,14 @@ impl QueriesService {
                 args.created_at.clone().is_some(),
                 |x| {
                     x.and_where(Expr::cust_with_values(
-                        "strftime('%Y-%m-%d', COALESCE(invoices.created_at, orders.created_at)) = ?",
+                        "strftime('%Y-%m-%d', inventory_mouvements.created_at) = ?",
                         args.created_at,
                     ));
                 },
                 |_| {},
             )
             .order_by_expr(
-                Func::coalesce([
-                    Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
-                    Expr::col((Orders, orders::Column::CreatedAt)).into(),
-                ])
-                .into(),
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::CreatedAt)).into(),
                 Order::Desc,
             )
             .limit(args.limit)
@@ -1082,20 +1064,20 @@ impl QueriesService {
     pub async fn list_mvm_stats(db: &DbConn) -> Result<Vec<JsonValue>, DbErr> {
         let (sql, values) = Query::select()
             .from(InventoryMouvements)
-            .exprs([Expr::col((InventoryMouvements, inventory_mouvements::Column::MvmType))])
+            .columns([
+                (InventoryMouvements, inventory_mouvements::Column::MvmType),
+                (InventoryMouvements, inventory_mouvements::Column::CreatedAt),
+            ])
             .expr_as(
-                Func::sum(Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity))),
+                Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity)).sum(),
                 Alias::new("quantity"),
-            )
-            .expr_as(
-                Expr::cust("strftime('%Y-%m-01', COALESCE(invoices.created_at, orders.created_at))"),
-                Alias::new("created_at"),
             )
             .expr_as(
                 Func::sum(
                     Expr::expr(Func::coalesce([
                         Expr::col((OrderItems, order_items::Column::Price)).into(),
                         Expr::col((InvoiceItems, invoice_items::Column::Price)).into(),
+                        Expr::col((Products, products::Column::Price)).into(),
                     ]))
                     .mul(Expr::col((InventoryMouvements, inventory_mouvements::Column::Quantity))),
                 ),
@@ -1128,27 +1110,20 @@ impl QueriesService {
             )
             .cond_where(
                 Cond::all()
-                    .add(
-                        Expr::expr(Func::coalesce([
-                            Expr::col((Invoices, invoices::Column::CreatedAt)).into(),
-                            Expr::col((Orders, orders::Column::CreatedAt)).into(),
-                        ]))
-                        .is_not_null(),
-                    )
+                    .add(Expr::col((Invoices, invoices::Column::OrderId)).is_null())
                     .add(
                         Expr::expr(Func::coalesce([
                             Expr::col((Invoices, invoices::Column::Status)).into(),
                             Expr::col((Orders, orders::Column::Status)).into(),
+                            Expr::expr("PENDING").into(),
                         ]))
                         .eq("CANCELED")
                         .not(),
                     )
-                    .add(Expr::cust(
-                        "COALESCE(invoices.created_at, orders.created_at) >= DATETIME('now', '-3 month')",
-                    )),
+                    .add(Expr::cust("inventory_mouvements.created_at >= DATETIME('now', '-3 month')")),
             )
             .add_group_by([
-                Expr::cust("strftime('%Y-%m', COALESCE(invoices.created_at, orders.created_at))"),
+                Expr::cust("strftime('%Y-%m', inventory_mouvements.created_at)"),
                 Expr::col((InventoryMouvements, inventory_mouvements::Column::MvmType)).into(),
             ])
             .to_owned()

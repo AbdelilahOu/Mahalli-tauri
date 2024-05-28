@@ -224,6 +224,7 @@ impl MutationsService {
         let invoice = InvoiceActiveModel {
             client_id: ActiveValue::Set(invoice.client_id),
             status: ActiveValue::Set(invoice.status),
+            order_id: ActiveValue::Set(invoice.order_id),
             paid_amount: ActiveValue::Set(invoice.paid_amount),
             ..Default::default()
         };

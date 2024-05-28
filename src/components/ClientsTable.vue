@@ -1,12 +1,11 @@
 <script setup lang="ts">
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import type { ClientT } from "@/schemas/client.schema";
+import { store } from "@/store";
+import { FilePenLine, Trash2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
-import { FilePenLine, BookUser, Trash2 } from "lucide-vue-next";
-import { store } from "@/store";
-import type { ClientT } from "@/schemas/client.schema";
-import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { SheetTrigger } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 defineProps<{
   clients: ClientT[];

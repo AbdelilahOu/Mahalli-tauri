@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { useI18n } from "vue-i18n";
-import { ref, reactive } from "vue";
-import { invoke } from "@tauri-apps/api";
-import { Trash2 } from "lucide-vue-next";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { store } from "@/store";
-import UiModalCard from "./ui/UiModalCard.vue";
-import { Label } from "./ui/label";
-import { Separator } from "./ui/separator";
-import type { OrderForCreateT } from "@/schemas/order.schema";
-import type { Res } from "@/types";
 import {
+  Select,
   SelectContent,
+  SelectItem,
   SelectTrigger,
   SelectValue,
-  SelectItem,
-  Select,
 } from "@/components/ui/select";
-import SearchableItems from "./ui/UISearchableItems.vue";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import type { OrderForCreateT } from "@/schemas/order.schema";
+import { store } from "@/store";
+import type { Res } from "@/types";
+import { invoke } from "@tauri-apps/api";
+import { Trash2 } from "lucide-vue-next";
 import { error, info } from "tauri-plugin-log-api";
+import { reactive, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { toast } from "vue-sonner";
+import SearchableItems from "./ui/UISearchableItems.vue";
+import UiModalCard from "./ui/UiModalCard.vue";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Separator } from "./ui/separator";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -89,7 +89,7 @@ const createOrder = async () => {
       for await (const item of order.items) {
         const invRes = await invoke<Res<string>>("create_inventory", {
           mvm: {
-            mvm_type: "IN",
+            mvm_type: "OUT",
             product_id: item.product_id,
             quantity: item.quantity,
           },
@@ -167,11 +167,14 @@ const hideModal = () => {
         </div>
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
+          <Label for="products">
+            {{ t("o.c.d.o.products") }}
+          </Label>
           <Button @click="addOrderItem">
             {{ t("o.c.d.o.add") }}
           </Button>
           <div
-            class="w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] items-center overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
+            class="products w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] items-center overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
           >
             <template v-for="(item, index) in order.items" :key="index">
               <SearchableItems

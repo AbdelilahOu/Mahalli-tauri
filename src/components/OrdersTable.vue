@@ -3,7 +3,11 @@ import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
 import { RouterLink } from "vue-router";
 import { store } from "@/store";
-import type { OrderProductT, OrderT } from "@/schemas/order.schema";
+import type {
+  OrderForUpdateT,
+  OrderProductT,
+  OrderT,
+} from "@/schemas/order.schema";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { cn } from "@/utils/shadcn";
@@ -16,7 +20,23 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { invoke } from "@tauri-apps/api";
 import { error, info } from "tauri-plugin-log-api";
-import { FilePenLine, Printer, Trash2 } from "lucide-vue-next";
+import {
+  FilePenLine,
+  Printer,
+  Trash2,
+  GripHorizontal,
+  NotepadText,
+} from "lucide-vue-next";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import type { Res } from "@/types";
+import { toast } from "vue-sonner";
+import { h } from "vue";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t, d } = useI18n();
@@ -26,6 +46,12 @@ defineEmits<{
   (e: "listOrderProducts", id?: string): void;
   (e: "cancelOrderProducts"): void;
 }>();
+
+const STATUS_COLORS = {
+  CANCELED: "bg-red-100 border-red-500 text-red-900",
+  PENDING: "bg-yellow-100 border-yellow-500 text-yellow-900",
+  DELIVERED: "bg-green-100 border-green-500 text-green-900",
+} as const;
 
 const toggleThisOrders = (Order: OrderT, name: string) => {
   updateQueryParams({
@@ -48,6 +74,54 @@ const updateOrderStatus = async (order: any) => {
     });
   } catch (err: any) {
     error("UPDATE ORDER STATUS: " + err.error);
+  }
+};
+
+const createInvoiceFromOrder = async (id: string) => {
+  try {
+    const res = await invoke<Res<OrderForUpdateT>>("get_order", {
+      id: id,
+    });
+    if (!res.error) {
+      const invoiceRes = await invoke<Res<String>>("create_invoice", {
+        invoice: {
+          client_id: res.data.clientId,
+          status: "PAID",
+          paid_amount: 0,
+          order_id: id,
+        },
+      });
+      //
+      for await (const item of res.data.items) {
+        const invRes = await invoke<Res<string>>("create_inventory", {
+          mvm: {
+            mvm_type: "OUT",
+            product_id: item.product_id,
+            quantity: item.quantity,
+          },
+        });
+
+        await invoke<Res<string>>("create_invoice_item", {
+          item: {
+            invoice_id: invoiceRes.data,
+            inventory_id: invRes.data,
+            price: item.price,
+          },
+        });
+      }
+      info(`CREATE INVOICE FROM ORDER: ${id}`);
+      //
+      toast.success(t("notifications.invoice.created"), {
+        closeButton: true,
+        description: h(RouterLink, {
+          to: "/invoices/?page=1&id=" + invoiceRes.data,
+          class: "underline",
+          innerHTML: "go to invoice",
+        }),
+      });
+    }
+  } catch (err: any) {
+    error("GET ORDER FOR INVOICE: " + err.error);
   }
 };
 </script>
@@ -127,13 +201,7 @@ const updateOrderStatus = async (order: any) => {
                   :class="
                     cn(
                       'cursor-pointer whitespace-nowrap',
-                      order?.status == 'CANCELED'
-                        ? 'bg-red-100 border-red-500 text-red-900'
-                        : order?.status == 'PENDING'
-                          ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
-                          : order?.status == 'DELIVERED'
-                            ? 'bg-green-100 border-green-500 text-green-900'
-                            : '',
+                      STATUS_COLORS[order.status],
                     )
                   "
                 >
@@ -198,21 +266,48 @@ const updateOrderStatus = async (order: any) => {
           <td class="p-2">{{ order.total?.toFixed(2) }} DH</td>
           <td class="p-2">
             <div class="flex justify-center items-center gap-3">
-              <Trash2
-                @click="toggleThisOrders(order, 'OrderDelete')"
-                :size="22"
-              />
-              <FilePenLine
-                @click="toggleThisOrders(order, 'OrderUpdate')"
-                :size="22"
-              />
-              <RouterLink
-                :to="{
-                  path: '/orders/' + order.id,
-                }"
-              >
-                <Printer :size="22" />
-              </RouterLink>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <GripHorizontal class="text-slate-800 inline" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <!-- <DropdownMenuLabel>My Account</DropdownMenuLabel> -->
+                  <DropdownMenuItem
+                    @click="toggleThisOrders(order, 'OrderDelete')"
+                  >
+                    <Trash2 :size="20" class="text-slate-800 inline mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    @click="toggleThisOrders(order, 'OrderUpdate')"
+                  >
+                    <FilePenLine
+                      :size="20"
+                      class="text-slate-800 inline mr-2"
+                    />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <RouterLink
+                      :to="{
+                        path: '/orders/' + order.id,
+                      }"
+                    >
+                      <Printer
+                        :size="20"
+                        class="text-slate-800 inline mr-2"
+                      />Print
+                    </RouterLink>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem @click="createInvoiceFromOrder(order.id!)">
+                    <NotepadText
+                      :size="20"
+                      class="text-slate-800 inline mr-2"
+                    />Create invoice
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </td>
         </tr>
