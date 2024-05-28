@@ -88,6 +88,7 @@ async function getInventory(search: string, page: number = 1) {
           : null,
       },
     });
+    console.log(res.data.inventory);
     //
     inventoryMouvements.value = res.data.inventory;
     totalRows.value = res.data.count;

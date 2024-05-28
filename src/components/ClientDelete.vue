@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { useI18n } from "vue-i18n";
-import UiModalCard from "./ui/UiModalCard.vue";
-import { invoke } from "@tauri-apps/api";
-import { Button } from "./ui/button";
 import { store } from "@/store";
-import { error, info } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
+import { invoke } from "@tauri-apps/api";
+import { error, info } from "tauri-plugin-log-api";
+import { useI18n } from "vue-i18n";
 import { toast } from "vue-sonner";
+import UiModalCard from "./ui/UiModalCard.vue";
+import { Button } from "./ui/button";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();

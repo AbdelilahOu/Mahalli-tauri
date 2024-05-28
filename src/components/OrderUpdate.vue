@@ -100,7 +100,7 @@ const updateTheOrders = async () => {
       if (!item.id) {
         const invRes = await invoke<Res<string>>("create_inventory", {
           mvm: {
-            mvm_type: "IN",
+            mvm_type: "OUT",
             product_id: item.product_id,
             quantity: item.quantity,
           },
@@ -116,7 +116,7 @@ const updateTheOrders = async () => {
         await invoke<Res<string>>("update_inventory", {
           mvm: {
             id: item.inventory_id,
-            mvm_type: "IN",
+            mvm_type: "OUT",
             product_id: item.product_id,
             quantity: item.quantity,
           },

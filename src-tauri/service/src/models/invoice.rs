@@ -13,7 +13,6 @@ pub struct SelectInvoices {
     pub total: f64,
 }
 
-
 #[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
 pub struct SelectInvoiceDetails {
     pub id: String,
@@ -30,6 +29,7 @@ pub struct SelectInvoiceDetails {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NewInvoice {
     pub client_id: String,
+    pub order_id: Option<String>,
     pub status: String,
     pub paid_amount: f64,
 }

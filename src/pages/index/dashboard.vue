@@ -68,9 +68,11 @@ async function getInventoryMouvementStats() {
   try {
     const res = await invoke<Res<mouvementsT[]>>("list_mvm_stats");
 
-    const result = res.data.reduce((acc, item) => {
-      const { createdAt, mvmType, quantity, price } = item;
+    console.log(res);
 
+    const result = res.data.reduce((acc, item) => {
+      const { createdAt: date, mvmType, quantity, price } = item;
+      const createdAt = new Date(date).toISOString().split("T")[0];
       if (!acc[createdAt]) {
         acc[createdAt] = {
           IN: {

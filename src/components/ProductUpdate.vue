@@ -23,7 +23,6 @@ const { t } = useI18n();
 const route = useRoute();
 
 const isUpdating = ref<boolean>(false);
-const quantity = ref<number>(0);
 
 const productSchema = toTypedSchema(
   z.object({
@@ -63,15 +62,15 @@ const updateTheProduct = async (product: ProductT) => {
       },
     });
 
-    if (quantity.value > 0) {
-      await invoke<Res<any>>("create_inventory", {
-        mvm: {
-          mvm_type: "IN",
-          product_id: id,
-          quantity: Number(quantity.value),
-        },
-      });
-    }
+    // if (quantity.value > 0) {
+    //   await invoke<Res<any>>("create_inventory", {
+    //     mvm: {
+    //       mvm_type: "IN",
+    //       product_id: id,
+    //       quantity: Number(quantity.value),
+    //     },
+    //   });
+    // }
     info(
       `UPDATE PRODUCT: ${JSON.stringify({
         name: product.name,
@@ -134,20 +133,6 @@ const onSubmit = form.handleSubmit((values) => {
                 v-bind="componentField"
               >
                 <template #unite> DH </template>
-              </Input>
-            </FormControl>
-          </FormItem>
-        </FormField>
-        <FormField name="">
-          <FormItem>
-            <FormLabel>{{ t("g.fields.quantity") }}</FormLabel>
-            <FormControl>
-              <Input
-                type="number"
-                :placeholder="t('g.fields.quantity')"
-                v-model="quantity"
-              >
-                <template #unite> Item </template>
               </Input>
             </FormControl>
           </FormItem>

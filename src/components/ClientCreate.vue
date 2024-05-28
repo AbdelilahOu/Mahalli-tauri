@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { CreateClientSchema, type ClientT } from "@/schemas/client.schema";
+import { store } from "@/store";
+import type { Res } from "@/types";
+import { getFileBytes } from "@/utils/fs";
+import { invoke } from "@tauri-apps/api";
 import { toTypedSchema } from "@vee-validate/zod";
+import { error, info } from "tauri-plugin-log-api";
+import { useForm } from "vee-validate";
+import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { toast } from "vue-sonner";
 import UiModalCard from "./ui/UiModalCard.vue";
 import UiUploader from "./ui/UiUploader.vue";
-import { invoke } from "@tauri-apps/api";
-import { useForm } from "vee-validate";
-import { getFileBytes } from "@/utils/fs";
 import { Button } from "./ui/button";
+import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { Input } from "./ui/input";
-import { useI18n } from "vue-i18n";
-import { store } from "@/store";
-import { ref } from "vue";
-import { CreateClientSchema, type ClientT } from "@/schemas/client.schema";
-import { info, error } from "tauri-plugin-log-api";
-import type { Res } from "@/types";
-import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();

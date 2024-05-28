@@ -1,19 +1,32 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import UiPagination from "./ui/UiPagination.vue";
-import { FilePenLine, Trash2 } from "lucide-vue-next";
-import { store } from "@/store";
-import type { ProductT } from "@/schemas/products.schema";
-import { Badge } from "./ui/badge";
-import { cn } from "@/utils/shadcn";
-import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { CalendarDays, Info } from "lucide-vue-next";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import type { ProductT } from "@/schemas/products.schema";
+import { store } from "@/store";
+import { cn } from "@/utils/shadcn";
+import {
+  CalendarDays,
+  FilePenLine,
+  GripHorizontal,
+  Info,
+  PackagePlus,
+  Trash2,
+} from "lucide-vue-next";
+import { useI18n } from "vue-i18n";
+import UiPagination from "./ui/UiPagination.vue";
+import { Badge } from "./ui/badge";
 
 defineProps<{ products: ProductT[] }>();
 
@@ -29,6 +42,15 @@ const toggleThisProduct = (product: ProductT, name: string) => {
     minQuantity: product.minQuantity,
   });
   store.setters.updateStore({ key: "name", value: name });
+  store.setters.updateStore({ key: "show", value: true });
+};
+
+const updateProductStock = (id: string, name: string) => {
+  updateQueryParams({
+    id,
+    name,
+  });
+  store.setters.updateStore({ key: "name", value: "UpdateStock" });
   store.setters.updateStore({ key: "show", value: true });
 };
 </script>
@@ -116,16 +138,38 @@ const toggleThisProduct = (product: ProductT, name: string) => {
 
           <td class="p-2">
             <div class="flex justify-center gap-3">
-              <Trash2
-                @click="toggleThisProduct(product, 'ProductDelete')"
-                class="cursor-pointer text-gray-800"
-                :size="22"
-              />
-              <FilePenLine
-                @click="toggleThisProduct(product, 'ProductUpdate')"
-                class="cursor-pointer text-gray-800"
-                :size="22"
-              />
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <GripHorizontal class="text-slate-800 inline" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <!-- <DropdownMenuLabel>My Account</DropdownMenuLabel> -->
+                  <DropdownMenuItem
+                    @click="toggleThisProduct(product, 'ProductDelete')"
+                  >
+                    <Trash2 class="text-slate-800 inline mr-2" :size="20" />
+                    <span> Delete </span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    @click="toggleThisProduct(product, 'ProductUpdate')"
+                  >
+                    <FilePenLine
+                      class="text-slate-800 inline mr-2"
+                      :size="20"
+                    />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    @click="updateProductStock(product.id!, product.name!)"
+                  >
+                    <PackagePlus
+                      :size="20"
+                      class="text-slate-800 inline mr-2"
+                    />Update stock
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </td>
         </tr>
