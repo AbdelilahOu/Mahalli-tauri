@@ -46,7 +46,7 @@ const openTranslationModal = () => {
         </span>
         <ChevronsLeft
           @click="collapse = !collapse"
-          :size="22"
+          :size="20"
           :class="{
             'rotate-180': collapse,
             'transition-all duration-200 cursor-pointer transform': true,

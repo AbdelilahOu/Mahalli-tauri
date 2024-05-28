@@ -209,7 +209,7 @@ const hideModal = () => {
               <Trash2
                 @click="deleteOrderItem(index)"
                 class="cursor-pointer"
-                :size="22"
+                :size="20"
               />
             </template>
           </div>

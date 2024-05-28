@@ -3,9 +3,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import type { ClientT } from "@/schemas/client.schema";
 import { store } from "@/store";
-import { FilePenLine, Trash2 } from "lucide-vue-next";
+import { FilePenLine, Trash2, GripHorizontal } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 defineProps<{
   clients: ClientT[];
@@ -76,19 +83,32 @@ const toggleCLientProfile = (client: ClientT) => {
           </td>
           <td class="p-2 whitespace-nowrap">{{ client.credi }} DH</td>
           <td class="p-2">
-            <div class="flex space-x-3">
-              <Trash2
-                @click="toggleThisClient(client, 'ClientDelete')"
-                class="cursor-pointer text-gray-800"
-                :size="22"
-              />
-              <FilePenLine
-                @click="toggleThisClient(client, 'ClientUpdate')"
-                class="cursor-pointer text-gray-800"
-                :size="22"
-              />
+            <div class="flex justify-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <GripHorizontal class="text-slate-800 inline" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <!-- <DropdownMenuLabel>My Account</DropdownMenuLabel> -->
+                  <DropdownMenuItem
+                    @click="toggleThisClient(client, 'ClientDelete')"
+                  >
+                    <Trash2 :size="20" class="text-slate-800 inline mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    @click="toggleThisClient(client, 'ClientUpdate')"
+                  >
+                    <FilePenLine
+                      :size="20"
+                      class="text-slate-800 inline mr-2"
+                    />
+                    Edit
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <!-- <SheetTrigger @click="(e) => toggleCLientProfile(client)">
-                <BookUser class="text-gray-800" :size="22" />
+                <BookUser class="text-gray-800" :size="20" />
               </SheetTrigger> -->
             </div>
           </td>
