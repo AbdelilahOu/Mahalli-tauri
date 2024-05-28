@@ -65,7 +65,7 @@ onBeforeUnmount(() => {
       v-if="selectedFile"
       class="absolute w-8 h-8 bg-white rounded-bl-md rounded-tr-md hover:bg-gray-100 cursor-pointer transition-all duration-150 -top-0 flex items-center justify-center -right-0 z-[90]"
     >
-      <Trash2 :size="22" />
+      <Trash2 :size="20" />
     </span>
     <img
       v-if="name == 'Image' && selectedFile"

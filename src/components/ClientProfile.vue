@@ -26,20 +26,20 @@ import { Mail, MapPin, Phone, User } from "lucide-vue-next";
         </div>
         <div class="w-full grid grid-cols-1 p-2 py-6 gap-1 border-b">
           <div class="flex gap-2 w-full">
-            <User class="text-slate-700" :size="22" />{{
+            <User class="text-slate-700" :size="20" />{{
               $route.query.fullname
             }}
           </div>
           <div class="flex gap-2 w-full">
-            <Mail class="text-slate-700" :size="22" />{{ $route.query.email }}
+            <Mail class="text-slate-700" :size="20" />{{ $route.query.email }}
           </div>
           <div class="flex gap-2 w-full">
-            <Phone class="text-slate-700" :size="22" />{{
+            <Phone class="text-slate-700" :size="20" />{{
               $route.query.phoneNumber
             }}
           </div>
           <div class="flex gap-2 w-full">
-            <MapPin class="text-slate-700" :size="22" />{{
+            <MapPin class="text-slate-700" :size="20" />{{
               $route.query.address
             }}
           </div>

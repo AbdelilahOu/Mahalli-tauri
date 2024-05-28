@@ -186,7 +186,7 @@ const hideModal = () => {
               <Trash2
                 @click="deleteQuoteItem(index)"
                 class="cursor-pointer"
-                :size="22"
+                :size="20"
               />
             </template>
           </div>

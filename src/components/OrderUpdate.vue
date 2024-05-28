@@ -244,7 +244,7 @@ const deleteOrderItem = (index: number) => {
               <Trash2
                 @click="deleteOrderItem(index)"
                 class="cursor-pointer"
-                :size="22"
+                :size="20"
               />
             </template>
           </div>

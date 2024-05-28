@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import UiPagination from "./ui/UiPagination.vue";
-import { FilePenLine, BookUser, Trash2 } from "lucide-vue-next";
+import { FilePenLine, GripHorizontal, Trash2 } from "lucide-vue-next";
 import { store } from "@/store";
 import type { SupplierT } from "@/schemas/supplier.schema";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { SheetTrigger } from "./ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 defineProps<{
   suppliers: SupplierT[];
@@ -78,19 +84,31 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
             {{ supplier.address }}
           </td>
           <td class="p-2">
-            <div class="flex space-x-3">
-              <Trash2
-                @click="toggleThisSupplier(supplier, 'supplierDelete')"
-                class="cursor-pointer text-gray-800"
-                :size="22"
-              />
-              <FilePenLine
-                @click="toggleThisSupplier(supplier, 'supplierUpdate')"
-                class="cursor-pointer text-gray-800"
-                :size="22"
-              />
+            <div class="flex justify-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <GripHorizontal class="text-slate-800 inline" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem
+                    @click="toggleThisSupplier(supplier, 'supplierDelete')"
+                  >
+                    <Trash2 :size="20" class="text-slate-800 inline mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    @click="toggleThisSupplier(supplier, 'supplierUpdate')"
+                  >
+                    <FilePenLine
+                      :size="20"
+                      class="text-slate-800 inline mr-2"
+                    />
+                    Edit
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <!-- <SheetTrigger @click="(e) => toggleSupplierProfile(supplier)">
-                <BookUser class="text-gray-800" :size="22" />
+                <BookUser class="text-gray-800" :size="20" />
               </SheetTrigger> -->
             </div>
           </td>
