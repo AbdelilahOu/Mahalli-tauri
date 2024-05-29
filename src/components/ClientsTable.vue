@@ -94,7 +94,7 @@ const toggleCLientProfile = (client: ClientT) => {
                     @click="toggleThisClient(client, 'ClientDelete')"
                   >
                     <Trash2 :size="20" class="text-slate-800 inline mr-2" />
-                    Delete
+                    {{ t("g.actions.delete") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     @click="toggleThisClient(client, 'ClientUpdate')"
@@ -103,7 +103,7 @@ const toggleCLientProfile = (client: ClientT) => {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    Edit
+                    {{ t("g.actions.edit") }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

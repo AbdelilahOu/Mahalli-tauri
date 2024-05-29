@@ -181,7 +181,7 @@ const createInvoiceFromQuote = async (id: string) => {
                     @click="toggleThisQuotes(quote, 'QuoteDelete')"
                   >
                     <Trash2 :size="20" class="text-slate-800 inline mr-2" />
-                    Delete
+                    {{ t("g.actions.delete") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     @click="toggleThisQuotes(quote, 'QuoteUpdate')"
@@ -190,7 +190,7 @@ const createInvoiceFromQuote = async (id: string) => {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    Edit
+                    {{ t("g.actions.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <RouterLink
@@ -201,15 +201,13 @@ const createInvoiceFromQuote = async (id: string) => {
                       <Printer
                         :size="20"
                         class="text-slate-800 inline mr-2"
-                      />Print
+                      />{{ t("g.actions.print") }}
                     </RouterLink>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem @click="createInvoiceFromQuote(quote.id!)">
-                    <Truck
-                      :size="20"
-                      class="text-slate-800 inline mr-2"
-                    />Create order
+                    <Truck :size="20" class="text-slate-800 inline mr-2" />
+                    {{ t("g.actions.toOrder") }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

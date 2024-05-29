@@ -281,7 +281,7 @@ const createInvoiceFromOrder = async (id: string) => {
                     @click="toggleThisOrders(order, 'OrderDelete')"
                   >
                     <Trash2 :size="20" class="text-slate-800 inline mr-2" />
-                    Delete
+                    {{ t("g.actions.delete") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     @click="toggleThisOrders(order, 'OrderUpdate')"
@@ -290,7 +290,7 @@ const createInvoiceFromOrder = async (id: string) => {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    Edit
+                    {{ t("g.actions.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <RouterLink
@@ -301,7 +301,7 @@ const createInvoiceFromOrder = async (id: string) => {
                       <Printer
                         :size="20"
                         class="text-slate-800 inline mr-2"
-                      />Print
+                      />{{ t("g.actions.print") }}
                     </RouterLink>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -309,7 +309,7 @@ const createInvoiceFromOrder = async (id: string) => {
                     <NotepadText
                       :size="20"
                       class="text-slate-800 inline mr-2"
-                    />Create invoice
+                    />{{ t("g.actions.toInvoice") }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
