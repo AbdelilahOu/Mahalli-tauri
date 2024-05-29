@@ -134,7 +134,7 @@ const updateTheOrders = async () => {
     //
     info(`UPDATE ORDER: ${JSON.stringify(order)}`);
     //
-    toast(t("notifications.invoice.updated"), {
+    toast(t("notifications.order.updated"), {
       closeButton: true,
     });
     // toggle refresh
@@ -142,7 +142,7 @@ const updateTheOrders = async () => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE ORDER: " + err.error);
+    error("UPDATE ORDER: " + err);
   } finally {
     hideModal();
   }
@@ -156,7 +156,7 @@ async function deleteOneOrderItem(id: string) {
   try {
     await invoke("delete_order_item", { id });
   } catch (err: any) {
-    error("Error creating client : " + err.error);
+    error("ERROR DELETE ORDER ITEM: " + err);
   }
 }
 

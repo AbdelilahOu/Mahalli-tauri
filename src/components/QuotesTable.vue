@@ -1,32 +1,4 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import UiPagination from "./ui/UiPagination.vue";
-import { RouterLink } from "vue-router";
-import { store } from "@/store";
-import type {
-  QuoteForUpdateT,
-  QuoteProductT,
-  QuoteT,
-} from "@/schemas/quote.schema";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import { cn } from "@/utils/shadcn";
-import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { invoke } from "@tauri-apps/api";
-import { error, info } from "tauri-plugin-log-api";
-import {
-  FilePenLine,
-  Printer,
-  Trash2,
-  GripHorizontal,
-  NotepadText,
-} from "lucide-vue-next";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,9 +6,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import type {
+  QuoteForUpdateT,
+  QuoteProductT,
+  QuoteT,
+} from "@/schemas/quote.schema";
+import { store } from "@/store";
 import type { Res } from "@/types";
-import { toast } from "vue-sonner";
+import { invoke } from "@tauri-apps/api";
+import {
+  FilePenLine,
+  GripHorizontal,
+  Printer,
+  Trash2,
+  Truck,
+} from "lucide-vue-next";
+import { error, info } from "tauri-plugin-log-api";
 import { h } from "vue";
+import { useI18n } from "vue-i18n";
+import { RouterLink } from "vue-router";
+import { toast } from "vue-sonner";
+import UiPagination from "./ui/UiPagination.vue";
+import { Button } from "./ui/button";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t, d } = useI18n();
@@ -61,12 +58,10 @@ const createInvoiceFromQuote = async (id: string) => {
       id: id,
     });
     if (!res.error) {
-      const invoiceRes = await invoke<Res<String>>("create_invoice", {
-        invoice: {
+      const orderRes = await invoke<Res<String>>("create_order", {
+        order: {
           client_id: res.data.clientId,
-          status: "PAID",
-          paid_amount: 0,
-          quote_id: id,
+          status: "DELIVERED",
         },
       });
       //
@@ -79,27 +74,27 @@ const createInvoiceFromQuote = async (id: string) => {
           },
         });
 
-        await invoke<Res<string>>("create_invoice_item", {
+        await invoke<Res<string>>("create_order_item", {
           item: {
-            invoice_id: invoiceRes.data,
+            order_id: orderRes.data,
             inventory_id: invRes.data,
             price: item.price,
           },
         });
       }
-      info(`CREATE INVOICE FROM QUOTE: ${id}`);
+      info(`CREATE ORDER FROM QUOTE: ${id}`);
       //
-      toast.success(t("notifications.invoice.created"), {
+      toast.success(t("notifications.order.created"), {
         closeButton: true,
         description: h(RouterLink, {
-          to: "/invoices/?page=1&id=" + invoiceRes.data,
+          to: "/orders/?page=1&id=" + orderRes.data,
           class: "underline",
-          innerHTML: "go to invoice",
+          innerHTML: "go to order",
         }),
       });
     }
   } catch (err: any) {
-    error("GET QUOTE FOR INVOICE: " + err.error);
+    error("GET QUOTE FOR ORDER: " + err);
   }
 };
 </script>
@@ -211,10 +206,10 @@ const createInvoiceFromQuote = async (id: string) => {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem @click="createInvoiceFromQuote(quote.id!)">
-                    <NotepadText
+                    <Truck
                       :size="20"
                       class="text-slate-800 inline mr-2"
-                    />Create invoice
+                    />Create order
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

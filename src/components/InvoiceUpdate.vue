@@ -146,7 +146,7 @@ const updateTheInvoices = async () => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE INVOICE: " + err.error);
+    error("UPDATE INVOICE: " + err);
   } finally {
     hideModal();
   }
@@ -160,7 +160,7 @@ async function deleteOneInvoiceItem(id: string) {
   try {
     await invoke("delete_invoice_item", { id });
   } catch (err: any) {
-    error("Error creating client : " + err.error);
+    error("Error creating client : " + err);
   }
 }
 

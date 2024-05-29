@@ -26,7 +26,7 @@ const deleteTheInvoice = async (id: string) => {
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("DELETE INVOICE: " + err.error);
+    error("DELETE INVOICE: " + err);
   } finally {
     store.setters.updateStore({ key: "show", value: false });
   }

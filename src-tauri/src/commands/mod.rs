@@ -8,6 +8,8 @@ pub mod invoices;
 pub mod order_items;
 pub mod orders;
 pub mod products;
+pub mod quote_items;
+pub mod quotes;
 pub mod suppliers;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]

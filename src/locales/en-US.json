@@ -11,6 +11,7 @@
       "Dashboard": "Dashboard",
       "Payment": "Paymentt",
       "Settings": "Settings",
+      "Quotes": "Quotes",
       "Notifications": "Notifications"
     },
     "b": {
@@ -97,6 +98,11 @@
       "created": "An Invoice has been created",
       "updated": "The Invoice has been updated",
       "deleted": "The Invoice has been deleted"
+    },
+    "quote": {
+      "created": "A Quote has been created",
+      "updated": "The Quote has been updated",
+      "deleted": "The Quote has been deleted"
     }
   },
   "c": {
@@ -181,6 +187,70 @@
       "title": "are you sure you wanna delete the order ",
       "yes": "Confirme",
       "no": "Cancel"
+    }
+  },
+  "q": {
+    "i": {
+      "addButton": "Add new quote"
+    },
+    "c": {
+      "title": "add new quote",
+      "d": {
+        "s": {
+          "title": "Client",
+          "select": "Search for client"
+        },
+        "o": {
+          "title": "Quote status",
+          "products": "Products",
+          "add": "Add a product",
+          "select": "Select a product",
+          "placeholder": ["Product quantity", "New price"]
+        }
+      },
+      "button": "Add a Quotes"
+    },
+    "u": {
+      "title": "update quote",
+      "d": {
+        "s": {
+          "title": "client details",
+          "select": "Select a client"
+        },
+        "o": {
+          "title": "quote details",
+          "select": "Select a product",
+          "add": "Add a product"
+        }
+      },
+      "button": "Update Quotes"
+    },
+    "d": {
+      "title": "are you sure you wanna delete the quote ",
+      "yes": "Confirme",
+      "no": "Cancel"
+    }
+  },
+  "oq": {
+    "d": {
+      "o": {
+        "title": "quote details",
+        "id": "id",
+        "date": "date"
+      },
+      "s": {
+        "title": "client details",
+        "id": "id",
+        "name": "name",
+        "phone": "phoner number",
+        "email": "email",
+        "address": "address"
+      },
+      "i": {
+        "title": "quote items details",
+        "fields": ["name", "description", "quantity", "price", "total"]
+      },
+      "button": "print"
     }
   },
   "od": {

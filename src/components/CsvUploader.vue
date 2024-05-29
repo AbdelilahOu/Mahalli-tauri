@@ -37,7 +37,7 @@ const upload = async () => {
         table: route.query.table,
       });
     } catch (err: any) {
-      error("Error upload csv : " + err.error);
+      error("Error upload csv : " + err);
     } finally {
       updateQueryParams({
         refresh: "refresh-upload-" + Math.random() * 9999,

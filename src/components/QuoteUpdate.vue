@@ -88,34 +88,21 @@ const updateTheQuotes = async () => {
     });
     for await (const item of quote.items) {
       if (!item.id) {
-        const invRes = await invoke<Res<string>>("create_inventory", {
-          mvm: {
-            mvm_type: "OUT",
-            product_id: item.product_id,
-            quantity: item.quantity,
-          },
-        });
         await invoke<Res<string>>("create_quote_item", {
           item: {
             quote_id: quote.id,
-            inventory_id: invRes.data,
+            quantity: item.quantity,
+            product_id: item.product_id,
             price: item.price,
           },
         });
       } else {
-        await invoke<Res<string>>("update_inventory", {
-          mvm: {
-            id: item.inventory_id,
-            mvm_type: "OUT",
-            product_id: item.product_id,
-            quantity: item.quantity,
-          },
-        });
         await invoke<Res<string>>("update_quote_item", {
           item: {
             id: item.id,
             quote_id: quote.id,
-            inventory_id: item.inventory_id,
+            quantity: item.quantity,
+            product_id: item.product_id,
             price: item.price,
           },
         });
@@ -124,7 +111,7 @@ const updateTheQuotes = async () => {
     //
     info(`UPDATE QUOTE: ${JSON.stringify(quote)}`);
     //
-    toast(t("notifications.invoice.updated"), {
+    toast(t("notifications.quote.updated"), {
       closeButton: true,
     });
     // toggle refresh
@@ -132,7 +119,7 @@ const updateTheQuotes = async () => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE QUOTE: " + err.error);
+    error("UPDATE QUOTE: " + err);
   } finally {
     hideModal();
   }
@@ -146,7 +133,7 @@ async function deleteOneQuoteItem(id: string) {
   try {
     await invoke("delete_quote_item", { id });
   } catch (err: any) {
-    error("Error creating client : " + err.error);
+    error("ERROR DELETE QUOTE ITEM : " + err);
   }
 }
 
@@ -160,13 +147,13 @@ const deleteQuoteItem = (index: number) => {
   <UiModalCard
     class="w-5/6 lg:w-1/2 relative h-fit rounded-md z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
   >
-    <template #title> {{ t("o.u.title") }} N° {{ quote?.id }} </template>
+    <template #title> {{ t("q.u.title") }} N° {{ quote?.id }} </template>
     <template #content>
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="flex w-full h-fit gap-1">
           <div class="w-full h-full flex flex-col gap-1">
             <Label for="client_id">
-              {{ t("o.u.d.o.title") }}
+              {{ t("q.u.d.o.title") }}
             </Label>
             <SearchableItems
               v-if="quote.fullname"
@@ -180,7 +167,7 @@ const deleteQuoteItem = (index: number) => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Button @click="addQuoteItem">
-            {{ t("o.u.d.o.add") }}
+            {{ t("q.u.d.o.add") }}
           </Button>
           <div
             class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] items-center overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"

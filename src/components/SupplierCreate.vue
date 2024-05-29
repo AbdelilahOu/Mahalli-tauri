@@ -61,7 +61,7 @@ const createNewSupplier = async (supplier: SupplierT) => {
       refresh: "refresh-create-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("CREATE SUPPLIER: " + err.error);
+    error("CREATE SUPPLIER: " + err);
   } finally {
     isLoading.value = false;
     hideModal();

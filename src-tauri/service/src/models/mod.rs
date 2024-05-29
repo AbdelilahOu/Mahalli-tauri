@@ -6,6 +6,8 @@ mod invoice_item;
 mod order;
 mod order_item;
 mod product;
+mod quote;
+mod quote_item;
 mod supplier;
 
 pub use client::*;
@@ -16,4 +18,6 @@ pub use invoice_item::*;
 pub use order::*;
 pub use order_item::*;
 pub use product::*;
+pub use quote::*;
+pub use quote_item::*;
 pub use supplier::*;

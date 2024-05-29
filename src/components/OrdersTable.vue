@@ -73,7 +73,7 @@ const updateOrderStatus = async (order: any) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE ORDER STATUS: " + err.error);
+    error("UPDATE ORDER STATUS: " + err);
   }
 };
 
@@ -121,7 +121,7 @@ const createInvoiceFromOrder = async (id: string) => {
       });
     }
   } catch (err: any) {
-    error("GET ORDER FOR INVOICE: " + err.error);
+    error("GET ORDER FOR INVOICE: " + err);
   }
 };
 </script>
@@ -140,7 +140,12 @@ const createInvoiceFromOrder = async (id: string) => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(order, index) in orders" v-fade="index" :key="order.id">
+        <tr
+          v-for="(order, index) in orders"
+          v-fade="index"
+          :key="order.id"
+          :class="{ 'animate-highlight-row': order.id == $route.query.id }"
+        >
           <td class="p-2">
             <RouterLink
               class="font-medium"

@@ -26,7 +26,7 @@ const deleteTheClient = async (id: string, fullname: string) => {
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("DELETE CLIENT: " + err.error);
+    error("DELETE CLIENT: " + err);
   } finally {
     cancelDelete();
   }

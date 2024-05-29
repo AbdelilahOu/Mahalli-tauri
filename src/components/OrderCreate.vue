@@ -113,7 +113,7 @@ const createOrder = async () => {
         refresh: "refresh-create-" + Math.random() * 9999,
       });
     } catch (err: any) {
-      error("CREATE ORDER: " + err.error);
+      error("CREATE ORDER: " + err);
     } finally {
       isLoading.value = false;
       hideModal();

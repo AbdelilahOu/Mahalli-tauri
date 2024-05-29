@@ -289,4 +289,70 @@ impl MutationsService {
         }
     }
     //
+    pub async fn create_quote(db: &DbConn, quote: NewQuote) -> Result<String, DbErr> {
+        let quote = QuoteActiveModel {
+            client_id: ActiveValue::Set(quote.client_id),
+            ..Default::default()
+        };
+        match quote.insert(db).await {
+            Ok(o) => Ok(o.id),
+            Err(err) => Err(err),
+        }
+    }
+    pub async fn update_quote(db: &DbConn, quote: Quote) -> Result<(), DbErr> {
+        let quote_model = Quotes::find_by_id(quote.id).one(db).await?;
+        let mut quote_active: QuoteActiveModel = quote_model.unwrap().into();
+        quote_active.client_id = ActiveValue::Set(quote.client_id);
+        match quote_active.save(db).await {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err),
+        }
+    }
+    pub async fn delete_quote(db: &DbConn, id: String) -> Result<u64, DbErr> {
+        let quote_model = Quotes::find_by_id(id).one(db).await?;
+        match quote_model {
+            Some(quote_model) => {
+                let quote = quote_model.delete(db).await?;
+                Ok(quote.rows_affected)
+            }
+            None => Ok(0),
+        }
+    }
+    //
+    pub async fn create_quote_item(db: &DbConn, item: NewQuoteItem) -> Result<String, DbErr> {
+        let quote_item = QuoteItemActiveModel {
+            product_id: ActiveValue::Set(item.product_id),
+            quote_id: ActiveValue::Set(item.quote_id),
+            price: ActiveValue::Set(item.price),
+            quantity: ActiveValue::Set(item.quantity),
+            ..Default::default()
+        };
+        match quote_item.insert(db).await {
+            Ok(o) => Ok(o.id),
+            Err(err) => Err(err),
+        }
+    }
+    pub async fn update_quote_item(db: &DbConn, item: QuoteItem) -> Result<(), DbErr> {
+        let quote_item_model = QuoteItems::find_by_id(item.id).one(db).await?;
+        let mut quote_item_active: QuoteItemActiveModel = quote_item_model.unwrap().into();
+        quote_item_active.product_id = ActiveValue::Set(item.product_id);
+        quote_item_active.quote_id = ActiveValue::Set(item.quote_id);
+        quote_item_active.price = ActiveValue::Set(item.price);
+        quote_item_active.quantity = ActiveValue::Set(item.quantity);
+        match quote_item_active.save(db).await {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err),
+        }
+    }
+    pub async fn delete_quote_item(db: &DbConn, id: String) -> Result<u64, DbErr> {
+        let quote_item_model = QuoteItems::find_by_id(id).one(db).await?;
+        match quote_item_model {
+            Some(quote_item_model) => {
+                let quote_item = quote_item_model.delete(db).await?;
+                Ok(quote_item.rows_affected)
+            }
+            None => Ok(0),
+        }
+    }
+    //
 }

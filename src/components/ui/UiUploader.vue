@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { pictureDir, downloadDir } from "@tauri-apps/api/path";
 import { deleteTempFolder, uploadImagefiles } from "@/utils/fs";
-import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { open } from "@tauri-apps/api/dialog";
+import { downloadDir, pictureDir } from "@tauri-apps/api/path";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { useDropZone } from "@vueuse/core";
-import { ref, onBeforeUnmount } from "vue";
 import { Trash2 } from "lucide-vue-next";
+import { error } from "tauri-plugin-log-api";
+import { onBeforeUnmount, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { name, extensions } = defineProps<{
@@ -46,8 +47,8 @@ const OpenDialog = async () => {
       }
       return;
     }
-  } catch (error) {
-    console.log("sth went wrong reading the file");
+  } catch (err: any) {
+    error("ERROR PDF-LIB: " + err);
   }
 };
 onBeforeUnmount(() => {

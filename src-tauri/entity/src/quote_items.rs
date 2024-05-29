@@ -9,6 +9,8 @@ pub struct Model {
     pub id: String,
     #[sea_orm(column_type = "Double")]
     pub price: f64,
+    #[sea_orm(column_type = "Double")]
+    pub quantity: f64,
     pub product_id: String,
     pub quote_id: String,
 }

@@ -117,7 +117,7 @@ const createInvoice = async () => {
         refresh: "refresh-create-" + Math.random() * 9999,
       });
     } catch (err: any) {
-      error("CREATE INVOICE: " + err.error);
+      error("CREATE INVOICE: " + err);
     } finally {
       isLoading.value = false;
       hideModal();

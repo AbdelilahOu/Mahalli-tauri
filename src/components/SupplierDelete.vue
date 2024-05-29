@@ -26,7 +26,7 @@ const deleteTheSupplier = async (id: string, name: string) => {
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("DELETE SUPPLIER: " + err.error);
+    error("DELETE SUPPLIER: " + err);
   } finally {
     cancelDelete();
   }

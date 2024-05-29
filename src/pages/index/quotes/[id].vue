@@ -20,7 +20,7 @@ import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 
 const { t, d, locale } = useI18n();
 const id = useRoute().params.id;
-const order = ref<any | null>(null);
+const quote = ref<any | null>(null);
 const pdfRef = ref<HTMLIFrameElement | null>();
 //
 let resolveWaitForFetch: (value?: unknown) => void;
@@ -31,14 +31,13 @@ let color: RGB;
 
 onBeforeMount(async () => {
   try {
-    const res = await invoke<Res<any>>("get_order_details", {
+    const res = await invoke<Res<any>>("get_quote_details", {
       id,
     });
-    order.value = res.data;
+    quote.value = res.data;
     resolveWaitForFetch();
   } catch (err: any) {
-    console.log(err);
-    error("Error creating supplier : " + err.error);
+    error("ERROR QUOTE DETAILS: " + err);
   }
 });
 
@@ -56,8 +55,8 @@ onMounted(async () => {
     }
     color = rgb(0.34, 0.34, 0.34);
     generatePdf();
-  } catch (error) {
-    console.log(error);
+  } catch (err: any) {
+    error("ERROR PDF-LIB: " + err);
   }
 });
 
@@ -66,7 +65,7 @@ const generatePdf = async () => {
   page.setSize(...PageSizes.A4);
   const { width, height } = page.getSize();
 
-  drawOrderHeader(page, width, height, order.value);
+  drawOrderHeader(page, width, height, quote.value);
 
   page.drawLine({
     start: { x: 20, y: height - 200 },
@@ -76,7 +75,7 @@ const generatePdf = async () => {
     opacity: 0.75,
   });
 
-  const items = [...order.value.items];
+  const items = [...quote.value.items];
   drawOrderItems(page, width, height, items, 210);
 
   const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
@@ -87,25 +86,18 @@ const drawOrderHeader = (
   page: PDFPage,
   width: number,
   height: number,
-  order: any,
+  quote: any,
 ) => {
-  page.drawText("O R D E R", {
+  page.drawText("Q U O T E", {
     x: width - 190,
     y: height - 40,
     font,
     size: 30,
     color,
   });
-  page.drawText(order.createdAt.split(" ")[0], {
+  page.drawText(quote.createdAt.split(" ")[0], {
     x: width - 190,
     y: height - 70,
-    font,
-    size: 13,
-    color,
-  });
-  page.drawText(t("g.status." + order.status.toLowerCase()), {
-    x: width - 190,
-    y: height - 90,
     font,
     size: 13,
     color,
@@ -118,28 +110,28 @@ const drawOrderHeader = (
     size: 14,
     color,
   });
-  page.drawText(order.supplier.fullname, {
+  page.drawText(quote.client.fullname, {
     x: 20,
     y: height - 90,
     font,
     size: 13,
     color,
   });
-  page.drawText(order.supplier.address, {
+  page.drawText(quote.client.address, {
     x: 20,
     y: height - 110,
     font,
     size: 13,
     color,
   });
-  page.drawText(order.supplier.phoneNumber, {
+  page.drawText(quote.client.phoneNumber, {
     x: 20,
     y: height - 130,
     font,
     size: 13,
     color,
   });
-  page.drawText(order.supplier.email, {
+  page.drawText(quote.client.email, {
     x: 20,
     y: height - 150,
     font,
@@ -253,7 +245,7 @@ const drawSummary = (
   height: number,
   currentY: number,
 ) => {
-  page.drawText("DH " + order.value.total.toFixed(2), {
+  page.drawText("DH " + quote.value.total.toFixed(2), {
     x: 25 + (width * 3) / 4,
     y: height - currentY - 10,
     font,

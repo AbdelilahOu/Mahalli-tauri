@@ -66,7 +66,7 @@ const createNewProduct = async (product: ProductT) => {
       refresh: "refresh-create-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("CREATE PRODUCT: " + err.error);
+    error("CREATE PRODUCT: " + err);
   } finally {
     isCreating.value = false;
     hideModal();

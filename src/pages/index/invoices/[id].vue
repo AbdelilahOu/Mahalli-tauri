@@ -37,8 +37,7 @@ onBeforeMount(async () => {
     invoice.value = res.data;
     resolveWaitForFetch();
   } catch (err: any) {
-    console.log(err);
-    error("Error creating client : " + err.error);
+    error("ERROR INVOICE DETAILS: " + err);
   }
 });
 
@@ -56,8 +55,8 @@ onMounted(async () => {
     }
     color = rgb(0.34, 0.34, 0.34);
     generatePdf();
-  } catch (error) {
-    console.log(error);
+  } catch (err: any) {
+    error("ERROR PDF-LIB: " + err);
   }
 });
 

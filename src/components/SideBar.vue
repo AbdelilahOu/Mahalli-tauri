@@ -14,6 +14,7 @@ import {
   Settings,
   Truck,
   Contact,
+  Quote,
 } from "lucide-vue-next";
 
 const collapse = defineModel<boolean>("collapse", { required: true });
@@ -105,6 +106,23 @@ const openTranslationModal = () => {
             class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
           >
             {{ t("g.r.Products") }}
+          </span>
+        </RouterLink>
+        <RouterLink
+          class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
+          :to="{ path: '/quotes/', query: { page: 1 } }"
+        >
+          <span class="w-8 min-w-[30px] max-w-[30px]">
+            <Quote
+              class="m-auto text-gray-700 group-hover:text-black"
+              :size="20"
+            />
+          </span>
+          <span
+            v-if="!collapse"
+            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
+          >
+            {{ t("g.r.Quotes") }}
           </span>
         </RouterLink>
         <RouterLink
