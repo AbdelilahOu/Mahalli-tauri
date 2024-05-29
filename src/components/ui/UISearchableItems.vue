@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { ref } from "vue";
 import { cn } from "@/utils/shadcn";
 import { onClickOutside } from "@vueuse/core";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
   defaultValue?: string;
@@ -18,6 +19,8 @@ const emits = defineEmits<{
   (e: "update:items", s: string | number): () => void;
   (e: "on:select", s: string, a?: number): () => void;
 }>();
+
+const { t } = useI18n();
 
 const open = ref(false);
 const dropdownParent = ref<HTMLElement | null>(null);
@@ -48,7 +51,7 @@ const selectItem = (item: { label: string; value: string; price?: number }) => {
         <Input
           v-model:model-value="inputValue"
           @update:model-value="updateInput"
-          placeHolder="search"
+          :placeHolder="t('g.s')"
         />
       </PopoverTrigger>
       <PopoverContent class="p-1" @open-auto-focus="(e) => e.preventDefault()">
