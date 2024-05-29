@@ -59,7 +59,7 @@ const createNewClient = async (client: ClientT) => {
       refresh: "refresh-create-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("CREATE CLIENT: " + err.error);
+    error("CREATE CLIENT: " + err);
   } finally {
     isCreating.value = false;
     hideModal();

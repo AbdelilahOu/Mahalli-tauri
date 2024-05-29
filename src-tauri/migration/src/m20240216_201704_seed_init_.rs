@@ -244,20 +244,22 @@ impl MigrationTrait for Migration {
         for _ in 0..1000 {
             let id = uuid::Uuid::now_v7();
             let price: u8 = Faker.fake();
+            let quantity: u8 = Faker.fake();
             let insert_quote = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,
                 r#"
                 INSERT INTO 
-                    quote_items (id, price, product_id, quote_id)
+                    quote_items (id, price, product_id, quote_id, quantity)
                 VALUES
                     (
                         $1, 
                         $2, 
                         (SELECT id FROM products ORDER BY RANDOM() LIMIT 1),
-                        (SELECT id FROM quotes ORDER BY RANDOM() LIMIT 1)
+                        (SELECT id FROM quotes ORDER BY RANDOM() LIMIT 1),
+                        $3
                     )
                 "#,
-                [id.to_string().into(), price.into()],
+                [id.to_string().into(), price.into(), quantity.into()],
             );
             db.execute(insert_quote).await?;
         }

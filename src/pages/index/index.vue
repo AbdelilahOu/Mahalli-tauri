@@ -25,6 +25,11 @@ const pages = ref([
     path: "/orders/",
   },
   {
+    image: "/orders.jpg",
+    text: "Quotes",
+    path: "/quotes/",
+  },
+  {
     image: "/invoices.jpg",
     text: "Invoices",
     path: "/invoices/",

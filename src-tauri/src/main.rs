@@ -1,7 +1,4 @@
-#![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 mod commands;
 mod db;
@@ -89,6 +86,22 @@ async fn main() {
             commands::order_items::create_order_item,
             commands::order_items::update_order_item,
             commands::order_items::delete_order_item,
+            //
+            // quotes
+            //
+            commands::quotes::list_quotes,
+            commands::quotes::get_quote,
+            commands::quotes::get_quote_details,
+            commands::quotes::create_quote,
+            commands::quotes::update_quote,
+            commands::quotes::delete_quote,
+            commands::quotes::list_quote_products,
+            //
+            // quote items
+            //
+            commands::quote_items::create_quote_item,
+            commands::quote_items::update_quote_item,
+            commands::quote_items::delete_quote_item,
             //
             // invoices
             //

@@ -19,7 +19,6 @@ export type QuoteForUpdateT = {
   createdAt: string;
   items: {
     id?: string;
-    inventory_id?: string;
     name?: string;
     product_id?: string;
     quantity?: number;

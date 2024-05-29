@@ -1,40 +1,32 @@
 <script setup lang="ts">
-import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
-import { useRoute } from "vue-router";
-import { invoke } from "@tauri-apps/api";
-import { useI18n } from "vue-i18n";
-import { store } from "@/store";
 import QuotesTable from "@/components/QuotesTable.vue";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import type { Res } from "@/types";
-import type { QuoteProductT, QuoteT } from "@/schemas/quote.schema";
-import {
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-  SelectItem,
-  Select,
-} from "@/components/ui/select";
-import {
-  type WatchStopHandle,
-  onUnmounted,
-  onMounted,
-  computed,
-  provide,
-  watch,
-  ref,
-} from "vue";
-import { Calendar as CalendarIcon } from "lucide-vue-next";
 import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
+import type { QuoteProductT, QuoteT } from "@/schemas/quote.schema";
+import { store } from "@/store";
+import type { Res } from "@/types";
 import { cn } from "@/utils/shadcn";
+import { invoke } from "@tauri-apps/api";
+import { Calendar as CalendarIcon, PlusCircleIcon } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
-import { PlusCircleIcon } from "lucide-vue-next";
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  provide,
+  ref,
+  watch,
+  type WatchStopHandle,
+} from "vue";
+import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -45,7 +37,6 @@ const page = computed(() => Number(route.query.page));
 const refresh = computed(() => route.query.refresh);
 const quotes = ref<QuoteT[]>([]);
 const totalRows = ref<number>(0);
-const status = ref<string | undefined>(undefined);
 const createdAt = ref<string | number | undefined>(undefined);
 const quoteProducts = ref<QuoteProductT[]>([]);
 //
@@ -60,7 +51,7 @@ let timer: any;
 let unwatch: WatchStopHandle | null = null;
 onMounted(() => {
   unwatch = watch(
-    [searchQuery, page, refresh, createdAt, status],
+    [searchQuery, page, refresh, createdAt],
     ([search, p], [oldSearch]) => {
       clearTimeout(timer);
       timer = setTimeout(
@@ -83,7 +74,6 @@ const getQuotes = async (search: string, page = 1) => {
         page,
         search,
         limit: 17,
-        status: status.value,
         created_at: createdAt.value
           ? new Date(createdAt.value).toISOString().slice(0, 10)
           : null,
@@ -93,7 +83,7 @@ const getQuotes = async (search: string, page = 1) => {
     quotes.value = res.data.quotes;
     totalRows.value = res.data.count;
   } catch (err: any) {
-    error("LIST ORDERS: " + err.error);
+    error("LIST ORDERS: " + err);
   }
 };
 
@@ -108,7 +98,7 @@ const listQuoteProduct = (id?: string) => {
       //
       quoteProducts.value = res.data;
     } catch (err: any) {
-      error("LIST ORDER PRODUCTS: " + err.error);
+      error("LIST ORDER PRODUCTS: " + err);
     }
   }, 300);
 };
@@ -158,22 +148,6 @@ const updateModal = (name: string) => {
                 <Calendar v-model="createdAt" />
               </PopoverContent>
             </Popover>
-            <Select v-model="status">
-              <SelectTrigger>
-                <SelectValue placeholder="Select a status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="DELIVERED">
-                  {{ t("g.status.delivered") }}
-                </SelectItem>
-                <SelectItem value="CANCELED">
-                  {{ t("g.status.cancelled") }}
-                </SelectItem>
-                <SelectItem value="PENDING">
-                  {{ t("g.status.pending") }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
           </div>
           <div class="w-fit flex gap-1">
             <Button variant="ghost" @click="uploadCSV">
@@ -198,7 +172,7 @@ const updateModal = (name: string) => {
             >
               <PlusCircleIcon :size="20" />
 
-              {{ t("o.i.addButton") }}
+              {{ t("q.i.addButton") }}
             </Button>
           </div>
         </div>

@@ -37,8 +37,7 @@ onBeforeMount(async () => {
     order.value = res.data;
     resolveWaitForFetch();
   } catch (err: any) {
-    console.log(err);
-    error("Error creating supplier : " + err.error);
+    error("ERROR ORDER DETAILS: " + err);
   }
 });
 
@@ -56,8 +55,8 @@ onMounted(async () => {
     }
     color = rgb(0.34, 0.34, 0.34);
     generatePdf();
-  } catch (error) {
-    console.log(error);
+  } catch (err: any) {
+    error("ERROR PDF-LIB: " + err);
   }
 });
 
@@ -118,28 +117,28 @@ const drawOrderHeader = (
     size: 14,
     color,
   });
-  page.drawText(order.supplier.fullname, {
+  page.drawText(order.client.fullname, {
     x: 20,
     y: height - 90,
     font,
     size: 13,
     color,
   });
-  page.drawText(order.supplier.address, {
+  page.drawText(order.client.address, {
     x: 20,
     y: height - 110,
     font,
     size: 13,
     color,
   });
-  page.drawText(order.supplier.phoneNumber, {
+  page.drawText(order.client.phoneNumber, {
     x: 20,
     y: height - 130,
     font,
     size: 13,
     color,
   });
-  page.drawText(order.supplier.email, {
+  page.drawText(order.client.email, {
     x: 20,
     y: height - 150,
     font,

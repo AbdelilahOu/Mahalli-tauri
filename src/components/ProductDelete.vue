@@ -25,7 +25,7 @@ const deleteTheProduct = async (id: string, name: string) => {
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("DELETE PRODUCT: " + err.error);
+    error("DELETE PRODUCT: " + err);
   } finally {
     cancelDelete();
   }

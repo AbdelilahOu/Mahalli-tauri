@@ -67,9 +67,6 @@ function numberToK(num: number) {
 async function getInventoryMouvementStats() {
   try {
     const res = await invoke<Res<mouvementsT[]>>("list_mvm_stats");
-
-    console.log(res);
-
     const result = res.data.reduce((acc, item) => {
       const { createdAt: date, mvmType, quantity, price } = item;
       const createdAt = new Date(date).toISOString().split("T")[0];
@@ -100,7 +97,7 @@ async function getInventoryMouvementStats() {
     let mouvementLabelsSet = new Set<string>(Object.keys(mouvements.value));
     mouvementsLabels.value = [...mouvementLabelsSet];
   } catch (err: any) {
-    error("STATS INVENTORY MOUVEMENTS: " + err.error);
+    error("STATS INVENTORY MOUVEMENTS: " + err);
   }
 }
 
@@ -111,7 +108,7 @@ async function getBestClients() {
     //
     bestClients.value = res.data;
   } catch (err: any) {
-    error("STATS BEST CLIENTS: " + err.error);
+    error("STATS BEST CLIENTS: " + err);
   }
 }
 
@@ -122,7 +119,7 @@ async function getBestSuppliers() {
     //
     bestSuppliers.value = res.data;
   } catch (err: any) {
-    error("STATS BEST SUPPLIERS: " + err.error);
+    error("STATS BEST SUPPLIERS: " + err);
   }
 }
 
@@ -133,7 +130,7 @@ async function getStatusCounts() {
     //
     statusCounts.value = res.data;
   } catch (err: any) {
-    error("STATS STATUS COUNT: " + err.error);
+    error("STATS STATUS COUNT: " + err);
   }
 }
 
@@ -154,7 +151,7 @@ async function getRevenue() {
       currentRevenue: data.currentRevenue,
     };
   } catch (err: any) {
-    error("STATS REVENUE: " + err.error);
+    error("STATS REVENUE: " + err);
   }
 }
 
@@ -174,7 +171,7 @@ async function getExpenses() {
       currentExpenses: data.currentExpenses,
     };
   } catch (err: any) {
-    error("STATS EXPENSES: " + err.error);
+    error("STATS EXPENSES: " + err);
   }
 }
 

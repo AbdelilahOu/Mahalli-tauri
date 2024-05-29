@@ -229,6 +229,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(ColumnDef::new(QuoteItem::Id).string().not_null().primary_key())
                     .col(ColumnDef::new(QuoteItem::Price).float().not_null().default(0.0f32))
+                    .col(ColumnDef::new(QuoteItem::Quantity).float().not_null().default(0.0f32))
                     .col(ColumnDef::new(QuoteItem::ProductId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
@@ -352,6 +353,8 @@ pub enum QuoteItem {
     QuoteId,
     #[sea_orm(iden = "price")]
     Price,
+    #[sea_orm(iden = "quantity")]
+    Quantity,
 }
 
 #[derive(DeriveIden)]

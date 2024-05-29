@@ -72,7 +72,7 @@ const updateTheSupplier = async (supplier: SupplierT) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE SUPPLIER: " + err.error);
+    error("UPDATE SUPPLIER: " + err);
   } finally {
     hideModal();
   }

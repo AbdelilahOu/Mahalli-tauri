@@ -1,11 +1,4 @@
 <script setup lang="ts">
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useUpdateRouteQueryParams } from "@/composables/useUpdateQuery";
 import type { QuoteForCreateT } from "@/schemas/quote.schema";
 import { store } from "@/store";
@@ -77,48 +70,38 @@ const searchProducts = async (search: string | number) => {
 
 const createQuote = async () => {
   isLoading.value = true;
-  if (quote?.clientId && quote.items?.length !== 0) {
-    try {
-      const quoteRes = await invoke<Res<String>>("create_quote", {
-        quote: {
-          client_id: quote.clientId,
+  try {
+    const quoteRes = await invoke<Res<String>>("create_quote", {
+      quote: {
+        client_id: quote.clientId,
+      },
+    });
+    for await (const item of quote.items) {
+      await invoke<Res<string>>("create_quote_item", {
+        item: {
+          quote_id: quoteRes.data,
+          price: item.price,
+          quantity: item.quantity,
+          product_id: item.product_id,
         },
       });
-      for await (const item of quote.items) {
-        const invRes = await invoke<Res<string>>("create_inventory", {
-          mvm: {
-            mvm_type: "OUT",
-            product_id: item.product_id,
-            quantity: item.quantity,
-          },
-        });
-        await invoke<Res<string>>("create_quote_item", {
-          item: {
-            quote_id: quoteRes.data,
-            inventory_id: invRes.data,
-            price: item.price,
-          },
-        });
-      }
-      //
-      info(`CREATE QUOTE: ${JSON.stringify(quote)}`);
-      //
-      toast(t("notifications.quote.created"), {
-        closeButton: true,
-      });
-      // toggle refresh
-      updateQueryParams({
-        refresh: "refresh-create-" + Math.random() * 9999,
-      });
-    } catch (err: any) {
-      error("CREATE QUOTE: " + err.error);
-    } finally {
-      isLoading.value = false;
-      hideModal();
     }
-    return;
+    //
+    info(`CREATE QUOTE: ${JSON.stringify(quote)}`);
+    //
+    toast(t("notifications.quote.created"), {
+      closeButton: true,
+    });
+    // toggle refresh
+    updateQueryParams({
+      refresh: "refresh-create-" + Math.random() * 9999,
+    });
+  } catch (err: any) {
+    error("CREATE QUOTE: " + err);
+  } finally {
+    isLoading.value = false;
+    hideModal();
   }
-
   isLoading.value = false;
 };
 
@@ -132,14 +115,14 @@ const hideModal = () => {
     class="w-5/6 lg:w-1/2 rounded-md relative h-fit z-50 gap-3 flex flex-col bg-white p-2 min-w-[350px]"
   >
     <template #title>
-      {{ t("o.c.title") }}
+      {{ t("q.c.title") }}
     </template>
     <template #content>
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="flex w-full h-fit gap-1">
           <div class="w-full h-full flex flex-col gap-1">
             <Label for="client_id">
-              {{ t("o.c.d.s.title") }}
+              {{ t("q.c.d.s.title") }}
             </Label>
             <SearchableItems
               :items="clients"
@@ -151,10 +134,10 @@ const hideModal = () => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="products">
-            {{ t("o.c.d.o.products") }}
+            {{ t("q.c.d.o.products") }}
           </Label>
           <Button @click="addQuoteItem">
-            {{ t("o.c.d.o.add") }}
+            {{ t("q.c.d.o.add") }}
           </Button>
           <div
             class="products w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] items-center overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"

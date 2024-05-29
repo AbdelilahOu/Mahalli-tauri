@@ -9,8 +9,8 @@ use serde_json::json;
 
 use crate::{
     SelectClients, SelectExpenses, SelectInventory, SelectInvoiceDetails, SelectInvoices, SelectInvoicesItems, SelectInvoicesItemsForUpdate,
-    SelectMvm, SelectOrderDetails, SelectOrders, SelectOrdersItems, SelectOrdersItemsForUpdate, SelectProducts, SelectRevenue, SelectStatusCount,
-    SelectSuppliers, SelectTops,
+    SelectMvm, SelectOrderDetails, SelectOrders, SelectOrdersItems, SelectOrdersItemsForUpdate, SelectProducts, SelectQuoteDetails, SelectQuotes,
+    SelectQuotesItems, SelectQuotesItemsForUpdate, SelectRevenue, SelectStatusCount, SelectSuppliers, SelectTops,
 };
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -639,7 +639,7 @@ impl QueriesService {
                     "createdAt": order.created_at,
                     "status": order.status,
                     "total": order.total,
-                    "supplier": json!({
+                    "client": json!({
                         "fullname": order.full_name,
                         "email": order.email,
                         "address":order.address,
@@ -925,6 +925,233 @@ impl QueriesService {
                 }))
             }
             None => Err(DbErr::RecordNotFound(String::from("no invoice"))),
+        }
+    }
+    //
+    pub async fn list_quotes(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
+        let count = Quotes::find()
+            .apply_if(Some(args.search.clone()), |query, v| {
+                query.filter(Expr::col((Clients, clients::Column::FullName)).like(format!("{}%", v)))
+            })
+            .apply_if(args.created_at.clone(), |query, v| {
+                query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', quotes.created_at) = ?", [v]))
+            })
+            .join(JoinType::Join, quotes::Relation::Clients.def())
+            .count(db)
+            .await?;
+
+        let (sql, values) = Query::select()
+            .from(Quotes)
+            .exprs([
+                Expr::col((Quotes, quotes::Column::Id)),
+                Expr::col((Quotes, quotes::Column::CreatedAt)),
+                Expr::col((Quotes, quotes::Column::ClientId)),
+                Expr::col((Clients, clients::Column::FullName)),
+            ])
+            .expr_as(
+                Func::coalesce([
+                    Func::count(Expr::col(inventory_mouvements::Column::Quantity)).into(),
+                    Expr::val(0i64).into(),
+                ]),
+                Alias::new("products"),
+            )
+            .expr_as(
+                Func::coalesce([
+                    Func::sum(Expr::col((QuoteItems, quote_items::Column::Quantity)).mul(Expr::col((QuoteItems, quote_items::Column::Price)))).into(),
+                    Expr::val(0.0f64).into(),
+                ]),
+                Alias::new("total"),
+            )
+            .left_join(
+                QuoteItems,
+                Expr::col((QuoteItems, quote_items::Column::QuoteId)).equals((Quotes, quotes::Column::Id)),
+            )
+            .join(
+                JoinType::Join,
+                Clients,
+                Expr::col((Clients, clients::Column::Id)).equals((Quotes, quotes::Column::ClientId)),
+            )
+            .cond_where(Expr::col((Clients, clients::Column::FullName)).like(format!("{}%", args.search)))
+            .conditions(
+                args.created_at.clone().is_some(),
+                |x| {
+                    x.and_where(Expr::cust_with_values("strftime('%Y-%m-%d', quotes.created_at) = ?", args.created_at));
+                },
+                |_| {},
+            )
+            .limit(args.limit)
+            .offset((args.page - 1) * args.limit)
+            .order_by((Quotes, quotes::Column::CreatedAt), Order::Desc)
+            .group_by_col((Quotes, quotes::Column::Id))
+            .to_owned()
+            .build(SqliteQueryBuilder);
+
+        let res = SelectQuotes::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values))
+            .all(db)
+            .await?;
+
+        let mut result = Vec::<JsonValue>::new();
+        res.into_iter().for_each(|row| {
+            result.push(json!({
+                "id": row.id,
+                "clientId": row.client_id,
+                "createdAt": row.created_at,
+                "fullname": row.full_name,
+                "products": row.products,
+                "total": row.total,
+            }));
+        });
+
+        Ok(json!({
+            "count": count,
+            "quotes": result
+        }))
+    }
+    pub async fn get_quote(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
+        let quote = Quotes::find_by_id(id.clone()).find_also_related(Clients).one(db).await?;
+
+        match quote {
+            Some(quote) => {
+                let (sql, values) = Query::select()
+                    .exprs([
+                        Expr::col((QuoteItems, quote_items::Column::Id)),
+                        Expr::col((QuoteItems, quote_items::Column::Price)),
+                        Expr::col((QuoteItems, quote_items::Column::Quantity)),
+                        Expr::col((Products, products::Column::Name)),
+                    ])
+                    .expr_as(Expr::col((Products, products::Column::Id)), Alias::new("product_id"))
+                    .from(QuoteItems)
+                    .join(
+                        JoinType::Join,
+                        Products,
+                        Expr::col((Products, products::Column::Id)).equals((QuoteItems, quote_items::Column::ProductId)),
+                    )
+                    .cond_where(Expr::col((QuoteItems, quote_items::Column::QuoteId)).eq(id))
+                    .to_owned()
+                    .build(SqliteQueryBuilder);
+
+                let items = SelectQuotesItemsForUpdate::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values))
+                    .all(db)
+                    .await?;
+
+                let mut result = Vec::<JsonValue>::new();
+                items.into_iter().for_each(|item| {
+                    result.push(json!({
+                        "id": item.id,
+                        "product_id": item.product_id,
+                        "price": item.price,
+                        "quantity": item.quantity,
+                        "name": item.name,
+                    }));
+                });
+
+                Ok(json!({
+                    "id": quote.0.id,
+                    "clientId": quote.0.client_id,
+                    "createdAt": quote.0.created_at,
+                    "fullname": quote.1.unwrap().full_name,
+                    "items": result,
+                }))
+            }
+            None => Err(DbErr::RecordNotFound(String::from("no quote"))),
+        }
+    }
+    pub async fn list_quote_products(db: &DbConn, id: String) -> Result<Vec<JsonValue>, DbErr> {
+        let quote_products = QuoteItems::find()
+            .select_only()
+            .columns([quote_items::Column::Price])
+            .exprs([
+                Expr::col((Products, products::Column::Name)),
+                Expr::col((QuoteItems, quote_items::Column::Quantity)),
+            ])
+            .join(JoinType::Join, quote_items::Relation::Products.def())
+            .filter(Expr::col((QuoteItems, quote_items::Column::QuoteId)).eq(id))
+            .into_json()
+            .all(db)
+            .await?;
+
+        Ok(quote_products)
+    }
+    pub async fn get_quote_details(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
+        let (sql, values) = Query::select()
+            .from(Quotes)
+            .exprs([
+                Expr::col((Clients, clients::Column::FullName)),
+                Expr::col((Clients, clients::Column::Address)),
+                Expr::col((Clients, clients::Column::PhoneNumber)),
+                Expr::col((Clients, clients::Column::Email)),
+                Expr::col((Quotes, quotes::Column::Id)),
+                Expr::col((Quotes, quotes::Column::CreatedAt)),
+            ])
+            .expr_as(
+                Func::coalesce([
+                    Func::sum(Expr::col((QuoteItems, quote_items::Column::Quantity)).mul(Expr::col((QuoteItems, quote_items::Column::Price)))).into(),
+                    Expr::val(0.0f64).into(),
+                ]),
+                Alias::new("total"),
+            )
+            .left_join(
+                QuoteItems,
+                Expr::col((QuoteItems, quote_items::Column::QuoteId)).equals((Quotes, quotes::Column::Id)),
+            )
+            .join(
+                JoinType::Join,
+                Clients,
+                Expr::col((Clients, clients::Column::Id)).equals((Quotes, quotes::Column::ClientId)),
+            )
+            .cond_where(Expr::col((Quotes, quotes::Column::Id)).eq(id.clone()))
+            .to_owned()
+            .build(SqliteQueryBuilder);
+
+        let quote = SelectQuoteDetails::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values))
+            .one(db)
+            .await?;
+
+        match quote {
+            Some(quote) => {
+                let (sql, values) = Query::select()
+                    .exprs([
+                        Expr::col((QuoteItems, quote_items::Column::Price)),
+                        Expr::col((QuoteItems, quote_items::Column::Quantity)),
+                        Expr::col((Products, products::Column::Name)),
+                    ])
+                    .from(QuoteItems)
+                    .join(
+                        JoinType::Join,
+                        Products,
+                        Expr::col((Products, products::Column::Id)).equals((QuoteItems, quote_items::Column::ProductId)),
+                    )
+                    .cond_where(Expr::col((QuoteItems, quote_items::Column::QuoteId)).eq(id))
+                    .to_owned()
+                    .build(SqliteQueryBuilder);
+
+                let items = SelectQuotesItems::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values))
+                    .all(db)
+                    .await?;
+
+                let mut result = Vec::<JsonValue>::new();
+                items.into_iter().for_each(|item| {
+                    result.push(json!({
+                        "price": item.price,
+                        "quantity": item.quantity,
+                        "name": item.name,
+                    }));
+                });
+
+                Ok(json!({
+                    "id": quote.id,
+                    "createdAt": quote.created_at,
+                    "total": quote.total,
+                    "client": json!({
+                        "fullname": quote.full_name,
+                        "email": quote.email,
+                        "address":quote.address,
+                        "phoneNumber":quote.phone_number,
+                    }),
+                    "items": result,
+                }))
+            }
+            None => Err(DbErr::RecordNotFound(String::from("no quote"))),
         }
     }
     //

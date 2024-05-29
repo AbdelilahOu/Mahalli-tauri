@@ -93,7 +93,7 @@ const getInvoices = async (search: string, page = 1) => {
     invoices.value = res.data.invoices;
     totalRows.value = res.data.count;
   } catch (err: any) {
-    error("LIST INVOICES " + err.error);
+    error("LIST INVOICES " + err);
   }
 };
 
@@ -108,7 +108,7 @@ const listInvoiceProduct = (id?: string) => {
       //
       invoiceProducts.value = res.data;
     } catch (err: any) {
-      error("ERROR LIST INVOICE PRODUCTS: " + err.error);
+      error("ERROR LIST INVOICE PRODUCTS: " + err);
     }
   }, 300);
 };

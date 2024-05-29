@@ -26,7 +26,7 @@ const deleteTheQuotes = async (id: string) => {
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("DELETE QUOTE: " + err.error);
+    error("DELETE QUOTE: " + err);
   } finally {
     store.setters.updateStore({ key: "show", value: false });
   }
@@ -40,7 +40,7 @@ const cancelDelete = () => {
 <template>
   <UiModalCard>
     <template #title>
-      {{ t("o.d.title") }}n° {{ $route.query?.id }} ?
+      {{ t("q.d.title") }}n° {{ $route.query?.id }} ?
     </template>
     <template #footer>
       <div class="grid grid-cols-3 gap-2">

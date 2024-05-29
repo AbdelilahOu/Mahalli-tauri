@@ -59,7 +59,7 @@ const updateInvoiceStatus = async (invoice: any) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE INVOICE STATUS: " + err.error);
+    error("UPDATE INVOICE STATUS: " + err);
   }
 };
 </script>

@@ -90,7 +90,7 @@ const updateTheProduct = async (product: ProductT) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE PRODUCT: " + err.error);
+    error("UPDATE PRODUCT: " + err);
   } finally {
     hideModal();
   }
