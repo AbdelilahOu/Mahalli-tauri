@@ -1,6 +1,7 @@
 {
   "g": {
     "s": "Search",
+    "pick-date": "Pick a date",
     "r": {
       "Clients": "Clients",
       "Suppliers": "Suppliers",
@@ -63,7 +64,8 @@
       "delete": "Delete",
       "print": "Print",
       "toOrder": "Create order",
-      "toInvoice": "Create invoice"
+      "toInvoice": "Create invoice",
+      "updateStock": "Update stock"
     }
   },
   "csv": {

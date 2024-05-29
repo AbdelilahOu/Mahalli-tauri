@@ -1,1 +1,317 @@
-{"g":{"s":"Suchen","r":{"Clients":"Kunden","Suppliers":"Lieferanten","Products":"Produkte","Orders":"Aufträge","Invoices":"Rechnungen","Inventory":"Inventar","Dashboard":"Armaturenbrett","Payment":"Zahlungt","Settings":"Einstellungen","Quotes":"Zitate","Notifications":"Benachrichtigungen"},"b":{"no":"Stornieren","c":"Hinzufügen","d":"Bestätigen","u":"Aktualisieren Sie {name}","a":"Hinzufügen","csv":"Hochladen auf {table}"},"translationTitle":"Sprache ändern","dropZone":"Ziehen Sie Ihr Bild per Drag & Drop oder wählen Sie es aus","plrz":{"i":"keine Artikel | {n} Artikel | {n} Artikel","p":"keine Produkte | {n} Produkt | {n} Produkte"},"fields":{"fullname":"Vollständiger Name","name":"Produktname","email":"Email","phone":"Telefonnummer","address":"Adresse","actions":"Aktionen","description":"Beschreibung","status":"Status","price":"Preis","date":"Datum","paid":"Avance","rest":"Ausruhen","items":"Artikel","total":"Gesamt","inventory":"Inventar","init-quantity":"Anfangsmenge","min-quantity":"Mindestens hinzufügen","quantity":"Menge","credit":"Kredit","threshold":"Schwelle"},"status":{"delivered":"Geliefert","pending":"Ausstehend","canceled":"Abgesagt","paid":"Bezahlt","in":"Gekauft","out":"Verkauft"},"actions":{"edit":"Bearbeiten","delete":"Löschen","print":"Drucken","toOrder":"Bestellung anlegen","toInvoice":"Rechnung erstellen"}},"csv":{"title":"CSV-Dateien hochladen"},"dashboard":{"i":{"title":"In den letzten drei Monaten verkaufte und gekaufte Artikel","labels":["GEKAUFT","VERKAUFT"],"b3c":"Beste Kunden basierend auf den Ausgaben","b3s":"Beste Lieferanten basierend auf den Kosten"},"de":{"title":"Produkte, die in den letzten drei Monaten gekauft wurden"}},"notifications":{"product":{"created":"Produkt {name} wurde hinzugefügt","updated":"Produkt {name} wurde aktualisiert","deleted":"Produkt {name} wurde gelöscht"},"client":{"created":"Kunde {name} wurde hinzugefügt","updated":"Client {name} wurde aktualisiert","deleted":"Der Kunde {name} wurde gelöscht"},"supplier":{"created":"Lieferant {name} wurde hinzugefügt","updated":"Lieferant {name} wurde aktualisiert","deleted":"Lieferant {name} wurde gelöscht"},"order":{"created":"Eine Bestellung wurde erstellt","updated":"Die Bestellung wurde aktualisiert","deleted":"Die Bestellung wurde gelöscht"},"invoice":{"created":"Eine Rechnung wurde erstellt","updated":"Die Rechnung wurde aktualisiert","deleted":"Die Rechnung wurde gelöscht"},"quote":{"created":"Ein Angebot wurde erstellt","updated":"Das Angebot wurde aktualisiert","deleted":"Das Angebot wurde gelöscht"}},"c":{"i":{"addButton":"Neuen Kunden hinzufügen"},"c":{"title":"einen Kunden hinzufügen"},"u":{"title":"Update-Client"},"d":{"title":"Sind Sie sicher, dass Sie den Client löschen möchten?"}},"s":{"i":{"addButton":"Neuen Lieferanten hinzufügen"},"c":{"title":"Fügen Sie einen Lieferanten hinzu"},"u":{"title":"Update-Anbieter"},"d":{"title":"Sind Sie sicher, dass Sie den Lieferanten löschen möchten?"}},"p":{"i":{"addButton":"Neues Produkt hinzufügen"},"c":{"title":"ein Produkt hinzufügen"},"u":{"title":"Produkt aktualisieren"},"d":{"title":"Sind Sie sicher, dass Sie das Produkt löschen möchten?"}},"o":{"i":{"addButton":"Neue Bestellung hinzufügen"},"c":{"title":"Neue Bestellung hinzufügen","d":{"s":{"title":"Klient","select":"Suche nach Kunde"},"o":{"title":"Bestellstatus","products":"Produkte","add":"Fügen Sie ein Produkt hinzu","select":"Wähle ein Produkt","placeholder":["Produktmenge","Neuer Preis","Wählen Sie einen Status aus"]}},"button":"Fügen Sie Bestellungen hinzu"},"u":{"title":"Reihenfolge aktualisieren","d":{"s":{"title":"Kundendaten","select":"Wählen Sie einen Kunden aus"},"o":{"title":"Bestelldetails","select":"Wähle ein Produkt","add":"Fügen Sie ein Produkt hinzu"}},"button":"Bestellungen aktualisieren"},"d":{"title":"Sind Sie sicher, dass Sie die Bestellung löschen möchten?","yes":"Bestätigen","no":"Stornieren"}},"q":{"i":{"addButton":"Neues Angebot hinzufügen"},"c":{"title":"Neues Zitat hinzufügen","d":{"s":{"title":"Klient","select":"Suche nach Kunde"},"o":{"title":"Angebotsstatus","products":"Produkte","add":"Fügen Sie ein Produkt hinzu","select":"Wähle ein Produkt","placeholder":["Produktmenge","Neuer Preis"]}},"button":"Fügen Sie Zitate hinzu"},"u":{"title":"Angebot aktualisieren","d":{"s":{"title":"Kundendaten","select":"Wählen Sie einen Kunden aus"},"o":{"title":"Angebotsdetails","select":"Wähle ein Produkt","add":"Fügen Sie ein Produkt hinzu"}},"button":"Angebote aktualisieren"},"d":{"title":"Sind Sie sicher, dass Sie das Zitat löschen möchten?","yes":"Bestätigen","no":"Stornieren"}},"oq":{"d":{"o":{"title":"Angebotsdetails","id":"Ausweis","date":"Datum"},"s":{"title":"Kundendaten","id":"Ausweis","name":"Name","phone":"Telefonnummer","email":"Email","address":"Adresse"},"i":{"title":"Einzelheiten zu Angebotspositionen","fields":["Name","Beschreibung","Menge","Preis","gesamt"]},"button":"drucken"}},"od":{"d":{"o":{"title":"Bestelldetails","id":"Ausweis","date":"Datum","status":"Status"},"s":{"title":"Kundendaten","id":"Ausweis","name":"Name","phone":"Telefonnummer","email":"Email","address":"Adresse"},"i":{"title":"Einzelheiten zu den Bestellartikeln","fields":["Name","Beschreibung","Menge","Preis","gesamt"]},"button":"drucken"}},"id":{"d":{"i":{"title":"Rechnungs-Details","id":"Ausweis","date":"Datum"},"c":{"title":"Kundendaten","id":"Ausweis","name":"Name","phone":"Telefonnummer","email":"Email","address":"Adresse"},"it":{"title":"Einzelheiten zu den Rechnungspositionen","fields":["Name","Beschreibung","Menge","Preis","gesamt"]},"button":"drucken"}},"i":{"i":{"addButton":"Neue Rechnung hinzufügen"},"c":{"title":"Neue Rechnung hinzufügen","d":{"c":{"title":"Kundendaten","select":"Wählen Sie einen Kunden aus"},"i":{"title":"Rechnungs-Details","add":"Fügen Sie ein Produkt hinzu","select":"Wähle ein Produkt","placeholder":["Produktmenge","Neuer Preis"]}},"button":"Fügen Sie eine Rechnung hinzu"},"u":{"title":"Rechnung aktualisieren","d":{"c":{"title":"Kundendaten","select":"--"},"i":{"title":"Rechnungs-Details","add":"Fügen Sie ein Produkt hinzu","select":"--"}},"button":"Rechnung aktualisieren"},"d":{"title":"Sind Sie sicher, dass Sie die Rechnung löschen möchten?","yes":"Bestätigen","no":"Stornieren"},"s":{"paid":"Bezahlt","pending":"Ausstehend","canceled":"Abgesagt"}},"im":{"i":{"addButton":"Zum Inventar hinzufügen"},"c":{"title":"Artikel zum Inventar hinzufügen","l":{"a":"Produkt","b":"Menge"},"p":{"a":"Wähle ein Produkt","b":"Menge"}}}}
+{
+  "g": {
+    "s": "Suchen",
+    "pick-date": "Ein Datum auswählen",
+    "r": {
+      "Clients": "Kunden",
+      "Suppliers": "Lieferanten",
+      "Products": "Produkte",
+      "Orders": "Aufträge",
+      "Invoices": "Rechnungen",
+      "Inventory": "Inventar",
+      "Dashboard": "Armaturenbrett",
+      "Payment": "Zahlungt",
+      "Settings": "Einstellungen",
+      "Quotes": "Zitate",
+      "Notifications": "Benachrichtigungen"
+    },
+    "b": {
+      "no": "Stornieren",
+      "c": "Hinzufügen",
+      "d": "Bestätigen",
+      "u": "Aktualisieren Sie {name}",
+      "a": "Hinzufügen",
+      "csv": "Hochladen auf {table}"
+    },
+    "translationTitle": "Sprache ändern",
+    "dropZone": "Ziehen Sie Ihr Bild per Drag & Drop oder wählen Sie es aus",
+    "plrz": {
+      "i": "keine Artikel | {n} Artikel | {n} Artikel",
+      "p": "keine Produkte | {n} Produkt | {n} Produkte"
+    },
+    "fields": {
+      "fullname": "Vollständiger Name",
+      "name": "Produktname",
+      "email": "Email",
+      "phone": "Telefonnummer",
+      "address": "Adresse",
+      "actions": "Aktionen",
+      "description": "Beschreibung",
+      "status": "Status",
+      "price": "Preis",
+      "date": "Datum",
+      "paid": "Avance",
+      "rest": "Ausruhen",
+      "items": "Artikel",
+      "total": "Gesamt",
+      "inventory": "Inventar",
+      "init-quantity": "Anfangsmenge",
+      "min-quantity": "Mindestens hinzufügen",
+      "quantity": "Menge",
+      "credit": "Kredit",
+      "threshold": "Schwelle"
+    },
+    "status": {
+      "delivered": "Geliefert",
+      "pending": "Ausstehend",
+      "canceled": "Abgesagt",
+      "paid": "Bezahlt",
+      "in": "Gekauft",
+      "out": "Verkauft"
+    },
+    "actions": {
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "print": "Drucken",
+      "toOrder": "Bestellung anlegen",
+      "toInvoice": "Rechnung erstellen",
+      "updateStock": "zum Inventar hinzufügen"
+    }
+  },
+  "csv": { "title": "CSV-Dateien hochladen" },
+  "dashboard": {
+    "i": {
+      "title": "In den letzten drei Monaten verkaufte und gekaufte Artikel",
+      "labels": ["GEKAUFT", "VERKAUFT"],
+      "b3c": "Beste Kunden basierend auf den Ausgaben",
+      "b3s": "Beste Lieferanten basierend auf den Kosten"
+    },
+    "de": {
+      "title": "Produkte, die in den letzten drei Monaten gekauft wurden"
+    }
+  },
+  "notifications": {
+    "product": {
+      "created": "Produkt {name} wurde hinzugefügt",
+      "updated": "Produkt {name} wurde aktualisiert",
+      "deleted": "Produkt {name} wurde gelöscht"
+    },
+    "client": {
+      "created": "Kunde {name} wurde hinzugefügt",
+      "updated": "Client {name} wurde aktualisiert",
+      "deleted": "Der Kunde {name} wurde gelöscht"
+    },
+    "supplier": {
+      "created": "Lieferant {name} wurde hinzugefügt",
+      "updated": "Lieferant {name} wurde aktualisiert",
+      "deleted": "Lieferant {name} wurde gelöscht"
+    },
+    "order": {
+      "created": "Eine Bestellung wurde erstellt",
+      "updated": "Die Bestellung wurde aktualisiert",
+      "deleted": "Die Bestellung wurde gelöscht"
+    },
+    "invoice": {
+      "created": "Eine Rechnung wurde erstellt",
+      "updated": "Die Rechnung wurde aktualisiert",
+      "deleted": "Die Rechnung wurde gelöscht"
+    },
+    "quote": {
+      "created": "Ein Angebot wurde erstellt",
+      "updated": "Das Angebot wurde aktualisiert",
+      "deleted": "Das Angebot wurde gelöscht"
+    }
+  },
+  "c": {
+    "i": { "addButton": "Neuen Kunden hinzufügen" },
+    "c": { "title": "einen Kunden hinzufügen" },
+    "u": { "title": "Update-Client" },
+    "d": { "title": "Sind Sie sicher, dass Sie den Client löschen möchten?" }
+  },
+  "s": {
+    "i": { "addButton": "Neuen Lieferanten hinzufügen" },
+    "c": { "title": "Fügen Sie einen Lieferanten hinzu" },
+    "u": { "title": "Update-Anbieter" },
+    "d": {
+      "title": "Sind Sie sicher, dass Sie den Lieferanten löschen möchten?"
+    }
+  },
+  "p": {
+    "i": { "addButton": "Neues Produkt hinzufügen" },
+    "c": { "title": "ein Produkt hinzufügen" },
+    "u": { "title": "Produkt aktualisieren" },
+    "d": { "title": "Sind Sie sicher, dass Sie das Produkt löschen möchten?" }
+  },
+  "o": {
+    "i": { "addButton": "Neue Bestellung hinzufügen" },
+    "c": {
+      "title": "Neue Bestellung hinzufügen",
+      "d": {
+        "s": { "title": "Klient", "select": "Suche nach Kunde" },
+        "o": {
+          "title": "Bestellstatus",
+          "products": "Produkte",
+          "add": "Fügen Sie ein Produkt hinzu",
+          "select": "Wähle ein Produkt",
+          "placeholder": [
+            "Produktmenge",
+            "Neuer Preis",
+            "Wählen Sie einen Status aus"
+          ]
+        }
+      },
+      "button": "Fügen Sie Bestellungen hinzu"
+    },
+    "u": {
+      "title": "Reihenfolge aktualisieren",
+      "d": {
+        "s": {
+          "title": "Kundendaten",
+          "select": "Wählen Sie einen Kunden aus"
+        },
+        "o": {
+          "title": "Bestelldetails",
+          "select": "Wähle ein Produkt",
+          "add": "Fügen Sie ein Produkt hinzu"
+        }
+      },
+      "button": "Bestellungen aktualisieren"
+    },
+    "d": {
+      "title": "Sind Sie sicher, dass Sie die Bestellung löschen möchten?",
+      "yes": "Bestätigen",
+      "no": "Stornieren"
+    }
+  },
+  "q": {
+    "i": { "addButton": "Neues Angebot hinzufügen" },
+    "c": {
+      "title": "Neues Zitat hinzufügen",
+      "d": {
+        "s": { "title": "Klient", "select": "Suche nach Kunde" },
+        "o": {
+          "title": "Angebotsstatus",
+          "products": "Produkte",
+          "add": "Fügen Sie ein Produkt hinzu",
+          "select": "Wähle ein Produkt",
+          "placeholder": ["Produktmenge", "Neuer Preis"]
+        }
+      },
+      "button": "Fügen Sie Zitate hinzu"
+    },
+    "u": {
+      "title": "Angebot aktualisieren",
+      "d": {
+        "s": {
+          "title": "Kundendaten",
+          "select": "Wählen Sie einen Kunden aus"
+        },
+        "o": {
+          "title": "Angebotsdetails",
+          "select": "Wähle ein Produkt",
+          "add": "Fügen Sie ein Produkt hinzu"
+        }
+      },
+      "button": "Angebote aktualisieren"
+    },
+    "d": {
+      "title": "Sind Sie sicher, dass Sie das Zitat löschen möchten?",
+      "yes": "Bestätigen",
+      "no": "Stornieren"
+    }
+  },
+  "oq": {
+    "d": {
+      "o": { "title": "Angebotsdetails", "id": "Ausweis", "date": "Datum" },
+      "s": {
+        "title": "Kundendaten",
+        "id": "Ausweis",
+        "name": "Name",
+        "phone": "Telefonnummer",
+        "email": "Email",
+        "address": "Adresse"
+      },
+      "i": {
+        "title": "Einzelheiten zu Angebotspositionen",
+        "fields": ["Name", "Beschreibung", "Menge", "Preis", "gesamt"]
+      },
+      "button": "drucken"
+    }
+  },
+  "od": {
+    "d": {
+      "o": {
+        "title": "Bestelldetails",
+        "id": "Ausweis",
+        "date": "Datum",
+        "status": "Status"
+      },
+      "s": {
+        "title": "Kundendaten",
+        "id": "Ausweis",
+        "name": "Name",
+        "phone": "Telefonnummer",
+        "email": "Email",
+        "address": "Adresse"
+      },
+      "i": {
+        "title": "Einzelheiten zu den Bestellartikeln",
+        "fields": ["Name", "Beschreibung", "Menge", "Preis", "gesamt"]
+      },
+      "button": "drucken"
+    }
+  },
+  "id": {
+    "d": {
+      "i": { "title": "Rechnungs-Details", "id": "Ausweis", "date": "Datum" },
+      "c": {
+        "title": "Kundendaten",
+        "id": "Ausweis",
+        "name": "Name",
+        "phone": "Telefonnummer",
+        "email": "Email",
+        "address": "Adresse"
+      },
+      "it": {
+        "title": "Einzelheiten zu den Rechnungspositionen",
+        "fields": ["Name", "Beschreibung", "Menge", "Preis", "gesamt"]
+      },
+      "button": "drucken"
+    }
+  },
+  "i": {
+    "i": { "addButton": "Neue Rechnung hinzufügen" },
+    "c": {
+      "title": "Neue Rechnung hinzufügen",
+      "d": {
+        "c": {
+          "title": "Kundendaten",
+          "select": "Wählen Sie einen Kunden aus"
+        },
+        "i": {
+          "title": "Rechnungs-Details",
+          "add": "Fügen Sie ein Produkt hinzu",
+          "select": "Wähle ein Produkt",
+          "placeholder": ["Produktmenge", "Neuer Preis"]
+        }
+      },
+      "button": "Fügen Sie eine Rechnung hinzu"
+    },
+    "u": {
+      "title": "Rechnung aktualisieren",
+      "d": {
+        "c": { "title": "Kundendaten", "select": "--" },
+        "i": {
+          "title": "Rechnungs-Details",
+          "add": "Fügen Sie ein Produkt hinzu",
+          "select": "--"
+        }
+      },
+      "button": "Rechnung aktualisieren"
+    },
+    "d": {
+      "title": "Sind Sie sicher, dass Sie die Rechnung löschen möchten?",
+      "yes": "Bestätigen",
+      "no": "Stornieren"
+    },
+    "s": { "paid": "Bezahlt", "pending": "Ausstehend", "canceled": "Abgesagt" }
+  },
+  "im": {
+    "i": { "addButton": "Zum Inventar hinzufügen" },
+    "c": {
+      "title": "Artikel zum Inventar hinzufügen",
+      "l": { "a": "Produkt", "b": "Menge" },
+      "p": { "a": "Wähle ein Produkt", "b": "Menge" }
+    }
+  }
+}
