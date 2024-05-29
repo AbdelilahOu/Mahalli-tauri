@@ -157,7 +157,7 @@ const updateProductStock = (id: string, name: string) => {
                       class="text-slate-800 inline mr-2"
                       :size="20"
                     />
-                    Edit
+                    {{ t("g.actions.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem

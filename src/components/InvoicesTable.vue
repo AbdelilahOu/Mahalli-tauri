@@ -228,7 +228,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                     @click="toggleThisInvoices(invoice, 'InvoiceDelete')"
                   >
                     <Trash2 :size="20" class="text-slate-800 inline mr-2" />
-                    Delete
+                    {{ t("g.actions.delete") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     @click="toggleThisInvoices(invoice, 'InvoiceUpdate')"
@@ -237,7 +237,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    Edit
+                    {{ t("g.actions.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <RouterLink
@@ -248,7 +248,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                       <Printer
                         :size="20"
                         class="text-slate-800 inline mr-2"
-                      />Print
+                      />{{ t("g.actions.print") }}
                     </RouterLink>
                   </DropdownMenuItem>
                   <!-- <DropdownMenuSeparator />

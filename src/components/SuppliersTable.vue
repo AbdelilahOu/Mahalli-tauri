@@ -94,7 +94,7 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
                     @click="toggleThisSupplier(supplier, 'supplierDelete')"
                   >
                     <Trash2 :size="20" class="text-slate-800 inline mr-2" />
-                    Delete
+                    {{ t("g.actions.delete") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     @click="toggleThisSupplier(supplier, 'supplierUpdate')"
@@ -103,7 +103,7 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    Edit
+                    {{ t("g.actions.edit") }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
