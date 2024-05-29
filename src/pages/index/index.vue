@@ -20,14 +20,14 @@ const pages = ref([
     path: "/suppliers/",
   },
   {
-    image: "/orders.jpg",
-    text: "Orders",
-    path: "/orders/",
-  },
-  {
     image: "/devis.webp",
     text: "Quotes",
     path: "/quotes/",
+  },
+  {
+    image: "/orders.jpg",
+    text: "Orders",
+    path: "/orders/",
   },
   {
     image: "/invoices.jpg",
