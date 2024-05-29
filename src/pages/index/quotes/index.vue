@@ -140,7 +140,7 @@ const updateModal = (name: string) => {
                   <span>{{
                     createdAt
                       ? new Date(createdAt).toLocaleDateString("fr-fr")
-                      : "Pick a date"
+                      : t("g.pick-date")
                   }}</span>
                 </Button>
               </PopoverTrigger>

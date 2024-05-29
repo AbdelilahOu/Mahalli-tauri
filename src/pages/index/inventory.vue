@@ -126,7 +126,7 @@ const uploadCSV = () => {
                   <span>{{
                     createdAt
                       ? new Date(createdAt).toLocaleDateString("fr-fr")
-                      : "Pick a date"
+                      : t("g.pick-date")
                   }}</span>
                 </Button>
               </PopoverTrigger>
@@ -136,11 +136,18 @@ const uploadCSV = () => {
             </Popover>
             <Select v-model="status">
               <SelectTrigger>
-                <SelectValue placeholder="Select a status" />
+                <SelectValue
+                  class="text-muted-foreground"
+                  :placeholder="t('o.c.d.o.placeholder[2]')"
+                />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="OUT"> Sold </SelectItem>
-                <SelectItem value="IN"> Bought </SelectItem>
+                <SelectItem value="OUT">
+                  {{ t("g.status.out") }}
+                </SelectItem>
+                <SelectItem value="IN">
+                  {{ t("g.status.in") }}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>

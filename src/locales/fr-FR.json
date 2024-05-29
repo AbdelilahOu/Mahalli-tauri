@@ -1,6 +1,7 @@
 {
   "g": {
     "s": "Recherche",
+    "pick-date": "Pick a date",
     "r": {
       "Clients": "Clientèle",
       "Suppliers": "Fournisseurs",
@@ -63,7 +64,8 @@
       "delete": "Supprimer",
       "print": "Imprimer",
       "toOrder": "Créer une commande",
-      "toInvoice": "Créer une facture"
+      "toInvoice": "Créer une facture",
+      "updateStock": "Ajouter à l'inventaire"
     }
   },
   "csv": { "title": "Téléchargez des fichiers csv" },

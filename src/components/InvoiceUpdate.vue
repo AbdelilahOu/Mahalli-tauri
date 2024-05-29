@@ -196,14 +196,17 @@ const deleteInvoiceItem = (index: number) => {
             </Label>
             <Select v-model="invoice.status">
               <SelectTrigger>
-                <SelectValue placeholder="Select a status" />
+                <SelectValue
+                  class="text-muted-foreground"
+                  :placeholder="t('o.c.d.o.placeholder[2]')"
+                />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="PAID">
                   {{ t("g.status.paid") }}
                 </SelectItem>
                 <SelectItem value="CANCELED">
-                  {{ t("g.status.cancelled") }}
+                  {{ t("g.status.canceled") }}
                 </SelectItem>
                 <SelectItem value="PENDING">
                   {{ t("g.status.pending") }}

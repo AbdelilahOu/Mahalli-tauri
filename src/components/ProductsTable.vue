@@ -148,7 +148,9 @@ const updateProductStock = (id: string, name: string) => {
                     @click="toggleThisProduct(product, 'ProductDelete')"
                   >
                     <Trash2 class="text-slate-800 inline mr-2" :size="20" />
-                    <span> Delete </span>
+                    <span>
+                      {{ t("g.actions.delete") }}
+                    </span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     @click="toggleThisProduct(product, 'ProductUpdate')"
@@ -166,7 +168,8 @@ const updateProductStock = (id: string, name: string) => {
                     <PackagePlus
                       :size="20"
                       class="text-slate-800 inline mr-2"
-                    />Update stock
+                    />
+                    {{ t("g.actions.updateStock") }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
