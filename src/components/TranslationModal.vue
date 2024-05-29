@@ -76,7 +76,7 @@ const hideModal = () => {
         </Button>
         <Button
           variant="ghost"
-          @click="changeLocale({ key: 'ar-AE', text: 'Arabic' })"
+          @click="changeLocale({ key: 'ar-AE', text: 'العربية' })"
         >
           <span
             class="w-3/5 items-center h-full text-start flex justify-center gap-2"
@@ -93,12 +93,12 @@ const hideModal = () => {
                 />
               </svg>
             </span>
-            Arabic
+            العربية
           </span>
         </Button>
         <Button
           variant="ghost"
-          @click="changeLocale({ key: 'de-DE', text: 'German' })"
+          @click="changeLocale({ key: 'de-DE', text: 'Deutsch' })"
         >
           <span
             class="w-3/5 items-center h-full text-start flex justify-center gap-2"
