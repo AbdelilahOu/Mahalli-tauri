@@ -18,7 +18,7 @@ const deleteTheOrders = async (id: string) => {
     //
     info(`DELETE ORDER: ${id}`);
     //
-    toast(t("notifications.order.deleted"), {
+    toast.success(t("notifications.order.deleted"), {
       closeButton: true,
     });
     // toggle refresh

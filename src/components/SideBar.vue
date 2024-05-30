@@ -58,10 +58,10 @@ const openTranslationModal = () => {
     <div class="w-full px-1 flex flex-col justify-around h-full pb-2">
       <div class="w-full h-full flex flex-col gap-1">
         <RouterLink
-          class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
+          class="w-full flex flex-nowrap h-9 rounded-md items-center p-1 group transition-all duration-300"
           :to="{ path: '/clients/', query: { page: 1 } }"
         >
-          <span class="w-8 min-w-[30px] max-w-[30px]">
+          <span class="w-[30px] shrink-0">
             <Contact
               class="m-auto text-gray-700 group-hover:text-black"
               :size="20"
@@ -69,16 +69,16 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
+            class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
           >
             {{ t("g.r.Clients") }}
           </span>
         </RouterLink>
-        <RouterLink
+        <!-- <RouterLink
           class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
           :to="{ path: '/suppliers/', query: { page: 1 } }"
         >
-          <span class="w-8 min-w-[30px] max-w-[30px]">
+          <span class="w-[30px] shrink-0">
             <Contact
               class="m-auto text-gray-700 group-hover:text-black"
               :size="20"
@@ -86,16 +86,16 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
+            class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary  font-medium"
           >
             {{ t("g.r.Suppliers") }}
           </span>
-        </RouterLink>
+        </RouterLink> -->
         <RouterLink
           class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
           :to="{ path: '/products/', query: { page: 1 } }"
         >
-          <span class="w-8 min-w-[30px] max-w-[30px]">
+          <span class="w-[30px] shrink-0">
             <Package
               class="m-auto text-gray-700 group-hover:text-black"
               :size="20"
@@ -103,7 +103,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
+            class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
           >
             {{ t("g.r.Products") }}
           </span>
@@ -112,7 +112,7 @@ const openTranslationModal = () => {
           class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
           :to="{ path: '/quotes/', query: { page: 1 } }"
         >
-          <span class="w-8 min-w-[30px] max-w-[30px]">
+          <span class="w-[30px] shrink-0">
             <Quote
               class="m-auto text-gray-700 group-hover:text-black"
               :size="20"
@@ -120,7 +120,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
+            class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
           >
             {{ t("g.r.Quotes") }}
           </span>
@@ -129,7 +129,7 @@ const openTranslationModal = () => {
           class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
           :to="{ path: '/orders/', query: { page: 1 } }"
         >
-          <span class="w-8 min-w-[30px] max-w-[30px]">
+          <span class="w-[30px] shrink-0">
             <Truck
               class="m-auto text-gray-700 group-hover:text-black"
               :size="20"
@@ -137,7 +137,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
+            class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
           >
             {{ t("g.r.Orders") }}
           </span>
@@ -146,7 +146,7 @@ const openTranslationModal = () => {
           class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
           :to="{ path: '/invoices/', query: { page: 1 } }"
         >
-          <span class="w-8 min-w-[30px] max-w-[30px]">
+          <span class="w-[30px] shrink-0">
             <NotepadText
               class="m-auto text-gray-700 group-hover:text-black"
               :size="20"
@@ -154,7 +154,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
+            class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
           >
             {{ t("g.r.Invoices") }}
           </span>
@@ -163,7 +163,7 @@ const openTranslationModal = () => {
           class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
           :to="{ path: '/inventory/', query: { page: 1 } }"
         >
-          <span class="w-8 min-w-[30px] max-w-[30px]">
+          <span class="w-[30px] shrink-0">
             <Archive
               class="m-auto text-gray-700 group-hover:text-black"
               :size="20"
@@ -171,7 +171,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
+            class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
           >
             {{ t("g.r.Inventory") }}
           </span>
@@ -180,7 +180,7 @@ const openTranslationModal = () => {
           class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
           :to="{ path: '/dashboard' }"
         >
-          <span class="w-8 min-w-[30px] max-w-[30px]">
+          <span class="w-[30px] shrink-0">
             <BarChartBig
               class="m-auto text-gray-700 group-hover:text-black"
               :size="20"
@@ -188,7 +188,7 @@ const openTranslationModal = () => {
           </span>
           <span
             v-if="!collapse"
-            class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
+            class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
           >
             {{ t("g.r.Dashboard") }}
           </span>
@@ -198,7 +198,7 @@ const openTranslationModal = () => {
         class="cursor-pointer w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
         @click="openTranslationModal"
       >
-        <span class="w-8 min-w-[30px] max-w-[30px]">
+        <span class="w-[30px] shrink-0">
           <Languages
             class="m-auto text-gray-700 group-hover:text-black"
             :size="20"
@@ -206,7 +206,7 @@ const openTranslationModal = () => {
         </span>
         <span
           v-if="!collapse"
-          class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
+          class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
         >
           {{ locale.text }}
         </span>
@@ -215,7 +215,7 @@ const openTranslationModal = () => {
         class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
         :to="{ path: '/settings' }"
       >
-        <span class="w-8 min-w-[30px] max-w-[30px]">
+        <span class="w-[30px] shrink-0">
           <Settings
             class="m-auto text-gray-700 group-hover:text-black"
             :size="20"
@@ -223,7 +223,7 @@ const openTranslationModal = () => {
         </span>
         <span
           v-if="!collapse"
-          class="text-gray-500 ml-1 text-sm group-hover:text-primary overflow-hidden font-medium"
+          class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
         >
           {{ t("g.r.Settings") }}
         </span>

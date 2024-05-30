@@ -17,7 +17,7 @@ const deleteTheProduct = async (id: string, name: string) => {
     await invoke<Res<string>>("delete_product", { id });
     info(`DELETE PRODUCT: ${id}`);
     //
-    toast(t("notifications.product.deleted", { name }), {
+    toast.success(t("notifications.product.deleted", { name }), {
       closeButton: true,
     });
     // toggle refresh

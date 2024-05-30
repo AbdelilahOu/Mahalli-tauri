@@ -64,9 +64,12 @@ const updateTheSupplier = async (supplier: SupplierT) => {
       })}`,
     );
     //
-    toast(t("notifications.supplier.updated", { name: supplier.fullname }), {
-      closeButton: true,
-    });
+    toast.success(
+      t("notifications.supplier.updated", { name: supplier.fullname }),
+      {
+        closeButton: true,
+      },
+    );
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,

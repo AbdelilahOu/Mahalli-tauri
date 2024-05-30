@@ -65,7 +65,7 @@
       "print": "Drucken",
       "toOrder": "Bestellung anlegen",
       "toInvoice": "Rechnung erstellen",
-      "updateStock": "zum Inventar hinzufügen"
+      "inventoryUpdate": "zum Inventar hinzufügen"
     }
   },
   "csv": { "title": "CSV-Dateien hochladen" },

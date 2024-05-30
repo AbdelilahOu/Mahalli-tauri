@@ -109,7 +109,7 @@ const createInvoice = async () => {
       //
       info(`CREATE INVOICE: ${JSON.stringify(invoice)}`);
       //
-      toast(t("notifications.invoice.created"), {
+      toast.success(t("notifications.invoice.created"), {
         closeButton: true,
       });
       // toggle refresh
@@ -218,7 +218,7 @@ const hideModal = () => {
               </Input>
               <Trash2
                 @click="deleteInvoiceItem(index)"
-                class="cursor-pointer"
+                class="cursor-pointer m-auto"
                 :size="20"
               />
             </template>

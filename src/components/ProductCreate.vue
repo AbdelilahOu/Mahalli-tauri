@@ -58,7 +58,7 @@ const createNewProduct = async (product: ProductT) => {
       })}`,
     );
     //
-    toast(t("notifications.product.created", { name: product.name }), {
+    toast.success(t("notifications.product.created", { name: product.name }), {
       closeButton: true,
     });
     // toggle refresh

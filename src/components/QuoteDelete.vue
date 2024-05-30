@@ -18,7 +18,7 @@ const deleteTheQuotes = async (id: string) => {
     //
     info(`DELETE QUOTE: ${id}`);
     //
-    toast(t("notifications.quote.deleted"), {
+    toast.success(t("notifications.quote.deleted"), {
       closeButton: true,
     });
     // toggle refresh

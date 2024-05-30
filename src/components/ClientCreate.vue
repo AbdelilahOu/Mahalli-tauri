@@ -51,9 +51,12 @@ const createNewClient = async (client: ClientT) => {
       })}`,
     );
     //
-    toast(t("notifications.client.created", { name: client.fullname }), {
-      closeButton: true,
-    });
+    toast.success(
+      t("notifications.client.created", { name: client.fullname }),
+      {
+        closeButton: true,
+      },
+    );
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-create-" + Math.random() * 9999,

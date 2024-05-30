@@ -53,9 +53,12 @@ const createNewSupplier = async (supplier: SupplierT) => {
       })}`,
     );
     //
-    toast(t("notifications.supplier.created", { name: supplier.fullname }), {
-      closeButton: true,
-    });
+    toast.success(
+      t("notifications.supplier.created", { name: supplier.fullname }),
+      {
+        closeButton: true,
+      },
+    );
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-create-" + Math.random() * 9999,

@@ -65,7 +65,7 @@
       "print": "طبع",
       "toOrder": "إضافة طلب",
       "toInvoice": "إضافة فاتورة",
-      "updateStock": "تحديث المخزون"
+      "inventoryUpdate": "تحديث المخزون"
     }
   },
   "csv": { "title": "تحميل ملفات CSV" },
