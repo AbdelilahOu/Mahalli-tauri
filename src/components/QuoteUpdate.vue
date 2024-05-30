@@ -111,7 +111,7 @@ const updateTheQuotes = async () => {
     //
     info(`UPDATE QUOTE: ${JSON.stringify(quote)}`);
     //
-    toast(t("notifications.quote.updated"), {
+    toast.success(t("notifications.quote.updated"), {
       closeButton: true,
     });
     // toggle refresh
@@ -199,7 +199,7 @@ const deleteQuoteItem = (index: number) => {
               </Input>
               <Trash2
                 @click="deleteQuoteItem(index)"
-                class="cursor-pointer"
+                class="cursor-pointer m-auto"
                 :size="20"
               />
             </template>

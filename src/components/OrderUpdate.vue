@@ -134,7 +134,7 @@ const updateTheOrders = async () => {
     //
     info(`UPDATE ORDER: ${JSON.stringify(order)}`);
     //
-    toast(t("notifications.order.updated"), {
+    toast.success(t("notifications.order.updated"), {
       closeButton: true,
     });
     // toggle refresh
@@ -246,7 +246,7 @@ const deleteOrderItem = (index: number) => {
               </Input>
               <Trash2
                 @click="deleteOrderItem(index)"
-                class="cursor-pointer"
+                class="cursor-pointer m-auto"
                 :size="20"
               />
             </template>

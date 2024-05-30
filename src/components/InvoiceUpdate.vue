@@ -138,7 +138,7 @@ const updateTheInvoices = async () => {
     //
     info(`UPDATE INVOICE: ${JSON.stringify(invoice)}`);
     //
-    toast(t("notifications.invoice.updated"), {
+    toast.success(t("notifications.invoice.updated"), {
       closeButton: true,
     });
     // toggle refresh
@@ -256,7 +256,7 @@ const deleteInvoiceItem = (index: number) => {
               </Input>
               <Trash2
                 @click="deleteInvoiceItem(index)"
-                class="cursor-pointer"
+                class="cursor-pointer m-auto"
                 :size="20"
               />
             </template>

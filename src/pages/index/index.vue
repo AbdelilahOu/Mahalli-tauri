@@ -14,11 +14,11 @@ const pages = ref([
     text: "Products",
     path: "/products",
   },
-  {
-    image: "/suppliers.jpeg",
-    text: "Suppliers",
-    path: "/suppliers/",
-  },
+  // {
+  //   image: "/suppliers.jpeg",
+  //   text: "Suppliers",
+  //   path: "/suppliers/",
+  // },
   {
     image: "/devis.webp",
     text: "Quotes",
@@ -48,7 +48,7 @@ const pages = ref([
 </script>
 
 <template>
-  <div class="w-full h-[calc(100vh-50px)]">
+  <div class="w-full h-[calc(100vh-80px)]">
     <div class="w-full h-full flex justify-center items-center flex-col">
       <div
         class="md:h-[700px] m-auto w-full max-w-3xl h-full p-3 gap-3 grid-cols-3 grid-rows-3 grid"

@@ -18,7 +18,7 @@ const deleteTheInvoice = async (id: string) => {
     //
     info(`DELETE INVOICE: ${id}`);
     //
-    toast(t("notifications.invoice.deleted"), {
+    toast.success(t("notifications.invoice.deleted"), {
       closeButton: true,
     });
     // toggle refresh

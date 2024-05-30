@@ -50,7 +50,7 @@ const updateProductStock = (id: string, name: string) => {
     id,
     name,
   });
-  store.setters.updateStore({ key: "name", value: "UpdateStock" });
+  store.setters.updateStore({ key: "name", value: "InventoryUpdate" });
   store.setters.updateStore({ key: "show", value: true });
 };
 </script>
@@ -169,7 +169,7 @@ const updateProductStock = (id: string, name: string) => {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    {{ t("g.actions.updateStock") }}
+                    {{ t("g.actions.inventoryUpdate") }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

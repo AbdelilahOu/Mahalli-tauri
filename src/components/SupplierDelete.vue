@@ -18,7 +18,7 @@ const deleteTheSupplier = async (id: string, name: string) => {
     //
     info(`DELETE SUPPLIER: ${id}`);
     //
-    toast(t("notifications.supplier.deleted", { name }), {
+    toast.success(t("notifications.supplier.deleted", { name }), {
       closeButton: true,
     });
     // toggle refresh

@@ -105,7 +105,7 @@ const createOrder = async () => {
       //
       info(`CREATE ORDER: ${JSON.stringify(order)}`);
       //
-      toast(t("notifications.order.created"), {
+      toast.success(t("notifications.order.created"), {
         closeButton: true,
       });
       // toggle refresh
@@ -211,7 +211,7 @@ const hideModal = () => {
               </Input>
               <Trash2
                 @click="deleteOrderItem(index)"
-                class="cursor-pointer"
+                class="cursor-pointer m-auto"
                 :size="20"
               />
             </template>

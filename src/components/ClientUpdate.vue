@@ -65,9 +65,12 @@ const updateTheClient = async (client: ClientT) => {
       })}`,
     );
     //
-    toast(t("notifications.client.updated", { name: client.fullname }), {
-      closeButton: true,
-    });
+    toast.success(
+      t("notifications.client.updated", { name: client.fullname }),
+      {
+        closeButton: true,
+      },
+    );
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,

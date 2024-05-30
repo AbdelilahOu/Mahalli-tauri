@@ -82,7 +82,7 @@ const updateTheProduct = async (product: ProductT) => {
       })}`,
     );
     //
-    toast(t("notifications.product.updated", { name: product.name }), {
+    toast.success(t("notifications.product.updated", { name: product.name }), {
       closeButton: true,
     });
     // toggle refresh

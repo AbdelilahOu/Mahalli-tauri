@@ -18,7 +18,7 @@ const deleteTheClient = async (id: string, fullname: string) => {
     //
     info(`DELETE CLIENT: ${id}`);
     //
-    toast(t("notifications.client.deleted", { name: fullname }), {
+    toast.success(t("notifications.client.deleted", { name: fullname }), {
       closeButton: true,
     });
     // toggle refresh

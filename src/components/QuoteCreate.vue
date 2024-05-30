@@ -89,7 +89,7 @@ const createQuote = async () => {
     //
     info(`CREATE QUOTE: ${JSON.stringify(quote)}`);
     //
-    toast(t("notifications.quote.created"), {
+    toast.success(t("notifications.quote.created"), {
       closeButton: true,
     });
     // toggle refresh
@@ -168,7 +168,7 @@ const hideModal = () => {
               </Input>
               <Trash2
                 @click="deleteQuoteItem(index)"
-                class="cursor-pointer"
+                class="cursor-pointer m-auto"
                 :size="20"
               />
             </template>

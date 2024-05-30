@@ -49,9 +49,12 @@ const updateTheProduct = async ({ quantity }: z.infer<typeof stock>) => {
       })}`,
     );
     //
-    toast(t("notifications.product.updated", { name: quantity }), {
-      closeButton: true,
-    });
+    toast.success(
+      t("notifications.product.updated", { name: route.query.name }),
+      {
+        closeButton: true,
+      },
+    );
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
