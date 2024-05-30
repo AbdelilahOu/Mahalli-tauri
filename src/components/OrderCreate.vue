@@ -141,7 +141,7 @@ const hideModal = () => {
         <div class="flex w-full h-fit gap-1">
           <div class="w-full h-full flex flex-col gap-1">
             <Label for="client_id">
-              {{ t("o.c.d.s.title") }}
+              {{ t("g.fields.fullname") }}
             </Label>
             <SearchableItems
               :items="clients"
@@ -151,7 +151,7 @@ const hideModal = () => {
           </div>
           <div class="w-full h-full flex flex-col gap-1">
             <Label for="status">
-              {{ t("o.u.d.o.title") }}
+              {{ t("g.fields.status") }}
             </Label>
             <Select v-model="order.status">
               <SelectTrigger>
@@ -176,9 +176,6 @@ const hideModal = () => {
         </div>
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
-          <Label for="products">
-            {{ t("o.c.d.o.products") }}
-          </Label>
           <Button @click="addOrderItem">
             {{ t("o.c.d.o.add") }}
           </Button>

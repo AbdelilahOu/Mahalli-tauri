@@ -136,7 +136,7 @@ const updateModal = (name: string) => {
                 "
               >
                 <CalendarIcon class="mr-2 h-4 w-4" />
-                <span>{{
+                <span class="text-nowrap">{{
                   createdAt
                     ? new Date(createdAt).toLocaleDateString("fr-fr")
                     : t("g.pick-date")
@@ -165,10 +165,7 @@ const updateModal = (name: string) => {
               </svg>
             </span>
           </Button>
-          <Button
-            class="gap-2 w-fit font-medium text-sm"
-            @click="updateModal('QuoteCreate')"
-          >
+          <Button class="gap-2 text-nowrap" @click="updateModal('QuoteCreate')">
             <PlusCircleIcon :size="20" />
 
             {{ t("q.i.addButton") }}

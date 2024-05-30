@@ -122,7 +122,7 @@ const uploadCSV = () => {
                 "
               >
                 <CalendarIcon class="mr-2 h-4 w-4" />
-                <span>{{
+                <span class="text-nowrap">{{
                   createdAt
                     ? new Date(createdAt).toLocaleDateString("fr-fr")
                     : t("g.pick-date")

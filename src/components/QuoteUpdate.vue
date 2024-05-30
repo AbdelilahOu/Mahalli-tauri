@@ -153,7 +153,7 @@ const deleteQuoteItem = (index: number) => {
         <div class="flex w-full h-fit gap-1">
           <div class="w-full h-full flex flex-col gap-1">
             <Label for="client_id">
-              {{ t("q.u.d.o.title") }}
+              {{ t("g.fields.fullname") }}
             </Label>
             <SearchableItems
               v-if="quote.fullname"

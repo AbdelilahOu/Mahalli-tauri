@@ -114,7 +114,7 @@ const updateModal = (name: string) => {
             </span>
           </Button>
           <Button
-            class="gap-2 w-fit font-medium text-sm"
+            class="gap-2 text-nowrap"
             @click="updateModal('ClientCreate')"
           >
             <PlusCircleIcon :size="20" />

@@ -13,10 +13,13 @@ import {
 } from "@unovis/vue";
 import { Donut, GroupedBar } from "@unovis/ts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { invoke } from "@tauri-apps/api";
 import { ref } from "vue";
 import type { Res } from "@/types";
 import { error } from "tauri-plugin-log-api";
+import { NotepadText, Truck, DollarSign } from "lucide-vue-next";
+import { cn } from "@/utils/shadcn";
 
 const { t, locale } = useI18n();
 
@@ -37,6 +40,13 @@ type groupedMvm = Record<
     }
   >
 >;
+
+const STATUS_COLORS = {
+  CANCELED: "bg-red-100 border-red-500 text-red-900",
+  PENDING: "bg-yellow-100 border-yellow-500 text-yellow-900",
+  DELIVERED: "bg-green-100 border-green-500 text-green-900",
+  PAID: "bg-green-100 border-green-500 text-green-900",
+} as const;
 
 //
 const mouvements = ref<groupedMvm>();
@@ -178,11 +188,11 @@ async function getExpenses() {
 onBeforeMount(async () => {
   await Promise.all([
     getRevenue(),
-    getExpenses(),
+    // getExpenses(),
     getInventoryMouvementStats(),
     getBestClients(),
-    getBestSuppliers(),
-    // getStatusCounts(),
+    // getBestSuppliers(),
+    getStatusCounts(),
   ]);
 });
 </script>
@@ -196,20 +206,7 @@ onBeforeMount(async () => {
             class="flex flex-row items-center justify-between space-y-0 pb-2"
           >
             <CardTitle class="text-sm font-medium"> Total Revenue </CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              class="h-4 w-4 text-muted-foreground"
-            >
-              <path
-                d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
-              />
-            </svg>
+            <DollarSign class="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div class="text-2xl font-bold">
@@ -221,71 +218,53 @@ onBeforeMount(async () => {
             </p>
           </CardContent>
         </Card>
+        <div class="flex-1 grid grid-cols-2 gap-2">
+          <Card>
+            <CardHeader
+              class="flex flex-row items-center justify-between space-y-0 pb-2"
+            >
+              <CardTitle class="text-sm font-medium"> Orders </CardTitle>
+              <Truck class="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent class="flex justify-start gap-2 py-3">
+              <Badge
+                v-for="(status, index) in statusCounts?.orders"
+                :key="index"
+                variant="secondary"
+                :class="
+                  // @ts-ignore
+                  cn('rounded-sm h-8 w-full', STATUS_COLORS[status.status])
+                "
+              >
+                {{ status.status_count }}
+                {{ t("g.status." + status.status.toLowerCase()) }}
+              </Badge>
+            </CardContent>
+          </Card>
+          <Card class="lg:order-4">
+            <CardHeader
+              class="flex flex-row items-center justify-between space-y-0 pb-2"
+            >
+              <CardTitle class="text-sm font-medium"> Invoices </CardTitle>
+              <NotepadText class="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent class="flex justify-start gap-2 py-3">
+              <Badge
+                v-for="(status, index) in statusCounts?.invoices"
+                :key="index"
+                variant="secondary"
+                :class="
+                  // @ts-ignore
+                  cn('rounded-sm h-8 w-full', STATUS_COLORS[status.status])
+                "
+              >
+                {{ status.status_count }}
+                {{ t("g.status." + status.status.toLowerCase()) }}
+              </Badge>
+            </CardContent>
+          </Card>
+        </div>
         <!-- <Card>
-          <CardHeader
-            class="flex flex-row items-center justify-between space-y-0 pb-2"
-          >
-            <CardTitle class="text-sm font-medium"> Orders </CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              class="h-4 w-4 text-muted-foreground"
-            >
-              <path
-                d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
-              />
-            </svg>
-          </CardHeader>
-          <CardContent class="flex justify-start gap-2">
-            <Badge
-              v-for="(status, index) in statusCounts?.orders"
-              :key="index"
-              variant="secondary"
-              class="rounded-sm h-8 w-full"
-            >
-              {{ status.status_count }}
-              {{ t("g.status." + status.status.toLowerCase()) }}
-            </Badge>
-          </CardContent>
-        </Card> -->
-        <!-- <Card class="lg:order-4">
-          <CardHeader
-            class="flex flex-row items-center justify-between space-y-0 pb-2"
-          >
-            <CardTitle class="text-sm font-medium"> Invoices </CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              class="h-4 w-4 text-muted-foreground"
-            >
-              <path
-                d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
-              />
-            </svg>
-          </CardHeader>
-          <CardContent class="flex justify-start gap-2">
-            <Badge
-              v-for="(status, index) in statusCounts?.invoices"
-              :key="index"
-              variant="secondary"
-              class="rounded-sm h-8 w-full"
-            >
-              {{ status.status_count }}
-              {{ t("g.status." + status.status.toLowerCase()) }}
-            </Badge>
-          </CardContent>
-        </Card> -->
-        <Card>
           <CardHeader
             class="flex flex-row items-center justify-between space-y-0 pb-2"
           >
@@ -314,7 +293,7 @@ onBeforeMount(async () => {
               }}{{ expenses?.percentageDeff }}% from last month
             </p>
           </CardContent>
-        </Card>
+        </Card> -->
       </div>
       <div class="w-full h-fit">
         <ChartHolder>
@@ -386,9 +365,12 @@ onBeforeMount(async () => {
         <div class="w-1/2 h-full">
           <ChartHolder>
             <template #default>
-              <div v-if="bestClients" class="w-full h-full flex flex-col gap-2">
+              <div
+                v-if="bestClients"
+                class="w-full h-full flex flex-col lg:grid lg:grid-cols-3 gap-2"
+              >
                 <VisBulletLegend
-                  class="text-left my-2 [&>*]:grid [&>*]:grid-cols-2"
+                  class="text-left my-2 [&>*]:grid [&>*]:grid-cols-2 lg:[&>*]:flex lg:[&>*]:flex-col lg:[&>*]:justify-center lg:[&>*]:w-full lg:[&>*]:h-full"
                   :items="
                     bestClients?.map((a) => ({
                       name: a.Fullname + ' : ' + numberToK(a.price) + ' DH',
@@ -396,7 +378,7 @@ onBeforeMount(async () => {
                   "
                 />
 
-                <VisSingleContainer :data="bestClients">
+                <VisSingleContainer class="col-span-2" :data="bestClients">
                   <VisDonut
                     :cornerRadius="5"
                     :padAngle="0.01"
@@ -417,7 +399,7 @@ onBeforeMount(async () => {
             </template>
           </ChartHolder>
         </div>
-        <div class="w-1/2 h-full">
+        <!-- <div class="w-1/2 h-full">
           <ChartHolder>
             <template #default>
               <div
@@ -449,7 +431,7 @@ onBeforeMount(async () => {
               </h1>
             </template>
           </ChartHolder>
-        </div>
+        </div> -->
       </div>
     </div>
   </main>

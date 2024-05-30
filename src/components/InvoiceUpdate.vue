@@ -180,7 +180,7 @@ const deleteInvoiceItem = (index: number) => {
         <div class="flex w-full h-fit gap-1">
           <div class="w-full h-full flex flex-col gap-1">
             <Label for="client_id">
-              {{ t("i.u.d.c.title") }}
+              {{ t("g.fields.fullname") }}
             </Label>
             <SearchableItems
               v-if="invoice.fullname"
@@ -192,7 +192,7 @@ const deleteInvoiceItem = (index: number) => {
           </div>
           <div class="w-full h-full flex flex-col gap-1">
             <Label for="status">
-              {{ t("i.u.d.c.title") }}
+              {{ t("g.fields.status") }}
             </Label>
             <Select v-model="invoice.status">
               <SelectTrigger>
@@ -216,8 +216,8 @@ const deleteInvoiceItem = (index: number) => {
           </div>
         </div>
         <div class="w-full h-full flex flex-col gap-1">
-          <Label for="status">
-            {{ t("i.u.d.c.title") }}
+          <Label for="paid">
+            {{ t("g.fields.paid") }}
           </Label>
           <Input v-model="invoice.paidAmount" place-holder="" type="number" />
         </div>
