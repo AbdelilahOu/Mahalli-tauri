@@ -7,7 +7,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "Mahali",
+    "productName": "mahali",
     "version": "1.2.4"
   },
   "tauri": {
@@ -75,7 +75,7 @@
         "fullscreen": false,
         "height": 750,
         "resizable": true,
-        "title": "inventory manager",
+        "title": "Mahali | inventory & invoicing",
         "width": 1000,
         "fileDropEnabled": false
       }
