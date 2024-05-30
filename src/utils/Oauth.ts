@@ -1,7 +1,7 @@
 import { open } from "@tauri-apps/api/shell";
 import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
-import callbackTemplate from "./callBackTemplate";
+// import callbackTemplate from "./callBackTemplate";
 // import {
 //   getAuth,
 //   GoogleAuthProvider,
@@ -66,7 +66,7 @@ export const login = () => {
 
   invoke("plugin:oauth|start", {
     config: {
-      response: callbackTemplate,
+      response: "",
     },
   }).then((port: any) => {
     openGoogleSignIn(port as string);
