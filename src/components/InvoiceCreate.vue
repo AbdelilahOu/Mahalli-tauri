@@ -145,7 +145,7 @@ const hideModal = () => {
         <div class="flex w-full h-fit gap-1">
           <div class="w-full h-full flex flex-col gap-1">
             <Label for="client_id">
-              {{ t("i.c.d.c.title") }}
+              {{ t("g.fields.fullname") }}
             </Label>
             <SearchableItems
               :items="clients"
@@ -155,7 +155,7 @@ const hideModal = () => {
           </div>
           <div class="w-full h-full flex flex-col gap-1">
             <Label for="status">
-              {{ t("i.u.d.i.title") }}
+              {{ t("g.fields.status") }}
             </Label>
             <Select v-model="invoice.status">
               <SelectTrigger>
@@ -180,7 +180,7 @@ const hideModal = () => {
         </div>
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="status">
-            {{ t("i.u.d.c.title") }}
+            {{ t("g.fields.paid") }}
           </Label>
           <Input v-model="invoice.paidAmount" place-holder="" type="number" />
         </div>

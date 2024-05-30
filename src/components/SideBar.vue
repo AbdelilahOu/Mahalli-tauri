@@ -211,7 +211,7 @@ const openTranslationModal = () => {
           {{ locale.text }}
         </span>
       </div>
-      <RouterLink
+      <!-- <RouterLink
         class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
         :to="{ path: '/settings' }"
       >
@@ -227,7 +227,7 @@ const openTranslationModal = () => {
         >
           {{ t("g.r.Settings") }}
         </span>
-      </RouterLink>
+      </RouterLink> -->
     </div>
   </aside>
 </template>
