@@ -8,7 +8,7 @@ migrationsdown:
 	cd src-tauri && sea-orm-cli migrate fresh
 
 entity:
-	cd src-tauri && sea-orm-cli generate entity --lib -u sqlite://stocker.sqlite?mode=rwc -o entity/src
+	cd src-tauri && sea-orm-cli generate entity --lib -u sqlite://mahalli.sqlite?mode=rwc -o entity/src
 
 dev:
 	npm run tauri dev

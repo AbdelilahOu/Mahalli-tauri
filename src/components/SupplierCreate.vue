@@ -35,21 +35,20 @@ const form = useForm({
 const createNewSupplier = async (supplier: SupplierT) => {
   isLoading.value = true;
   try {
-    let imageBase64 = await getFileBytes(imagePath.value);
     await invoke<Res<string>>("create_supplier", {
       supplier: {
         full_name: supplier.fullname,
         email: supplier.email,
         phone_number: supplier.phoneNumber,
         address: supplier.address,
-        image: `data:image/png;base64,${imageBase64}`,
+        image: `data:image/png;base64,${imagePath.value}`,
       },
     });
     //
     info(
       `CREATE SUPPLIER: ${JSON.stringify({
         ...supplier,
-        image: `data:image/png;base64,${imageBase64}`,
+        image: `data:image/png;base64,${imagePath.value}`,
       })}`,
     );
     //
@@ -94,7 +93,7 @@ const saveImage = (image: string) => {
         <UiUploader
           name="Image"
           :extensions="['png', 'jpeg', 'webp']"
-          @on:save="saveImage"
+          @save:base64="saveImage"
         />
         <FormField v-slot="{ componentField }" name="fullname">
           <FormItem>

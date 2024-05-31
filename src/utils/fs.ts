@@ -15,7 +15,9 @@ import { error } from "tauri-plugin-log-api";
 export const getFileBytes = async (path?: string) => {
   if (!path) return null;
   try {
-    const content = await readBinaryFile(path);
+    const content = await readBinaryFile(path, {
+      dir: BaseDirectory.Home,
+    });
     return btoa(String.fromCharCode(...content));
   } catch (error) {
     console.log("sth went wrong", error);
@@ -74,26 +76,6 @@ export const uploadCSVfiles = async ({ file }: { file: File }) => {
   }
 };
 
-export const uploadImagefiles = async (file: File) => {
-  try {
-    // create folder
-    await createFolder("tempo");
-    // read the file
-    const bytes = (await getBytesArray(file)) as ArrayBuffer;
-    // get final path
-    const path = await join(await appDataDir(), "tempo", file.name);
-    // write the file into the final path
-    await writeBinaryFile(path, bytes, {
-      dir: BaseDirectory.AppData,
-    });
-    // return final path
-    return path;
-  } catch (err: any) {
-    console.log(err);
-    return "";
-  }
-};
-
 export const deleteTempFolder = async () => {
   try {
     // delete all the files inside tempo folder
@@ -114,7 +96,7 @@ export const deleteTempFolder = async () => {
   }
 };
 
-const getBytesArray = (file: File) => {
+export const getBytesArray = (file: File): Promise<Uint8Array> => {
   //
   const fileData = new Blob([file]);
   //

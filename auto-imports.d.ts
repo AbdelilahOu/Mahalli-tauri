@@ -46,6 +46,7 @@ declare global {
   const effectScope: typeof import('vue')['effectScope']
   const extendRef: typeof import('@vueuse/core')['extendRef']
   const generateColor: typeof import('./src/utils/generateColor')['generateColor']
+  const getBytesArray: typeof import('./src/utils/fs')['getBytesArray']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
   const getFileBytes: typeof import('./src/utils/fs')['getFileBytes']

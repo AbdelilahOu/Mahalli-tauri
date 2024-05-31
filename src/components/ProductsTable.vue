@@ -121,7 +121,7 @@ const updateProductStock = (id: string, name: string) => {
                       ? 'bg-red-100 border-red-500 text-red-900'
                       : product?.stock < product.minQuantity
                         ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
-                        : product?.stock > product.minQuantity
+                        : product?.stock >= product.minQuantity
                           ? 'bg-green-100 border-green-500 text-green-900'
                           : ''
                     : '',

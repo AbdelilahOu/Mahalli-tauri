@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { deleteTempFolder, uploadImagefiles } from "@/utils/fs";
+import { getBytesArray, getFileBytes } from "@/utils/fs";
 import { open } from "@tauri-apps/api/dialog";
 import { downloadDir, pictureDir } from "@tauri-apps/api/path";
-import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { useDropZone } from "@vueuse/core";
 import { Trash2 } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
-import { onBeforeUnmount, ref } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { name, extensions } = defineProps<{
@@ -15,7 +14,7 @@ const { name, extensions } = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: "on:save", image: string): void;
+  (e: "save:base64", image: string): void;
 }>();
 
 const { t } = useI18n();
@@ -23,9 +22,12 @@ const dropZone = ref<HTMLDivElement>();
 
 async function onDrop(files: File[] | null) {
   if (files) {
-    const imagePath = await uploadImagefiles(files[0]);
-    emits("on:save", imagePath);
-    selectedFile.value = convertFileSrc(imagePath);
+    const imagePath = await getBytesArray(files[0]);
+    if (imagePath) {
+      let base64 = btoa(String.fromCharCode(...imagePath));
+      emits("save:base64", base64);
+      selectedFile.value = base64;
+    }
   }
 }
 
@@ -34,16 +36,19 @@ const { isOverDropZone } = useDropZone(dropZone, onDrop);
 const selectedFile = ref<string | null>();
 const OpenDialog = async () => {
   try {
-    selectedFile.value = (await open({
+    let imagePath = (await open({
       multiple: false,
       filters: [{ name, extensions }],
       defaultPath: name == "Image" ? await pictureDir() : await downloadDir(),
     })) as string | null;
 
-    if (selectedFile.value) {
-      emits("on:save", selectedFile.value);
+    if (imagePath) {
       if (name === "Image") {
-        selectedFile.value = convertFileSrc(selectedFile.value);
+        let base64 = await getFileBytes(imagePath);
+        if (base64) {
+          emits("save:base64", base64);
+          selectedFile.value = base64;
+        }
       }
       return;
     }
@@ -51,10 +56,6 @@ const OpenDialog = async () => {
     error("ERROR PDF-LIB: " + err);
   }
 };
-onBeforeUnmount(() => {
-  // clear tempo folder
-  deleteTempFolder();
-});
 </script>
 
 <template>
@@ -71,7 +72,7 @@ onBeforeUnmount(() => {
     <img
       v-if="name == 'Image' && selectedFile"
       class="absolute top-0 border border-gray-300 rounded-md object-cover w-full h-full"
-      :src="selectedFile"
+      :src="`data:image/png;base64,${selectedFile}`"
     />
     <div
       v-else

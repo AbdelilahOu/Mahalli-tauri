@@ -33,14 +33,13 @@ const form = useForm({
 const createNewProduct = async (product: ProductT) => {
   isCreating.value = true;
   try {
-    let imageBase64 = await getFileBytes(imagePath.value);
     let createRes = await invoke<Res<string>>("create_product", {
       product: {
         name: product.name,
         price: Number(product.price),
         description: product.description,
         min_quantity: product.minQuantity,
-        image: `data:image/png;base64,${imageBase64}`,
+        image: `data:image/png;base64,${imagePath.value}`,
       },
     });
     await invoke<Res<string>>("create_inventory", {
@@ -53,7 +52,7 @@ const createNewProduct = async (product: ProductT) => {
     info(
       `CREATE PRODUCT: ${JSON.stringify({
         ...product,
-        image: `data:image/png;base64,${imageBase64}`,
+        image: `data:image/png;base64,${imagePath.value}`,
         quantity: quantity.value,
       })}`,
     );
@@ -96,7 +95,7 @@ const setImage = (image: string) => {
         <UiUploader
           name="Image"
           :extensions="['png', 'jpeg', 'webp']"
-          @on:save="setImage"
+          @save:base64="setImage"
         />
         <FormField v-slot="{ componentField }" name="name">
           <FormItem>

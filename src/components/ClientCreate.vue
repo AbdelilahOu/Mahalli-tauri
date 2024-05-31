@@ -33,21 +33,20 @@ const isCreating = ref<boolean>(false);
 const createNewClient = async (client: ClientT) => {
   isCreating.value = true;
   try {
-    let imageBase64 = await getFileBytes(imagePath.value);
     await invoke<Res<null>>("create_client", {
       client: {
         full_name: client.fullname,
         email: client.email,
         phone_number: client.phoneNumber,
         address: client.address,
-        image: `data:image/png;base64,${imageBase64}`,
+        image: `data:image/png;base64,${imagePath.value}`,
       },
     });
     //
     info(
       `CREATE CLIENT: ${JSON.stringify({
         ...client,
-        image: `data:image/png;base64,${imageBase64}`,
+        image: `data:image/png;base64,${imagePath.value}`,
       })}`,
     );
     //
@@ -92,7 +91,7 @@ const setImage = (image: string) => {
         <UiUploader
           name="Image"
           :extensions="['png', 'jpeg', 'webp']"
-          @on:save="setImage"
+          @save:base64="setImage"
         />
         <FormField v-slot="{ componentField }" name="fullname">
           <FormItem>
