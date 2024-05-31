@@ -1,25 +1,22 @@
 <script setup lang="ts">
 import ChartHolder from "@/components/ChartHolder.vue";
-import { onBeforeMount } from "vue";
-import { useI18n } from "vue-i18n";
-import {
-  VisXYContainer,
-  VisGroupedBar,
-  VisAxis,
-  VisDonut,
-  VisSingleContainer,
-  VisTooltip,
-  VisBulletLegend,
-} from "@unovis/vue";
-import { Donut, GroupedBar } from "@unovis/ts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { invoke } from "@tauri-apps/api";
-import { ref } from "vue";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Res } from "@/types";
-import { error } from "tauri-plugin-log-api";
-import { NotepadText, Truck, DollarSign } from "lucide-vue-next";
 import { cn } from "@/utils/shadcn";
+import { invoke } from "@tauri-apps/api";
+import { GroupedBar } from "@unovis/ts";
+import {
+  VisAxis,
+  VisBulletLegend,
+  VisGroupedBar,
+  VisTooltip,
+  VisXYContainer,
+} from "@unovis/vue";
+import { DollarSign, NotepadText, Truck } from "lucide-vue-next";
+import { error } from "tauri-plugin-log-api";
+import { onBeforeMount, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 const { t, locale } = useI18n();
 
@@ -205,7 +202,9 @@ onBeforeMount(async () => {
           <CardHeader
             class="flex flex-row items-center justify-between space-y-0 pb-2"
           >
-            <CardTitle class="text-sm font-medium"> Total Revenue </CardTitle>
+            <CardTitle class="text-sm font-medium">
+              {{ t("dashboard.i.revenue") }}
+            </CardTitle>
             <DollarSign class="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -213,8 +212,8 @@ onBeforeMount(async () => {
               {{ revenue?.currentRevenue.toFixed(2) }} DH
             </div>
             <p class="text-xs text-muted-foreground">
-              {{ revenue?.percentageDeff < 0 ? "-" : "+"
-              }}{{ revenue?.percentageDeff }}% from last month
+              {{ revenue?.percentageDeff < 0 ? "-" : "+" }}
+              {{ t("dashboard.i.growth", { n: revenue?.percentageDeff }) }}
             </p>
           </CardContent>
         </Card>
@@ -223,7 +222,9 @@ onBeforeMount(async () => {
             <CardHeader
               class="flex flex-row items-center justify-between space-y-0 pb-2"
             >
-              <CardTitle class="text-sm font-medium"> Orders </CardTitle>
+              <CardTitle class="text-sm font-medium">
+                {{ t("g.r.Orders") }}</CardTitle
+              >
               <Truck class="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent class="flex justify-start gap-2 py-3">
@@ -245,7 +246,9 @@ onBeforeMount(async () => {
             <CardHeader
               class="flex flex-row items-center justify-between space-y-0 pb-2"
             >
-              <CardTitle class="text-sm font-medium"> Invoices </CardTitle>
+              <CardTitle class="text-sm font-medium">
+                {{ t("g.r.Invoices") }}
+              </CardTitle>
               <NotepadText class="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent class="flex justify-start gap-2 py-3">
@@ -264,36 +267,6 @@ onBeforeMount(async () => {
             </CardContent>
           </Card>
         </div>
-        <!-- <Card>
-          <CardHeader
-            class="flex flex-row items-center justify-between space-y-0 pb-2"
-          >
-            <CardTitle class="text-sm font-medium"> Total Expenses </CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              class="h-4 w-4 text-muted-foreground"
-            >
-              <path
-                d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
-              />
-            </svg>
-          </CardHeader>
-          <CardContent>
-            <div class="text-2xl font-bold">
-              {{ expenses?.currentExpenses.toFixed(2) }} DH
-            </div>
-            <p class="text-xs text-muted-foreground">
-              {{ expenses?.percentageDeff < 0 ? "-" : "+"
-              }}{{ expenses?.percentageDeff }}% from last month
-            </p>
-          </CardContent>
-        </Card> -->
       </div>
       <div class="w-full h-fit">
         <ChartHolder>
@@ -308,8 +281,8 @@ onBeforeMount(async () => {
                 :x="(d: any, index: number) => index"
                 :y="[(d: any) => d.IN.quantity, (d: any) => d.OUT.quantity]"
               />
-              <VisAxis type="x" label="months" :tickFormat="tickFormatToDate" />
-              <VisAxis type="y" label="quantity" />
+              <VisAxis type="x" :tickFormat="tickFormatToDate" />
+              <VisAxis type="y" :label="t('g.fields.quantity')" />
               <VisTooltip :triggers="barQuantityTriggers" />
               <VisBulletLegend
                 class="text-left my-2"
@@ -323,7 +296,7 @@ onBeforeMount(async () => {
           </template>
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>{{ t("dashboard.i.title") }}</i>
+              <i>{{ t("dashboard.i.title") }} ({{ t("g.fields.item") }})</i>
             </h1>
           </template>
         </ChartHolder>
@@ -341,8 +314,8 @@ onBeforeMount(async () => {
                 :x="(d: any, index: number) => index"
                 :y="[(d: any) => d.IN.price, (d: any) => d.OUT.price]"
               />
-              <VisAxis type="x" label="months" :tickFormat="tickFormatToDate" />
-              <VisAxis type="y" label="price in DH" />
+              <VisAxis type="x" :tickFormat="tickFormatToDate" />
+              <VisAxis type="y" :label="t('g.fields.price') + ' (DH)'" />
               <VisTooltip :triggers="barPriceTriggers" />
               <VisBulletLegend
                 class="text-left my-2"
@@ -356,82 +329,46 @@ onBeforeMount(async () => {
           </template>
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>{{ t("dashboard.i.title") }}</i>
+              <i>{{ t("dashboard.i.title") }} (DH)</i>
             </h1>
           </template>
         </ChartHolder>
       </div>
-      <div class="w-full flex col-span-2 gap-2 h-full">
-        <div class="w-1/2 h-full">
-          <ChartHolder>
-            <template #default>
-              <div
-                v-if="bestClients"
-                class="w-full h-full flex flex-col lg:grid lg:grid-cols-3 gap-2"
-              >
-                <VisBulletLegend
-                  class="text-left my-2 [&>*]:grid [&>*]:grid-cols-2 lg:[&>*]:flex lg:[&>*]:flex-col lg:[&>*]:justify-center lg:[&>*]:w-full lg:[&>*]:h-full"
-                  :items="
-                    bestClients?.map((a) => ({
-                      name: a.Fullname + ' : ' + numberToK(a.price) + ' DH',
-                    }))
-                  "
-                />
-
-                <VisSingleContainer class="col-span-2" :data="bestClients">
-                  <VisDonut
-                    :cornerRadius="5"
-                    :padAngle="0.01"
-                    :value="(d: any) => d.price"
-                    :events="{
-                      [Donut.selectors.segment]: {
-                        mouseover: (d: any) => '<span>' + 50 + ' DH</span>',
-                      },
-                    }"
-                  />
-                </VisSingleContainer>
-              </div>
-            </template>
-            <template #title>
-              <h1 class="m-2 w-full text-center text-base font-medium">
-                <i>{{ t("dashboard.i.b3c") }}</i>
-              </h1>
-            </template>
-          </ChartHolder>
-        </div>
-        <!-- <div class="w-1/2 h-full">
-          <ChartHolder>
-            <template #default>
-              <div
-                v-if="bestSuppliers"
-                class="w-full h-full flex flex-col gap-2"
-              >
-                <VisBulletLegend
-                  class="text-left my-2 [&>*]:grid [&>*]:grid-cols-2"
-                  :items="
-                    bestSuppliers?.map((a) => ({
-                      name: a.Fullname + ' : ' + numberToK(a.price) + ' DH',
-                    }))
-                  "
-                />
-                <VisSingleContainer v-if="bestSuppliers" :data="bestSuppliers">
-                  <VisDonut
-                    :cornerRadius="5"
-                    :padAngle="0.01"
-                    :value="(d: any) => d.price"
-                  />
-                </VisSingleContainer>
-              </div>
-            </template>
-            <template #title>
-              <h1 class="m-2 w-full text-center text-base font-medium">
-                <i>
-                  {{ t("dashboard.i.b3s") }}
-                </i>
-              </h1>
-            </template>
-          </ChartHolder>
-        </div> -->
+      <div class="w-full h-fit">
+        <ChartHolder>
+          <template #default>
+            <VisXYContainer
+              v-if="bestClients"
+              :data="bestClients"
+              :height="500"
+            >
+              <VisGroupedBar
+                :barPadding="0.1"
+                :x="(d: any, index: number) => index"
+                :y="(d: any) => d.price"
+              />
+              <VisAxis
+                type="x"
+                :tickFormat="
+                  (i: number) => (bestClients ? bestClients[i].Fullname : i)
+                "
+              />
+              <VisAxis type="y" :label="t('g.fields.price') + ' (DH)'" />
+              <VisTooltip
+                :triggers="{
+                  [GroupedBar.selectors.bar]: (d: any) => {
+                    return '<span>' + d.price + ' DH</span>';
+                  },
+                }"
+              />
+            </VisXYContainer>
+          </template>
+          <template #title>
+            <h1 class="m-2 w-full text-center text-base font-medium">
+              <i>{{ t("dashboard.i.b3c") }}</i>
+            </h1>
+          </template>
+        </ChartHolder>
       </div>
     </div>
   </main>

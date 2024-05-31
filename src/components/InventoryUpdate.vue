@@ -91,7 +91,7 @@ const onSubmit = form.handleSubmit((values) => {
                 :placeholder="t('g.fields.quantity')"
                 v-bind="componentField"
               >
-                <template #unite> DH </template>
+                <template #unite> {{ t("g.fields.item") }} </template>
               </Input>
             </FormControl>
           </FormItem>

@@ -49,7 +49,8 @@
       "min-quantity": "Minimum Quantity",
       "quantity": "Quantity",
       "credit": "Credit",
-      "threshold": "Threshold"
+      "threshold": "Threshold",
+      "item": "Item"
     },
     "status": {
       "delivered": "Delivered",
@@ -75,6 +76,8 @@
     "i": {
       "title": "Sold and bought items during the last three months",
       "labels": ["BOUGHT", "SOLD"],
+      "revenue": "Total revenue",
+      "growth": "{n} from last month",
       "b3c": "Best clients based on expenses",
       "b3s": "Best suppliers based on expenses"
     },
