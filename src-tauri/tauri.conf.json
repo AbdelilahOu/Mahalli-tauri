@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "mahalli",
-    "version": "1.3.4"
+    "version": "1.4.0"
   },
   "tauri": {
     "allowlist": {
@@ -46,7 +46,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": ".stocker",
+      "identifier": ".mahalli",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

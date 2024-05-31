@@ -318,6 +318,7 @@
     "watchWithFilter": true,
     "whenever": true,
     "getFileBytes": true,
-    "CreateQuoteSchema": true
+    "CreateQuoteSchema": true,
+    "getBytesArray": true
   }
 }

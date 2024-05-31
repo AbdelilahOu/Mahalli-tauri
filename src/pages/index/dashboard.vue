@@ -197,8 +197,8 @@ onBeforeMount(async () => {
 <template>
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col lg:grid lg:grid-cols-2 gap-2">
-      <div class="grid grid-cols-2 col-span-2 gap-2">
-        <Card>
+      <div class="grid grid-cols-1 lg:grid-cols-4 col-span-2 gap-2">
+        <Card class="lg:col-span-2">
           <CardHeader
             class="flex flex-row items-center justify-between space-y-0 pb-2"
           >
@@ -217,56 +217,54 @@ onBeforeMount(async () => {
             </p>
           </CardContent>
         </Card>
-        <div class="flex-1 grid grid-cols-2 gap-2">
-          <Card>
-            <CardHeader
-              class="flex flex-row items-center justify-between space-y-0 pb-2"
+        <Card>
+          <CardHeader
+            class="flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <CardTitle class="text-sm font-medium">
+              {{ t("g.r.Orders") }}</CardTitle
             >
-              <CardTitle class="text-sm font-medium">
-                {{ t("g.r.Orders") }}</CardTitle
-              >
-              <Truck class="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent class="flex justify-start gap-2 py-3">
-              <Badge
-                v-for="(status, index) in statusCounts?.orders"
-                :key="index"
-                variant="secondary"
-                :class="
-                  // @ts-ignore
-                  cn('rounded-sm h-8 w-full', STATUS_COLORS[status.status])
-                "
-              >
-                {{ status.status_count }}
-                {{ t("g.status." + status.status.toLowerCase()) }}
-              </Badge>
-            </CardContent>
-          </Card>
-          <Card class="lg:order-4">
-            <CardHeader
-              class="flex flex-row items-center justify-between space-y-0 pb-2"
+            <Truck class="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent class="flex justify-start gap-2 py-3">
+            <Badge
+              v-for="(status, index) in statusCounts?.orders"
+              :key="index"
+              variant="secondary"
+              :class="
+                // @ts-ignore
+                cn('rounded-sm h-8 w-full', STATUS_COLORS[status.status])
+              "
             >
-              <CardTitle class="text-sm font-medium">
-                {{ t("g.r.Invoices") }}
-              </CardTitle>
-              <NotepadText class="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent class="flex justify-start gap-2 py-3">
-              <Badge
-                v-for="(status, index) in statusCounts?.invoices"
-                :key="index"
-                variant="secondary"
-                :class="
-                  // @ts-ignore
-                  cn('rounded-sm h-8 w-full', STATUS_COLORS[status.status])
-                "
-              >
-                {{ status.status_count }}
-                {{ t("g.status." + status.status.toLowerCase()) }}
-              </Badge>
-            </CardContent>
-          </Card>
-        </div>
+              {{ status.status_count }}
+              {{ t("g.status." + status.status.toLowerCase()) }}
+            </Badge>
+          </CardContent>
+        </Card>
+        <Card class="lg:order-4">
+          <CardHeader
+            class="flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <CardTitle class="text-sm font-medium">
+              {{ t("g.r.Invoices") }}
+            </CardTitle>
+            <NotepadText class="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent class="flex justify-start gap-2 py-3">
+            <Badge
+              v-for="(status, index) in statusCounts?.invoices"
+              :key="index"
+              variant="secondary"
+              :class="
+                // @ts-ignore
+                cn('rounded-sm h-8 w-full', STATUS_COLORS[status.status])
+              "
+            >
+              {{ status.status_count }}
+              {{ t("g.status." + status.status.toLowerCase()) }}
+            </Badge>
+          </CardContent>
+        </Card>
       </div>
       <div class="w-full h-fit">
         <ChartHolder>
