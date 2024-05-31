@@ -35,7 +35,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
       class="w-fit h-10 transform transition-color border duration-100 border-l-0 flex rounded-r-md items-center justify-center"
     >
       <span
-        class="h-full text-gray-400 rounded-md px-2 flex items-center justify-center"
+        class="h-full text-gray-400 rounded-md px-2 flex items-center text-sm font-light justify-center"
       >
         <slot name="unite"></slot>
       </span>

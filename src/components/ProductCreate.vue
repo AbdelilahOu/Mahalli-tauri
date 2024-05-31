@@ -132,7 +132,7 @@ const setImage = (image: string) => {
                 :placeholder="t('g.fields.init-quantity')"
                 v-model="quantity"
               >
-                <template #unite> Item </template>
+                <template #unite> {{ t("g.fields.item") }} </template>
               </Input>
             </FormControl>
           </FormItem>
@@ -146,7 +146,7 @@ const setImage = (image: string) => {
                 :placeholder="t('g.fields.min-quantity')"
                 v-bind="componentField"
               >
-                <template #unite> Item </template>
+                <template #unite> {{ t("g.fields.item") }} </template>
               </Input>
             </FormControl>
           </FormItem>

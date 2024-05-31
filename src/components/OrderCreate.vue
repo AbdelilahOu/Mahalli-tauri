@@ -196,7 +196,7 @@ const hideModal = () => {
                 type="number"
                 v-model="item.quantity"
               >
-                <template #unite> Item </template>
+                <template #unite> {{ t("g.fields.item") }} </template>
               </Input>
               <Input
                 class="border-r-0"

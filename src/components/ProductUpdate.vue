@@ -146,7 +146,7 @@ const onSubmit = form.handleSubmit((values) => {
                 :placeholder="t('g.fields.min-quantity')"
                 v-bind="componentField"
               >
-                <template #unite> Item </template>
+                <template #unite> {{ t("g.fields.item") }} </template>
               </Input>
             </FormControl>
           </FormItem>

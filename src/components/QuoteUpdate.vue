@@ -187,7 +187,7 @@ const deleteQuoteItem = (index: number) => {
                 :placeHolder="t('o.c.d.o.placeholder[0]')"
                 type="number"
               >
-                <template #unite> Item </template>
+                <template #unite> {{ t("g.fields.item") }} </template>
               </Input>
               <Input
                 v-model="item.price"

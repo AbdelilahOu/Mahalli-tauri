@@ -49,7 +49,8 @@
       "min-quantity": "Mindestens hinzufügen",
       "quantity": "Menge",
       "credit": "Kredit",
-      "threshold": "Schwelle"
+      "threshold": "Schwelle",
+      "item": "Artikel"
     },
     "status": {
       "delivered": "Geliefert",
@@ -73,6 +74,8 @@
     "i": {
       "title": "In den letzten drei Monaten verkaufte und gekaufte Artikel",
       "labels": ["GEKAUFT", "VERKAUFT"],
+      "revenue": "Gesamtumsatz",
+      "growth": "{n} vom letzten Monat",
       "b3c": "Beste Kunden basierend auf den Ausgaben",
       "b3s": "Beste Lieferanten basierend auf den Kosten"
     },
