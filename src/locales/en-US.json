@@ -79,6 +79,7 @@
       "revenue": "Total revenue",
       "growth": "{n} from last month",
       "b3c": "Best clients based on expenses",
+      "bp": "Best Selling Products (quantity)",
       "b3s": "Best suppliers based on expenses"
     },
     "de": {

@@ -1,11 +1,11 @@
 [package]
-name = "app"
-version = "0.1.0"
-description = "A Tauri App"
+name = "mahalli"
+version = "1.4.5"
+description = "Inventory & invoicing management app"
 authors = ["AbdelilahOu"]
 license = ""
-repository = ""
-default-run = "app"
+repository = "https://github.com/AbdelilahOu/Mahalli-tauri"
+default-run = "mahalli"
 edition = "2021"
 rust-version = "1.59"
 build = "src/build.rs"

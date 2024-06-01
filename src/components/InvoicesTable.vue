@@ -227,8 +227,10 @@ const updateInvoiceStatus = async (invoice: any) => {
                   <DropdownMenuItem
                     @click="toggleThisInvoices(invoice, 'InvoiceDelete')"
                   >
-                    <Trash2 :size="20" class="text-slate-800 inline mr-2" />
-                    {{ t("g.actions.delete") }}
+                    <Trash2 :size="20" class="text-red-500 inline mr-2" />
+                    <span class="text-red-500">
+                      {{ t("g.actions.delete") }}
+                    </span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     @click="toggleThisInvoices(invoice, 'InvoiceUpdate')"
