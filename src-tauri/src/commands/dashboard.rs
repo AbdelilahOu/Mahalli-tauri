@@ -67,6 +67,26 @@ pub async fn list_top_suppliers(state: State<'_, AppState>) -> SResult<Vec<Value
 }
 
 #[tauri::command]
+pub async fn list_top_products(state: State<'_, AppState>) -> SResult<Vec<Value>> {
+    let _ = state.db_conn;
+    let res = QueriesService::list_top_products(&state.db_conn).await;
+    match res {
+        Ok(res) => Ok(Seccess {
+            error: None,
+            message: None,
+            data: Some(res),
+        }),
+        Err(err) => {
+            println!("Error: {}", err);
+            Err(Fail {
+                error: Some(err.to_string()),
+                message: None,
+            })
+        }
+    }
+}
+
+#[tauri::command]
 pub async fn list_status_count(state: State<'_, AppState>) -> SResult<Value> {
     let _ = state.db_conn;
     let res = QueriesService::list_status_count(&state.db_conn).await;

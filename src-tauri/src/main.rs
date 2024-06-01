@@ -124,6 +124,7 @@ async fn main() {
             commands::dashboard::list_mvm_stats,
             commands::dashboard::list_top_clients,
             commands::dashboard::list_top_suppliers,
+            commands::dashboard::list_top_products,
             commands::dashboard::list_status_count,
             commands::dashboard::list_revenue,
             commands::dashboard::list_expenses,

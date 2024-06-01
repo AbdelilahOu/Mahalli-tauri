@@ -55,11 +55,7 @@ const tickFormatToDate = (i: number) => {
 const barQuantityTriggers = {
   [GroupedBar.selectors.bar]: (d: groupedMvm[string], i: number) => {
     let mvmType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
-    return (
-      "<span>" +
-      t("g.plrz.i", { n: d[mvmType].quantity.toFixed(2) }) +
-      "</span>"
-    );
+    return "<span>" + t("g.plrz.i", { n: d[mvmType].quantity }) + "</span>";
   },
 };
 const barPriceTriggers = {
@@ -119,14 +115,15 @@ async function getBestClients() {
   }
 }
 
-const bestSuppliers = ref<any[]>();
-async function getBestSuppliers() {
+const bestProducts = ref<any[]>();
+async function getBestProducts() {
   try {
-    const res = await invoke<Res<any[]>>("list_top_suppliers");
+    const res = await invoke<Res<any[]>>("list_top_products");
     //
-    bestSuppliers.value = res.data;
+    bestProducts.value = res.data;
+    console.log(res.data);
   } catch (err: any) {
-    error("STATS BEST SUPPLIERS: " + err);
+    error("STATS BEST PRODUCTS: " + err);
   }
 }
 
@@ -188,7 +185,7 @@ onBeforeMount(async () => {
     // getExpenses(),
     getInventoryMouvementStats(),
     getBestClients(),
-    // getBestSuppliers(),
+    getBestProducts(),
     getStatusCounts(),
   ]);
 });
@@ -270,6 +267,84 @@ onBeforeMount(async () => {
         <ChartHolder>
           <template #default>
             <VisXYContainer
+              v-if="bestClients"
+              :data="bestClients"
+              :height="500"
+            >
+              <VisGroupedBar
+                :barPadding="0.1"
+                :x="(d: any, index: number) => index"
+                :y="(d: any) => d.price"
+              />
+              <VisAxis
+                type="x"
+                :tickFormat="
+                  (i: number) => (bestClients ? bestClients[i].Fullname : i)
+                "
+              />
+              <VisAxis type="y" :label="t('g.fields.price') + ' (DH)'" />
+              <VisTooltip
+                :triggers="{
+                  [GroupedBar.selectors.bar]: (d: any) => {
+                    return '<span>' + d.price + ' DH</span>';
+                  },
+                }"
+              />
+            </VisXYContainer>
+          </template>
+          <template #title>
+            <h1 class="m-2 w-full text-center text-base font-medium">
+              <i>{{ t("dashboard.i.b3c") }}</i>
+            </h1>
+          </template>
+        </ChartHolder>
+      </div>
+      <div class="w-full h-fit">
+        <ChartHolder>
+          <template #default>
+            <VisXYContainer
+              v-if="bestProducts"
+              :data="bestProducts"
+              :height="500"
+            >
+              <VisGroupedBar
+                :barPadding="0.1"
+                :x="(d: any, index: number) => index"
+                :y="(d: any) => d.quantity"
+              />
+              <VisAxis
+                type="x"
+                :tickFormat="
+                  (i: number) => (bestProducts ? bestProducts[i].name : i)
+                "
+              />
+              <VisAxis type="y" :label="t('g.fields.quantity')" />
+              <VisTooltip
+                :triggers="{
+                  [GroupedBar.selectors.bar]: (d: any) => {
+                    return (
+                      '<span>' +
+                      d.name +
+                      ': ' +
+                      t('g.plrz.i', { n: d.quantity }) +
+                      '</span>'
+                    );
+                  },
+                }"
+              />
+            </VisXYContainer>
+          </template>
+          <template #title>
+            <h1 class="m-2 w-full text-center text-base font-medium">
+              <i>{{ t("dashboard.i.bp") }}</i>
+            </h1>
+          </template>
+        </ChartHolder>
+      </div>
+      <div class="w-full h-fit">
+        <ChartHolder>
+          <template #default>
+            <VisXYContainer
               v-if="mouvements"
               :data="Object.values(mouvements)"
               :height="500"
@@ -283,7 +358,7 @@ onBeforeMount(async () => {
               <VisAxis type="y" :label="t('g.fields.quantity')" />
               <VisTooltip :triggers="barQuantityTriggers" />
               <VisBulletLegend
-                class="text-left my-2"
+                class="my-2 m-auto w-fit"
                 :items="
                   ['in', 'out'].map((a) => ({
                     name: t('g.status.' + a),
@@ -316,7 +391,7 @@ onBeforeMount(async () => {
               <VisAxis type="y" :label="t('g.fields.price') + ' (DH)'" />
               <VisTooltip :triggers="barPriceTriggers" />
               <VisBulletLegend
-                class="text-left my-2"
+                class="my-2 m-auto w-fit"
                 :items="
                   ['in', 'out'].map((a) => ({
                     name: t('g.status.' + a),
@@ -328,42 +403,6 @@ onBeforeMount(async () => {
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
               <i>{{ t("dashboard.i.title") }} (DH)</i>
-            </h1>
-          </template>
-        </ChartHolder>
-      </div>
-      <div class="w-full h-fit">
-        <ChartHolder>
-          <template #default>
-            <VisXYContainer
-              v-if="bestClients"
-              :data="bestClients"
-              :height="500"
-            >
-              <VisGroupedBar
-                :barPadding="0.1"
-                :x="(d: any, index: number) => index"
-                :y="(d: any) => d.price"
-              />
-              <VisAxis
-                type="x"
-                :tickFormat="
-                  (i: number) => (bestClients ? bestClients[i].Fullname : i)
-                "
-              />
-              <VisAxis type="y" :label="t('g.fields.price') + ' (DH)'" />
-              <VisTooltip
-                :triggers="{
-                  [GroupedBar.selectors.bar]: (d: any) => {
-                    return '<span>' + d.price + ' DH</span>';
-                  },
-                }"
-              />
-            </VisXYContainer>
-          </template>
-          <template #title>
-            <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>{{ t("dashboard.i.b3c") }}</i>
             </h1>
           </template>
         </ChartHolder>

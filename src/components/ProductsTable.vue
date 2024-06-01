@@ -147,9 +147,11 @@ const updateProductStock = (id: string, name: string) => {
                   <DropdownMenuItem
                     @click="toggleThisProduct(product, 'ProductDelete')"
                   >
-                    <Trash2 class="text-slate-800 inline mr-2" :size="20" />
+                    <Trash2 class="text-red-500 inline mr-2" :size="20" />
                     <span>
-                      {{ t("g.actions.delete") }}
+                      <span class="text-red-500">
+                        {{ t("g.actions.delete") }}
+                      </span>
                     </span>
                   </DropdownMenuItem>
                   <DropdownMenuItem

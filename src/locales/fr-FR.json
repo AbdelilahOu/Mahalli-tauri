@@ -77,6 +77,7 @@
       "revenue": "Chiffre d'affaires total",
       "growth": "{n} du mois dernier",
       "b3c": "Meilleurs clients en fonction des dépenses",
+      "bp": "Produits les plus vendus (quantité)",
       "b3s": "Meilleurs fournisseurs en fonction des dépenses"
     },
     "de": { "title": "Produits achetés au cours des trois derniers mois" }
