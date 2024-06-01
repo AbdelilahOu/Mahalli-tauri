@@ -15,6 +15,7 @@ import {
   Truck,
   Contact,
   Quote,
+  Store,
 } from "lucide-vue-next";
 
 const collapse = defineModel<boolean>("collapse", { required: true });
@@ -30,7 +31,7 @@ const openTranslationModal = () => {
 
 <template>
   <aside class="w-full h-screen sticky top-0 z-50 flex flex-col gap-3 bg-white">
-    <div class="w-full h-[50px]">
+    <div class="w-full min-h-[51px] border-b border-slate-100">
       <div
         :class="
           cn(
@@ -41,9 +42,10 @@ const openTranslationModal = () => {
       >
         <span
           v-if="!collapse"
-          class="whitespace-nowrap pl-2 text-gray-800 overflow-hidden"
+          class="whitespace-nowrap flex items-center gap-2 pl-2 font-semibold text-base text-primary overflow-hidden"
         >
-          The Inventoryer
+          <Store :size="20" class="text-primary inline shrink-0 m-auto" />
+          Mahalli
         </span>
         <ChevronsLeft
           @click="collapse = !collapse"
