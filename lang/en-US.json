@@ -1,0 +1,376 @@
+{
+  "g": {
+    "s": "Search",
+    "pick-date": "Pick a date",
+    "r": {
+      "Clients": "Clients",
+      "Suppliers": "Suppliers",
+      "Products": "Products",
+      "Orders": "Orders",
+      "Invoices": "Invoices",
+      "Inventory": "Inventory",
+      "Dashboard": "Dashboard",
+      "Payment": "Paymentt",
+      "Settings": "Settings",
+      "Quotes": "Quotes",
+      "Notifications": "Notifications"
+    },
+    "b": {
+      "no": "Cancel",
+      "c": "Add",
+      "d": "Confirme",
+      "u": "Update {name}",
+      "a": "Add",
+      "csv": "Upload to {table}"
+    },
+    "translationTitle": "Change Language",
+    "dropZone": "Drag and drop or select your image",
+    "plrz": {
+      "i": "no items | {n} item | {n} items",
+      "p": "no products | {n} product | {n} products"
+    },
+    "fields": {
+      "fullname": "Full name",
+      "name": "Product name",
+      "email": "E-mail",
+      "phone": "Phoner number",
+      "address": "Address",
+      "actions": "Actions",
+      "description": "Description",
+      "status": "Status",
+      "price": "Price",
+      "date": "Date",
+      "paid": "Avance",
+      "rest": "Rest",
+      "items": "Items",
+      "total": "Total",
+      "inventory": "Inventory",
+      "init-quantity": "Initiale Quantity",
+      "min-quantity": "Minimum Quantity",
+      "quantity": "Quantity",
+      "credit": "Credit",
+      "threshold": "Threshold",
+      "item": "Item"
+    },
+    "status": {
+      "delivered": "Delivered",
+      "pending": "Pending",
+      "canceled": "Canceled",
+      "paid": "Paid",
+      "in": "Bought",
+      "out": "Sold"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "print": "Print",
+      "toOrder": "Create order",
+      "toInvoice": "Create invoice",
+      "inventoryUpdate": "Update stock"
+    }
+  },
+  "csv": {
+    "title": "Upload csv files"
+  },
+  "dashboard": {
+    "i": {
+      "title": "Sold and bought items during the last three months",
+      "labels": ["BOUGHT", "SOLD"],
+      "revenue": "Total revenue",
+      "growth": "{n} from last month",
+      "b3c": "Best clients based on expenses",
+      "bp": "Best Selling Products (quantity)",
+      "b3s": "Best suppliers based on expenses"
+    },
+    "de": {
+      "title": "Products baught last three months"
+    }
+  },
+  "notifications": {
+    "product": {
+      "created": "Product {name} has been added",
+      "updated": "Product {name} has been updated",
+      "deleted": "Product {name} has been deleted"
+    },
+    "client": {
+      "created": "Client {name} has been added",
+      "updated": "Client {name} has been updated",
+      "deleted": "Client {name} has been deleted"
+    },
+    "supplier": {
+      "created": "Supplier {name} has been added",
+      "updated": "Supplier {name} has been updated",
+      "deleted": "Supplier {name} has been deleted"
+    },
+    "order": {
+      "created": "An Order has been created",
+      "updated": "The Order has been updated",
+      "deleted": "The Order has been deleted"
+    },
+    "invoice": {
+      "created": "An Invoice has been created",
+      "updated": "The Invoice has been updated",
+      "deleted": "The Invoice has been deleted"
+    },
+    "quote": {
+      "created": "A Quote has been created",
+      "updated": "The Quote has been updated",
+      "deleted": "The Quote has been deleted"
+    }
+  },
+  "c": {
+    "i": {
+      "addButton": "Add new client"
+    },
+    "c": {
+      "title": "add a client"
+    },
+    "u": {
+      "title": "update client"
+    },
+    "d": {
+      "title": "are you sure you wanna delete the client"
+    }
+  },
+  "s": {
+    "i": {
+      "addButton": "Add new supplier"
+    },
+    "c": {
+      "title": "add a supplier"
+    },
+    "u": {
+      "title": "update supplier"
+    },
+    "d": {
+      "title": "are you sure you wanna delete the supplier"
+    }
+  },
+  "p": {
+    "i": {
+      "addButton": "Add new product"
+    },
+    "c": {
+      "title": "add a product"
+    },
+    "u": {
+      "title": "UPDATE product"
+    },
+    "d": {
+      "title": "are you sure you wanna delete the product "
+    }
+  },
+  "o": {
+    "i": {
+      "addButton": "Add new order"
+    },
+    "c": {
+      "title": "add new order",
+      "d": {
+        "s": {
+          "title": "Client",
+          "select": "Search for client"
+        },
+        "o": {
+          "title": "Order status",
+          "products": "Products",
+          "add": "Add a product",
+          "select": "Select a product",
+          "placeholder": ["Product quantity", "New price", "Select a status"]
+        }
+      },
+      "button": "Add a Orders"
+    },
+    "u": {
+      "title": "update order",
+      "d": {
+        "s": {
+          "title": "client details",
+          "select": "Select a client"
+        },
+        "o": {
+          "title": "order details",
+          "select": "Select a product",
+          "add": "Add a product"
+        }
+      },
+      "button": "Update Orders"
+    },
+    "d": {
+      "title": "are you sure you wanna delete the order ",
+      "yes": "Confirme",
+      "no": "Cancel"
+    }
+  },
+  "q": {
+    "i": {
+      "addButton": "Add new quote"
+    },
+    "c": {
+      "title": "add new quote",
+      "d": {
+        "s": {
+          "title": "Client",
+          "select": "Search for client"
+        },
+        "o": {
+          "title": "Quote status",
+          "products": "Products",
+          "add": "Add a product",
+          "select": "Select a product",
+          "placeholder": ["Product quantity", "New price"]
+        }
+      },
+      "button": "Add a Quotes"
+    },
+    "u": {
+      "title": "update quote",
+      "d": {
+        "s": {
+          "title": "client details",
+          "select": "Select a client"
+        },
+        "o": {
+          "title": "quote details",
+          "select": "Select a product",
+          "add": "Add a product"
+        }
+      },
+      "button": "Update Quotes"
+    },
+    "d": {
+      "title": "are you sure you wanna delete the quote ",
+      "yes": "Confirme",
+      "no": "Cancel"
+    }
+  },
+  "oq": {
+    "d": {
+      "o": {
+        "title": "quote details",
+        "id": "id",
+        "date": "date"
+      },
+      "s": {
+        "title": "client details",
+        "id": "id",
+        "name": "name",
+        "phone": "phoner number",
+        "email": "email",
+        "address": "address"
+      },
+      "i": {
+        "title": "quote items details",
+        "fields": ["name", "description", "quantity", "price", "total"]
+      },
+      "button": "print"
+    }
+  },
+  "od": {
+    "d": {
+      "o": {
+        "title": "order details",
+        "id": "id",
+        "date": "date",
+        "status": "status"
+      },
+      "s": {
+        "title": "client details",
+        "id": "id",
+        "name": "name",
+        "phone": "phoner number",
+        "email": "email",
+        "address": "address"
+      },
+      "i": {
+        "title": "order items details",
+        "fields": ["name", "description", "quantity", "price", "total"]
+      },
+      "button": "print"
+    }
+  },
+  "id": {
+    "d": {
+      "i": {
+        "title": "invoice details",
+        "id": "id",
+        "date": "date"
+      },
+      "c": {
+        "title": "client details",
+        "id": "id",
+        "name": "name",
+        "phone": "phoner number",
+        "email": "email",
+        "address": "address"
+      },
+      "it": {
+        "title": "invoice items details",
+        "fields": ["name", "description", "quantity", "price", "total"]
+      },
+      "button": "print"
+    }
+  },
+  "i": {
+    "i": {
+      "addButton": "Add new invoice"
+    },
+    "c": {
+      "title": "add new invoice",
+      "d": {
+        "c": {
+          "title": "client details",
+          "select": "Select a client"
+        },
+        "i": {
+          "title": "invoice details",
+          "add": "Add a product",
+          "select": "Select a product",
+          "placeholder": ["Product quantity", "New Price"]
+        }
+      },
+      "button": "Add a Invoice"
+    },
+    "u": {
+      "title": "update invoice",
+      "d": {
+        "c": {
+          "title": "client details",
+          "select": ""
+        },
+        "i": {
+          "title": "invoice details",
+          "add": "Add a product",
+          "select": ""
+        }
+      },
+      "button": "Update Invoice"
+    },
+    "d": {
+      "title": "are you sure you wanna delete the invoice ",
+      "yes": "Confirme",
+      "no": "Cancel"
+    },
+    "s": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "canceled": "Canceled"
+    }
+  },
+  "im": {
+    "i": {
+      "addButton": "Add to Inventory"
+    },
+    "c": {
+      "title": "add items to inventory",
+      "l": {
+        "a": "Product",
+        "b": "Quantity"
+      },
+      "p": {
+        "a": "Select a product",
+        "b": "Quantity"
+      }
+    }
+  }
+}

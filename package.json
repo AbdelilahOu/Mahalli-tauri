@@ -1,0 +1,44 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "tauri": "tauri",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxtjs/i18n": "^8.3.1",
+    "@pdf-lib/fontkit": "^1.1.1",
+    "@tauri-apps/api": "^1.5.3",
+    "@unovis/ts": "^1.3.5",
+    "@unovis/vue": "^1.3.5",
+    "@vee-validate/zod": "^4.12.5",
+    "@vueuse/core": "^10.10.0",
+    "@vueuse/motion": "^2.1.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-vue-next": "^0.387.0",
+    "nuxt": "^3.11.2",
+    "pdf-lib": "^1.17.1",
+    "radix-vue": "^1.8.3",
+    "shadcn-nuxt": "^0.10.4",
+    "tailwind-merge": "^2.3.0",
+    "tailwindcss-animate": "^1.0.7",
+    "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log#v1",
+    "v-calendar": "^3.1.2",
+    "vee-validate": "^4.12.5",
+    "vue": "^3.4.27",
+    "vue-router": "^4.3.2",
+    "vue-sonner": "^1.1.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.12.0",
+    "@tauri-apps/cli": "^1.5.9",
+    "typescript": "^5.4.5"
+  }
+}
