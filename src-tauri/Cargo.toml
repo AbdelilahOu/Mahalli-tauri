@@ -1,0 +1,55 @@
+[package]
+name = "mahalli"
+version = "1.4.6"
+description = "Inventory & invoicing management app"
+authors = ["AbdelilahOu"]
+license = ""
+repository = "https://github.com/AbdelilahOu/Mahalli-tauri"
+default-run = "mahalli"
+edition = "2021"
+rust-version = "1.59"
+build = "src/build.rs"
+
+[workspace]
+members = [".", "service", "entity", "migration"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "1.5.1", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.5.4", features = [
+  "dialog-open",
+  "fs-all",
+  "notification-all",
+  "path-all",
+  "process-command-api",
+  "protocol-all",
+] }
+csv = "1.1"
+tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tokio = { version = "1", features = ["full"] }
+chrono = { version = "0.4", features = ["serde"] }
+libsqlite3-sys = { version = "^0", features = ["bundled"] }
+uuid = { version = "1.7.0", features = [
+  "v7",
+  "std",
+  "fast-rng",
+  "macro-diagnostics",
+] }
+dotenvy = "0.15.7"
+log = "^0.4"
+migration = { path = "./migration" }
+service = { path = "./service" }
+entity = { path = "./entity" }
+
+[features]
+# by default Tauri runs in production mode
+# when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
+default = ["custom-protocol"]
+# this feature is used for production builds where `devPath` points to the filesystem
+# DO NOT remove this
+custom-protocol = ["tauri/custom-protocol"]

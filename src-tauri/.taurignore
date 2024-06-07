@@ -1,0 +1,6 @@
+db.sqlite
+data
+data/
+/data/
+mahalli.sqlite
+migrations/
