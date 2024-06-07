@@ -1,6 +1,9 @@
 {
-  "name": "nuxt-app",
+  "name": "mahalli",
+  "version": "1.5.0",
   "private": true,
+  "author": "abdelilah ouaadouch",
+  "description": "inventory & invoicing management app",
   "type": "module",
   "scripts": {
     "build": "nuxt build",
