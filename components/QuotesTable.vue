@@ -31,7 +31,6 @@ let previewProductsTimer: any;
 const previewProducts = (id: string) => {
   clearTimeout(previewProductsTimer);
   previewProductsTimer = setTimeout(() => {
-    console.log("object");
     emits("listQuoteProducts", id);
   }, 400);
 };
