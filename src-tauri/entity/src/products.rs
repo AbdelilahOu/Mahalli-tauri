@@ -11,10 +11,12 @@ pub struct Model {
     pub created_at: String,
     pub description: Option<String>,
     #[sea_orm(column_type = "Double")]
-    pub price: f64,
+    pub purchase_price: f64,
     #[sea_orm(column_type = "Double")]
     pub min_quantity: f64,
     pub image: Option<String>,
+    #[sea_orm(column_type = "Double")]
+    pub selling_price: f64,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

@@ -39,6 +39,8 @@
       "description": "Description",
       "status": "Status",
       "price": "Price",
+      "purchase-price": "Purchase Price",
+      "selling-price": "Selling Price",
       "date": "Date",
       "paid": "Avance",
       "rest": "Rest",

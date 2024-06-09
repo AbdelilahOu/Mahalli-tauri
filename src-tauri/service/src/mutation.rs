@@ -1,7 +1,6 @@
-use ::entity::prelude::*;
 use sea_orm::*;
 
-use crate::{models::*, Order};
+use crate::{entities::*, models::*, Order};
 
 pub struct MutationsService;
 
@@ -9,7 +8,8 @@ impl MutationsService {
     pub async fn create_product(db: &DbConn, product: NewProduct) -> Result<String, DbErr> {
         let product = ProductActiveModel {
             name: ActiveValue::Set(product.name),
-            price: ActiveValue::Set(product.price),
+            selling_price: ActiveValue::Set(product.selling_price),
+            purchase_price: ActiveValue::Set(product.purchase_price),
             image: ActiveValue::Set(product.image),
             description: ActiveValue::Set(product.description),
             min_quantity: ActiveValue::Set(product.min_quantity),
@@ -24,7 +24,8 @@ impl MutationsService {
         let product_model = Products::find_by_id(product.id).one(db).await?;
         let mut product_active: ProductActiveModel = product_model.unwrap().into();
         product_active.name = ActiveValue::Set(product.name);
-        product_active.price = ActiveValue::Set(product.price);
+        product_active.selling_price = ActiveValue::Set(product.selling_price);
+        product_active.purchase_price = ActiveValue::Set(product.purchase_price);
         product_active.image = ActiveValue::Set(product.image);
         product_active.description = ActiveValue::Set(product.description);
         product_active.min_quantity = ActiveValue::Set(product.min_quantity);
