@@ -134,7 +134,7 @@ impl MutationsService {
         }
     }
     pub async fn delete_inv_mvm(db: &DbConn, id: String) -> Result<u64, DbErr> {
-        let city_model = InventoryMouvements::find_by_id(id).one(db).await?;
+        let city_model = InventoryMovements::find_by_id(id).one(db).await?;
         match city_model {
             Some(city_model) => {
                 let city = city_model.delete(db).await?;
@@ -144,7 +144,7 @@ impl MutationsService {
         }
     }
     pub async fn update_inv_mvm(db: &DbConn, mvm: Inventory) -> Result<(), DbErr> {
-        let inventory_model = InventoryMouvements::find_by_id(mvm.id).one(db).await?;
+        let inventory_model = InventoryMovements::find_by_id(mvm.id).one(db).await?;
         let mut inventory_active: InventoryActiveModel = inventory_model.unwrap().into();
         inventory_active.mvm_type = ActiveValue::Set(mvm.mvm_type);
         inventory_active.quantity = ActiveValue::Set(mvm.quantity);

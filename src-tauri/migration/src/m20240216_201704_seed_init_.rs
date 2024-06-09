@@ -1,7 +1,7 @@
 use std::ops::Range;
 
 use crate::{
-    m20220101_000001_init_::{Client, InventoryMouvement, Invoice, InvoiceItem, Order, OrderItem, Product, Quote, QuoteItem, Supplier},
+    m20220101_000001_init_::{Client, InventoryMovement, Invoice, InvoiceItem, Order, OrderItem, Product, Quote, QuoteItem, Supplier},
     utils::get_random_enum,
 };
 use fake::{
@@ -76,12 +76,12 @@ impl MigrationTrait for Migration {
             let inventory_id = uuid::Uuid::now_v7();
             let inventory_quantity: u8 = Faker.fake();
             let insert_stock = Query::insert()
-                .into_table(InventoryMouvement::Table)
+                .into_table(InventoryMovement::Table)
                 .columns([
-                    InventoryMouvement::Id,
-                    InventoryMouvement::ProductId,
-                    InventoryMouvement::Quantity,
-                    InventoryMouvement::MvmType,
+                    InventoryMovement::Id,
+                    InventoryMovement::ProductId,
+                    InventoryMovement::Quantity,
+                    InventoryMovement::MvmType,
                 ])
                 .values_panic([
                     inventory_id.to_string().into(),
@@ -125,7 +125,7 @@ impl MigrationTrait for Migration {
                 sea_orm::DatabaseBackend::Sqlite,
                 r#"
                 INSERT INTO 
-                    inventory_mouvements (id, mvm_type, quantity, product_id)
+                    inventory_movements (id, mvm_type, quantity, product_id)
                 VALUES
                     (
                         $1, 
@@ -190,7 +190,7 @@ impl MigrationTrait for Migration {
                 sea_orm::DatabaseBackend::Sqlite,
                 r#"
                 INSERT INTO 
-                    inventory_mouvements (id, mvm_type, quantity, product_id)
+                    inventory_movements (id, mvm_type, quantity, product_id)
                 VALUES
                     (
                         $1, 
@@ -286,7 +286,7 @@ impl MigrationTrait for Migration {
         let delete = Query::delete().from_table(Quote::Table).to_owned();
         manager.exec_stmt(delete).await?;
 
-        let delete = Query::delete().from_table(InventoryMouvement::Table).to_owned();
+        let delete = Query::delete().from_table(InventoryMovement::Table).to_owned();
         manager.exec_stmt(delete).await?;
 
         let delete = Query::delete().from_table(Product::Table).to_owned();

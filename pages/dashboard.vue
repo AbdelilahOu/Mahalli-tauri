@@ -14,7 +14,7 @@ import { error } from "tauri-plugin-log-api";
 
 const { t, locale } = useI18n();
 
-interface mouvementsT {
+interface movementsT {
   createdAt: string;
   mvmType: "IN" | "OUT";
   quantity: number;
@@ -40,11 +40,11 @@ const STATUS_COLORS = {
 } as const;
 
 //
-const mouvements = ref<groupedMvm>();
-const mouvementsLabels = ref<string[]>([]);
+const movements = ref<groupedMvm>();
+const movementsLabels = ref<string[]>([]);
 const tickFormatToDate = (i: number) => {
   if (i % 1 != 0) return "";
-  return new Date(mouvementsLabels.value[i]).toLocaleDateString("fr-fr", {});
+  return new Date(movementsLabels.value[i]).toLocaleDateString("fr-fr", {});
 };
 const barQuantityTriggers = {
   [GroupedBar.selectors.bar]: (d: groupedMvm[string], i: number) => {
@@ -61,9 +61,9 @@ const barPriceTriggers = {
 function numberToK(num: number) {
   return Intl.NumberFormat(locale.value, { notation: "compact" }).format(num);
 }
-async function getInventoryMouvementStats() {
+async function getInventoryMovementStats() {
   try {
-    const res = await invoke<Res<mouvementsT[]>>("list_mvm_stats");
+    const res = await invoke<Res<movementsT[]>>("list_mvm_stats");
     const result = res.data.reduce((acc, item) => {
       const { createdAt: date, mvmType, quantity, price } = item;
       const createdAt = new Date(date).toISOString().split("T")[0];
@@ -90,9 +90,9 @@ async function getInventoryMouvementStats() {
       return acc;
     }, {} as groupedMvm);
 
-    mouvements.value = result;
-    let mouvementLabelsSet = new Set<string>(Object.keys(mouvements.value));
-    mouvementsLabels.value = [...mouvementLabelsSet];
+    movements.value = result;
+    let movementLabelsSet = new Set<string>(Object.keys(movements.value));
+    movementsLabels.value = [...movementLabelsSet];
   } catch (err: any) {
     error("STATS INVENTORY MOUVEMENTS: " + err);
   }
@@ -176,7 +176,7 @@ onBeforeMount(async () => {
   await Promise.all([
     getRevenue(),
     // getExpenses(),
-    getInventoryMouvementStats(),
+    getInventoryMovementStats(),
     getBestClients(),
     getBestProducts(),
     getStatusCounts(),
@@ -338,8 +338,8 @@ onBeforeMount(async () => {
         <ChartHolder>
           <template #default>
             <VisXYContainer
-              v-if="mouvements"
-              :data="Object.values(mouvements)"
+              v-if="movements"
+              :data="Object.values(movements)"
               :height="500"
             >
               <VisGroupedBar
@@ -371,8 +371,8 @@ onBeforeMount(async () => {
         <ChartHolder>
           <template #default>
             <VisXYContainer
-              v-if="mouvements"
-              :data="Object.values(mouvements)"
+              v-if="movements"
+              :data="Object.values(movements)"
               :height="500"
             >
               <VisGroupedBar

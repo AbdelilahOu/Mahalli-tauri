@@ -72,14 +72,14 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(InventoryMouvement::Table)
+                    .table(InventoryMovement::Table)
                     .if_not_exists()
-                    .col(ColumnDef::new(InventoryMouvement::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(InventoryMouvement::MvmType).string().not_null())
-                    .col(ColumnDef::new(InventoryMouvement::Quantity).float().not_null().default(0.0f32))
-                    .col(ColumnDef::new(InventoryMouvement::ProductId).string().not_null())
+                    .col(ColumnDef::new(InventoryMovement::Id).string().not_null().primary_key())
+                    .col(ColumnDef::new(InventoryMovement::MvmType).string().not_null())
+                    .col(ColumnDef::new(InventoryMovement::Quantity).float().not_null().default(0.0f32))
+                    .col(ColumnDef::new(InventoryMovement::ProductId).string().not_null())
                     .col(
-                        ColumnDef::new(InventoryMouvement::CreatedAt)
+                        ColumnDef::new(InventoryMovement::CreatedAt)
                             .date_time()
                             .not_null()
                             .default(Expr::current_timestamp()),
@@ -87,7 +87,7 @@ impl MigrationTrait for Migration {
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_inventory_mvm_product_id")
-                            .from(InventoryMouvement::Table, InventoryMouvement::ProductId)
+                            .from(InventoryMovement::Table, InventoryMovement::ProductId)
                             .to(Product::Table, Product::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
@@ -135,7 +135,7 @@ impl MigrationTrait for Migration {
                         ForeignKey::create()
                             .name("fk_order_item_inventory_id")
                             .from(OrderItem::Table, OrderItem::InventoryId)
-                            .to(InventoryMouvement::Table, InventoryMouvement::Id)
+                            .to(InventoryMovement::Table, InventoryMovement::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
@@ -196,7 +196,7 @@ impl MigrationTrait for Migration {
                         ForeignKey::create()
                             .name("fk_invoice_item_inventory_id")
                             .from(InvoiceItem::Table, InvoiceItem::InventoryId)
-                            .to(InventoryMouvement::Table, InventoryMouvement::Id)
+                            .to(InventoryMovement::Table, InventoryMovement::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
@@ -317,8 +317,8 @@ pub enum Product {
 }
 
 #[derive(DeriveIden)]
-pub enum InventoryMouvement {
-    #[sea_orm(iden = "inventory_mouvements")]
+pub enum InventoryMovement {
+    #[sea_orm(iden = "inventory_movements")]
     Table,
     Id,
     #[sea_orm(iden = "mvm_type")]
