@@ -23,10 +23,19 @@ const { t, d } = useI18n();
 const localePath = useLocalePath();
 
 defineProps<{ quotes: QuoteT[]; quoteProducts: QuoteProductT[] }>();
-defineEmits<{
+const emits = defineEmits<{
   (e: "listQuoteProducts", id?: string): void;
-  (e: "cancelQuoteProducts"): void;
 }>();
+
+let previewProductsTimer: any;
+const previewProducts = (id: string) => {
+  clearTimeout(previewProductsTimer);
+  previewProductsTimer = setTimeout(() => {
+    console.log("object");
+    emits("listQuoteProducts", id);
+  }, 400);
+};
+const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 
 const toggleThisQuotes = (Quote: QuoteT, name: string) => {
   updateQueryParams({
@@ -111,8 +120,8 @@ const createInvoiceFromQuote = async (id: string) => {
             <Popover v-if="quote.products && quote.products > 0">
               <PopoverTrigger as-child>
                 <Button
-                  @mouseenter.passive="$emit('listQuoteProducts', quote.id)"
-                  @mouseleave.passive="$emit('cancelQuoteProducts')"
+                  @mouseenter.passive="previewProducts(quote.id!)"
+                  @mouseleave.passive="cancelPreviewProducts"
                   size="sm"
                   variant="link"
                   class="underline px-0 h-fit"

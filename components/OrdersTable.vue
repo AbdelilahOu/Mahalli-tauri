@@ -23,9 +23,8 @@ const { t, d } = useI18n();
 const localePath = useLocalePath();
 
 defineProps<{ orders: OrderT[]; orderProducts: OrderProductT[] }>();
-defineEmits<{
+const emits = defineEmits<{
   (e: "listOrderProducts", id?: string): void;
-  (e: "cancelOrderProducts"): void;
 }>();
 
 const STATUS_COLORS = {
@@ -33,6 +32,15 @@ const STATUS_COLORS = {
   PENDING: "bg-yellow-100 border-yellow-500 text-yellow-900",
   DELIVERED: "bg-green-100 border-green-500 text-green-900",
 } as const;
+
+let previewProductsTimer: any;
+const previewProducts = (id: string) => {
+  clearTimeout(previewProductsTimer);
+  previewProductsTimer = setTimeout(() => {
+    emits("listOrderProducts", id);
+  }, 400);
+};
+const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 
 const toggleThisOrders = (Order: OrderT, name: string) => {
   updateQueryParams({
@@ -141,8 +149,8 @@ const createInvoiceFromOrder = async (id: string) => {
             <Popover v-if="order.products && order.products > 0">
               <PopoverTrigger as-child>
                 <Button
-                  @mouseenter.passive="$emit('listOrderProducts', order.id)"
-                  @mouseleave.passive="$emit('cancelOrderProducts')"
+                  @mouseenter.passive="previewProducts(order.id!)"
+                  @mouseleave.passive="cancelPreviewProducts"
                   size="sm"
                   variant="link"
                   class="underline px-0 h-fit"
