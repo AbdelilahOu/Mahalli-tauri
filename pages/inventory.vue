@@ -10,7 +10,7 @@ const { t } = useI18n();
 const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 //
-const inventoryMouvements = ref<InventoryT[]>([]);
+const inventoryMovements = ref<InventoryT[]>([]);
 const searchQuery = ref<string>("");
 const page = computed(() => Number(route.query.page));
 const refresh = computed(() => route.query.refresh);
@@ -59,7 +59,7 @@ async function getInventory(search: string, page: number = 1) {
       },
     });
     //
-    inventoryMouvements.value = res.data.inventory;
+    inventoryMovements.value = res.data.inventory;
     totalRows.value = res.data.count;
   } catch (err: any) {
     error("LIST INVENTORY MOUVEMENTS: " + err);
@@ -140,7 +140,7 @@ const uploadCSV = () => {
         </div>
       </div>
 
-      <InventoryTable :inventory="inventoryMouvements" />
+      <InventoryTable :inventory="inventoryMovements" />
     </div>
   </main>
 </template>
