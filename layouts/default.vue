@@ -21,16 +21,16 @@ const isCollapse = ref<boolean>(true);
       <ScrollArea
         class="w-full scroll-smooth h-[calc(100vh-50px)] flex flex-col border-t border-slate-100"
       >
-        <div
-          v-if="show"
-          class="w-full h-full flex items-center justify-center fixed bg-black z-50 top-0 left-0 bg-opacity-30"
-        >
-          <ModalComponentsRenderer :name="name" />
-        </div>
         <div class="w-full bg-[#FFFAFA] p-2 rounded-md h-full">
           <slot />
         </div>
       </ScrollArea>
+    </div>
+    <div
+      v-if="show"
+      class="w-full h-full flex items-center justify-center fixed bg-black z-50 top-0 left-0 bg-opacity-30"
+    >
+      <ModalComponentsRenderer :name="name" />
     </div>
     <Toaster position="top-center" />
   </main>
