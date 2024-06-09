@@ -21,10 +21,14 @@ const productSchema = toTypedSchema(
       .min(2)
       .max(50)
       .default(route.query.name as string),
-    price: z
+    purchasePrice: z
       .number()
       .min(0)
-      .default(Number(route.query.price) ?? 0),
+      .default(Number(route.query.purchasePrice) ?? 0),
+    sellingPrice: z
+      .number()
+      .min(0)
+      .default(Number(route.query.sellingPrice) ?? 0),
     description: z
       .string()
       .min(2)
@@ -44,7 +48,8 @@ const updateTheProduct = async (product: ProductT) => {
     await invoke<Res<string>>("update_product", {
       product: {
         name: product.name,
-        price: Number(product.price),
+        selling_price: Number(product.sellingPrice),
+        purchase_price: Number(product.purchasePrice),
         description: product.description,
         min_quantity: Number(product.minQuantity),
         image: product.image,
@@ -55,7 +60,8 @@ const updateTheProduct = async (product: ProductT) => {
     info(
       `UPDATE PRODUCT: ${JSON.stringify({
         name: product.name,
-        price: Number(product.price),
+        selling_price: Number(product.sellingPrice),
+        purchase_price: Number(product.purchasePrice),
         description: product.description,
         min_quantity: Number(product.minQuantity),
         image: product.image,
@@ -106,13 +112,27 @@ const onSubmit = form.handleSubmit((values) => {
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="price">
+        <FormField v-slot="{ componentField }" name="purchasePrice">
           <FormItem>
-            <FormLabel>{{ t("g.fields.price") }}</FormLabel>
+            <FormLabel>{{ t("g.fields.purchase-price") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
-                :placeholder="t('g.fields.price')"
+                :placeholder="t('g.fields.purchase-price')"
+                v-bind="componentField"
+              >
+                <template #unite> DH </template>
+              </Input>
+            </FormControl>
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="sellingPrice">
+          <FormItem>
+            <FormLabel>{{ t("g.fields.selling-price") }}</FormLabel>
+            <FormControl>
+              <Input
+                type="number"
+                :placeholder="t('g.fields.selling-price')"
                 v-bind="componentField"
               >
                 <template #unite> DH </template>

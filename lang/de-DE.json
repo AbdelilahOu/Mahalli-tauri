@@ -39,6 +39,8 @@
       "description": "Beschreibung",
       "status": "Status",
       "price": "Preis",
+      "purchase_price": "Einkaufspreis",
+      "selling_price": "Verkaufspreis",
       "date": "Datum",
       "paid": "Avance",
       "rest": "Ausruhen",

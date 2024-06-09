@@ -18,7 +18,8 @@ const toggleThisProduct = (product: ProductT, name: string) => {
   updateQueryParams({
     id: product.id,
     name: product.name,
-    price: product.price,
+    purchasePrice: product.purchasePrice,
+    sellingPrice: product.sellingPrice,
     description: product.description,
     minQuantity: product.minQuantity,
   });
@@ -45,7 +46,8 @@ const updateProductStock = (id: string, name: string) => {
           <th class="w-20">{{ t("g.fields.name") }}</th>
           <th class="small">{{ t("g.fields.inventory") }}</th>
           <th>{{ t("g.fields.threshold") }}</th>
-          <th>{{ t("g.fields.price") }}</th>
+          <th>{{ t("g.fields.purchase-price") }}</th>
+          <th>{{ t("g.fields.selling-price") }}</th>
           <th class="small">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
@@ -115,8 +117,8 @@ const updateProductStock = (id: string, name: string) => {
           <td class="p-2">
             {{ t("g.plrz.i", { n: product.minQuantity }) }}
           </td>
-          <td class="p-2">{{ product.price.toFixed(2) }} DH</td>
-
+          <td class="p-2">{{ product.purchasePrice.toFixed(2) }} DH</td>
+          <td class="p-2">{{ product.sellingPrice.toFixed(2) }} DH</td>
           <td class="p-2">
             <div class="flex justify-center gap-3">
               <DropdownMenu>

@@ -9,12 +9,17 @@ import { onClickOutside } from "@vueuse/core";
 
 const props = defineProps<{
   defaultValue?: string;
-  items: { label: string; value: string; price?: number }[];
+  items: {
+    label: string;
+    value: string;
+    selling_price?: number;
+    purchase_price?: number;
+  }[];
 }>();
 
 const emits = defineEmits<{
   (e: "update:items", s: string | number): () => void;
-  (e: "on:select", s: string, a?: number): () => void;
+  (e: "on:select", s: string, a?: number, b?: number): () => void;
 }>();
 
 const { t } = useI18n();
@@ -34,9 +39,14 @@ const updateInput = (s: string | number) => {
 
 onClickOutside(dropdownParent, () => (open.value = false));
 
-const selectItem = (item: { label: string; value: string; price?: number }) => {
+const selectItem = (item: {
+  label: string;
+  value: string;
+  selling_price?: number;
+  purchase_price?: number;
+}) => {
   inputValue.value = item.label;
-  emits("on:select", item.value, item.price);
+  emits("on:select", item.value, item.purchase_price, item.selling_price);
   open.value = false;
 };
 </script>
