@@ -9,9 +9,8 @@ const { t, d } = useI18n();
 const localePath = useLocalePath();
 
 defineProps<{ invoices: InvoiceT[]; invoiceProducts: InvoiceProductT[] }>();
-defineEmits<{
+const emits = defineEmits<{
   (e: "listInvoiceProducts", id?: string): void;
-  (e: "cancelInvoiceProducts"): void;
 }>();
 
 const STATUS_COLORS = {
@@ -19,6 +18,15 @@ const STATUS_COLORS = {
   PENDING: "bg-yellow-100 border-yellow-500 text-yellow-900",
   PAID: "bg-green-100 border-green-500 text-green-900",
 } as const;
+
+let previewProductsTimer: any;
+const previewProducts = (id: string) => {
+  clearTimeout(previewProductsTimer);
+  previewProductsTimer = setTimeout(() => {
+    emits("listInvoiceProducts", id);
+  }, 400);
+};
+const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 
 const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
   updateQueryParams({
@@ -80,8 +88,8 @@ const updateInvoiceStatus = async (invoice: any) => {
             <Popover v-if="invoice.products && invoice.products > 0">
               <PopoverTrigger as-child>
                 <Button
-                  @mouseenter.passive="$emit('listInvoiceProducts', invoice.id)"
-                  @mouseleave.passive="$emit('cancelInvoiceProducts')"
+                  @mouseenter.passive="previewProducts(invoice.id!)"
+                  @mouseleave.passive="cancelPreviewProducts"
                   size="sm"
                   variant="link"
                   class="underline px-0 h-fit"
