@@ -7,7 +7,7 @@ defineProps<{
   clients: ClientT[];
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const toggleThisClient = (client: ClientT, name: string) => {
@@ -36,7 +36,7 @@ const toggleCLientProfile = (client: ClientT) => {
 
 <template>
   <div>
-    <table>
+    <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
           <th class="small"></th>

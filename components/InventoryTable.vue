@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { InventoryT } from "@/schemas/inventory.schema";
 
-const { t, d } = useI18n();
+const { t, d, locale } = useI18n();
 
 defineProps<{
   inventory: InventoryT[];
@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
   <div>
-    <table>
+    <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
           <th>{{ t("g.fields.name") }}</th>

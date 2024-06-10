@@ -5,7 +5,7 @@ import { FilePenLine, GripHorizontal, Printer, Trash2 } from "lucide-vue-next";
 import { error, info } from "tauri-plugin-log-api";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { t, d } = useI18n();
+const { t, d, locale } = useI18n();
 const localePath = useLocalePath();
 
 defineProps<{ invoices: InvoiceT[]; invoiceProducts: InvoiceProductT[] }>();
@@ -55,7 +55,7 @@ const updateInvoiceStatus = async (invoice: any) => {
 
 <template>
   <div>
-    <table>
+    <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
           <th>{{ t("g.fields.fullname") }}</th>
