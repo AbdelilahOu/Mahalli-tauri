@@ -1,23 +1,22 @@
 use serde_json::Value;
-use service::{ListArgs, MutationsService, NewInventory, QueriesService};
 use tauri::State;
 
-use crate::{commands::Fail, AppState};
+use service::{ListArgs, MutationsService, NewInventory, QueriesService};
 
-use super::{SResult, Seccess};
+use crate::{AppState, commands::Fail};
+
+use super::{Seccess, SResult};
 
 #[tauri::command]
 pub async fn list_inventory(state: State<'_, AppState>, args: ListArgs) -> SResult<Value> {
     let _ = state.db_conn;
-    let res = QueriesService::list_inventory(&state.db_conn, args).await;
-    match res {
+    match QueriesService::list_inventory(&state.db_conn, args).await {
         Ok(res) => Ok(Seccess {
             error: None,
             message: None,
             data: Some(res),
         }),
         Err(err) => {
-            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -29,15 +28,13 @@ pub async fn list_inventory(state: State<'_, AppState>, args: ListArgs) -> SResu
 #[tauri::command]
 pub async fn create_inventory(state: State<'_, AppState>, mvm: NewInventory) -> SResult<String> {
     let _ = state.db_conn;
-    let res = MutationsService::create_inv_mvm(&state.db_conn, mvm).await;
-    match res {
+    match MutationsService::create_inv_mvm(&state.db_conn, mvm).await {
         Ok(id) => Ok(Seccess::<String> {
             error: None,
             message: Option::Some(String::from("inventory created successfully")),
             data: Some(id),
         }),
         Err(err) => {
-            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -49,15 +46,13 @@ pub async fn create_inventory(state: State<'_, AppState>, mvm: NewInventory) -> 
 #[tauri::command]
 pub async fn delete_inventory(state: State<'_, AppState>, id: String) -> SResult<String> {
     let _ = state.db_conn;
-    let res = MutationsService::delete_inv_mvm(&state.db_conn, id).await;
-    match res {
+    match MutationsService::delete_inv_mvm(&state.db_conn, id).await {
         Ok(_) => Ok(Seccess::<String> {
             error: None,
             message: Option::Some(String::from("inventory deleted successfully")),
             data: None,
         }),
         Err(err) => {
-            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,

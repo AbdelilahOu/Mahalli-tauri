@@ -68,48 +68,25 @@ const updateOrderStatus = async (order: any) => {
 
 const createInvoiceFromOrder = async (id: string) => {
   try {
-    const res = await invoke<Res<OrderForUpdateT>>("get_order", {
-      id: id,
-    });
-    if (!res.error) {
-      const invoiceRes = await invoke<Res<String>>("create_invoice", {
-        invoice: {
-          client_id: res.data.clientId,
-          status: "PAID",
-          paid_amount: 0,
-          order_id: id,
-        },
-      });
-      //
-      for await (const item of res.data.items) {
-        const invRes = await invoke<Res<string>>("create_inventory", {
-          mvm: {
-            mvm_type: "OUT",
-            product_id: item.product_id,
-            quantity: item.quantity,
-          },
-        });
-
-        await invoke<Res<string>>("create_invoice_item", {
-          item: {
-            invoice_id: invoiceRes.data,
-            inventory_id: invRes.data,
-            price: item.price,
-          },
-        });
+    const res = await invoke<Res<OrderForUpdateT>>(
+      "create_invoice_from_order",
+      {
+        id: id,
       }
-      info(`CREATE INVOICE FROM ORDER: ${id}`);
-      //
-      toast.success(t("notifications.invoice.created"), {
-        closeButton: true,
-        description: h(NuxtLink, {
-          to: localePath("/invoices/?page=1&id=" + invoiceRes.data),
-          class: "underline",
-          innerHTML: "go to invoice",
-        }),
-      });
-    }
+    );
+    //
+    info(`CREATE INVOICE FROM ORDER: ${id}`);
+    //
+    toast.success(t("notifications.invoice.created"), {
+      closeButton: true,
+      description: h(NuxtLink, {
+        to: localePath("/invoices/?page=1&id=" + res.data),
+        class: "underline",
+        innerHTML: "go to invoice",
+      }),
+    });
   } catch (err: any) {
+    console.log(err);
     error("GET ORDER FOR INVOICE: " + err.error);
   }
 };

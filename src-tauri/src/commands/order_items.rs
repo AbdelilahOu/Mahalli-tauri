@@ -8,8 +8,7 @@ use super::{Fail, SResult, Seccess};
 #[tauri::command]
 pub async fn delete_order_item(state: State<'_, AppState>, id: String) -> SResult<u64> {
     let _ = state.db_conn;
-    let res = MutationsService::delete_order_item(&state.db_conn, id).await;
-    match res {
+    match MutationsService::delete_order_item(&state.db_conn, id).await {
         Ok(res) => Ok(Seccess {
             error: None,
             message: None,

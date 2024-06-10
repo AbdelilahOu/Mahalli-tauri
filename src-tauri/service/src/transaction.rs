@@ -3,9 +3,9 @@ use sea_orm::{ActiveValue, prelude::*, TransactionError, TransactionTrait};
 use crate::{NewInvoice, NewOrder, NewQuote, UpdateInvoice, UpdateOrder, UpdateQuote};
 use crate::entities::{
     InventoryActiveModel, InventoryMovements, InvoiceActiveModel,
-    InvoiceItemActiveModel, InvoiceItems, Invoices, OrderActiveModel,
-    OrderItemActiveModel, OrderItems, Orders, QuoteActiveModel, QuoteItemActiveModel,
-    QuoteItems, Quotes,
+    InvoiceItemActiveModel, InvoiceItems, Invoices, invoices,
+    order_items, OrderActiveModel, OrderItemActiveModel, OrderItems, Orders,
+    orders, quote_items, QuoteActiveModel, QuoteItemActiveModel, QuoteItems, Quotes,
 };
 
 type TxnRes<T> = Result<T, TransactionError<DbErr>>;
@@ -250,18 +250,105 @@ impl TransactionService {
         })
             .await
     }
-    pub async fn create_order_from_quote(db: DbConn) -> TxnRes<()> {
-        db.transaction::<_, (), DbErr>(|_txn| {
+    pub async fn create_order_from_quote(db: &DbConn, id: String) -> TxnRes<String> {
+        db.transaction::<_, String, DbErr>(|txn| {
             Box::pin(async move {
-                Ok(())
+                match Orders::find().filter(orders::Column::QuoteId.eq(&id)).one(txn).await? {
+                    Some(order) => Ok(order.id),
+                    None => {
+                        match Quotes::find_by_id(&id).one(txn).await? {
+                            Some(quote) => {
+                                let order = OrderActiveModel {
+                                    client_id: ActiveValue::Set(quote.client_id),
+                                    status: ActiveValue::Set("DELIVERED".to_string()),
+                                    ..Default::default()
+                                }.insert(txn).await?;
+
+                                let quote_items = QuoteItems::find().filter(quote_items::Column::QuoteId.eq(id)).all(txn).await?;
+
+                                let mut items = Vec::<OrderItemActiveModel>::new();
+
+                                for item in quote_items {
+                                    let created_inventory = InventoryActiveModel {
+                                        product_id: ActiveValue::Set(item.product_id),
+                                        quantity: ActiveValue::Set(item.quantity),
+                                        mvm_type: ActiveValue::Set("OUT".to_string()),
+                                        ..Default::default()
+                                    }.insert(txn).await?;
+
+                                    items.push(OrderItemActiveModel {
+                                        order_id: ActiveValue::Set(order.id.clone()),
+                                        price: ActiveValue::Set(item.price),
+                                        inventory_id: ActiveValue::Set(created_inventory.id),
+                                        ..Default::default()
+                                    })
+                                }
+                                if items.len() > 0 {
+                                    OrderItems::insert_many(items).exec(txn).await?;
+                                }
+                                Ok(order.id)
+                            }
+                            None => {
+                                Err(DbErr::RecordNotFound("no quote".to_string()))
+                            }
+                        }
+                    }
+                }
             })
         })
             .await
     }
-    pub async fn create_invoice_from_order(db: DbConn) -> TxnRes<()> {
-        db.transaction::<_, (), DbErr>(|_txn| {
+    pub async fn create_invoice_from_order(db: &DbConn, id: String) -> TxnRes<String> {
+        db.transaction::<_, String, DbErr>(|txn| {
             Box::pin(async move {
-                Ok(())
+                match Invoices::find().filter(invoices::Column::OrderId.eq(&id)).one(txn).await? {
+                    Some(invoice) => Ok(invoice.id),
+                    None => {
+                        match Orders::find_by_id(&id).one(txn).await? {
+                            Some(order) => {
+                                let mut status = String::from("");
+                                if order.status.eq("DELIVERED") {
+                                    status = "PAID".to_string()
+                                } else {
+                                    status = order.status;
+                                }
+                                let invoice = InvoiceActiveModel {
+                                    client_id: ActiveValue::Set(order.client_id),
+                                    paid_amount: ActiveValue::Set(0.0),
+                                    status: ActiveValue::Set(status),
+                                    ..Default::default()
+                                }.insert(txn).await?;
+
+                                let order_items = OrderItems::find().filter(order_items::Column::OrderId.eq(id)).find_also_related(InventoryMovements).all(txn).await?;
+
+                                let mut items = Vec::<InvoiceItemActiveModel>::new();
+
+                                for (item, inventory) in order_items {
+                                    let created_inventory = InventoryActiveModel {
+                                        product_id: ActiveValue::Set(inventory.clone().unwrap().product_id),
+                                        quantity: ActiveValue::Set(inventory.unwrap().quantity),
+                                        mvm_type: ActiveValue::Set("OUT".to_string()),
+                                        ..Default::default()
+                                    }.insert(txn).await?;
+
+                                    items.push(InvoiceItemActiveModel {
+                                        invoice_id: ActiveValue::Set(invoice.id.clone()),
+                                        price: ActiveValue::Set(item.price),
+                                        inventory_id: ActiveValue::Set(created_inventory.id),
+                                        ..Default::default()
+                                    })
+                                }
+                                if items.len() > 0 {
+                                    InvoiceItems::insert_many(items).exec(txn).await?;
+                                }
+                                Ok(invoice.id)
+                            }
+                            None => {
+                                Err(DbErr::RecordNotFound("no quote".to_string()))
+                            }
+                        }
+                    }
+                }
             })
         })
             .await
