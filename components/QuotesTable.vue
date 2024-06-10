@@ -86,7 +86,7 @@ const createInvoiceFromQuote = async (id: string) => {
       });
     }
   } catch (err: any) {
-    error("GET QUOTE FOR ORDER: " + err);
+    error("GET QUOTE FOR ORDER: " + err.error);
   }
 };
 </script>

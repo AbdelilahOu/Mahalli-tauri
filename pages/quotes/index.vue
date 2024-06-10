@@ -62,7 +62,7 @@ const getQuotes = async (search: string, page = 1) => {
     quotes.value = res.data.quotes;
     totalRows.value = res.data.count;
   } catch (err: any) {
-    error("LIST ORDERS: " + err);
+    error("LIST ORDERS: " + err.error);
   }
 };
 
@@ -74,7 +74,7 @@ const listQuoteProduct = async (id?: string) => {
     //
     quoteProducts.value = res.data;
   } catch (err: any) {
-    error("LIST ORDER PRODUCTS: " + err);
+    error("LIST ORDER PRODUCTS: " + err.error);
   }
 };
 

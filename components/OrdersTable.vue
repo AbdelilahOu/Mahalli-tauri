@@ -62,7 +62,7 @@ const updateOrderStatus = async (order: any) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE ORDER STATUS: " + err);
+    error("UPDATE ORDER STATUS: " + err.error);
   }
 };
 
@@ -110,7 +110,7 @@ const createInvoiceFromOrder = async (id: string) => {
       });
     }
   } catch (err: any) {
-    error("GET ORDER FOR INVOICE: " + err);
+    error("GET ORDER FOR INVOICE: " + err.error);
   }
 };
 </script>

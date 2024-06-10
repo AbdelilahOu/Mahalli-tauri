@@ -33,8 +33,8 @@ async fn main() {
                 .level_for("tauri", log::LevelFilter::Error)
                 .level_for("hyper", log::LevelFilter::Off)
                 .level_for("tracing", log::LevelFilter::Off)
-                .level_for("sea_orm", log::LevelFilter::Off)
-                .level_for("sqlx", log::LevelFilter::Off)
+                .level_for("sea_orm", log::LevelFilter::Info)
+                .level_for("sqlx", log::LevelFilter::Info)
                 .level_for("tao", log::LevelFilter::Off)
                 .build(),
         )
@@ -52,7 +52,6 @@ async fn main() {
             //
             commands::inventory::list_inventory,
             commands::inventory::create_inventory,
-            commands::inventory::update_inventory,
             commands::inventory::delete_inventory,
             //
             // clients
@@ -83,8 +82,6 @@ async fn main() {
             //
             // order items
             //
-            commands::order_items::create_order_item,
-            commands::order_items::update_order_item,
             commands::order_items::delete_order_item,
             //
             // quotes
@@ -99,8 +96,6 @@ async fn main() {
             //
             // quote items
             //
-            commands::quote_items::create_quote_item,
-            commands::quote_items::update_quote_item,
             commands::quote_items::delete_quote_item,
             //
             // invoices
@@ -115,8 +110,6 @@ async fn main() {
             //
             // invoice items
             //
-            commands::invoice_items::create_invoice_item,
-            commands::invoice_items::update_invoice_item,
             commands::invoice_items::delete_invoice_item,
             //
             // dashboard

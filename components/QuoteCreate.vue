@@ -61,22 +61,12 @@ const searchProducts = async (search: string | number) => {
 const createQuote = async () => {
   isLoading.value = true;
   try {
-    const quoteRes = await invoke<Res<String>>("create_quote", {
+    await invoke<Res<String>>("create_quote", {
       quote: {
         client_id: quote.clientId,
+        items: quote.items,
       },
     });
-    for await (const item of quote.items) {
-      await invoke<Res<string>>("create_quote_item", {
-        item: {
-          quote_id: quoteRes.data,
-          price: item.price,
-          quantity: item.quantity,
-          product_id: item.product_id,
-        },
-      });
-    }
-    //
     info(`CREATE QUOTE: ${JSON.stringify(quote)}`);
     //
     toast.success(t("notifications.quote.created"), {
@@ -87,7 +77,7 @@ const createQuote = async () => {
       refresh: "refresh-create-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("CREATE QUOTE: " + err);
+    error("CREATE QUOTE: " + err.error);
   } finally {
     isLoading.value = false;
     hideModal();

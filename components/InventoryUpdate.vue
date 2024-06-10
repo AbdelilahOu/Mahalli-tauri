@@ -51,7 +51,7 @@ const updateTheProduct = async ({ quantity }: z.infer<typeof stock>) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE PRODUCT: " + err);
+    error("UPDATE PRODUCT: " + err.error);
   } finally {
     hideModal();
   }

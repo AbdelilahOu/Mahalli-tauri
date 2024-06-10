@@ -1,5 +1,5 @@
 use serde_json::Value;
-use service::{Invoice, ListArgs, MutationsService, NewInvoice, QueriesService};
+use service::{UpdateInvoice, ListArgs, MutationsService,TransactionService, NewInvoice, QueriesService};
 use tauri::State;
 
 use crate::AppState;
@@ -17,7 +17,7 @@ pub async fn list_invoices(state: State<'_, AppState>, args: ListArgs) -> SResul
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -37,7 +37,7 @@ pub async fn list_invoice_products(state: State<'_, AppState>, id: String) -> SR
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -49,7 +49,7 @@ pub async fn list_invoice_products(state: State<'_, AppState>, id: String) -> SR
 #[tauri::command]
 pub async fn create_invoice(state: State<'_, AppState>, invoice: NewInvoice) -> SResult<String> {
     let _ = state.db_conn;
-    let res = MutationsService::create_invoice(&state.db_conn, invoice).await;
+    let res = TransactionService::create_invoice(&state.db_conn, invoice).await;
     match res {
         Ok(id) => Ok(Seccess {
             error: None,
@@ -57,7 +57,7 @@ pub async fn create_invoice(state: State<'_, AppState>, invoice: NewInvoice) -> 
             data: Some(id),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -67,9 +67,9 @@ pub async fn create_invoice(state: State<'_, AppState>, invoice: NewInvoice) -> 
 }
 
 #[tauri::command]
-pub async fn update_invoice(state: State<'_, AppState>, invoice: Invoice) -> SResult<()> {
+pub async fn update_invoice(state: State<'_, AppState>, invoice: UpdateInvoice) -> SResult<()> {
     let _ = state.db_conn;
-    let res = MutationsService::update_invoice(&state.db_conn, invoice).await;
+    let res = TransactionService::update_invoice(&state.db_conn, invoice).await;
     match res {
         Ok(_) => Ok(Seccess {
             error: None,
@@ -77,7 +77,7 @@ pub async fn update_invoice(state: State<'_, AppState>, invoice: Invoice) -> SRe
             data: None,
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -97,7 +97,7 @@ pub async fn delete_invoice(state: State<'_, AppState>, id: String) -> SResult<u
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -117,7 +117,7 @@ pub async fn get_invoice(state: State<'_, AppState>, id: String) -> SResult<Valu
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -137,7 +137,7 @@ pub async fn get_invoice_details(state: State<'_, AppState>, id: String) -> SRes
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,

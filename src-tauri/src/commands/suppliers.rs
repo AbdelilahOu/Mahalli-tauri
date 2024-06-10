@@ -1,10 +1,11 @@
 use serde_json::Value;
-use service::{ListArgs, MutationsService, NewSupplier, QueriesService, Supplier};
 use tauri::State;
+
+use service::{ListArgs, MutationsService, NewSupplier, QueriesService, Supplier};
 
 use crate::AppState;
 
-use super::{Fail, SResult, Seccess};
+use super::{Fail, Seccess, SResult};
 
 #[tauri::command]
 pub async fn list_suppliers(state: State<'_, AppState>, args: ListArgs) -> SResult<Value> {
@@ -17,7 +18,6 @@ pub async fn list_suppliers(state: State<'_, AppState>, args: ListArgs) -> SResu
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -37,7 +37,6 @@ pub async fn search_suppliers(state: State<'_, AppState>, search: String) -> SRe
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -57,7 +56,6 @@ pub async fn create_supplier(state: State<'_, AppState>, supplier: NewSupplier) 
             data: Some(id),
         }),
         Err(err) => {
-            println!("Error: {}", err);
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -77,7 +75,6 @@ pub async fn delete_supplier(state: State<'_, AppState>, id: String) -> SResult<
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -97,7 +94,6 @@ pub async fn update_supplier(state: State<'_, AppState>, supplier: Supplier) -> 
             data: None,
         }),
         Err(err) => {
-            println!("Error: {}", err);
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,

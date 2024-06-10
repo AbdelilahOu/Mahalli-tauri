@@ -50,7 +50,7 @@ const OpenDialog = async () => {
       return;
     }
   } catch (err: any) {
-    error("ERROR PDF-LIB: " + err);
+    error("ERROR PDF-LIB: " + err.error);
   }
 };
 </script>

@@ -1,5 +1,5 @@
 use serde_json::Value;
-use service::{ListArgs, MutationsService, NewQuote, QueriesService, Quote};
+use service::{ListArgs, MutationsService, NewQuote, QueriesService, UpdateQuote, TransactionService};
 use tauri::State;
 
 use crate::AppState;
@@ -17,7 +17,7 @@ pub async fn list_quotes(state: State<'_, AppState>, args: ListArgs) -> SResult<
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -37,7 +37,7 @@ pub async fn list_quote_products(state: State<'_, AppState>, id: String) -> SRes
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -49,7 +49,7 @@ pub async fn list_quote_products(state: State<'_, AppState>, id: String) -> SRes
 #[tauri::command]
 pub async fn create_quote(state: State<'_, AppState>, quote: NewQuote) -> SResult<String> {
     let _ = state.db_conn;
-    let res = MutationsService::create_quote(&state.db_conn, quote).await;
+    let res = TransactionService::create_quote(&state.db_conn, quote).await;
     match res {
         Ok(id) => Ok(Seccess {
             error: None,
@@ -57,7 +57,7 @@ pub async fn create_quote(state: State<'_, AppState>, quote: NewQuote) -> SResul
             data: Some(id),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -67,9 +67,9 @@ pub async fn create_quote(state: State<'_, AppState>, quote: NewQuote) -> SResul
 }
 
 #[tauri::command]
-pub async fn update_quote(state: State<'_, AppState>, quote: Quote) -> SResult<()> {
+pub async fn update_quote(state: State<'_, AppState>, quote: UpdateQuote) -> SResult<()> {
     let _ = state.db_conn;
-    let res = MutationsService::update_quote(&state.db_conn, quote).await;
+    let res = TransactionService::update_quote(&state.db_conn, quote).await;
     match res {
         Ok(_) => Ok(Seccess {
             error: None,
@@ -77,7 +77,7 @@ pub async fn update_quote(state: State<'_, AppState>, quote: Quote) -> SResult<(
             data: None,
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -97,7 +97,7 @@ pub async fn delete_quote(state: State<'_, AppState>, id: String) -> SResult<u64
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -117,7 +117,7 @@ pub async fn get_quote(state: State<'_, AppState>, id: String) -> SResult<Value>
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -137,7 +137,7 @@ pub async fn get_quote_details(state: State<'_, AppState>, id: String) -> SResul
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,

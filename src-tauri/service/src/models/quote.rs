@@ -1,5 +1,6 @@
 use sea_orm::FromQueryResult;
 use serde::{Deserialize, Serialize};
+use crate::{NewQuoteItem,UpdateQuoteItem};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
 pub struct SelectQuotes {
@@ -25,10 +26,14 @@ pub struct SelectQuoteDetails {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NewQuote {
     pub client_id: String,
+    pub items: Vec<NewQuoteItem>,
 }
 
+
+
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Quote {
+pub struct UpdateQuote {
     pub id: String,
     pub client_id: String,
+    pub items: Vec<UpdateQuoteItem>,
 }

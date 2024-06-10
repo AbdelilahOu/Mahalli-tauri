@@ -17,7 +17,7 @@ pub async fn list_mvm_stats(state: State<'_, AppState>) -> SResult<Vec<Value>> {
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -37,7 +37,7 @@ pub async fn list_top_clients(state: State<'_, AppState>) -> SResult<Vec<Value>>
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -57,7 +57,7 @@ pub async fn list_top_suppliers(state: State<'_, AppState>) -> SResult<Vec<Value
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -77,7 +77,7 @@ pub async fn list_top_products(state: State<'_, AppState>) -> SResult<Vec<Value>
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -97,7 +97,7 @@ pub async fn list_status_count(state: State<'_, AppState>) -> SResult<Value> {
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -117,7 +117,7 @@ pub async fn list_revenue(state: State<'_, AppState>) -> SResult<Value> {
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -137,7 +137,7 @@ pub async fn list_expenses(state: State<'_, AppState>) -> SResult<Value> {
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,

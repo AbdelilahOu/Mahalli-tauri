@@ -17,7 +17,7 @@ pub async fn list_products(state: State<'_, AppState>, args: ListArgs) -> SResul
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -37,7 +37,7 @@ pub async fn search_products(state: State<'_, AppState>, search: String) -> SRes
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -57,7 +57,7 @@ pub async fn create_product(state: State<'_, AppState>, product: NewProduct) -> 
             data: Some(id),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -77,7 +77,7 @@ pub async fn delete_product(state: State<'_, AppState>, id: String) -> SResult<u
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -97,7 +97,7 @@ pub async fn update_product(state: State<'_, AppState>, product: Product) -> SRe
             data: None,
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,

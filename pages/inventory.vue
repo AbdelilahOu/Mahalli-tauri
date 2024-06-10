@@ -62,7 +62,7 @@ async function getInventory(search: string, page: number = 1) {
     inventoryMovements.value = res.data.inventory;
     totalRows.value = res.data.count;
   } catch (err: any) {
-    error("LIST INVENTORY MOUVEMENTS: " + err);
+    error("LIST INVENTORY MOUVEMENTS: " + err.error);
   }
 }
 
