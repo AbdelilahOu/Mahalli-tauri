@@ -54,7 +54,7 @@ const createOrderFromQuote = async (id: string) => {
     toast.success(t("notifications.order.created"), {
       closeButton: true,
       description: h(NuxtLink, {
-        to: localePath("/orders/?page=1&id=" + res.data),
+        to: localePath("/orders/?page=1&highlight=true&id=" + res.data),
         class: "underline",
         innerHTML: "go to order",
       }),
