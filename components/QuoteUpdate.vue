@@ -69,35 +69,14 @@ const addQuoteItem = () => {
 
 const updateTheQuotes = async () => {
   try {
+    console.log(quote);
     await invoke<Res<String>>("update_quote", {
       quote: {
         id: quote.id,
         client_id: quote.clientId,
+        items: quote.items,
       },
     });
-    for await (const item of quote.items) {
-      if (!item.id) {
-        await invoke<Res<string>>("create_quote_item", {
-          item: {
-            quote_id: quote.id,
-            quantity: item.quantity,
-            product_id: item.product_id,
-            price: item.price,
-          },
-        });
-      } else {
-        await invoke<Res<string>>("update_quote_item", {
-          item: {
-            id: item.id,
-            quote_id: quote.id,
-            quantity: item.quantity,
-            product_id: item.product_id,
-            price: item.price,
-          },
-        });
-      }
-    }
-    //
     info(`UPDATE QUOTE: ${JSON.stringify(quote)}`);
     //
     toast.success(t("notifications.quote.updated"), {
@@ -108,7 +87,7 @@ const updateTheQuotes = async () => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE QUOTE: " + err);
+    error("UPDATE QUOTE: " + err.error);
   } finally {
     hideModal();
   }
@@ -122,7 +101,7 @@ async function deleteOneQuoteItem(id: string) {
   try {
     await invoke("delete_quote_item", { id });
   } catch (err: any) {
-    error("ERROR DELETE QUOTE ITEM : " + err);
+    error("ERROR DELETE QUOTE ITEM : " + err.error);
   }
 }
 

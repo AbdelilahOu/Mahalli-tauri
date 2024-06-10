@@ -17,7 +17,7 @@ pub async fn list_clients(state: State<'_, AppState>, args: ListArgs) -> SResult
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -37,7 +37,7 @@ pub async fn search_clients(state: State<'_, AppState>, search: String) -> SResu
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -57,7 +57,7 @@ pub async fn create_client(state: State<'_, AppState>, client: NewClient) -> SRe
             data: Some(id),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -77,7 +77,7 @@ pub async fn delete_client(state: State<'_, AppState>, id: String) -> SResult<u6
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -97,7 +97,7 @@ pub async fn update_client(state: State<'_, AppState>, client: Client) -> SResul
             data: None,
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,

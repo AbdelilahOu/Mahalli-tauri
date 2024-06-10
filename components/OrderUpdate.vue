@@ -76,43 +76,44 @@ const updateTheOrders = async () => {
         id: order.id,
         client_id: order.clientId,
         status: order.status,
+        items: order.items,
       },
     });
-    for await (const item of order.items) {
-      if (!item.id) {
-        const invRes = await invoke<Res<string>>("create_inventory", {
-          mvm: {
-            mvm_type: "OUT",
-            product_id: item.product_id,
-            quantity: item.quantity,
-          },
-        });
-        await invoke<Res<string>>("create_order_item", {
-          item: {
-            order_id: order.id,
-            inventory_id: invRes.data,
-            price: item.price,
-          },
-        });
-      } else {
-        await invoke<Res<string>>("update_inventory", {
-          mvm: {
-            id: item.inventory_id,
-            mvm_type: "OUT",
-            product_id: item.product_id,
-            quantity: item.quantity,
-          },
-        });
-        await invoke<Res<string>>("update_order_item", {
-          item: {
-            id: item.id,
-            order_id: order.id,
-            inventory_id: item.inventory_id,
-            price: item.price,
-          },
-        });
-      }
-    }
+    // for await (const item of order.items) {
+    //   if (!item.id) {
+    //     const invRes = await invoke<Res<string>>("create_inventory", {
+    //       mvm: {
+    //         mvm_type: "OUT",
+    //         product_id: item.product_id,
+    //         quantity: item.quantity,
+    //       },
+    //     });
+    //     await invoke<Res<string>>("create_order_item", {
+    //       item: {
+    //         order_id: order.id,
+    //         inventory_id: invRes.data,
+    //         price: item.price,
+    //       },
+    //     });
+    //   } else {
+    //     await invoke<Res<string>>("update_inventory", {
+    //       mvm: {
+    //         id: item.inventory_id,
+    //         mvm_type: "OUT",
+    //         product_id: item.product_id,
+    //         quantity: item.quantity,
+    //       },
+    //     });
+    //     await invoke<Res<string>>("update_order_item", {
+    //       item: {
+    //         id: item.id,
+    //         order_id: order.id,
+    //         inventory_id: item.inventory_id,
+    //         price: item.price,
+    //       },
+    //     });
+    //   }
+    // }
     //
     info(`UPDATE ORDER: ${JSON.stringify(order)}`);
     //
@@ -124,7 +125,7 @@ const updateTheOrders = async () => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE ORDER: " + err);
+    error("UPDATE ORDER: " + err.error);
   } finally {
     hideModal();
   }
@@ -138,7 +139,7 @@ async function deleteOneOrderItem(id: string) {
   try {
     await invoke("delete_order_item", { id });
   } catch (err: any) {
-    error("ERROR DELETE ORDER ITEM: " + err);
+    error("ERROR DELETE ORDER ITEM: " + err.error);
   }
 }
 

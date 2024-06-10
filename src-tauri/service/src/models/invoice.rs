@@ -1,5 +1,6 @@
 use sea_orm::FromQueryResult;
 use serde::{Deserialize, Serialize};
+use crate::{NewInvoiceItem, UpdateInvoiceItem};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
 pub struct SelectInvoices {
@@ -32,12 +33,14 @@ pub struct NewInvoice {
     pub order_id: Option<String>,
     pub status: String,
     pub paid_amount: f64,
+    pub items: Vec<NewInvoiceItem>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Invoice {
+pub struct UpdateInvoice {
     pub id: String,
     pub client_id: String,
     pub status: String,
     pub paid_amount: f64,
+    pub items: Vec<UpdateInvoiceItem>,
 }

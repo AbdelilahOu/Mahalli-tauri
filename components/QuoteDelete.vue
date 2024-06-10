@@ -21,7 +21,7 @@ const deleteTheQuotes = async (id: string) => {
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("DELETE QUOTE: " + err);
+    error("DELETE QUOTE: " + err.error);
   } finally {
     store.setters.updateStore({ key: "show", value: false });
   }

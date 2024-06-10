@@ -98,6 +98,54 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
+                    .table(Quote::Table)
+                    .if_not_exists()
+                    .col(ColumnDef::new(Quote::Id).string().not_null().primary_key())
+                    .col(ColumnDef::new(Quote::ClientId).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_quote_client_id")
+                            .from(Quote::Table, Quote::ClientId)
+                            .to(Client::Table, Client::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .col(ColumnDef::new(Quote::CreatedAt).date_time().not_null().default(Expr::current_timestamp()))
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_table(
+                Table::create()
+                    .table(QuoteItem::Table)
+                    .if_not_exists()
+                    .col(ColumnDef::new(QuoteItem::Id).string().not_null().primary_key())
+                    .col(ColumnDef::new(QuoteItem::Price).float().not_null().default(0.0f32))
+                    .col(ColumnDef::new(QuoteItem::Quantity).float().not_null().default(0.0f32))
+                    .col(ColumnDef::new(QuoteItem::ProductId).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_quote_item_product_id")
+                            .from(QuoteItem::Table, QuoteItem::ProductId)
+                            .to(Product::Table, Product::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .col(ColumnDef::new(QuoteItem::QuoteId).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_quote_item_quote_id")
+                            .from(QuoteItem::Table, QuoteItem::QuoteId)
+                            .to(Quote::Table, Quote::Id)
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .to_owned(),
+            )
+            .await?;
+
+
+        manager
+            .create_table(
+                Table::create()
                     .table(Order::Table)
                     .if_not_exists()
                     .col(ColumnDef::new(Order::Id).string().not_null().primary_key())
@@ -108,6 +156,14 @@ impl MigrationTrait for Migration {
                             .from(Order::Table, Order::ClientId)
                             .to(Client::Table, Client::Id)
                             .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .col(ColumnDef::new(Order::QuoteId).string().unique_key())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_order_quote_id")
+                            .from(Order::Table, Order::QuoteId)
+                            .to(Quote::Table, Quote::Id)
+                            .on_delete(ForeignKeyAction::SetNull),
                     )
                     .col(ColumnDef::new(Order::CreatedAt).date_time().not_null().default(Expr::current_timestamp()))
                     .col(ColumnDef::new(Order::Status).string().not_null())
@@ -157,7 +213,7 @@ impl MigrationTrait for Migration {
                             .to(Client::Table, Client::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    .col(ColumnDef::new(Invoice::OrderId).string())
+                    .col(ColumnDef::new(Invoice::OrderId).string().unique_key())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_invoice_order_id")
@@ -197,53 +253,6 @@ impl MigrationTrait for Migration {
                             .name("fk_invoice_item_inventory_id")
                             .from(InvoiceItem::Table, InvoiceItem::InventoryId)
                             .to(InventoryMovement::Table, InventoryMovement::Id)
-                            .on_delete(ForeignKeyAction::Cascade),
-                    )
-                    .to_owned(),
-            )
-            .await?;
-
-        manager
-            .create_table(
-                Table::create()
-                    .table(Quote::Table)
-                    .if_not_exists()
-                    .col(ColumnDef::new(Quote::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(Quote::ClientId).string().not_null())
-                    .foreign_key(
-                        ForeignKey::create()
-                            .name("fk_quote_client_id")
-                            .from(Quote::Table, Quote::ClientId)
-                            .to(Client::Table, Client::Id)
-                            .on_delete(ForeignKeyAction::Cascade),
-                    )
-                    .col(ColumnDef::new(Quote::CreatedAt).date_time().not_null().default(Expr::current_timestamp()))
-                    .to_owned(),
-            )
-            .await?;
-
-        manager
-            .create_table(
-                Table::create()
-                    .table(QuoteItem::Table)
-                    .if_not_exists()
-                    .col(ColumnDef::new(QuoteItem::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(QuoteItem::Price).float().not_null().default(0.0f32))
-                    .col(ColumnDef::new(QuoteItem::Quantity).float().not_null().default(0.0f32))
-                    .col(ColumnDef::new(QuoteItem::ProductId).string().not_null())
-                    .foreign_key(
-                        ForeignKey::create()
-                            .name("fk_quote_item_product_id")
-                            .from(QuoteItem::Table, QuoteItem::ProductId)
-                            .to(Product::Table, Product::Id)
-                            .on_delete(ForeignKeyAction::Cascade),
-                    )
-                    .col(ColumnDef::new(QuoteItem::QuoteId).string().not_null())
-                    .foreign_key(
-                        ForeignKey::create()
-                            .name("fk_quote_item_quote_id")
-                            .from(QuoteItem::Table, QuoteItem::QuoteId)
-                            .to(Quote::Table, Quote::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
@@ -364,6 +373,8 @@ pub enum Order {
     Id,
     #[sea_orm(iden = "client_id")]
     ClientId,
+    #[sea_orm(iden = "quote_id")]
+    QuoteId,
     // status: delivered, cancel, ongoing
     #[sea_orm(iden = "status")]
     Status,

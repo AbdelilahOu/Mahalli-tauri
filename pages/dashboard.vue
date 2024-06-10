@@ -94,7 +94,7 @@ async function getInventoryMovementStats() {
     let movementLabelsSet = new Set<string>(Object.keys(movements.value));
     movementsLabels.value = [...movementLabelsSet];
   } catch (err: any) {
-    error("STATS INVENTORY MOUVEMENTS: " + err);
+    error("STATS INVENTORY MOUVEMENTS: " + err.error);
   }
 }
 
@@ -105,7 +105,7 @@ async function getBestClients() {
     //
     bestClients.value = res.data;
   } catch (err: any) {
-    error("STATS BEST CLIENTS: " + err);
+    error("STATS BEST CLIENTS: " + err.error);
   }
 }
 
@@ -116,7 +116,7 @@ async function getBestProducts() {
     //
     bestProducts.value = res.data;
   } catch (err: any) {
-    error("STATS BEST PRODUCTS: " + err);
+    error("STATS BEST PRODUCTS: " + err.error);
   }
 }
 
@@ -127,7 +127,7 @@ async function getStatusCounts() {
     //
     statusCounts.value = res.data;
   } catch (err: any) {
-    error("STATS STATUS COUNT: " + err);
+    error("STATS STATUS COUNT: " + err.error);
   }
 }
 
@@ -148,7 +148,7 @@ async function getRevenue() {
       currentRevenue: data.currentRevenue,
     };
   } catch (err: any) {
-    error("STATS REVENUE: " + err);
+    error("STATS REVENUE: " + err.error);
   }
 }
 
@@ -168,7 +168,7 @@ async function getExpenses() {
       currentExpenses: data.currentExpenses,
     };
   } catch (err: any) {
-    error("STATS EXPENSES: " + err);
+    error("STATS EXPENSES: " + err.error);
   }
 }
 

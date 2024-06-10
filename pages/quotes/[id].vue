@@ -33,7 +33,7 @@ onBeforeMount(async () => {
     quote.value = res.data;
     resolveWaitForFetch();
   } catch (err: any) {
-    error("ERROR QUOTE DETAILS: " + err);
+    error("ERROR QUOTE DETAILS: " + err.error);
   }
 });
 
@@ -52,7 +52,7 @@ onMounted(async () => {
     color = rgb(0.34, 0.34, 0.34);
     generatePdf();
   } catch (err: any) {
-    error("ERROR PDF-LIB: " + err);
+    error("ERROR PDF-LIB: " + err.error);
   }
 });
 

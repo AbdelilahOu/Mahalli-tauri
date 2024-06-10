@@ -7,6 +7,7 @@ mod m20240216_201704_seed_init_;
 mod m20240224_175322_status_index_;
 mod m20240609_135936_add_prices;
 
+
 pub struct Migrator;
 
 #[async_trait::async_trait]

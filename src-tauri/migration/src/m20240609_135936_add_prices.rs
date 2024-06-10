@@ -25,7 +25,7 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager.alter_table(sea_query::Table::alter()
-            .table(Product::Table).drop_column(Alias::new("purchase_price")).to_owned()
+            .table(Product::Table).rename_column(Alias::new("purchase_price"), Alias::new("price")).to_owned()
         ).await?;
 
         manager.alter_table(sea_query::Table::alter()

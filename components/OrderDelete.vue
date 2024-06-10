@@ -21,7 +21,7 @@ const deleteTheOrders = async (id: string) => {
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("DELETE ORDER: " + err);
+    error("DELETE ORDER: " + err.error);
   } finally {
     store.setters.updateStore({ key: "show", value: false });
   }

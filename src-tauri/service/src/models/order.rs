@@ -1,5 +1,6 @@
 use sea_orm::FromQueryResult;
 use serde::{Deserialize, Serialize};
+use crate::{NewOrderItem,UpdateOrderItem};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
 pub struct SelectOrders {
@@ -28,11 +29,13 @@ pub struct SelectOrderDetails {
 pub struct NewOrder {
     pub client_id: String,
     pub status: String,
+    pub items: Vec<NewOrderItem>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Order {
+pub struct UpdateOrder {
     pub id: String,
     pub client_id: String,
     pub status: String,
+    pub items: Vec<UpdateOrderItem>,
 }

@@ -63,28 +63,13 @@ const createOrder = async () => {
   isLoading.value = true;
   if (order?.clientId && order.items?.length !== 0) {
     try {
-      const orderRes = await invoke<Res<String>>("create_order", {
+      await invoke<Res<String>>("create_order", {
         order: {
           client_id: order.clientId,
           status: order.status,
+          items: order.items,
         },
       });
-      for await (const item of order.items) {
-        const invRes = await invoke<Res<string>>("create_inventory", {
-          mvm: {
-            mvm_type: "OUT",
-            product_id: item.product_id,
-            quantity: item.quantity,
-          },
-        });
-        await invoke<Res<string>>("create_order_item", {
-          item: {
-            order_id: orderRes.data,
-            inventory_id: invRes.data,
-            price: item.price,
-          },
-        });
-      }
       //
       info(`CREATE ORDER: ${JSON.stringify(order)}`);
       //
@@ -96,7 +81,7 @@ const createOrder = async () => {
         refresh: "refresh-create-" + Math.random() * 9999,
       });
     } catch (err: any) {
-      error("CREATE ORDER: " + err);
+      error("CREATE ORDER: " + err.error);
     } finally {
       isLoading.value = false;
       hideModal();

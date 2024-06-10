@@ -1,6 +1,6 @@
 use sea_orm::*;
 
-use crate::{entities::*, models::*, Order};
+use crate::{entities::*, models::*};
 
 pub struct MutationsService;
 
@@ -67,7 +67,7 @@ impl MutationsService {
         client_active.phone_number = ActiveValue::Set(client.phone_number);
         client_active.address = ActiveValue::Set(client.address);
         client_active.image = ActiveValue::Set(client.image);
-        match client_active.save(db).await {
+        match client_active.update(db).await {
             Ok(_) => Ok(()),
             Err(err) => Err(err),
         }
@@ -105,7 +105,7 @@ impl MutationsService {
         supplier_active.phone_number = ActiveValue::Set(supplier.phone_number);
         supplier_active.address = ActiveValue::Set(supplier.address);
         supplier_active.image = ActiveValue::Set(supplier.image);
-        match supplier_active.save(db).await {
+        match supplier_active.update(db).await {
             Ok(_) => Ok(()),
             Err(err) => Err(err),
         }
@@ -143,39 +143,6 @@ impl MutationsService {
             None => Ok(0),
         }
     }
-    pub async fn update_inv_mvm(db: &DbConn, mvm: Inventory) -> Result<(), DbErr> {
-        let inventory_model = InventoryMovements::find_by_id(mvm.id).one(db).await?;
-        let mut inventory_active: InventoryActiveModel = inventory_model.unwrap().into();
-        inventory_active.mvm_type = ActiveValue::Set(mvm.mvm_type);
-        inventory_active.quantity = ActiveValue::Set(mvm.quantity);
-        inventory_active.product_id = ActiveValue::Set(mvm.product_id);
-        match inventory_active.save(db).await {
-            Ok(_) => Ok(()),
-            Err(err) => Err(err),
-        }
-    }
-    //
-    pub async fn create_order(db: &DbConn, order: NewOrder) -> Result<String, DbErr> {
-        let order = OrderActiveModel {
-            client_id: ActiveValue::Set(order.client_id),
-            status: ActiveValue::Set(order.status),
-            ..Default::default()
-        };
-        match order.insert(db).await {
-            Ok(o) => Ok(o.id),
-            Err(err) => Err(err),
-        }
-    }
-    pub async fn update_order(db: &DbConn, order: Order) -> Result<(), DbErr> {
-        let order_model = Orders::find_by_id(order.id).one(db).await?;
-        let mut order_active: OrderActiveModel = order_model.unwrap().into();
-        order_active.client_id = ActiveValue::Set(order.client_id);
-        order_active.status = ActiveValue::Set(order.status);
-        match order_active.save(db).await {
-            Ok(_) => Ok(()),
-            Err(err) => Err(err),
-        }
-    }
     pub async fn delete_order(db: &DbConn, id: String) -> Result<u64, DbErr> {
         let order_model = Orders::find_by_id(id).one(db).await?;
         match order_model {
@@ -184,30 +151,6 @@ impl MutationsService {
                 Ok(order.rows_affected)
             }
             None => Ok(0),
-        }
-    }
-    //
-    pub async fn create_order_item(db: &DbConn, item: NewOrderItem) -> Result<String, DbErr> {
-        let order_item = OrderItemActiveModel {
-            order_id: ActiveValue::Set(item.order_id),
-            inventory_id: ActiveValue::Set(item.inventory_id),
-            price: ActiveValue::Set(item.price),
-            ..Default::default()
-        };
-        match order_item.insert(db).await {
-            Ok(o) => Ok(o.id),
-            Err(err) => Err(err),
-        }
-    }
-    pub async fn update_order_item(db: &DbConn, item: OrderItem) -> Result<(), DbErr> {
-        let order_item_model = OrderItems::find_by_id(item.id).one(db).await?;
-        let mut order_item_active: OrderItemActiveModel = order_item_model.unwrap().into();
-        order_item_active.order_id = ActiveValue::Set(item.order_id);
-        order_item_active.inventory_id = ActiveValue::Set(item.inventory_id);
-        order_item_active.price = ActiveValue::Set(item.price);
-        match order_item_active.save(db).await {
-            Ok(_) => Ok(()),
-            Err(err) => Err(err),
         }
     }
     pub async fn delete_order_item(db: &DbConn, id: String) -> Result<u64, DbErr> {
@@ -220,32 +163,6 @@ impl MutationsService {
             None => Ok(0),
         }
     }
-    //
-    //
-    pub async fn create_invoice(db: &DbConn, invoice: NewInvoice) -> Result<String, DbErr> {
-        let invoice = InvoiceActiveModel {
-            client_id: ActiveValue::Set(invoice.client_id),
-            status: ActiveValue::Set(invoice.status),
-            order_id: ActiveValue::Set(invoice.order_id),
-            paid_amount: ActiveValue::Set(invoice.paid_amount),
-            ..Default::default()
-        };
-        match invoice.insert(db).await {
-            Ok(o) => Ok(o.id),
-            Err(err) => Err(err),
-        }
-    }
-    pub async fn update_invoice(db: &DbConn, invoice: Invoice) -> Result<(), DbErr> {
-        let invoice_model = Invoices::find_by_id(invoice.id).one(db).await?;
-        let mut invoice_active: InvoiceActiveModel = invoice_model.unwrap().into();
-        invoice_active.client_id = ActiveValue::Set(invoice.client_id);
-        invoice_active.status = ActiveValue::Set(invoice.status);
-        invoice_active.paid_amount = ActiveValue::Set(invoice.paid_amount);
-        match invoice_active.save(db).await {
-            Ok(_) => Ok(()),
-            Err(err) => Err(err),
-        }
-    }
     pub async fn delete_invoice(db: &DbConn, id: String) -> Result<u64, DbErr> {
         let invoice_model = Invoices::find_by_id(id).one(db).await?;
         match invoice_model {
@@ -254,30 +171,6 @@ impl MutationsService {
                 Ok(invoice.rows_affected)
             }
             None => Ok(0),
-        }
-    }
-    //
-    pub async fn create_invoice_item(db: &DbConn, item: NewInvoiceItem) -> Result<String, DbErr> {
-        let invoice_item = InvoiceItemActiveModel {
-            invoice_id: ActiveValue::Set(item.invoice_id),
-            inventory_id: ActiveValue::Set(item.inventory_id),
-            price: ActiveValue::Set(item.price),
-            ..Default::default()
-        };
-        match invoice_item.insert(db).await {
-            Ok(o) => Ok(o.id),
-            Err(err) => Err(err),
-        }
-    }
-    pub async fn update_invoice_item(db: &DbConn, item: InvoiceItem) -> Result<(), DbErr> {
-        let invoice_item_model = InvoiceItems::find_by_id(item.id).one(db).await?;
-        let mut invoice_item_active: InvoiceItemActiveModel = invoice_item_model.unwrap().into();
-        invoice_item_active.invoice_id = ActiveValue::Set(item.invoice_id);
-        invoice_item_active.inventory_id = ActiveValue::Set(item.inventory_id);
-        invoice_item_active.price = ActiveValue::Set(item.price);
-        match invoice_item_active.save(db).await {
-            Ok(_) => Ok(()),
-            Err(err) => Err(err),
         }
     }
     pub async fn delete_invoice_item(db: &DbConn, id: String) -> Result<u64, DbErr> {
@@ -290,26 +183,6 @@ impl MutationsService {
             None => Ok(0),
         }
     }
-    //
-    pub async fn create_quote(db: &DbConn, quote: NewQuote) -> Result<String, DbErr> {
-        let quote = QuoteActiveModel {
-            client_id: ActiveValue::Set(quote.client_id),
-            ..Default::default()
-        };
-        match quote.insert(db).await {
-            Ok(o) => Ok(o.id),
-            Err(err) => Err(err),
-        }
-    }
-    pub async fn update_quote(db: &DbConn, quote: Quote) -> Result<(), DbErr> {
-        let quote_model = Quotes::find_by_id(quote.id).one(db).await?;
-        let mut quote_active: QuoteActiveModel = quote_model.unwrap().into();
-        quote_active.client_id = ActiveValue::Set(quote.client_id);
-        match quote_active.save(db).await {
-            Ok(_) => Ok(()),
-            Err(err) => Err(err),
-        }
-    }
     pub async fn delete_quote(db: &DbConn, id: String) -> Result<u64, DbErr> {
         let quote_model = Quotes::find_by_id(id).one(db).await?;
         match quote_model {
@@ -318,32 +191,6 @@ impl MutationsService {
                 Ok(quote.rows_affected)
             }
             None => Ok(0),
-        }
-    }
-    //
-    pub async fn create_quote_item(db: &DbConn, item: NewQuoteItem) -> Result<String, DbErr> {
-        let quote_item = QuoteItemActiveModel {
-            product_id: ActiveValue::Set(item.product_id),
-            quote_id: ActiveValue::Set(item.quote_id),
-            price: ActiveValue::Set(item.price),
-            quantity: ActiveValue::Set(item.quantity),
-            ..Default::default()
-        };
-        match quote_item.insert(db).await {
-            Ok(o) => Ok(o.id),
-            Err(err) => Err(err),
-        }
-    }
-    pub async fn update_quote_item(db: &DbConn, item: QuoteItem) -> Result<(), DbErr> {
-        let quote_item_model = QuoteItems::find_by_id(item.id).one(db).await?;
-        let mut quote_item_active: QuoteItemActiveModel = quote_item_model.unwrap().into();
-        quote_item_active.product_id = ActiveValue::Set(item.product_id);
-        quote_item_active.quote_id = ActiveValue::Set(item.quote_id);
-        quote_item_active.price = ActiveValue::Set(item.price);
-        quote_item_active.quantity = ActiveValue::Set(item.quantity);
-        match quote_item_active.save(db).await {
-            Ok(_) => Ok(()),
-            Err(err) => Err(err),
         }
     }
     pub async fn delete_quote_item(db: &DbConn, id: String) -> Result<u64, DbErr> {

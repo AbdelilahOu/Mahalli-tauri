@@ -1,5 +1,5 @@
 use serde_json::Value;
-use service::{ListArgs, MutationsService, NewOrder, Order, QueriesService};
+use service::{ListArgs, MutationsService,TransactionService, NewOrder, UpdateOrder, QueriesService};
 use tauri::State;
 
 use crate::AppState;
@@ -17,7 +17,7 @@ pub async fn list_orders(state: State<'_, AppState>, args: ListArgs) -> SResult<
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -37,7 +37,7 @@ pub async fn list_order_products(state: State<'_, AppState>, id: String) -> SRes
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -49,7 +49,7 @@ pub async fn list_order_products(state: State<'_, AppState>, id: String) -> SRes
 #[tauri::command]
 pub async fn create_order(state: State<'_, AppState>, order: NewOrder) -> SResult<String> {
     let _ = state.db_conn;
-    let res = MutationsService::create_order(&state.db_conn, order).await;
+    let res = TransactionService::create_order(&state.db_conn, order).await;
     match res {
         Ok(id) => Ok(Seccess {
             error: None,
@@ -57,7 +57,7 @@ pub async fn create_order(state: State<'_, AppState>, order: NewOrder) -> SResul
             data: Some(id),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -67,9 +67,9 @@ pub async fn create_order(state: State<'_, AppState>, order: NewOrder) -> SResul
 }
 
 #[tauri::command]
-pub async fn update_order(state: State<'_, AppState>, order: Order) -> SResult<()> {
+pub async fn update_order(state: State<'_, AppState>, order: UpdateOrder) -> SResult<()> {
     let _ = state.db_conn;
-    let res = MutationsService::update_order(&state.db_conn, order).await;
+    let res = TransactionService::update_order(&state.db_conn, order).await;
     match res {
         Ok(_) => Ok(Seccess {
             error: None,
@@ -77,7 +77,7 @@ pub async fn update_order(state: State<'_, AppState>, order: Order) -> SResult<(
             data: None,
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -97,7 +97,7 @@ pub async fn delete_order(state: State<'_, AppState>, id: String) -> SResult<u64
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -117,7 +117,7 @@ pub async fn get_order(state: State<'_, AppState>, id: String) -> SResult<Value>
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -137,7 +137,7 @@ pub async fn get_order_details(state: State<'_, AppState>, id: String) -> SResul
             data: Some(res),
         }),
         Err(err) => {
-            println!("Error: {}", err);
+            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
