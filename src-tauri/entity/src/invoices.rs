@@ -10,6 +10,7 @@ pub struct Model {
     #[sea_orm(column_type = "Double")]
     pub paid_amount: f64,
     pub client_id: String,
+    #[sea_orm(unique)]
     pub order_id: Option<String>,
     pub status: String,
     pub created_at: String,

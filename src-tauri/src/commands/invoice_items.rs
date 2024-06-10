@@ -1,15 +1,15 @@
-use service::{ MutationsService};
 use tauri::State;
+
+use service::MutationsService;
 
 use crate::AppState;
 
-use super::{Fail, SResult, Seccess};
+use super::{Fail, Seccess, SResult};
 
 #[tauri::command]
 pub async fn delete_invoice_item(state: State<'_, AppState>, id: String) -> SResult<u64> {
     let _ = state.db_conn;
-    let res = MutationsService::delete_invoice_item(&state.db_conn, id).await;
-    match res {
+    match MutationsService::delete_invoice_item(&state.db_conn, id).await {
         Ok(res) => Ok(Seccess {
             error: None,
             message: None,

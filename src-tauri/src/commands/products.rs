@@ -1,23 +1,22 @@
 use serde_json::Value;
-use service::{ListArgs, MutationsService, NewProduct, Product, QueriesService};
 use tauri::State;
+
+use service::{ListArgs, MutationsService, NewProduct, Product, QueriesService};
 
 use crate::AppState;
 
-use super::{Fail, SResult, Seccess};
+use super::{Fail, Seccess, SResult};
 
 #[tauri::command]
 pub async fn list_products(state: State<'_, AppState>, args: ListArgs) -> SResult<Value> {
     let _ = state.db_conn;
-    let res = QueriesService::list_products(&state.db_conn, args).await;
-    match res {
+    match QueriesService::list_products(&state.db_conn, args).await {
         Ok(res) => Ok(Seccess {
             error: None,
             message: None,
             data: Some(res),
         }),
         Err(err) => {
-            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -29,15 +28,13 @@ pub async fn list_products(state: State<'_, AppState>, args: ListArgs) -> SResul
 #[tauri::command]
 pub async fn search_products(state: State<'_, AppState>, search: String) -> SResult<Vec<Value>> {
     let _ = state.db_conn;
-    let res = QueriesService::search_products(&state.db_conn, search).await;
-    match res {
+    match QueriesService::search_products(&state.db_conn, search).await {
         Ok(res) => Ok(Seccess {
             error: None,
             message: None,
             data: Some(res),
         }),
         Err(err) => {
-            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -49,15 +46,13 @@ pub async fn search_products(state: State<'_, AppState>, search: String) -> SRes
 #[tauri::command]
 pub async fn create_product(state: State<'_, AppState>, product: NewProduct) -> SResult<String> {
     let _ = state.db_conn;
-    let res = MutationsService::create_product(&state.db_conn, product).await;
-    match res {
+    match MutationsService::create_product(&state.db_conn, product).await {
         Ok(id) => Ok(Seccess::<String> {
             error: None,
             message: Option::Some(String::from("product created successfully")),
             data: Some(id),
         }),
         Err(err) => {
-            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -69,15 +64,13 @@ pub async fn create_product(state: State<'_, AppState>, product: NewProduct) -> 
 #[tauri::command]
 pub async fn delete_product(state: State<'_, AppState>, id: String) -> SResult<u64> {
     let _ = state.db_conn;
-    let res = MutationsService::delete_product(&state.db_conn, id).await;
-    match res {
+    match MutationsService::delete_product(&state.db_conn, id).await {
         Ok(res) => Ok(Seccess {
             error: None,
             message: None,
             data: Some(res),
         }),
         Err(err) => {
-            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,
@@ -89,15 +82,13 @@ pub async fn delete_product(state: State<'_, AppState>, id: String) -> SResult<u
 #[tauri::command]
 pub async fn update_product(state: State<'_, AppState>, product: Product) -> SResult<String> {
     let _ = state.db_conn;
-    let res = MutationsService::update_product(&state.db_conn, product).await;
-    match res {
+    match MutationsService::update_product(&state.db_conn, product).await {
         Ok(_) => Ok(Seccess::<String> {
             error: None,
             message: Option::Some(String::from("update products success")),
             data: None,
         }),
         Err(err) => {
-            
             Err(Fail {
                 error: Some(err.to_string()),
                 message: None,

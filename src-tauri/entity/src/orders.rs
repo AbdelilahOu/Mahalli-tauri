@@ -8,6 +8,8 @@ pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: String,
     pub client_id: String,
+    #[sea_orm(unique)]
+    pub quote_id: Option<String>,
     pub created_at: String,
     pub status: String,
 }
@@ -22,10 +24,18 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Clients,
-    #[sea_orm(has_many = "super::invoices::Entity")]
+    #[sea_orm(has_one = "super::invoices::Entity")]
     Invoices,
     #[sea_orm(has_many = "super::order_items::Entity")]
     OrderItems,
+    #[sea_orm(
+        belongs_to = "super::quotes::Entity",
+        from = "Column::QuoteId",
+        to = "super::quotes::Column::Id",
+        on_update = "NoAction",
+        on_delete = "SetNull"
+    )]
+    Quotes,
 }
 
 impl Related<super::clients::Entity> for Entity {
@@ -43,6 +53,12 @@ impl Related<super::invoices::Entity> for Entity {
 impl Related<super::order_items::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::OrderItems.def()
+    }
+}
+
+impl Related<super::quotes::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Quotes.def()
     }
 }
 

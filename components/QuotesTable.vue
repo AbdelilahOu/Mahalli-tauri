@@ -44,47 +44,21 @@ const toggleThisQuotes = (Quote: QuoteT, name: string) => {
   store.setters.updateStore({ key: "show", value: true });
 };
 
-const createInvoiceFromQuote = async (id: string) => {
+const createOrderFromQuote = async (id: string) => {
   try {
-    const res = await invoke<Res<QuoteForUpdateT>>("get_quote", {
+    const res = await invoke<Res<QuoteForUpdateT>>("create_order_from_quote", {
       id: id,
     });
-    if (!res.error) {
-      const orderRes = await invoke<Res<String>>("create_order", {
-        order: {
-          client_id: res.data.clientId,
-          status: "DELIVERED",
-        },
-      });
-      //
-      for await (const item of res.data.items) {
-        const invRes = await invoke<Res<string>>("create_inventory", {
-          mvm: {
-            mvm_type: "OUT",
-            product_id: item.product_id,
-            quantity: item.quantity,
-          },
-        });
-
-        await invoke<Res<string>>("create_order_item", {
-          item: {
-            order_id: orderRes.data,
-            inventory_id: invRes.data,
-            price: item.price,
-          },
-        });
-      }
-      info(`CREATE ORDER FROM QUOTE: ${id}`);
-      //
-      toast.success(t("notifications.order.created"), {
-        closeButton: true,
-        description: h(NuxtLink, {
-          to: localePath("/orders/?page=1&id=" + orderRes.data),
-          class: "underline",
-          innerHTML: "go to order",
-        }),
-      });
-    }
+    info(`CREATE ORDER FROM QUOTE: ${id}`);
+    //
+    toast.success(t("notifications.order.created"), {
+      closeButton: true,
+      description: h(NuxtLink, {
+        to: localePath("/orders/?page=1&id=" + res.data),
+        class: "underline",
+        innerHTML: "go to order",
+      }),
+    });
   } catch (err: any) {
     error("GET QUOTE FOR ORDER: " + err.error);
   }
@@ -201,7 +175,7 @@ const createInvoiceFromQuote = async (id: string) => {
                     </NuxtLink>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem @click="createInvoiceFromQuote(quote.id!)">
+                  <DropdownMenuItem @click="createOrderFromQuote(quote.id!)">
                     <Truck :size="20" class="text-slate-800 inline mr-2" />
                     {{ t("g.actions.toOrder") }}
                   </DropdownMenuItem>
