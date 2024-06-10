@@ -261,6 +261,7 @@ impl TransactionService {
                                 let order = OrderActiveModel {
                                     client_id: ActiveValue::Set(quote.client_id),
                                     status: ActiveValue::Set("DELIVERED".to_string()),
+                                    quote_id: ActiveValue::Set(Some(quote.id)),
                                     ..Default::default()
                                 }.insert(txn).await?;
 
@@ -315,6 +316,7 @@ impl TransactionService {
                                     client_id: ActiveValue::Set(order.client_id),
                                     paid_amount: ActiveValue::Set(0.0),
                                     status: ActiveValue::Set(status),
+                                    order_id: ActiveValue::Set(Some(order.id)),
                                     ..Default::default()
                                 }.insert(txn).await?;
 
