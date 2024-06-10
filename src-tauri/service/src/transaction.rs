@@ -306,7 +306,7 @@ impl TransactionService {
                     None => {
                         match Orders::find_by_id(&id).one(txn).await? {
                             Some(order) => {
-                                let mut status = String::from("");
+                                let mut status: String;
                                 if order.status.eq("DELIVERED") {
                                     status = "PAID".to_string()
                                 } else {

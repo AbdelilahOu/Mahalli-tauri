@@ -44,7 +44,7 @@ const openTranslationModal = () => {
       >
         <span
           v-if="!collapse"
-          class="whitespace-nowrap flex items-center gap-2 pl-2 font-semibold text-base text-primary overflow-hidden"
+          class="whitespace-nowrap flex items-center gap-2 px-2 font-semibold text-base text-primary overflow-hidden"
         >
           <Store :size="20" class="text-primary inline shrink-0 m-auto" />
           Mahalli
@@ -53,7 +53,7 @@ const openTranslationModal = () => {
           @click="collapse = !collapse"
           :size="20"
           :class="{
-            'rotate-180': collapse,
+            'rotate-180': locale == 'ar' ? !collapse : collapse,
             'transition-all duration-200 cursor-pointer transform': true,
           }"
         />

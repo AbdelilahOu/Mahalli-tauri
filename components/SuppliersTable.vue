@@ -7,7 +7,7 @@ defineProps<{
   suppliers: SupplierT[];
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const toggleThisSupplier = (supplier: SupplierT, name: string) => {
@@ -35,7 +35,7 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
 
 <template>
   <div>
-    <table>
+    <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
           <th class="small"></th>

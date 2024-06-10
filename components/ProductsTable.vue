@@ -11,7 +11,7 @@ import {
 
 defineProps<{ products: ProductT[] }>();
 
-const { t, d } = useI18n();
+const { t, d, locale } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const toggleThisProduct = (product: ProductT, name: string) => {
@@ -39,7 +39,7 @@ const updateProductStock = (id: string, name: string) => {
 
 <template>
   <div>
-    <table>
+    <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
           <th class="small"></th>

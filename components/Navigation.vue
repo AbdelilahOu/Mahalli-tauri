@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { HomeIcon, ChevronLeft, ChevronRight } from "lucide-vue-next";
 const localePath = useLocalePath();
+const { locale } = useI18n();
 </script>
 
 <template>
@@ -8,7 +9,12 @@ const localePath = useLocalePath();
     <div
       class="w-full h-full flex items-center py-3 px-2 bg-white justify-between"
     >
-      <div class="text-black flex items-center justify-center gap-2">
+      <div
+        :class="{
+          'text-black flex items-center justify-center gap-2': true,
+          'flex-row-reverse': locale == 'ar',
+        }"
+      >
         <ChevronLeft
           :size="20"
           class="cursor-pointer"

@@ -19,7 +19,7 @@ import { toast } from "vue-sonner";
 import { NuxtLink } from "#components";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { t, d } = useI18n();
+const { t, d, locale } = useI18n();
 const localePath = useLocalePath();
 
 defineProps<{ quotes: QuoteT[]; quoteProducts: QuoteProductT[] }>();
@@ -67,7 +67,7 @@ const createOrderFromQuote = async (id: string) => {
 
 <template>
   <div>
-    <table>
+    <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
           <th>{{ t("g.fields.fullname") }}</th>
