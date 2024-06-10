@@ -31,6 +31,7 @@ const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
   updateQueryParams({
     id: Invoice.id,
+    highlight: false,
   });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
@@ -72,7 +73,10 @@ const updateInvoiceStatus = async (invoice: any) => {
           v-for="(invoice, index) in invoices"
           v-fade="index"
           :key="invoice.id"
-          :class="{ 'animate-highlight-row': invoice.id == $route.query.id }"
+          :class="{
+            'animate-highlight-row':
+              invoice.id == $route.query.id && $route.query.highlight == 'true',
+          }"
         >
           <td class="p-2">
             <NuxtLink

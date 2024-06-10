@@ -45,6 +45,7 @@ const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 const toggleThisOrders = (Order: OrderT, name: string) => {
   updateQueryParams({
     id: Order.id,
+    highlight: false,
   });
   store.setters.updateStore({ key: "name", value: name });
   store.setters.updateStore({ key: "show", value: true });
@@ -80,7 +81,7 @@ const createInvoiceFromOrder = async (id: string) => {
     toast.success(t("notifications.invoice.created"), {
       closeButton: true,
       description: h(NuxtLink, {
-        to: localePath("/invoices/?page=1&id=" + res.data),
+        to: localePath("/invoices/?page=1&highlight=true&id=" + res.data),
         class: "underline",
         innerHTML: "go to invoice",
       }),
@@ -110,7 +111,10 @@ const createInvoiceFromOrder = async (id: string) => {
           v-for="(order, index) in orders"
           v-fade="index"
           :key="order.id"
-          :class="{ 'animate-highlight-row': order.id == $route.query.id }"
+          :class="{
+            'animate-highlight-row':
+              order.id == $route.query.id && $route.query.highlight == 'true',
+          }"
         >
           <td class="p-2">
             <NuxtLink
