@@ -306,12 +306,11 @@ impl TransactionService {
                     None => {
                         match Orders::find_by_id(&id).one(txn).await? {
                             Some(order) => {
-                                let mut status: String;
-                                if order.status.eq("DELIVERED") {
-                                    status = "PAID".to_string()
+                                let status = if order.status.eq("DELIVERED") {
+                                    "PAID".to_string()
                                 } else {
-                                    status = order.status;
-                                }
+                                    order.status
+                                };
                                 let invoice = InvoiceActiveModel {
                                     client_id: ActiveValue::Set(order.client_id),
                                     paid_amount: ActiveValue::Set(0.0),
