@@ -79,7 +79,7 @@
       "title": "Sold and bought items during the last three months",
       "labels": ["BOUGHT", "SOLD"],
       "revenue": "Total revenue",
-      "growth": "{n} from last month",
+      "growth": "{n} % from last month",
       "b3c": "Best clients based on expenses",
       "bp": "Best Selling Products (quantity)",
       "b3s": "Best suppliers based on expenses"
