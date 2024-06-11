@@ -285,7 +285,7 @@ onBeforeMount(async () => {
               />
             </VisXYContainer>
           </template>
-          <template #footer>
+          <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
               <i>{{ t("dashboard.i.b3c") }}</i>
             </h1>
@@ -327,7 +327,7 @@ onBeforeMount(async () => {
               />
             </VisXYContainer>
           </template>
-          <template #footer>
+          <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
               <i>{{ t("dashboard.i.bp") }}</i>
             </h1>
@@ -360,7 +360,7 @@ onBeforeMount(async () => {
               />
             </VisXYContainer>
           </template>
-          <template #footer>
+          <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
               <i>{{ t("dashboard.i.title") }} ({{ t("g.fields.item") }})</i>
             </h1>
@@ -393,7 +393,7 @@ onBeforeMount(async () => {
               />
             </VisXYContainer>
           </template>
-          <template #footer>
+          <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
               <i>{{ t("dashboard.i.title") }} (DH)</i>
             </h1>

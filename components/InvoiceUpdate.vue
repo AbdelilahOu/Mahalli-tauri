@@ -79,44 +79,9 @@ const updateTheInvoices = async () => {
         client_id: invoice.clientId,
         status: invoice.status,
         paid_amount: invoice.paidAmount,
+        items: invoice.items,
       },
     });
-    //
-    for await (const item of invoice.items) {
-      if (!item.id) {
-        const invRes = await invoke<Res<string>>("create_inventory", {
-          mvm: {
-            mvm_type: "OUT",
-            product_id: item.product_id,
-            quantity: item.quantity,
-          },
-        });
-        await invoke<Res<string>>("create_invoice_item", {
-          item: {
-            invoice_id: invoice.id,
-            inventory_id: invRes.data,
-            price: item.price,
-          },
-        });
-      } else {
-        await invoke<Res<string>>("update_inventory", {
-          mvm: {
-            id: item.inventory_id,
-            mvm_type: "OUT",
-            product_id: item.product_id,
-            quantity: item.quantity,
-          },
-        });
-        await invoke<Res<string>>("update_invoice_item", {
-          item: {
-            id: item.id,
-            invoice_id: invoice.id,
-            inventory_id: item.inventory_id,
-            price: item.price,
-          },
-        });
-      }
-    }
     //
     info(`UPDATE INVOICE: ${JSON.stringify(invoice)}`);
     //
@@ -128,6 +93,7 @@ const updateTheInvoices = async () => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    console.log(err);
     error("UPDATE INVOICE: " + err.error);
   } finally {
     hideModal();
