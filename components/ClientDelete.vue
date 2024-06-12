@@ -21,6 +21,10 @@ const deleteTheClient = async (id: string, fullname: string) => {
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("DELETE CLIENT: " + err.error);
   } finally {
     cancelDelete();
@@ -39,7 +43,7 @@ const cancelDelete = () => {
       </CardTitle>
     </CardHeader>
     <CardContent>
-      <div/>
+      <div />
     </CardContent>
     <CardFooter>
       <Button variant="outline" @click="cancelDelete">

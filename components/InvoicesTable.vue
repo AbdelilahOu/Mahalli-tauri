@@ -49,6 +49,10 @@ const updateInvoiceStatus = async (invoice: any) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("UPDATE INVOICE STATUS: " + err.error);
   }
 };
@@ -105,7 +109,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                 <table class="w-full not-default">
                   <thead>
                     <tr>
-                      <th v-for="index in 3" :key="index"/>
+                      <th v-for="index in 3" :key="index" />
                     </tr>
                   </thead>
                   <tbody>

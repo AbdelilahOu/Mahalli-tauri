@@ -29,6 +29,10 @@ const upload = async () => {
         table: route.query.table,
       });
     } catch (err: any) {
+      toast.error(t("notifications.error.title"), {
+        description: t("notifications.error.description"),
+        closeButton: true,
+      });
       error("Error upload csv : " + err.error);
     } finally {
       updateQueryParams({

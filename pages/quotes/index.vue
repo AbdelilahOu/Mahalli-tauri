@@ -5,6 +5,7 @@ import { invoke } from "@tauri-apps/api";
 import { Calendar as CalendarIcon, PlusCircleIcon } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
 import { type WatchStopHandle } from "vue";
+import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -62,6 +63,10 @@ const getQuotes = async (search: string, page = 1) => {
     quotes.value = res.data.quotes;
     totalRows.value = res.data.count;
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("LIST ORDERS: " + err.error);
   }
 };
@@ -74,6 +79,10 @@ const listQuoteProduct = async (id?: string) => {
     //
     quoteProducts.value = res.data;
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("LIST ORDER PRODUCTS: " + err.error);
   }
 };
@@ -95,7 +104,7 @@ const updateModal = (name: string) => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
         <div class="w-2/3 lg:max-w-[50%] grid grid-cols-3 gap-2">
-          <Input v-model="searchQuery" type="text" :place-holder="t('g.s')" />
+          <Input v-model="searchQuery" type="text" :placeholder="t('g.s')" />
           <Popover>
             <PopoverTrigger as-child>
               <Button

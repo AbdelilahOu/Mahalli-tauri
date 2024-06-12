@@ -11,6 +11,7 @@ import {
 } from "@unovis/vue";
 import { DollarSign, NotepadText, Truck } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
+import { toast } from "vue-sonner";
 
 const { t, locale } = useI18n();
 
@@ -58,9 +59,7 @@ const barPriceTriggers = {
     return "<span>" + d[mvmType].price.toFixed(2) + " DH</span>";
   },
 };
-function numberToK(num: number) {
-  return Intl.NumberFormat(locale.value, { notation: "compact" }).format(num);
-}
+
 async function getInventoryMovementStats() {
   try {
     const res = await invoke<Res<movementsT[]>>("list_mvm_stats");
@@ -94,6 +93,10 @@ async function getInventoryMovementStats() {
     const movementLabelsSet = new Set<string>(Object.keys(movements.value));
     movementsLabels.value = [...movementLabelsSet];
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("STATS INVENTORY MOUVEMENTS: " + err.error);
   }
 }
@@ -105,6 +108,10 @@ async function getBestClients() {
     //
     bestClients.value = res.data;
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("STATS BEST CLIENTS: " + err.error);
   }
 }
@@ -116,6 +123,10 @@ async function getBestProducts() {
     //
     bestProducts.value = res.data;
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("STATS BEST PRODUCTS: " + err.error);
   }
 }
@@ -127,6 +138,10 @@ async function getStatusCounts() {
     //
     statusCounts.value = res.data;
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("STATS STATUS COUNT: " + err.error);
   }
 }
@@ -148,6 +163,10 @@ async function getRevenue() {
       currentRevenue: data.currentRevenue,
     };
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("STATS REVENUE: " + err.error);
   }
 }
@@ -168,6 +187,10 @@ async function getExpenses() {
       currentExpenses: data.currentExpenses,
     };
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("STATS EXPENSES: " + err.error);
   }
 }

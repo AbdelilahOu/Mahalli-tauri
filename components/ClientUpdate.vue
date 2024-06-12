@@ -67,6 +67,10 @@ const updateTheClient = async (client: ClientT) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("UPDATE CLIENT: " + err.error);
   } finally {
     hideModal();

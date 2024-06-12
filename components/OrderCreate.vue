@@ -81,6 +81,10 @@ const createOrder = async () => {
         refresh: "refresh-create-" + Math.random() * 9999,
       });
     } catch (err: any) {
+      toast.error(t("notifications.error.title"), {
+        description: t("notifications.error.description"),
+        closeButton: true,
+      });
       error("CREATE ORDER: " + err.error);
     } finally {
       isLoading.value = false;
@@ -163,7 +167,7 @@ const hideModal = () => {
               <Input
                 v-model="item.quantity"
                 class="border-r-0"
-                :place-holder="t('o.c.d.o.placeholder[0]')"
+                :placeholder="t('o.c.d.o.placeholder[0]')"
                 type="number"
               >
                 <template #unite> {{ t("g.fields.item") }} </template>
@@ -171,7 +175,7 @@ const hideModal = () => {
               <Input
                 v-model="item.price"
                 class="border-r-0"
-                :place-holder="t('o.c.d.o.placeholder[1]')"
+                :placeholder="t('o.c.d.o.placeholder[1]')"
                 type="number"
               >
                 <template #unite> DH </template>

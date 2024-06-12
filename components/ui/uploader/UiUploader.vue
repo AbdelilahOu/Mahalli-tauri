@@ -50,6 +50,10 @@ const OpenDialog = async () => {
       return;
     }
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("ERROR PDF-LIB: " + err.error);
   }
 };

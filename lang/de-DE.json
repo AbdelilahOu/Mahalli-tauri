@@ -116,6 +116,10 @@
       "created": "Ein Angebot wurde erstellt",
       "updated": "Das Angebot wurde aktualisiert",
       "deleted": "Das Angebot wurde gelöscht"
+    },
+    "error": {
+      "title": "Hoppla! Bei uns ist etwas schiefgelaufen.",
+      "description": "Sie können es erneut versuchen."
     }
   },
   "c": {
