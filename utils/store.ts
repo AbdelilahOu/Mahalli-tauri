@@ -31,30 +31,7 @@ interface args1 {
 
 interface args2 {
   key: "name";
-  value:
-    | "TranslationModal"
-    | "ProductUpdate"
-    | "ProductDelete"
-    | "ProductCreate"
-    | "InvoiceCreate"
-    | "InvoiceUpdate"
-    | "InvoiceDelete"
-    | "SupplierCreate"
-    | "SupplierDelete"
-    | "SupplierUpdate"
-    | "ClientDelete"
-    | "ClientUpdate"
-    | "ClientCreate"
-    | "OrderCreate"
-    | "OrderDelete"
-    | "OrderUpdate"
-    | "CsvUploader"
-    | string;
-}
-
-interface args4 {
-  key: "currentLocale";
-  value: locale;
+  value: string;
 }
 
 interface args5 {
@@ -62,7 +39,7 @@ interface args5 {
   value: any;
 }
 
-export type Args = args1 | args2 | args4 | args5;
+export type Args = args1 | args2 | args5;
 
 export interface storeState
   extends Record<"show", boolean>,
