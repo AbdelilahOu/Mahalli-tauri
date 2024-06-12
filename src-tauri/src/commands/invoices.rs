@@ -1,7 +1,7 @@
 use serde_json::Value;
 use tauri::State;
 
-use service::{ListArgs, MutationsService, NewInvoice, QueriesService, TransactionService, UpdateInvoice};
+use service::{ListArgs, MutationsService, NewInvoice, QueriesService, TransactionService, UpdateInvoice, UpdateStatus};
 
 use crate::AppState;
 
@@ -83,6 +83,24 @@ pub async fn create_invoice(state: State<'_, AppState>, invoice: NewInvoice) -> 
 pub async fn update_invoice(state: State<'_, AppState>, invoice: UpdateInvoice) -> SResult<()> {
     let _ = state.db_conn;
     match TransactionService::update_invoice(&state.db_conn, invoice).await {
+        Ok(_) => Ok(Seccess {
+            error: None,
+            message: Option::Some(String::from("update invoices success")),
+            data: None,
+        }),
+        Err(err) => {
+            Err(Fail {
+                error: Some(err.to_string()),
+                message: None,
+            })
+        }
+    }
+}
+
+#[tauri::command]
+pub async fn update_invoice_status(state: State<'_, AppState>, invoice: UpdateStatus) -> SResult<()> {
+    let _ = state.db_conn;
+    match MutationsService::update_invoice_status(&state.db_conn, invoice).await {
         Ok(_) => Ok(Seccess {
             error: None,
             message: Option::Some(String::from("update invoices success")),

@@ -53,7 +53,7 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
 
 const updateOrderStatus = async (order: any) => {
   try {
-    await invoke("update_order", {
+    await invoke("update_order_status", {
       order,
     });
     //
@@ -197,9 +197,7 @@ const createInvoiceFromOrder = async (id: string) => {
                     () =>
                       updateOrderStatus({
                         id: order.id,
-                        client_id: order.clientId,
                         status: 'DELIVERED',
-                        items: [],
                       })
                   "
                 >
@@ -214,9 +212,7 @@ const createInvoiceFromOrder = async (id: string) => {
                     () =>
                       updateOrderStatus({
                         id: order.id,
-                        client_id: order.clientId,
                         status: 'PENDING',
-                        items: [],
                       })
                   "
                 >
@@ -231,9 +227,7 @@ const createInvoiceFromOrder = async (id: string) => {
                     () =>
                       updateOrderStatus({
                         id: order.id,
-                        client_id: order.clientId,
                         status: 'CANCELED',
-                        items: [],
                       })
                   "
                 >
