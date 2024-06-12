@@ -133,9 +133,9 @@ const onSubmit = form.handleSubmit((values) => {
       <CardFooter>
         <Button
           type="button"
-          @click="hideModal"
           :disabled="isUpdating"
           variant="outline"
+          @click="hideModal"
         >
           {{ t("g.b.no") }}</Button
         >

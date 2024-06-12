@@ -11,5 +11,5 @@ const client = ref<ClientT | null>(null);
 </script>
 
 <template>
-  <main class="w-full h-full px-3 py-1"></main>
+  <main class="w-full h-full px-3 py-1"/>
 </template>

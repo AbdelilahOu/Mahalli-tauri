@@ -77,7 +77,7 @@ const updateModal = (name: string) => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
         <div class="w-1/3">
-          <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')" />
+          <Input v-model="searchQuery" type="text" :place-holder="t('g.s')" />
         </div>
         <div class="w-fit flex gap-2">
           <!-- <Button variant="ghost" @click="uploadCSV">

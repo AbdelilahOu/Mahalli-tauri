@@ -73,7 +73,7 @@ const addInvoiceItem = () => {
 
 const updateTheInvoices = async () => {
   try {
-    await invoke<Res<String>>("update_invoice", {
+    await invoke<Res<string>>("update_invoice", {
       invoice: {
         id: invoice.id,
         client_id: invoice.clientId,
@@ -134,7 +134,7 @@ const deleteInvoiceItem = (index: number) => {
             </Label>
             <SearchableItems
               v-if="invoice.fullname"
-              :defaultValue="invoice.fullname"
+              :default-value="invoice.fullname"
               :items="clients"
               @update:items="(s) => searchSuppliers(s)"
               @on:select="(id) => (invoice.clientId = id)"
@@ -181,7 +181,7 @@ const deleteInvoiceItem = (index: number) => {
           >
             <template v-for="(item, index) in invoice.items" :key="index">
               <SearchableItems
-                :defaultValue="item.name"
+                :default-value="item.name"
                 :items="products"
                 @update:items="(s) => searchProducts(s)"
                 @on:select="
@@ -191,7 +191,7 @@ const deleteInvoiceItem = (index: number) => {
               <Input
                 v-model="item.quantity"
                 class="border-r-0"
-                :placeHolder="t('o.c.d.o.placeholder[0]')"
+                :place-holder="t('o.c.d.o.placeholder[0]')"
                 type="number"
               >
                 <template #unite> {{ t("g.fields.item") }} </template>
@@ -199,15 +199,15 @@ const deleteInvoiceItem = (index: number) => {
               <Input
                 v-model="item.price"
                 class="border-r-0"
-                :placeHolder="t('o.c.d.o.placeholder[1]')"
+                :place-holder="t('o.c.d.o.placeholder[1]')"
                 type="number"
               >
                 <template #unite> DH </template>
               </Input>
               <Trash2
-                @click="deleteInvoiceItem(index)"
                 class="cursor-pointer m-auto"
                 :size="20"
+                @click="deleteInvoiceItem(index)"
               />
             </template>
           </div>

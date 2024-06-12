@@ -21,7 +21,7 @@ async function onDrop(files: File[] | null) {
   if (files) {
     const imagePath = await getBytesArray(files[0]);
     if (imagePath) {
-      let base64 = btoa(String.fromCharCode(...imagePath));
+      const base64 = btoa(String.fromCharCode(...imagePath));
       emits("save:base64", base64);
       selectedFile.value = base64;
     }
@@ -33,7 +33,7 @@ const { isOverDropZone } = useDropZone(dropZone, onDrop);
 const selectedFile = ref<string | null>();
 const OpenDialog = async () => {
   try {
-    let imagePath = (await open({
+    const imagePath = (await open({
       multiple: false,
       filters: [{ name, extensions }],
       defaultPath: name == "Image" ? await pictureDir() : await downloadDir(),
@@ -41,7 +41,7 @@ const OpenDialog = async () => {
 
     if (imagePath) {
       if (name === "Image") {
-        let base64 = await getFileBytes(imagePath);
+        const base64 = await getFileBytes(imagePath);
         if (base64) {
           emits("save:base64", base64);
           selectedFile.value = base64;
@@ -60,9 +60,9 @@ const OpenDialog = async () => {
     class="w-full relative h-36 flex-col rounded-md flex text-black justify-center items-center"
   >
     <span
-      @click="selectedFile = null"
       v-if="selectedFile"
       class="absolute w-8 h-8 bg-white rounded-bl-md rounded-tr-md hover:bg-gray-100 cursor-pointer transition-all duration-150 -top-0 flex items-center justify-center -right-0 z-[90]"
+      @click="selectedFile = null"
     >
       <Trash2 :size="20" />
     </span>
@@ -70,7 +70,7 @@ const OpenDialog = async () => {
       v-if="name == 'Image' && selectedFile"
       class="absolute top-0 border border-gray-300 rounded-md object-cover w-full h-full"
       :src="`data:image/png;base64,${selectedFile}`"
-    />
+    >
     <div
       v-else
       ref="dropZone"
@@ -84,13 +84,13 @@ const OpenDialog = async () => {
     >
       <button
         type="button"
-        @mouseenter="isOverDropZone = true"
-        @mouseleave="isOverDropZone = false"
-        @click="OpenDialog"
         :class="[
           'w-full h-full flex flex-col gap-2 justify-center items-center',
           isOverDropZone ? 'text-sky-500' : 'text-gray-400',
         ]"
+        @mouseenter="isOverDropZone = true"
+        @mouseleave="isOverDropZone = false"
+        @click="OpenDialog"
       >
         <span> {{ t("g.dropZone") }} </span>
         <svg

@@ -70,7 +70,7 @@ const addQuoteItem = () => {
 const updateTheQuotes = async () => {
   try {
     console.log(quote);
-    await invoke<Res<String>>("update_quote", {
+    await invoke<Res<string>>("update_quote", {
       quote: {
         id: quote.id,
         client_id: quote.clientId,
@@ -127,7 +127,7 @@ const deleteQuoteItem = (index: number) => {
             </Label>
             <SearchableItems
               v-if="quote.fullname"
-              :defaultValue="quote.fullname"
+              :default-value="quote.fullname"
               :items="clients"
               @update:items="(s) => searchClients(s)"
               @on:select="(id) => (quote.clientId = id)"
@@ -144,7 +144,7 @@ const deleteQuoteItem = (index: number) => {
           >
             <template v-for="(item, index) in quote.items" :key="index">
               <SearchableItems
-                :defaultValue="item.name"
+                :default-value="item.name"
                 :items="products"
                 @update:items="(s) => searchProducts(s)"
                 @on:select="
@@ -154,7 +154,7 @@ const deleteQuoteItem = (index: number) => {
               <Input
                 v-model="item.quantity"
                 class="order-r-0"
-                :placeHolder="t('o.c.d.o.placeholder[0]')"
+                :place-holder="t('o.c.d.o.placeholder[0]')"
                 type="number"
               >
                 <template #unite> {{ t("g.fields.item") }} </template>
@@ -162,15 +162,15 @@ const deleteQuoteItem = (index: number) => {
               <Input
                 v-model="item.price"
                 class="order-r-0"
-                :placeHolder="t('o.c.d.o.placeholder[1]')"
+                :place-holder="t('o.c.d.o.placeholder[1]')"
                 type="number"
               >
                 <template #unite> DH </template>
               </Input>
               <Trash2
-                @click="deleteQuoteItem(index)"
                 class="cursor-pointer m-auto"
                 :size="20"
+                @click="deleteQuoteItem(index)"
               />
             </template>
           </div>

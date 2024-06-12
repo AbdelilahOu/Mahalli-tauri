@@ -98,10 +98,10 @@ const updateModal = (name: string) => {
       <div class="flex justify-between w-full gap-9 mb-2">
         <div class="w-2/3 lg:max-w-[50%] flex gap-2">
           <Input
-            name="search"
             v-model="searchQuery"
+            name="search"
             type="text"
-            :placeHolder="t('g.s')"
+            :place-holder="t('g.s')"
           />
           <Popover>
             <PopoverTrigger as-child>
@@ -126,7 +126,7 @@ const updateModal = (name: string) => {
               <Calendar v-model="createdAt" />
             </PopoverContent>
           </Popover>
-          <Select name="status" v-model="status">
+          <Select v-model="status" name="status">
             <SelectTrigger>
               <SelectValue
                 class="text-muted-foreground"
@@ -158,9 +158,9 @@ const updateModal = (name: string) => {
         </div>
       </div>
       <InvoicesTable
-        @listInvoiceProducts="listInvoiceProduct"
         :invoices="invoices"
-        :invoiceProducts="invoiceProducts"
+        :invoice-products="invoiceProducts"
+        @list-invoice-products="listInvoiceProduct"
       />
     </div>
   </main>

@@ -63,7 +63,7 @@ const createOrder = async () => {
   isLoading.value = true;
   if (order?.clientId && order.items?.length !== 0) {
     try {
-      await invoke<Res<String>>("create_order", {
+      await invoke<Res<string>>("create_order", {
         order: {
           client_id: order.clientId,
           status: order.status,
@@ -161,25 +161,25 @@ const hideModal = () => {
                 "
               />
               <Input
-                class="border-r-0"
-                :placeHolder="t('o.c.d.o.placeholder[0]')"
-                type="number"
                 v-model="item.quantity"
+                class="border-r-0"
+                :place-holder="t('o.c.d.o.placeholder[0]')"
+                type="number"
               >
                 <template #unite> {{ t("g.fields.item") }} </template>
               </Input>
               <Input
-                class="border-r-0"
-                :placeHolder="t('o.c.d.o.placeholder[1]')"
-                type="number"
                 v-model="item.price"
+                class="border-r-0"
+                :place-holder="t('o.c.d.o.placeholder[1]')"
+                type="number"
               >
                 <template #unite> DH </template>
               </Input>
               <Trash2
-                @click="deleteOrderItem(index)"
                 class="cursor-pointer m-auto"
                 :size="20"
+                @click="deleteOrderItem(index)"
               />
             </template>
           </div>
@@ -187,7 +187,7 @@ const hideModal = () => {
       </div>
     </CardContent>
     <CardFooter>
-      <Button @click="hideModal" variant="outline">
+      <Button variant="outline" @click="hideModal">
         {{ t("g.b.no") }}
       </Button>
       <Button class="col-span-2" @click="createOrder()">

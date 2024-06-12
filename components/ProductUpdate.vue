@@ -163,17 +163,17 @@ const onSubmit = form.handleSubmit((values) => {
               <Textarea
                 :placeholder="t('g.fields.description')"
                 v-bind="componentField"
-              ></Textarea>
+              />
             </FormControl>
           </FormItem>
         </FormField>
       </CardContent>
       <CardFooter>
         <Button
-          @click="hideModal"
           type="button"
           :disabled="isUpdating"
           variant="outline"
+          @click="hideModal"
         >
           {{ t("g.b.no") }}
         </Button>

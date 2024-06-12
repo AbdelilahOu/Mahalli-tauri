@@ -22,7 +22,7 @@ const form = useForm({
 const createNewProduct = async (product: ProductT) => {
   isCreating.value = true;
   try {
-    let createRes = await invoke<Res<string>>("create_product", {
+    const createRes = await invoke<Res<string>>("create_product", {
       product: {
         name: product.name,
         selling_price: Number(product.sellingPrice),
@@ -133,9 +133,9 @@ const setImage = (image: string) => {
             <FormLabel>{{ t("g.fields.init-quantity") }}</FormLabel>
             <FormControl>
               <Input
+                v-model="quantity"
                 type="number"
                 :placeholder="t('g.fields.init-quantity')"
-                v-model="quantity"
               >
                 <template #unite> {{ t("g.fields.item") }} </template>
               </Input>
@@ -165,17 +165,17 @@ const setImage = (image: string) => {
               <Textarea
                 :placeholder="t('g.fields.description')"
                 v-bind="componentField"
-              ></Textarea>
+              />
             </FormControl>
           </FormItem>
         </FormField>
       </CardContent>
       <CardFooter>
         <Button
-          @click="hideModal"
           type="button"
           :disabled="isCreating"
           variant="outline"
+          @click="hideModal"
         >
           {{ t("g.b.no") }}
         </Button>

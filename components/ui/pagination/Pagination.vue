@@ -73,9 +73,9 @@ const goToLast = () => {
               as-child
             >
               <Button
-                @click="goToPage(item.value)"
                 class="w-10 h-10 p-0"
                 :variant="item.value === page ? 'default' : 'outline'"
+                @click="goToPage(item.value)"
               >
                 {{ item.value }}
               </Button>

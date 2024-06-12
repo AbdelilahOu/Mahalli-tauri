@@ -71,8 +71,8 @@ const updateInvoiceStatus = async (invoice: any) => {
       <tbody>
         <tr
           v-for="(invoice, index) in invoices"
-          v-fade="index"
           :key="invoice.id"
+          v-fade="index"
           :class="{
             'animate-highlight-row':
               invoice.id == $route.query.id && $route.query.highlight == 'true',
@@ -92,11 +92,11 @@ const updateInvoiceStatus = async (invoice: any) => {
             <Popover v-if="invoice.products && invoice.products > 0">
               <PopoverTrigger as-child>
                 <Button
-                  @mouseenter.passive="previewProducts(invoice.id!)"
-                  @mouseleave.passive="cancelPreviewProducts"
                   size="sm"
                   variant="link"
                   class="underline px-0 h-fit"
+                  @mouseenter.passive="previewProducts(invoice.id!)"
+                  @mouseleave.passive="cancelPreviewProducts"
                 >
                   {{ t("g.plrz.p", { n: invoice.products }) }}
                 </Button>
@@ -105,7 +105,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                 <table class="w-full not-default">
                   <thead>
                     <tr>
-                      <th v-for="index in 3" :key="index"></th>
+                      <th v-for="index in 3" :key="index"/>
                     </tr>
                   </thead>
                   <tbody>
@@ -150,6 +150,9 @@ const updateInvoiceStatus = async (invoice: any) => {
               <PopoverContent class="w-40 p-1 flex flex-col gap-1">
                 <Button
                   type="button"
+                  variant="secondary"
+                  size="sm"
+                  class="border bg-green-100 w-full border-green-500 text-green-900"
                   @click="
                     () =>
                       updateInvoiceStatus({
@@ -159,14 +162,14 @@ const updateInvoiceStatus = async (invoice: any) => {
                         paid_amount: invoice.paidAmount,
                       })
                   "
-                  variant="secondary"
-                  size="sm"
-                  class="border bg-green-100 w-full border-green-500 text-green-900"
                 >
                   {{ t(`g.status.paid`) }}
                 </Button>
                 <Button
                   type="button"
+                  variant="secondary"
+                  size="sm"
+                  class="border bg-yellow-100 w-full border-yellow-500 text-yellow-900"
                   @click="
                     () =>
                       updateInvoiceStatus({
@@ -176,14 +179,14 @@ const updateInvoiceStatus = async (invoice: any) => {
                         paid_amount: invoice.paidAmount,
                       })
                   "
-                  variant="secondary"
-                  size="sm"
-                  class="border bg-yellow-100 w-full border-yellow-500 text-yellow-900"
                 >
                   {{ t(`g.status.pending`) }}
                 </Button>
                 <Button
                   type="button"
+                  variant="secondary"
+                  size="sm"
+                  class="border bg-red-100 w-full border-red-500 text-red-900"
                   @click="
                     () =>
                       updateInvoiceStatus({
@@ -193,9 +196,6 @@ const updateInvoiceStatus = async (invoice: any) => {
                         paid_amount: invoice.paidAmount,
                       })
                   "
-                  variant="secondary"
-                  size="sm"
-                  class="border bg-red-100 w-full border-red-500 text-red-900"
                 >
                   {{ t(`g.status.canceled`) }}
                 </Button>

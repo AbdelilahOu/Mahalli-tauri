@@ -42,7 +42,7 @@ const updateProductStock = (id: string, name: string) => {
     <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
-          <th class="small"></th>
+          <th class="small"/>
           <th class="w-20">{{ t("g.fields.name") }}</th>
           <th class="small">{{ t("g.fields.inventory") }}</th>
           <th>{{ t("g.fields.threshold") }}</th>
