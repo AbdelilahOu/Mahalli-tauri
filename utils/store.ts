@@ -18,7 +18,7 @@ export const store = {
   },
   setters: {
     updateStore: function ({ key, value }: Args) {
-      //@ts-ignore
+      //@ts-expect-error
       store.state[key] = value;
     },
   },
