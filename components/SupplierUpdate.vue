@@ -66,6 +66,10 @@ const updateTheSupplier = async (supplier: SupplierT) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("UPDATE SUPPLIER: " + err.error);
   } finally {
     hideModal();

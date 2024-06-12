@@ -53,6 +53,10 @@ const createNewSupplier = async (supplier: SupplierT) => {
       refresh: "refresh-create-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("CREATE SUPPLIER: " + err.error);
   } finally {
     isLoading.value = false;

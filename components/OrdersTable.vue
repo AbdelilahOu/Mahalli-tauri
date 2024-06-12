@@ -63,6 +63,10 @@ const updateOrderStatus = async (order: any) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("UPDATE ORDER STATUS: " + err.error);
   }
 };
@@ -143,7 +147,7 @@ const createInvoiceFromOrder = async (id: string) => {
                 <table class="w-full not-default">
                   <thead>
                     <tr>
-                      <th v-for="index in 3" :key="index"/>
+                      <th v-for="index in 3" :key="index" />
                     </tr>
                   </thead>
                   <tbody>

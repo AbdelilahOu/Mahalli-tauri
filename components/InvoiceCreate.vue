@@ -83,6 +83,10 @@ const createInvoice = async () => {
         refresh: "refresh-create-" + Math.random() * 9999,
       });
     } catch (err: any) {
+      toast.error(t("notifications.error.title"), {
+        description: t("notifications.error.description"),
+        closeButton: true,
+      });
       error("CREATE INVOICE: " + err.error);
     } finally {
       isLoading.value = false;
@@ -150,7 +154,7 @@ const hideModal = () => {
           <Label for="status">
             {{ t("g.fields.paid") }}
           </Label>
-          <Input v-model="invoice.paidAmount" place-holder="" type="number" />
+          <Input v-model="invoice.paidAmount" placeholder="" type="number" />
         </div>
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
@@ -171,7 +175,7 @@ const hideModal = () => {
               <Input
                 v-model="item.quantity"
                 class="border-r-0"
-                :place-holder="t('o.c.d.o.placeholder[0]')"
+                :placeholder="t('o.c.d.o.placeholder[0]')"
                 type="number"
               >
                 <template #unite> {{ t("g.fields.item") }} </template>
@@ -179,7 +183,7 @@ const hideModal = () => {
               <Input
                 v-model="item.price"
                 class="border-r-0"
-                :place-holder="t('o.c.d.o.placeholder[1]')"
+                :placeholder="t('o.c.d.o.placeholder[1]')"
                 type="number"
               >
                 <template #unite> DH </template>

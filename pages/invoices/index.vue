@@ -5,6 +5,7 @@ import { invoke } from "@tauri-apps/api";
 import { Calendar as CalendarIcon, PlusCircleIcon } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
 import { type WatchStopHandle } from "vue";
+import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -64,6 +65,10 @@ const getInvoices = async (search: string, page = 1) => {
     invoices.value = res.data.invoices;
     totalRows.value = res.data.count;
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("LIST INVOICES " + err.error);
   }
 };
@@ -76,6 +81,10 @@ const listInvoiceProduct = async (id?: string) => {
     //
     invoiceProducts.value = res.data;
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("ERROR LIST INVOICE PRODUCTS: " + err.error);
   }
 };
@@ -101,7 +110,7 @@ const updateModal = (name: string) => {
             v-model="searchQuery"
             name="search"
             type="text"
-            :place-holder="t('g.s')"
+            :placeholder="t('g.s')"
           />
           <Popover>
             <PopoverTrigger as-child>

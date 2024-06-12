@@ -118,6 +118,10 @@
       "created": "A Quote has been created",
       "updated": "The Quote has been updated",
       "deleted": "The Quote has been deleted"
+    },
+    "error": {
+      "title": "Oops! Something went wrong on our end.",
+      "description": "You can try again"
     }
   },
   "c": {

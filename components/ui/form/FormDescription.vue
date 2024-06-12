@@ -1,20 +1,19 @@
 <script lang="ts" setup>
-import { useAttrs } from "vue";
-import { useFormField } from "./useFormField";
+import type { HTMLAttributes } from 'vue'
+import { useFormField } from './useFormField'
+import { cn } from '@/utils/shadcn'
 
-defineOptions({
-  inheritAttrs: false,
-});
+const props = defineProps<{
+  class?: HTMLAttributes['class']
+}>()
 
-const { formDescriptionId } = useFormField();
-const { class: className, ...rest } = useAttrs();
+const { formDescriptionId } = useFormField()
 </script>
 
 <template>
   <p
     :id="formDescriptionId"
-    :class="cn('text-sm text-muted-foreground', (className as string) ?? '')"
-    v-bind="rest"
+    :class="cn('text-sm text-muted-foreground', props.class)"
   >
     <slot />
   </p>

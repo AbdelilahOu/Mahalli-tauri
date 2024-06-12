@@ -108,6 +108,10 @@ async function deleteOneInvoiceItem(id: string) {
   try {
     await invoke("delete_invoice_item", { id });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("Error creating client : " + err.error);
   }
 }
@@ -169,7 +173,7 @@ const deleteInvoiceItem = (index: number) => {
           <Label for="paid">
             {{ t("g.fields.paid") }}
           </Label>
-          <Input v-model="invoice.paidAmount" place-holder="" type="number" />
+          <Input v-model="invoice.paidAmount" placeholder="" type="number" />
         </div>
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
@@ -191,7 +195,7 @@ const deleteInvoiceItem = (index: number) => {
               <Input
                 v-model="item.quantity"
                 class="border-r-0"
-                :place-holder="t('o.c.d.o.placeholder[0]')"
+                :placeholder="t('o.c.d.o.placeholder[0]')"
                 type="number"
               >
                 <template #unite> {{ t("g.fields.item") }} </template>
@@ -199,7 +203,7 @@ const deleteInvoiceItem = (index: number) => {
               <Input
                 v-model="item.price"
                 class="border-r-0"
-                :place-holder="t('o.c.d.o.placeholder[1]')"
+                :placeholder="t('o.c.d.o.placeholder[1]')"
                 type="number"
               >
                 <template #unite> DH </template>

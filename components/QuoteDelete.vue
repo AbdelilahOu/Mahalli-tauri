@@ -21,6 +21,10 @@ const deleteTheQuotes = async (id: string) => {
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("DELETE QUOTE: " + err.error);
   } finally {
     store.setters.updateStore({ key: "show", value: false });
@@ -38,7 +42,7 @@ const cancelDelete = () => {
       <CardTitle> {{ t("q.d.title") }}n° {{ $route.query?.id }} ? </CardTitle>
     </CardHeader>
     <CardContent>
-      <div/>
+      <div />
     </CardContent>
     <CardFooter>
       <Button variant="outline" @click="cancelDelete">

@@ -5,6 +5,7 @@ import type { InventoryT } from "@/schemas/inventory.schema";
 import type { Res } from "@/types";
 import { Calendar as CalendarIcon } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
+import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -62,6 +63,10 @@ async function getInventory(search: string, page: number = 1) {
     inventoryMovements.value = res.data.inventory;
     totalRows.value = res.data.count;
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("LIST INVENTORY MOUVEMENTS: " + err.error);
   }
 }
@@ -78,7 +83,7 @@ const uploadCSV = () => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
         <div class="w-full lg:max-w-[50%] max-w-[70%] grid grid-cols-3 gap-2">
-          <Input v-model="searchQuery" type="text" :place-holder="t('g.s')" />
+          <Input v-model="searchQuery" type="text" :placeholder="t('g.s')" />
 
           <Popover>
             <PopoverTrigger as-child>

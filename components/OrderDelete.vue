@@ -21,6 +21,10 @@ const deleteTheOrders = async (id: string) => {
       refresh: "refresh-delete-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("DELETE ORDER: " + err.error);
   } finally {
     store.setters.updateStore({ key: "show", value: false });

@@ -57,7 +57,7 @@ const selectItem = (item: {
       <PopoverTrigger class="w-full" aria-disabled="true">
         <Input
           v-model:model-value="inputValue"
-          :place-holder="t('g.s')"
+          :placeholder="t('g.s')"
           @update:model-value="updateInput"
         />
       </PopoverTrigger>

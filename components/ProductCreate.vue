@@ -55,6 +55,10 @@ const createNewProduct = async (product: ProductT) => {
       refresh: "refresh-create-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("CREATE PRODUCT: " + err.error);
   } finally {
     isCreating.value = false;

@@ -87,6 +87,10 @@ const updateTheQuotes = async () => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("UPDATE QUOTE: " + err.error);
   } finally {
     hideModal();
@@ -101,6 +105,10 @@ async function deleteOneQuoteItem(id: string) {
   try {
     await invoke("delete_quote_item", { id });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("ERROR DELETE QUOTE ITEM : " + err.error);
   }
 }
@@ -154,7 +162,7 @@ const deleteQuoteItem = (index: number) => {
               <Input
                 v-model="item.quantity"
                 class="order-r-0"
-                :place-holder="t('o.c.d.o.placeholder[0]')"
+                :placeholder="t('o.c.d.o.placeholder[0]')"
                 type="number"
               >
                 <template #unite> {{ t("g.fields.item") }} </template>
@@ -162,7 +170,7 @@ const deleteQuoteItem = (index: number) => {
               <Input
                 v-model="item.price"
                 class="order-r-0"
-                :place-holder="t('o.c.d.o.placeholder[1]')"
+                :placeholder="t('o.c.d.o.placeholder[1]')"
                 type="number"
               >
                 <template #unite> DH </template>

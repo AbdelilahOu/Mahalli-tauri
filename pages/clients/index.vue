@@ -5,6 +5,7 @@ import { invoke } from "@tauri-apps/api";
 import { PlusCircleIcon } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
 import type { WatchStopHandle } from "vue";
+import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -58,6 +59,10 @@ const getClients = async (search: string, page: number = 1) => {
     clients.value = res.data.clients;
     totalRows.value = res.data.count;
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("LIST CLIENTS " + err.error);
   }
 };
@@ -79,7 +84,7 @@ const updateModal = (name: string) => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
         <div class="w-1/3">
-          <Input v-model="searchQuery" type="text" :place-holder="t('g.s')" />
+          <Input v-model="searchQuery" type="text" :placeholder="t('g.s')" />
         </div>
         <div class="w-fit flex gap-2">
           <!-- <Button variant="ghost" @click="uploadCSV">

@@ -114,6 +114,10 @@
       "created": "Un devis a été créé",
       "updated": "Le devis a été mis à jour",
       "deleted": "Le devis a été supprimé"
+    },
+    "error": {
+      "title": "Oups ! Une erreur s'est produite de notre côté.",
+      "description": "Vous pouvez réessayer."
     }
   },
   "c": {

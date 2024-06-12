@@ -51,6 +51,10 @@ const createNewClient = async (client: ClientT) => {
       refresh: "refresh-create-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("CREATE CLIENT: " + err.error);
   } finally {
     isCreating.value = false;

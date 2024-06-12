@@ -3,17 +3,17 @@ import { invoke } from "@tauri-apps/api";
 import { error } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
 import {
-  PDFPage,
-  PDFFont,
   PDFDocument,
   StandardFonts,
   rgb,
   PageSizes,
 } from "pdf-lib";
-import type { RGB } from "pdf-lib";
-
+import type { RGB ,
+  PDFPage,
+  PDFFont} from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
+import { toast } from "vue-sonner";
 
 const { t, d, locale } = useI18n();
 const id = useRoute().params.id;
@@ -34,6 +34,10 @@ onBeforeMount(async () => {
     order.value = res.data;
     resolveWaitForFetch();
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("ERROR ORDER DETAILS: " + err.error);
   }
 });
@@ -53,6 +57,10 @@ onMounted(async () => {
     color = rgb(0.34, 0.34, 0.34);
     generatePdf();
   } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
     error("ERROR PDF-LIB: " + err.error);
   }
 });
