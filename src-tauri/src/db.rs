@@ -14,7 +14,7 @@ pub async fn establish_connection() -> DatabaseConnection {
     dotenv().ok();
 
     #[cfg(debug_assertions)]
-    let db_url = env::var("DATABASE_URL").unwrap();
+    let db_url = env::var("DATABASE_URL").expect("DATABASE_URL is missing check .env file in src-taur");
 
     #[cfg(not(debug_assertions))]
     let home_dir = match tauri::api::path::data_dir() {
