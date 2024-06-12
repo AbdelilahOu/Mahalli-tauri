@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { InventoryT } from "@/schemas/inventory.schema";
 
-const { t, d, locale } = useI18n();
-
 defineProps<{
   inventory: InventoryT[];
 }>();
+
+const { t, d, locale } = useI18n();
 </script>
 
 <template>

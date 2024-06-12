@@ -199,6 +199,7 @@ const createInvoiceFromOrder = async (id: string) => {
                         id: order.id,
                         client_id: order.clientId,
                         status: 'DELIVERED',
+                        items: [],
                       })
                   "
                 >
@@ -215,6 +216,7 @@ const createInvoiceFromOrder = async (id: string) => {
                         id: order.id,
                         client_id: order.clientId,
                         status: 'PENDING',
+                        items: [],
                       })
                   "
                 >
@@ -231,6 +233,7 @@ const createInvoiceFromOrder = async (id: string) => {
                         id: order.id,
                         client_id: order.clientId,
                         status: 'CANCELED',
+                        items: [],
                       })
                   "
                 >
