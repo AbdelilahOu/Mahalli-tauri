@@ -80,6 +80,7 @@ async fn main() {
             commands::orders::delete_order,
             commands::orders::list_order_products,
             commands::orders::create_order_from_quote,
+            commands::orders::update_order_status,
             //
             // order items
             //
@@ -109,6 +110,7 @@ async fn main() {
             commands::invoices::delete_invoice,
             commands::invoices::list_invoice_products,
             commands::invoices::create_invoice_from_order,
+            commands::invoices::update_invoice_status,
             //
             // invoice items
             //

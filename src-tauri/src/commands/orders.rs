@@ -1,7 +1,7 @@
 use serde_json::Value;
 use tauri::State;
 
-use service::{ListArgs, MutationsService, NewOrder, QueriesService, TransactionService, UpdateOrder};
+use service::{ListArgs, MutationsService, NewOrder, QueriesService, TransactionService, UpdateOrder, UpdateStatus};
 
 use crate::AppState;
 
@@ -83,6 +83,24 @@ pub async fn create_order(state: State<'_, AppState>, order: NewOrder) -> SResul
 pub async fn update_order(state: State<'_, AppState>, order: UpdateOrder) -> SResult<()> {
     let _ = state.db_conn;
     match TransactionService::update_order(&state.db_conn, order).await {
+        Ok(_) => Ok(Seccess {
+            error: None,
+            message: Option::Some(String::from("update orders success")),
+            data: None,
+        }),
+        Err(err) => {
+            Err(Fail {
+                error: Some(err.to_string()),
+                message: None,
+            })
+        }
+    }
+}
+
+#[tauri::command]
+pub async fn update_order_status(state: State<'_, AppState>, order: UpdateStatus) -> SResult<()> {
+    let _ = state.db_conn;
+    match MutationsService::update_order_status(&state.db_conn, order).await {
         Ok(_) => Ok(Seccess {
             error: None,
             message: Option::Some(String::from("update orders success")),

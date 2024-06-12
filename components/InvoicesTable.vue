@@ -40,7 +40,7 @@ const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
 
 const updateInvoiceStatus = async (invoice: any) => {
   try {
-    await invoke("update_invoice", {
+    await invoke("update_invoice_status", {
       invoice,
     });
     //
@@ -163,10 +163,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                     () =>
                       updateInvoiceStatus({
                         id: invoice.id,
-                        client_id: invoice.clientId,
                         status: 'PAID',
-                        paid_amount: invoice.paidAmount,
-                        items: [],
                       })
                   "
                 >
@@ -181,10 +178,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                     () =>
                       updateInvoiceStatus({
                         id: invoice.id,
-                        client_id: invoice.clientId,
                         status: 'PENDING',
-                        paid_amount: invoice.paidAmount,
-                        items: [],
                       })
                   "
                 >
@@ -199,10 +193,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                     () =>
                       updateInvoiceStatus({
                         id: invoice.id,
-                        client_id: invoice.clientId,
                         status: 'CANCELED',
-                        paid_amount: invoice.paidAmount,
-                        items: [],
                       })
                   "
                 >

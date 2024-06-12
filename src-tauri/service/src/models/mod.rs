@@ -9,6 +9,7 @@ mod product;
 mod quote;
 mod quote_item;
 mod supplier;
+mod shared;
 
 pub use client::*;
 pub use dashboard::*;
@@ -21,3 +22,4 @@ pub use product::*;
 pub use quote::*;
 pub use quote_item::*;
 pub use supplier::*;
+pub use shared::*;
