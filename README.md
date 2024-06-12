@@ -10,7 +10,7 @@ Before you begin using Mahalli, ensure you have Node.js and npm (Node Package Ma
 
 Tauri is the framework used to build Mahalli. Here are the additional requirements for running Tauri applications:
 
-check : (tauri prerequisites)[https://tauri.app/v1/guides/getting-started/prerequisites/#:~:text=Tauri%20heavily%20depends%20on%20WebView2,and%20version%20for%20your%20system.].
+check : [tauri prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites/#:~:text=Tauri%20heavily%20depends%20on%20WebView2,and%20version%20for%20your%20system.)
 
 ### Running Mahalli
 
