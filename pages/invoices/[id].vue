@@ -2,15 +2,15 @@
 import { invoke } from "@tauri-apps/api";
 import { error } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
-import type {
+import {
   PDFPage,
   PDFFont,
   PDFDocument,
   StandardFonts,
   rgb,
   PageSizes,
-  type RGB,
 } from "pdf-lib";
+import type { RGB } from "pdf-lib";
 
 import fontkit from "@pdf-lib/fontkit";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
