@@ -39,7 +39,7 @@ const toggleCLientProfile = (client: ClientT) => {
     <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
-          <th class="small"></th>
+          <th class="small"/>
           <th>{{ t("g.fields.fullname") }}</th>
           <th>{{ t("g.fields.email") }}</th>
           <th>{{ t("g.fields.phone") }}</th>
@@ -49,7 +49,7 @@ const toggleCLientProfile = (client: ClientT) => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(client, index) in clients" v-fade="index" :key="client.id">
+        <tr v-for="(client, index) in clients" :key="client.id" v-fade="index">
           <td class="p-2 flex justify-center">
             <Avatar>
               <AvatarImage :src="client.image ?? ''" />

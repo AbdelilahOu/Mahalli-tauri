@@ -38,7 +38,7 @@ const cancelDelete = () => {
       <CardTitle> {{ t("q.d.title") }}n° {{ $route.query?.id }} ? </CardTitle>
     </CardHeader>
     <CardContent>
-      <div></div>
+      <div/>
     </CardContent>
     <CardFooter>
       <Button variant="outline" @click="cancelDelete">

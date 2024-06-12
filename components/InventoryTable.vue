@@ -21,7 +21,7 @@ defineProps<{
         </tr>
       </thead>
       <tbody>
-        <tr v-fade="index" v-for="(mvm, index) in inventory" :key="mvm.id">
+        <tr v-for="(mvm, index) in inventory" :key="mvm.id" v-fade="index">
           <td class="p-2 font-medium">
             {{ mvm?.name }}
           </td>

@@ -38,7 +38,7 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
     <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
-          <th class="small"></th>
+          <th class="small"/>
           <th>{{ t("g.fields.fullname") }}</th>
           <th>{{ t("g.fields.email") }}</th>
           <th>{{ t("g.fields.phone") }}</th>
@@ -49,8 +49,8 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
       <tbody>
         <tr
           v-for="(supplier, index) in suppliers"
-          v-fade="index"
           :key="supplier.id"
+          v-fade="index"
         >
           <td class="p-2 flex justify-center">
             <Avatar>

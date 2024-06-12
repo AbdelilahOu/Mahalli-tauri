@@ -128,10 +128,10 @@ const saveImage = (image: string) => {
       </CardContent>
       <CardFooter>
         <Button
-          @click="hideModal"
           type="button"
           :disabled="isLoading"
           variant="outline"
+          @click="hideModal"
         >
           {{ t("g.b.no") }}
         </Button>

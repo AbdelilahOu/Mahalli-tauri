@@ -39,7 +39,7 @@ const cancelDelete = () => {
       </CardTitle>
     </CardHeader>
     <CardContent>
-      <div></div>
+      <div/>
     </CardContent>
     <CardFooter>
       <Button variant="outline" @click="cancelDelete">

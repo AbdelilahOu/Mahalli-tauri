@@ -9,10 +9,10 @@
       v-if="$slots.title"
       class="w-full h-full flex items-center bg-slate-50"
     >
-      <slot name="title"></slot>
+      <slot name="title"/>
     </div>
     <div class="w-full h-full p-2 flex">
-      <slot></slot>
+      <slot/>
     </div>
   </div>
 </template>

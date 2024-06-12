@@ -64,7 +64,7 @@ const createInvoice = async () => {
   isLoading.value = true;
   if (invoice?.clientId && invoice.items?.length !== 0) {
     try {
-      const invoiceRes = await invoke<Res<String>>("create_invoice", {
+      const invoiceRes = await invoke<Res<string>>("create_invoice", {
         invoice: {
           client_id: invoice.clientId,
           status: invoice.status,
@@ -169,25 +169,25 @@ const hideModal = () => {
                 "
               />
               <Input
-                class="border-r-0"
-                :placeHolder="t('o.c.d.o.placeholder[0]')"
-                type="number"
                 v-model="item.quantity"
+                class="border-r-0"
+                :place-holder="t('o.c.d.o.placeholder[0]')"
+                type="number"
               >
                 <template #unite> {{ t("g.fields.item") }} </template>
               </Input>
               <Input
-                class="border-r-0"
-                :placeHolder="t('o.c.d.o.placeholder[1]')"
-                type="number"
                 v-model="item.price"
+                class="border-r-0"
+                :place-holder="t('o.c.d.o.placeholder[1]')"
+                type="number"
               >
                 <template #unite> DH </template>
               </Input>
               <Trash2
-                @click="deleteInvoiceItem(index)"
                 class="cursor-pointer m-auto"
                 :size="20"
+                @click="deleteInvoiceItem(index)"
               />
             </template>
           </div>
@@ -195,7 +195,7 @@ const hideModal = () => {
       </div>
     </CardContent>
     <CardFooter>
-      <Button @click="hideModal" variant="outline">
+      <Button variant="outline" @click="hideModal">
         {{ t("g.b.no") }}
       </Button>
       <Button class="col-span-2" @click="createInvoice()">

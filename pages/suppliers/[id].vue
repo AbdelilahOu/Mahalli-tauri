@@ -16,12 +16,12 @@ const supplier = ref<SupplierT | null>(null);
       <div
         class="w-full grid-cols-[400px_1fr] xl:grid-rows-[258px_1fr] xl:grid-cols-1 items-start justify-start gap-3 grid"
       >
-        <div class="w-full flex items-end xl:items-start h-fit"></div>
+        <div class="w-full flex items-end xl:items-start h-fit"/>
       </div>
-      <div class="xl:border-l-2 border-b-2"></div>
+      <div class="xl:border-l-2 border-b-2"/>
       <div class="w-full">
         <ChartHolder>
-          <template #default> </template>
+          <template #default/>
           <template #footer>
             <h1 class="m-2 w-full text-center text-base font-medium">
               <i>

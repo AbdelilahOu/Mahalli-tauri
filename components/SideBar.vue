@@ -50,12 +50,12 @@ const openTranslationModal = () => {
           Mahalli
         </span>
         <ChevronsLeft
-          @click="collapse = !collapse"
           :size="20"
           :class="{
             'rotate-180': locale == 'ar' ? !collapse : collapse,
             'transition-all duration-200 cursor-pointer transform': true,
           }"
+          @click="collapse = !collapse"
         />
       </div>
     </div>

@@ -2,15 +2,16 @@
 import { invoke } from "@tauri-apps/api";
 import { error } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
-import {
+import type {
+  PDFPage,
+  PDFFont,
   PDFDocument,
   StandardFonts,
   rgb,
   PageSizes,
-  PDFPage,
-  PDFFont,
   type RGB,
 } from "pdf-lib";
+
 import fontkit from "@pdf-lib/fontkit";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 
@@ -20,7 +21,7 @@ const quote = ref<any | null>(null);
 const pdfRef = ref<HTMLIFrameElement | null>();
 //
 let resolveWaitForFetch: (value?: unknown) => void;
-let waitForFetch = new Promise((r) => (resolveWaitForFetch = r));
+const waitForFetch = new Promise((r) => (resolveWaitForFetch = r));
 let pdfDoc: PDFDocument;
 let font: PDFFont;
 let color: RGB;

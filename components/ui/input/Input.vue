@@ -28,7 +28,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
             : ''
         )
       "
-    />
+    >
     <div
       v-if="$slots.unite"
       class="w-fit h-10 transform transition-color border duration-100 border-l-0 flex rounded-r-md items-center justify-center"
@@ -36,7 +36,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
       <span
         class="h-full text-gray-400 rounded-md px-2 flex items-center text-sm font-light justify-center"
       >
-        <slot name="unite"></slot>
+        <slot name="unite"/>
       </span>
     </div>
   </div>

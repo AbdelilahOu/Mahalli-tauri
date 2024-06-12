@@ -124,10 +124,10 @@ const setImage = (image: string) => {
       </CardContent>
       <CardFooter>
         <Button
-          @click="hideModal"
           type="button"
           :disabled="isCreating"
           variant="outline"
+          @click="hideModal"
         >
           {{ t("g.b.no") }}</Button
         >

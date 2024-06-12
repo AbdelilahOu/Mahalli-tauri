@@ -57,8 +57,8 @@ const selectItem = (item: {
       <PopoverTrigger class="w-full" aria-disabled="true">
         <Input
           v-model:model-value="inputValue"
+          :place-holder="t('g.s')"
           @update:model-value="updateInput"
-          :placeHolder="t('g.s')"
         />
       </PopoverTrigger>
       <PopoverContent class="p-1" @open-auto-focus="(e) => e.preventDefault()">
@@ -74,9 +74,9 @@ const selectItem = (item: {
           "
         >
           <span
-            class="relative flex w-full hover:bg-slate-100 cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
             v-for="item in items"
             :key="item.value"
+            class="relative flex w-full hover:bg-slate-100 cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
             @click="() => selectItem(item)"
           >
             {{ item.label }}

@@ -117,9 +117,9 @@ const hideModal = () => {
     <CardFooter>
       <Button
         class="col-span-3"
-        @click="hideModal"
         type="button"
         variant="outline"
+        @click="hideModal"
       >
         {{ t("g.b.no") }}
       </Button>

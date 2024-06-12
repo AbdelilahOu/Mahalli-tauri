@@ -78,7 +78,7 @@ const createOrderFromQuote = async (id: string) => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(quote, index) in quotes" v-fade="index" :key="quote.id">
+        <tr v-for="(quote, index) in quotes" :key="quote.id" v-fade="index">
           <td class="p-2">
             <NuxtLink
               class="font-medium"
@@ -93,11 +93,11 @@ const createOrderFromQuote = async (id: string) => {
             <Popover v-if="quote.products && quote.products > 0">
               <PopoverTrigger as-child>
                 <Button
-                  @mouseenter.passive="previewProducts(quote.id!)"
-                  @mouseleave.passive="cancelPreviewProducts"
                   size="sm"
                   variant="link"
                   class="underline px-0 h-fit"
+                  @mouseenter.passive="previewProducts(quote.id!)"
+                  @mouseleave.passive="cancelPreviewProducts"
                 >
                   {{ t("g.plrz.p", { n: quote.products }) }}
                 </Button>
@@ -106,7 +106,7 @@ const createOrderFromQuote = async (id: string) => {
                 <table class="w-full not-default">
                   <thead>
                     <tr>
-                      <th v-for="index in 3" :key="index"></th>
+                      <th v-for="index in 3" :key="index"/>
                     </tr>
                   </thead>
                   <tbody>

@@ -71,7 +71,7 @@ const addOrderItem = () => {
 
 const updateTheOrders = async () => {
   try {
-    await invoke<Res<String>>("update_order", {
+    await invoke<Res<string>>("update_order", {
       order: {
         id: order.id,
         client_id: order.clientId,
@@ -130,7 +130,7 @@ const deleteOrderItem = (index: number) => {
             </Label>
             <SearchableItems
               v-if="order.fullname"
-              :defaultValue="order.fullname"
+              :default-value="order.fullname"
               :items="clients"
               @update:items="(s) => searchClients(s)"
               @on:select="(id) => (order.clientId = id)"
@@ -171,7 +171,7 @@ const deleteOrderItem = (index: number) => {
           >
             <template v-for="(item, index) in order.items" :key="index">
               <SearchableItems
-                :defaultValue="item.name"
+                :default-value="item.name"
                 :items="products"
                 @update:items="(s) => searchProducts(s)"
                 @on:select="
@@ -181,7 +181,7 @@ const deleteOrderItem = (index: number) => {
               <Input
                 v-model="item.quantity"
                 class="border-r-0"
-                :placeHolder="t('o.c.d.o.placeholder[0]')"
+                :place-holder="t('o.c.d.o.placeholder[0]')"
                 type="number"
               >
                 <template #unite> {{ t("g.fields.item") }} </template>
@@ -189,15 +189,15 @@ const deleteOrderItem = (index: number) => {
               <Input
                 v-model="item.price"
                 class="border-r-0"
-                :placeHolder="t('o.c.d.o.placeholder[1]')"
+                :place-holder="t('o.c.d.o.placeholder[1]')"
                 type="number"
               >
                 <template #unite> DH </template>
               </Input>
               <Trash2
-                @click="deleteOrderItem(index)"
                 class="cursor-pointer m-auto"
                 :size="20"
+                @click="deleteOrderItem(index)"
               />
             </template>
           </div>

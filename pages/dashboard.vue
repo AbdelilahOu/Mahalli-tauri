@@ -48,13 +48,13 @@ const tickFormatToDate = (i: number) => {
 };
 const barQuantityTriggers = {
   [GroupedBar.selectors.bar]: (d: groupedMvm[string], i: number) => {
-    let mvmType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
+    const mvmType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
     return "<span>" + t("g.plrz.i", { n: d[mvmType].quantity }) + "</span>";
   },
 };
 const barPriceTriggers = {
   [GroupedBar.selectors.bar]: (d: groupedMvm[string], i: number) => {
-    let mvmType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
+    const mvmType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
     return "<span>" + d[mvmType].price.toFixed(2) + " DH</span>";
   },
 };
@@ -91,7 +91,7 @@ async function getInventoryMovementStats() {
     }, {} as groupedMvm);
 
     movements.value = result;
-    let movementLabelsSet = new Set<string>(Object.keys(movements.value));
+    const movementLabelsSet = new Set<string>(Object.keys(movements.value));
     movementsLabels.value = [...movementLabelsSet];
   } catch (err: any) {
     error("STATS INVENTORY MOUVEMENTS: " + err.error);
@@ -136,7 +136,7 @@ async function getRevenue() {
   try {
     const res = await invoke<Res<any>>("list_revenue");
 
-    let data = res.data.revenue[0];
+    const data = res.data.revenue[0];
     let percentageDeff = (
       ((data?.currentRevenue - data?.lastMonthRevenue) /
         data?.lastMonthRevenue) *
@@ -156,7 +156,7 @@ const expenses = ref<any>();
 async function getExpenses() {
   try {
     const res = await invoke<Res<any>>("list_expenses");
-    let data = res.data.expenses[0];
+    const data = res.data.expenses[0];
     let percentageDeff = (
       ((data?.currentExpenses - data?.lastMonthExpenses) /
         data?.lastMonthExpenses) *
@@ -265,13 +265,13 @@ onBeforeMount(async () => {
               :height="500"
             >
               <VisGroupedBar
-                :barPadding="0.1"
+                :bar-padding="0.1"
                 :x="(d: any, index: number) => index"
                 :y="(d: any) => d.price"
               />
               <VisAxis
                 type="x"
-                :tickFormat="
+                :tick-format="
                   (i: number) => (bestClients ? bestClients[i].Fullname : i)
                 "
               />
@@ -301,13 +301,13 @@ onBeforeMount(async () => {
               :height="500"
             >
               <VisGroupedBar
-                :barPadding="0.1"
+                :bar-padding="0.1"
                 :x="(d: any, index: number) => index"
                 :y="(d: any) => d.quantity"
               />
               <VisAxis
                 type="x"
-                :tickFormat="
+                :tick-format="
                   (i: number) => (bestProducts ? bestProducts[i].name : i)
                 "
               />
@@ -343,11 +343,11 @@ onBeforeMount(async () => {
               :height="500"
             >
               <VisGroupedBar
-                :barPadding="0.1"
+                :bar-padding="0.1"
                 :x="(d: any, index: number) => index"
                 :y="[(d: any) => d.IN.quantity, (d: any) => d.OUT.quantity]"
               />
-              <VisAxis type="x" :tickFormat="tickFormatToDate" />
+              <VisAxis type="x" :tick-format="tickFormatToDate" />
               <VisAxis type="y" :label="t('g.fields.quantity')" />
               <VisTooltip :triggers="barQuantityTriggers" />
               <VisBulletLegend
@@ -376,11 +376,11 @@ onBeforeMount(async () => {
               :height="500"
             >
               <VisGroupedBar
-                :barPadding="0.1"
+                :bar-padding="0.1"
                 :x="(d: any, index: number) => index"
                 :y="[(d: any) => d.IN.price, (d: any) => d.OUT.price]"
               />
-              <VisAxis type="x" :tickFormat="tickFormatToDate" />
+              <VisAxis type="x" :tick-format="tickFormatToDate" />
               <VisAxis type="y" :label="t('g.fields.price') + ' (DH)'" />
               <VisTooltip :triggers="barPriceTriggers" />
               <VisBulletLegend

@@ -95,7 +95,7 @@ const updateModal = (name: string) => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
         <div class="w-2/3 lg:max-w-[50%] grid grid-cols-3 gap-2">
-          <Input v-model="searchQuery" type="text" :placeHolder="t('g.s')" />
+          <Input v-model="searchQuery" type="text" :place-holder="t('g.s')" />
           <Popover>
             <PopoverTrigger as-child>
               <Button
@@ -129,9 +129,9 @@ const updateModal = (name: string) => {
         </div>
       </div>
       <QuotesTable
-        @listQuoteProducts="listQuoteProduct"
         :quotes="quotes"
-        :quoteProducts="quoteProducts"
+        :quote-products="quoteProducts"
+        @list-quote-products="listQuoteProduct"
       />
     </div>
   </main>
