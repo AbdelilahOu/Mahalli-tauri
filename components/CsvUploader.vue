@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api";
 import { useDropZone } from "@vueuse/core";
 import { Trash2 } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
+import { toast } from "vue-sonner";
 
 const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();

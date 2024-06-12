@@ -3,6 +3,7 @@ import type { InvoiceProductT, InvoiceT } from "@/schemas/invoice.schema";
 import { invoke } from "@tauri-apps/api";
 import { FilePenLine, GripHorizontal, Printer, Trash2 } from "lucide-vue-next";
 import { error, info } from "tauri-plugin-log-api";
+import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { t, d, locale } = useI18n();
@@ -49,6 +50,7 @@ const updateInvoiceStatus = async (invoice: any) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
+    console.log(err);
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -164,6 +166,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                         client_id: invoice.clientId,
                         status: 'PAID',
                         paid_amount: invoice.paidAmount,
+                        items: [],
                       })
                   "
                 >
@@ -181,6 +184,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                         client_id: invoice.clientId,
                         status: 'PENDING',
                         paid_amount: invoice.paidAmount,
+                        items: [],
                       })
                   "
                 >
@@ -198,6 +202,7 @@ const updateInvoiceStatus = async (invoice: any) => {
                         client_id: invoice.clientId,
                         status: 'CANCELED',
                         paid_amount: invoice.paidAmount,
+                        items: [],
                       })
                   "
                 >
