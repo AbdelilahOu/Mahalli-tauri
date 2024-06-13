@@ -28,9 +28,9 @@ const updateTheProduct = async ({ quantity }: z.infer<typeof stock>) => {
     const id = route.query.id;
     await invoke<Res<any>>("create_inventory", {
       mvm: {
-        mvm_type: quantity > 0 ? "IN" : "OUT",
+        mvm_type: "IN",
         product_id: id,
-        quantity: Number(Math.abs(quantity)),
+        quantity: Number(quantity),
       },
     });
     info(

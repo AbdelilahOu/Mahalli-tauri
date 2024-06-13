@@ -198,7 +198,7 @@ async function getExpenses() {
 onBeforeMount(async () => {
   await Promise.all([
     getRevenue(),
-    // getExpenses(),
+    getExpenses(),
     getInventoryMovementStats(),
     getBestClients(),
     getBestProducts(),
@@ -211,7 +211,7 @@ onBeforeMount(async () => {
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col lg:grid lg:grid-cols-2 gap-2">
       <div class="grid grid-cols-1 lg:grid-cols-4 col-span-2 gap-2">
-        <Card class="lg:col-span-2 h-fit w-full">
+        <Card class="h-fit w-full">
           <CardHeader
             class="flex border-b-0 flex-row items-center justify-between space-y-0 pb-2"
           >
@@ -227,6 +227,25 @@ onBeforeMount(async () => {
             <p class="text-xs text-muted-foreground">
               {{ revenue?.percentageDeff < 0 ? "-" : "+" }}
               {{ t("dashboard.i.growth", { n: revenue?.percentageDeff }) }}
+            </p>
+          </CardContent>
+        </Card>
+        <Card class="h-fit w-full">
+          <CardHeader
+            class="flex border-b-0 flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <CardTitle class="text-sm font-medium">
+              {{ t("dashboard.i.expenses") }}
+            </CardTitle>
+            <DollarSign class="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent class="pt-0">
+            <div class="text-2xl font-bold">
+              {{ expenses?.currentExpenses.toFixed(2) }} DH
+            </div>
+            <p class="text-xs text-muted-foreground">
+              {{ expenses?.percentageDeff < 0 ? "-" : "+" }}
+              {{ t("dashboard.i.growth", { n: expenses?.percentageDeff }) }}
             </p>
           </CardContent>
         </Card>
