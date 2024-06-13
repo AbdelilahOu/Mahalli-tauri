@@ -93,7 +93,6 @@ const updateTheInvoices = async () => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    console.log(err);
     error("UPDATE INVOICE: " + err.error);
   } finally {
     hideModal();

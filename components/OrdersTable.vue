@@ -91,7 +91,6 @@ const createInvoiceFromOrder = async (id: string) => {
       }),
     });
   } catch (err: any) {
-    console.log(err);
     error("GET ORDER FOR INVOICE: " + err.error);
   }
 };

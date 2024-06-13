@@ -50,7 +50,6 @@ const updateInvoiceStatus = async (invoice: any) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    console.log(err);
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
