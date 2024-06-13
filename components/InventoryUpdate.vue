@@ -34,7 +34,7 @@ const updateTheProduct = async ({ quantity }: z.infer<typeof stock>) => {
       },
     });
     info(
-      `UPDATE PRODUCT STOCK: ${JSON.stringify({
+      `UPDATE PRODUCT INVENTORY: ${JSON.stringify({
         id,
         quantity: Number(quantity),
       })}`
@@ -51,11 +51,11 @@ const updateTheProduct = async ({ quantity }: z.infer<typeof stock>) => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-      toast.error(t("notifications.error.title"), {
-        description: t("notifications.error.description"),
-        closeButton: true,
-      });
-      error("UPDATE PRODUCT: " + err.error);
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
+    error("UPDATE PRODUCT INVENTORY: " + err.error);
   } finally {
     hideModal();
   }

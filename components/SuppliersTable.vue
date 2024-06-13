@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { FilePenLine, GripHorizontal, Trash2 } from "lucide-vue-next";
-
 import type { SupplierT } from "@/schemas/supplier.schema";
 
 defineProps<{
@@ -38,7 +37,7 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
     <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
-          <th class="small"/>
+          <th class="small" />
           <th>{{ t("g.fields.fullname") }}</th>
           <th>{{ t("g.fields.email") }}</th>
           <th>{{ t("g.fields.phone") }}</th>
