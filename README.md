@@ -1,6 +1,6 @@
 # Mahalli
 
-Mahalli is a desktop application for inventory and invoicing, it help you create and manage clients, products, quotes, commands and invoices.
+Mahalli is an inventory & invoicing management desktop application, it helps you create and manage clients, products, quotes, commands and invoices.
 
 ## Getting Started
 
