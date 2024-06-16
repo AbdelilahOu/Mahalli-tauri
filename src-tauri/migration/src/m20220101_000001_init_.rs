@@ -264,6 +264,16 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager.drop_table(Table::drop().table(Client::Table).to_owned()).await?;
+        manager.drop_table(Table::drop().table(Supplier::Table).to_owned()).await?;
+        manager.drop_table(Table::drop().table(Product::Table).to_owned()).await?;
+        manager.drop_table(Table::drop().table(InventoryMovement::Table).to_owned()).await?;
+        manager.drop_table(Table::drop().table(Quote::Table).to_owned()).await?;
+        manager.drop_table(Table::drop().table(QuoteItem::Table).to_owned()).await?;
+        manager.drop_table(Table::drop().table(Order::Table).to_owned()).await?;
+        manager.drop_table(Table::drop().table(OrderItem::Table).to_owned()).await?;
+        manager.drop_table(Table::drop().table(Invoice::Table).to_owned()).await?;
+        manager.drop_table(Table::drop().table(InvoiceItem::Table).to_owned()).await?;
+        
         Ok(())
     }
 }
