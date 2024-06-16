@@ -29,17 +29,9 @@ tauri = { version = "1.5.4", features = [
   "process-command-api",
   "protocol-all",
 ] }
-csv = "1.1"
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tokio = { version = "1", features = ["full"] }
-chrono = { version = "0.4", features = ["serde"] }
 libsqlite3-sys = { version = "^0", features = ["bundled"] }
-uuid = { version = "1.7.0", features = [
-  "v7",
-  "std",
-  "fast-rng",
-  "macro-diagnostics",
-] }
 dotenvy = "0.15.7"
 log = "^0.4"
 migration = { path = "./migration" }
