@@ -7,6 +7,7 @@ import { toast } from "vue-sonner";
 
 const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 
 const { t } = useI18n();
 
@@ -39,7 +40,7 @@ const upload = async () => {
       updateQueryParams({
         refresh: "refresh-upload-" + Math.random() * 9999,
       });
-      store.setters.updateStore({ key: "show", value: false });
+      toggleModal(false);
     }
   }
 };

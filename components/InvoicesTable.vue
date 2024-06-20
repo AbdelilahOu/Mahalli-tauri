@@ -6,6 +6,7 @@ import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { setModalName, toggleModal } = useStore();
 const { t, d, locale } = useI18n();
 const localePath = useLocalePath();
 
@@ -34,8 +35,8 @@ const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
     id: Invoice.id,
     highlight: false,
   });
-  store.setters.updateStore({ key: "name", value: name });
-  store.setters.updateStore({ key: "show", value: true });
+  setModalName(name);
+  toggleModal(true);
 };
 
 const updateInvoiceStatus = async (invoice: any) => {

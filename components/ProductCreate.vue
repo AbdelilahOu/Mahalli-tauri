@@ -9,6 +9,7 @@ import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 
 const isCreating = ref<boolean>(false);
 const imagePath = ref<string>();
@@ -66,9 +67,7 @@ const createNewProduct = async (product: ProductT) => {
   }
 };
 
-const hideModal = () => {
-  store.setters.updateStore({ key: "show", value: false });
-};
+const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   createNewProduct(values);

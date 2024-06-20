@@ -9,6 +9,7 @@ import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 
 const clientSchema = toTypedSchema(CreateClientSchema);
 
@@ -62,9 +63,7 @@ const createNewClient = async (client: ClientT) => {
   }
 };
 
-const hideModal = () => {
-  store.setters.updateStore({ key: "show", value: false });
-};
+const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   createNewClient(values);

@@ -8,6 +8,7 @@ defineProps<{
 
 const { t, locale } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { setModalName, toggleModal } = useStore();
 
 const toggleThisSupplier = (supplier: SupplierT, name: string) => {
   updateQueryParams({
@@ -17,8 +18,8 @@ const toggleThisSupplier = (supplier: SupplierT, name: string) => {
     phoneNumber: supplier.phoneNumber,
     address: supplier.address,
   });
-  store.setters.updateStore({ key: "name", value: name });
-  store.setters.updateStore({ key: "show", value: true });
+  setModalName(name);
+  toggleModal(true);
 };
 
 const toggleSupplierProfile = (supplier: SupplierT) => {

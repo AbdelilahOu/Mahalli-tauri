@@ -8,7 +8,7 @@ import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const route = useRoute();
-const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal, setModalName } = useStore();
 //
 const products = ref<ProductT[]>([]);
 const searchQuery = ref<string>("");
@@ -64,17 +64,12 @@ async function listProducts(search: string, page: number = 1) {
     error("LIST PRODUCTS: " + err.error);
   }
 }
-const uploadCSV = () => {
-  store.setters.updateStore({ key: "name", value: "CsvUploader" });
-  store.setters.updateStore({ key: "show", value: true });
-  updateQueryParams({ table: "products" });
-};
+
 //
 const updateModal = (name: string) => {
-  store.setters.updateStore({ key: "name", value: name });
-  store.setters.updateStore({ key: "show", value: true });
+  setModalName(name);
+  toggleModal(true);
 };
-//
 </script>
 
 <template>

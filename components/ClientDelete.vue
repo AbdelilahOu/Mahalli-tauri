@@ -6,6 +6,7 @@ import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 
 const deleteTheClient = async (id: string, fullname: string) => {
   try {
@@ -32,7 +33,7 @@ const deleteTheClient = async (id: string, fullname: string) => {
 };
 
 const cancelDelete = () => {
-  store.setters.updateStore({ key: "show", value: false });
+  toggleModal(false);
 };
 </script>
 <template>

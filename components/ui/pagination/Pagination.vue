@@ -14,6 +14,7 @@ const defaultPage = computed(() =>
 );
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 
 const rowsCount = inject<Ref<number>>("count");
 const itemsCount = inject<Ref<number>>("itemsCount");

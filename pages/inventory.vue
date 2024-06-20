@@ -10,6 +10,7 @@ import { toast } from "vue-sonner";
 const { t } = useI18n();
 const route = useRoute();
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 //
 const inventoryMovements = ref<InventoryT[]>([]);
 const searchQuery = ref<string>("");
@@ -70,12 +71,6 @@ async function getInventory(search: string, page: number = 1) {
     error("LIST INVENTORY MOUVEMENTS: " + err.error);
   }
 }
-
-const uploadCSV = () => {
-  store.setters.updateStore({ key: "name", value: "CsvUploader" });
-  store.setters.updateStore({ key: "show", value: true });
-  updateQueryParams({ table: "clients" });
-};
 </script>
 
 <template>
@@ -125,7 +120,7 @@ const uploadCSV = () => {
             </SelectContent>
           </Select>
         </div>
-        <div></div>
+        <div />
       </div>
 
       <InventoryTable :inventory="inventoryMovements" />

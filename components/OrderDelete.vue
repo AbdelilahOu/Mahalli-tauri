@@ -6,6 +6,7 @@ import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 
 const deleteTheOrders = async (id: string) => {
   try {
@@ -27,12 +28,12 @@ const deleteTheOrders = async (id: string) => {
     });
     error("DELETE ORDER: " + err.error);
   } finally {
-    store.setters.updateStore({ key: "show", value: false });
+    toggleModal(false);
   }
 };
 
 const cancelDelete = () => {
-  store.setters.updateStore({ key: "show", value: false });
+  toggleModal(false);
 };
 </script>
 
@@ -41,6 +42,9 @@ const cancelDelete = () => {
     <CardHeader>
       <CardTitle> {{ t("o.d.title") }}n° {{ $route.query?.id }} ? </CardTitle>
     </CardHeader>
+    <CardContent>
+      <div />
+    </CardContent>
     <CardFooter>
       <Button variant="outline" @click="cancelDelete">
         {{ t("g.b.no") }}

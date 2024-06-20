@@ -9,6 +9,7 @@ import { toast } from "vue-sonner";
 import { z } from "zod";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 const { t } = useI18n();
 const route = useRoute();
 
@@ -24,11 +25,11 @@ const productSchema = toTypedSchema(
     purchasePrice: z
       .number()
       .min(0)
-      .default(Number(route.query.purchasePrice) ?? 0),
+      .default(Number(route.query.purchasePrice ?? 0)),
     sellingPrice: z
       .number()
       .min(0)
-      .default(Number(route.query.sellingPrice) ?? 0),
+      .default(Number(route.query.sellingPrice ?? 0)),
     description: z
       .string()
       .min(2)
@@ -87,9 +88,7 @@ const updateTheProduct = async (product: ProductT) => {
   }
 };
 
-const hideModal = () => {
-  store.setters.updateStore({ key: "show", value: false });
-};
+const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   updateTheProduct(values);

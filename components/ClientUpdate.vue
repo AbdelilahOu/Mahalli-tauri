@@ -10,6 +10,7 @@ import { z } from "zod";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 const route = useRoute();
 
 const isUpdating = ref<boolean>(false);
@@ -77,9 +78,7 @@ const updateTheClient = async (client: ClientT) => {
   }
 };
 
-const hideModal = () => {
-  store.setters.updateStore({ key: "show", value: false });
-};
+const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   updateTheClient(values);

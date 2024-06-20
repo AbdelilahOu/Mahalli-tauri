@@ -9,6 +9,7 @@ import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 const { t } = useI18n();
 const route = useRoute();
 const isLoading = ref<boolean>(false);
@@ -76,9 +77,7 @@ const updateTheSupplier = async (supplier: SupplierT) => {
   }
 };
 
-const hideModal = () => {
-  store.setters.updateStore({ key: "show", value: false });
-};
+const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   updateTheSupplier(values);

@@ -8,6 +8,7 @@ import { toast } from "vue-sonner";
 import { z } from "zod";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 const { t } = useI18n();
 const route = useRoute();
 
@@ -61,9 +62,7 @@ const updateTheProduct = async ({ quantity }: z.infer<typeof stock>) => {
   }
 };
 
-const hideModal = () => {
-  store.setters.updateStore({ key: "show", value: false });
-};
+const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   updateTheProduct(values);

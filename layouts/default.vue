@@ -1,6 +1,5 @@
 <script setup lang="ts">
-const show = computed(() => store.getters.getModalVisibility());
-const name = computed(() => store.getters.getModalName());
+const { show, name } = useStore();
 const isCollapse = ref<boolean>(true);
 </script>
 
