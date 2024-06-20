@@ -1,5 +1,4 @@
-use migration::sea_orm::Database;
-use migration::sea_orm::DatabaseConnection;
+use service::sea_orm::{DatabaseConnection,Database};
 
 #[cfg(not(debug_assertions))]
 use std::fs;
