@@ -46,12 +46,12 @@ impl Related<super::quotes::Entity> for Entity {
         Relation::Quotes.def()
     }
 }
-
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {
         Self {
-            id: Set(Uuid::now_v7().to_string()),
+            id: Set(ulid::Ulid::new().to_string()),
             ..ActiveModelTrait::default()
         }
     }
 }
+

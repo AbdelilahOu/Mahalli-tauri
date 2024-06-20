@@ -9,6 +9,8 @@ pub struct Model {
     pub id: String,
     pub full_name: String,
     pub created_at: String,
+    pub is_deleted: bool,
+    pub is_archived: bool,
     pub phone_number: Option<String>,
     pub email: Option<String>,
     pub address: Option<String>,
@@ -17,12 +19,12 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {}
-
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {
         Self {
-            id: Set(Uuid::now_v7().to_string()),
+            id: Set(ulid::Ulid::new().to_string()),
             ..ActiveModelTrait::default()
         }
     }
 }
+

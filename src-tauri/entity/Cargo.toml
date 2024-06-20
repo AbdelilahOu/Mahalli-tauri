@@ -7,8 +7,7 @@ edition = "2021"
 
 [dependencies]
 serde = { version = "1.0.192", features = ["derive"] }
-uuid = { version = "1.7.0", features = ["v7", "std"] }
-
+ulid = "1.1.2"
 
 [dependencies.sea-orm]
 version = "0.12.4"

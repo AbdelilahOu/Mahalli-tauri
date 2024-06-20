@@ -23,7 +23,7 @@ pub struct Migration;
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         for _ in 0..200 {
-            let id = uuid::Uuid::now_v7();
+            let id = ulid::Ulid::new();
             let fullname: String = Name().fake();
             let address: String = SecondaryAddress().fake();
             let email: String = FreeEmail().fake();
@@ -38,7 +38,7 @@ impl MigrationTrait for Migration {
         }
 
         for _ in 0..200 {
-            let id = uuid::Uuid::now_v7();
+            let id = ulid::Ulid::new();
             let fullname: String = Name().fake();
             let address: String = SecondaryAddress().fake();
             let email: String = FreeEmail().fake();
@@ -53,27 +53,29 @@ impl MigrationTrait for Migration {
         }
 
         for _ in 0..400 {
-            let id = uuid::Uuid::now_v7();
+            let id = ulid::Ulid::new();
             let name: String = Word().fake();
             let rand: u8 = Faker.fake();
             let address: String = Sentence(Range { start: 5, end: 10 }).fake();
-            let price: u8 = Faker.fake();
+            let purchase_price = (50..150).fake::<u8>();
+            let selling_price = (150..250).fake::<u8>();
             let quantity: u8 = Faker.fake();
             let insert = Query::insert()
                 .into_table(Product::Table)
-                .columns([Product::Id, Product::Name, Product::Description, Product::Price, Product::MinQuantity])
+                .columns([Product::Id, Product::Name, Product::Description, Product::PurchasePrice, Product::SellingPrice, Product::MinQuantity])
                 .values_panic([
                     id.to_string().into(),
                     format!("{}-{}", name, rand).into(),
                     address.into(),
-                    price.into(),
+                    purchase_price.into(),
+                    selling_price.into(),
                     quantity.into(),
                 ])
                 .to_owned();
 
             manager.exec_stmt(insert).await?;
 
-            let inventory_id = uuid::Uuid::now_v7();
+            let inventory_id = ulid::Ulid::new();
             let inventory_quantity: u8 = Faker.fake();
             let insert_stock = Query::insert()
                 .into_table(InventoryMovement::Table)
@@ -99,7 +101,7 @@ impl MigrationTrait for Migration {
         let status = vec![String::from("DELIVERED"), String::from("CANCELED"), String::from("PENDING")];
 
         for _ in 0..100 {
-            let id = uuid::Uuid::now_v7();
+            let id = ulid::Ulid::new();
             let status_ = get_random_enum(status.clone());
             let insert_order = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,
@@ -119,7 +121,7 @@ impl MigrationTrait for Migration {
         }
 
         for _ in 0..1000 {
-            let _id = uuid::Uuid::now_v7();
+            let _id = ulid::Ulid::new();
             let quantity: u8 = Faker.fake();
             let insert_inventory = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,
@@ -138,7 +140,7 @@ impl MigrationTrait for Migration {
             );
             db.execute(insert_inventory).await?;
             //
-            let id = uuid::Uuid::now_v7();
+            let id = ulid::Ulid::new();
             let price: u8 = Faker.fake();
             let insert_order = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,
@@ -161,7 +163,7 @@ impl MigrationTrait for Migration {
         let status = vec![String::from("PAID"), String::from("CANCELED"), String::from("PENDING")];
 
         for _ in 0..100 {
-            let id = uuid::Uuid::now_v7();
+            let id = ulid::Ulid::new();
             let status_ = get_random_enum(status.clone());
             let paid: u8 = Faker.fake();
             let insert_invoice = Statement::from_sql_and_values(
@@ -184,7 +186,7 @@ impl MigrationTrait for Migration {
         }
 
         for _ in 0..1000 {
-            let _id = uuid::Uuid::now_v7();
+            let _id = ulid::Ulid::new();
             let quantity: u8 = Faker.fake();
             let insert_inventory = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,
@@ -203,7 +205,7 @@ impl MigrationTrait for Migration {
             );
             db.execute(insert_inventory).await?;
 
-            let id = uuid::Uuid::now_v7();
+            let id = ulid::Ulid::new();
             let price: u8 = Faker.fake();
             let insert_invoice = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,
@@ -224,7 +226,7 @@ impl MigrationTrait for Migration {
         }
 
         for _ in 0..150 {
-            let id = uuid::Uuid::now_v7();
+            let id = ulid::Ulid::new();
             let insert_quote = Statement::from_sql_and_values(
                 sea_orm::DatabaseBackend::Sqlite,
                 r#"
@@ -242,7 +244,7 @@ impl MigrationTrait for Migration {
         }
 
         for _ in 0..1000 {
-            let id = uuid::Uuid::now_v7();
+            let id = ulid::Ulid::new();
             let price: u8 = Faker.fake();
             let quantity: u8 = Faker.fake();
             let insert_quote = Statement::from_sql_and_values(
