@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
 import ModalLoading from "./ModalLoading.vue";
-import Error from "./Error.vue";
+import Error from "./ModalError.vue";
 
 const { name } = defineProps<{ name: string }>();
 

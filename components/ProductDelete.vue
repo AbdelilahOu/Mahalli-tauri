@@ -5,6 +5,7 @@ import type { Res } from "@/types";
 import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 const { t } = useI18n();
 
 const deleteTheProduct = async (id: string, name: string) => {
@@ -31,7 +32,7 @@ const deleteTheProduct = async (id: string, name: string) => {
 };
 
 const cancelDelete = () => {
-  store.setters.updateStore({ key: "show", value: false });
+  toggleModal(false);
 };
 </script>
 

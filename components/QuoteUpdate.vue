@@ -7,6 +7,7 @@ import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 const { t } = useI18n();
 const route = useRoute();
 
@@ -97,9 +98,7 @@ const updateTheQuotes = async () => {
   }
 };
 
-const hideModal = () => {
-  store.setters.updateStore({ key: "show", value: false });
-};
+const hideModal = () => toggleModal(false);
 
 async function deleteOneQuoteItem(id: string) {
   try {

@@ -13,6 +13,7 @@ defineProps<{ products: ProductT[] }>();
 
 const { t, d, locale } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { setModalName, toggleModal } = useStore();
 
 const toggleThisProduct = (product: ProductT, name: string) => {
   updateQueryParams({
@@ -23,8 +24,8 @@ const toggleThisProduct = (product: ProductT, name: string) => {
     description: product.description,
     minQuantity: product.minQuantity,
   });
-  store.setters.updateStore({ key: "name", value: name });
-  store.setters.updateStore({ key: "show", value: true });
+  setModalName(name);
+  toggleModal(true);
 };
 
 const updateProductStock = (id: string, name: string) => {
@@ -32,8 +33,8 @@ const updateProductStock = (id: string, name: string) => {
     id,
     name,
   });
-  store.setters.updateStore({ key: "name", value: "InventoryUpdate" });
-  store.setters.updateStore({ key: "show", value: true });
+  setModalName("InventoryUpdate");
+  toggleModal(true);
 };
 </script>
 
@@ -42,7 +43,7 @@ const updateProductStock = (id: string, name: string) => {
     <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
-          <th class="small"/>
+          <th class="small" />
           <th class="w-20">{{ t("g.fields.name") }}</th>
           <th class="small">{{ t("g.fields.inventory") }}</th>
           <th>{{ t("g.fields.threshold") }}</th>

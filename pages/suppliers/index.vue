@@ -9,7 +9,7 @@ import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const route = useRoute();
-const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal, setModalName } = useStore();
 //
 const suppliers = ref<SupplierT[]>([]);
 const searchQuery = ref<string>("");
@@ -68,15 +68,10 @@ async function getSuppliers(search: string, page: number = 1) {
   }
 }
 
-const uploadCSV = () => {
-  store.setters.updateStore({ key: "name", value: "CsvUploader" });
-  store.setters.updateStore({ key: "show", value: true });
-  updateQueryParams({ table: "suppliers" });
-};
 //
 const updateModal = (name: string) => {
-  store.setters.updateStore({ key: "name", value: name });
-  store.setters.updateStore({ key: "show", value: true });
+  setModalName(name);
+  toggleModal(true);
 };
 </script>
 

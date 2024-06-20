@@ -2,10 +2,8 @@
 import { buttonVariants } from "./ui/button";
 const { t } = useI18n();
 const switchLocalePath = useSwitchLocalePath();
-
-const hideModal = () => {
-  store.setters.updateStore({ key: "show", value: false });
-};
+const { toggleModal } = useStore();
+const hideModal = () => toggleModal(false);
 </script>
 
 <template>

@@ -9,6 +9,7 @@ defineProps<{
 
 const { t, locale } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { setModalName, toggleModal } = useStore();
 
 const toggleThisClient = (client: ClientT, name: string) => {
   updateQueryParams({
@@ -18,19 +19,8 @@ const toggleThisClient = (client: ClientT, name: string) => {
     phoneNumber: client.phoneNumber,
     address: client.address,
   });
-  store.setters.updateStore({ key: "name", value: name });
-  store.setters.updateStore({ key: "show", value: true });
-};
-
-const toggleCLientProfile = (client: ClientT) => {
-  updateQueryParams({
-    id: client.id,
-    fullname: client.fullname,
-    email: client.email,
-    phoneNumber: client.phoneNumber,
-    address: client.address,
-    // image: client.image,
-  });
+  setModalName(name);
+  toggleModal(true);
 };
 </script>
 
@@ -39,7 +29,7 @@ const toggleCLientProfile = (client: ClientT) => {
     <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
-          <th class="small"/>
+          <th class="small" />
           <th>{{ t("g.fields.fullname") }}</th>
           <th>{{ t("g.fields.email") }}</th>
           <th>{{ t("g.fields.phone") }}</th>

@@ -26,7 +26,7 @@ const LOCALE_TEXT = {
 } as const;
 
 const openTranslationModal = () => {
-  store.setters.updateStore({ key: "show", value: true });
+  toggleModal(true);
   store.setters.updateStore({ key: "name", value: "TranslationModal" });
 };
 </script>

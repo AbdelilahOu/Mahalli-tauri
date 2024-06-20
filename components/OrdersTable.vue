@@ -19,6 +19,7 @@ import { toast } from "vue-sonner";
 import { NuxtLink } from "#components";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { setModalName, toggleModal } = useStore();
 const { t, d, locale } = useI18n();
 const localePath = useLocalePath();
 
@@ -47,8 +48,8 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
     id: Order.id,
     highlight: false,
   });
-  store.setters.updateStore({ key: "name", value: name });
-  store.setters.updateStore({ key: "show", value: true });
+  setModalName(name);
+  toggleModal(true);
 };
 
 const updateOrderStatus = async (order: any) => {

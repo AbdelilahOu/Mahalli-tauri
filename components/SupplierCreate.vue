@@ -11,6 +11,7 @@ import type { Res } from "@/types";
 import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 const { t } = useI18n();
 const isLoading = ref<boolean>(false);
 
@@ -64,9 +65,7 @@ const createNewSupplier = async (supplier: SupplierT) => {
   }
 };
 
-const hideModal = () => {
-  store.setters.updateStore({ key: "show", value: false });
-};
+const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   createNewSupplier(values);

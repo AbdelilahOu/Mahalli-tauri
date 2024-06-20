@@ -18,7 +18,7 @@ const status = ref<string | undefined>(undefined);
 const createdAt = ref<string | number | undefined>(undefined);
 const invoiceProducts = ref<InvoiceProductT[]>([]);
 
-const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal, setModalName } = useStore();
 
 const LIMIT = 25;
 provide("count", totalRows);
@@ -89,15 +89,9 @@ const listInvoiceProduct = async (id?: string) => {
   }
 };
 
-const uploadCSV = () => {
-  store.setters.updateStore({ key: "name", value: "CsvUploader" });
-  store.setters.updateStore({ key: "show", value: true });
-  updateQueryParams({ table: "invoices" });
-};
-
 const updateModal = (name: string) => {
-  store.setters.updateStore({ key: "name", value: name });
-  store.setters.updateStore({ key: "show", value: true });
+  setModalName(name);
+  toggleModal(true);
 };
 </script>
 

@@ -5,6 +5,7 @@ import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
+const { toggleModal } = useStore();
 const { t } = useI18n();
 
 const deleteTheInvoice = async (id: string) => {
@@ -27,12 +28,12 @@ const deleteTheInvoice = async (id: string) => {
     });
     error("DELETE INVOICE: " + err.error);
   } finally {
-    store.setters.updateStore({ key: "show", value: false });
+    toggleModal(false);
   }
 };
 
 const cancelDelete = () => {
-  store.setters.updateStore({ key: "show", value: false });
+  toggleModal(false);
 };
 </script>
 
