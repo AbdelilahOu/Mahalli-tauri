@@ -9,14 +9,16 @@ pub struct Model {
     pub id: String,
     pub name: String,
     pub created_at: String,
+    pub is_deleted: bool,
+    pub is_archived: bool,
     pub description: Option<String>,
     #[sea_orm(column_type = "Double")]
     pub purchase_price: f64,
     #[sea_orm(column_type = "Double")]
+    pub selling_price: f64,
+    #[sea_orm(column_type = "Double")]
     pub min_quantity: f64,
     pub image: Option<String>,
-    #[sea_orm(column_type = "Double")]
-    pub selling_price: f64,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
@@ -38,12 +40,12 @@ impl Related<super::quote_items::Entity> for Entity {
         Relation::QuoteItems.def()
     }
 }
-
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {
         Self {
-            id: Set(Uuid::now_v7().to_string()),
+            id: Set(ulid::Ulid::new().to_string()),
             ..ActiveModelTrait::default()
         }
     }
 }
+

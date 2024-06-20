@@ -19,6 +19,8 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(Expr::current_timestamp()),
                     )
+                    .col(ColumnDef::new(Client::IsDeleted).boolean().not_null().default(false))
+                    .col(ColumnDef::new(Client::IsArchived).boolean().not_null().default(false))
                     .col(ColumnDef::new(Client::Phone).string())
                     .col(ColumnDef::new(Client::Email).string())
                     .col(ColumnDef::new(Client::Address).string())
@@ -40,6 +42,8 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(Expr::current_timestamp()),
                     )
+                    .col(ColumnDef::new(Supplier::IsDeleted).boolean().not_null().default(false))
+                    .col(ColumnDef::new(Supplier::IsArchived).boolean().not_null().default(false))
                     .col(ColumnDef::new(Supplier::Phone).string())
                     .col(ColumnDef::new(Supplier::Email).string())
                     .col(ColumnDef::new(Supplier::Address).string())
@@ -61,8 +65,11 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(Expr::current_timestamp()),
                     )
+                    .col(ColumnDef::new(Product::IsDeleted).boolean().not_null().default(false))
+                    .col(ColumnDef::new(Product::IsArchived).boolean().not_null().default(false))
                     .col(ColumnDef::new(Product::Description).string())
-                    .col(ColumnDef::new(Product::Price).float().not_null().default(0.0f32))
+                    .col(ColumnDef::new(Product::PurchasePrice).float().not_null().default(0.0f32))
+                    .col(ColumnDef::new(Product::SellingPrice).float().not_null().default(0.0f32))
                     .col(ColumnDef::new(Product::MinQuantity).float().not_null().default(0.0f32))
                     .col(ColumnDef::new(Product::Image).string())
                     .to_owned(),
@@ -109,6 +116,8 @@ impl MigrationTrait for Migration {
                             .to(Client::Table, Client::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
+                    .col(ColumnDef::new(Quote::IsDeleted).boolean().not_null().default(false))
+                    .col(ColumnDef::new(Quote::IsArchived).boolean().not_null().default(false))
                     .col(ColumnDef::new(Quote::CreatedAt).date_time().not_null().default(Expr::current_timestamp()))
                     .to_owned(),
             )
@@ -165,6 +174,8 @@ impl MigrationTrait for Migration {
                             .to(Quote::Table, Quote::Id)
                             .on_delete(ForeignKeyAction::SetNull),
                     )
+                    .col(ColumnDef::new(Order::IsDeleted).boolean().not_null().default(false))
+                    .col(ColumnDef::new(Order::IsArchived).boolean().not_null().default(false))
                     .col(ColumnDef::new(Order::CreatedAt).date_time().not_null().default(Expr::current_timestamp()))
                     .col(ColumnDef::new(Order::Status).string().not_null())
                     .to_owned(),
@@ -221,6 +232,8 @@ impl MigrationTrait for Migration {
                             .to(Order::Table, Order::Id)
                             .on_delete(ForeignKeyAction::SetNull),
                     )
+                    .col(ColumnDef::new(Invoice::IsDeleted).boolean().not_null().default(false))
+                    .col(ColumnDef::new(Invoice::IsArchived).boolean().not_null().default(false))
                     .col(ColumnDef::new(Invoice::Status).string().not_null())
                     .col(
                         ColumnDef::new(Invoice::CreatedAt)
@@ -259,6 +272,57 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        manager
+            .create_index(
+                sea_query::Index::create()
+                    .table(Order::Table)
+                    .col(Order::Status)
+                    .name("idx_orders_status")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                sea_query::Index::create()
+                    .table(Invoice::Table)
+                    .col(Invoice::Status)
+                    .name("idx_invoices_status")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                sea_query::Index::create()
+                    .table(Client::Table)
+                    .col(Client::Fullname)
+                    .name("idx_clients_fullname")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                sea_query::Index::create()
+                    .table(Supplier::Table)
+                    .col(Supplier::Fullname)
+                    .name("idx_suppliers_fullname")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                sea_query::Index::create()
+                    .table(Product::Table)
+                    .col(Product::Name)
+                    .name("idx_products_name")
+                    .to_owned(),
+            )
+            .await?;
+
+
         Ok(())
     }
 
@@ -273,7 +337,7 @@ impl MigrationTrait for Migration {
         manager.drop_table(Table::drop().table(OrderItem::Table).to_owned()).await?;
         manager.drop_table(Table::drop().table(Invoice::Table).to_owned()).await?;
         manager.drop_table(Table::drop().table(InvoiceItem::Table).to_owned()).await?;
-        
+
         Ok(())
     }
 }
@@ -295,6 +359,10 @@ pub enum Client {
     Email,
     #[sea_orm(iden = "address")]
     Address,
+    #[sea_orm(iden = "is_deleted")]
+    IsDeleted,
+    #[sea_orm(iden = "is_archived")]
+    IsArchived,
 }
 
 #[derive(DeriveIden)]
@@ -314,6 +382,10 @@ pub enum Supplier {
     Email,
     #[sea_orm(iden = "address")]
     Address,
+    #[sea_orm(iden = "is_deleted")]
+    IsDeleted,
+    #[sea_orm(iden = "is_archived")]
+    IsArchived,
 }
 
 #[derive(DeriveIden)]
@@ -329,10 +401,16 @@ pub enum Product {
     Image,
     #[sea_orm(iden = "description")]
     Description,
-    #[sea_orm(iden = "price")]
-    Price,
+    #[sea_orm(iden = "purchase_price")]
+    PurchasePrice,
+    #[sea_orm(iden = "selling_price")]
+    SellingPrice,
     #[sea_orm(iden = "min_quantity")]
     MinQuantity,
+    #[sea_orm(iden = "is_deleted")]
+    IsDeleted,
+    #[sea_orm(iden = "is_archived")]
+    IsArchived,
 }
 
 #[derive(DeriveIden)]
@@ -359,6 +437,10 @@ pub enum Quote {
     ClientId,
     #[sea_orm(iden = "created_at")]
     CreatedAt,
+    #[sea_orm(iden = "is_deleted")]
+    IsDeleted,
+    #[sea_orm(iden = "is_archived")]
+    IsArchived,
 }
 
 #[derive(DeriveIden)]
@@ -390,6 +472,10 @@ pub enum Order {
     Status,
     #[sea_orm(iden = "created_at")]
     CreatedAt,
+    #[sea_orm(iden = "is_deleted")]
+    IsDeleted,
+    #[sea_orm(iden = "is_archived")]
+    IsArchived,
 }
 
 #[derive(DeriveIden)]
@@ -421,6 +507,10 @@ pub enum Invoice {
     PaidAmount,
     #[sea_orm(iden = "created_at")]
     CreatedAt,
+    #[sea_orm(iden = "is_deleted")]
+    IsDeleted,
+    #[sea_orm(iden = "is_archived")]
+    IsArchived,
 }
 
 #[derive(DeriveIden)]

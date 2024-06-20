@@ -10,6 +10,8 @@ pub struct Model {
     pub client_id: String,
     #[sea_orm(unique)]
     pub quote_id: Option<String>,
+    pub is_deleted: bool,
+    pub is_archived: bool,
     pub created_at: String,
     pub status: String,
 }
@@ -61,12 +63,12 @@ impl Related<super::quotes::Entity> for Entity {
         Relation::Quotes.def()
     }
 }
-
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {
         Self {
-            id: Set(Uuid::now_v7().to_string()),
+            id: Set(ulid::Ulid::new().to_string()),
             ..ActiveModelTrait::default()
         }
     }
 }
+
