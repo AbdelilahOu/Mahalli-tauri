@@ -32,9 +32,7 @@ const deleteTheInvoice = async (id: string) => {
   }
 };
 
-const cancelDelete = () => {
-  toggleModal(false);
-};
+const cancelDelete = () => toggleModal(false);
 </script>
 
 <template>

@@ -32,9 +32,7 @@ const deleteTheClient = async (id: string, fullname: string) => {
   }
 };
 
-const cancelDelete = () => {
-  toggleModal(false);
-};
+const cancelDelete = () => toggleModal(false);
 </script>
 <template>
   <Card>
