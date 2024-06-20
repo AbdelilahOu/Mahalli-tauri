@@ -31,9 +31,7 @@ const deleteTheProduct = async (id: string, name: string) => {
   }
 };
 
-const cancelDelete = () => {
-  toggleModal(false);
-};
+const cancelDelete = () => toggleModal(false);
 </script>
 
 <template>
