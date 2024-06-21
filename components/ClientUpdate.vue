@@ -72,7 +72,11 @@ const updateTheClient = async (client: ClientT) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("UPDATE CLIENT: " + err.error);
+    if ("error" in err) {
+      error("UPDATE CLIENT: " + err.error);
+      return;
+    }
+    error("UPDATE CLIENT: " + err);
   } finally {
     hideModal();
   }

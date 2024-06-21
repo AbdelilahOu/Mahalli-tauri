@@ -58,7 +58,11 @@ const createNewSupplier = async (supplier: SupplierT) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("CREATE SUPPLIER: " + err.error);
+    if ("error" in err) {
+      error("CREATE SUPPLIER: " + err.error);
+      return;
+    }
+    error("CREATE SUPPLIER: " + err);
   } finally {
     isLoading.value = false;
     hideModal();

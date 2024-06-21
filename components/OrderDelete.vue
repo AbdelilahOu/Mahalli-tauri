@@ -26,7 +26,11 @@ const deleteTheOrders = async (id: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("DELETE ORDER: " + err.error);
+    if ("error" in err) {
+      error("DELETE ORDER: " + err.error);
+      return;
+    }
+    error("DELETE ORDER: " + err);
   } finally {
     toggleModal(false);
   }

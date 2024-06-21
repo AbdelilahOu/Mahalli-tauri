@@ -69,7 +69,11 @@ const getInvoices = async (search: string, page = 1) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("LIST INVOICES " + err.error);
+    if ("error" in err) {
+      error("LIST INVOICES " + err.error);
+      return;
+    }
+    error("LIST INVOICES " + err);
   }
 };
 
@@ -85,7 +89,10 @@ const listInvoiceProduct = async (id?: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("ERROR LIST INVOICE PRODUCTS: " + err.error);
+    if ("error" in err) {
+      error("ERROR LIST INVOICE PRODUCTS: " + err.error);
+      return;
+    }
   }
 };
 

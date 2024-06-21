@@ -86,7 +86,11 @@ const createOrder = async () => {
         description: t("notifications.error.description"),
         closeButton: true,
       });
-      error("CREATE ORDER: " + err.error);
+      if ("error" in err) {
+        error("CREATE ORDER: " + err.error);
+        return;
+      }
+      error("CREATE ORDER: " + err);
     } finally {
       isLoading.value = false;
       hideModal();

@@ -67,7 +67,11 @@ const getQuotes = async (search: string, page = 1) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("LIST ORDERS: " + err.error);
+    if ("error" in err) {
+      error("LIST ORDERS: " + err.error);
+      return;
+    }
+    error("LIST ORDERS: " + err);
   }
 };
 
@@ -83,7 +87,11 @@ const listQuoteProduct = async (id?: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("LIST ORDER PRODUCTS: " + err.error);
+    if ("error" in err) {
+      error("LIST ORDER PRODUCTS: " + err.error);
+      return;
+    }
+    error("LIST ORDER PRODUCTS: " + err);
   }
 };
 

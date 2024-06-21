@@ -26,7 +26,11 @@ const deleteTheQuotes = async (id: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("DELETE QUOTE: " + err.error);
+    if ("error" in err) {
+      error("DELETE QUOTE: " + err.error);
+      return;
+    }
+    error("DELETE QUOTE: " + err);
   } finally {
     toggleModal(false);
   }

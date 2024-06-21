@@ -61,7 +61,11 @@ async function listProducts(search: string, page: number = 1) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("LIST PRODUCTS: " + err.error);
+    if ("error" in err) {
+      error("LIST PRODUCTS: " + err.error);
+      return;
+    }
+    error("LIST PRODUCTS: " + err);
   }
 }
 

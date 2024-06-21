@@ -55,7 +55,11 @@ const updateInvoiceStatus = async (invoice: any) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("UPDATE INVOICE STATUS: " + err.error);
+    if ("error" in err) {
+      error("UPDATE INVOICE STATUS: " + err.error);
+      return;
+    }
+    error("UPDATE INVOICE STATUS: " + err);
   }
 };
 </script>

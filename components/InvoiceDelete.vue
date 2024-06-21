@@ -26,7 +26,11 @@ const deleteTheInvoice = async (id: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("DELETE INVOICE: " + err.error);
+    if ("error" in err) {
+      error("DELETE INVOICE: " + err.error);
+      return;
+    }
+    error("DELETE INVOICE: " + err);
   } finally {
     toggleModal(false);
   }

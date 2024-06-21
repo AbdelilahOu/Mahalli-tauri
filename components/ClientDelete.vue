@@ -26,7 +26,11 @@ const deleteTheClient = async (id: string, fullname: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("DELETE CLIENT: " + err.error);
+    if ("error" in err) {
+      error("DELETE CLIENT: " + err.error);
+      return;
+    }
+    error("DELETE CLIENT: " + err);
   } finally {
     cancelDelete();
   }

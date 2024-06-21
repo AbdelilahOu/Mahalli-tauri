@@ -82,7 +82,11 @@ const createQuote = async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("CREATE QUOTE: " + err.error);
+    if ("error" in err) {
+      error("CREATE QUOTE: " + err.error);
+      return;
+    }
+    error("CREATE QUOTE: " + err);
   } finally {
     isLoading.value = false;
     hideModal();

@@ -64,7 +64,11 @@ async function getSuppliers(search: string, page: number = 1) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("LIST SUPPLIERS: " + err.error);
+    if ("error" in err) {
+      error("LIST SUPPLIERS: " + err.error);
+      return;
+    }
+    error("LIST SUPPLIERS: " + err);
   }
 }
 

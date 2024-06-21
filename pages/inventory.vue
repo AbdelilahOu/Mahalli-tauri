@@ -68,7 +68,11 @@ async function getInventory(search: string, page: number = 1) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("LIST INVENTORY MOUVEMENTS: " + err.error);
+    if ("error" in err) {
+      error("LIST INVENTORY MOUVEMENTS: " + err.error);
+      return;
+    }
+    error("LIST INVENTORY MOUVEMENTS: " + err);
   }
 }
 </script>

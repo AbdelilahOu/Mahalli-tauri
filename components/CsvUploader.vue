@@ -35,7 +35,10 @@ const upload = async () => {
         description: t("notifications.error.description"),
         closeButton: true,
       });
-      error("ERROR UPLOAD CSV : " + err.error);
+      if ("error" in err) {
+        error("ERROR UPLOAD CSV : " + err.error);
+        return;
+      }
     } finally {
       updateQueryParams({
         refresh: "refresh-upload-" + Math.random() * 9999,

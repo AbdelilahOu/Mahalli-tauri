@@ -56,7 +56,11 @@ const createNewClient = async (client: ClientT) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("CREATE CLIENT: " + err.error);
+    if ("error" in err) {
+      error("CREATE CLIENT: " + err.error);
+      return;
+    }
+    error("CREATE CLIENT: " + err);
   } finally {
     isCreating.value = false;
     hideModal();

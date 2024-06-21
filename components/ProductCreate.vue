@@ -60,7 +60,11 @@ const createNewProduct = async (product: ProductT) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("CREATE PRODUCT: " + err.error);
+    if ("error" in err) {
+      error("CREATE PRODUCT: " + err.error);
+      return;
+    }
+    error("CREATE PRODUCT: " + err);
   } finally {
     isCreating.value = false;
     hideModal();
