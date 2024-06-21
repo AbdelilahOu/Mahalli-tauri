@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { show, name } = useStore();
+const { isShowModal, modalName } = useStore();
 const isCollapse = ref<boolean>(true);
 </script>
 
@@ -18,7 +18,7 @@ const isCollapse = ref<boolean>(true);
     <div class="grid grid-rows-[50px_1fr] w-full">
       <Navigation />
       <ScrollArea
-        class="w-full scroll-smooth h-[calc(100vh-50px)] flex flex-col border-t border-slate-100"
+        class="w-full scroll-smooth flex flex-col border-t border-slate-100"
       >
         <div class="w-full bg-[#FFFAFA] p-2 rounded-md h-full">
           <slot />
@@ -26,10 +26,10 @@ const isCollapse = ref<boolean>(true);
       </ScrollArea>
     </div>
     <div
-      v-if="show"
+      v-if="isShowModal"
       class="w-full h-full flex items-center justify-center fixed bg-black z-50 top-0 left-0 bg-opacity-30"
     >
-      <ModalComponentsRenderer :name="name" />
+      <ModalComponentsRenderer :name="modalName" />
     </div>
     <Toaster position="top-center" />
   </main>

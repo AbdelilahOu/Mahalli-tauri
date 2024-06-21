@@ -2,8 +2,9 @@
 import { open } from "@tauri-apps/api/dialog";
 import { downloadDir, pictureDir } from "@tauri-apps/api/path";
 import { useDropZone } from "@vueuse/core";
-import { Trash2 } from "lucide-vue-next";
+import { Trash2, Upload, FileCheck, File } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
+import { toast } from "vue-sonner";
 
 const { name, extensions } = defineProps<{
   extensions: string[];
@@ -16,14 +17,19 @@ const emits = defineEmits<{
 
 const { t } = useI18n();
 const dropZone = ref<HTMLDivElement>();
+const isFileSelected = ref(false);
 
 async function onDrop(files: File[] | null) {
   if (files) {
-    const imagePath = await getBytesArray(files[0]);
-    if (imagePath) {
-      const base64 = btoa(String.fromCharCode(...imagePath));
+    const filePath = await getBytesArray(files[0]);
+    if (filePath) {
+      const base64 = btoa(String.fromCharCode(...filePath));
       emits("save:base64", base64);
-      selectedFile.value = base64;
+      if (name == "Image") {
+        selectedFile.value = base64;
+      } else {
+        isFileSelected.value = true;
+      }
     }
   }
 }
@@ -33,28 +39,30 @@ const { isOverDropZone } = useDropZone(dropZone, onDrop);
 const selectedFile = ref<string | null>();
 const OpenDialog = async () => {
   try {
-    const imagePath = (await open({
+    const filePath = (await open({
       multiple: false,
       filters: [{ name, extensions }],
       defaultPath: name == "Image" ? await pictureDir() : await downloadDir(),
     })) as string | null;
 
-    if (imagePath) {
-      if (name === "Image") {
-        const base64 = await getFileBytes(imagePath);
-        if (base64) {
-          emits("save:base64", base64);
+    if (filePath) {
+      const base64 = await getFileBytes(filePath);
+      if (base64) {
+        emits("save:base64", base64);
+        if (name == "Image") {
           selectedFile.value = base64;
+        } else {
+          isFileSelected.value = true;
         }
       }
-      return;
     }
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("ERROR PDF-LIB: " + err.error);
+
+    error("ERROR PDF-LIB: " + error);
   }
 };
 </script>
@@ -74,15 +82,16 @@ const OpenDialog = async () => {
       v-if="name == 'Image' && selectedFile"
       class="absolute top-0 border border-gray-300 rounded-md object-cover w-full h-full"
       :src="`data:image/png;base64,${selectedFile}`"
-    >
+    />
     <div
       v-else
       ref="dropZone"
       :class="[
         'w-full relative h-full rounded-md transition-all duration-200 transform z-50 border-2 border-dashed border-spacing-4 flex items-center justify-center',
-
         isOverDropZone
           ? 'fill-sky-500 border-sky-500 bg-sky-200'
+          : isFileSelected
+          ? 'fill-green-400 border-green-300 bg-green-200'
           : 'fill-gray-400 border-gray-300 bg-white',
       ]"
     >
@@ -96,18 +105,15 @@ const OpenDialog = async () => {
         @mouseleave="isOverDropZone = false"
         @click="OpenDialog"
       >
-        <span> {{ t("g.dropZone") }} </span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="32"
-          height="32"
-          viewBox="0 0 256 256"
-        >
-          <path
-            fill="currentColor"
-            d="m213.7 82.3l-56-56A8.1 8.1 0 0 0 152 24H56a16 16 0 0 0-16 16v176a16 16 0 0 0 16 16h144a16 16 0 0 0 16-16V88a8.1 8.1 0 0 0-2.3-5.7Zm-53.7-31L188.7 80H160ZM200 216H56V40h88v48a8 8 0 0 0 8 8h48v120Zm-40-64a8 8 0 0 1-8 8h-16v16a8 8 0 0 1-16 0v-16h-16a8 8 0 0 1 0-16h16v-16a8 8 0 0 1 16 0v16h16a8 8 0 0 1 8 8Z"
-          />
-        </svg>
+        <span v-if="!isFileSelected">
+          {{ t("g.dropZone") }}
+        </span>
+        <Upload :size="26" v-if="!isFileSelected" />
+        <FileCheck
+          class="fill-green-200 stroke-green-800"
+          :size="30"
+          v-if="isFileSelected && name == 'Pdf'"
+        />
       </button>
     </div>
   </div>

@@ -82,7 +82,11 @@ const updateTheProduct = async (product: ProductT) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("UPDATE PRODUCT: " + err.error);
+    if ("error" in err) {
+      error("UPDATE PRODUCT: " + err.error);
+      return;
+    }
+    error("UPDATE PRODUCT: " + err);
   } finally {
     hideModal();
   }

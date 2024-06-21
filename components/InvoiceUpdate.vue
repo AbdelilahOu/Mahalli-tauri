@@ -94,7 +94,11 @@ const updateTheInvoices = async () => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    error("UPDATE INVOICE: " + err.error);
+    if ("error" in err) {
+      error("UPDATE INVOICE: " + err.error);
+      return;
+    }
+    error("UPDATE INVOICE: " + err);
   } finally {
     hideModal();
   }
@@ -110,7 +114,10 @@ async function deleteOneInvoiceItem(id: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("Error creating client : " + err.error);
+    if ("error" in err) {
+      error("Error creating client : " + err.error);
+      return;
+    }
   }
 }
 

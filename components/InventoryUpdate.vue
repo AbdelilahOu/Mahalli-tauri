@@ -56,7 +56,11 @@ const updateTheProduct = async ({ quantity }: z.infer<typeof stock>) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("UPDATE PRODUCT INVENTORY: " + err.error);
+    if ("error" in err) {
+      error("UPDATE PRODUCT INVENTORY: " + err.error);
+      return;
+    }
+    error("UPDATE PRODUCT INVENTORY: " + err);
   } finally {
     hideModal();
   }

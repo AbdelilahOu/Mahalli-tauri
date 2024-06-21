@@ -17,6 +17,7 @@ import {
 const collapse = defineModel<boolean>("collapse", { required: true });
 const { t, locale } = useI18n();
 const localePath = useLocalePath();
+const { setModalName, toggleModal } = useStore();
 
 const LOCALE_TEXT = {
   en: "English",
@@ -27,7 +28,7 @@ const LOCALE_TEXT = {
 
 const openTranslationModal = () => {
   toggleModal(true);
-  store.setters.updateStore({ key: "name", value: "TranslationModal" });
+  setModalName("TranslationModal");
 };
 </script>
 

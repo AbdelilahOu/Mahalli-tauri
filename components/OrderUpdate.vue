@@ -95,7 +95,11 @@ const updateTheOrders = async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("UPDATE ORDER: " + err.error);
+    if ("error" in err) {
+      error("UPDATE ORDER: " + err.error);
+      return;
+    }
+    error("UPDATE ORDER: " + err);
   } finally {
     hideModal();
   }
@@ -111,7 +115,10 @@ async function deleteOneOrderItem(id: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("ERROR DELETE ORDER ITEM: " + err.error);
+    if ("error" in err) {
+      error("ERROR DELETE ORDER ITEM: " + err.error);
+      return;
+    }
   }
 }
 

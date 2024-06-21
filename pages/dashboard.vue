@@ -97,7 +97,11 @@ async function getInventoryMovementStats() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("STATS INVENTORY MOUVEMENTS: " + err.error);
+    if ("error" in err) {
+      error("STATS INVENTORY MOUVEMENTS: " + err.error);
+      return;
+    }
+    error("STATS INVENTORY MOUVEMENTS: " + err);
   }
 }
 
@@ -112,7 +116,11 @@ async function getBestClients() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("STATS BEST CLIENTS: " + err.error);
+    if ("error" in err) {
+      error("STATS BEST CLIENTS: " + err.error);
+      return;
+    }
+    error("STATS BEST CLIENTS: " + err);
   }
 }
 
@@ -127,7 +135,11 @@ async function getBestProducts() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("STATS BEST PRODUCTS: " + err.error);
+    if ("error" in err) {
+      error("STATS BEST PRODUCTS: " + err.error);
+      return;
+    }
+    error("STATS BEST PRODUCTS: " + err);
   }
 }
 
@@ -142,7 +154,11 @@ async function getStatusCounts() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("STATS STATUS COUNT: " + err.error);
+    if ("error" in err) {
+      error("STATS STATUS COUNT: " + err.error);
+      return;
+    }
+    error("STATS STATUS COUNT: " + err);
   }
 }
 
@@ -167,7 +183,11 @@ async function getRevenue() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("STATS REVENUE: " + err.error);
+    if ("error" in err) {
+      error("STATS REVENUE: " + err.error);
+      return;
+    }
+    error("STATS REVENUE: " + err);
   }
 }
 
@@ -191,7 +211,11 @@ async function getExpenses() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("STATS EXPENSES: " + err.error);
+    if ("error" in err) {
+      error("STATS EXPENSES: " + err.error);
+      return;
+    }
+    error("STATS EXPENSES: " + err);
   }
 }
 

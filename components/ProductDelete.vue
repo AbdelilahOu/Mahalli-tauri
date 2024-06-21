@@ -25,7 +25,11 @@ const deleteTheProduct = async (id: string, name: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("DELETE PRODUCT: " + err.error);
+    if ("error" in err) {
+      error("DELETE PRODUCT: " + err.error);
+      return;
+    }
+    error("DELETE PRODUCT: " + err);
   } finally {
     cancelDelete();
   }

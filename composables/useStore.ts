@@ -1,12 +1,12 @@
 export function useStore() {
-  const show = useState("showModal", () => false);
-  const name = useState("modalName", () => "");
-  const toggleModal = (s: boolean) => (show.value = s);
-  const setModalName = (n: string) => (name.value = n);
+  const isShowModal = useState("showModal", () => false);
+  const modalName = useState("modalName", () => "");
+  const toggleModal = (s: boolean) => (isShowModal.value = s);
+  const setModalName = (n: string) => (modalName.value = n);
 
   return {
-    show,
-    name,
+    isShowModal,
+    modalName,
     toggleModal,
     setModalName,
   };

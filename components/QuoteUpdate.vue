@@ -92,7 +92,11 @@ const updateTheQuotes = async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("UPDATE QUOTE: " + err.error);
+    if ("error" in err) {
+      error("UPDATE QUOTE: " + err.error);
+      return;
+    }
+    error("UPDATE QUOTE: " + err);
   } finally {
     hideModal();
   }
@@ -108,7 +112,10 @@ async function deleteOneQuoteItem(id: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("ERROR DELETE QUOTE ITEM : " + err.error);
+    if ("error" in err) {
+      error("ERROR DELETE QUOTE ITEM : " + err.error);
+      return;
+    }
   }
 }
 

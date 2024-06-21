@@ -88,7 +88,11 @@ const createInvoice = async () => {
         description: t("notifications.error.description"),
         closeButton: true,
       });
-      error("CREATE INVOICE: " + err.error);
+      if ("error" in err) {
+        error("CREATE INVOICE: " + err.error);
+        return;
+      }
+      error("CREATE INVOICE: " + err);
     } finally {
       isLoading.value = false;
       hideModal();
