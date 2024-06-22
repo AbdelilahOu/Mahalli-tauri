@@ -20,9 +20,10 @@ const id = useRoute().params.id;
 const quote = ref<any | null>(null);
 const pdfRef = ref<HTMLIFrameElement | null>();
 // pdf layout setting
-const marginTop = ref(150);
+const marginTop = ref(120);
 const marginX = ref(20);
 const marginBottom = ref(20);
+const templateBase64 = ref<string>();
 //
 let resolveWaitForFetch: (value?: unknown) => void;
 const waitForFetch = new Promise((r) => (resolveWaitForFetch = r));
@@ -31,7 +32,8 @@ let font: PDFFont;
 let color: RGB;
 
 const setDocumentTemplate = (data: string) => {
-  initPdfDoc(data);
+  templateBase64.value = data;
+  initPdfDoc();
 };
 
 onBeforeMount(async () => {
@@ -57,10 +59,7 @@ onMounted(async () => {
   try {
     await waitForFetch;
     initPdfDoc();
-    marginTop.value = 40;
-    marginBottom.value = 20;
   } catch (err: any) {
-    console.log(err);
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -69,12 +68,8 @@ onMounted(async () => {
   }
 });
 
-const initPdfDoc = async (templateBase64?: string) => {
-  if (templateBase64) {
-    marginTop.value = 150;
-    marginBottom.value = 20;
-  }
-
+const initPdfDoc = async () => {
+  marginTop.value = !templateBase64.value ? 40 : 130;
   pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
   if (locale.value == "ar") {
@@ -85,16 +80,16 @@ const initPdfDoc = async (templateBase64?: string) => {
     font = await pdfDoc.embedFont(StandardFonts.Helvetica);
   }
   color = rgb(0.34, 0.34, 0.34);
-  generatePdf(templateBase64);
+  generatePdf();
 };
 
-const generatePdf = async (templateBase64?: string) => {
+const generatePdf = async () => {
   try {
     let page: PDFPage;
     let Tempalte: PDFPage | undefined;
-    if (templateBase64) {
+    if (templateBase64.value) {
       const sourcePdfDoc = await PDFDocument.load(
-        "data:application/pdf;base64," + templateBase64
+        "data:application/pdf;base64," + templateBase64.value
       );
       const [template] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
       Tempalte = template;
@@ -355,11 +350,18 @@ const copyPage = (originalPage: any) => {
         <CardTitle> configuration </CardTitle>
       </CardHeader>
       <CardContent>
+        <Label> Template </Label>
         <UiUploader
           @save:base64="setDocumentTemplate"
           name="Pdf"
           :extensions="['pdf']"
         />
+        <Label> Top margin </Label>
+        <Input v-model="marginTop" />
+        <Label> Bottom margin </Label>
+        <Input v-model="marginBottom" />
+        <Label> Vertical margin </Label>
+        <Input v-model="marginX" />
       </CardContent>
     </Card>
   </main>
