@@ -24,12 +24,12 @@ const marginTop = ref(120);
 const marginX = ref(20);
 const marginBottom = ref(20);
 const templateBase64 = ref<string>();
+const color = ref(rgb(0.34, 0.34, 0.34));
 //
 let resolveWaitForFetch: (value?: unknown) => void;
 const waitForFetch = new Promise((r) => (resolveWaitForFetch = r));
 let pdfDoc: PDFDocument;
 let font: PDFFont;
-let color: RGB;
 
 const setDocumentTemplate = (data: string) => {
   templateBase64.value = data;
@@ -79,7 +79,6 @@ const initPdfDoc = async () => {
   } else {
     font = await pdfDoc.embedFont(StandardFonts.Helvetica);
   }
-  color = rgb(0.34, 0.34, 0.34);
   generatePdf();
 };
 
@@ -109,7 +108,7 @@ const generatePdf = async () => {
         y: height - marginTop.value - 20 * 7 + 10,
       },
       thickness: 1,
-      color,
+      color: color.value,
       opacity: 0.75,
     });
 
@@ -140,14 +139,14 @@ const drawOrderHeader = (
     y: height - marginTop.value,
     font,
     size: 30,
-    color,
+    color: color.value,
   });
   page.drawText(quote.createdAt.split(" ")[0], {
     x: width - 190,
     y: height - marginTop.value - 20,
     font,
     size: 13,
-    color,
+    color: color.value,
   });
   //
   page.drawText(t("i.u.d.c.title").toUpperCase(), {
@@ -155,42 +154,42 @@ const drawOrderHeader = (
     y: height - marginTop.value,
     font,
     size: 14,
-    color,
+    color: color.value,
   });
   page.drawText(quote.client.fullname, {
     x: marginX.value,
     y: height - marginTop.value - 20,
     font,
     size: 13,
-    color,
+    color: color.value,
   });
   page.drawText(quote.client.address, {
     x: marginX.value,
     y: height - marginTop.value - 20 * 2,
     font,
     size: 13,
-    color,
+    color: color.value,
   });
   page.drawText(quote.client.phoneNumber, {
     x: marginX.value,
     y: height - marginTop.value - 20 * 3,
     font,
     size: 13,
-    color,
+    color: color.value,
   });
   page.drawText(quote.client.email, {
     x: marginX.value,
     y: height - marginTop.value - 20 * 4,
     font,
     size: 13,
-    color,
+    color: color.value,
   });
   //
   page.drawLine({
     start: { x: marginX.value, y: height - marginTop.value - 20 * 5 },
     end: { x: width - marginX.value, y: height - marginTop.value - 20 * 5 },
     thickness: 1,
-    color,
+    color: color.value,
     opacity: 0.75,
   });
   page.drawText(t("g.fields.name"), {
@@ -198,14 +197,14 @@ const drawOrderHeader = (
     y: height - marginTop.value - 20 * 6,
     font,
     size: 14,
-    color,
+    color: color.value,
   });
   page.drawText(t("g.fields.price"), {
     x: 25 + width / 4,
     y: height - marginTop.value - 20 * 6,
     font,
     size: 14,
-    color,
+    color: color.value,
   });
 
   page.drawText(t("g.fields.quantity"), {
@@ -213,7 +212,7 @@ const drawOrderHeader = (
     y: height - marginTop.value - 20 * 6,
     font,
     size: 14,
-    color,
+    color: color.value,
   });
 
   page.drawText(t("g.fields.total"), {
@@ -221,7 +220,7 @@ const drawOrderHeader = (
     y: height - marginTop.value - 20 * 6,
     font,
     size: 14,
-    color,
+    color: color.value,
   });
 };
 
@@ -243,28 +242,28 @@ const drawOrderItems = (
     y: currentY - 10,
     font,
     size: 12,
-    color,
+    color: color.value,
   });
   page.drawText("DH " + item.price.toFixed(2), {
     x: 25 + width / 4,
     y: currentY - 10,
     font,
     size: 12,
-    color,
+    color: color.value,
   });
   page.drawText(item.quantity.toFixed(0), {
     x: 25 + width / 2,
     y: currentY - 10,
     font,
     size: 12,
-    color,
+    color: color.value,
   });
   page.drawText("DH " + (item.price * item.quantity).toFixed(2), {
     x: 25 + (width * 3) / 4,
     y: currentY - 10,
     font,
     size: 12,
-    color,
+    color: color.value,
   });
   page.drawLine({
     start: { x: marginX.value, y: currentY - 20 },
@@ -273,7 +272,7 @@ const drawOrderItems = (
       y: currentY - 20,
     },
     thickness: 1,
-    color,
+    color: color.value,
     opacity: 0.75,
   });
 
@@ -305,7 +304,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     y: currentY - 10,
     font,
     size: 12,
-    color,
+    color: color.value,
   });
 
   page.drawText(t("g.fields.total"), {
@@ -313,7 +312,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     y: currentY - 10,
     font,
     size: 12,
-    color,
+    color: color.value,
   });
   page.drawLine({
     start: {
@@ -325,7 +324,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
       y: currentY - 20,
     },
     thickness: 1,
-    color,
+    color: color.value,
     opacity: 0.75,
   });
 };
