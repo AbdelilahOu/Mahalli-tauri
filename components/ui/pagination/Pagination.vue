@@ -14,10 +14,9 @@ const defaultPage = computed(() =>
 );
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
 
 const rowsCount = inject<Ref<number>>("count");
-const itemsCount = inject<Ref<number>>("itemsCount");
+const itemsPerPage = inject<Ref<number>>("itemsPerPage");
 
 const goBackward = () => {
   if (defaultPage.value > 1) {
@@ -28,7 +27,7 @@ const goBackward = () => {
 const goForward = () => {
   if (
     defaultPage.value <
-    Math.ceil((rowsCount?.value ?? 1) / (itemsCount?.value ?? 17))
+    Math.ceil((rowsCount?.value ?? 1) / (itemsPerPage?.value ?? 17))
   ) {
     updateQueryParams({ page: defaultPage.value + 1 });
   }
@@ -45,7 +44,7 @@ const goToFirst = () => {
 const goToLast = () => {
   if (rowsCount?.value) {
     updateQueryParams({
-      page: Math.ceil(rowsCount?.value / (itemsCount?.value ?? 17)),
+      page: Math.ceil(rowsCount?.value / (itemsPerPage?.value ?? 17)),
     });
   }
 };
@@ -60,7 +59,7 @@ const goToLast = () => {
         :sibling-count="1"
         show-edges
         :default-page="defaultPage"
-        :items-per-page="itemsCount ?? 1"
+        :items-per-page="itemsPerPage ?? 1"
       >
         <PaginationList v-slot="{ items }" class="flex items-center gap-1">
           <PaginationFirst @click="goToFirst" />
