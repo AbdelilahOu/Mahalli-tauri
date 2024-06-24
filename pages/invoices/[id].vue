@@ -20,11 +20,13 @@ const id = useRoute().params.id;
 const invoice = ref<any | null>(null);
 const pdfRef = ref<HTMLIFrameElement | null>();
 // pdf layout setting
-const marginTop = ref(120);
-const marginX = ref(20);
-const marginBottom = ref(20);
-const templateBase64 = ref<string>();
-const color = ref(rgb(0.34, 0.34, 0.34));
+const config = reactive({
+  marginTop: 120,
+  marginX: 20,
+  marginBottom: 20,
+  templateBase64: null,
+  color: rgb(0.34, 0.34, 0.34),
+});
 //
 let resolveWaitForFetch: (value?: unknown) => void;
 const waitForFetch = new Promise((r) => (resolveWaitForFetch = r));
@@ -32,7 +34,8 @@ let pdfDoc: PDFDocument;
 let font: PDFFont;
 
 const setDocumentTemplate = (data: string) => {
-  templateBase64.value = data;
+  //@ts-ignore
+  config.templateBase64 = data;
   initPdfDoc();
 };
 
@@ -69,7 +72,7 @@ onMounted(async () => {
 });
 
 const initPdfDoc = async () => {
-  marginTop.value = !templateBase64.value ? 40 : 130;
+  config.marginTop = !config.templateBase64 ? 40 : 130;
   pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
   if (locale.value == "ar") {
@@ -86,9 +89,9 @@ const generatePdf = async () => {
   try {
     let page: PDFPage;
     let Tempalte: PDFPage | undefined;
-    if (templateBase64.value) {
+    if (config.templateBase64) {
       const sourcePdfDoc = await PDFDocument.load(
-        "data:application/pdf;base64," + templateBase64.value
+        "data:application/pdf;base64," + config.templateBase64
       );
       const [template] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
       Tempalte = template;
@@ -102,13 +105,13 @@ const generatePdf = async () => {
     drawOrderHeader(page, width, height, invoice.value);
 
     page.drawLine({
-      start: { x: marginX.value, y: height - marginTop.value - 20 * 7 + 10 },
+      start: { x: config.marginX, y: height - config.marginTop - 20 * 7 + 10 },
       end: {
-        x: width - marginX.value,
-        y: height - marginTop.value - 20 * 7 + 10,
+        x: width - config.marginX,
+        y: height - config.marginTop - 20 * 7 + 10,
       },
       thickness: 1,
-      color: color.value,
+      color: config.color,
       opacity: 0.75,
     });
 
@@ -117,7 +120,7 @@ const generatePdf = async () => {
       page,
       width,
       items,
-      height - marginTop.value - 20 * 7,
+      height - config.marginTop - 20 * 7,
       Tempalte
     );
 
@@ -136,98 +139,98 @@ const drawOrderHeader = (
 ) => {
   page.drawText("I N V O I C E", {
     x: width - 190,
-    y: height - marginTop.value,
+    y: height - config.marginTop,
     font,
     size: 30,
-    color: color.value,
+    color: config.color,
   });
   page.drawText(invoice.createdAt.split(" ")[0], {
     x: width - 190,
-    y: height - marginTop.value - 20,
+    y: height - config.marginTop - 20,
     font,
     size: 13,
-    color: color.value,
+    color: config.color,
   });
   page.drawText(t("g.status." + invoice.status.toLowerCase()), {
     x: width - 190,
-    y: height - marginTop.value - 40,
+    y: height - config.marginTop - 40,
     font,
     size: 13,
-    color: color.value,
+    color: config.color,
   });
   //
   page.drawText(t("i.u.d.c.title").toUpperCase(), {
-    x: marginX.value,
-    y: height - marginTop.value,
+    x: config.marginX,
+    y: height - config.marginTop,
     font,
     size: 14,
-    color: color.value,
+    color: config.color,
   });
   page.drawText(invoice.client.fullname, {
-    x: marginX.value,
-    y: height - marginTop.value - 20,
+    x: config.marginX,
+    y: height - config.marginTop - 20,
     font,
     size: 13,
-    color: color.value,
+    color: config.color,
   });
   page.drawText(invoice.client.address, {
-    x: marginX.value,
-    y: height - marginTop.value - 20 * 2,
+    x: config.marginX,
+    y: height - config.marginTop - 20 * 2,
     font,
     size: 13,
-    color: color.value,
+    color: config.color,
   });
   page.drawText(invoice.client.phoneNumber, {
-    x: marginX.value,
-    y: height - marginTop.value - 20 * 3,
+    x: config.marginX,
+    y: height - config.marginTop - 20 * 3,
     font,
     size: 13,
-    color: color.value,
+    color: config.color,
   });
   page.drawText(invoice.client.email, {
-    x: marginX.value,
-    y: height - marginTop.value - 20 * 4,
+    x: config.marginX,
+    y: height - config.marginTop - 20 * 4,
     font,
     size: 13,
-    color: color.value,
+    color: config.color,
   });
   //
   page.drawLine({
-    start: { x: marginX.value, y: height - marginTop.value - 20 * 5 },
-    end: { x: width - marginX.value, y: height - marginTop.value - 20 * 5 },
+    start: { x: config.marginX, y: height - config.marginTop - 20 * 5 },
+    end: { x: width - config.marginX, y: height - config.marginTop - 20 * 5 },
     thickness: 1,
-    color: color.value,
+    color: config.color,
     opacity: 0.75,
   });
   page.drawText(t("g.fields.name"), {
     x: 25,
-    y: height - marginTop.value - 20 * 6,
+    y: height - config.marginTop - 20 * 6,
     font,
     size: 14,
-    color: color.value,
+    color: config.color,
   });
   page.drawText(t("g.fields.price"), {
     x: 25 + width / 4,
-    y: height - marginTop.value - 20 * 6,
+    y: height - config.marginTop - 20 * 6,
     font,
     size: 14,
-    color: color.value,
+    color: config.color,
   });
 
   page.drawText(t("g.fields.quantity"), {
     x: 25 + width / 2,
-    y: height - marginTop.value - 20 * 6,
+    y: height - config.marginTop - 20 * 6,
     font,
     size: 14,
-    color: color.value,
+    color: config.color,
   });
 
   page.drawText(t("g.fields.total"), {
     x: 25 + (width * 3) / 4,
-    y: height - marginTop.value - 20 * 6,
+    y: height - config.marginTop - 20 * 6,
     font,
     size: 14,
-    color: color.value,
+    color: config.color,
   });
 };
 
@@ -249,43 +252,43 @@ const drawOrderItems = (
     y: currentY - 10,
     font,
     size: 12,
-    color: color.value,
+    color: config.color,
   });
   page.drawText("DH " + item.price.toFixed(2), {
     x: 25 + width / 4,
     y: currentY - 10,
     font,
     size: 12,
-    color: color.value,
+    color: config.color,
   });
   page.drawText(item.quantity.toFixed(0), {
     x: 25 + width / 2,
     y: currentY - 10,
     font,
     size: 12,
-    color: color.value,
+    color: config.color,
   });
   page.drawText("DH " + (item.price * item.quantity).toFixed(2), {
     x: 25 + (width * 3) / 4,
     y: currentY - 10,
     font,
     size: 12,
-    color: color.value,
+    color: config.color,
   });
   page.drawLine({
-    start: { x: marginX.value, y: currentY - 20 },
+    start: { x: config.marginX, y: currentY - 20 },
     end: {
-      x: width - marginX.value,
+      x: width - config.marginX,
       y: currentY - 20,
     },
     thickness: 1,
-    color: color.value,
+    color: config.color,
     opacity: 0.75,
   });
 
   const lineHeight = 30; // Assuming a line height for each item
   const remainingHeight = currentY - lineHeight;
-  if (remainingHeight < marginBottom.value + lineHeight + 30) {
+  if (remainingHeight < config.marginBottom + lineHeight + 30) {
     let newPage: PDFPage;
     if (template) {
       newPage = pdfDoc.addPage(copyPage(template));
@@ -297,7 +300,7 @@ const drawOrderItems = (
       newPage,
       width,
       items,
-      newPage.getHeight() - marginTop.value,
+      newPage.getHeight() - config.marginTop,
       template
     );
   } else {
@@ -311,7 +314,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     y: currentY - 10,
     font,
     size: 12,
-    color: color.value,
+    color: config.color,
   });
 
   page.drawText(t("g.fields.total"), {
@@ -319,7 +322,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     y: currentY - 10,
     font,
     size: 12,
-    color: color.value,
+    color: config.color,
   });
   page.drawLine({
     start: {
@@ -327,11 +330,11 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
       y: currentY - 20,
     },
     end: {
-      x: width - marginX.value,
+      x: width - config.marginX,
       y: currentY - 20,
     },
     thickness: 1,
-    color: color.value,
+    color: config.color,
     opacity: 0.75,
   });
 };
@@ -363,11 +366,11 @@ const copyPage = (originalPage: any) => {
           :extensions="['pdf']"
         />
         <Label> Top margin </Label>
-        <Input v-model="marginTop" />
+        <Input v-model="config.marginTop" />
         <Label> Bottom margin </Label>
-        <Input v-model="marginBottom" />
+        <Input v-model="config.marginBottom" />
         <Label> Vertical margin </Label>
-        <Input v-model="marginX" />
+        <Input v-model="config.marginX" />
       </CardContent>
     </Card>
   </main>
