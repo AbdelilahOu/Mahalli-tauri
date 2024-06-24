@@ -10,7 +10,7 @@ import {
   PDFName,
   PDFPage,
 } from "pdf-lib";
-import type { RGB, PDFFont } from "pdf-lib";
+import type { PDFFont } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 import { toast } from "vue-sonner";
