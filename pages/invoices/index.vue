@@ -22,7 +22,7 @@ const { toggleModal, setModalName } = useStore();
 
 const LIMIT = 25;
 provide("count", totalRows);
-provide("itemsCount", LIMIT);
+provide("itemsPerPage", LIMIT);
 
 onUnmounted(() => {
   if (unwatch) unwatch();

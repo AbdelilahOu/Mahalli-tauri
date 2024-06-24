@@ -21,7 +21,7 @@ const createdAt = ref<string | number | undefined>(undefined);
 const totalRows = ref<number>(0);
 //
 provide("count", totalRows);
-provide("itemsCount", 30);
+provide("itemsPerPage", 30);
 //
 let timer: any;
 let unwatch: WatchStopHandle | null = null;
