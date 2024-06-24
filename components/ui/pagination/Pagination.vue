@@ -27,7 +27,9 @@ const goBackward = () => {
 const goForward = () => {
   if (
     defaultPage.value <
-    Math.ceil((rowsCount?.value ?? 1) / (itemsPerPage?.value ?? 17))
+    Math.ceil(
+      (rowsCount?.value ?? 1) / (itemsPerPage?.value ? itemsPerPage?.value : 17)
+    )
   ) {
     updateQueryParams({ page: defaultPage.value + 1 });
   }
@@ -44,7 +46,9 @@ const goToFirst = () => {
 const goToLast = () => {
   if (rowsCount?.value) {
     updateQueryParams({
-      page: Math.ceil(rowsCount?.value / (itemsPerPage?.value ?? 17)),
+      page: Math.ceil(
+        rowsCount?.value / (itemsPerPage?.value ? itemsPerPage?.value : 17)
+      ),
     });
   }
 };
