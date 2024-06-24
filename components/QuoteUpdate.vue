@@ -70,7 +70,6 @@ const addQuoteItem = () => {
 
 const updateTheQuotes = async () => {
   try {
-    console.log(quote);
     await invoke<Res<string>>("update_quote", {
       quote: {
         id: quote.id,
