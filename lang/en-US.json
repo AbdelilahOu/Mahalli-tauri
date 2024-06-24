@@ -68,7 +68,7 @@
       "print": "Print",
       "toOrder": "Create order",
       "toInvoice": "Create invoice",
-      "inventoryUpdate": "Update stock"
+      "inventoryUpdate": "Update inventory"
     }
   },
   "csv": {
