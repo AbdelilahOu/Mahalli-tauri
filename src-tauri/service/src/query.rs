@@ -27,7 +27,12 @@ pub struct QueriesService;
 impl QueriesService {
     pub async fn list_products(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Products::find().filter(
-            Condition::any().add(products::Column::Name.like(format!("{}%", args.search))).add(products::Column::Description.like(format!("%{}%", args.search))),
+            Condition::any()
+                .add(products::Column::Name.like(format!("{}%", args.search)))
+                .add(products::Column::Description.like(format!("%{}%", args.search)))
+                .add(products::Column::IsArchived.eq(false))
+                .add(products::Column::IsDeleted.eq(false))
+            ,
         ).count(db).await?;
 
         let (sql, values) = Query::select().from(Products).exprs([
@@ -97,6 +102,12 @@ impl QueriesService {
                 Expr::col((Products, products::Column::Name)).like(format!("{}%", args.search)).into_condition(),
             ).add(
                 Expr::col((Products, products::Column::Description)).like(format!("%{}%", args.search)).into_condition(),
+            )
+            .add(
+                Expr::col((Products, products::Column::IsArchived)).eq(false).into_condition(),
+            )
+            .add(
+                Expr::col((Products, products::Column::IsDeleted)).eq(false).into_condition(),
             ),
         ).limit(args.limit).offset((args.page - 1) * args.limit).order_by(products::Column::CreatedAt, Order::Desc).to_owned().build(SqliteQueryBuilder);
 
