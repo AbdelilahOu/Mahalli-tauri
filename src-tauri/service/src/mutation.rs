@@ -73,7 +73,7 @@ impl MutationsService {
     }
     pub async fn delete_client(db: &DbConn, id: String) -> Result<u64, DbErr> {
         let client_model = Clients::find_by_id(id).one(db).await?;
-        let mut client_active: ProductActiveModel = client_model.unwrap().into();
+        let mut client_active: ClientActiveModel = client_model.unwrap().into();
         client_active.is_deleted = ActiveValue::Set(true);
         match client_active.update(db).await {
             Ok(_) => Ok(1),
@@ -110,7 +110,7 @@ impl MutationsService {
     }
     pub async fn delete_supplier(db: &DbConn, id: String) -> Result<u64, DbErr> {
         let supplier_model = Suppliers::find_by_id(id).one(db).await?;
-        let mut supplier_active: ProductActiveModel = supplier_model.unwrap().into();
+        let mut supplier_active: SupplierActiveModel = supplier_model.unwrap().into();
         supplier_active.is_deleted = ActiveValue::Set(true);
         match supplier_active.update(db).await {
             Ok(_) => Ok(1),
@@ -118,7 +118,7 @@ impl MutationsService {
         }
     }
     //
-    pub async fn create_inv_mvm(db: &DbConn, mvm: NewInventory) -> Result<String, DbErr> {
+    pub async fn create_inventory(db: &DbConn, mvm: NewInventory) -> Result<String, DbErr> {
         let in_mvm = InventoryActiveModel {
             mvm_type: ActiveValue::Set(mvm.mvm_type),
             quantity: ActiveValue::Set(mvm.quantity),
@@ -130,13 +130,14 @@ impl MutationsService {
             Err(err) => Err(err),
         }
     }
-    pub async fn delete_inv_mvm(db: &DbConn, id: String) -> Result<u64, DbErr> {
+    pub async fn delete_inventory(db: &DbConn, id: String) -> Result<u64, DbErr> {
         let movement_model = InventoryMovements::find_by_id(id).one(db).await?;
-        let mut movement_active: ProductActiveModel = movement_model.unwrap().into();
-        movement_active.is_deleted = ActiveValue::Set(true);
-        match movement_active.update(db).await {
-            Ok(_) => Ok(1),
-            Err(err) => Err(err),
+        match movement_model {
+            Some(movement_model) => {
+                let movement = movement_model.delete(db).await?;
+                Ok(movement.rows_affected)
+            }
+            None => Ok(0),
         }
     }
     pub async fn update_order_status(db: &DbConn, data: UpdateStatus) -> Result<(), DbErr> {
@@ -150,21 +151,11 @@ impl MutationsService {
     }
     pub async fn delete_order(db: &DbConn, id: String) -> Result<u64, DbErr> {
         let order_model = Orders::find_by_id(id).one(db).await?;
-        let mut order_active: ProductActiveModel = order_model.unwrap().into();
+        let mut order_active: OrderActiveModel = order_model.unwrap().into();
         order_active.is_deleted = ActiveValue::Set(true);
         match order_active.update(db).await {
             Ok(_) => Ok(1),
             Err(err) => Err(err),
-        }
-    }
-    pub async fn delete_order_item(db: &DbConn, id: String) -> Result<u64, DbErr> {
-        let order_item_model = OrderItems::find_by_id(id).one(db).await?;
-        match order_item_model {
-            Some(order_item_model) => {
-                let order_item = order_item_model.delete(db).await?;
-                Ok(order_item.rows_affected)
-            }
-            None => Ok(0),
         }
     }
     pub async fn update_invoice_status(db: &DbConn, data: UpdateStatus) -> Result<(), DbErr> {
@@ -178,26 +169,16 @@ impl MutationsService {
     }
     pub async fn delete_invoice(db: &DbConn, id: String) -> Result<u64, DbErr> {
         let invoice_model = Invoices::find_by_id(id).one(db).await?;
-        let mut invoice_active: ProductActiveModel = invoice_model.unwrap().into();
+        let mut invoice_active: InvoiceActiveModel = invoice_model.unwrap().into();
         invoice_active.is_deleted = ActiveValue::Set(true);
         match invoice_active.update(db).await {
             Ok(_) => Ok(1),
             Err(err) => Err(err),
         }
     }
-    pub async fn delete_invoice_item(db: &DbConn, id: String) -> Result<u64, DbErr> {
-        let invoice_item_model = InvoiceItems::find_by_id(id).one(db).await?;
-        match invoice_item_model {
-            Some(invoice_item_model) => {
-                let invoice_item = invoice_item_model.delete(db).await?;
-                Ok(invoice_item.rows_affected)
-            }
-            None => Ok(0),
-        }
-    }
     pub async fn delete_quote(db: &DbConn, id: String) -> Result<u64, DbErr> {
         let quote_model = Quotes::find_by_id(id).one(db).await?;
-        let mut quote_active: ProductActiveModel = quote_model.unwrap().into();
+        let mut quote_active: QuoteActiveModel = quote_model.unwrap().into();
         quote_active.is_deleted = ActiveValue::Set(true);
         match quote_active.update(db).await {
             Ok(_) => Ok(1),

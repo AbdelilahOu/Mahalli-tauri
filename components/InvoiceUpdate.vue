@@ -108,14 +108,14 @@ const hideModal = () => toggleModal(false);
 
 async function deleteOneInvoiceItem(id: string) {
   try {
-    await invoke("delete_invoice_item", { id });
+    await invoke("delete_inventory", { id });
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if ("error" in err) {
-      error("Error creating client : " + err.error);
+      error("ERROR DELETE INVOICE ITEM: " + err.error);
       return;
     }
   }
@@ -123,7 +123,7 @@ async function deleteOneInvoiceItem(id: string) {
 
 const deleteInvoiceItem = (index: number) => {
   const item = invoice.items?.splice(index, 1)[0];
-  if (item?.id) deleteOneInvoiceItem(item.id);
+  if (item?.inventory_id) deleteOneInvoiceItem(item.inventory_id);
 };
 </script>
 

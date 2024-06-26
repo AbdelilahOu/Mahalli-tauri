@@ -62,7 +62,7 @@ const barPriceTriggers = {
 
 async function getInventoryMovementStats() {
   try {
-    const res = await invoke<Res<movementsT[]>>("list_mvm_stats");
+    const res = await invoke<Res<movementsT[]>>("list_inventory_stats");
     const result = res.data.reduce((acc, item) => {
       const { createdAt: date, mvmType, quantity, price } = item;
       const createdAt = new Date(date).toISOString().split("T")[0];

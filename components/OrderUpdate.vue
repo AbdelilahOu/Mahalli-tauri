@@ -109,7 +109,7 @@ const hideModal = () => toggleModal(false);
 
 async function deleteOneOrderItem(id: string) {
   try {
-    await invoke("delete_order_item", { id });
+    await invoke("delete_inventory", { id });
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
@@ -124,7 +124,7 @@ async function deleteOneOrderItem(id: string) {
 
 const deleteOrderItem = (index: number) => {
   const item = order.items?.splice(index, 1)[0];
-  if (item?.id) deleteOneOrderItem(item.id);
+  if (item?.inventory_id) deleteOneOrderItem(item.inventory_id);
 };
 </script>
 
