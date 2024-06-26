@@ -82,10 +82,6 @@ async fn main() {
             commands::orders::create_order_from_quote,
             commands::orders::update_order_status,
             //
-            // order items
-            //
-            commands::order_items::delete_order_item,
-            //
             // quotes
             //
             commands::quotes::list_quotes,
@@ -112,13 +108,9 @@ async fn main() {
             commands::invoices::create_invoice_from_order,
             commands::invoices::update_invoice_status,
             //
-            // invoice items
-            //
-            commands::invoice_items::delete_invoice_item,
-            //
             // dashboard
             //
-            commands::dashboard::list_mvm_stats,
+            commands::dashboard::list_inventory_stats,
             commands::dashboard::list_top_clients,
             commands::dashboard::list_top_suppliers,
             commands::dashboard::list_top_products,

@@ -28,7 +28,7 @@ pub async fn list_inventory(state: State<'_, AppState>, args: ListArgs) -> SResu
 #[tauri::command]
 pub async fn create_inventory(state: State<'_, AppState>, mvm: NewInventory) -> SResult<String> {
     let _ = state.db_conn;
-    match MutationsService::create_inv_mvm(&state.db_conn, mvm).await {
+    match MutationsService::create_inventory(&state.db_conn, mvm).await {
         Ok(id) => Ok(Seccess::<String> {
             error: None,
             message: Option::Some(String::from("inventory created successfully")),
@@ -46,7 +46,7 @@ pub async fn create_inventory(state: State<'_, AppState>, mvm: NewInventory) -> 
 #[tauri::command]
 pub async fn delete_inventory(state: State<'_, AppState>, id: String) -> SResult<String> {
     let _ = state.db_conn;
-    match MutationsService::delete_inv_mvm(&state.db_conn, id).await {
+    match MutationsService::delete_inventory(&state.db_conn, id).await {
         Ok(_) => Ok(Seccess::<String> {
             error: None,
             message: Option::Some(String::from("inventory deleted successfully")),

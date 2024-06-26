@@ -8,9 +8,9 @@ use crate::AppState;
 use super::{Fail, Seccess, SResult};
 
 #[tauri::command]
-pub async fn list_mvm_stats(state: State<'_, AppState>) -> SResult<Vec<Value>> {
+pub async fn list_inventory_stats(state: State<'_, AppState>) -> SResult<Vec<Value>> {
     let _ = state.db_conn;
-    match QueriesService::list_mvm_stats(&state.db_conn).await {
+    match QueriesService::list_inventory_stats(&state.db_conn).await {
         Ok(res) => Ok(Seccess {
             error: None,
             message: None,

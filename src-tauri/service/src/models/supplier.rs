@@ -9,7 +9,6 @@ pub struct SelectSuppliers {
     pub phone_number: Option<String>,
     pub email: Option<String>,
     pub image: Option<String>,
-    pub credi: f64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
