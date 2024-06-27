@@ -39,8 +39,7 @@ impl TransactionService {
 
                 Ok(created_quote.id)
             })
-        })
-            .await
+        }).await
     }
     pub async fn update_quote(db: &DbConn, quote: UpdateQuote) -> TxnRes<()> {
         db.transaction::<_, (), DbErr>(|txn| {
@@ -78,8 +77,7 @@ impl TransactionService {
                 }
                 Ok(())
             })
-        })
-            .await
+        }).await
     }
     pub async fn create_order(db: &DbConn, order: NewOrder) -> TxnRes<String> {
         db.transaction::<_, String, DbErr>(|txn| {
@@ -113,8 +111,7 @@ impl TransactionService {
 
                 Ok(created_order.id)
             })
-        })
-            .await
+        }).await
     }
     pub async fn update_order(db: &DbConn, order: UpdateOrder) -> TxnRes<()> {
         db.transaction::<_, (), DbErr>(|txn| {
@@ -162,8 +159,7 @@ impl TransactionService {
                 }
                 Ok(())
             })
-        })
-            .await
+        }).await
     }
     pub async fn create_invoice(db: &DbConn, invoice: NewInvoice) -> TxnRes<String> {
         db.transaction::<_, String, DbErr>(|txn| {
@@ -197,8 +193,7 @@ impl TransactionService {
                 }
                 Ok(created_invoice.id)
             })
-        })
-            .await
+        }).await
     }
     pub async fn update_invoice(db: &DbConn, invoice: UpdateInvoice) -> TxnRes<()> {
         db.transaction::<_, (), DbErr>(|txn| {
@@ -247,8 +242,7 @@ impl TransactionService {
                 }
                 Ok(())
             })
-        })
-            .await
+        }).await
     }
     pub async fn create_order_from_quote(db: &DbConn, id: String) -> TxnRes<String> {
         db.transaction::<_, String, DbErr>(|txn| {
@@ -296,8 +290,7 @@ impl TransactionService {
                     }
                 }
             })
-        })
-            .await
+        }).await
     }
     pub async fn create_invoice_from_order(db: &DbConn, id: String) -> TxnRes<String> {
         db.transaction::<_, String, DbErr>(|txn| {
@@ -351,7 +344,6 @@ impl TransactionService {
                     }
                 }
             })
-        })
-            .await
+        }).await
     }
 }
