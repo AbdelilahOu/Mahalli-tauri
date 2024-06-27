@@ -29,6 +29,7 @@ impl QueriesService {
         let count = Products::find().filter(
             Condition::any().add(products::Column::Name.like(format!("{}%", args.search))).add(products::Column::Description.like(format!("%{}%", args.search))).add(products::Column::IsArchived.eq(false)).add(products::Column::IsDeleted.eq(false)),
         ).count(db).await?;
+        
         let (sql, values) = Query::select().from(Products).exprs([
             Expr::col((Products, products::Column::Id)),
             Expr::col((Products, products::Column::Name)),
@@ -108,7 +109,9 @@ impl QueriesService {
                 )
             )
         ).limit(args.limit).offset((args.page - 1) * args.limit).order_by(products::Column::CreatedAt, Order::Desc).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectProducts::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         let mut result = Vec::<JsonValue>::new();
         res.into_iter().for_each(|row| {
             result.push(json!({
@@ -130,10 +133,12 @@ impl QueriesService {
     }
     pub async fn search_products(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
         let products = Products::find().select_only().expr_as_(Expr::col(products::Column::Name), "label").expr_as_(Expr::col(products::Column::Id), "value").expr(Expr::col(products::Column::PurchasePrice)).expr(Expr::col(products::Column::SellingPrice)).filter(products::Column::IsDeleted.eq(false)).filter(products::Column::Name.like(format!("{}%", search))).into_json().all(db).await?;
+        
         Ok(products)
     }
     pub async fn list_clients(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Clients::find().filter(clients::Column::IsDeleted.eq(false)).filter(clients::Column::IsArchived.eq(false)).filter(clients::Column::FullName.like(format!("{}%", args.search))).count(db).await?;
+        
         let (sql, values) = Query::select().from(Clients).exprs([
             Expr::col((Clients, clients::Column::Id)),
             Expr::col((Clients, clients::Column::FullName)),
@@ -173,13 +178,15 @@ impl QueriesService {
                 Expr::col((Clients, clients::Column::FullName)).like(format!("{}%", args.search))
             ).add(
                 Cond::all().add(
-                    Expr::col((Products, products::Column::IsArchived)).eq(false)
+                    Expr::col((Clients, clients::Column::IsArchived)).eq(false)
                 ).add(
-                    Expr::col((Products, products::Column::IsDeleted)).eq(false),
+                    Expr::col((Clients, clients::Column::IsDeleted)).eq(false),
                 )
             )
         ).limit(args.limit).offset((args.page - 1) * args.limit).order_by(clients::Column::CreatedAt, Order::Desc).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectClients::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         let mut result = Vec::<JsonValue>::new();
         res.into_iter().for_each(|row| {
             result.push(json!({
@@ -199,10 +206,12 @@ impl QueriesService {
     }
     pub async fn search_clients(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
         let clients = Clients::find().select_only().expr_as_(Expr::col(clients::Column::FullName), "label").expr_as_(Expr::col(clients::Column::Id), "value").filter(clients::Column::IsDeleted.eq(false)).filter(clients::Column::FullName.like(format!("{}%", search))).into_json().all(db).await?;
+        
         Ok(clients)
     }
     pub async fn list_suppliers(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Suppliers::find().filter(suppliers::Column::FullName.like(format!("{}%", args.search))).filter(suppliers::Column::IsDeleted.eq(false)).filter(suppliers::Column::IsArchived.eq(false)).count(db).await?;
+        
         let (sql, values) = Query::select().from(Suppliers).exprs([
             Expr::col((Suppliers, suppliers::Column::Id)),
             Expr::col((Suppliers, suppliers::Column::FullName)),
@@ -215,13 +224,15 @@ impl QueriesService {
                 Expr::col((Suppliers, suppliers::Column::FullName)).like(format!("{}%", args.search))
             ).add(
                 Cond::all().add(
-                    Expr::col((Products, products::Column::IsArchived)).eq(false)
+                    Expr::col((Suppliers, suppliers::Column::IsArchived)).eq(false)
                 ).add(
-                    Expr::col((Products, products::Column::IsDeleted)).eq(false),
+                    Expr::col((Suppliers, suppliers::Column::IsDeleted)).eq(false),
                 )
             )
         ).limit(args.limit).offset((args.page - 1) * args.limit).order_by(suppliers::Column::CreatedAt, Order::Desc).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectSuppliers::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         let mut result = Vec::<JsonValue>::new();
         res.into_iter().for_each(|row| {
             result.push(json!({
@@ -240,6 +251,7 @@ impl QueriesService {
     }
     pub async fn search_suppliers(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
         let suppliers = Suppliers::find().select_only().expr_as_(Expr::col(suppliers::Column::FullName), "label").expr_as_(Expr::col(suppliers::Column::Id), "value").filter(clients::Column::IsDeleted.eq(false)).filter(suppliers::Column::FullName.like(format!("{}%", search))).into_json().all(db).await?;
+        
         Ok(suppliers)
     }
     pub async fn list_orders(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
@@ -250,6 +262,7 @@ impl QueriesService {
         }).apply_if(args.created_at.clone(), |query, v| {
             query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', orders.created_at) = ?", [v]))
         }).join(JoinType::Join, orders::Relation::Clients.def()).filter(orders::Column::IsDeleted.eq(false)).filter(orders::Column::IsArchived.eq(false)).count(db).await?;
+        
         let (sql, values) = Query::select().from(Orders).exprs([
             Expr::col((Orders, orders::Column::Id)),
             Expr::col((Orders, orders::Column::Status)),
@@ -285,9 +298,9 @@ impl QueriesService {
                 Expr::col((Clients, clients::Column::FullName)).like(format!("{}%", args.search))
             ).add(
                 Cond::all().add(
-                    Expr::col((Products, products::Column::IsArchived)).eq(false)
+                    Expr::col((Orders, orders::Column::IsArchived)).eq(false)
                 ).add(
-                    Expr::col((Products, products::Column::IsDeleted)).eq(false),
+                    Expr::col((Orders, orders::Column::IsDeleted)).eq(false),
                 )
             )
         ).conditions(
@@ -303,7 +316,9 @@ impl QueriesService {
             },
             |_| {},
         ).limit(args.limit).offset((args.page - 1) * args.limit).order_by((Orders, orders::Column::CreatedAt), Order::Desc).group_by_col((Orders, orders::Column::Id)).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectOrders::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         let mut result = Vec::<JsonValue>::new();
         res.into_iter().for_each(|row| {
             result.push(json!({
@@ -323,7 +338,7 @@ impl QueriesService {
     }
     pub async fn get_order(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
         let order = Orders::find_by_id(id.clone()).find_also_related(Clients).one(db).await?;
-
+        
         match order {
             Some(order) => {
                 let (sql, values) = Query::select().exprs([
@@ -343,7 +358,7 @@ impl QueriesService {
                 ).cond_where(Expr::col((OrderItems, order_items::Column::OrderId)).eq(id)).to_owned().build(SqliteQueryBuilder);
 
                 let items = SelectOrdersItemsForUpdate::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
-
+                
                 let mut result = Vec::<JsonValue>::new();
                 items.into_iter().for_each(|item| {
                     result.push(json!({
@@ -355,7 +370,6 @@ impl QueriesService {
                         "name": item.name,
                     }));
                 });
-
                 Ok(json!({
                     "id": order.0.id,
                     "clientId": order.0.client_id,
@@ -373,6 +387,7 @@ impl QueriesService {
             Expr::col((Products, products::Column::Name)),
             Expr::col((InventoryMovements, inventory_movements::Column::Quantity)),
         ]).join(JoinType::Join, order_items::Relation::InventoryMovements.def()).join(JoinType::Join, inventory_movements::Relation::Products.def()).filter(Expr::col((OrderItems, order_items::Column::OrderId)).eq(id)).into_json().all(db).await?;
+        
         Ok(order_products)
     }
     pub async fn get_order_details(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
@@ -403,8 +418,9 @@ impl QueriesService {
             Clients,
             Expr::col((Clients, clients::Column::Id)).equals((Orders, orders::Column::ClientId)),
         ).cond_where(Expr::col((Orders, orders::Column::Id)).eq(id.clone())).to_owned().build(SqliteQueryBuilder);
-        let order = SelectOrderDetails::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).one(db).await?;
 
+        let order = SelectOrderDetails::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).one(db).await?;
+        
         match order {
             Some(order) => {
                 let (sql, values) = Query::select().exprs([
@@ -422,7 +438,7 @@ impl QueriesService {
                 ).cond_where(Expr::col((OrderItems, order_items::Column::OrderId)).eq(id)).to_owned().build(SqliteQueryBuilder);
 
                 let items = SelectOrdersItems::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
-
+                
                 let mut result = Vec::<JsonValue>::new();
                 items.into_iter().for_each(|item| {
                     result.push(json!({
@@ -431,7 +447,6 @@ impl QueriesService {
                         "name": item.name,
                     }));
                 });
-
                 Ok(json!({
                     "id": order.id,
                     "createdAt": order.created_at,
@@ -457,6 +472,7 @@ impl QueriesService {
         }).apply_if(args.created_at.clone(), |query, v| {
             query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', invoices.created_at) = ?", [v]))
         }).join(JoinType::Join, invoices::Relation::Clients.def()).filter(invoices::Column::IsDeleted.eq(false)).filter(invoices::Column::IsArchived.eq(false)).count(db).await?;
+        
         let (sql, values) = Query::select().from(Invoices).exprs([
             Expr::col((Invoices, invoices::Column::Id)),
             Expr::col((Invoices, invoices::Column::Status)),
@@ -493,9 +509,9 @@ impl QueriesService {
                 Expr::col((Clients, clients::Column::FullName)).like(format!("{}%", args.search))
             ).add(
                 Cond::all().add(
-                    Expr::col((Products, products::Column::IsArchived)).eq(false)
+                    Expr::col((Invoices, invoices::Column::IsArchived)).eq(false)
                 ).add(
-                    Expr::col((Products, products::Column::IsDeleted)).eq(false),
+                    Expr::col((Invoices, invoices::Column::IsDeleted)).eq(false),
                 )
             )
         ).conditions(
@@ -511,7 +527,9 @@ impl QueriesService {
             },
             |_| {},
         ).limit(args.limit).offset((args.page - 1) * args.limit).order_by((Invoices, invoices::Column::CreatedAt), Order::Desc).group_by_col((Invoices, invoices::Column::Id)).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectInvoices::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         let mut result = Vec::<JsonValue>::new();
         res.into_iter().for_each(|row| {
             result.push(json!({
@@ -532,7 +550,7 @@ impl QueriesService {
     }
     pub async fn get_invoice(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
         let invoice = Invoices::find_by_id(id.clone()).find_also_related(Clients).one(db).await?;
-
+        
         match invoice {
             Some(invoice) => {
                 let (sql, values) = Query::select().exprs([
@@ -552,7 +570,7 @@ impl QueriesService {
                 ).cond_where(Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).eq(id)).to_owned().build(SqliteQueryBuilder);
 
                 let items = SelectInvoicesItemsForUpdate::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
-
+                
                 let mut result = Vec::<JsonValue>::new();
                 items.into_iter().for_each(|item| {
                     result.push(json!({
@@ -564,7 +582,6 @@ impl QueriesService {
                         "name": item.name,
                     }));
                 });
-
                 Ok(json!({
                     "id": invoice.0.id,
                     "clientId": invoice.0.client_id,
@@ -583,6 +600,7 @@ impl QueriesService {
             Expr::col((Products, products::Column::Name)),
             Expr::col((InventoryMovements, inventory_movements::Column::Quantity)),
         ]).join(JoinType::Join, invoice_items::Relation::InventoryMovements.def()).join(JoinType::Join, inventory_movements::Relation::Products.def()).filter(Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).eq(id)).into_json().all(db).await?;
+        
         Ok(invoice_products)
     }
     pub async fn get_invoice_details(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
@@ -614,8 +632,9 @@ impl QueriesService {
             Clients,
             Expr::col((Clients, clients::Column::Id)).equals((Invoices, invoices::Column::ClientId)),
         ).cond_where(Expr::col((Invoices, invoices::Column::Id)).eq(id.clone())).to_owned().build(SqliteQueryBuilder);
-        let invoice = SelectInvoiceDetails::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).one(db).await?;
 
+        let invoice = SelectInvoiceDetails::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).one(db).await?;
+        
         match invoice {
             Some(invoice) => {
                 let (sql, values) = Query::select().exprs([
@@ -633,7 +652,7 @@ impl QueriesService {
                 ).cond_where(Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).eq(id)).to_owned().build(SqliteQueryBuilder);
 
                 let items = SelectInvoicesItems::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
-
+                
                 let mut result = Vec::<JsonValue>::new();
                 items.into_iter().for_each(|item| {
                     result.push(json!({
@@ -642,7 +661,6 @@ impl QueriesService {
                         "name": item.name,
                     }));
                 });
-
                 Ok(json!({
                     "id": invoice.id,
                     "paidAmount": invoice.paid_amount,
@@ -667,6 +685,7 @@ impl QueriesService {
         }).apply_if(args.created_at.clone(), |query, v| {
             query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', quotes.created_at) = ?", [v]))
         }).join(JoinType::Join, quotes::Relation::Clients.def()).filter(quotes::Column::IsDeleted.eq(false)).filter(quotes::Column::IsArchived.eq(false)).count(db).await?;
+        
         let (sql, values) = Query::select().from(Quotes).exprs([
             Expr::col((Quotes, quotes::Column::Id)),
             Expr::col((Quotes, quotes::Column::CreatedAt)),
@@ -695,9 +714,9 @@ impl QueriesService {
             Expr::col((Clients, clients::Column::FullName)).like(format!("{}%", args.search))
         ).add(
             Cond::all().add(
-                Expr::col((Products, products::Column::IsArchived)).eq(false)
+                Expr::col((Quotes, quotes::Column::IsArchived)).eq(false)
             ).add(
-                Expr::col((Products, products::Column::IsDeleted)).eq(false),
+                Expr::col((Quotes, quotes::Column::IsDeleted)).eq(false),
             ))).conditions(
             args.created_at.clone().is_some(),
             |x| {
@@ -705,7 +724,9 @@ impl QueriesService {
             },
             |_| {},
         ).limit(args.limit).offset((args.page - 1) * args.limit).order_by((Quotes, quotes::Column::CreatedAt), Order::Desc).group_by_col((Quotes, quotes::Column::Id)).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectQuotes::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         let mut result = Vec::<JsonValue>::new();
         res.into_iter().for_each(|row| {
             result.push(json!({
@@ -724,7 +745,7 @@ impl QueriesService {
     }
     pub async fn get_quote(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
         let quote = Quotes::find_by_id(id.clone()).find_also_related(Clients).one(db).await?;
-
+        
         match quote {
             Some(quote) => {
                 let (sql, values) = Query::select().exprs([
@@ -739,7 +760,7 @@ impl QueriesService {
                 ).cond_where(Expr::col((QuoteItems, quote_items::Column::QuoteId)).eq(id)).to_owned().build(SqliteQueryBuilder);
 
                 let items = SelectQuotesItemsForUpdate::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
-
+                
                 let mut result = Vec::<JsonValue>::new();
                 items.into_iter().for_each(|item| {
                     result.push(json!({
@@ -750,7 +771,6 @@ impl QueriesService {
                         "name": item.name,
                     }));
                 });
-
                 Ok(json!({
                     "id": quote.0.id,
                     "clientId": quote.0.client_id,
@@ -767,6 +787,7 @@ impl QueriesService {
             Expr::col((Products, products::Column::Name)),
             Expr::col((QuoteItems, quote_items::Column::Quantity)),
         ]).join(JoinType::Join, quote_items::Relation::Products.def()).filter(Expr::col((QuoteItems, quote_items::Column::QuoteId)).eq(id)).into_json().all(db).await?;
+        
         Ok(quote_products)
     }
     pub async fn get_quote_details(db: &DbConn, id: String) -> Result<JsonValue, DbErr> {
@@ -791,8 +812,9 @@ impl QueriesService {
             Clients,
             Expr::col((Clients, clients::Column::Id)).equals((Quotes, quotes::Column::ClientId)),
         ).cond_where(Expr::col((Quotes, quotes::Column::Id)).eq(id.clone())).to_owned().build(SqliteQueryBuilder);
-        let quote = SelectQuoteDetails::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).one(db).await?;
 
+        let quote = SelectQuoteDetails::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).one(db).await?;
+        
         match quote {
             Some(quote) => {
                 let (sql, values) = Query::select().exprs([
@@ -806,7 +828,7 @@ impl QueriesService {
                 ).cond_where(Expr::col((QuoteItems, quote_items::Column::QuoteId)).eq(id)).to_owned().build(SqliteQueryBuilder);
 
                 let items = SelectQuotesItems::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
-
+                
                 let mut result = Vec::<JsonValue>::new();
                 items.into_iter().for_each(|item| {
                     result.push(json!({
@@ -815,7 +837,6 @@ impl QueriesService {
                         "name": item.name,
                     }));
                 });
-
                 Ok(json!({
                     "id": quote.id,
                     "createdAt": quote.created_at,
@@ -852,6 +873,7 @@ impl QueriesService {
         }).apply_if(args.created_at.clone(), |query, v| {
             query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', inventory_movements.created_at) = ?", [v]))
         }).count(db).await?;
+        
         let (sql, values) = Query::select().from(InventoryMovements).exprs([
             Expr::col((InventoryMovements, inventory_movements::Column::Id)),
             Expr::col((InventoryMovements, inventory_movements::Column::Quantity)),
@@ -916,7 +938,9 @@ impl QueriesService {
             Expr::col((InventoryMovements, inventory_movements::Column::CreatedAt)).into(),
             Order::Desc,
         ).limit(args.limit).offset((args.page - 1) * args.limit).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectInventory::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         let mut result = Vec::<JsonValue>::new();
         res.into_iter().for_each(|row| {
             result.push(json!({
@@ -981,7 +1005,9 @@ impl QueriesService {
             Expr::cust("strftime('%Y-%m', inventory_movements.created_at)"),
             Expr::col((InventoryMovements, inventory_movements::Column::MvmType)).into(),
         ]).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectMvm::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         let mut result = Vec::<JsonValue>::new();
         res.into_iter().for_each(|row| {
             result.push(json!({
@@ -1030,7 +1056,9 @@ impl QueriesService {
             ).into(),
             Order::Desc,
         ).limit(10).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectTopProducts::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         let mut result = Vec::<JsonValue>::new();
         res.into_iter().for_each(|row| {
             result.push(json!({
@@ -1067,7 +1095,9 @@ impl QueriesService {
             ).into(),
             Order::Desc,
         ).limit(5).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectTops::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         let mut result = Vec::<JsonValue>::new();
         res.into_iter().for_each(|row| {
             result.push(json!({
@@ -1105,7 +1135,9 @@ impl QueriesService {
             ).into(),
             Order::Desc,
         ).limit(5).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectTops::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         let mut result = Vec::<JsonValue>::new();
         res.into_iter().for_each(|row| {
             result.push(json!({
@@ -1124,6 +1156,7 @@ impl QueriesService {
                 orders::Column::IsArchived.eq(false)
             )
         ).group_by_col(orders::Column::Status).to_owned().build(SqliteQueryBuilder);
+
         let (invoice_sql, invoice_values) = Query::select().from(Invoices).column(invoices::Column::Status).expr_as(Func::count(Expr::col((Invoices, invoices::Column::Id))), Alias::new("status_count")).cond_where(
             Cond::all().add(
                 invoices::Column::IsDeleted.eq(false)
@@ -1131,8 +1164,11 @@ impl QueriesService {
                 invoices::Column::IsArchived.eq(false)
             )
         ).group_by_col(invoices::Column::Status).to_owned().build(SqliteQueryBuilder);
+
         let order_res = SelectStatusCount::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, order_sql, order_values)).all(db).await?;
+        
         let invoice_res = SelectStatusCount::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, invoice_sql, invoice_values)).all(db).await?;
+        
         Ok(json!({
             "orders": order_res,
             "invoices": invoice_res,
@@ -1181,7 +1217,9 @@ impl QueriesService {
         ).cond_where(
             Cond::all().add(Expr::col((Invoices, invoices::Column::Status)).eq("PAID")).add(Expr::col((Invoices, invoices::Column::IsDeleted)).eq(false))
         ).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectRevenue::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         Ok(json!({
             "revenue": res.into_iter().map(|r| json!({
                 "currentRevenue": r.current_revenue,
@@ -1220,7 +1258,9 @@ impl QueriesService {
             Products,
             Expr::col((Products, products::Column::Id)).equals((InventoryMovements, inventory_movements::Column::ProductId)),
         ).and_where(Expr::col((InventoryMovements, inventory_movements::Column::MvmType)).eq("IN")).to_owned().build(SqliteQueryBuilder);
+
         let res = SelectExpenses::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        
         Ok(json!({
             "expenses": res.into_iter().map(|r| json!({
                 "currentExpenses": r.current_expenses,
