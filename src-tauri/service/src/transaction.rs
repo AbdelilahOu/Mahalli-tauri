@@ -1,12 +1,7 @@
-use sea_orm::{ActiveValue, prelude::*, TransactionError, TransactionTrait};
+use sea_orm::*;
 
-use crate::{NewInvoice, NewOrder, NewQuote, UpdateInvoice, UpdateOrder, UpdateQuote};
-use crate::entities::{
-    InventoryActiveModel, InventoryMovements, InvoiceActiveModel,
-    InvoiceItemActiveModel, InvoiceItems, Invoices, invoices,
-    order_items, OrderActiveModel, OrderItemActiveModel, OrderItems, Orders,
-    orders, quote_items, QuoteActiveModel, QuoteItemActiveModel, QuoteItems, Quotes,
-};
+use crate::{entities::*, models::*};
+
 
 type TxnRes<T> = Result<T, TransactionError<DbErr>>;
 
