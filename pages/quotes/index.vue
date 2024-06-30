@@ -1,65 +1,48 @@
 <script setup lang="ts">
-import type { QuoteProductT, QuoteT } from "@/schemas/quote.schema";
-import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { Calendar as CalendarIcon, PlusCircleIcon } from "lucide-vue-next";
+import type { QuoteProductT, QuoteT } from "@/schemas/quote.schema";
+import type { Res, QueryParams } from "@/types";
+import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
-import { type WatchStopHandle } from "vue";
 import { toast } from "vue-sonner";
 
-const { t } = useI18n();
 const route = useRoute();
+const { t } = useI18n();
 const { toggleModal, setModalName } = useStore();
-//
-const searchQuery = ref<string>("");
-const page = computed(() => Number(route.query.page));
-const refresh = computed(() => route.query.refresh);
+const { updateQueryParams } = useUpdateRouteQueryParams();
+
 const quotes = ref<QuoteT[]>([]);
 const totalRows = ref<number>(0);
-const createdAt = ref<string | number | undefined>(undefined);
 const quoteProducts = ref<QuoteProductT[]>([]);
-//
+
+const searchQuery = ref<string>("");
+const createdAt = ref<string | number | undefined>(undefined);
+
 const LIMIT = 25;
 provide("count", totalRows);
 provide("itemsPerPage", LIMIT);
-//
-onUnmounted(() => {
-  if (unwatch) unwatch();
-});
 
-let timer: any;
-let unwatch: WatchStopHandle | null = null;
-onMounted(() => {
-  unwatch = watch(
-    [searchQuery, page, refresh, createdAt],
-    ([search, p], [oldSearch]) => {
-      clearTimeout(timer);
-      timer = setTimeout(
-        () => {
-          if (p && p > 0) getQuotes(search, p);
-        },
-        search != oldSearch && oldSearch ? 500 : 0
-      );
-    },
-    {
-      immediate: true,
-    }
-  );
-});
+const queryParams = computed<QueryParams>(() => ({
+  search: route.query.search,
+  page: route.query.page,
+  refresh: route.query.refresh,
+  limit: route.query.limit,
+  created_at: route.query.created_at,
+}));
 
-const getQuotes = async (search: string, page = 1) => {
+const fetchQuotes = async () => {
   try {
-    const res = await invoke<Res<any>>("list_quotes", {
+    const res: Res<any> = await invoke("list_quotes", {
       args: {
-        page,
-        search,
-        limit: LIMIT,
-        created_at: createdAt.value
-          ? new Date(createdAt.value).toISOString().slice(0, 10)
-          : null,
+        page: Number(queryParams.value.page) ?? 1,
+        search: queryParams.value.search ?? "",
+        limit: queryParams.value.limit
+          ? Number(queryParams.value.limit)
+          : LIMIT,
+        created_at: queryParams.value.created_at,
       },
     });
-
     quotes.value = res.data.quotes;
     totalRows.value = res.data.count;
   } catch (err: any) {
@@ -67,31 +50,48 @@ const getQuotes = async (search: string, page = 1) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
-      error("LIST ORDERS: " + err.error);
+    if (typeof err == "object" && "error" in err) {
+      error("LIST QUOTES: " + err.error);
       return;
     }
-    error("LIST ORDERS: " + err);
+    error("LIST QUOTES: " + err);
   }
 };
+
+watch(queryParams, fetchQuotes, { deep: true });
+
+const debouncedSearch = useDebounceFn(() => {
+  updateQueryParams({ search: searchQuery.value });
+}, 500);
+
+watch(searchQuery, debouncedSearch);
+
+watch(createdAt, () => {
+  updateQueryParams({
+    created_at: createdAt.value
+      ? new Date(createdAt.value).toISOString().slice(0, 10)
+      : undefined,
+  });
+});
+
+onMounted(fetchQuotes);
 
 const listQuoteProduct = async (id?: string) => {
   try {
     const res = await invoke<Res<any>>("list_quote_products", {
       id,
     });
-    //
     quoteProducts.value = res.data;
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
-      error("LIST ORDER PRODUCTS: " + err.error);
+    if (typeof err == "object" && "error" in err) {
+      error("LIST QUOTE PRODUCTS: " + err.error);
       return;
     }
-    error("LIST ORDER PRODUCTS: " + err);
+    error("LIST QUOTE PRODUCTS: " + err);
   }
 };
 
@@ -100,7 +100,6 @@ const updateModal = (name: string) => {
   toggleModal(true);
 };
 </script>
-
 <template>
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col items-start justify-start">

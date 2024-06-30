@@ -72,7 +72,7 @@ const updateTheClient = async (client: ClientT) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("UPDATE CLIENT: " + err.error);
       return;
     }

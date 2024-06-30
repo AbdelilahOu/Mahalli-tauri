@@ -1,67 +1,51 @@
 <script setup lang="ts">
-import type { OrderProductT, OrderT } from "@/schemas/order.schema";
-import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { Calendar as CalendarIcon, PlusCircleIcon } from "lucide-vue-next";
+import type { OrderProductT, OrderT } from "@/schemas/order.schema";
+import type { Res, QueryParams } from "@/types";
+import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
-import type { WatchStopHandle } from "vue";
 import { toast } from "vue-sonner";
 
-const { t } = useI18n();
 const route = useRoute();
+const { t } = useI18n();
 const { toggleModal, setModalName } = useStore();
-//
-const searchQuery = ref<string>("");
-const page = computed(() => Number(route.query.page));
-const refresh = computed(() => route.query.refresh);
+const { updateQueryParams } = useUpdateRouteQueryParams();
+
 const orders = ref<OrderT[]>([]);
 const totalRows = ref<number>(0);
+const orderProducts = ref<OrderProductT[]>([]);
+
+const searchQuery = ref<string>("");
 const status = ref<string | undefined>(undefined);
 const createdAt = ref<string | number | undefined>(undefined);
-const orderProducts = ref<OrderProductT[]>([]);
-//
+
 const LIMIT = 25;
 provide("count", totalRows);
 provide("itemsPerPage", LIMIT);
-//
-onUnmounted(() => {
-  if (unwatch) unwatch();
-});
 
-let timer: any;
-let unwatch: WatchStopHandle | null = null;
-onMounted(() => {
-  unwatch = watch(
-    [searchQuery, page, refresh, createdAt, status],
-    ([search, p], [oldSearch]) => {
-      clearTimeout(timer);
-      timer = setTimeout(
-        () => {
-          if (p && p > 0) getOrders(search, p);
-        },
-        search != oldSearch && oldSearch ? 500 : 0
-      );
-    },
-    {
-      immediate: true,
-    }
-  );
-});
+const queryParams = computed<QueryParams>(() => ({
+  search: route.query.search,
+  page: route.query.page,
+  refresh: route.query.refresh,
+  limit: route.query.limit,
+  status: route.query.status,
+  created_at: route.query.created_at,
+}));
 
-const getOrders = async (search: string, page = 1) => {
+const fetchOrders = async () => {
   try {
-    const res = await invoke<Res<any>>("list_orders", {
+    const res: Res<any> = await invoke("list_orders", {
       args: {
-        page,
-        search,
-        limit: LIMIT,
-        status: status.value,
-        created_at: createdAt.value
-          ? new Date(createdAt.value).toISOString().slice(0, 10)
-          : null,
+        page: Number(queryParams.value.page) ?? 1,
+        search: queryParams.value.search ?? "",
+        limit: queryParams.value.limit
+          ? Number(queryParams.value.limit)
+          : LIMIT,
+        status: queryParams.value.status,
+        created_at: queryParams.value.created_at,
       },
     });
-
     orders.value = res.data.orders;
     totalRows.value = res.data.count;
   } catch (err: any) {
@@ -69,7 +53,7 @@ const getOrders = async (search: string, page = 1) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("LIST ORDERS: " + err.error);
       return;
     }
@@ -77,23 +61,41 @@ const getOrders = async (search: string, page = 1) => {
   }
 };
 
+watch(queryParams, fetchOrders, { deep: true });
+
+const debouncedSearch = useDebounceFn(() => {
+  updateQueryParams({ search: searchQuery.value });
+}, 500);
+
+watch(searchQuery, debouncedSearch);
+
+watch([status, createdAt], () => {
+  updateQueryParams({
+    status: status.value,
+    created_at: createdAt.value
+      ? new Date(createdAt.value).toISOString().slice(0, 10)
+      : undefined,
+  });
+});
+
+onMounted(fetchOrders);
+
 const listOrderProduct = async (id?: string) => {
   try {
     const res = await invoke<Res<any>>("list_order_products", {
       id,
     });
-    //
     orderProducts.value = res.data;
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
-      error("LIST ORDER PRODUCTS: " + err.error);
+    if (typeof err == "object" && "error" in err) {
+      error("ERROR LIST ORDER PRODUCTS: " + err.error);
       return;
     }
-    error("LIST ORDER PRODUCTS: " + err);
+    error("ERROR LIST ORDER PRODUCTS: " + err);
   }
 };
 
@@ -107,14 +109,13 @@ const updateModal = (name: string) => {
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
-        <div class="w-2/3 lg:max-w-[50%] grid grid-cols-3 gap-2">
+        <div class="w-2/3 lg:max-w-[50%] flex gap-2">
           <Input
             v-model="searchQuery"
             name="search"
             type="text"
             :placeholder="t('g.s')"
           />
-
           <Popover>
             <PopoverTrigger as-child>
               <Button
@@ -146,8 +147,8 @@ const updateModal = (name: string) => {
               />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="DELIVERED">
-                {{ t("g.status.delivered") }}
+              <SelectItem value="PAID">
+                {{ t("g.status.paid") }}
               </SelectItem>
               <SelectItem value="CANCELED">
                 {{ t("g.status.canceled") }}
@@ -162,11 +163,10 @@ const updateModal = (name: string) => {
           <Button class="gap-2 text-nowrap" @click="updateModal('OrderCreate')">
             <PlusCircleIcon :size="20" />
 
-            {{ t("o.i.addButton") }}
+            {{ t("i.i.addButton") }}
           </Button>
         </div>
       </div>
-
       <OrdersTable
         :orders="orders"
         :order-products="orderProducts"

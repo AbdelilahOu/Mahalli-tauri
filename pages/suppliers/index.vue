@@ -1,62 +1,43 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { type WatchStopHandle } from "vue";
-import type { SupplierT } from "@/schemas/supplier.schema";
-import type { Res } from "@/types";
-import { error } from "tauri-plugin-log-api";
 import { PlusCircleIcon } from "lucide-vue-next";
+import type { SupplierT } from "@/schemas/supplier.schema";
+import type { Res, QueryParams } from "@/types";
+import { useDebounceFn } from "@vueuse/core";
+import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
-const { t } = useI18n();
 const route = useRoute();
+const { t } = useI18n();
 const { toggleModal, setModalName } = useStore();
-//
+const { updateQueryParams } = useUpdateRouteQueryParams();
+
 const suppliers = ref<SupplierT[]>([]);
 const searchQuery = ref<string>("");
 const totalRows = ref<number>(0);
-//
-const page = computed(() => Number(route.query.page));
-const refresh = computed(() => route.query.refresh);
-//
+
+const LIMIT = 25;
 provide("count", totalRows);
-provide("itemsPerPage", 17);
+provide("itemsPerPage", LIMIT);
 
-//
-let timer: any;
-let unwatch: WatchStopHandle | null = null;
-onMounted(() => {
-  unwatch = watch(
-    [searchQuery, page, refresh],
-    ([search, p], [oldSearch]) => {
-      clearTimeout(timer);
-      timer = setTimeout(
-        () => {
-          if (p && p > 0) getSuppliers(search, p);
-        },
-        search != oldSearch && oldSearch ? 500 : 0
-      );
-    },
-    {
-      immediate: true,
-    }
-  );
-});
+const queryParams = computed<QueryParams>(() => ({
+  search: route.query.search,
+  page: route.query.page,
+  refresh: route.query.refresh,
+  limit: route.query.limit,
+}));
 
-//
-onUnmounted(() => {
-  if (unwatch) unwatch();
-});
-//
-async function getSuppliers(search: string, page: number = 1) {
+const fetchSuppliers = async () => {
   try {
-    const res = await invoke<Res<any>>("list_suppliers", {
+    const res: Res<any> = await invoke("list_suppliers", {
       args: {
-        search,
-        page,
-        limit: 17,
+        search: queryParams.value.search ?? "",
+        page: Number(queryParams.value.page) ?? 1,
+        limit: queryParams.value.limit
+          ? Number(queryParams.value.limit)
+          : LIMIT,
       },
     });
-    //
     suppliers.value = res.data.suppliers;
     totalRows.value = res.data.count;
   } catch (err: any) {
@@ -64,15 +45,26 @@ async function getSuppliers(search: string, page: number = 1) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("LIST SUPPLIERS: " + err.error);
       return;
     }
     error("LIST SUPPLIERS: " + err);
   }
-}
+};
 
-//
+watch(queryParams, fetchSuppliers, { deep: true });
+
+const debouncedSearch = useDebounceFn(() => {
+  updateQueryParams({
+    search: searchQuery.value,
+  });
+}, 500);
+
+watch(searchQuery, debouncedSearch);
+
+onMounted(fetchSuppliers);
+
 const updateModal = (name: string) => {
   setModalName(name);
   toggleModal(true);
@@ -92,7 +84,6 @@ const updateModal = (name: string) => {
             @click="updateModal('SupplierCreate')"
           >
             <PlusCircleIcon :size="20" />
-
             {{ t("s.i.addButton") }}
           </Button>
         </div>

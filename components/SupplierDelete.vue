@@ -26,7 +26,7 @@ const deleteTheSupplier = async (id: string, name: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("DELETE SUPPLIER: " + err.error);
       return;
     }

@@ -58,7 +58,7 @@ const createNewSupplier = async (supplier: SupplierT) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("CREATE SUPPLIER: " + err.error);
       return;
     }

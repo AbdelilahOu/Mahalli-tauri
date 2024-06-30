@@ -13,7 +13,7 @@ import { DollarSign, NotepadText, Truck } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 interface movementsT {
   createdAt: string;
@@ -97,7 +97,7 @@ async function getInventoryMovementStats() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("STATS INVENTORY MOUVEMENTS: " + err.error);
       return;
     }
@@ -116,7 +116,7 @@ async function getBestClients() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("STATS BEST CLIENTS: " + err.error);
       return;
     }
@@ -135,7 +135,7 @@ async function getBestProducts() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("STATS BEST PRODUCTS: " + err.error);
       return;
     }
@@ -154,7 +154,7 @@ async function getStatusCounts() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("STATS STATUS COUNT: " + err.error);
       return;
     }
@@ -183,7 +183,7 @@ async function getRevenue() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("STATS REVENUE: " + err.error);
       return;
     }
@@ -211,7 +211,7 @@ async function getExpenses() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("STATS EXPENSES: " + err.error);
       return;
     }

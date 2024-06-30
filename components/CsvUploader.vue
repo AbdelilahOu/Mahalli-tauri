@@ -35,7 +35,7 @@ const upload = async () => {
         description: t("notifications.error.description"),
         closeButton: true,
       });
-      if ("error" in err) {
+      if (typeof err == "object" && "error" in err) {
         error("ERROR UPLOAD CSV : " + err.error);
         return;
       }

@@ -879,7 +879,7 @@ impl QueriesService {
             ).add(Expr::expr(Func::coalesce([
                 Expr::col((Invoices, invoices::Column::IsDeleted)).into(),
                 Expr::col((Orders, orders::Column::IsDeleted)).into(),
-                Expr::expr(true).into(),
+                Expr::expr(false).into(),
             ])).eq(false)),
         ).apply_if(Some(args.search.clone()), |query, v| {
             query.filter(Expr::col((Products, products::Column::Name)).like(format!("{}%", v)))
@@ -932,7 +932,7 @@ impl QueriesService {
             ).add(Expr::expr(Func::coalesce([
                 Expr::col((Invoices, invoices::Column::IsDeleted)).into(),
                 Expr::col((Orders, orders::Column::IsDeleted)).into(),
-                Expr::expr(true).into(),
+                Expr::expr(false).into(),
             ])).eq(false)),
         ).and_where(Expr::col((Products, products::Column::Name)).like(format!("{}%", args.search))).conditions(
             args.status.clone().is_some(),
