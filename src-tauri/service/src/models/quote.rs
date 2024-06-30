@@ -9,6 +9,7 @@ pub struct SelectQuotes {
     pub client_id: String,
     pub full_name: String,
     pub products: i64,
+    pub identifier: String,
     pub total: f64,
 }
 
@@ -20,6 +21,7 @@ pub struct SelectQuoteDetails {
     pub address: Option<String>,
     pub phone_number: Option<String>,
     pub email: Option<String>,
+    pub identifier: String,
     pub total: f64,
 }
 
@@ -28,8 +30,6 @@ pub struct NewQuote {
     pub client_id: String,
     pub items: Vec<NewQuoteItem>,
 }
-
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UpdateQuote {

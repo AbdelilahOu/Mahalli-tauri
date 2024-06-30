@@ -69,6 +69,7 @@ const updateInvoiceStatus = async (invoice: any) => {
     <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
+          <th class="small"></th>
           <th>{{ t("g.fields.fullname") }}</th>
           <th>{{ t("g.fields.items") }}</th>
           <th class="small">{{ t("g.fields.status") }}</th>
@@ -88,6 +89,9 @@ const updateInvoiceStatus = async (invoice: any) => {
               invoice.id == $route.query.id && $route.query.highlight == 'true',
           }"
         >
+          <td class="p-2 text-nowrap font-medium">
+            {{ invoice.identifier }}
+          </td>
           <td class="p-2">
             <NuxtLink
               class="font-medium"

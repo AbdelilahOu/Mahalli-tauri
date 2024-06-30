@@ -10,6 +10,7 @@ pub struct SelectInvoices {
     pub client_id: String,
     pub full_name: String,
     pub status: String,
+    pub identifier: String,
     pub products: i64,
     pub total: f64,
 }
@@ -24,6 +25,7 @@ pub struct SelectInvoiceDetails {
     pub phone_number: Option<String>,
     pub email: Option<String>,
     pub status: String,
+    pub identifier: String,
     pub total: f64,
 }
 

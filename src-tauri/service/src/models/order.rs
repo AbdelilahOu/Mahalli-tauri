@@ -9,6 +9,7 @@ pub struct SelectOrders {
     pub client_id: String,
     pub full_name: String,
     pub status: String,
+    pub identifier: String,
     pub products: i64,
     pub total: f64,
 }
@@ -18,6 +19,7 @@ pub struct SelectOrderDetails {
     pub id: String,
     pub created_at: String,
     pub full_name: String,
+    pub identifier: String,
     pub address: Option<String>,
     pub phone_number: Option<String>,
     pub email: Option<String>,

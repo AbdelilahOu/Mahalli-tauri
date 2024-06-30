@@ -10,6 +10,7 @@ export type QuoteT = z.infer<typeof CreateQuoteSchema> & {
   products?: number;
   total?: number;
   createdAt?: string;
+  identifier: string;
 };
 
 export type QuoteForUpdateT = {
