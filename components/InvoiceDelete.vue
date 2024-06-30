@@ -26,7 +26,7 @@ const deleteTheInvoice = async (id: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("DELETE INVOICE: " + err.error);
       return;
     }

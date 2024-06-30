@@ -95,7 +95,7 @@ const updateTheOrders = async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("UPDATE ORDER: " + err.error);
       return;
     }
@@ -115,7 +115,7 @@ async function deleteOneOrderItem(id: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("ERROR DELETE ORDER ITEM: " + err.error);
       return;
     }

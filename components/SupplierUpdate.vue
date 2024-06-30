@@ -71,7 +71,7 @@ const updateTheSupplier = async (supplier: SupplierT) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("UPDATE SUPPLIER: " + err.error);
       return;
     }

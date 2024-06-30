@@ -68,7 +68,7 @@ const updateOrderStatus = async (order: any) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("UPDATE ORDER STATUS: " + err.error);
       return;
     }
@@ -96,7 +96,7 @@ const createInvoiceFromOrder = async (id: string) => {
       }),
     });
   } catch (err: any) {
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("GET ORDER FOR INVOICE: " + err.error);
       return;
     }

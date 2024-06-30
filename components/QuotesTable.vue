@@ -65,7 +65,7 @@ const createOrderFromQuote = async (id: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("GET QUOTE FOR ORDER: " + err.error);
       return;
     }

@@ -13,6 +13,8 @@ const defaultPage = computed(() =>
   Number(router.currentRoute.value.query.page)
 );
 
+const LIMIT = 25;
+
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const rowsCount = inject<Ref<number>>("count");
@@ -28,7 +30,8 @@ const goForward = () => {
   if (
     defaultPage.value <
     Math.ceil(
-      (rowsCount?.value ?? 1) / (itemsPerPage?.value ? itemsPerPage?.value : 17)
+      (rowsCount?.value ?? 1) /
+        (itemsPerPage?.value ? itemsPerPage?.value : LIMIT)
     )
   ) {
     updateQueryParams({ page: defaultPage.value + 1 });
@@ -47,7 +50,7 @@ const goToLast = () => {
   if (rowsCount?.value) {
     updateQueryParams({
       page: Math.ceil(
-        rowsCount?.value / (itemsPerPage?.value ? itemsPerPage?.value : 17)
+        rowsCount?.value / (itemsPerPage?.value ? itemsPerPage?.value : LIMIT)
       ),
     });
   }

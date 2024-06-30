@@ -1,61 +1,43 @@
 <script setup lang="ts">
-import type { ClientT } from "@/schemas/client.schema";
-import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { PlusCircleIcon } from "lucide-vue-next";
+import type { ClientT } from "@/schemas/client.schema";
+import type { Res, QueryParams } from "@/types";
+import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
-import type { WatchStopHandle } from "vue";
 import { toast } from "vue-sonner";
 
-const { t } = useI18n();
 const route = useRoute();
+const { t } = useI18n();
 const { toggleModal, setModalName } = useStore();
+const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const clients = ref<ClientT[]>([]);
 const searchQuery = ref<string>("");
-const page = computed(() => Number(route.query.page));
-const refresh = computed(() => route.query.refresh);
-
 const totalRows = ref<number>(0);
 
+const LIMIT = 25;
 provide("count", totalRows);
-provide("itemsPerPage", 17);
+provide("itemsPerPage", LIMIT);
 
-//
-let timer: any;
-let unwatch: WatchStopHandle | null = null;
-onMounted(() => {
-  unwatch = watch(
-    [searchQuery, page, refresh],
-    ([search, p], [oldSearch]) => {
-      clearTimeout(timer);
-      timer = setTimeout(
-        () => {
-          if (p && p > 0) getClients(search, p);
-        },
-        search != oldSearch && oldSearch ? 500 : 0
-      );
-    },
-    {
-      immediate: true,
-    }
-  );
-});
+const queryParams = computed<QueryParams>(() => ({
+  search: route.query.search,
+  page: route.query.page,
+  refresh: route.query.refresh,
+  limit: route.query.limit,
+}));
 
-onUnmounted(() => {
-  if (unwatch) unwatch();
-});
-
-const getClients = async (search: string, page: number = 1) => {
+const fetchClients = async () => {
   try {
-    const res = await invoke<Res<any>>("list_clients", {
+    const res: Res<any> = await invoke("list_clients", {
       args: {
-        search,
-        page,
-        limit: 17,
+        search: queryParams.value.search ?? "",
+        page: Number(queryParams.value.page) ?? 1,
+        limit: queryParams.value.limit
+          ? Number(queryParams.value.limit)
+          : LIMIT,
       },
     });
-    //
     clients.value = res.data.clients;
     totalRows.value = res.data.count;
   } catch (err: any) {
@@ -63,13 +45,23 @@ const getClients = async (search: string, page: number = 1) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
-      error("LIST CLIENTS " + err.error);
+    if (typeof err == "object" && "error" in err) {
+      error("LIST CLIENTS: " + err.error);
       return;
     }
-    error("LIST CLIENTS " + err);
+    error("LIST CLIENTS: " + err);
   }
 };
+
+watch(queryParams, fetchClients, { deep: true });
+
+const debouncedSearch = useDebounceFn(() => {
+  updateQueryParams({ search: searchQuery.value });
+}, 500);
+
+watch(searchQuery, debouncedSearch);
+
+onMounted(fetchClients);
 
 const updateModal = (name: string) => {
   setModalName(name);
@@ -90,7 +82,6 @@ const updateModal = (name: string) => {
             @click="updateModal('ClientCreate')"
           >
             <PlusCircleIcon :size="20" />
-
             {{ t("c.i.addButton") }}
           </Button>
         </div>

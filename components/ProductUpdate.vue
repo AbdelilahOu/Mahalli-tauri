@@ -82,7 +82,7 @@ const updateTheProduct = async (product: ProductT) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("UPDATE PRODUCT: " + err.error);
       return;
     }

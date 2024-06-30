@@ -94,7 +94,7 @@ const updateTheInvoices = async () => {
       refresh: "refresh-update-" + Math.random() * 9999,
     });
   } catch (err: any) {
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("UPDATE INVOICE: " + err.error);
       return;
     }
@@ -114,7 +114,7 @@ async function deleteOneInvoiceItem(id: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("ERROR DELETE INVOICE ITEM: " + err.error);
       return;
     }

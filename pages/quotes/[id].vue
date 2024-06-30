@@ -24,7 +24,7 @@ const config = reactive({
   marginTop: 120,
   marginX: 20,
   marginBottom: 20,
-  templateBase64: null,
+  templateBase64: null as string | null,
   color: rgb(0.34, 0.34, 0.34),
 });
 //
@@ -34,7 +34,6 @@ let pdfDoc: PDFDocument;
 let font: PDFFont;
 
 const setDocumentTemplate = (data: string) => {
-  //@ts-ignore
   config.templateBase64 = data;
   initPdfDoc();
 };
@@ -51,7 +50,7 @@ onBeforeMount(async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
+    if (typeof err == "object" && "error" in err) {
       error("ERROR QUOTE DETAILS: " + err.error);
       return;
     }

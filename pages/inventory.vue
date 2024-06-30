@@ -1,80 +1,82 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { type WatchStopHandle } from "vue";
+import { CalendarIcon } from "lucide-vue-next";
 import type { InventoryT } from "@/schemas/inventory.schema";
-import type { Res } from "@/types";
-import { Calendar as CalendarIcon } from "lucide-vue-next";
+import type { Res, QueryParams } from "@/types";
+import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
-const { t } = useI18n();
 const route = useRoute();
+const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
-//
-const inventoryMovements = ref<InventoryT[]>([]);
-const searchQuery = ref<string>("");
-const page = computed(() => Number(route.query.page));
-const refresh = computed(() => route.query.refresh);
-const status = ref<string | undefined>(undefined);
-const createdAt = ref<string | number | undefined>(undefined);
+
+const inventory = ref<InventoryT[]>([]);
 const totalRows = ref<number>(0);
-//
+
+const searchQuery = ref<string>();
+const status = ref<string>();
+const createdAt = ref<string | number>();
+
+const LIMIT = 25;
 provide("count", totalRows);
-provide("itemsPerPage", 30);
-//
-let timer: any;
-let unwatch: WatchStopHandle | null = null;
-onMounted(() => {
-  unwatch = watch(
-    [searchQuery, page, refresh, createdAt, status],
-    ([search, p], [oldSearch]) => {
-      clearTimeout(timer);
-      timer = setTimeout(
-        () => {
-          if (p && p > 0) getInventory(search, p);
-        },
-        search != oldSearch && oldSearch ? 500 : 0
-      );
-    },
-    {
-      immediate: true,
-    }
-  );
-});
+provide("itemsPerPage", LIMIT);
 
-onUnmounted(() => {
-  if (unwatch) unwatch();
-});
+const queryParams = computed<QueryParams>(() => ({
+  search: route.query.search,
+  page: route.query.page,
+  refresh: route.query.refresh,
+  limit: route.query.limit,
+  status: route.query.status,
+  created_at: route.query.created_at,
+}));
 
-async function getInventory(search: string, page: number = 1) {
+const fetchInventory = async () => {
   try {
-    const res = await invoke<Res<any>>("list_inventory", {
+    const res: Res<any> = await invoke("list_inventory", {
       args: {
-        page,
-        search,
-        limit: 30,
-        status: status.value,
-        created_at: createdAt.value
-          ? new Date(createdAt.value).toISOString().slice(0, 10)
-          : null,
+        search: queryParams.value.search ?? "",
+        page: Number(queryParams.value.page) ?? 1,
+        limit: queryParams.value.limit
+          ? Number(queryParams.value.limit)
+          : LIMIT,
+        status: queryParams.value.status,
+        created_at: queryParams.value.created_at,
       },
     });
-    //
-    inventoryMovements.value = res.data.inventory;
+
+    inventory.value = res.data.inventory;
     totalRows.value = res.data.count;
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if ("error" in err) {
-      error("LIST INVENTORY MOUVEMENTS: " + err.error);
+    if (typeof err == "object" && "error" in err) {
+      error("LIST INVENTORY: " + err.error);
       return;
     }
-    error("LIST INVENTORY MOUVEMENTS: " + err);
+    error("LIST INVENTORY: " + err);
   }
-}
+};
+
+watch(queryParams, fetchInventory, { deep: true });
+
+const debouncedSearch = useDebounceFn(() => {
+  updateQueryParams({ search: searchQuery.value });
+}, 500);
+
+watch(searchQuery, debouncedSearch);
+
+watch([status, createdAt], () => {
+  updateQueryParams({
+    status: status.value,
+    created_at: createdAt.value
+      ? new Date(createdAt.value).toISOString().slice(0, 10)
+      : undefined,
+  });
+});
+onMounted(fetchInventory);
 </script>
 
 <template>
@@ -127,7 +129,7 @@ async function getInventory(search: string, page: number = 1) {
         <div />
       </div>
 
-      <InventoryTable :inventory="inventoryMovements" />
+      <InventoryTable :inventory="inventory" />
     </div>
   </main>
 </template>

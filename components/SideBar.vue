@@ -64,7 +64,7 @@ const openTranslationModal = () => {
       <div class="w-full h-full flex flex-col gap-1">
         <NuxtLink
           class="w-full flex flex-nowrap h-9 rounded-md items-center p-1 group transition-all duration-300"
-          :to="localePath({ path: '/clients/', query: { page: 1 } })"
+          :to="localePath({ path: '/clients/', query: { page: 1, limit: 25 } })"
         >
           <span class="w-[30px] shrink-0">
             <Contact
