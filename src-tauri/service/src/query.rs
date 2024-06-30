@@ -272,6 +272,7 @@ impl QueriesService {
         let (sql, values) = Query::select().from(Orders).exprs([
             Expr::col((Orders, orders::Column::Id)),
             Expr::col((Orders, orders::Column::Status)),
+            Expr::col((Orders, orders::Column::Identifier)),
             Expr::col((Orders, orders::Column::CreatedAt)),
             Expr::col((Orders, orders::Column::ClientId)),
             Expr::col((Clients, clients::Column::FullName)),
@@ -331,6 +332,7 @@ impl QueriesService {
                 "createdAt": row.created_at,
                 "fullname": row.full_name,
                 "status": row.status,
+                "identifier": row.identifier,
                 "products": row.products,
                 "total": row.total,
             }));
@@ -379,6 +381,7 @@ impl QueriesService {
                     "clientId": order.0.client_id,
                     "createdAt": order.0.created_at,
                     "status": order.0.status,
+                    "identifier": order.0.identifier,
                     "fullname": order.1.unwrap().full_name,
                     "items": result,
                 }))
@@ -402,6 +405,7 @@ impl QueriesService {
             Expr::col((Clients, clients::Column::Email)),
             Expr::col((Orders, orders::Column::Id)),
             Expr::col((Orders, orders::Column::Status)),
+            Expr::col((Orders, orders::Column::Identifier)),
             Expr::col((Orders, orders::Column::CreatedAt)),
         ]).expr_as(
             Func::coalesce([
@@ -456,6 +460,7 @@ impl QueriesService {
                     "createdAt": order.created_at,
                     "status": order.status,
                     "total": order.total,
+                    "identifier": order.identifier,
                     "client": json!({
                         "fullname": order.full_name,
                         "email": order.email,
@@ -486,6 +491,7 @@ impl QueriesService {
         let (sql, values) = Query::select().from(Invoices).exprs([
             Expr::col((Invoices, invoices::Column::Id)),
             Expr::col((Invoices, invoices::Column::Status)),
+            Expr::col((Invoices, invoices::Column::Identifier)),
             Expr::col((Invoices, invoices::Column::CreatedAt)),
             Expr::col((Invoices, invoices::Column::ClientId)),
             Expr::col((Invoices, invoices::Column::PaidAmount)),
@@ -545,6 +551,7 @@ impl QueriesService {
                 "clientId": row.client_id,
                 "paidAmount": row.paid_amount,
                 "createdAt": row.created_at,
+                "identifier": row.identifier,
                 "fullname": row.full_name,
                 "status": row.status,
                 "products": row.products,
@@ -596,6 +603,7 @@ impl QueriesService {
                     "paidAmount": invoice.0.paid_amount,
                     "createdAt": invoice.0.created_at,
                     "status": invoice.0.status,
+                    "identifier": invoice.0.identifier,
                     "fullname": invoice.1.unwrap().full_name,
                     "items": result,
                 }))
@@ -619,6 +627,7 @@ impl QueriesService {
             Expr::col((Clients, clients::Column::Email)),
             Expr::col((Invoices, invoices::Column::Id)),
             Expr::col((Invoices, invoices::Column::Status)),
+            Expr::col((Invoices, invoices::Column::Identifier)),
             Expr::col((Invoices, invoices::Column::PaidAmount)),
             Expr::col((Invoices, invoices::Column::CreatedAt)),
         ]).expr_as(
@@ -674,6 +683,7 @@ impl QueriesService {
                     "paidAmount": invoice.paid_amount,
                     "createdAt": invoice.created_at,
                     "status": invoice.status,
+                    "identifier": invoice.identifier,
                     "total": invoice.total,
                     "client": json!({
                         "fullname": invoice.full_name,
@@ -704,6 +714,7 @@ impl QueriesService {
             Expr::col((Quotes, quotes::Column::Id)),
             Expr::col((Quotes, quotes::Column::CreatedAt)),
             Expr::col((Quotes, quotes::Column::ClientId)),
+            Expr::col((Quotes, quotes::Column::Identifier)),
             Expr::col((Clients, clients::Column::FullName)),
         ]).expr_as(
             Func::coalesce([
@@ -748,6 +759,7 @@ impl QueriesService {
                 "id": row.id,
                 "clientId": row.client_id,
                 "createdAt": row.created_at,
+                "identifier": row.identifier,
                 "fullname": row.full_name,
                 "products": row.products,
                 "total": row.total,
@@ -790,6 +802,7 @@ impl QueriesService {
                     "id": quote.0.id,
                     "clientId": quote.0.client_id,
                     "createdAt": quote.0.created_at,
+                    "identifier": quote.0.identifier,
                     "fullname": quote.1.unwrap().full_name,
                     "items": result,
                 }))
@@ -812,6 +825,7 @@ impl QueriesService {
             Expr::col((Clients, clients::Column::PhoneNumber)),
             Expr::col((Clients, clients::Column::Email)),
             Expr::col((Quotes, quotes::Column::Id)),
+            Expr::col((Quotes, quotes::Column::Identifier)),
             Expr::col((Quotes, quotes::Column::CreatedAt)),
         ]).expr_as(
             Func::coalesce([
@@ -856,6 +870,7 @@ impl QueriesService {
                     "id": quote.id,
                     "createdAt": quote.created_at,
                     "total": quote.total,
+                    "identifier": quote.identifier,
                     "client": json!({
                         "fullname": quote.full_name,
                         "email": quote.email,

@@ -11,6 +11,7 @@ export type OrderT = z.infer<typeof CreateOrderSchema> & {
   products?: number;
   total?: number;
   createdAt?: string;
+  identifier: string;
 };
 
 export type OrderForUpdateT = {

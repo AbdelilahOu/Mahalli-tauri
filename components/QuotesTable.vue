@@ -79,6 +79,7 @@ const createOrderFromQuote = async (id: string) => {
     <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
+          <th class="small"></th>
           <th>{{ t("g.fields.fullname") }}</th>
           <th>{{ t("g.fields.items") }}</th>
           <th>{{ t("g.fields.date") }}</th>
@@ -88,6 +89,9 @@ const createOrderFromQuote = async (id: string) => {
       </thead>
       <tbody>
         <tr v-for="(quote, index) in quotes" :key="quote.id" v-fade="index">
+          <td class="p-2 text-nowrap font-medium">
+            {{ quote.identifier }}
+          </td>
           <td class="p-2">
             <NuxtLink
               class="font-medium"

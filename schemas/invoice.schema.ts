@@ -13,6 +13,7 @@ export type InvoiceT = z.infer<typeof CreateInvoiceSchema> & {
   products?: number;
   total?: number;
   createdAt?: string;
+  identifier: string;
 };
 
 export type InvoiceForUpdateT = {
