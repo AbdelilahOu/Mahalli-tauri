@@ -47,6 +47,7 @@ impl Related<super::products::Entity> for Entity {
         Relation::Products.def()
     }
 }
+
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {
         Self {

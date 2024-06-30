@@ -11,6 +11,7 @@ pub struct Model {
     pub is_deleted: bool,
     pub is_archived: bool,
     pub created_at: String,
+    pub identifier: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
@@ -46,6 +47,7 @@ impl Related<super::quote_items::Entity> for Entity {
         Relation::QuoteItems.def()
     }
 }
+
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {
         Self {

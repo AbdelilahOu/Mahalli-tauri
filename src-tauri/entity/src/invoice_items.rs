@@ -45,6 +45,7 @@ impl Related<super::invoices::Entity> for Entity {
         Relation::Invoices.def()
     }
 }
+
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {
         Self {

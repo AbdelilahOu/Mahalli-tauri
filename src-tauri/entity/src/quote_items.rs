@@ -46,6 +46,7 @@ impl Related<super::quotes::Entity> for Entity {
         Relation::Quotes.def()
     }
 }
+
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {
         Self {

@@ -45,6 +45,7 @@ impl Related<super::orders::Entity> for Entity {
         Relation::Orders.def()
     }
 }
+
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {
         Self {

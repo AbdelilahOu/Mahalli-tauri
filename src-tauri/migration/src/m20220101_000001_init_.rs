@@ -1,4 +1,4 @@
-use sea_orm_migration::prelude::*;
+use sea_orm_migration::{prelude::*, sea_orm::Statement};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -119,6 +119,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Quote::IsDeleted).boolean().not_null().default(false))
                     .col(ColumnDef::new(Quote::IsArchived).boolean().not_null().default(false))
                     .col(ColumnDef::new(Quote::CreatedAt).date_time().not_null().default(Expr::current_timestamp()))
+                    .col(ColumnDef::new(Quote::Identifier).string())
                     .to_owned(),
             )
             .await?;
@@ -178,6 +179,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Order::IsArchived).boolean().not_null().default(false))
                     .col(ColumnDef::new(Order::CreatedAt).date_time().not_null().default(Expr::current_timestamp()))
                     .col(ColumnDef::new(Order::Status).string().not_null())
+                    .col(ColumnDef::new(Order::Identifier).string())
                     .to_owned(),
             )
             .await?;
@@ -235,6 +237,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Invoice::IsDeleted).boolean().not_null().default(false))
                     .col(ColumnDef::new(Invoice::IsArchived).boolean().not_null().default(false))
                     .col(ColumnDef::new(Invoice::Status).string().not_null())
+                    .col(ColumnDef::new(Invoice::Identifier).string())
                     .col(
                         ColumnDef::new(Invoice::CreatedAt)
                             .date_time()
@@ -321,6 +324,125 @@ impl MigrationTrait for Migration {
                     .to_owned(),
             )
             .await?;
+
+        let db = manager.get_connection();
+
+        let i_identifier_generator = Statement::from_string(
+            sea_orm::DatabaseBackend::Sqlite,
+            r#"
+                CREATE TRIGGER IF NOT EXISTS invoice_identifier_generator
+                AFTER
+                INSERT
+                    ON invoices BEGIN
+                UPDATE
+                    invoices
+                SET
+                    identifier = (
+                        SELECT
+                            (
+                                SELECT
+                                    format(
+                                        'F-%s-%03d',
+                                        SUBSTRING(strftime('%Y-%m', i2.created_at), 3),
+                                        COUNT(i2.id)
+                                    )
+                                FROM
+                                    invoices AS i2
+                                WHERE
+                                    i2.id <= i.id
+                                    AND i2.created_at >= strftime('%Y-%m-01', i.created_at)
+                                ORDER BY
+                                    i2.created_at
+                            ) as F
+                        FROM
+                            invoices as i
+                        WHERE
+                            i.id = new.id
+                    )
+                WHERE
+                    id = new.id;
+                END;
+            "#,
+        );
+        db.execute(i_identifier_generator).await?;
+
+        let o_identifier_generator = Statement::from_string(
+            sea_orm::DatabaseBackend::Sqlite,
+            r#"
+                CREATE TRIGGER IF NOT EXISTS order_identifier_generator
+                AFTER
+                INSERT
+                    ON orders BEGIN
+                UPDATE
+                    orders
+                SET
+                    identifier = (
+                        SELECT
+                            (
+                                SELECT
+                                    format(
+                                        'C-%s-%03d',
+                                        SUBSTRING(strftime('%Y-%m', o2.created_at), 3),
+                                        COUNT(o2.id)
+                                    )
+                                FROM
+                                    orders AS o2
+                                WHERE
+                                    o2.id <= o.id
+                                    AND o2.created_at >= strftime('%Y-%m-01', o.created_at)
+                                ORDER BY
+                                    o2.created_at
+                            ) as F
+                        FROM
+                            orders as o
+                        WHERE
+                            o.id = new.id
+                    )
+                WHERE
+                    id = new.id;
+                END;
+            "#,
+        );
+        db.execute(o_identifier_generator).await?;
+
+        let q_identifier_generator = Statement::from_string(
+            sea_orm::DatabaseBackend::Sqlite,
+            r#"
+                CREATE TRIGGER IF NOT EXISTS quote_identifier_generator
+                AFTER
+                INSERT
+                    ON quotes BEGIN
+                UPDATE
+                    quotes
+                SET
+                    identifier = (
+                        SELECT
+                            (
+                                SELECT
+                                    format(
+                                        'D-%s-%03d',
+                                        SUBSTRING(strftime('%Y-%m', q2.created_at), 3),
+                                        COUNT(q2.id)
+                                    )
+                                FROM
+                                    quotes AS q2
+                                WHERE
+                                    q2.id <= q.id
+                                    AND q2.created_at >= strftime('%Y-%m-01', q.created_at)
+                                ORDER BY
+                                    q2.created_at
+                            ) as F
+                        FROM
+                            quotes as q
+                        WHERE
+                            q.id = new.id
+                    )
+                WHERE
+                    id = new.id;
+                END;
+            "#,
+        );
+        db.execute(q_identifier_generator).await?;
 
 
         Ok(())
@@ -441,6 +563,8 @@ pub enum Quote {
     IsDeleted,
     #[sea_orm(iden = "is_archived")]
     IsArchived,
+    #[sea_orm(iden = "identifier")]
+    Identifier,
 }
 
 #[derive(DeriveIden)]
@@ -476,6 +600,8 @@ pub enum Order {
     IsDeleted,
     #[sea_orm(iden = "is_archived")]
     IsArchived,
+    #[sea_orm(iden = "identifier")]
+    Identifier,
 }
 
 #[derive(DeriveIden)]
@@ -511,6 +637,8 @@ pub enum Invoice {
     IsDeleted,
     #[sea_orm(iden = "is_archived")]
     IsArchived,
+    #[sea_orm(iden = "identifier")]
+    Identifier,
 }
 
 #[derive(DeriveIden)]
