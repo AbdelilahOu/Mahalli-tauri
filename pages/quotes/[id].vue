@@ -14,6 +14,7 @@ import type { PDFFont } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 import { toast } from "vue-sonner";
+import { useDebounceFn } from "@vueuse/core";
 
 const { t, locale } = useI18n();
 const { numberToWords } = useNumberToWords();
@@ -22,9 +23,9 @@ const quote = ref<any | null>(null);
 const pdfRef = ref<HTMLIFrameElement | null>();
 // pdf layout setting
 const config = reactive({
-  marginTop: 120,
+  marginTop: 40,
   marginX: 20,
-  marginBottom: 20,
+  marginBottom: 120,
   templateBase64: null as string | null,
   color: rgb(0.34, 0.34, 0.34),
 });
@@ -34,10 +35,7 @@ const waitForFetch = new Promise((r) => (resolveWaitForFetch = r));
 let pdfDoc: PDFDocument;
 let font: PDFFont;
 
-const setDocumentTemplate = (data: string) => {
-  config.templateBase64 = data;
-  initPdfDoc();
-};
+const setDocumentTemplate = (data: string) => (config.templateBase64 = data);
 
 onBeforeMount(async () => {
   try {
@@ -71,8 +69,23 @@ onMounted(async () => {
   }
 });
 
+watch(
+  () => config.templateBase64,
+  () => {
+    initPdfDoc();
+  }
+);
+
+const debouncedRegenerate = useDebounceFn(() => {
+  initPdfDoc();
+}, 700);
+
+watch(
+  () => [config.marginTop, config.marginX, config.marginBottom],
+  debouncedRegenerate
+);
+
 const initPdfDoc = async () => {
-  config.marginTop = !config.templateBase64 ? 40 : 130;
   pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
   if (locale.value == "ar") {
@@ -278,9 +291,8 @@ const drawOrderItems = (
     opacity: 0.75,
   });
 
-  const lineHeight = 30; // Assuming a line height for each item
-  const remainingHeight = currentY - lineHeight * 3;
-  if (remainingHeight < config.marginBottom + lineHeight + 30) {
+  const lineHeight = 30;
+  if (currentY < config.marginBottom) {
     let newPage: PDFPage;
     if (template) {
       newPage = pdfDoc.addPage(copyPage(template));
@@ -480,8 +492,6 @@ const copyPage = (originalPage: any) => {
         <Input v-model="config.marginTop" />
         <Label> Bottom margin </Label>
         <Input v-model="config.marginBottom" />
-        <Label> Vertical margin </Label>
-        <Input v-model="config.marginX" />
       </CardContent>
     </Card>
   </main>
