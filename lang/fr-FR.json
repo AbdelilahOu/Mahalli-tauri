@@ -52,7 +52,11 @@
       "quantity": "Quantité",
       "credit": "Crédit",
       "threshold": "Seuil",
-      "item": "Article"
+      "item": "Article",
+      "sub-total": "sous-total",
+      "vat-rate": "taux de TVA",
+      "vat-amount": "montant de TVA",
+      "grand-total": "total TTC"
     },
     "status": {
       "delivered": "Livré",

@@ -294,7 +294,7 @@ const drawOrderItems = (
   });
 
   const lineHeight = 30; // Assuming a line height for each item
-  const remainingHeight = currentY - lineHeight;
+  const remainingHeight = currentY - lineHeight * 3;
   if (remainingHeight < config.marginBottom + lineHeight + 30) {
     let newPage: PDFPage;
     if (template) {
@@ -316,6 +316,20 @@ const drawOrderItems = (
 };
 
 const drawSummary = (page: PDFPage, width: number, currentY: number) => {
+  let SummaryX = 0;
+  switch (locale.value) {
+    case "en":
+    case "fr":
+      SummaryX = width - width / 2 + 60;
+      break;
+    case "de":
+      SummaryX = width - width / 2 - 20;
+      break;
+    case "ar":
+      SummaryX = width - width / 2 + 30;
+      break;
+  }
+
   page.drawText("DH " + invoice.value.total.toFixed(2), {
     x: 25 + (width * 3) / 4,
     y: currentY - 10,
@@ -324,8 +338,8 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     color: config.color,
   });
 
-  page.drawText(t("g.fields.total"), {
-    x: 100 + (width * 2) / 4,
+  page.drawText(t("g.fields.sub-total").toUpperCase(), {
+    x: SummaryX,
     y: currentY - 10,
     font,
     size: 12,
@@ -333,7 +347,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
   });
   page.drawLine({
     start: {
-      x: 90 + (width * 2) / 4,
+      x: SummaryX,
       y: currentY - 20,
     },
     end: {
@@ -344,15 +358,112 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     color: config.color,
     opacity: 0.75,
   });
-  page.drawText(numberToWords(invoice.value.total, locale.value as any), {
-    x: config.marginX,
-    y: currentY - 80,
+
+  page.drawText("20%", {
+    x: 25 + (width * 3) / 4,
+    y: currentY - 40,
+    font,
+    size: 12,
+    color: config.color,
+  });
+
+  page.drawText(t("g.fields.vat-rate").toUpperCase(), {
+    x: SummaryX,
+    y: currentY - 40,
+    font,
+    size: 12,
+    color: config.color,
+  });
+
+  page.drawLine({
+    start: {
+      x: SummaryX,
+      y: currentY - 50,
+    },
+    end: {
+      x: width - config.marginX,
+      y: currentY - 50,
+    },
+    thickness: 1,
+    color: config.color,
+    opacity: 0.75,
+  });
+
+  page.drawText("DH " + (invoice.value.total * 0.2).toFixed(2), {
+    x: 25 + (width * 3) / 4,
+    y: currentY - 70,
+    font,
+    size: 12,
+    color: config.color,
+  });
+
+  page.drawText(t("g.fields.vat-amount").toUpperCase(), {
+    x: SummaryX,
+    y: currentY - 70,
+    font,
+    size: 12,
+    color: config.color,
+  });
+
+  page.drawLine({
+    start: {
+      x: SummaryX,
+      y: currentY - 80,
+    },
+    end: {
+      x: width - config.marginX,
+      y: currentY - 80,
+    },
+    thickness: 1,
+    color: config.color,
+    opacity: 0.75,
+  });
+
+  page.drawText(
+    "DH " + (invoice.value.total + invoice.value.total * 0.2).toFixed(2),
+    {
+      x: 25 + (width * 3) / 4,
+      y: currentY - 100,
+      font,
+      size: 12,
+      color: config.color,
+    }
+  );
+
+  page.drawText(t("g.fields.grand-total").toUpperCase(), {
+    x: SummaryX,
+    y: currentY - 100,
+    font,
+    size: 12,
+    color: config.color,
+  });
+
+  page.drawLine({
+    start: {
+      x: SummaryX,
+      y: currentY - 110,
+    },
+    end: {
+      x: width - config.marginX,
+      y: currentY - 110,
+    },
+    thickness: 1,
+    color: config.color,
+    opacity: 0.75,
+  });
+
+  const totalAsText = numberToWords(
+    invoice.value.total + invoice.value.total * 0.2,
+    locale.value as any
+  );
+  page.drawText(totalAsText, {
+    x: (width - config.marginX - font.widthOfTextAtSize(totalAsText, 13)) / 2,
+    y: currentY - 130,
     font,
     size: 13,
     color: config.color,
   });
 };
-
 const copyPage = (originalPage: any) => {
   const cloneNode = originalPage.node.clone();
 
