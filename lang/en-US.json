@@ -52,7 +52,11 @@
       "quantity": "Quantity",
       "credit": "Credit",
       "threshold": "Threshold",
-      "item": "Item"
+      "item": "Item",
+      "sub-total": "sous-total",
+      "vat-rate": "VAT rate",
+      "vat-amount": "VAT amount",
+      "grand-total": "grand total"
     },
     "status": {
       "delivered": "Delivered",

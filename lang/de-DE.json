@@ -52,7 +52,11 @@
       "quantity": "Menge",
       "credit": "Kredit",
       "threshold": "Schwelle",
-      "item": "Artikel"
+      "item": "Artikel",
+      "sub-total": "Zwischensumme",
+      "vat-rate": "Mehrwertsteuersatz",
+      "vat-amount": "Mehrwertsteuerbetrag",
+      "grand-total": "Gesamtsumme"
     },
     "status": {
       "delivered": "Geliefert",
