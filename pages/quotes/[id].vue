@@ -143,19 +143,18 @@ const drawOrderHeader = (
     size: 30,
     color: config.color,
   });
-  page.drawText(quote.createdAt.split(" ")[0], {
+  page.drawText(quote.identifier, {
     x: width - 190,
     y: height - config.marginTop - 20,
     font,
     size: 13,
     color: config.color,
   });
-  //
-  page.drawText(t("i.u.d.c.title").toUpperCase(), {
-    x: config.marginX,
-    y: height - config.marginTop,
+  page.drawText(quote.createdAt.split(" ")[0], {
+    x: width - 190,
+    y: height - config.marginTop - 40,
     font,
-    size: 14,
+    size: 13,
     color: config.color,
   });
   page.drawText(quote.client.fullname, {
