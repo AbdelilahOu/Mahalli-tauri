@@ -16,6 +16,7 @@ import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 import { toast } from "vue-sonner";
 
 const { t, locale } = useI18n();
+const { numberToWords } = useNumberToWords();
 const id = useRoute().params.id;
 const invoice = ref<any | null>(null);
 const pdfRef = ref<HTMLIFrameElement | null>();
@@ -342,6 +343,13 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     thickness: 1,
     color: config.color,
     opacity: 0.75,
+  });
+  page.drawText(numberToWords(invoice.value.total, locale.value as any), {
+    x: config.marginX,
+    y: currentY - 80,
+    font,
+    size: 13,
+    color: config.color,
   });
 };
 
