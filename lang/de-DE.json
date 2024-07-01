@@ -56,7 +56,11 @@
       "sub-total": "Zwischensumme",
       "vat-rate": "Mehrwertsteuersatz",
       "vat-amount": "Mehrwertsteuerbetrag",
-      "grand-total": "Gesamtsumme"
+      "grand-total": "Gesamtsumme",
+      "template": "Vorlage",
+      "configuration": "Konfiguration",
+      "top-margin": "Oberer Rand",
+      "bottom-margin": "Unterer Rand"
     },
     "status": {
       "delivered": "Geliefert",

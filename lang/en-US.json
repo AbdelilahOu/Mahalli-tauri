@@ -56,7 +56,11 @@
       "sub-total": "sous-total",
       "vat-rate": "VAT rate",
       "vat-amount": "VAT amount",
-      "grand-total": "grand total"
+      "grand-total": "grand total",
+      "template": "Template",
+      "configuration": "Configuration",
+      "top-margin": "Top margin",
+      "bottom-margin": "Bottom margin"
     },
     "status": {
       "delivered": "Delivered",

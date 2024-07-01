@@ -56,7 +56,11 @@
       "sub-total": "sous-total",
       "vat-rate": "taux de TVA",
       "vat-amount": "montant de TVA",
-      "grand-total": "total TTC"
+      "grand-total": "total TTC",
+      "template": "Modèle",
+      "configuration": "Configuration",
+      "top-margin": "Marge supérieure",
+      "bottom-margin": "Marge inférieure"
     },
     "status": {
       "delivered": "Livré",
