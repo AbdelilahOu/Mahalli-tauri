@@ -37,7 +37,6 @@ let font: PDFFont;
 
 const setDocumentTemplate = (data: string) => {
   config.templateBase64 = data;
-  initPdfDoc();
 };
 
 onBeforeMount(async () => {
