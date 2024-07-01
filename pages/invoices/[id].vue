@@ -143,16 +143,23 @@ const drawOrderHeader = (
     size: 30,
     color: config.color,
   });
-  page.drawText(invoice.createdAt.split(" ")[0], {
+  page.drawText(invoice.identifier, {
     x: width - 190,
     y: height - config.marginTop - 20,
     font,
     size: 13,
     color: config.color,
   });
-  page.drawText(t("g.status." + invoice.status.toLowerCase()), {
+  page.drawText(invoice.createdAt.split(" ")[0], {
     x: width - 190,
     y: height - config.marginTop - 40,
+    font,
+    size: 13,
+    color: config.color,
+  });
+  page.drawText(t("g.status." + invoice.status.toLowerCase()), {
+    x: width - 190,
+    y: height - config.marginTop - 60,
     font,
     size: 13,
     color: config.color,
