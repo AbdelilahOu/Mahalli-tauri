@@ -496,18 +496,18 @@ const copyPage = (originalPage: any) => {
     <iframe ref="pdfRef" class="flex-1" />
     <Card class="w-1/2 md:w-1/3 min-w-[500px]">
       <CardHeader>
-        <CardTitle> configuration </CardTitle>
+        <CardTitle> {{ t("g.fields.configuration") }} </CardTitle>
       </CardHeader>
       <CardContent>
-        <Label> Template </Label>
+        <Label> {{ t("g.fields.template") }} </Label>
         <UiUploader
           @save:base64="setDocumentTemplate"
           name="Pdf"
           :extensions="['pdf']"
         />
-        <Label> Top margin </Label>
+        <Label>{{ t("g.fields.top-margin") }} </Label>
         <Input v-model="config.marginTop" />
-        <Label> Bottom margin </Label>
+        <Label> {{ t("g.fields.bottom-margin") }} </Label>
         <Input v-model="config.marginBottom" />
       </CardContent>
     </Card>
