@@ -98,9 +98,6 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <!-- <SheetTrigger @click="(e) => toggleSupplierProfile(supplier)">
-                <BookUser class="text-gray-800" :size="20" />
-              </SheetTrigger> -->
             </div>
           </td>
         </tr>

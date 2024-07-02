@@ -266,7 +266,7 @@ impl QueriesService {
         ).apply_if(args.status.clone(), |query, v| {
             query.filter(Expr::col((Orders, orders::Column::Status)).eq(v))
         }).apply_if(args.created_at.clone(), |query, v| {
-            query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', orders.created_at) = ?", [v]))
+            query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', orders.created_at) = strftime('%Y-%m-%d', ?)", [v]))
         }).count(db).await?;
 
         let (sql, values) = Query::select().from(Orders).exprs([
@@ -317,7 +317,7 @@ impl QueriesService {
         ).conditions(
             args.created_at.clone().is_some(),
             |x| {
-                x.and_where(Expr::cust_with_values("strftime('%Y-%m-%d', orders.created_at) = ?", args.created_at));
+                x.and_where(Expr::cust_with_values("strftime('%Y-%m-%d', orders.created_at) = strftime('%Y-%m-%d', ?)", args.created_at));
             },
             |_| {},
         ).limit(args.limit).offset((args.page - 1) * args.limit).order_by((Orders, orders::Column::CreatedAt), Order::Desc).group_by_col((Orders, orders::Column::Id)).to_owned().build(SqliteQueryBuilder);
@@ -485,7 +485,7 @@ impl QueriesService {
         ).apply_if(args.status.clone(), |query, v| {
             query.filter(Expr::col((Invoices, invoices::Column::Status)).eq(v))
         }).apply_if(args.created_at.clone(), |query, v| {
-            query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', invoices.created_at) = ?", [v]))
+            query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', invoices.created_at) = strftime('%Y-%m-%d', ?)", [v]))
         }).count(db).await?;
 
         let (sql, values) = Query::select().from(Invoices).exprs([
@@ -537,7 +537,7 @@ impl QueriesService {
         ).conditions(
             args.created_at.clone().is_some(),
             |x| {
-                x.and_where(Expr::cust_with_values("strftime('%Y-%m-%d', invoices.created_at) = ?", args.created_at));
+                x.and_where(Expr::cust_with_values("strftime('%Y-%m-%d', invoices.created_at) = strftime('%Y-%m-%d', ?)", args.created_at));
             },
             |_| {},
         ).limit(args.limit).offset((args.page - 1) * args.limit).order_by((Invoices, invoices::Column::CreatedAt), Order::Desc).group_by_col((Invoices, invoices::Column::Id)).to_owned().build(SqliteQueryBuilder);
@@ -707,7 +707,7 @@ impl QueriesService {
                 Expr::col((Clients, clients::Column::FullName)).like(format!("{}%", args.search))
             )
         ).apply_if(args.created_at.clone(), |query, v| {
-            query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', quotes.created_at) = ?", [v]))
+            query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', quotes.created_at) = strftime('%Y-%m-%d', ?)", [v]))
         }).count(db).await?;
 
         let (sql, values) = Query::select().from(Quotes).exprs([
@@ -746,7 +746,7 @@ impl QueriesService {
         ).conditions(
             args.created_at.clone().is_some(),
             |x| {
-                x.and_where(Expr::cust_with_values("strftime('%Y-%m-%d', quotes.created_at) = ?", args.created_at));
+                x.and_where(Expr::cust_with_values("strftime('%Y-%m-%d', quotes.created_at) = strftime('%Y-%m-%d', ?)", args.created_at));
             },
             |_| {},
         ).limit(args.limit).offset((args.page - 1) * args.limit).order_by((Quotes, quotes::Column::CreatedAt), Order::Desc).group_by_col((Quotes, quotes::Column::Id)).to_owned().build(SqliteQueryBuilder);
@@ -901,7 +901,7 @@ impl QueriesService {
         }).apply_if(args.status.clone(), |query, v| {
             query.filter(Expr::col((InventoryMovements, inventory_movements::Column::MvmType)).eq(v))
         }).apply_if(args.created_at.clone(), |query, v| {
-            query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', inventory_movements.created_at) = ?", [v]))
+            query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', inventory_movements.created_at) = strftime('%Y-%m-%d', ?)", [v]))
         }).count(db).await?;
 
         let (sql, values) = Query::select().from(InventoryMovements).exprs([
@@ -959,7 +959,7 @@ impl QueriesService {
             args.created_at.clone().is_some(),
             |x| {
                 x.and_where(Expr::cust_with_values(
-                    "strftime('%Y-%m-%d', inventory_movements.created_at) = ?",
+                    "strftime('%Y-%m-%d', inventory_movements.created_at) = strftime('%Y-%m-%d', ?)",
                     args.created_at,
                 ));
             },

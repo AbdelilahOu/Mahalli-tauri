@@ -3,10 +3,6 @@ import { Mail, MapPin, Phone, User } from "lucide-vue-next";
 </script>
 
 <template>
-  <!-- <SheetContent
-    @close-auto-focus="(e) => e.preventDefault()"
-    class="w-1/2 min-w-[540px] p-0"
-  > -->
   <ScrollArea class="h-screen">
     <div class="w-full h-fit flex px-2">
       <div class="w-full h-48 flex items-center justify-center border-b">
@@ -90,5 +86,4 @@ import { Mail, MapPin, Phone, User } from "lucide-vue-next";
       </Card>
     </div>
   </ScrollArea>
-  <!-- </SheetContent> -->
 </template>
