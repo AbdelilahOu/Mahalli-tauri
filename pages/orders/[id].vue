@@ -25,7 +25,7 @@ const pdfRef = ref<HTMLIFrameElement | null>();
 const config = reactive({
   marginTop: 40,
   marginX: 20,
-  marginBottom: 120,
+  marginBottom: 40,
   templateBase64: null as string | null,
   color: rgb(0.34, 0.34, 0.34),
 });
