@@ -92,15 +92,8 @@ const updateInvoiceStatus = async (invoice: any) => {
           <td class="p-2 text-nowrap font-medium">
             {{ invoice.identifier }}
           </td>
-          <td class="p-2">
-            <NuxtLink
-              class="font-medium"
-              :to="{
-                path: '/clients/' + invoice.clientId,
-              }"
-            >
-              {{ invoice.fullname }}
-            </NuxtLink>
+          <td class="p-2 font-medium">
+            {{ invoice.fullname }}
           </td>
           <td class="p-2">
             <Popover v-if="invoice.products && invoice.products > 0">

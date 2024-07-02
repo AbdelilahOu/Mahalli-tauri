@@ -72,7 +72,7 @@ watch([status, createdAt], () => {
   updateQueryParams({
     status: status.value,
     created_at: createdAt.value
-      ? new Date(createdAt.value).toISOString().slice(0, 10)
+      ? new Date(createdAt.value).toISOString()
       : undefined,
   });
 });

@@ -132,15 +132,8 @@ const createInvoiceFromOrder = async (id: string) => {
           <td class="p-2 text-nowrap font-medium">
             {{ order.identifier }}
           </td>
-          <td class="p-2">
-            <NuxtLink
-              class="font-medium"
-              :to="{
-                path: '/clients/' + order.clientId,
-              }"
-            >
-              {{ order.fullname }}
-            </NuxtLink>
+          <td class="p-2 font-medium">
+            {{ order.fullname }}
           </td>
           <td class="p-2">
             <Popover v-if="order.products && order.products > 0">

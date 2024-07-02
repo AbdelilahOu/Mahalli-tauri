@@ -92,15 +92,8 @@ const createOrderFromQuote = async (id: string) => {
           <td class="p-2 text-nowrap font-medium">
             {{ quote.identifier }}
           </td>
-          <td class="p-2">
-            <NuxtLink
-              class="font-medium"
-              :to="{
-                path: '/clients/' + quote.clientId,
-              }"
-            >
-              {{ quote.fullname }}
-            </NuxtLink>
+          <td class="p-2 font-medium">
+            {{ quote.fullname }}
           </td>
           <td class="p-2">
             <Popover v-if="quote.products && quote.products > 0">
