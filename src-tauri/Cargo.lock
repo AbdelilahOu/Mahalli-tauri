@@ -2283,7 +2283,7 @@ dependencies = [
 
 [[package]]
 name = "mahalli"
-version = "1.7.0"
+version = "1.7.1"
 dependencies = [
  "dotenvy",
  "entity",

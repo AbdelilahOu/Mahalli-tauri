@@ -16,9 +16,9 @@ const orders = ref<OrderT[]>([]);
 const totalRows = ref<number>(0);
 const orderProducts = ref<OrderProductT[]>([]);
 
-const searchQuery = ref<string>("");
-const status = ref<string | undefined>(undefined);
-const createdAt = ref<string | number | undefined>(undefined);
+const searchQuery = ref<string>(route.query.search);
+const status = ref<string | undefined>(route.query.status);
+const createdAt = ref<string | number | undefined>(route.query.created_at);
 
 const LIMIT = 25;
 provide("count", totalRows);
@@ -147,8 +147,8 @@ const updateModal = (name: string) => {
               />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="PAID">
-                {{ t("g.status.paid") }}
+              <SelectItem value="DELIVERED">
+                {{ t("g.status.delivered") }}
               </SelectItem>
               <SelectItem value="CANCELED">
                 {{ t("g.status.canceled") }}

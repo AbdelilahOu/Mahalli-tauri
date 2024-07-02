@@ -13,8 +13,9 @@ const { toggleModal, setModalName } = useStore();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const suppliers = ref<SupplierT[]>([]);
-const searchQuery = ref<string>("");
 const totalRows = ref<number>(0);
+
+const searchQuery = ref<string>(route.query.search);
 
 const LIMIT = 25;
 provide("count", totalRows);
