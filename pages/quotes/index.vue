@@ -16,8 +16,8 @@ const quotes = ref<QuoteT[]>([]);
 const totalRows = ref<number>(0);
 const quoteProducts = ref<QuoteProductT[]>([]);
 
-const searchQuery = ref<string>("");
-const createdAt = ref<string | number | undefined>(undefined);
+const searchQuery = ref<string>(route.query.search);
+const createdAt = ref<string | number | undefined>(route.query.created_at);
 
 const LIMIT = 25;
 provide("count", totalRows);

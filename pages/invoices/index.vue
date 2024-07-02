@@ -16,9 +16,9 @@ const invoices = ref<InvoiceT[]>([]);
 const totalRows = ref<number>(0);
 const invoiceProducts = ref<InvoiceProductT[]>([]);
 
-const searchQuery = ref<string>("");
-const status = ref<string | undefined>(undefined);
-const createdAt = ref<string | number | undefined>(undefined);
+const searchQuery = ref<string>(route.query.search);
+const status = ref<string | undefined>(route.query.status);
+const createdAt = ref<string | number | undefined>(route.query.created_at);
 
 const LIMIT = 25;
 provide("count", totalRows);

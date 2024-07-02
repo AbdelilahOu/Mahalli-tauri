@@ -14,9 +14,9 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 const inventory = ref<InventoryT[]>([]);
 const totalRows = ref<number>(0);
 
-const searchQuery = ref<string>();
-const status = ref<string>();
-const createdAt = ref<string | number>();
+const searchQuery = ref<string>(route.query.search);
+const status = ref<string | undefined>(route.query.status);
+const createdAt = ref<string | number | undefined>(route.query.created_at);
 
 const LIMIT = 25;
 provide("count", totalRows);
