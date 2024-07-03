@@ -103,7 +103,7 @@ impl QueriesService {
         }))
     }
     pub async fn search_products(db: &DbConn, search: String) -> Result<Vec<JsonValue>, DbErr> {
-        let products = Products::find().select_only().expr_as_(Expr::col(products::Column::Name), "label").expr_as_(Expr::col(products::Column::Id), "value").expr(Expr::col(products::Column::PurchasePrice)).expr(Expr::col(products::Column::SellingPrice)).filter(products::Column::IsDeleted.eq(false)).filter(products::Column::Name.like(format!("{}%", search))).into_json().all(db).await?;
+        let products = Products::find().select_only().expr_as_(Expr::col(products::Column::Name), "label").expr_as_(Expr::col(products::Column::Id), "value").expr_as_(Expr::col(products::Column::SellingPrice), "price").filter(products::Column::IsDeleted.eq(false)).filter(products::Column::Name.like(format!("{}%", search))).into_json().all(db).await?;
         Ok(products)
     }
     pub async fn list_clients(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {

@@ -12,14 +12,13 @@ const props = defineProps<{
   items: {
     label: string;
     value: string;
-    selling_price?: number;
-    purchase_price?: number;
+    price?: number;
   }[];
 }>();
 
 const emits = defineEmits<{
   (e: "update:items", s: string | number): () => void;
-  (e: "on:select", s: string, a?: number, b?: number): () => void;
+  (e: "on:select", s: string, a?: number): () => void;
 }>();
 
 const { t } = useI18n();
@@ -39,14 +38,9 @@ const updateInput = (s: string | number) => {
 
 onClickOutside(dropdownParent, () => (open.value = false));
 
-const selectItem = (item: {
-  label: string;
-  value: string;
-  selling_price?: number;
-  purchase_price?: number;
-}) => {
+const selectItem = (item: { label: string; value: string; price?: number }) => {
   inputValue.value = item.label;
-  emits("on:select", item.value, item.purchase_price, item.selling_price);
+  emits("on:select", item.value, item.price);
   open.value = false;
 };
 </script>
