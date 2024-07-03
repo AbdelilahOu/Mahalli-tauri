@@ -8,7 +8,7 @@ import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const route = useRoute();
-const { t } = useI18n();
+const { t, d } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const inventory = ref<InventoryT[]>([]);
@@ -99,9 +99,7 @@ onMounted(fetchInventory);
               >
                 <CalendarIcon class="mr-2 h-4 w-4" />
                 <span class="text-nowrap">{{
-                  createdAt
-                    ? new Date(createdAt).toLocaleDateString("fr-fr")
-                    : t("g.pick-date")
+                  createdAt ? d(new Date(createdAt), "short") : t("g.pick-date")
                 }}</span>
               </Button>
             </PopoverTrigger>
