@@ -138,7 +138,9 @@ impl QueriesService {
                             ])
                         ).sub(
                             Func::coalesce([
-                                Expr::col((Invoices, invoices::Column::PaidAmount)).into(),
+                                Func::sum(
+                                    Expr::col((Invoices, invoices::Column::PaidAmount)),
+                                ).into(),
                                 Expr::val(0.0f64).into(),
                             ])
                         )
