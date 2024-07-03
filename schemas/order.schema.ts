@@ -19,6 +19,7 @@ export type OrderForUpdateT = {
   clientId: string;
   fullname: string;
   createdAt: string;
+  identifier?: string;
   status: string;
   items: {
     id?: string;

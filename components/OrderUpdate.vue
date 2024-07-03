@@ -133,7 +133,9 @@ const deleteOrderItem = (index: number) => {
     class="w-5/6 lg:w-1/2 relative h-fit rounded-md z-50 gap-3 flex flex-col bg-white min-w-[350px]"
   >
     <CardHeader>
-      <CardTitle> {{ t("o.u.title") }} N° {{ order?.id }} </CardTitle>
+      <CardTitle>
+        {{ t("o.u.title") }} N° {{ $route.query?.identifier }}
+      </CardTitle>
     </CardHeader>
     <CardContent>
       <div class="h-full w-full grid grid-cols-1 gap-2">

@@ -46,6 +46,7 @@ const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 const toggleThisOrders = (Order: OrderT, name: string) => {
   updateQueryParams({
     id: Order.id,
+    identifier: Order.identifier,
     highlight: false,
   });
   setModalName(name);

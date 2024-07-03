@@ -40,6 +40,7 @@ const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 const toggleThisQuotes = (Quote: QuoteT, name: string) => {
   updateQueryParams({
     id: Quote.id,
+    identifier: Quote.identifier,
   });
   setModalName(name);
   toggleModal(true);
