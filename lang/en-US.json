@@ -24,7 +24,7 @@
       "csv": "Upload to {table}"
     },
     "translationTitle": "Change Language",
-    "dropZone": "Drag and drop or select your image",
+    "dropZone": "Drag and drop or select",
     "plrz": {
       "i": "no items | {n} item | {n} items",
       "p": "no products | {n} product | {n} products"

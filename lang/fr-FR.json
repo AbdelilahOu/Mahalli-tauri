@@ -6,7 +6,7 @@
       "Clients": "Clientèle",
       "Suppliers": "Fournisseurs",
       "Products": "Produits",
-      "Orders": "Commands",
+      "Orders": "Commandes",
       "Invoices": "Factures",
       "Inventory": "Inventaire",
       "Dashboard": "Tableau de bord",
@@ -24,7 +24,7 @@
       "csv": "Télécharger vers {table}"
     },
     "translationTitle": "Changer de langue",
-    "dropZone": "Glissez-déposez ou sélectionnez votre image",
+    "dropZone": "Glissez-déposez ou sélectionnez",
     "plrz": {
       "i": "aucun article | {n} article | {n} articles",
       "p": "aucun produit | {n} produit | {n} produits"

@@ -163,7 +163,7 @@ const updateModal = (name: string) => {
           <Button class="gap-2 text-nowrap" @click="updateModal('OrderCreate')">
             <PlusCircleIcon :size="20" />
 
-            {{ t("i.i.addButton") }}
+            {{ t("o.i.addButton") }}
           </Button>
         </div>
       </div>
