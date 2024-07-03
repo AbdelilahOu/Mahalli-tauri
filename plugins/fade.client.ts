@@ -11,7 +11,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         enter: {
           opacity: 1,
           transition: {
-            delay: bin.value * 30,
+            delay: bin.value * 20,
           },
         },
       });

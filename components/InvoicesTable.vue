@@ -33,6 +33,7 @@ const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
   updateQueryParams({
     id: Invoice.id,
+    identifier: Invoice.identifier,
     highlight: false,
   });
   setModalName(name);

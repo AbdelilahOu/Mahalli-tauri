@@ -42,7 +42,9 @@ const cancelDelete = () => toggleModal(false);
 <template>
   <Card>
     <CardHeader>
-      <CardTitle> {{ t("i.d.title") }} n° {{ $route.query.id }} ? </CardTitle>
+      <CardTitle>
+        {{ t("i.d.title") }} n° {{ $route.query?.identifier }} ?
+      </CardTitle>
     </CardHeader>
     <CardContent>
       <div />

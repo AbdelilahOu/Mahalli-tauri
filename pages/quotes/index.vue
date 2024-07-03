@@ -43,7 +43,6 @@ const fetchQuotes = async () => {
         created_at: queryParams.value.created_at,
       },
     });
-    console.log(res.data.quotes);
     quotes.value = res.data.quotes;
     totalRows.value = res.data.count;
   } catch (err: any) {
