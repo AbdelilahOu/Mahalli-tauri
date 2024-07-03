@@ -18,6 +18,7 @@ pub struct SelectInvoices {
 #[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
 pub struct SelectInvoiceDetails {
     pub id: String,
+    pub order_id: String,
     pub created_at: String,
     pub paid_amount: f64,
     pub full_name: String,

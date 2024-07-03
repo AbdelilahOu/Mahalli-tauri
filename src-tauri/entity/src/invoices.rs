@@ -11,7 +11,7 @@ pub struct Model {
     pub paid_amount: f64,
     pub client_id: String,
     #[sea_orm(unique)]
-    pub order_id: Option<String>,
+    pub order_id: String,
     pub is_deleted: bool,
     pub is_archived: bool,
     pub status: String,
@@ -29,8 +29,6 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Clients,
-    #[sea_orm(has_many = "super::invoice_items::Entity")]
-    InvoiceItems,
     #[sea_orm(
         belongs_to = "super::orders::Entity",
         from = "Column::OrderId",
@@ -44,12 +42,6 @@ pub enum Relation {
 impl Related<super::clients::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Clients.def()
-    }
-}
-
-impl Related<super::invoice_items::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::InvoiceItems.def()
     }
 }
 
@@ -67,4 +59,3 @@ impl ActiveModelBehavior for ActiveModel {
         }
     }
 }
-
