@@ -226,7 +226,7 @@ impl MigrationTrait for Migration {
                             .to(Client::Table, Client::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    .col(ColumnDef::new(Invoice::OrderId).string().unique_key())
+                    .col(ColumnDef::new(Invoice::OrderId).string().unique_key().not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_invoice_order_id")
@@ -243,33 +243,6 @@ impl MigrationTrait for Migration {
                             .date_time()
                             .not_null()
                             .default(Expr::current_timestamp()),
-                    )
-                    .to_owned(),
-            )
-            .await?;
-
-        manager
-            .create_table(
-                Table::create()
-                    .table(InvoiceItem::Table)
-                    .if_not_exists()
-                    .col(ColumnDef::new(InvoiceItem::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(InvoiceItem::Price).float().not_null().default(0.0f32))
-                    .col(ColumnDef::new(InvoiceItem::InvoiceId).string().not_null())
-                    .foreign_key(
-                        ForeignKey::create()
-                            .name("fk_invoice_item_invoice_id")
-                            .from(InvoiceItem::Table, InvoiceItem::InvoiceId)
-                            .to(Invoice::Table, Invoice::Id)
-                            .on_delete(ForeignKeyAction::Cascade),
-                    )
-                    .col(ColumnDef::new(InvoiceItem::InventoryId).string().not_null().unique_key())
-                    .foreign_key(
-                        ForeignKey::create()
-                            .name("fk_invoice_item_inventory_id")
-                            .from(InvoiceItem::Table, InvoiceItem::InventoryId)
-                            .to(InventoryMovement::Table, InventoryMovement::Id)
-                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
             )
@@ -458,7 +431,6 @@ impl MigrationTrait for Migration {
         manager.drop_table(Table::drop().table(Order::Table).to_owned()).await?;
         manager.drop_table(Table::drop().table(OrderItem::Table).to_owned()).await?;
         manager.drop_table(Table::drop().table(Invoice::Table).to_owned()).await?;
-        manager.drop_table(Table::drop().table(InvoiceItem::Table).to_owned()).await?;
 
         Ok(())
     }
@@ -639,17 +611,4 @@ pub enum Invoice {
     IsArchived,
     #[sea_orm(iden = "identifier")]
     Identifier,
-}
-
-#[derive(DeriveIden)]
-pub enum InvoiceItem {
-    #[sea_orm(iden = "invoice_items")]
-    Table,
-    Id,
-    #[sea_orm(iden = "invoice_id")]
-    InvoiceId,
-    #[sea_orm(iden = "inventory_id")]
-    InventoryId,
-    #[sea_orm(iden = "price")]
-    Price,
 }

@@ -49,4 +49,3 @@ impl ActiveModelBehavior for ActiveModel {
         }
     }
 }
-

@@ -16,8 +16,6 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_one = "super::invoice_items::Entity")]
-    InvoiceItems,
     #[sea_orm(has_one = "super::order_items::Entity")]
     OrderItems,
     #[sea_orm(
@@ -28,12 +26,6 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Products,
-}
-
-impl Related<super::invoice_items::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::InvoiceItems.def()
-    }
 }
 
 impl Related<super::order_items::Entity> for Entity {
@@ -56,4 +48,3 @@ impl ActiveModelBehavior for ActiveModel {
         }
     }
 }
-

@@ -2,7 +2,6 @@ use sea_orm::*;
 
 use crate::{entities::*, models::*};
 
-
 type TxnRes<T> = Result<T, TransactionError<DbErr>>;
 
 pub struct TransactionService;
@@ -159,14 +158,18 @@ impl TransactionService {
     pub async fn create_invoice(db: &DbConn, invoice: NewInvoice) -> TxnRes<String> {
         db.transaction::<_, String, DbErr>(|txn| {
             Box::pin(async move {
-                let created_invoice = InvoiceActiveModel {
-                    client_id: ActiveValue::Set(invoice.client_id),
-                    status: ActiveValue::Set(invoice.status),
-                    paid_amount: ActiveValue::Set(invoice.paid_amount),
+                let status = if invoice.status.eq("PAID") {
+                    "DELIVERED".to_string()
+                } else {
+                    invoice.status.clone()
+                };
+                let created_order = OrderActiveModel {
+                    client_id: ActiveValue::Set(invoice.client_id.clone()),
+                    status: ActiveValue::Set(status),
                     ..Default::default()
                 }.insert(txn).await?;
 
-                let mut items = Vec::<InvoiceItemActiveModel>::new();
+                let mut items = Vec::<OrderItemActiveModel>::new();
 
                 for item in invoice.items {
                     let created_inventory = InventoryActiveModel {
@@ -176,16 +179,25 @@ impl TransactionService {
                         ..Default::default()
                     }.insert(txn).await?;
 
-                    items.push(InvoiceItemActiveModel {
-                        invoice_id: ActiveValue::Set(created_invoice.id.clone()),
+                    items.push(OrderItemActiveModel {
+                        order_id: ActiveValue::Set(created_order.id.clone()),
                         price: ActiveValue::Set(item.price),
                         inventory_id: ActiveValue::Set(created_inventory.id),
                         ..Default::default()
                     })
                 }
                 if items.len() > 0 {
-                    InvoiceItems::insert_many(items).exec(txn).await?;
+                    OrderItems::insert_many(items).exec(txn).await?;
                 }
+
+                let created_invoice = InvoiceActiveModel {
+                    client_id: ActiveValue::Set(invoice.client_id),
+                    status: ActiveValue::Set(invoice.status),
+                    paid_amount: ActiveValue::Set(invoice.paid_amount),
+                    order_id: ActiveValue::Set(created_order.id),
+                    ..Default::default()
+                }.insert(txn).await?;
+
                 Ok(created_invoice.id)
             })
         }).await
@@ -194,21 +206,22 @@ impl TransactionService {
         db.transaction::<_, (), DbErr>(|txn| {
             Box::pin(async move {
                 let invoice_model = Invoices::find_by_id(invoice.id.clone()).one(txn).await?;
+                let order_id = invoice_model.clone().unwrap().order_id;
                 let mut invoice_active: InvoiceActiveModel = invoice_model.unwrap().into();
                 invoice_active.client_id = ActiveValue::Set(invoice.client_id);
                 invoice_active.status = ActiveValue::Set(invoice.status);
                 invoice_active.paid_amount = ActiveValue::Set(invoice.paid_amount);
                 invoice_active.save(txn).await?;
 
-                let mut items = Vec::<InvoiceItemActiveModel>::new();
+                let mut items = Vec::<OrderItemActiveModel>::new();
 
                 for item in invoice.items {
                     match item.id {
                         Some(id) => {
-                            let invoice_item_model = InvoiceItems::find_by_id(id).one(txn).await?;
-                            let mut invoice_item_active: InvoiceItemActiveModel = invoice_item_model.unwrap().into();
-                            invoice_item_active.price = ActiveValue::Set(item.price);
-                            invoice_item_active.save(txn).await?;
+                            let order_item_model = OrderItems::find_by_id(id).one(txn).await?;
+                            let mut order_item_active: OrderItemActiveModel = order_item_model.unwrap().into();
+                            order_item_active.price = ActiveValue::Set(item.price);
+                            order_item_active.save(txn).await?;
                             let inventory_model = InventoryMovements::find_by_id(item.inventory_id.unwrap()).one(txn).await?;
                             let mut inventory_active: InventoryActiveModel = inventory_model.unwrap().into();
                             inventory_active.quantity = ActiveValue::Set(item.quantity);
@@ -223,8 +236,8 @@ impl TransactionService {
                                 ..Default::default()
                             }.insert(txn).await?;
 
-                            items.push(InvoiceItemActiveModel {
-                                invoice_id: ActiveValue::Set(invoice.id.clone()),
+                            items.push(OrderItemActiveModel {
+                                order_id: ActiveValue::Set(order_id.clone()),
                                 price: ActiveValue::Set(item.price),
                                 inventory_id: ActiveValue::Set(created_inventory.id),
                                 ..Default::default()
@@ -233,7 +246,7 @@ impl TransactionService {
                     }
                 }
                 if items.len() > 0 {
-                    InvoiceItems::insert_many(items).exec(txn).await?;
+                    OrderItems::insert_many(items).exec(txn).await?;
                 }
                 Ok(())
             })
@@ -304,36 +317,13 @@ impl TransactionService {
                                     client_id: ActiveValue::Set(order.client_id),
                                     paid_amount: ActiveValue::Set(0.0),
                                     status: ActiveValue::Set(status),
-                                    order_id: ActiveValue::Set(Some(order.id)),
+                                    order_id: ActiveValue::Set(order.id),
                                     ..Default::default()
                                 }.insert(txn).await?;
-
-                                let order_items = OrderItems::find().filter(order_items::Column::OrderId.eq(id)).find_also_related(InventoryMovements).all(txn).await?;
-
-                                let mut items = Vec::<InvoiceItemActiveModel>::new();
-
-                                for (item, inventory) in order_items {
-                                    let created_inventory = InventoryActiveModel {
-                                        product_id: ActiveValue::Set(inventory.clone().unwrap().product_id),
-                                        quantity: ActiveValue::Set(inventory.unwrap().quantity),
-                                        mvm_type: ActiveValue::Set("OUT".to_string()),
-                                        ..Default::default()
-                                    }.insert(txn).await?;
-
-                                    items.push(InvoiceItemActiveModel {
-                                        invoice_id: ActiveValue::Set(invoice.id.clone()),
-                                        price: ActiveValue::Set(item.price),
-                                        inventory_id: ActiveValue::Set(created_inventory.id),
-                                        ..Default::default()
-                                    })
-                                }
-                                if items.len() > 0 {
-                                    InvoiceItems::insert_many(items).exec(txn).await?;
-                                }
                                 Ok(invoice.id)
                             }
                             None => {
-                                Err(DbErr::RecordNotFound("no quote".to_string()))
+                                Err(DbErr::RecordNotFound("no order".to_string()))
                             }
                         }
                     }

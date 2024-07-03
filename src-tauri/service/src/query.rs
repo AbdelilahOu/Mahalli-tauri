@@ -69,26 +69,6 @@ impl QueriesService {
                         ).add(orders::Column::Status.eq("CANCELED").not()).add(orders::Column::IsDeleted.eq(false)),
                     ).to_owned(),
                 )),
-            )).sub(SimpleExpr::SubQuery(
-                None,
-                Box::new(SubQueryStatement::SelectStatement(
-                    Query::select().from(InventoryMovements).expr(Func::coalesce([
-                        Func::sum(Expr::col(inventory_movements::Column::Quantity)).into(),
-                        Expr::val(0.0f64).into(),
-                    ])).join(
-                        JoinType::Join,
-                        InvoiceItems,
-                        Expr::col((InvoiceItems, invoice_items::Column::InventoryId)).equals((InventoryMovements, inventory_movements::Column::Id)),
-                    ).join(
-                        JoinType::Join,
-                        Invoices,
-                        Expr::col((Invoices, invoices::Column::Id)).equals((InvoiceItems, invoice_items::Column::InvoiceId)),
-                    ).cond_where(
-                        Cond::all().add(Expr::col((Invoices, invoices::Column::OrderId)).is_null()).add(
-                            Expr::col((InventoryMovements, inventory_movements::Column::ProductId)).equals((Products, products::Column::Id)),
-                        ).add(invoices::Column::Status.eq("CANCELED").not()).add(invoices::Column::IsDeleted.eq(false).not()),
-                    ).to_owned(),
-                )),
             )),
             Alias::new("stock"),
         ).cond_where(
@@ -148,17 +128,29 @@ impl QueriesService {
             SimpleExpr::SubQuery(
                 None,
                 Box::new(SubQueryStatement::SelectStatement(
-                    Query::select().from(Invoices).expr(Func::coalesce([
-                        Func::sum(
-                            Expr::col((InventoryMovements, inventory_movements::Column::Quantity)).mul(Expr::col((InvoiceItems, invoice_items::Column::Price))),
-                        ).into(),
-                        Expr::val(0.0f64).into(),
-                    ])).inner_join(
-                        InvoiceItems,
-                        Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).equals((Invoices, invoices::Column::Id)),
+                    Query::select().from(Invoices).expr(
+                        Expr::expr(
+                            Func::coalesce([
+                                Func::sum(
+                                    Expr::col((InventoryMovements, inventory_movements::Column::Quantity)).mul(Expr::col((OrderItems, order_items::Column::Price))),
+                                ).into(),
+                                Expr::val(0.0f64).into(),
+                            ])
+                        ).sub(
+                            Func::coalesce([
+                                Expr::col((Invoices, invoices::Column::PaidAmount)).into(),
+                                Expr::val(0.0f64).into(),
+                            ])
+                        )
+                    ).left_join(
+                        Orders,
+                        Expr::col((Orders, orders::Column::Id)).equals((Invoices, invoices::Column::OrderId)),
+                    ).inner_join(
+                        OrderItems,
+                        Expr::col((OrderItems, order_items::Column::OrderId)).equals((Orders, orders::Column::Id)),
                     ).inner_join(
                         InventoryMovements,
-                        Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((InvoiceItems, invoice_items::Column::InventoryId)),
+                        Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((OrderItems, order_items::Column::InventoryId)),
                     ).cond_where(
                         Cond::all().add(
                             Expr::col((Invoices, invoices::Column::Status)).eq("PAID")
@@ -505,17 +497,20 @@ impl QueriesService {
         ).expr_as(
             Func::coalesce([
                 Func::sum(
-                    Expr::col((InventoryMovements, inventory_movements::Column::Quantity)).mul(Expr::col((InvoiceItems, invoice_items::Column::Price))),
+                    Expr::col((InventoryMovements, inventory_movements::Column::Quantity)).mul(Expr::col((OrderItems, order_items::Column::Price))),
                 ).into(),
                 Expr::val(0.0f64).into(),
             ]),
             Alias::new("total"),
         ).left_join(
-            InvoiceItems,
-            Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).equals((Invoices, invoices::Column::Id)),
+            Orders,
+            Expr::col((Orders, orders::Column::Id)).equals((Invoices, invoices::Column::OrderId)),
+        ).left_join(
+            OrderItems,
+            Expr::col((OrderItems, order_items::Column::OrderId)).equals((Orders, orders::Column::Id)),
         ).left_join(
             InventoryMovements,
-            Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((InvoiceItems, invoice_items::Column::InventoryId)),
+            Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((OrderItems, order_items::Column::InventoryId)),
         ).join(
             JoinType::Join,
             Clients,
@@ -569,20 +564,20 @@ impl QueriesService {
         match invoice {
             Some(invoice) => {
                 let (sql, values) = Query::select().exprs([
-                    Expr::col((InvoiceItems, invoice_items::Column::Id)),
-                    Expr::col((InvoiceItems, invoice_items::Column::InventoryId)),
-                    Expr::col((InvoiceItems, invoice_items::Column::Price)),
+                    Expr::col((OrderItems, order_items::Column::Id)),
+                    Expr::col((OrderItems, order_items::Column::InventoryId)),
+                    Expr::col((OrderItems, order_items::Column::Price)),
                     Expr::col((InventoryMovements, inventory_movements::Column::Quantity)),
                     Expr::col((Products, products::Column::Name)),
-                ]).expr_as(Expr::col((Products, products::Column::Id)), Alias::new("product_id")).from(InvoiceItems).join(
+                ]).expr_as(Expr::col((Products, products::Column::Id)), Alias::new("product_id")).from(OrderItems).join(
                     JoinType::Join,
                     InventoryMovements,
-                    Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((InvoiceItems, invoice_items::Column::InventoryId)),
+                    Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((OrderItems, order_items::Column::InventoryId)),
                 ).join(
                     JoinType::Join,
                     Products,
                     Expr::col((Products, products::Column::Id)).equals((InventoryMovements, inventory_movements::Column::ProductId)),
-                ).cond_where(Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).eq(id)).to_owned().build(SqliteQueryBuilder);
+                ).cond_where(Expr::col((OrderItems, order_items::Column::OrderId)).eq(invoice.0.order_id)).to_owned().build(SqliteQueryBuilder);
 
                 let items = SelectInvoicesItemsForUpdate::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
 
@@ -612,10 +607,10 @@ impl QueriesService {
         }
     }
     pub async fn list_invoice_products(db: &DbConn, id: String) -> Result<Vec<JsonValue>, DbErr> {
-        let invoice_products = InvoiceItems::find().select_only().columns([invoice_items::Column::Price]).exprs([
+        let invoice_products = OrderItems::find().select_only().columns([order_items::Column::Price]).exprs([
             Expr::col((Products, products::Column::Name)),
             Expr::col((InventoryMovements, inventory_movements::Column::Quantity)),
-        ]).join(JoinType::Join, invoice_items::Relation::InventoryMovements.def()).join(JoinType::Join, inventory_movements::Relation::Products.def()).filter(Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).eq(id)).into_json().all(db).await?;
+        ]).join(JoinType::Join, order_items::Relation::InventoryMovements.def()).join(JoinType::Join, order_items::Relation::Orders.def()).join(JoinType::Join, orders::Relation::Invoices.def()).join(JoinType::Join, inventory_movements::Relation::Products.def()).filter(Expr::col((Invoices, invoices::Column::Id)).eq(id)).into_json().all(db).await?;
 
         Ok(invoice_products)
     }
@@ -630,20 +625,24 @@ impl QueriesService {
             Expr::col((Invoices, invoices::Column::Identifier)),
             Expr::col((Invoices, invoices::Column::PaidAmount)),
             Expr::col((Invoices, invoices::Column::CreatedAt)),
+            Expr::col((Invoices, invoices::Column::OrderId)),
         ]).expr_as(
             Func::coalesce([
                 Func::sum(
-                    Expr::col((InventoryMovements, inventory_movements::Column::Quantity)).mul(Expr::col((InvoiceItems, invoice_items::Column::Price))),
+                    Expr::col((InventoryMovements, inventory_movements::Column::Quantity)).mul(Expr::col((OrderItems, order_items::Column::Price))),
                 ).into(),
                 Expr::val(0.0f64).into(),
             ]),
             Alias::new("total"),
         ).left_join(
-            InvoiceItems,
-            Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).equals((Invoices, invoices::Column::Id)),
-        ).left_join(
+            Orders,
+            Expr::col((Orders, orders::Column::Id)).equals((Invoices, invoices::Column::OrderId)),
+        ).inner_join(
+            OrderItems,
+            Expr::col((OrderItems, order_items::Column::OrderId)).equals((Orders, orders::Column::Id)),
+        ).inner_join(
             InventoryMovements,
-            Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((InvoiceItems, invoice_items::Column::InventoryId)),
+            Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((OrderItems, order_items::Column::InventoryId)),
         ).join(
             JoinType::Join,
             Clients,
@@ -655,18 +654,18 @@ impl QueriesService {
         match invoice {
             Some(invoice) => {
                 let (sql, values) = Query::select().exprs([
-                    Expr::col((InvoiceItems, invoice_items::Column::Price)),
+                    Expr::col((OrderItems, order_items::Column::Price)),
                     Expr::col((InventoryMovements, inventory_movements::Column::Quantity)),
                     Expr::col((Products, products::Column::Name)),
-                ]).from(InvoiceItems).join(
+                ]).from(OrderItems).join(
                     JoinType::Join,
                     InventoryMovements,
-                    Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((InvoiceItems, invoice_items::Column::InventoryId)),
+                    Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((OrderItems, order_items::Column::InventoryId)),
                 ).join(
                     JoinType::Join,
                     Products,
                     Expr::col((Products, products::Column::Id)).equals((InventoryMovements, inventory_movements::Column::ProductId)),
-                ).cond_where(Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).eq(id)).to_owned().build(SqliteQueryBuilder);
+                ).cond_where(Expr::col((OrderItems, order_items::Column::OrderId)).eq(invoice.order_id)).to_owned().build(SqliteQueryBuilder);
 
                 let items = SelectInvoicesItems::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
 
@@ -884,15 +883,13 @@ impl QueriesService {
         }
     }
     pub async fn list_inventory(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
-        let count = InventoryMovements::find().join(JoinType::Join, inventory_movements::Relation::Products.def()).join(JoinType::LeftJoin, inventory_movements::Relation::OrderItems.def()).join(JoinType::LeftJoin, inventory_movements::Relation::InvoiceItems.def()).join(JoinType::LeftJoin, invoice_items::Relation::Invoices.def()).join(JoinType::LeftJoin, order_items::Relation::Orders.def()).filter(
-            Cond::all().add(Expr::col((Invoices, invoices::Column::OrderId)).is_null()).add(
+        let count = InventoryMovements::find().join(JoinType::Join, inventory_movements::Relation::Products.def()).join(JoinType::LeftJoin, inventory_movements::Relation::OrderItems.def()).join(JoinType::LeftJoin, order_items::Relation::Orders.def()).filter(
+            Cond::all().add(
                 Expr::expr(Func::coalesce([
-                    Expr::col((Invoices, invoices::Column::Status)).into(),
                     Expr::col((Orders, orders::Column::Status)).into(),
                     Expr::expr("PENDING").into(),
                 ])).eq("CANCELED").not(),
             ).add(Expr::expr(Func::coalesce([
-                Expr::col((Invoices, invoices::Column::IsDeleted)).into(),
                 Expr::col((Orders, orders::Column::IsDeleted)).into(),
                 Expr::expr(false).into(),
             ])).eq(false)),
@@ -913,7 +910,6 @@ impl QueriesService {
         ]).expr_as(
             Func::coalesce([
                 Expr::col((OrderItems, order_items::Column::Price)).into(),
-                Expr::col((InvoiceItems, invoice_items::Column::Price)).into(),
                 Expr::col((Products, products::Column::PurchasePrice)).into(),
             ]),
             Alias::new("price"),
@@ -927,25 +923,15 @@ impl QueriesService {
             Expr::col((OrderItems, order_items::Column::InventoryId)).equals((InventoryMovements, inventory_movements::Column::Id)),
         ).join(
             JoinType::LeftJoin,
-            InvoiceItems,
-            Expr::col((InvoiceItems, invoice_items::Column::InventoryId)).equals((InventoryMovements, inventory_movements::Column::Id)),
-        ).join(
-            JoinType::LeftJoin,
             Orders,
             Expr::col((Orders, orders::Column::Id)).equals((OrderItems, order_items::Column::OrderId)),
-        ).join(
-            JoinType::LeftJoin,
-            Invoices,
-            Expr::col((Invoices, invoices::Column::Id)).equals((InvoiceItems, invoice_items::Column::InvoiceId)),
         ).cond_where(
-            Cond::all().add(Expr::col((Invoices, invoices::Column::OrderId)).is_null()).add(
+            Cond::all().add(
                 Expr::expr(Func::coalesce([
-                    Expr::col((Invoices, invoices::Column::Status)).into(),
                     Expr::col((Orders, orders::Column::Status)).into(),
                     Expr::expr("PENDING").into(),
                 ])).eq("CANCELED").not(),
             ).add(Expr::expr(Func::coalesce([
-                Expr::col((Invoices, invoices::Column::IsDeleted)).into(),
                 Expr::col((Orders, orders::Column::IsDeleted)).into(),
                 Expr::expr(false).into(),
             ])).eq(false)),
@@ -998,7 +984,6 @@ impl QueriesService {
             Func::sum(
                 Expr::expr(Func::coalesce([
                     Expr::col((OrderItems, order_items::Column::Price)).into(),
-                    Expr::col((InvoiceItems, invoice_items::Column::Price)).into(),
                     Expr::col((Products, products::Column::PurchasePrice)).into(),
                 ])).mul(Expr::col((InventoryMovements, inventory_movements::Column::Quantity))),
             ),
@@ -1013,20 +998,11 @@ impl QueriesService {
             Expr::col((OrderItems, order_items::Column::InventoryId)).equals((InventoryMovements, inventory_movements::Column::Id)),
         ).join(
             JoinType::LeftJoin,
-            InvoiceItems,
-            Expr::col((InvoiceItems, invoice_items::Column::InventoryId)).equals((InventoryMovements, inventory_movements::Column::Id)),
-        ).join(
-            JoinType::LeftJoin,
             Orders,
             Expr::col((Orders, orders::Column::Id)).equals((OrderItems, order_items::Column::OrderId)),
-        ).join(
-            JoinType::LeftJoin,
-            Invoices,
-            Expr::col((Invoices, invoices::Column::Id)).equals((InvoiceItems, invoice_items::Column::InvoiceId)),
         ).cond_where(
-            Cond::all().add(Expr::col((Invoices, invoices::Column::OrderId)).is_null()).add(
+            Cond::all().add(
                 Expr::expr(Func::coalesce([
-                    Expr::col((Invoices, invoices::Column::Status)).into(),
                     Expr::col((Orders, orders::Column::Status)).into(),
                     Expr::expr("PENDING").into(),
                 ])).eq("CANCELED").not(),
@@ -1063,22 +1039,11 @@ impl QueriesService {
             Expr::col((OrderItems, order_items::Column::InventoryId)).equals((InventoryMovements, inventory_movements::Column::Id)),
         ).join(
             JoinType::LeftJoin,
-            InvoiceItems,
-            Expr::col((InvoiceItems, invoice_items::Column::InventoryId)).equals((InventoryMovements, inventory_movements::Column::Id)),
-        ).join(
-            JoinType::LeftJoin,
             Orders,
             Expr::col((Orders, orders::Column::Id)).equals((OrderItems, order_items::Column::OrderId)),
-        ).join(
-            JoinType::LeftJoin,
-            Invoices,
-            Expr::col((Invoices, invoices::Column::Id)).equals((InvoiceItems, invoice_items::Column::InvoiceId)),
         ).cond_where(
-            Cond::all().add(Expr::col((InventoryMovements, inventory_movements::Column::MvmType)).eq("OUT")).add(Expr::col((Invoices, invoices::Column::OrderId)).is_null()).add(
-                Expr::expr(Func::coalesce([
-                    Expr::col((Invoices, invoices::Column::Status)).into(),
-                    Expr::col((Orders, orders::Column::Status)).into(),
-                ])).eq("CANCELED").not(),
+            Cond::all().add(Expr::col((InventoryMovements, inventory_movements::Column::MvmType)).eq("OUT")).add(
+                Expr::col((Orders, orders::Column::Status)).eq("CANCELED").not(),
             ),
         ).add_group_by([Expr::col((Products, products::Column::Id)).into()]).order_by_expr(
             Func::sum(
@@ -1104,7 +1069,7 @@ impl QueriesService {
             Alias::new("quantity"),
         ).expr_as(
             Func::sum(
-                Expr::col((InvoiceItems, invoice_items::Column::Price)).mul(Expr::col((InventoryMovements, inventory_movements::Column::Quantity))),
+                Expr::col((OrderItems, order_items::Column::Price)).mul(Expr::col((InventoryMovements, inventory_movements::Column::Quantity))),
             ),
             Alias::new("price"),
         ).join(
@@ -1113,15 +1078,15 @@ impl QueriesService {
             Expr::col((Invoices, invoices::Column::ClientId)).equals((Clients, clients::Column::Id)),
         ).join(
             JoinType::Join,
-            InvoiceItems,
-            Expr::col((InvoiceItems, invoice_items::Column::InvoiceId)).equals((Invoices, invoices::Column::Id)),
+            OrderItems,
+            Expr::col((OrderItems, order_items::Column::OrderId)).equals((Invoices, invoices::Column::OrderId)),
         ).join(
             JoinType::Join,
             InventoryMovements,
-            Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((InvoiceItems, invoice_items::Column::InventoryId)),
+            Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((OrderItems, order_items::Column::InventoryId)),
         ).cond_where(Cond::all().add(Expr::expr(Expr::col((Invoices, invoices::Column::Status))).eq("CANCELED").not())).add_group_by([Expr::col((Clients, clients::Column::Id)).into()]).order_by_expr(
             Func::sum(
-                Expr::col((InvoiceItems, invoice_items::Column::Price)).mul(Expr::col((InventoryMovements, inventory_movements::Column::Quantity))),
+                Expr::col((OrderItems, order_items::Column::Price)).mul(Expr::col((InventoryMovements, inventory_movements::Column::Quantity))),
             ).into(),
             Order::Desc,
         ).limit(5).to_owned().build(SqliteQueryBuilder);
@@ -1208,7 +1173,7 @@ impl QueriesService {
         let (sql, values) = Query::select().from(InventoryMovements).expr_as(
             Func::coalesce([
                 Func::sum(
-                    Expr::col((InventoryMovements, inventory_movements::Column::Quantity)).mul(Expr::col((InvoiceItems, invoice_items::Column::Price))),
+                    Expr::col((InventoryMovements, inventory_movements::Column::Quantity)).mul(Expr::col((OrderItems, order_items::Column::Price))),
                 ).into(),
                 Expr::val(0.0).into(),
             ]),
@@ -1219,17 +1184,21 @@ impl QueriesService {
                 Box::new(SubQueryStatement::SelectStatement(
                     Query::select().from(InventoryMovements).expr(Func::coalesce([
                         Func::sum(
-                            Expr::col((InventoryMovements, inventory_movements::Column::Quantity)).mul(Expr::col((InvoiceItems, invoice_items::Column::Price))),
+                            Expr::col((InventoryMovements, inventory_movements::Column::Quantity)).mul(Expr::col((OrderItems, order_items::Column::Price))),
                         ).into(),
                         Expr::val(0.0).into(),
                     ])).join(
                         JoinType::Join,
-                        InvoiceItems,
-                        Expr::col((InvoiceItems, invoice_items::Column::InventoryId)).equals((InventoryMovements, inventory_movements::Column::Id)),
+                        OrderItems,
+                        Expr::col((OrderItems, order_items::Column::InventoryId)).equals((InventoryMovements, inventory_movements::Column::Id)),
+                    ).join(
+                        JoinType::Join,
+                        Orders,
+                        Expr::col((Orders, orders::Column::Id)).equals((OrderItems, order_items::Column::OrderId)),
                     ).join(
                         JoinType::Join,
                         Invoices,
-                        Expr::col((Invoices, invoices::Column::Id)).equals((InvoiceItems, invoice_items::Column::InvoiceId)),
+                        Expr::col((Invoices, invoices::Column::OrderId)).equals((Orders, orders::Column::Id)),
                     ).cond_where(
                         Cond::all().add(Expr::col((Invoices, invoices::Column::Status)).eq("PAID")).add(Expr::col((Invoices, invoices::Column::IsDeleted)).eq(false)).add(Expr::cust("inventory_movements.created_at < strftime('%Y-%m-01', CURRENT_DATE)"))
                     ).to_owned(),
@@ -1238,12 +1207,16 @@ impl QueriesService {
             Alias::new("last_month_revenue"),
         ).join(
             JoinType::Join,
-            InvoiceItems,
-            Expr::col((InvoiceItems, invoice_items::Column::InventoryId)).equals((InventoryMovements, inventory_movements::Column::Id)),
+            OrderItems,
+            Expr::col((OrderItems, order_items::Column::InventoryId)).equals((InventoryMovements, inventory_movements::Column::Id)),
+        ).join(
+            JoinType::Join,
+            Orders,
+            Expr::col((Orders, orders::Column::Id)).equals((OrderItems, order_items::Column::OrderId)),
         ).join(
             JoinType::Join,
             Invoices,
-            Expr::col((Invoices, invoices::Column::Id)).equals((InvoiceItems, invoice_items::Column::InvoiceId)),
+            Expr::col((Invoices, invoices::Column::OrderId)).equals((Orders, orders::Column::Id)),
         ).cond_where(
             Cond::all().add(Expr::col((Invoices, invoices::Column::Status)).eq("PAID")).add(Expr::col((Invoices, invoices::Column::IsDeleted)).eq(false))
         ).to_owned().build(SqliteQueryBuilder);

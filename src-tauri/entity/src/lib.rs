@@ -4,7 +4,6 @@ pub mod prelude;
 
 pub mod clients;
 pub mod inventory_movements;
-pub mod invoice_items;
 pub mod invoices;
 pub mod order_items;
 pub mod orders;

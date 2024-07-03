@@ -1,7 +1,7 @@
 use std::ops::Range;
 
 use crate::{
-    m20220101_000001_init_::{Client, InventoryMovement, Invoice, InvoiceItem, Order, OrderItem, Product, Quote, QuoteItem, Supplier},
+    m20220101_000001_init_::{Client, InventoryMovement, Invoice, Order, OrderItem, Product, Quote, QuoteItem, Supplier},
     utils::get_random_enum,
 };
 use fake::{
@@ -170,57 +170,19 @@ impl MigrationTrait for Migration {
                 sea_orm::DatabaseBackend::Sqlite,
                 r#"
                 INSERT INTO 
-                    invoices (id, status, client_id, paid_amount)
+                    invoices (id, status, client_id, paid_amount, order_id)
                 VALUES
                     (
                         $1, 
                         $2, 
                         (SELECT id FROM clients ORDER BY RANDOM() LIMIT 1),
-                        $3
+                        $3,
+                        (SELECT id FROM orders ORDER BY RANDOM() LIMIT 1)
 
                     )
+                ON CONFLICT DO NOTHING
                 "#,
                 [id.to_string().into(), status_.into(), paid.into()],
-            );
-            db.execute(insert_invoice).await?;
-        }
-
-        for _ in 0..1000 {
-            let _id = ulid::Ulid::new();
-            let quantity: u8 = Faker.fake();
-            let insert_inventory = Statement::from_sql_and_values(
-                sea_orm::DatabaseBackend::Sqlite,
-                r#"
-                INSERT INTO 
-                    inventory_movements (id, mvm_type, quantity, product_id)
-                VALUES
-                    (
-                        $1, 
-                        $2, 
-                        $3,
-                        (SELECT id FROM products ORDER BY RANDOM() LIMIT 1)
-                    )
-                "#,
-                [_id.to_string().into(), String::from("OUT").into(), quantity.into()],
-            );
-            db.execute(insert_inventory).await?;
-
-            let id = ulid::Ulid::new();
-            let price: u8 = Faker.fake();
-            let insert_invoice = Statement::from_sql_and_values(
-                sea_orm::DatabaseBackend::Sqlite,
-                r#"
-                INSERT INTO 
-                    invoice_items (id, price, invoice_id, inventory_id)
-                VALUES
-                    (
-                        $1, 
-                        $2, 
-                        (SELECT id FROM invoices ORDER BY RANDOM() LIMIT 1),
-                        $3
-                    )
-                "#,
-                [id.to_string().into(), price.into(), _id.to_string().into()],
             );
             db.execute(insert_invoice).await?;
         }
@@ -271,9 +233,6 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         let delete_item = Query::delete().from_table(OrderItem::Table).to_owned();
-        manager.exec_stmt(delete_item).await?;
-
-        let delete_item = Query::delete().from_table(InvoiceItem::Table).to_owned();
         manager.exec_stmt(delete_item).await?;
 
         let delete_item: DeleteStatement = Query::delete().from_table(QuoteItem::Table).to_owned();
