@@ -17,7 +17,7 @@ import { toast } from "vue-sonner";
 import { useDebounceFn } from "@vueuse/core";
 
 const { t, locale } = useI18n();
-const { numberToWords } = useNumberToWords();
+const { numberToText } = useNumberToText();
 const id = useRoute().params.id;
 const quote = ref<any | null>(null);
 const pdfRef = ref<HTMLIFrameElement | null>();
@@ -449,7 +449,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     opacity: 0.75,
   });
 
-  const totalAsText = numberToWords(
+  const totalAsText = numberToText(
     quote.value.total + quote.value.total * 0.2,
     locale.value as any
   );
