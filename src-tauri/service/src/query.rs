@@ -136,13 +136,6 @@ impl QueriesService {
                                 ).into(),
                                 Expr::val(0.0f64).into(),
                             ])
-                        ).sub(
-                            Func::coalesce([
-                                Func::sum(
-                                    Expr::col((Invoices, invoices::Column::PaidAmount)),
-                                ).into(),
-                                Expr::val(0.0f64).into(),
-                            ])
                         )
                     ).left_join(
                         Orders,
@@ -163,6 +156,30 @@ impl QueriesService {
                         ),
                     ).to_owned(),
                 )),
+            ).sub(
+                SimpleExpr::SubQuery(
+                    None,
+                    Box::new(SubQueryStatement::SelectStatement(
+                        Query::select().from(Invoices).expr(
+                            Expr::expr(
+                                Func::coalesce([
+                                    Func::sum(
+                                        Expr::col((Invoices, invoices::Column::PaidAmount)),
+                                    ).into(),
+                                    Expr::val(0.0f64).into(),
+                                ])
+                            )
+                        ).cond_where(
+                            Cond::all().add(
+                                Expr::col((Invoices, invoices::Column::Status)).eq("PAID")
+                            ).add(
+                                Expr::col((Invoices, invoices::Column::IsDeleted)).eq(false)
+                            ).add(
+                                Expr::col((Invoices, invoices::Column::ClientId)).equals((Clients, clients::Column::Id)),
+                            ),
+                        ).to_owned(),
+                    )),
+                )
             ),
             Alias::new("credi"),
         ).cond_where(

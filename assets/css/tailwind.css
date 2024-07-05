@@ -139,16 +139,8 @@ table:not(.not-default) > thead > tr > th {
   @apply font-semibold text-left whitespace-nowrap p-2 first-letter:capitalize;
 }
 
-table:not(.not-default) > thead > tr > .small {
-  @apply font-semibold text-left p-2 first-letter:capitalize w-11;
-}
-
 html:dir(rtl) table:not(.not-default) > thead > tr > th {
   @apply font-semibold text-right  whitespace-nowrap p-2 first-letter:capitalize;
-}
-
-html:dir(rtl) table:not(.not-default) > thead > tr > .small {
-  @apply font-semibold text-right p-2 first-letter:capitalize w-11;
 }
 
 table:not(.not-default) > tbody {
