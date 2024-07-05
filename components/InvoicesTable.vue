@@ -110,30 +110,34 @@ const updateInvoiceStatus = async (invoice: any) => {
                 </Button>
               </PopoverTrigger>
               <PopoverContent class="min-w-[13rem] p-2">
-                <table class="w-full not-default">
-                  <thead>
-                    <tr>
-                      <th v-for="index in 3" :key="index" />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="(invoiceProduct, index) in invoiceProducts"
-                      :key="index"
-                      class="space-y-1 text-sm flex justify-between w-full items-center"
-                    >
-                      <td class="underline w-1/2">
-                        {{ invoiceProduct.name }}
-                      </td>
-                      <td class="w-1/4 text-end">
-                        {{ invoiceProduct.price }} Dh
-                      </td>
-                      <td class="w-1/4 text-slate-700 text-end">
-                        <i> x{{ invoiceProduct.quantity }} </i>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <ScrollArea
+                  :class="invoiceProducts.length > 16 ? 'h-[400px]' : 'h-fit'"
+                >
+                  <table class="w-full not-default">
+                    <thead>
+                      <tr>
+                        <th v-for="index in 3" :key="index" />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(invoiceProduct, index) in invoiceProducts"
+                        :key="index"
+                        class="space-y-1 text-sm flex justify-between w-full items-center"
+                      >
+                        <td class="underline w-1/2">
+                          {{ invoiceProduct.name }}
+                        </td>
+                        <td class="w-1/4 text-end">
+                          {{ invoiceProduct.price }} Dh
+                        </td>
+                        <td class="w-1/4 text-slate-700 text-end">
+                          <i> x{{ invoiceProduct.quantity }} </i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </ScrollArea>
               </PopoverContent>
             </Popover>
             <template v-else>
