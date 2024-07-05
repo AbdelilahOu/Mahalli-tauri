@@ -17,7 +17,7 @@ const { t, d, locale } = useI18n();
           <th>{{ t("g.fields.price") }}</th>
           <th>{{ t("g.fields.quantity") }}</th>
           <th>{{ t("g.fields.status") }}</th>
-          <th>{{ t("g.fields.date") }}</th>
+          <th class="w-56">{{ t("g.fields.date") }}</th>
         </tr>
       </thead>
       <tbody>

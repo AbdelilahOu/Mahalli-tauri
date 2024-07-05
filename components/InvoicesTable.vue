@@ -70,14 +70,14 @@ const updateInvoiceStatus = async (invoice: any) => {
     <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
-          <th class="small"></th>
+          <th class="w-24"></th>
           <th>{{ t("g.fields.fullname") }}</th>
           <th>{{ t("g.fields.items") }}</th>
-          <th class="small">{{ t("g.fields.status") }}</th>
-          <th>{{ t("g.fields.date") }}</th>
+          <th class="w-fit">{{ t("g.fields.status") }}</th>
+          <th class="w-56">{{ t("g.fields.date") }}</th>
           <th>{{ t("g.fields.total") }}</th>
           <th>{{ t("g.fields.paid") }}</th>
-          <th class="small">{{ t("g.fields.actions") }}</th>
+          <th class="w-fit">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
       <tbody>

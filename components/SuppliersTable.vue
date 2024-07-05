@@ -38,12 +38,12 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
     <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
       <thead>
         <tr>
-          <th class="small" />
+          <th class="w-fit" />
           <th>{{ t("g.fields.fullname") }}</th>
           <th>{{ t("g.fields.email") }}</th>
           <th>{{ t("g.fields.phone") }}</th>
           <th>{{ t("g.fields.address") }}</th>
-          <th class="small">{{ t("g.fields.actions") }}</th>
+          <th class="w-fit">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
       <tbody>
