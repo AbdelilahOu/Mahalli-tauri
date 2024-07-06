@@ -5,16 +5,7 @@ const isCollapse = ref<boolean>(true);
 
 <template>
   <main class="w-screen h-screen fixed top-0 left-0 bg-[#FFFAFA] flex">
-    <div
-      :class="
-        cn(
-          'transition-all print:hidden sticky h-screen top-0 border-x border-slate-100 z-50 flex justify-center duration-200',
-          isCollapse ? 'w-12 min-w-[48px]' : 'w-52 min-w-[12rem]'
-        )
-      "
-    >
-      <SideBar v-model:collapse="isCollapse" />
-    </div>
+    <SideBar v-model:collapse="isCollapse" />
     <div class="grid grid-rows-[50px_1fr] w-full">
       <Navigation />
       <ScrollArea
