@@ -115,7 +115,7 @@ const generatePdf = async () => {
     page.setSize(...PageSizes.A4);
     const { width, height } = page.getSize();
 
-    drawQuoteHeader(page, width, height, quote.value);
+    drawHeader(page, width, height, quote.value);
 
     page.drawLine({
       start: { x: config.marginX, y: height - config.marginTop - 20 * 7 + 10 },
@@ -129,13 +129,7 @@ const generatePdf = async () => {
     });
 
     const items = [...quote.value.items];
-    drawQuoteItems(
-      page,
-      width,
-      items,
-      height - config.marginTop - 20 * 7,
-      Tempalte
-    );
+    drawItems(page, width, items, height - config.marginTop - 20 * 7, Tempalte);
 
     const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
     pdfRef.value?.setAttribute("src", pdfDataUri);
@@ -144,7 +138,7 @@ const generatePdf = async () => {
   }
 };
 
-const drawQuoteHeader = (
+const drawHeader = (
   page: PDFPage,
   width: number,
   height: number,
@@ -267,7 +261,7 @@ const drawQuoteHeader = (
   });
 };
 
-const drawQuoteItems = (
+const drawItems = (
   page: PDFPage,
   width: number,
   items: any[],
@@ -328,7 +322,7 @@ const drawQuoteItems = (
       newPage = pdfDoc.addPage();
     }
     newPage.setSize(...PageSizes.A4);
-    drawQuoteItems(
+    drawItems(
       newPage,
       width,
       items,
@@ -336,7 +330,7 @@ const drawQuoteItems = (
       template
     );
   } else {
-    drawQuoteItems(page, width, items, currentY - lineHeight, template);
+    drawItems(page, width, items, currentY - lineHeight, template);
   }
 };
 
