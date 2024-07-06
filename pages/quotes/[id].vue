@@ -88,13 +88,9 @@ watch(
 const initPdfDoc = async () => {
   pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
-  if (locale.value == "ar") {
-    const res = await fetch(CairoRegular);
-    const fontBytes = await res.arrayBuffer();
-    font = await pdfDoc.embedFont(fontBytes);
-  } else {
-    font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  }
+  const res = await fetch(CairoRegular);
+  const fontBytes = await res.arrayBuffer();
+  font = await pdfDoc.embedFont(fontBytes);
   generatePdf();
 };
 
