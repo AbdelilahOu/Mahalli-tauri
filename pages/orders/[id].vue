@@ -117,7 +117,7 @@ const generatePdf = async () => {
     page.setSize(...PageSizes.A4);
     const { width, height } = page.getSize();
 
-    drawOrderHeader(page, width, height, order.value);
+    drawHeader(page, width, height, order.value);
 
     page.drawLine({
       start: { x: config.marginX, y: height - config.marginTop - 20 * 7 + 10 },
@@ -131,13 +131,7 @@ const generatePdf = async () => {
     });
 
     const items = [...order.value.items];
-    drawOrderItems(
-      page,
-      width,
-      items,
-      height - config.marginTop - 20 * 7,
-      Tempalte
-    );
+    drawItems(page, width, items, height - config.marginTop - 20 * 7, Tempalte);
 
     const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
     pdfRef.value?.setAttribute("src", pdfDataUri);
@@ -146,7 +140,7 @@ const generatePdf = async () => {
   }
 };
 
-const drawOrderHeader = (
+const drawHeader = (
   page: PDFPage,
   width: number,
   height: number,
@@ -284,7 +278,7 @@ const drawOrderHeader = (
   });
 };
 
-const drawOrderItems = (
+const drawItems = (
   page: PDFPage,
   width: number,
   items: any[],
@@ -345,7 +339,7 @@ const drawOrderItems = (
       newPage = pdfDoc.addPage();
     }
     newPage.setSize(...PageSizes.A4);
-    drawOrderItems(
+    drawItems(
       newPage,
       width,
       items,
@@ -353,7 +347,7 @@ const drawOrderItems = (
       template
     );
   } else {
-    drawOrderItems(page, width, items, currentY - lineHeight, template);
+    drawItems(page, width, items, currentY - lineHeight, template);
   }
 };
 

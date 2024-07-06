@@ -117,7 +117,7 @@ const generatePdf = async () => {
     page.setSize(...PageSizes.A4);
     const { width, height } = page.getSize();
 
-    drawInvoiceHeader(page, width, height, invoice.value);
+    drawHeader(page, width, height, invoice.value);
 
     page.drawLine({
       start: { x: config.marginX, y: height - config.marginTop - 20 * 7 + 10 },
@@ -131,13 +131,7 @@ const generatePdf = async () => {
     });
 
     const items = [...invoice.value.items];
-    drawInvoiceItems(
-      page,
-      width,
-      items,
-      height - config.marginTop - 20 * 7,
-      Tempalte
-    );
+    drawItems(page, width, items, height - config.marginTop - 20 * 7, Tempalte);
 
     const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
     pdfRef.value?.setAttribute("src", pdfDataUri);
@@ -146,7 +140,7 @@ const generatePdf = async () => {
   }
 };
 
-const drawInvoiceHeader = (
+const drawHeader = (
   page: PDFPage,
   width: number,
   height: number,
@@ -284,7 +278,7 @@ const drawInvoiceHeader = (
   });
 };
 
-const drawInvoiceItems = (
+const drawItems = (
   page: PDFPage,
   width: number,
   items: any[],
@@ -345,7 +339,7 @@ const drawInvoiceItems = (
       newPage = pdfDoc.addPage();
     }
     newPage.setSize(...PageSizes.A4);
-    drawInvoiceItems(
+    drawItems(
       newPage,
       width,
       items,
@@ -353,7 +347,7 @@ const drawInvoiceItems = (
       template
     );
   } else {
-    drawInvoiceItems(page, width, items, currentY - lineHeight, template);
+    drawItems(page, width, items, currentY - lineHeight, template);
   }
 };
 
