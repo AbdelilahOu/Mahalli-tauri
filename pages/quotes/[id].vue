@@ -231,14 +231,14 @@ const drawHeader = (
     opacity: 0.75,
   });
   page.drawText(t("g.fields.name"), {
-    x: 25,
+    x: config.marginX + 5,
     y: height - config.marginTop - 20 * 6,
     font,
     size: 14,
     color: config.color,
   });
   page.drawText(t("g.fields.quantity"), {
-    x: 25 + width / 4,
+    x: config.marginX + 5 + width / 4,
     y: height - config.marginTop - 20 * 6,
     font,
     size: 14,
@@ -246,7 +246,7 @@ const drawHeader = (
   });
 
   page.drawText(t("g.fields.price"), {
-    x: 25 + width / 2,
+    x: config.marginX + 5 + width / 2,
     y: height - config.marginTop - 20 * 6,
     font,
     size: 14,
@@ -254,7 +254,7 @@ const drawHeader = (
   });
 
   page.drawText(t("g.fields.total"), {
-    x: 25 + (width * 3) / 4,
+    x: config.marginX + 5 + (width * 3) / 4,
     y: height - config.marginTop - 20 * 6,
     font,
     size: 14,
@@ -276,28 +276,28 @@ const drawItems = (
 
   const item = items.shift();
   page.drawText(item.name, {
-    x: 25,
+    x: config.marginX + 5,
     y: currentY - 10,
     font,
     size: 12,
     color: config.color,
   });
   page.drawText(item.quantity.toFixed(0), {
-    x: 25 + width / 4,
+    x: config.marginX + 5 + width / 4,
     y: currentY - 10,
     font,
     size: 12,
     color: config.color,
   });
   page.drawText("DH " + item.price.toFixed(2), {
-    x: 25 + width / 2,
+    x: config.marginX + 5 + width / 2,
     y: currentY - 10,
     font,
     size: 12,
     color: config.color,
   });
   page.drawText("DH " + (item.price * item.quantity).toFixed(2), {
-    x: 25 + (width * 3) / 4,
+    x: config.marginX + 5 + (width * 3) / 4,
     y: currentY - 10,
     font,
     size: 12,
@@ -351,7 +351,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
   }
 
   page.drawText("DH " + quote.value.total.toFixed(2), {
-    x: 25 + (width * 3) / 4,
+    x: config.marginX + 5 + (width * 3) / 4,
     y: currentY - 10,
     font,
     size: 12,
@@ -380,7 +380,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
   });
 
   page.drawText("20%", {
-    x: 25 + (width * 3) / 4,
+    x: config.marginX + 5 + (width * 3) / 4,
     y: currentY - 40,
     font,
     size: 12,
@@ -410,7 +410,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
   });
 
   page.drawText("DH " + (quote.value.total * 0.2).toFixed(2), {
-    x: 25 + (width * 3) / 4,
+    x: config.marginX + 5 + (width * 3) / 4,
     y: currentY - 70,
     font,
     size: 12,
@@ -442,7 +442,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
   page.drawText(
     "DH " + (quote.value.total + quote.value.total * 0.2).toFixed(2),
     {
-      x: 25 + (width * 3) / 4,
+      x: config.marginX + 5 + (width * 3) / 4,
       y: currentY - 100,
       font,
       size: 12,
