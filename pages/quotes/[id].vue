@@ -2,14 +2,7 @@
 import { invoke } from "@tauri-apps/api";
 import { error } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
-import {
-  PDFDocument,
-  StandardFonts,
-  rgb,
-  PageSizes,
-  PDFName,
-  PDFPage,
-} from "pdf-lib";
+import { PDFDocument, rgb, PageSizes, PDFName, PDFPage } from "pdf-lib";
 import type { PDFFont } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
@@ -86,12 +79,20 @@ watch(
 );
 
 const initPdfDoc = async () => {
-  pdfDoc = await PDFDocument.create();
-  pdfDoc.registerFontkit(fontkit);
-  const res = await fetch(CairoRegular);
-  const fontBytes = await res.arrayBuffer();
-  font = await pdfDoc.embedFont(fontBytes);
-  generatePdf();
+  try {
+    pdfDoc = await PDFDocument.create();
+    pdfDoc.registerFontkit(fontkit);
+    const res = await fetch(CairoRegular);
+    const fontBytes = await res.arrayBuffer();
+    font = await pdfDoc.embedFont(fontBytes);
+    generatePdf();
+  } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
+    error("ERROR PDF-LIB: " + err);
+  }
 };
 
 const generatePdf = async () => {
