@@ -130,8 +130,12 @@ const generatePdf = async () => {
 
     const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
     pdfRef.value?.setAttribute("src", pdfDataUri);
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
+    error("ERROR PDF-LIB: " + err);
   }
 };
 
@@ -233,7 +237,7 @@ const drawHeader = (
     size: 14,
     color: config.color,
   });
-  page.drawText(t("g.fields.price"), {
+  page.drawText(t("g.fields.quantity"), {
     x: 25 + width / 4,
     y: height - config.marginTop - 20 * 6,
     font,
@@ -241,7 +245,7 @@ const drawHeader = (
     color: config.color,
   });
 
-  page.drawText(t("g.fields.quantity"), {
+  page.drawText(t("g.fields.price"), {
     x: 25 + width / 2,
     y: height - config.marginTop - 20 * 6,
     font,
@@ -278,14 +282,14 @@ const drawItems = (
     size: 12,
     color: config.color,
   });
-  page.drawText("DH " + item.price.toFixed(2), {
+  page.drawText(item.quantity.toFixed(0), {
     x: 25 + width / 4,
     y: currentY - 10,
     font,
     size: 12,
     color: config.color,
   });
-  page.drawText(item.quantity.toFixed(0), {
+  page.drawText("DH " + item.price.toFixed(2), {
     x: 25 + width / 2,
     y: currentY - 10,
     font,
