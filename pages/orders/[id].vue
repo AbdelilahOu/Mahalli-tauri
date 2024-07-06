@@ -152,29 +152,57 @@ const drawOrderHeader = (
   height: number,
   order: any
 ) => {
-  page.drawText("O R D E R", {
-    x: width - 190,
+  let OrderText = "";
+  switch (locale.value) {
+    case "en":
+      OrderText = "O R D E R";
+      break;
+    case "fr":
+      OrderText = "C O M M A N D E";
+      break;
+    case "de":
+      OrderText = "A U F T R A G";
+      break;
+    case "ar":
+      OrderText = "طلب";
+      break;
+  }
+  let OrderDetailsX = 0;
+  switch (locale.value) {
+    case "en":
+    case "fr":
+    case "de":
+      OrderDetailsX =
+        width - font.widthOfTextAtSize(OrderText, 30) - config.marginX;
+      break;
+    case "ar":
+      OrderDetailsX =
+        width - font.widthOfTextAtSize(order.identifier, 13) - config.marginX;
+      break;
+  }
+  page.drawText(OrderText, {
+    x: OrderDetailsX,
     y: height - config.marginTop,
     font,
     size: 30,
     color: config.color,
   });
   page.drawText(order.identifier, {
-    x: width - 190,
+    x: OrderDetailsX,
     y: height - config.marginTop - 20,
     font,
     size: 13,
     color: config.color,
   });
   page.drawText(order.createdAt.split(" ")[0], {
-    x: width - 190,
+    x: OrderDetailsX,
     y: height - config.marginTop - 40,
     font,
     size: 13,
     color: config.color,
   });
   page.drawText(t("g.status." + order.status.toLowerCase()), {
-    x: width - 190,
+    x: OrderDetailsX,
     y: height - config.marginTop - 60,
     font,
     size: 13,

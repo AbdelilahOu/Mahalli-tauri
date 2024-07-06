@@ -117,7 +117,7 @@ const generatePdf = async () => {
     page.setSize(...PageSizes.A4);
     const { width, height } = page.getSize();
 
-    drawOrderHeader(page, width, height, invoice.value);
+    drawInvoiceHeader(page, width, height, invoice.value);
 
     page.drawLine({
       start: { x: config.marginX, y: height - config.marginTop - 20 * 7 + 10 },
@@ -131,7 +131,7 @@ const generatePdf = async () => {
     });
 
     const items = [...invoice.value.items];
-    drawOrderItems(
+    drawInvoiceItems(
       page,
       width,
       items,
@@ -146,35 +146,63 @@ const generatePdf = async () => {
   }
 };
 
-const drawOrderHeader = (
+const drawInvoiceHeader = (
   page: PDFPage,
   width: number,
   height: number,
   invoice: any
 ) => {
-  page.drawText("I N V O I C E", {
-    x: width - 190,
+  let InvoiceText = "";
+  switch (locale.value) {
+    case "en":
+      InvoiceText = "I N V O I C E";
+      break;
+    case "fr":
+      InvoiceText = "F A C T U R E";
+      break;
+    case "de":
+      InvoiceText = "R E C H N U N G";
+      break;
+    case "ar":
+      InvoiceText = "فاتورة";
+      break;
+  }
+  let InvoiceDetailsX = 0;
+  switch (locale.value) {
+    case "en":
+    case "fr":
+    case "de":
+      InvoiceDetailsX =
+        width - font.widthOfTextAtSize(InvoiceText, 30) - config.marginX;
+      break;
+    case "ar":
+      InvoiceDetailsX =
+        width - font.widthOfTextAtSize(invoice.identifier, 13) - config.marginX;
+      break;
+  }
+  page.drawText(InvoiceText, {
+    x: InvoiceDetailsX,
     y: height - config.marginTop,
     font,
     size: 30,
     color: config.color,
   });
   page.drawText(invoice.identifier, {
-    x: width - 190,
+    x: InvoiceDetailsX,
     y: height - config.marginTop - 20,
     font,
     size: 13,
     color: config.color,
   });
   page.drawText(invoice.createdAt.split(" ")[0], {
-    x: width - 190,
+    x: InvoiceDetailsX,
     y: height - config.marginTop - 40,
     font,
     size: 13,
     color: config.color,
   });
   page.drawText(t("g.status." + invoice.status.toLowerCase()), {
-    x: width - 190,
+    x: InvoiceDetailsX,
     y: height - config.marginTop - 60,
     font,
     size: 13,
@@ -256,7 +284,7 @@ const drawOrderHeader = (
   });
 };
 
-const drawOrderItems = (
+const drawInvoiceItems = (
   page: PDFPage,
   width: number,
   items: any[],
@@ -317,7 +345,7 @@ const drawOrderItems = (
       newPage = pdfDoc.addPage();
     }
     newPage.setSize(...PageSizes.A4);
-    drawOrderItems(
+    drawInvoiceItems(
       newPage,
       width,
       items,
@@ -325,7 +353,7 @@ const drawOrderItems = (
       template
     );
   } else {
-    drawOrderItems(page, width, items, currentY - lineHeight, template);
+    drawInvoiceItems(page, width, items, currentY - lineHeight, template);
   }
 };
 

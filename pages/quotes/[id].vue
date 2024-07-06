@@ -115,7 +115,7 @@ const generatePdf = async () => {
     page.setSize(...PageSizes.A4);
     const { width, height } = page.getSize();
 
-    drawOrderHeader(page, width, height, quote.value);
+    drawQuoteHeader(page, width, height, quote.value);
 
     page.drawLine({
       start: { x: config.marginX, y: height - config.marginTop - 20 * 7 + 10 },
@@ -129,7 +129,7 @@ const generatePdf = async () => {
     });
 
     const items = [...quote.value.items];
-    drawOrderItems(
+    drawQuoteItems(
       page,
       width,
       items,
@@ -144,28 +144,56 @@ const generatePdf = async () => {
   }
 };
 
-const drawOrderHeader = (
+const drawQuoteHeader = (
   page: PDFPage,
   width: number,
   height: number,
   quote: any
 ) => {
-  page.drawText("Q U O T E", {
-    x: width - 190,
+  let QuoteText = "";
+  switch (locale.value) {
+    case "en":
+      QuoteText = "Q U O T E";
+      break;
+    case "fr":
+      QuoteText = "D E V I";
+      break;
+    case "de":
+      QuoteText = "Z I T A T E";
+      break;
+    case "ar":
+      QuoteText = "اقتباس";
+      break;
+  }
+  let QuoteDetailsX = 0;
+  switch (locale.value) {
+    case "en":
+    case "fr":
+    case "de":
+      QuoteDetailsX =
+        width - font.widthOfTextAtSize(QuoteText, 30) - config.marginX;
+      break;
+    case "ar":
+      QuoteDetailsX =
+        width - font.widthOfTextAtSize(quote.identifier, 13) - config.marginX;
+      break;
+  }
+  page.drawText(QuoteText, {
+    x: QuoteDetailsX,
     y: height - config.marginTop,
     font,
     size: 30,
     color: config.color,
   });
   page.drawText(quote.identifier, {
-    x: width - 190,
+    x: QuoteDetailsX,
     y: height - config.marginTop - 20,
     font,
     size: 13,
     color: config.color,
   });
   page.drawText(quote.createdAt.split(" ")[0], {
-    x: width - 190,
+    x: QuoteDetailsX,
     y: height - config.marginTop - 40,
     font,
     size: 13,
@@ -239,7 +267,7 @@ const drawOrderHeader = (
   });
 };
 
-const drawOrderItems = (
+const drawQuoteItems = (
   page: PDFPage,
   width: number,
   items: any[],
@@ -300,7 +328,7 @@ const drawOrderItems = (
       newPage = pdfDoc.addPage();
     }
     newPage.setSize(...PageSizes.A4);
-    drawOrderItems(
+    drawQuoteItems(
       newPage,
       width,
       items,
@@ -308,7 +336,7 @@ const drawOrderItems = (
       template
     );
   } else {
-    drawOrderItems(page, width, items, currentY - lineHeight, template);
+    drawQuoteItems(page, width, items, currentY - lineHeight, template);
   }
 };
 
