@@ -77,7 +77,7 @@ const updateInvoiceStatus = async (invoice: any) => {
           <th class="w-56">{{ t("g.fields.date") }}</th>
           <th>{{ t("g.fields.total") }}</th>
           <th>{{ t("g.fields.paid") }}</th>
-          <th class="w-fit">{{ t("g.fields.actions") }}</th>
+          <th class="w-20">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
       <tbody>

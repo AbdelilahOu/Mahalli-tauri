@@ -34,7 +34,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
           <th>{{ t("g.fields.phone") }}</th>
           <th>{{ t("g.fields.address") }}</th>
           <th>{{ t("g.fields.credit") }}</th>
-          <th class="w-fit">{{ t("g.fields.actions") }}</th>
+          <th class="w-20">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
       <tbody>

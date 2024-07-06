@@ -85,7 +85,7 @@ const createOrderFromQuote = async (id: string) => {
           <th>{{ t("g.fields.items") }}</th>
           <th class="w-56">{{ t("g.fields.date") }}</th>
           <th>{{ t("g.fields.total") }}</th>
-          <th class="w-fit">{{ t("g.fields.actions") }}</th>
+          <th class="w-20">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
       <tbody>

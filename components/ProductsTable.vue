@@ -49,7 +49,7 @@ const updateProductStock = (id: string, name: string) => {
           <th>{{ t("g.fields.threshold") }}</th>
           <th>{{ t("g.fields.purchase-price") }}</th>
           <th>{{ t("g.fields.selling-price") }}</th>
-          <th class="w-fit">{{ t("g.fields.actions") }}</th>
+          <th class="w-20">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
       <tbody>

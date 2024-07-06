@@ -43,7 +43,7 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
           <th>{{ t("g.fields.email") }}</th>
           <th>{{ t("g.fields.phone") }}</th>
           <th>{{ t("g.fields.address") }}</th>
-          <th class="w-fit">{{ t("g.fields.actions") }}</th>
+          <th class="w-20">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
       <tbody>
