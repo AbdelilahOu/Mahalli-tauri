@@ -26,7 +26,7 @@ impl MutationsService {
         product_active.name = ActiveValue::Set(product.name);
         product_active.selling_price = ActiveValue::Set(product.selling_price);
         product_active.purchase_price = ActiveValue::Set(product.purchase_price);
-        product_active.image = ActiveValue::Set(product.image);
+        // product_active.image = ActiveValue::Set(product.image);
         product_active.description = ActiveValue::Set(product.description);
         product_active.min_quantity = ActiveValue::Set(product.min_quantity);
         match product_active.update(db).await {
@@ -65,7 +65,7 @@ impl MutationsService {
         client_active.email = ActiveValue::Set(client.email);
         client_active.phone_number = ActiveValue::Set(client.phone_number);
         client_active.address = ActiveValue::Set(client.address);
-        client_active.image = ActiveValue::Set(client.image);
+        // client_active.image = ActiveValue::Set(client.image);
         match client_active.update(db).await {
             Ok(_) => Ok(()),
             Err(err) => Err(err),
@@ -102,7 +102,7 @@ impl MutationsService {
         supplier_active.email = ActiveValue::Set(supplier.email);
         supplier_active.phone_number = ActiveValue::Set(supplier.phone_number);
         supplier_active.address = ActiveValue::Set(supplier.address);
-        supplier_active.image = ActiveValue::Set(supplier.image);
+        // supplier_active.image = ActiveValue::Set(supplier.image);
         match supplier_active.update(db).await {
             Ok(_) => Ok(()),
             Err(err) => Err(err),

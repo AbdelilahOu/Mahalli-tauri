@@ -24,7 +24,6 @@ const supplierSchema = toTypedSchema(
     email: z.string().default((route.query.email as string) ?? ""),
     phoneNumber: z.string().default((route.query.phoneNumber as string) ?? ""),
     address: z.string().default((route.query.address as string) ?? ""),
-    image: z.string().default((route.query.image as string) ?? ""),
   })
 );
 
@@ -41,7 +40,7 @@ const updateTheSupplier = async (supplier: SupplierT) => {
         email: supplier.email,
         phone_number: supplier.phoneNumber,
         address: supplier.address,
-        image: supplier.image,
+        image: "",
       },
     });
     //
@@ -52,7 +51,6 @@ const updateTheSupplier = async (supplier: SupplierT) => {
         email: supplier.email,
         phone_number: supplier.phoneNumber,
         address: supplier.address,
-        image: supplier.image,
       })}`
     );
     //

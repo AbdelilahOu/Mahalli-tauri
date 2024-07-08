@@ -34,7 +34,7 @@ const productSchema = toTypedSchema(
       .string()
       .min(2)
       .default((route.query.description as string) ?? ""),
-    image: z.string().default((route.query.image ?? "") as string),
+    // image: z.string().default((route.query.image ?? "") as string),
     minQuantity: z.number().default(Number(route.query.minQuantity) ?? 0),
   })
 );
@@ -53,7 +53,7 @@ const updateTheProduct = async (product: ProductT) => {
         purchase_price: Number(product.purchasePrice),
         description: product.description,
         min_quantity: Number(product.minQuantity),
-        image: product.image,
+        image: "",
         id,
       },
     });
@@ -65,7 +65,6 @@ const updateTheProduct = async (product: ProductT) => {
         purchase_price: Number(product.purchasePrice),
         description: product.description,
         min_quantity: Number(product.minQuantity),
-        image: product.image,
         id,
       })}`
     );
