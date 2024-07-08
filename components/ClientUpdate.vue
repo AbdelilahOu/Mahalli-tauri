@@ -25,7 +25,6 @@ const clientSchema = toTypedSchema(
     email: z.string().default((route.query.email as string) ?? ""),
     phoneNumber: z.string().default((route.query.phoneNumber as string) ?? ""),
     address: z.string().default((route.query.address as string) ?? ""),
-    image: z.string().default((route.query.image as string) ?? ""),
   })
 );
 
@@ -42,7 +41,7 @@ const updateTheClient = async (client: ClientT) => {
         email: client.email,
         phone_number: client.phoneNumber,
         address: client.address,
-        image: client.image,
+        image: "",
       },
     });
     //
@@ -53,7 +52,6 @@ const updateTheClient = async (client: ClientT) => {
         email: client.email,
         phone_number: client.phoneNumber,
         address: client.address,
-        image: client.image,
       })}`
     );
     //
