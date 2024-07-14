@@ -187,6 +187,13 @@ impl MigrationTrait for Migration {
             db.execute(insert_invoice).await?;
         }
 
+        let fix_client_id = Statement::from_string(
+            sea_orm::DatabaseBackend::Sqlite,
+            r#"UPDATE invoices SET client_id = (SELECT client_id FROM orders WHERE id = order_id);"#
+        );
+
+        db.execute(fix_client_id).await?;
+
         for _ in 0..150 {
             let id = ulid::Ulid::new();
             let insert_quote = Statement::from_sql_and_values(
