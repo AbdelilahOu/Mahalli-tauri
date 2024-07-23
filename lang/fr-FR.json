@@ -63,10 +63,16 @@
       "bottom-margin": "Marge inférieure"
     },
     "status": {
-      "delivered": "Livré",
       "pending": "En attente",
-      "canceled": "Annulé",
+      "processing": "En cours de traitement",
+      "shipped": "Expédié",
+      "delivered": "Livré",
+      "cancelled": "Annulé",
+      "draft": "Brouillon",
+      "sent": "Envoyé",
       "paid": "Payé",
+      "partially_paid": "Partiellement payé",
+      "overdue": "En retard",
       "in": "Acheté",
       "out": "Vendu"
     },
@@ -86,7 +92,7 @@
       "labels": ["ACHETÉ", "VENDU"],
       "revenue": "Chiffre d'affaires total",
       "expenses": "Dépenses totales",
-      "growth": "{n} % du mois dernier",
+      "growth": " % du mois dernier",
       "b3c": "Meilleurs clients en fonction des dépenses",
       "bp": "Produits les plus vendus (quantité)",
       "b3s": "Meilleurs fournisseurs en fonction des dépenses"
@@ -322,8 +328,7 @@
       "title": "es-tu sûr de vouloir supprimer la facture",
       "yes": "Confirmer",
       "no": "Annuler"
-    },
-    "s": { "paid": "Payé", "pending": "En attente", "canceled": "Annulé" }
+    }
   },
   "im": {
     "i": { "addButton": "Ajouter à l'inventaire" },

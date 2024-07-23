@@ -63,10 +63,16 @@
       "bottom-margin": "Unterer Rand"
     },
     "status": {
-      "delivered": "Geliefert",
       "pending": "Ausstehend",
-      "canceled": "Abgesagt",
+      "processing": "In Bearbeitung",
+      "shipped": "Versendet",
+      "delivered": "Geliefert",
+      "cancelled": "Storniert",
+      "draft": "Entwurf",
+      "sent": "Gesendet",
       "paid": "Bezahlt",
+      "partially_paid": "Teilweise bezahlt",
+      "overdue": "Überfällig",
       "in": "Gekauft",
       "out": "Verkauft"
     },
@@ -86,7 +92,7 @@
       "labels": ["GEKAUFT", "VERKAUFT"],
       "revenue": "Gesamtumsatz",
       "expenses": "Gesamtausgaben",
-      "growth": "{n} % vom letzten Monat",
+      "growth": " % vom letzten Monat",
       "b3c": "Beste Kunden basierend auf den Ausgaben",
       "bp": "Meistverkaufte Produkte (Menge)",
       "b3s": "Beste Lieferanten basierend auf den Kosten"
@@ -322,8 +328,7 @@
       "title": "Sind Sie sicher, dass Sie die Rechnung löschen möchten?",
       "yes": "Bestätigen",
       "no": "Stornieren"
-    },
-    "s": { "paid": "Bezahlt", "pending": "Ausstehend", "canceled": "Abgesagt" }
+    }
   },
   "im": {
     "i": { "addButton": "Zum Inventar hinzufügen" },

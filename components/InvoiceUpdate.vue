@@ -163,14 +163,23 @@ const deleteInvoiceItem = (index: number) => {
                 />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="DRAFT">
+                  {{ t("g.status.draft") }}
+                </SelectItem>
+                <SelectItem value="SENT">
+                  {{ t("g.status.sent") }}
+                </SelectItem>
                 <SelectItem value="PAID">
                   {{ t("g.status.paid") }}
                 </SelectItem>
-                <SelectItem value="CANCELED">
-                  {{ t("g.status.canceled") }}
+                <SelectItem value="PARTIALLY_PAID">
+                  {{ t("g.status.partially_paid") }}
                 </SelectItem>
-                <SelectItem value="PENDING">
-                  {{ t("g.status.pending") }}
+                <SelectItem value="OVERDUE">
+                  {{ t("g.status.overdue") }}
+                </SelectItem>
+                <SelectItem value="CANCELLED">
+                  {{ t("g.status.cancelled") }}
                 </SelectItem>
               </SelectContent>
             </Select>

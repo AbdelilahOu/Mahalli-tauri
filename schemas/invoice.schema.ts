@@ -2,7 +2,14 @@ import { z } from "zod";
 
 export const CreateInvoiceSchema = z.object({
   id: z.string().optional(),
-  status: z.enum(["CANCELED", "PENDING", "PAID"]),
+  status: z.enum([
+    "DRAFT",
+    "SENT",
+    "PAID",
+    "PARTIALLY_PAID",
+    "OVERDUE",
+    "CANCELLED",
+  ]),
   paidAmount: z.number(),
   clientId: z.string().optional(),
   orderId: z.string().optional(),

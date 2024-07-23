@@ -66,7 +66,7 @@ impl QueriesService {
                     ).cond_where(
                         Cond::all().add(
                             Expr::col((InventoryMovements, inventory_movements::Column::ProductId)).equals((Products, products::Column::Id)),
-                        ).add(orders::Column::Status.eq("CANCELED").not()).add(orders::Column::IsDeleted.eq(false)),
+                        ).add(orders::Column::Status.eq("CANCELLED").not()).add(orders::Column::IsDeleted.eq(false)),
                     ).to_owned(),
                 )),
             )),
@@ -907,7 +907,7 @@ impl QueriesService {
                 Expr::expr(Func::coalesce([
                     Expr::col((Orders, orders::Column::Status)).into(),
                     Expr::expr("PENDING").into(),
-                ])).eq("CANCELED").not(),
+                ])).eq("CANCELLED").not(),
             ).add(Expr::expr(Func::coalesce([
                 Expr::col((Orders, orders::Column::IsDeleted)).into(),
                 Expr::expr(false).into(),
@@ -949,7 +949,7 @@ impl QueriesService {
                 Expr::expr(Func::coalesce([
                     Expr::col((Orders, orders::Column::Status)).into(),
                     Expr::expr("PENDING").into(),
-                ])).eq("CANCELED").not(),
+                ])).eq("CANCELLED").not(),
             ).add(Expr::expr(Func::coalesce([
                 Expr::col((Orders, orders::Column::IsDeleted)).into(),
                 Expr::expr(false).into(),
@@ -1024,7 +1024,7 @@ impl QueriesService {
                 Expr::expr(Func::coalesce([
                     Expr::col((Orders, orders::Column::Status)).into(),
                     Expr::expr("PENDING").into(),
-                ])).eq("CANCELED").not(),
+                ])).eq("CANCELLED").not(),
             ).add(Expr::cust("inventory_movements.created_at >= DATETIME('now', '-3 month')")),
         ).add_group_by([
             Expr::cust("strftime('%Y-%m', inventory_movements.created_at)"),
@@ -1062,7 +1062,7 @@ impl QueriesService {
             Expr::col((Orders, orders::Column::Id)).equals((OrderItems, order_items::Column::OrderId)),
         ).cond_where(
             Cond::all().add(Expr::col((InventoryMovements, inventory_movements::Column::MvmType)).eq("OUT")).add(
-                Expr::col((Orders, orders::Column::Status)).eq("CANCELED").not(),
+                Expr::col((Orders, orders::Column::Status)).eq("CANCELLED").not(),
             ),
         ).add_group_by([Expr::col((Products, products::Column::Id)).into()]).order_by_expr(
             Func::sum(
@@ -1103,7 +1103,7 @@ impl QueriesService {
             JoinType::Join,
             InventoryMovements,
             Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((OrderItems, order_items::Column::InventoryId)),
-        ).cond_where(Cond::all().add(Expr::expr(Expr::col((Invoices, invoices::Column::Status))).eq("CANCELED").not())).add_group_by([Expr::col((Clients, clients::Column::Id)).into()]).order_by_expr(
+        ).cond_where(Cond::all().add(Expr::expr(Expr::col((Invoices, invoices::Column::Status))).eq("CANCELLED").not())).add_group_by([Expr::col((Clients, clients::Column::Id)).into()]).order_by_expr(
             Func::sum(
                 Expr::col((OrderItems, order_items::Column::Price)).mul(Expr::col((InventoryMovements, inventory_movements::Column::Quantity))),
             ).into(),
@@ -1143,7 +1143,7 @@ impl QueriesService {
             JoinType::Join,
             InventoryMovements,
             Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((OrderItems, order_items::Column::InventoryId)),
-        ).cond_where(Cond::all().add(Expr::expr(Expr::col((Orders, orders::Column::Status))).eq("CANCELED").not())).add_group_by([Expr::col((Suppliers, suppliers::Column::Id)).into()]).order_by_expr(
+        ).cond_where(Cond::all().add(Expr::expr(Expr::col((Orders, orders::Column::Status))).eq("CANCELLED").not())).add_group_by([Expr::col((Suppliers, suppliers::Column::Id)).into()]).order_by_expr(
             Func::sum(
                 Expr::col((OrderItems, order_items::Column::Price)).mul(Expr::col((InventoryMovements, inventory_movements::Column::Quantity))),
             ).into(),

@@ -2,7 +2,13 @@ import { z } from "zod";
 
 export const CreateOrderSchema = z.object({
   id: z.string().optional(),
-  status: z.enum(["CANCELED", "PENDING", "DELIVERED"]),
+  status: z.enum([
+    "PENDING",
+    "PROCESSING",
+    "SHIPPED",
+    "DELIVERED",
+    "CANCELLED",
+  ]),
   clientId: z.string().optional(),
 });
 
