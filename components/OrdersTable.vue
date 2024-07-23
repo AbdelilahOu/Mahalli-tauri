@@ -29,10 +29,20 @@ const emits = defineEmits<{
 }>();
 
 const STATUS_COLORS = {
-  CANCELED: "bg-red-100 border-red-500 text-red-900",
   PENDING: "bg-yellow-100 border-yellow-500 text-yellow-900",
+  PROCESSING: "bg-blue-100 border-blue-500 text-blue-900",
+  SHIPPED: "bg-indigo-100 border-indigo-500 text-indigo-900",
   DELIVERED: "bg-green-100 border-green-500 text-green-900",
+  CANCELLED: "bg-red-100 border-red-500 text-red-900",
 } as const;
+
+const STATUSES = [
+  "PENDING",
+  "PROCESSING",
+  "SHIPPED",
+  "DELIVERED",
+  "CANCELLED",
+] as const;
 
 let previewProductsTimer: any;
 const previewProducts = (id: string) => {
@@ -53,13 +63,16 @@ const toggleThisOrders = (Order: OrderT, name: string) => {
   toggleModal(true);
 };
 
-const updateOrderStatus = async (order: any) => {
+const updateOrderStatus = async (id: string, status: string) => {
   try {
     await invoke("update_order_status", {
-      order,
+      order: {
+        id,
+        status,
+      },
     });
     //
-    info(`UPDATE ORDER STATUS: ${JSON.stringify(order)}`);
+    info(`UPDATE ORDER STATUS: ${JSON.stringify({ id, status })}`);
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
@@ -197,51 +210,16 @@ const createInvoiceFromOrder = async (id: string) => {
                   {{ t(`g.status.${order.status.toLowerCase()}`) }}
                 </Badge>
               </PopoverTrigger>
-              <PopoverContent class="w-40 p-1 flex flex-col gap-1">
+              <PopoverContent class="min-w-40 w-fit p-1 flex flex-col gap-1">
                 <Button
+                  v-for="status in STATUSES"
                   type="button"
                   variant="secondary"
                   size="sm"
-                  class="border bg-green-100 w-full border-green-500 text-green-900"
-                  @click="
-                    () =>
-                      updateOrderStatus({
-                        id: order.id,
-                        status: 'DELIVERED',
-                      })
-                  "
+                  :class="cn('border text-nowrap px-2', STATUS_COLORS[status])"
+                  @click="() => updateOrderStatus(order.id as string, status)"
                 >
-                  {{ t(`g.status.delivered`) }}
-                </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  class="border bg-yellow-100 w-full border-yellow-500 text-yellow-900"
-                  @click="
-                    () =>
-                      updateOrderStatus({
-                        id: order.id,
-                        status: 'PENDING',
-                      })
-                  "
-                >
-                  {{ t(`g.status.pending`) }}
-                </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  class="border bg-red-100 w-full border-red-500 text-red-900"
-                  @click="
-                    () =>
-                      updateOrderStatus({
-                        id: order.id,
-                        status: 'CANCELED',
-                      })
-                  "
-                >
-                  {{ t(`g.status.canceled`) }}
+                  {{ t(`g.status.` + status.toLowerCase()) }}
                 </Button>
               </PopoverContent>
             </Popover>

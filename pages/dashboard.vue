@@ -34,7 +34,7 @@ type groupedMvm = Record<
 >;
 
 const STATUS_COLORS = {
-  CANCELED: "bg-red-100 border-red-500 text-red-900",
+  CANCELLED: "bg-red-100 border-red-500 text-red-900",
   PENDING: "bg-yellow-100 border-yellow-500 text-yellow-900",
   DELIVERED: "bg-green-100 border-green-500 text-green-900",
   PAID: "bg-green-100 border-green-500 text-green-900",

@@ -16,10 +16,22 @@ const emits = defineEmits<{
 }>();
 
 const STATUS_COLORS = {
-  CANCELED: "bg-red-100 border-red-500 text-red-900",
-  PENDING: "bg-yellow-100 border-yellow-500 text-yellow-900",
+  DRAFT: "bg-gray-100 border-gray-500 text-gray-900",
+  SENT: "bg-blue-100 border-blue-500 text-blue-900",
   PAID: "bg-green-100 border-green-500 text-green-900",
+  PARTIALLY_PAID: "bg-teal-100 border-teal-500 text-teal-900",
+  OVERDUE: "bg-orange-100 border-orange-500 text-orange-900",
+  CANCELLED: "bg-red-100 border-red-500 text-red-900",
 } as const;
+
+const STATUSES = [
+  "DRAFT",
+  "SENT",
+  "PAID",
+  "PARTIALLY_PAID",
+  "OVERDUE",
+  "CANCELLED",
+] as const;
 
 let previewProductsTimer: any;
 const previewProducts = (id: string) => {
@@ -40,13 +52,21 @@ const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
   toggleModal(true);
 };
 
-const updateInvoiceStatus = async (invoice: any) => {
+const updateInvoiceStatus = async (id: string, status: string) => {
   try {
     await invoke("update_invoice_status", {
-      invoice,
+      invoice: {
+        id,
+        status,
+      },
     });
     //
-    info(`UPDATE INVOICE STATUS: ${JSON.stringify(invoice)}`);
+    info(
+      `UPDATE INVOICE STATUS: ${JSON.stringify({
+        id,
+        status,
+      })}`
+    );
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
@@ -159,51 +179,16 @@ const updateInvoiceStatus = async (invoice: any) => {
                   {{ t(`g.status.${invoice.status.toLowerCase()}`) }}
                 </Badge>
               </PopoverTrigger>
-              <PopoverContent class="w-40 p-1 flex flex-col gap-1">
+              <PopoverContent class="min-w-40 w-fit p-1 flex flex-col gap-1">
                 <Button
+                  v-for="status in STATUSES"
                   type="button"
                   variant="secondary"
                   size="sm"
-                  class="border bg-green-100 w-full border-green-500 text-green-900"
-                  @click="
-                    () =>
-                      updateInvoiceStatus({
-                        id: invoice.id,
-                        status: 'PAID',
-                      })
-                  "
+                  :class="cn('border text-nowrap px-2', STATUS_COLORS[status])"
+                  @click="() => updateInvoiceStatus(invoice.id as string, status)"
                 >
-                  {{ t(`g.status.paid`) }}
-                </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  class="border bg-yellow-100 w-full border-yellow-500 text-yellow-900"
-                  @click="
-                    () =>
-                      updateInvoiceStatus({
-                        id: invoice.id,
-                        status: 'PENDING',
-                      })
-                  "
-                >
-                  {{ t(`g.status.pending`) }}
-                </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  class="border bg-red-100 w-full border-red-500 text-red-900"
-                  @click="
-                    () =>
-                      updateInvoiceStatus({
-                        id: invoice.id,
-                        status: 'CANCELED',
-                      })
-                  "
-                >
-                  {{ t(`g.status.canceled`) }}
+                  {{ t(`g.status.` + status.toLowerCase()) }}
                 </Button>
               </PopoverContent>
             </Popover>

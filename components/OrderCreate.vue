@@ -67,7 +67,7 @@ const createOrder = async () => {
       await invoke<Res<string>>("create_order", {
         order: {
           client_id: order.clientId,
-          status: order.status,
+          status: "PENDING",
           items: order.items,
         },
       });
@@ -126,7 +126,7 @@ const hideModal = () => toggleModal(false);
               @on:select="(id) => (order.clientId = id)"
             />
           </div>
-          <div class="w-full h-full flex flex-col gap-1">
+          <!-- <div class="w-full h-full flex flex-col gap-1">
             <Label for="status">
               {{ t("g.fields.status") }}
             </Label>
@@ -141,7 +141,7 @@ const hideModal = () => toggleModal(false);
                 <SelectItem value="DELIVERED">
                   {{ t("g.status.delivered") }}
                 </SelectItem>
-                <SelectItem value="CANCELED">
+                <SelectItem value="CANCELLED">
                   {{ t("g.status.canceled") }}
                 </SelectItem>
                 <SelectItem value="PENDING">
@@ -149,7 +149,7 @@ const hideModal = () => toggleModal(false);
                 </SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </div> -->
         </div>
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">

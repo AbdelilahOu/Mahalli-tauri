@@ -68,7 +68,7 @@ const createInvoice = async () => {
       const invoiceRes = await invoke<Res<string>>("create_invoice", {
         invoice: {
           client_id: invoice.clientId,
-          status: invoice.status,
+          status: "DRAFT",
           paid_amount: invoice.paidAmount,
           items: invoice.items,
         },
@@ -128,7 +128,7 @@ const hideModal = () => toggleModal(false);
               @on:select="(id) => (invoice.clientId = id)"
             />
           </div>
-          <div class="w-full h-full flex flex-col gap-1">
+          <!-- <div class="w-full h-full flex flex-col gap-1">
             <Label for="status">
               {{ t("g.fields.status") }}
             </Label>
@@ -143,7 +143,7 @@ const hideModal = () => toggleModal(false);
                 <SelectItem value="PAID">
                   {{ t("g.status.paid") }}
                 </SelectItem>
-                <SelectItem value="CANCELED">
+                <SelectItem value="CANCELLED">
                   {{ t("g.status.canceled") }}
                 </SelectItem>
                 <SelectItem value="PENDING">
@@ -151,7 +151,7 @@ const hideModal = () => toggleModal(false);
                 </SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </div> -->
         </div>
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="status">

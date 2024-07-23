@@ -158,14 +158,9 @@ impl TransactionService {
     pub async fn create_invoice(db: &DbConn, invoice: NewInvoice) -> TxnRes<String> {
         db.transaction::<_, String, DbErr>(|txn| {
             Box::pin(async move {
-                let status = if invoice.status.eq("PAID") {
-                    "DELIVERED".to_string()
-                } else {
-                    invoice.status.clone()
-                };
                 let created_order = OrderActiveModel {
                     client_id: ActiveValue::Set(invoice.client_id.clone()),
-                    status: ActiveValue::Set(status),
+                    status: ActiveValue::Set("PENDING".to_string()),
                     ..Default::default()
                 }.insert(txn).await?;
 
@@ -262,7 +257,7 @@ impl TransactionService {
                             Some(quote) => {
                                 let order = OrderActiveModel {
                                     client_id: ActiveValue::Set(quote.client_id),
-                                    status: ActiveValue::Set("DELIVERED".to_string()),
+                                    status: ActiveValue::Set("PENDING".to_string()),
                                     quote_id: ActiveValue::Set(Some(quote.id)),
                                     ..Default::default()
                                 }.insert(txn).await?;
@@ -308,11 +303,7 @@ impl TransactionService {
                     None => {
                         match Orders::find_by_id(&id).one(txn).await? {
                             Some(order) => {
-                                let status = if order.status.eq("DELIVERED") {
-                                    "PAID".to_string()
-                                } else {
-                                    order.status
-                                };
+                                let status = "DRAFT".to_string();
                                 let invoice = InvoiceActiveModel {
                                     client_id: ActiveValue::Set(order.client_id),
                                     paid_amount: ActiveValue::Set(0.0),

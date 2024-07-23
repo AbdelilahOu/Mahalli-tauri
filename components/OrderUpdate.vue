@@ -164,14 +164,20 @@ const deleteOrderItem = (index: number) => {
                 />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="PENDING">
+                  {{ t("g.status.pending") }}
+                </SelectItem>
+                <SelectItem value="PROCESSING">
+                  {{ t("g.status.processing") }}
+                </SelectItem>
+                <SelectItem value="SHIPPED">
+                  {{ t("g.status.shipped") }}
+                </SelectItem>
                 <SelectItem value="DELIVERED">
                   {{ t("g.status.delivered") }}
                 </SelectItem>
-                <SelectItem value="CANCELED">
-                  {{ t("g.status.canceled") }}
-                </SelectItem>
-                <SelectItem value="PENDING">
-                  {{ t("g.status.pending") }}
+                <SelectItem value="CANCELLED">
+                  {{ t("g.status.cancelled") }}
                 </SelectItem>
               </SelectContent>
             </Select>

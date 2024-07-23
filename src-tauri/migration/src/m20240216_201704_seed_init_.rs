@@ -98,7 +98,13 @@ impl MigrationTrait for Migration {
 
         let db = manager.get_connection();
 
-        let status = vec![String::from("DELIVERED"), String::from("CANCELED"), String::from("PENDING")];
+        let status = vec![
+            String::from("PENDING"),
+            String::from("PROCESSING"),
+            String::from("SHIPPED"),
+            String::from("DELIVERED"),
+            String::from("CANCELLED")
+        ];
 
         for _ in 0..100 {
             let id = ulid::Ulid::new();
@@ -160,7 +166,14 @@ impl MigrationTrait for Migration {
             db.execute(insert_order).await?;
         }
 
-        let status = vec![String::from("PAID"), String::from("CANCELED"), String::from("PENDING")];
+        let status = vec![
+            String::from("DRAFT"),
+            String::from("SENT"),
+            String::from("PAID"),
+            String::from("PARTIALLY_PAID"),
+            String::from("OVERDUE"),
+            String::from("CANCELLED"),
+        ];
 
         for _ in 0..100 {
             let id = ulid::Ulid::new();

@@ -63,10 +63,16 @@
       "bottom-margin": "Bottom margin"
     },
     "status": {
-      "delivered": "Delivered",
       "pending": "Pending",
-      "canceled": "Canceled",
+      "processing": "Processing",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled",
+      "draft": "Draft",
+      "sent": "Sent",
       "paid": "Paid",
+      "partially_paid": "Partially Paid",
+      "overdue": "Overdue",
       "in": "Bought",
       "out": "Sold"
     },
@@ -88,7 +94,7 @@
       "labels": ["BOUGHT", "SOLD"],
       "revenue": "Total revenue",
       "expenses": "Total expenses",
-      "growth": "{n} % from last month",
+      "growth": " % from last month",
       "b3c": "Best clients based on expenses",
       "bp": "Best Selling Products (quantity)",
       "b3s": "Best suppliers based on expenses"
@@ -365,11 +371,6 @@
       "title": "are you sure you wanna delete the invoice ",
       "yes": "Confirme",
       "no": "Cancel"
-    },
-    "s": {
-      "paid": "Paid",
-      "pending": "Pending",
-      "canceled": "Canceled"
     }
   },
   "im": {
