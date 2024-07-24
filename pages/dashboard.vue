@@ -34,10 +34,16 @@ type groupedMvm = Record<
 >;
 
 const STATUS_COLORS = {
+  DRAFT: "bg-gray-100 border-gray-500 text-gray-900",
+  SENT: "bg-blue-100 border-blue-500 text-blue-900",
+  PAID: "bg-green-100 border-green-500 text-green-900",
+  PARTIALLY_PAID: "bg-teal-100 border-teal-500 text-teal-900",
+  OVERDUE: "bg-orange-100 border-orange-500 text-orange-900",
   CANCELLED: "bg-red-100 border-red-500 text-red-900",
   PENDING: "bg-yellow-100 border-yellow-500 text-yellow-900",
+  PROCESSING: "bg-blue-100 border-blue-500 text-blue-900",
+  SHIPPED: "bg-indigo-100 border-indigo-500 text-indigo-900",
   DELIVERED: "bg-green-100 border-green-500 text-green-900",
-  PAID: "bg-green-100 border-green-500 text-green-900",
 } as const;
 
 //
@@ -234,7 +240,7 @@ onBeforeMount(async () => {
 <template>
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col lg:grid lg:grid-cols-2 gap-2">
-      <div class="grid grid-cols-1 lg:grid-cols-4 col-span-2 gap-2">
+      <div class="grid grid-cols-1 lg:grid-cols-2 col-span-2 gap-2">
         <Card class="h-fit w-full">
           <CardHeader
             class="flex border-b-0 flex-row items-center justify-between space-y-0 pb-2"
@@ -254,7 +260,7 @@ onBeforeMount(async () => {
             </p>
           </CardContent>
         </Card>
-        <Card class="h-fit w-full">
+        <Card class="h-fit w-full lg:order-3">
           <CardHeader
             class="flex border-b-0 flex-row items-center justify-between space-y-0 pb-2"
           >

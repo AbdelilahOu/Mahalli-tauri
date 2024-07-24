@@ -92,7 +92,7 @@
       "labels": ["ACHETÉ", "VENDU"],
       "revenue": "Chiffre d'affaires total",
       "expenses": "Dépenses totales",
-      "growth": " % du mois dernier",
+      "growth": " {n} % du mois dernier",
       "b3c": "Meilleurs clients en fonction des dépenses",
       "bp": "Produits les plus vendus (quantité)",
       "b3s": "Meilleurs fournisseurs en fonction des dépenses"
