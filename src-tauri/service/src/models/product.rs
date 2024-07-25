@@ -10,7 +10,7 @@ pub struct SelectProducts {
     pub image: Option<String>,
     pub selling_price: Option<f64>,
     pub purchase_price: Option<f64>,
-    pub stock: f64,
+    pub inventory: f64,
     pub min_quantity: Option<f64>,
 }
 

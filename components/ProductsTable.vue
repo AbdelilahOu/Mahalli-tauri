@@ -100,19 +100,19 @@ const updateProductStock = (id: string, name: string) => {
               :class="
                 cn(
                   'whitespace-nowrap',
-                  product.stock != undefined
-                    ? product?.stock <= 0
+                  product.inventory != undefined
+                    ? product?.inventory <= 0
                       ? 'bg-red-100 border-red-500 text-red-900'
-                      : product?.stock < product.minQuantity
+                      : product?.inventory < product.minQuantity
                       ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
-                      : product?.stock >= product.minQuantity
+                      : product?.inventory >= product.minQuantity
                       ? 'bg-green-100 border-green-500 text-green-900'
                       : ''
                     : ''
                 )
               "
             >
-              {{ t("g.plrz.i", { n: product?.stock }) }}
+              {{ t("g.plrz.i", { n: product?.inventory }) }}
             </Badge>
           </td>
           <td class="p-2">

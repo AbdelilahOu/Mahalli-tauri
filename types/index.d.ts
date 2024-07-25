@@ -13,3 +13,21 @@ export type QueryParams = {
   limit: number;
   created_at?: string;
 };
+
+export interface movementsT {
+  createdAt: string;
+  mvmType: "IN" | "OUT";
+  quantity: number;
+  price: number;
+}
+
+export type groupedMvm = Record<
+  string,
+  Record<
+    "IN" | "OUT",
+    {
+      quantity: number;
+      price: number;
+    }
+  >
+>;

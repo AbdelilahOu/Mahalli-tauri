@@ -12,8 +12,6 @@ const { t, d } = useI18n();
 const { toggleModal, setModalName } = useStore();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const orders = ref<OrderT[]>([]);
-const totalRows = ref<number>(0);
 const orderProducts = ref<OrderProductT[]>([]);
 
 const searchQuery = ref<string>(route.query.search);
@@ -21,8 +19,6 @@ const status = ref<string | undefined>(route.query.status);
 const createdAt = ref<string | number | undefined>(route.query.created_at);
 
 const LIMIT = 25;
-provide("count", totalRows);
-provide("itemsPerPage", LIMIT);
 
 const queryParams = computed<QueryParams>(() => ({
   search: route.query.search,
@@ -46,8 +42,7 @@ const fetchOrders = async () => {
         created_at: queryParams.value.created_at,
       },
     });
-    orders.value = res.data.orders;
-    totalRows.value = res.data.count;
+    return res.data;
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
@@ -55,11 +50,22 @@ const fetchOrders = async () => {
     });
     if (typeof err == "object" && "error" in err) {
       error("LIST ORDERS: " + err.error);
-      return;
+    } else {
+      error("LIST ORDERS: " + err);
     }
-    error("LIST ORDERS: " + err);
+    throw err;
   }
 };
+
+const { data: ordersData } = await useAsyncData("orders", fetchOrders, {
+  watch: [queryParams],
+});
+
+const orders = computed(() => ordersData.value?.orders ?? []);
+const totalRows = computed(() => ordersData.value?.count ?? 0);
+
+provide("count", totalRows);
+provide("itemsPerPage", LIMIT);
 
 watch(queryParams, fetchOrders, { deep: true });
 
@@ -78,8 +84,6 @@ watch([status, createdAt], () => {
     page: 1,
   });
 });
-
-onMounted(fetchOrders);
 
 const listOrderProduct = async (id?: string) => {
   try {
