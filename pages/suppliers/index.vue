@@ -12,14 +12,9 @@ const { t } = useI18n();
 const { toggleModal, setModalName } = useStore();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const suppliers = ref<SupplierT[]>([]);
-const totalRows = ref<number>(0);
-
-const searchQuery = ref<string>(route.query.search);
+const searchQuery = ref<string>(route.query.search as string);
 
 const LIMIT = 25;
-provide("count", totalRows);
-provide("itemsPerPage", LIMIT);
 
 const queryParams = computed<QueryParams>(() => ({
   search: route.query.search,
@@ -28,19 +23,16 @@ const queryParams = computed<QueryParams>(() => ({
   limit: route.query.limit,
 }));
 
-const fetchSuppliers = async () => {
+const fetchSuppliers = async (params: QueryParams) => {
   try {
     const res: Res<any> = await invoke("list_suppliers", {
       args: {
-        search: queryParams.value.search ?? "",
-        page: Number(queryParams.value.page) ?? 1,
-        limit: queryParams.value.limit
-          ? Number(queryParams.value.limit)
-          : LIMIT,
+        search: params.search ?? "",
+        page: Number(params.page) ?? 1,
+        limit: params.limit ? Number(params.limit) : LIMIT,
       },
     });
-    suppliers.value = res.data.suppliers;
-    totalRows.value = res.data.count;
+    return res.data;
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
@@ -48,23 +40,30 @@ const fetchSuppliers = async () => {
     });
     if (typeof err == "object" && "error" in err) {
       error("LIST SUPPLIERS: " + err.error);
-      return;
+    } else {
+      error("LIST SUPPLIERS: " + err);
     }
-    error("LIST SUPPLIERS: " + err);
+    throw err;
   }
 };
 
-watch(queryParams, fetchSuppliers, { deep: true });
+const { data } = useAsyncData(
+  "suppliers",
+  () => fetchSuppliers(queryParams.value),
+  { watch: [queryParams] }
+);
+
+const suppliers = computed(() => data.value?.suppliers ?? []);
+const totalRows = computed(() => data.value?.count ?? 0);
+
+provide("count", totalRows);
+provide("itemsPerPage", LIMIT);
 
 const debouncedSearch = useDebounceFn(() => {
-  updateQueryParams({
-    search: searchQuery.value,
-  });
+  updateQueryParams({ search: searchQuery.value });
 }, 500);
 
 watch(searchQuery, debouncedSearch);
-
-onMounted(fetchSuppliers);
 
 const updateModal = (name: string) => {
   setModalName(name);

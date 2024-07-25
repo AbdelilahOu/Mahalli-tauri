@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Res } from "@/types";
+import type { Res, groupedMvm, movementsT } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { GroupedBar } from "@unovis/ts";
 import {
@@ -15,24 +15,6 @@ import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 
-interface movementsT {
-  createdAt: string;
-  mvmType: "IN" | "OUT";
-  quantity: number;
-  price: number;
-}
-
-type groupedMvm = Record<
-  string,
-  Record<
-    "IN" | "OUT",
-    {
-      quantity: number;
-      price: number;
-    }
-  >
->;
-
 const STATUS_COLORS = {
   DRAFT: "bg-gray-100 border-gray-500 text-gray-900",
   SENT: "bg-blue-100 border-blue-500 text-blue-900",
@@ -46,8 +28,6 @@ const STATUS_COLORS = {
   DELIVERED: "bg-green-100 border-green-500 text-green-900",
 } as const;
 
-//
-const movements = ref<groupedMvm>();
 const movementsLabels = ref<string[]>([]);
 const tickFormatToDate = (i: number) => {
   if (i % 1 != 0) return "";
@@ -66,175 +46,120 @@ const barPriceTriggers = {
   },
 };
 
-async function getInventoryMovementStats() {
-  try {
-    const res = await invoke<Res<movementsT[]>>("list_inventory_stats");
-    const result = res.data.reduce((acc, item) => {
-      const { createdAt: date, mvmType, quantity, price } = item;
-      const createdAt = new Date(date).toISOString().split("T")[0];
-      if (!acc[createdAt]) {
-        acc[createdAt] = {
-          IN: {
-            quantity: 0,
-            price: 0,
-          },
-          OUT: {
-            quantity: 0,
-            price: 0,
-          },
-        };
-      }
-
-      if (!acc[createdAt][mvmType]) {
-        acc[createdAt][mvmType] = { quantity, price };
-      } else {
+const { data: inventoryMovements } = useAsyncData(
+  "inventoryMovements",
+  async () => {
+    try {
+      const res = await invoke<Res<movementsT[]>>("list_inventory_stats");
+      const result = res.data.reduce((acc, item) => {
+        const { createdAt: date, mvmType, quantity, price } = item;
+        const createdAt = new Date(date).toISOString().split("T")[0];
+        if (!acc[createdAt]) {
+          acc[createdAt] = {
+            IN: { quantity: 0, price: 0 },
+            OUT: { quantity: 0, price: 0 },
+          };
+        }
         acc[createdAt][mvmType].quantity += quantity;
         acc[createdAt][mvmType].price += price;
-      }
+        return acc;
+      }, {} as groupedMvm);
 
-      return acc;
-    }, {} as groupedMvm);
-
-    movements.value = result;
-    const movementLabelsSet = new Set<string>(Object.keys(movements.value));
-    movementsLabels.value = [...movementLabelsSet];
-  } catch (err: any) {
-    toast.error(t("notifications.error.title"), {
-      description: t("notifications.error.description"),
-      closeButton: true,
-    });
-    if (typeof err == "object" && "error" in err) {
-      error("STATS INVENTORY MOUVEMENTS: " + err.error);
-      return;
+      const movementLabelsSet = new Set<string>(Object.keys(result));
+      movementsLabels.value = [...movementLabelsSet];
+      return result;
+    } catch (err: any) {
+      handleError(err, "STATS INVENTORY MOUVEMENTS");
+      return {};
     }
-    error("STATS INVENTORY MOUVEMENTS: " + err);
   }
-}
+);
 
-const bestClients = ref<any[]>();
-async function getBestClients() {
+const { data: bestClients } = useAsyncData("bestClients", async () => {
   try {
     const res = await invoke<Res<any[]>>("list_top_clients");
-    //
-    bestClients.value = res.data;
+    return res.data;
   } catch (err: any) {
-    toast.error(t("notifications.error.title"), {
-      description: t("notifications.error.description"),
-      closeButton: true,
-    });
-    if (typeof err == "object" && "error" in err) {
-      error("STATS BEST CLIENTS: " + err.error);
-      return;
-    }
-    error("STATS BEST CLIENTS: " + err);
+    handleError(err, "STATS BEST CLIENTS");
+    return [];
   }
-}
+});
 
-const bestProducts = ref<any[]>();
-async function getBestProducts() {
+const { data: bestProducts } = useAsyncData("bestProducts", async () => {
   try {
     const res = await invoke<Res<any[]>>("list_top_products");
-    //
-    bestProducts.value = res.data;
+    return res.data;
   } catch (err: any) {
-    toast.error(t("notifications.error.title"), {
-      description: t("notifications.error.description"),
-      closeButton: true,
-    });
-    if (typeof err == "object" && "error" in err) {
-      error("STATS BEST PRODUCTS: " + err.error);
-      return;
-    }
-    error("STATS BEST PRODUCTS: " + err);
+    handleError(err, "STATS BEST PRODUCTS");
+    return [];
   }
-}
+});
 
-const statusCounts = ref<any>();
-async function getStatusCounts() {
+const { data: statusCounts } = useAsyncData("statusCounts", async () => {
   try {
-    const res = await invoke<Res<any[]>>("list_status_count");
-    //
-    statusCounts.value = res.data;
+    const res = await invoke<Res<any>>("list_status_count");
+    return res.data;
   } catch (err: any) {
-    toast.error(t("notifications.error.title"), {
-      description: t("notifications.error.description"),
-      closeButton: true,
-    });
-    if (typeof err == "object" && "error" in err) {
-      error("STATS STATUS COUNT: " + err.error);
-      return;
-    }
-    error("STATS STATUS COUNT: " + err);
+    handleError(err, "STATS STATUS COUNT");
+    return null;
   }
-}
+});
 
-const revenue = ref<any>();
-async function getRevenue() {
+const { data: revenue } = useAsyncData("revenue", async () => {
   try {
     const res = await invoke<Res<any>>("list_revenue");
-
     const data = res.data.revenue[0];
-    let percentageDeff = (
+    let growth =
       ((data?.currentRevenue - data?.lastMonthRevenue) /
         data?.lastMonthRevenue) *
-      100
-    ).toFixed(2);
-    if (!data?.lastMonthRevenue) percentageDeff = "0";
-    revenue.value = {
-      percentageDeff,
+      100;
+    if (!data?.lastMonthRevenue) growth = 0;
+    return {
+      growth,
       currentRevenue: data.currentRevenue,
     };
   } catch (err: any) {
-    toast.error(t("notifications.error.title"), {
-      description: t("notifications.error.description"),
-      closeButton: true,
-    });
-    if (typeof err == "object" && "error" in err) {
-      error("STATS REVENUE: " + err.error);
-      return;
-    }
-    error("STATS REVENUE: " + err);
+    handleError(err, "STATS REVENUE");
+    return {
+      growth: 0,
+      currentRevenue: 0,
+    };
   }
-}
+});
 
-const expenses = ref<any>();
-async function getExpenses() {
+const { data: expenses } = useAsyncData("expenses", async () => {
   try {
     const res = await invoke<Res<any>>("list_expenses");
     const data = res.data.expenses[0];
-    let percentageDeff = (
+    let growth =
       ((data?.currentExpenses - data?.lastMonthExpenses) /
         data?.lastMonthExpenses) *
-      100
-    )?.toFixed(2);
-    if (!data?.lastMonthExpenses) percentageDeff = "0";
-    expenses.value = {
-      percentageDeff,
+      100;
+    if (!data?.lastMonthExpenses) growth = 0;
+    return {
+      growth,
       currentExpenses: data.currentExpenses,
     };
   } catch (err: any) {
-    toast.error(t("notifications.error.title"), {
-      description: t("notifications.error.description"),
-      closeButton: true,
-    });
-    if (typeof err == "object" && "error" in err) {
-      error("STATS EXPENSES: " + err.error);
-      return;
-    }
-    error("STATS EXPENSES: " + err);
+    handleError(err, "STATS EXPENSES");
+    return {
+      growth: 0,
+      currentExpenses: 0,
+    };
+  }
+});
+
+function handleError(err: any, context: string) {
+  toast.error(t("notifications.error.title"), {
+    description: t("notifications.error.description"),
+    closeButton: true,
+  });
+  if (typeof err == "object" && "error" in err) {
+    error(`${context}: ${err.error}`);
+  } else {
+    error(`${context}: ${err}`);
   }
 }
-
-onBeforeMount(async () => {
-  await Promise.all([
-    getRevenue(),
-    getExpenses(),
-    getInventoryMovementStats(),
-    getBestClients(),
-    getBestProducts(),
-    getStatusCounts(),
-  ]);
-});
 </script>
 
 <template>
@@ -255,8 +180,11 @@ onBeforeMount(async () => {
               {{ revenue?.currentRevenue.toFixed(2) }} DH
             </div>
             <p class="text-xs text-muted-foreground">
-              {{ revenue?.percentageDeff < 0 ? "-" : "+" }}
-              {{ t("dashboard.i.growth", { n: revenue?.percentageDeff }) }}
+              {{
+                //@ts-ignore
+                revenue?.growth < 0 ? "-" : "+"
+              }}
+              {{ t("dashboard.i.growth", { n: revenue?.growth }) }}
             </p>
           </CardContent>
         </Card>
@@ -274,8 +202,11 @@ onBeforeMount(async () => {
               {{ expenses?.currentExpenses.toFixed(2) }} DH
             </div>
             <p class="text-xs text-muted-foreground">
-              {{ expenses?.percentageDeff < 0 ? "-" : "+" }}
-              {{ t("dashboard.i.growth", { n: expenses?.percentageDeff }) }}
+              {{
+                //@ts-ignore
+                expenses?.growth < 0 ? "-" : "+"
+              }}
+              {{ t("dashboard.i.growth", { n: expenses?.growth }) }}
             </p>
           </CardContent>
         </Card>
@@ -410,8 +341,8 @@ onBeforeMount(async () => {
         <ChartHolder>
           <template #default>
             <VisXYContainer
-              v-if="movements"
-              :data="Object.values(movements)"
+              v-if="inventoryMovements"
+              :data="Object.values(inventoryMovements)"
               :height="500"
             >
               <VisGroupedBar
@@ -443,8 +374,8 @@ onBeforeMount(async () => {
         <ChartHolder>
           <template #default>
             <VisXYContainer
-              v-if="movements"
-              :data="Object.values(movements)"
+              v-if="inventoryMovements"
+              :data="Object.values(inventoryMovements)"
               :height="500"
             >
               <VisGroupedBar

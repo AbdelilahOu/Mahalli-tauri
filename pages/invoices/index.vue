@@ -12,8 +12,6 @@ const { t, d } = useI18n();
 const { toggleModal, setModalName } = useStore();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const invoices = ref<InvoiceT[]>([]);
-const totalRows = ref<number>(0);
 const invoiceProducts = ref<InvoiceProductT[]>([]);
 
 const searchQuery = ref<string>(route.query.search);
@@ -21,8 +19,6 @@ const status = ref<string | undefined>(route.query.status);
 const createdAt = ref<string | number | undefined>(route.query.created_at);
 
 const LIMIT = 25;
-provide("count", totalRows);
-provide("itemsPerPage", LIMIT);
 
 const queryParams = computed<QueryParams>(() => ({
   search: route.query.search,
@@ -46,20 +42,30 @@ const fetchInvoices = async () => {
         created_at: queryParams.value.created_at,
       },
     });
-    invoices.value = res.data.invoices;
-    totalRows.value = res.data.count;
+    return res.data;
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err == "object" && "error" in err) {
-      error("LIST INVOICES: " + err.error);
-      return;
+      error("LIST INVOICESS: " + err.error);
+    } else {
+      error("LIST INVOICESS: " + err);
     }
-    error("LIST INVOICES: " + err);
+    throw err;
   }
 };
+
+const { data: invoicesData } = await useAsyncData("invoices", fetchInvoices, {
+  watch: [queryParams],
+});
+
+const invoices = computed(() => invoicesData.value?.invoices ?? []);
+const totalRows = computed(() => invoicesData.value?.count ?? 0);
+
+provide("count", totalRows);
+provide("itemsPerPage", LIMIT);
 
 watch(queryParams, fetchInvoices, { deep: true });
 
@@ -79,8 +85,6 @@ watch([status, createdAt], () => {
   });
 });
 
-onMounted(fetchInvoices);
-
 const listInvoiceProduct = async (id?: string) => {
   try {
     const res = await invoke<Res<any>>("list_invoice_products", {
@@ -93,10 +97,10 @@ const listInvoiceProduct = async (id?: string) => {
       closeButton: true,
     });
     if (typeof err == "object" && "error" in err) {
-      error("ERROR LIST INVOICE PRODUCTS: " + err.error);
+      error("ERROR LIST INVOICES PRODUCTS: " + err.error);
       return;
     }
-    error("ERROR LIST INVOICE PRODUCTS: " + err);
+    error("ERROR LIST INVOICES PRODUCTS: " + err);
   }
 };
 

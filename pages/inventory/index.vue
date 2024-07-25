@@ -11,16 +11,13 @@ const route = useRoute();
 const { t, d } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const inventory = ref<InventoryT[]>([]);
-const totalRows = ref<number>(0);
-
-const searchQuery = ref<string>(route.query.search);
-const status = ref<string | undefined>(route.query.status);
+const searchQuery = ref<string>(route.query.search as string);
+const status = ref<string | undefined>(
+  route.query.status as string | undefined
+);
 const createdAt = ref<string | number | undefined>(route.query.created_at);
 
 const LIMIT = 25;
-provide("count", totalRows);
-provide("itemsPerPage", LIMIT);
 
 const queryParams = computed<QueryParams>(() => ({
   search: route.query.search,
@@ -31,36 +28,43 @@ const queryParams = computed<QueryParams>(() => ({
   created_at: route.query.created_at,
 }));
 
-const fetchInventory = async () => {
+const fetchInventory = async (params: QueryParams) => {
   try {
     const res: Res<any> = await invoke("list_inventory", {
       args: {
-        search: queryParams.value.search ?? "",
-        page: Number(queryParams.value.page) ?? 1,
-        limit: queryParams.value.limit
-          ? Number(queryParams.value.limit)
-          : LIMIT,
-        status: queryParams.value.status,
-        created_at: queryParams.value.created_at,
+        search: params.search ?? "",
+        page: Number(params.page) ?? 1,
+        limit: params.limit ? Number(params.limit) : LIMIT,
+        status: params.status,
+        created_at: params.created_at,
       },
     });
-
-    inventory.value = res.data.inventory;
-    totalRows.value = res.data.count;
+    return res.data;
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err == "object" && "error" in err) {
-      error("LIST INVENTORY: " + err.error);
-      return;
+      error(`LIST INVENTORY: ${err.error}`);
+    } else {
+      error(`LIST INVENTORY: ${err}`);
     }
-    error("LIST INVENTORY: " + err);
+    return { inventory: [], count: 0 };
   }
 };
 
-watch(queryParams, fetchInventory, { deep: true });
+const { data } = useAsyncData(
+  "inventory",
+  () => fetchInventory(queryParams.value),
+  { watch: [queryParams] }
+);
+
+const inventory = computed(() => data.value?.inventory ?? []);
+const totalRows = computed(() => data.value?.count ?? 0);
+
+provide("count", totalRows);
+provide("itemsPerPage", LIMIT);
 
 const debouncedSearch = useDebounceFn(() => {
   updateQueryParams({ search: searchQuery.value });
@@ -76,7 +80,6 @@ watch([status, createdAt], () => {
       : undefined,
   });
 });
-onMounted(fetchInventory);
 </script>
 
 <template>

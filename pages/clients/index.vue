@@ -12,14 +12,9 @@ const { t } = useI18n();
 const { toggleModal, setModalName } = useStore();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const clients = ref<ClientT[]>([]);
-const totalRows = ref<number>(0);
-
-const searchQuery = ref<string>(route.query.search);
+const searchQuery = ref<string>(route.query.search as string);
 
 const LIMIT = 25;
-provide("count", totalRows);
-provide("itemsPerPage", LIMIT);
 
 const queryParams = computed<QueryParams>(() => ({
   search: route.query.search,
@@ -28,19 +23,16 @@ const queryParams = computed<QueryParams>(() => ({
   limit: route.query.limit,
 }));
 
-const fetchClients = async () => {
+const fetchClients = async (params: QueryParams) => {
   try {
     const res: Res<any> = await invoke("list_clients", {
       args: {
-        search: queryParams.value.search ?? "",
-        page: Number(queryParams.value.page) ?? 1,
-        limit: queryParams.value.limit
-          ? Number(queryParams.value.limit)
-          : LIMIT,
+        search: params.search ?? "",
+        page: Number(params.page) ?? 1,
+        limit: params.limit ? Number(params.limit) : LIMIT,
       },
     });
-    clients.value = res.data.clients;
-    totalRows.value = res.data.count;
+    return res.data;
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
@@ -48,21 +40,30 @@ const fetchClients = async () => {
     });
     if (typeof err == "object" && "error" in err) {
       error("LIST CLIENTS: " + err.error);
-      return;
+    } else {
+      error("LIST CLIENTS: " + err);
     }
-    error("LIST CLIENTS: " + err);
+    throw err;
   }
 };
 
-watch(queryParams, fetchClients, { deep: true });
+const { data } = useAsyncData(
+  "clients",
+  () => fetchClients(queryParams.value),
+  { watch: [queryParams] }
+);
+
+const clients = computed(() => data.value?.clients ?? []);
+const totalRows = computed(() => data.value?.count ?? 0);
+
+provide("count", totalRows);
+provide("itemsPerPage", LIMIT);
 
 const debouncedSearch = useDebounceFn(() => {
   updateQueryParams({ search: searchQuery.value });
 }, 500);
 
 watch(searchQuery, debouncedSearch);
-
-onMounted(fetchClients);
 
 const updateModal = (name: string) => {
   setModalName(name);

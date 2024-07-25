@@ -8,7 +8,7 @@ export const CreateProductSchema = z.object({
   image: z.string().optional(),
   description: z.string().optional(),
   minQuantity: z.number().min(0),
-  stock: z.number().optional(),
+  inventory: z.number().optional(),
   createdAt: z.number().optional(),
 });
 

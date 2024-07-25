@@ -12,14 +12,9 @@ const { t } = useI18n();
 const { toggleModal, setModalName } = useStore();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const products = ref<ProductT[]>([]);
-const totalRows = ref<number>(0);
-
-const searchQuery = ref<string>(route.query.search);
+const searchQuery = ref<string>(route.query.search as string);
 
 const LIMIT = 25;
-provide("count", totalRows);
-provide("itemsPerPage", LIMIT);
 
 const queryParams = computed<QueryParams>(() => ({
   search: route.query.search,
@@ -39,8 +34,7 @@ const fetchProducts = async () => {
           : LIMIT,
       },
     });
-    products.value = res.data.products;
-    totalRows.value = res.data.count;
+    return res.data;
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
@@ -48,21 +42,32 @@ const fetchProducts = async () => {
     });
     if (typeof err == "object" && "error" in err) {
       error("LIST PRODUCTS: " + err.error);
-      return;
+    } else {
+      error("LIST PRODUCTS: " + err);
     }
-    error("LIST PRODUCTS: " + err);
+    throw err;
   }
 };
 
-watch(queryParams, fetchProducts, { deep: true });
+const { data: productsData, refresh: refreshProducts } = await useAsyncData(
+  "products",
+  fetchProducts,
+  {
+    watch: [queryParams],
+  }
+);
+
+const products = computed<ProductT[]>(() => productsData.value?.products ?? []);
+const totalRows = computed<number>(() => productsData.value?.count ?? 0);
+
+provide("count", totalRows);
+provide("itemsPerPage", LIMIT);
 
 const debouncedSearch = useDebounceFn(() => {
   updateQueryParams({ search: searchQuery.value });
 }, 500);
 
 watch(searchQuery, debouncedSearch);
-
-onMounted(fetchProducts);
 
 const updateModal = (name: string) => {
   setModalName(name);
@@ -87,7 +92,6 @@ const updateModal = (name: string) => {
           </Button>
         </div>
       </div>
-
       <ProductsTable :products="products" />
     </div>
   </main>

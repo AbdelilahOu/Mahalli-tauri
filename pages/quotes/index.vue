@@ -12,16 +12,12 @@ const { t, d } = useI18n();
 const { toggleModal, setModalName } = useStore();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const quotes = ref<QuoteT[]>([]);
-const totalRows = ref<number>(0);
-const quoteProducts = ref<QuoteProductT[]>([]);
-
-const searchQuery = ref<string>(route.query.search);
+const searchQuery = ref<string>(route.query.search as string);
 const createdAt = ref<string | number | undefined>(route.query.created_at);
 
+const quoteProducts = ref<QuoteProductT[]>([]);
+
 const LIMIT = 25;
-provide("count", totalRows);
-provide("itemsPerPage", LIMIT);
 
 const queryParams = computed<QueryParams>(() => ({
   search: route.query.search,
@@ -43,8 +39,7 @@ const fetchQuotes = async () => {
         created_at: queryParams.value.created_at,
       },
     });
-    quotes.value = res.data.quotes;
-    totalRows.value = res.data.count;
+    return res.data;
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
@@ -52,13 +47,22 @@ const fetchQuotes = async () => {
     });
     if (typeof err == "object" && "error" in err) {
       error("LIST QUOTES: " + err.error);
-      return;
+    } else {
+      error("LIST QUOTES: " + err);
     }
-    error("LIST QUOTES: " + err);
+    throw err;
   }
 };
 
-watch(queryParams, fetchQuotes, { deep: true });
+const { data: quotesData } = await useAsyncData("quotes", fetchQuotes, {
+  watch: [queryParams],
+});
+
+const quotes = computed(() => quotesData.value?.quotes ?? []);
+const totalRows = computed(() => quotesData.value?.count ?? 0);
+
+provide("count", totalRows);
+provide("itemsPerPage", LIMIT);
 
 const debouncedSearch = useDebounceFn(() => {
   updateQueryParams({ search: searchQuery.value });
@@ -74,8 +78,6 @@ watch(createdAt, () => {
   });
 });
 
-onMounted(fetchQuotes);
-
 const listQuoteProduct = async (id?: string) => {
   try {
     const res = await invoke<Res<any>>("list_quote_products", {
@@ -89,9 +91,10 @@ const listQuoteProduct = async (id?: string) => {
     });
     if (typeof err == "object" && "error" in err) {
       error("LIST QUOTE PRODUCTS: " + err.error);
-      return;
+    } else {
+      error("LIST QUOTE PRODUCTS: " + err);
     }
-    error("LIST QUOTE PRODUCTS: " + err);
+    throw err;
   }
 };
 
@@ -100,6 +103,7 @@ const updateModal = (name: string) => {
   toggleModal(true);
 };
 </script>
+
 <template>
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col items-start justify-start">

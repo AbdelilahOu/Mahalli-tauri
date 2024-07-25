@@ -66,11 +66,13 @@ impl QueriesService {
                     ).cond_where(
                         Cond::all().add(
                             Expr::col((InventoryMovements, inventory_movements::Column::ProductId)).equals((Products, products::Column::Id)),
-                        ).add(orders::Column::Status.eq("CANCELLED").not()).add(orders::Column::IsDeleted.eq(false)),
+                        ).add(
+                            Cond::any().add(orders::Column::Status.eq("DELIVERED")).add(orders::Column::Status.eq("SHIPPED"))
+                        ).add(orders::Column::IsDeleted.eq(false)),
                     ).to_owned(),
                 )),
             )),
-            Alias::new("stock"),
+            Alias::new("inventory"),
         ).cond_where(
             Cond::all().add(
                 Expr::col((Products, products::Column::IsArchived)).eq(false)
@@ -93,7 +95,7 @@ impl QueriesService {
                 "purchasePrice": row.purchase_price,
                 "sellingPrice": row.selling_price,
                 "minQuantity": row.min_quantity,
-                "stock": row.stock,
+                "inventory": row.inventory,
                 "createdAt": row.created_at,
             }));
         });
