@@ -150,7 +150,7 @@ impl QueriesService {
                         Expr::col((InventoryMovements, inventory_movements::Column::Id)).equals((OrderItems, order_items::Column::InventoryId)),
                     ).cond_where(
                         Cond::all().add(
-                            Expr::col((Invoices, invoices::Column::Status)).eq("PAID")
+                            Cond::all().add(Expr::col((Invoices, invoices::Column::Status)).eq("CANCELLED").not()).add(Expr::col((Invoices, invoices::Column::Status)).eq("DRAFT").not())
                         ).add(
                             Expr::col((Invoices, invoices::Column::IsDeleted)).eq(false)
                         ).add(
@@ -173,7 +173,7 @@ impl QueriesService {
                             )
                         ).cond_where(
                             Cond::all().add(
-                                Expr::col((Invoices, invoices::Column::Status)).eq("PAID")
+                                Expr::col((Invoices, invoices::Column::Status)).eq("PARTIALLY_PAID")
                             ).add(
                                 Expr::col((Invoices, invoices::Column::IsDeleted)).eq(false)
                             ).add(
@@ -183,7 +183,7 @@ impl QueriesService {
                     )),
                 )
             ),
-            Alias::new("credi"),
+            Alias::new("credit"),
         ).cond_where(
             Cond::all().add(
                 Expr::col((Clients, clients::Column::IsArchived)).eq(false)
@@ -205,7 +205,7 @@ impl QueriesService {
                 "image": row.image,
                 "email": row.email,
                 "phoneNumber": row.phone_number,
-                "credi": row.credi,
+                "credit": row.credit,
             }));
         });
         Ok(json!({

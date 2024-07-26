@@ -20,7 +20,7 @@ import { NuxtLink } from "#components";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { setModalName, toggleModal } = useStore();
-const { t, d, locale } = useI18n();
+const { t, d, locale, n } = useI18n();
 const localePath = useLocalePath();
 
 defineProps<{ quotes: QuoteT[]; quoteProducts: QuoteProductT[] }>();
@@ -106,7 +106,11 @@ const createOrderFromQuote = async (id: string) => {
                   @mouseenter.passive="previewProducts(quote.id!)"
                   @mouseleave.passive="cancelPreviewProducts"
                 >
-                  {{ t("g.plrz.p", { n: quote.products }) }}
+                  {{
+                    quote.products +
+                    " " +
+                    t("g.plrz.p", { n: Math.ceil(quote.products) })
+                  }}
                 </Button>
               </PopoverTrigger>
               <PopoverContent class="min-w-[13rem] p-2">
@@ -126,7 +130,7 @@ const createOrderFromQuote = async (id: string) => {
                         class="space-y-1 text-sm flex justify-between w-full items-center"
                       >
                         <td class="underline w-1/2">{{ quoteProduct.name }}</td>
-                        <td class="w-1/4 text-end">
+                        <td class="min-w-1/4 w-20 text-end text-nowrap">
                           {{ quoteProduct.price }} Dh
                         </td>
                         <td class="w-1/4 text-slate-700 text-end">
@@ -139,13 +143,20 @@ const createOrderFromQuote = async (id: string) => {
               </PopoverContent>
             </Popover>
             <template v-else>
-              {{ t("g.plrz.p", { n: quote.products }) }}
+              {{
+                quote.products +
+                " " +
+                t("g.plrz.p", { n: Math.ceil(quote?.products ?? 0) })
+              }}
             </template>
           </td>
           <td class="p-2">
-            {{ quote.createdAt ? d(new Date(quote.createdAt), "long") : "" }}
+            {{ d(new Date(quote.createdAt!), "long") }}
           </td>
-          <td class="p-2">{{ quote.total?.toFixed(2) }} DH</td>
+          <td class="p-2">
+            {{ n(quote.total!, "decimal") }}
+            DH
+          </td>
           <td class="p-2">
             <div class="flex justify-center items-center gap-3">
               <DropdownMenu>
@@ -153,7 +164,6 @@ const createOrderFromQuote = async (id: string) => {
                   <GripHorizontal class="text-slate-800 inline" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <!-- <DropdownMenuLabel>My Account</DropdownMenuLabel> -->
                   <DropdownMenuItem
                     @click="toggleThisQuotes(quote, 'QuoteDelete')"
                   >

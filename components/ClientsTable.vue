@@ -6,7 +6,7 @@ defineProps<{
   clients: ClientT[];
 }>();
 
-const { t, locale } = useI18n();
+const { t, locale, n } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { setModalName, toggleModal } = useStore();
 
@@ -33,7 +33,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
           <th>{{ t("g.fields.email") }}</th>
           <th>{{ t("g.fields.phone") }}</th>
           <th>{{ t("g.fields.address") }}</th>
-          <th>{{ t("g.fields.credit") }}</th>
+          <th>{{ t("g.fields.creditt") }}</th>
           <th class="w-20">{{ t("g.fields.actions") }}</th>
         </tr>
       </thead>
@@ -43,7 +43,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
             <Avatar>
               <AvatarImage :src="client.image ?? ''" />
               <AvatarFallback class="text-xs">
-                {{ client.fullname.substring(0, 5) }}
+                {{ client.fullname.split(" ")[0].substring(3) }}
               </AvatarFallback>
             </Avatar>
           </td>
@@ -59,7 +59,9 @@ const toggleThisClient = (client: ClientT, name: string) => {
           <td class="p-2">
             {{ client.address }}
           </td>
-          <td class="p-2 whitespace-nowrap">{{ client.credi }} DH</td>
+          <td class="p-2 whitespace-nowrap">
+            {{ n(client.credit!, "decimal") }} DH
+          </td>
           <td class="p-2">
             <div class="flex justify-center">
               <DropdownMenu>
@@ -67,7 +69,6 @@ const toggleThisClient = (client: ClientT, name: string) => {
                   <GripHorizontal class="text-slate-800 inline" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <!-- <DropdownMenuLabel>My Account</DropdownMenuLabel> -->
                   <DropdownMenuItem
                     @click="toggleThisClient(client, 'ClientDelete')"
                   >

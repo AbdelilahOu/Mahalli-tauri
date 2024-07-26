@@ -5,7 +5,7 @@ defineProps<{
   inventory: InventoryT[];
 }>();
 
-const { t, d, locale } = useI18n();
+const { t, d, locale, n } = useI18n();
 </script>
 
 <template>
@@ -25,9 +25,14 @@ const { t, d, locale } = useI18n();
           <td class="p-2 font-medium">
             {{ mvm?.name }}
           </td>
-          <td class="p-2">{{ mvm?.price?.toFixed(2) }} DH</td>
           <td class="p-2">
-            {{ t("g.plrz.i", { n: mvm.quantity }) }}
+            {{ n(mvm?.price, "decimal") }}
+            DH
+          </td>
+          <td class="p-2">
+            {{
+              mvm.quantity + " " + t("g.plrz.i", { n: Math.ceil(mvm.quantity) })
+            }}
           </td>
           <td class="p-2">
             <Badge

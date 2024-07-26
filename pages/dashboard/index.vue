@@ -13,7 +13,7 @@ import { DollarSign, NotepadText, Truck } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
-const { t } = useI18n();
+const { t, d, n } = useI18n();
 
 const STATUS_COLORS = {
   DRAFT: "bg-gray-100 border-gray-500 text-gray-900",
@@ -30,19 +30,21 @@ const STATUS_COLORS = {
 
 const movementsLabels = ref<string[]>([]);
 const tickFormatToDate = (i: number) => {
-  if (i % 1 != 0) return "";
-  return new Date(movementsLabels.value[i]).toLocaleDateString("fr-fr", {});
+  return d(movementsLabels.value[i], "short");
 };
 const barQuantityTriggers = {
   [GroupedBar.selectors.bar]: (d: groupedMvm[string], i: number) => {
     const mvmType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
-    return "<span>" + t("g.plrz.i", { n: d[mvmType].quantity }) + "</span>";
+    const quantity = d[mvmType].quantity;
+    return (
+      n(quantity, "decimal") + " " + t("g.plrz.i", { n: Math.ceil(quantity) })
+    );
   },
 };
 const barPriceTriggers = {
   [GroupedBar.selectors.bar]: (d: groupedMvm[string], i: number) => {
     const mvmType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
-    return "<span>" + d[mvmType].price.toFixed(2) + " DH</span>";
+    return n(d[mvmType].price, "decimal") + " DH";
   },
 };
 
@@ -177,14 +179,17 @@ function handleError(err: any, context: string) {
           </CardHeader>
           <CardContent class="pt-0">
             <div class="text-2xl font-bold">
-              {{ revenue?.currentRevenue.toFixed(2) }} DH
+              {{ n(revenue?.currentRevenue ?? 0, "decimal") }}
+              DH
             </div>
             <p class="text-xs text-muted-foreground">
               {{
-                //@ts-ignore
-                revenue?.growth < 0 ? "-" : "+"
+                t("dashboard.i.growth", {
+                  n: n(revenue?.growth! ?? 0, {
+                    style: "percent",
+                  }),
+                })
               }}
-              {{ t("dashboard.i.growth", { n: revenue?.growth }) }}
             </p>
           </CardContent>
         </Card>
@@ -199,14 +204,17 @@ function handleError(err: any, context: string) {
           </CardHeader>
           <CardContent class="pt-0">
             <div class="text-2xl font-bold">
-              {{ expenses?.currentExpenses.toFixed(2) }} DH
+              {{ n(expenses?.currentExpenses ?? 0, "decimal") }}
+              DH
             </div>
             <p class="text-xs text-muted-foreground">
               {{
-                //@ts-ignore
-                expenses?.growth < 0 ? "-" : "+"
+                t("dashboard.i.growth", {
+                  n: n(expenses?.growth! ?? 0, {
+                    style: "percent",
+                  }),
+                })
               }}
-              {{ t("dashboard.i.growth", { n: expenses?.growth }) }}
             </p>
           </CardContent>
         </Card>
@@ -282,7 +290,7 @@ function handleError(err: any, context: string) {
               <VisTooltip
                 :triggers="{
                   [GroupedBar.selectors.bar]: (d: any) => {
-                    return '<span>' + d.price + ' DH</span>';
+                    return n(d.price, 'decimal') +' DH';
                   },
                 }"
               />
@@ -319,11 +327,11 @@ function handleError(err: any, context: string) {
                 :triggers="{
                   [GroupedBar.selectors.bar]: (d: any) => {
                     return (
-                      '<span>' +
                       d.name +
                       ': ' +
-                      t('g.plrz.i', { n: d.quantity }) +
-                      '</span>'
+                      n(d.quantity, 'decimal')
+                      + ' ' +
+                      t('g.plrz.i', { n: Math.ceil(d.quantity) })
                     );
                   },
                 }"

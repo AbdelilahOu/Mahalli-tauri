@@ -7,7 +7,7 @@ export const CreateClientSchema = z.object({
   phoneNumber: z.string().optional(),
   address: z.string().optional(),
   image: z.string().optional(),
-  credi: z.number().optional(),
+  credit: z.number().optional(),
 });
 
 export type ClientT = z.infer<typeof CreateClientSchema>;

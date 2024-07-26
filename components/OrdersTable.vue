@@ -20,7 +20,7 @@ import { NuxtLink } from "#components";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { setModalName, toggleModal } = useStore();
-const { t, d, locale } = useI18n();
+const { t, d, locale, n } = useI18n();
 const localePath = useLocalePath();
 
 defineProps<{ orders: OrderT[]; orderProducts: OrderProductT[] }>();
@@ -159,7 +159,11 @@ const createInvoiceFromOrder = async (id: string) => {
                   @mouseenter.passive="previewProducts(order.id!)"
                   @mouseleave.passive="cancelPreviewProducts"
                 >
-                  {{ t("g.plrz.p", { n: order.products }) }}
+                  {{
+                    order.products +
+                    " " +
+                    t("g.plrz.p", { n: Math.ceil(order.products) })
+                  }}
                 </Button>
               </PopoverTrigger>
               <PopoverContent class="min-w-[13rem] p-2">
@@ -179,7 +183,7 @@ const createInvoiceFromOrder = async (id: string) => {
                         class="space-y-1 text-sm flex justify-between w-full items-center"
                       >
                         <td class="underline w-1/2">{{ orderProduct.name }}</td>
-                        <td class="w-1/4 text-end">
+                        <td class="min-w-1/4 w-20 text-end text-nowrap">
                           {{ orderProduct.price }} Dh
                         </td>
                         <td class="w-1/4 text-slate-700 text-end">
@@ -192,7 +196,11 @@ const createInvoiceFromOrder = async (id: string) => {
               </PopoverContent>
             </Popover>
             <template v-else>
-              {{ t("g.plrz.p", { n: order.products }) }}
+              {{
+                order.products +
+                " " +
+                t("g.plrz.p", { n: Math.ceil(order.products ?? 0) })
+              }}
             </template>
           </td>
           <td class="p-2">
@@ -210,13 +218,13 @@ const createInvoiceFromOrder = async (id: string) => {
                   {{ t(`g.status.${order.status.toLowerCase()}`) }}
                 </Badge>
               </PopoverTrigger>
-              <PopoverContent class="min-w-40 w-fit p-1 flex flex-col gap-1">
+              <PopoverContent class="w-40 p-1 flex flex-col gap-1">
                 <Button
                   v-for="status in STATUSES"
                   type="button"
                   variant="secondary"
                   size="sm"
-                  :class="cn('border text-nowrap px-2', STATUS_COLORS[status])"
+                  :class="cn('border', STATUS_COLORS[status])"
                   @click="() => updateOrderStatus(order.id as string, status)"
                 >
                   {{ t(`g.status.` + status.toLowerCase()) }}
@@ -225,9 +233,12 @@ const createInvoiceFromOrder = async (id: string) => {
             </Popover>
           </td>
           <td class="p-2">
-            {{ order.createdAt ? d(new Date(order.createdAt), "long") : "" }}
+            {{ d(new Date(order.createdAt!), "long") }}
           </td>
-          <td class="p-2">{{ order.total?.toFixed(2) }} DH</td>
+          <td class="p-2">
+            {{ n(order.total!, "decimal") }}
+            DH
+          </td>
           <td class="p-2">
             <div class="flex justify-center items-center gap-3">
               <DropdownMenu>
