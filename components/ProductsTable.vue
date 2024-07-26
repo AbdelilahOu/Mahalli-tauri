@@ -11,7 +11,7 @@ import {
 
 defineProps<{ products: ProductT[] }>();
 
-const { t, d, locale } = useI18n();
+const { t, d, locale, n } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { setModalName, toggleModal } = useStore();
 
@@ -28,7 +28,7 @@ const toggleThisProduct = (product: ProductT, name: string) => {
   toggleModal(true);
 };
 
-const updateProductStock = (id: string, name: string) => {
+const updateProductInventory = (id: string, name: string) => {
   updateQueryParams({
     id,
     name,
@@ -112,14 +112,28 @@ const updateProductStock = (id: string, name: string) => {
                 )
               "
             >
-              {{ t("g.plrz.i", { n: product?.inventory }) }}
+              {{
+                product?.inventory +
+                " " +
+                t("g.plrz.i", { n: Math.ceil(product?.inventory ?? 0) })
+              }}
             </Badge>
           </td>
           <td class="p-2">
-            {{ t("g.plrz.i", { n: product.minQuantity }) }}
+            {{
+              product.minQuantity +
+              " " +
+              t("g.plrz.i", { n: Math.ceil(product.minQuantity ?? 0) })
+            }}
           </td>
-          <td class="p-2">{{ product.purchasePrice.toFixed(2) }} DH</td>
-          <td class="p-2">{{ product.sellingPrice.toFixed(2) }} DH</td>
+          <td class="p-2">
+            {{ n(product.purchasePrice, "decimal") }}
+            DH
+          </td>
+          <td class="p-2">
+            {{ n(product.sellingPrice, "decimal") }}
+            DH
+          </td>
           <td class="p-2">
             <div class="flex justify-center gap-3">
               <DropdownMenu>
@@ -127,7 +141,6 @@ const updateProductStock = (id: string, name: string) => {
                   <GripHorizontal class="text-slate-800 inline" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <!-- <DropdownMenuLabel>My Account</DropdownMenuLabel> -->
                   <DropdownMenuItem
                     @click="toggleThisProduct(product, 'ProductDelete')"
                   >
@@ -149,7 +162,7 @@ const updateProductStock = (id: string, name: string) => {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    @click="updateProductStock(product.id!, product.name!)"
+                    @click="updateProductInventory(product.id!, product.name!)"
                   >
                     <PackagePlus
                       :size="20"

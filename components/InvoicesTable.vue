@@ -7,7 +7,7 @@ import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { setModalName, toggleModal } = useStore();
-const { t, d, locale } = useI18n();
+const { t, d, locale, n } = useI18n();
 const localePath = useLocalePath();
 
 defineProps<{ invoices: InvoiceT[]; invoiceProducts: InvoiceProductT[] }>();
@@ -126,7 +126,11 @@ const updateInvoiceStatus = async (id: string, status: string) => {
                   @mouseenter.passive="previewProducts(invoice.id!)"
                   @mouseleave.passive="cancelPreviewProducts"
                 >
-                  {{ t("g.plrz.p", { n: invoice.products }) }}
+                  {{
+                    invoice.products +
+                    " " +
+                    t("g.plrz.p", { n: Math.ceil(invoice.products) })
+                  }}
                 </Button>
               </PopoverTrigger>
               <PopoverContent class="min-w-[13rem] p-2">
@@ -148,7 +152,7 @@ const updateInvoiceStatus = async (id: string, status: string) => {
                         <td class="underline w-1/2">
                           {{ invoiceProduct.name }}
                         </td>
-                        <td class="w-1/4 text-end">
+                        <td class="min-w-1/4 w-20 text-end text-nowrap">
                           {{ invoiceProduct.price }} Dh
                         </td>
                         <td class="w-1/4 text-slate-700 text-end">
@@ -161,7 +165,11 @@ const updateInvoiceStatus = async (id: string, status: string) => {
               </PopoverContent>
             </Popover>
             <template v-else>
-              {{ t("g.plrz.p", { n: invoice.products }) }}
+              {{
+                invoice.products +
+                " " +
+                t("g.plrz.p", { n: Math.ceil(invoice.products ?? 0) })
+              }}
             </template>
           </td>
           <td class="p-2">
@@ -179,13 +187,13 @@ const updateInvoiceStatus = async (id: string, status: string) => {
                   {{ t(`g.status.${invoice.status.toLowerCase()}`) }}
                 </Badge>
               </PopoverTrigger>
-              <PopoverContent class="min-w-40 w-fit p-1 flex flex-col gap-1">
+              <PopoverContent class="w-40 p-1 flex flex-col gap-1">
                 <Button
                   v-for="status in STATUSES"
                   type="button"
                   variant="secondary"
                   size="sm"
-                  :class="cn('border text-nowrap px-2', STATUS_COLORS[status])"
+                  :class="cn('border', STATUS_COLORS[status])"
                   @click="() => updateInvoiceStatus(invoice.id as string, status)"
                 >
                   {{ t(`g.status.` + status.toLowerCase()) }}
@@ -194,12 +202,16 @@ const updateInvoiceStatus = async (id: string, status: string) => {
             </Popover>
           </td>
           <td class="p-2">
-            {{
-              invoice.createdAt ? d(new Date(invoice.createdAt), "long") : ""
-            }}
+            {{ d(new Date(invoice.createdAt!), "long") }}
           </td>
-          <td class="p-2">{{ invoice.total?.toFixed(2) }} DH</td>
-          <td class="p-2">{{ invoice.paidAmount?.toFixed(2) }} DH</td>
+          <td class="p-2">
+            {{ n(invoice.total!, "decimal") }}
+            DH
+          </td>
+          <td class="p-2">
+            {{ n(invoice.paidAmount, "decimal") }}
+            DH
+          </td>
           <td class="p-2">
             <div class="flex justify-center gap-3">
               <DropdownMenu>
@@ -207,7 +219,6 @@ const updateInvoiceStatus = async (id: string, status: string) => {
                   <GripHorizontal class="text-slate-800 inline" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <!-- <DropdownMenuLabel>My Account</DropdownMenuLabel> -->
                   <DropdownMenuItem
                     @click="toggleThisInvoices(invoice, 'InvoiceDelete')"
                   >

@@ -26,8 +26,8 @@
     "translationTitle": "Change Language",
     "dropZone": "Drag and drop or select",
     "plrz": {
-      "i": "no items | {n} item | {n} items",
-      "p": "no products | {n} product | {n} products"
+      "i": "no items | item | items",
+      "p": "no products | product | products"
     },
     "fields": {
       "fullname": "Full name",
@@ -50,7 +50,7 @@
       "init-quantity": "Initiale Quantity",
       "min-quantity": "Minimum Quantity",
       "quantity": "Quantity",
-      "credit": "Credit",
+      "creditt": "Credit",
       "threshold": "Threshold",
       "item": "Item",
       "sub-total": "sub-total",
