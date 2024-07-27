@@ -43,7 +43,7 @@ const toggleThisClient = (client: ClientT, name: string) => {
             <Avatar>
               <AvatarImage :src="client.image ?? ''" />
               <AvatarFallback class="text-xs">
-                {{ client.fullname.split(" ")[0].substring(3) }}
+                {{ client.fullname.substring(0, 5) }}
               </AvatarFallback>
             </Avatar>
           </td>
