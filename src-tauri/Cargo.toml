@@ -1,10 +1,10 @@
 [package]
 name = "mahalli"
-version = "1.8.0"
+version = "1.8.1"
 description = "Inventory & invoicing management app"
 authors = ["AbdelilahOu"]
 license = ""
-repository = "https://github.com/AbdelilahOu/Mahalli-tauri"
+repository = "https://github.com/AbdelilahOu/Mahalli-desktop"
 default-run = "mahalli"
 edition = "2021"
 rust-version = "1.59"
