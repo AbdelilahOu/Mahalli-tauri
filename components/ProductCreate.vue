@@ -34,8 +34,8 @@ const createNewProduct = async (product: ProductT) => {
       },
     });
     await invoke<Res<string>>("create_inventory", {
-      mvm: {
-        mvm_type: "IN",
+      transaction: {
+        transaction_type: "IN",
         product_id: createRes.data,
         quantity: Number(quantity.value),
       },

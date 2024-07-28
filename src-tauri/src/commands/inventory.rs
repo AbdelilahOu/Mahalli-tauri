@@ -26,9 +26,9 @@ pub async fn list_inventory(state: State<'_, AppState>, args: ListArgs) -> SResu
 }
 
 #[tauri::command]
-pub async fn create_inventory(state: State<'_, AppState>, mvm: NewInventory) -> SResult<String> {
+pub async fn create_inventory(state: State<'_, AppState>, transaction: NewInventory) -> SResult<String> {
     let _ = state.db_conn;
-    match MutationsService::create_inventory(&state.db_conn, mvm).await {
+    match MutationsService::create_inventory(&state.db_conn, transaction).await {
         Ok(id) => Ok(Seccess::<String> {
             error: None,
             message: Option::Some(String::from("inventory created successfully")),

@@ -3,11 +3,11 @@
 use sea_orm::{entity::prelude::*, Set};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
-#[sea_orm(table_name = "inventory_movements")]
+#[sea_orm(table_name = "inventory_transactions")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: String,
-    pub mvm_type: String,
+    pub transaction_type: String,
     #[sea_orm(column_type = "Double")]
     pub quantity: f64,
     pub product_id: String,

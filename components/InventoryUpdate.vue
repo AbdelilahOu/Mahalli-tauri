@@ -28,8 +28,8 @@ const updateTheProduct = async ({ quantity }: z.infer<typeof stock>) => {
   try {
     const id = route.query.id;
     await invoke<Res<any>>("create_inventory", {
-      mvm: {
-        mvm_type: "IN",
+      transaction: {
+        transaction_type: "IN",
         product_id: id,
         quantity: Number(quantity),
       },

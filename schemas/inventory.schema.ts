@@ -3,7 +3,7 @@ import { z } from "zod";
 export const CreateInventorySchema = z.object({
   id: z.string(),
   name: z.string(),
-  mvmType: z.enum(["IN", "OUT"]),
+  transactionType: z.enum(["IN", "OUT"]),
   quantity: z.number(),
   price: z.number(),
   createdAt: z.string(),

@@ -21,17 +21,23 @@ const { t, d, locale, n } = useI18n();
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(mvm, index) in inventory" :key="mvm.id" v-fade="index">
+        <tr
+          v-for="(transaction, index) in inventory"
+          :key="transaction.id"
+          v-fade="index"
+        >
           <td class="p-2 font-medium">
-            {{ mvm?.name }}
+            {{ transaction?.name }}
           </td>
           <td class="p-2">
-            {{ n(mvm?.price, "decimal") }}
+            {{ n(transaction?.price, "decimal") }}
             DH
           </td>
           <td class="p-2">
             {{
-              mvm.quantity + " " + t("g.plrz.i", { n: Math.ceil(mvm.quantity) })
+              transaction.quantity +
+              " " +
+              t("g.plrz.i", { n: Math.ceil(transaction.quantity) })
             }}
           </td>
           <td class="p-2">
@@ -40,17 +46,17 @@ const { t, d, locale, n } = useI18n();
               :class="
                 cn(
                   'cursor-pointer whitespace-nowrap',
-                  mvm?.mvmType == 'OUT'
+                  transaction?.transactionType == 'OUT'
                     ? 'bg-green-100 border-green-500 text-green-900'
                     : 'bg-sky-100 border-sky-500 text-sky-900'
                 )
               "
             >
-              {{ t("g.status." + mvm?.mvmType.toLowerCase()) }}
+              {{ t("g.status." + transaction?.transactionType.toLowerCase()) }}
             </Badge>
           </td>
           <td class="p-2">
-            {{ d(new Date(mvm.createdAt), "long") }}
+            {{ d(new Date(transaction.createdAt), "long") }}
           </td>
         </tr>
       </tbody>

@@ -17,13 +17,13 @@ pub struct Model {
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
-        belongs_to = "super::inventory_movements::Entity",
+        belongs_to = "super::inventory_transactions::Entity",
         from = "Column::InventoryId",
-        to = "super::inventory_movements::Column::Id",
+        to = "super::inventory_transactions::Column::Id",
         on_update = "NoAction",
         on_delete = "Cascade"
     )]
-    InventoryMovements,
+    InventoryTransactions,
     #[sea_orm(
         belongs_to = "super::orders::Entity",
         from = "Column::OrderId",
@@ -34,9 +34,9 @@ pub enum Relation {
     Orders,
 }
 
-impl Related<super::inventory_movements::Entity> for Entity {
+impl Related<super::inventory_transactions::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::InventoryMovements.def()
+        Relation::InventoryTransactions.def()
     }
 }
 

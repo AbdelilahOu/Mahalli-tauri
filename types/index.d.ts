@@ -14,14 +14,14 @@ export type QueryParams = {
   created_at?: string;
 };
 
-export interface movementsT {
+export interface transactionsT {
   createdAt: string;
-  mvmType: "IN" | "OUT";
+  transactionType: "IN" | "OUT";
   quantity: number;
   price: number;
 }
 
-export type groupedMvm = Record<
+export type groupedTransaction = Record<
   string,
   Record<
     "IN" | "OUT",

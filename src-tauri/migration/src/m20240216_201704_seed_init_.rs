@@ -1,7 +1,7 @@
 use std::ops::Range;
 
 use crate::{
-    m20220101_000001_init_::{Client, InventoryMovement, Invoice, Order, OrderItem, Product, Quote, QuoteItem, Supplier},
+    m20220101_000001_init_::{Client, InventoryTransaction, Invoice, Order, OrderItem, Product, Quote, QuoteItem, Supplier},
     utils::get_random_enum,
 };
 use fake::{
@@ -78,12 +78,12 @@ impl MigrationTrait for Migration {
             let inventory_id = ulid::Ulid::new();
             let inventory_quantity: u8 = Faker.fake();
             let insert_stock = Query::insert()
-                .into_table(InventoryMovement::Table)
+                .into_table(InventoryTransaction::Table)
                 .columns([
-                    InventoryMovement::Id,
-                    InventoryMovement::ProductId,
-                    InventoryMovement::Quantity,
-                    InventoryMovement::MvmType,
+                    InventoryTransaction::Id,
+                    InventoryTransaction::ProductId,
+                    InventoryTransaction::Quantity,
+                    InventoryTransaction::TransactionType,
                 ])
                 .values_panic([
                     inventory_id.to_string().into(),
@@ -133,7 +133,7 @@ impl MigrationTrait for Migration {
                 sea_orm::DatabaseBackend::Sqlite,
                 r#"
                 INSERT INTO 
-                    inventory_movements (id, mvm_type, quantity, product_id)
+                    inventory_transactions (id, transaction_type, quantity, product_id)
                 VALUES
                     (
                         $1, 
@@ -267,7 +267,7 @@ impl MigrationTrait for Migration {
         let delete = Query::delete().from_table(Quote::Table).to_owned();
         manager.exec_stmt(delete).await?;
 
-        let delete = Query::delete().from_table(InventoryMovement::Table).to_owned();
+        let delete = Query::delete().from_table(InventoryTransaction::Table).to_owned();
         manager.exec_stmt(delete).await?;
 
         let delete = Query::delete().from_table(Product::Table).to_owned();

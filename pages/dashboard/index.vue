@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Res, groupedMvm, movementsT } from "@/types";
+import type { Res, groupedTransaction, transactionsT } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { GroupedBar } from "@unovis/ts";
 import {
@@ -28,33 +28,33 @@ const STATUS_COLORS = {
   DELIVERED: "bg-green-100 border-green-500 text-green-900",
 } as const;
 
-const movementsLabels = ref<string[]>([]);
+const transactionsLabels = ref<string[]>([]);
 const tickFormatToDate = (i: number) => {
-  return d(movementsLabels.value[i], "short");
+  return d(transactionsLabels.value[i], "short");
 };
 const barQuantityTriggers = {
-  [GroupedBar.selectors.bar]: (d: groupedMvm[string], i: number) => {
-    const mvmType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
-    const quantity = d[mvmType].quantity;
+  [GroupedBar.selectors.bar]: (d: groupedTransaction[string], i: number) => {
+    const transactionType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
+    const quantity = d[transactionType].quantity;
     return (
       n(quantity, "decimal") + " " + t("g.plrz.i", { n: Math.ceil(quantity) })
     );
   },
 };
 const barPriceTriggers = {
-  [GroupedBar.selectors.bar]: (d: groupedMvm[string], i: number) => {
-    const mvmType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
-    return n(d[mvmType].price, "decimal") + " DH";
+  [GroupedBar.selectors.bar]: (d: groupedTransaction[string], i: number) => {
+    const transactionType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
+    return n(d[transactionType].price, "decimal") + " DH";
   },
 };
 
-const { data: inventoryMovements } = useAsyncData(
-  "inventoryMovements",
+const { data: inventoryTransactions } = useAsyncData(
+  "inventoryTransactions",
   async () => {
     try {
-      const res = await invoke<Res<movementsT[]>>("list_inventory_stats");
+      const res = await invoke<Res<transactionsT[]>>("list_inventory_stats");
       const result = res.data.reduce((acc, item) => {
-        const { createdAt: date, mvmType, quantity, price } = item;
+        const { createdAt: date, transactionType, quantity, price } = item;
         const createdAt = new Date(date).toISOString().split("T")[0];
         if (!acc[createdAt]) {
           acc[createdAt] = {
@@ -62,13 +62,13 @@ const { data: inventoryMovements } = useAsyncData(
             OUT: { quantity: 0, price: 0 },
           };
         }
-        acc[createdAt][mvmType].quantity += quantity;
-        acc[createdAt][mvmType].price += price;
+        acc[createdAt][transactionType].quantity += quantity;
+        acc[createdAt][transactionType].price += price;
         return acc;
-      }, {} as groupedMvm);
+      }, {} as groupedTransaction);
 
-      const movementLabelsSet = new Set<string>(Object.keys(result));
-      movementsLabels.value = [...movementLabelsSet];
+      const transactionLabelsSet = new Set<string>(Object.keys(result));
+      transactionsLabels.value = [...transactionLabelsSet];
       return result;
     } catch (err: any) {
       handleError(err, "STATS INVENTORY MOUVEMENTS");
@@ -349,8 +349,8 @@ function handleError(err: any, context: string) {
         <ChartHolder>
           <template #default>
             <VisXYContainer
-              v-if="inventoryMovements"
-              :data="Object.values(inventoryMovements)"
+              v-if="inventoryTransactions"
+              :data="Object.values(inventoryTransactions)"
               :height="500"
             >
               <VisGroupedBar
@@ -382,8 +382,8 @@ function handleError(err: any, context: string) {
         <ChartHolder>
           <template #default>
             <VisXYContainer
-              v-if="inventoryMovements"
-              :data="Object.values(inventoryMovements)"
+              v-if="inventoryTransactions"
+              :data="Object.values(inventoryTransactions)"
               :height="500"
             >
               <VisGroupedBar
