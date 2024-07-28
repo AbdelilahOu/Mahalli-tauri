@@ -8,12 +8,12 @@ pub struct SelectInventory {
     pub created_at: String,
     pub price: f64,
     pub quantity: f64,
-    pub mvm_type: String,
+    pub transaction_type: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NewInventory {
-    pub mvm_type: String,
+    pub transaction_type: String,
     pub product_id: String,
     pub quantity: f64,
 }
@@ -21,7 +21,7 @@ pub struct NewInventory {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Inventory {
     pub id: String,
-    pub mvm_type: String,
+    pub transaction_type: String,
     pub product_id: String,
     pub quantity: f64,
 }

@@ -118,24 +118,24 @@ impl MutationsService {
         }
     }
     //
-    pub async fn create_inventory(db: &DbConn, mvm: NewInventory) -> Result<String, DbErr> {
-        let in_mvm = InventoryActiveModel {
-            mvm_type: ActiveValue::Set(mvm.mvm_type),
-            quantity: ActiveValue::Set(mvm.quantity),
-            product_id: ActiveValue::Set(mvm.product_id),
+    pub async fn create_inventory(db: &DbConn, transaction: NewInventory) -> Result<String, DbErr> {
+        let in_transaction = InventoryActiveModel {
+            transaction_type: ActiveValue::Set(transaction.transaction_type),
+            quantity: ActiveValue::Set(transaction.quantity),
+            product_id: ActiveValue::Set(transaction.product_id),
             ..Default::default()
         };
-        match in_mvm.insert(db).await {
+        match in_transaction.insert(db).await {
             Ok(im) => Ok(im.id),
             Err(err) => Err(err),
         }
     }
     pub async fn delete_inventory(db: &DbConn, id: String) -> Result<u64, DbErr> {
-        let movement_model = InventoryMovements::find_by_id(id).one(db).await?;
-        match movement_model {
-            Some(movement_model) => {
-                let movement = movement_model.delete(db).await?;
-                Ok(movement.rows_affected)
+        let transaction_model = InventoryTransactions::find_by_id(id).one(db).await?;
+        match transaction_model {
+            Some(transaction_model) => {
+                let transaction = transaction_model.delete(db).await?;
+                Ok(transaction.rows_affected)
             }
             None => Ok(0),
         }

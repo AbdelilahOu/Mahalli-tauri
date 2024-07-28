@@ -5,7 +5,7 @@ mod transaction;
 
 mod entities {
     pub use entity::clients::{self, ActiveModel as ClientActiveModel, Entity as Clients };
-    pub use entity::inventory_movements::{self, ActiveModel as InventoryActiveModel, Entity as InventoryMovements };
+    pub use entity::inventory_transactions::{self, ActiveModel as InventoryActiveModel, Entity as InventoryTransactions };
     pub use entity::invoices::{self, ActiveModel as InvoiceActiveModel, Entity as Invoices };
     pub use entity::order_items::{self, ActiveModel as OrderItemActiveModel, Entity as OrderItems };
     pub use entity::orders::{self, ActiveModel as OrderActiveModel, Entity as Orders };

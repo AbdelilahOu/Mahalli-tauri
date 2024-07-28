@@ -88,7 +88,7 @@ impl TransactionService {
                     let created_inventory = InventoryActiveModel {
                         product_id: ActiveValue::Set(item.product_id),
                         quantity: ActiveValue::Set(item.quantity),
-                        mvm_type: ActiveValue::Set("OUT".to_string()),
+                        transaction_type: ActiveValue::Set("OUT".to_string()),
                         ..Default::default()
                     }.insert(txn).await?;
 
@@ -125,7 +125,7 @@ impl TransactionService {
                             let mut order_item_active: OrderItemActiveModel = order_item_model.unwrap().into();
                             order_item_active.price = ActiveValue::Set(item.price);
                             order_item_active.update(txn).await?;
-                            let inventory_model = InventoryMovements::find_by_id(item.inventory_id.unwrap()).one(txn).await?;
+                            let inventory_model = InventoryTransactions::find_by_id(item.inventory_id.unwrap()).one(txn).await?;
                             let mut inventory_active: InventoryActiveModel = inventory_model.unwrap().into();
                             inventory_active.quantity = ActiveValue::Set(item.quantity);
                             inventory_active.product_id = ActiveValue::Set(item.product_id);
@@ -135,7 +135,7 @@ impl TransactionService {
                             let created_inventory = InventoryActiveModel {
                                 product_id: ActiveValue::Set(item.product_id),
                                 quantity: ActiveValue::Set(item.quantity),
-                                mvm_type: ActiveValue::Set("OUT".to_string()),
+                                transaction_type: ActiveValue::Set("OUT".to_string()),
                                 ..Default::default()
                             }.insert(txn).await?;
 
@@ -170,7 +170,7 @@ impl TransactionService {
                     let created_inventory = InventoryActiveModel {
                         product_id: ActiveValue::Set(item.product_id),
                         quantity: ActiveValue::Set(item.quantity),
-                        mvm_type: ActiveValue::Set("OUT".to_string()),
+                        transaction_type: ActiveValue::Set("OUT".to_string()),
                         ..Default::default()
                     }.insert(txn).await?;
 
@@ -217,7 +217,7 @@ impl TransactionService {
                             let mut order_item_active: OrderItemActiveModel = order_item_model.unwrap().into();
                             order_item_active.price = ActiveValue::Set(item.price);
                             order_item_active.save(txn).await?;
-                            let inventory_model = InventoryMovements::find_by_id(item.inventory_id.unwrap()).one(txn).await?;
+                            let inventory_model = InventoryTransactions::find_by_id(item.inventory_id.unwrap()).one(txn).await?;
                             let mut inventory_active: InventoryActiveModel = inventory_model.unwrap().into();
                             inventory_active.quantity = ActiveValue::Set(item.quantity);
                             inventory_active.product_id = ActiveValue::Set(item.product_id);
@@ -227,7 +227,7 @@ impl TransactionService {
                             let created_inventory = InventoryActiveModel {
                                 product_id: ActiveValue::Set(item.product_id),
                                 quantity: ActiveValue::Set(item.quantity),
-                                mvm_type: ActiveValue::Set("OUT".to_string()),
+                                transaction_type: ActiveValue::Set("OUT".to_string()),
                                 ..Default::default()
                             }.insert(txn).await?;
 
@@ -270,7 +270,7 @@ impl TransactionService {
                                     let created_inventory = InventoryActiveModel {
                                         product_id: ActiveValue::Set(item.product_id),
                                         quantity: ActiveValue::Set(item.quantity),
-                                        mvm_type: ActiveValue::Set("OUT".to_string()),
+                                        transaction_type: ActiveValue::Set("OUT".to_string()),
                                         ..Default::default()
                                     }.insert(txn).await?;
 
