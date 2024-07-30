@@ -67,8 +67,10 @@ impl QueriesService {
                         Cond::all().add(
                             Expr::col((InventoryTransactions, inventory_transactions::Column::ProductId)).equals((Products, products::Column::Id)),
                         ).add(
-                            Cond::any().add(orders::Column::Status.eq("DELIVERED")).add(orders::Column::Status.eq("SHIPPED"))
-                        ).add(orders::Column::IsDeleted.eq(false)),
+                            orders::Column::Status.is_in(["DELIVERED", "SHIPPED"])
+                        ).add(
+                            orders::Column::IsDeleted.eq(false)
+                        ),
                     ).to_owned(),
                 )),
             )),
@@ -150,7 +152,7 @@ impl QueriesService {
                         Expr::col((InventoryTransactions, inventory_transactions::Column::Id)).equals((OrderItems, order_items::Column::InventoryId)),
                     ).cond_where(
                         Cond::all().add(
-                            Cond::all().add(Expr::col((Invoices, invoices::Column::Status)).eq("CANCELLED").not()).add(Expr::col((Invoices, invoices::Column::Status)).eq("DRAFT").not())
+                            Expr::col((Invoices, invoices::Column::Status)).is_not_in(["CANCELLED", "DRAFT", "PAID"])
                         ).add(
                             Expr::col((Invoices, invoices::Column::IsDeleted)).eq(false)
                         ).add(
@@ -1105,7 +1107,7 @@ impl QueriesService {
             JoinType::Join,
             InventoryTransactions,
             Expr::col((InventoryTransactions, inventory_transactions::Column::Id)).equals((OrderItems, order_items::Column::InventoryId)),
-        ).cond_where(Cond::all().add(Expr::expr(Expr::col((Invoices, invoices::Column::Status))).eq("CANCELLED").not())).add_group_by([Expr::col((Clients, clients::Column::Id)).into()]).order_by_expr(
+        ).cond_where(Cond::all().add(Expr::expr(Expr::col((Invoices, invoices::Column::Status))).is_not_in(["CANCELLED", "DRAFT"]))).add_group_by([Expr::col((Clients, clients::Column::Id)).into()]).order_by_expr(
             Func::sum(
                 Expr::col((OrderItems, order_items::Column::Price)).mul(Expr::col((InventoryTransactions, inventory_transactions::Column::Quantity))),
             ).into(),
@@ -1145,7 +1147,7 @@ impl QueriesService {
             JoinType::Join,
             InventoryTransactions,
             Expr::col((InventoryTransactions, inventory_transactions::Column::Id)).equals((OrderItems, order_items::Column::InventoryId)),
-        ).cond_where(Cond::all().add(Expr::expr(Expr::col((Orders, orders::Column::Status))).eq("CANCELLED").not())).add_group_by([Expr::col((Suppliers, suppliers::Column::Id)).into()]).order_by_expr(
+        ).cond_where(Cond::all().add(Expr::expr(Expr::col((Orders, orders::Column::Status))).is_not_in(["CANCELLED", "PENDING"]))).add_group_by([Expr::col((Suppliers, suppliers::Column::Id)).into()]).order_by_expr(
             Func::sum(
                 Expr::col((OrderItems, order_items::Column::Price)).mul(Expr::col((InventoryTransactions, inventory_transactions::Column::Quantity))),
             ).into(),
