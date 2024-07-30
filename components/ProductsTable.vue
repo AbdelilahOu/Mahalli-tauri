@@ -39,34 +39,34 @@ const updateProductInventory = (id: string, name: string) => {
 </script>
 
 <template>
-  <div>
-    <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
-      <thead>
-        <tr>
-          <th class="w-14" />
-          <th class="w-20">{{ t("g.fields.name") }}</th>
-          <th class="w-fit">{{ t("g.fields.inventory") }}</th>
-          <th>{{ t("g.fields.threshold") }}</th>
-          <th>{{ t("g.fields.purchase-price") }}</th>
-          <th>{{ t("g.fields.selling-price") }}</th>
-          <th class="w-20">{{ t("g.fields.actions") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
+  <div class="w-full">
+    <Table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
+      <TableHeader>
+        <TableRow>
+          <TableHead class="w-14" />
+          <TableHead class="w-20">{{ t("g.fields.name") }}</TableHead>
+          <TableHead class="w-fit">{{ t("g.fields.inventory") }}</TableHead>
+          <TableHead>{{ t("g.fields.threshold") }}</TableHead>
+          <TableHead>{{ t("g.fields.purchase-price") }}</TableHead>
+          <TableHead>{{ t("g.fields.selling-price") }}</TableHead>
+          <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow
           v-for="(product, index) in products"
           :key="product.id"
           v-fade="index"
         >
-          <td class="p-2 flex justify-center">
+          <TableCell class="p-2 flex justify-center">
             <Avatar>
               <AvatarImage :src="product.image ?? ''" />
               <AvatarFallback class="text-xs">
                 {{ product.name.substring(0, 5) }}
               </AvatarFallback>
             </Avatar>
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             <span class="whitespace-nowrap flex justify-between gap-3">
               {{ product.name }}
               <HoverCard>
@@ -93,8 +93,8 @@ const updateProductInventory = (id: string, name: string) => {
                 </HoverCardContent>
               </HoverCard>
             </span>
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             <Badge
               variant="outline"
               :class="
@@ -118,23 +118,23 @@ const updateProductInventory = (id: string, name: string) => {
                 t("g.plrz.i", { n: Math.ceil(product?.inventory ?? 0) })
               }}
             </Badge>
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{
               product.minQuantity +
               " " +
               t("g.plrz.i", { n: Math.ceil(product.minQuantity ?? 0) })
             }}
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{ n(product.purchasePrice, "decimal") }}
             DH
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{ n(product.sellingPrice, "decimal") }}
             DH
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             <div class="flex justify-center gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger>
@@ -173,10 +173,10 @@ const updateProductInventory = (id: string, name: string) => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
     <Pagination />
   </div>
 </template>

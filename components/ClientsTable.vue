@@ -24,45 +24,49 @@ const toggleThisClient = (client: ClientT, name: string) => {
 </script>
 
 <template>
-  <div>
-    <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
-      <thead>
-        <tr>
-          <th class="w-14" />
-          <th>{{ t("g.fields.fullname") }}</th>
-          <th>{{ t("g.fields.email") }}</th>
-          <th>{{ t("g.fields.phone") }}</th>
-          <th>{{ t("g.fields.address") }}</th>
-          <th>{{ t("g.fields.creditt") }}</th>
-          <th class="w-20">{{ t("g.fields.actions") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(client, index) in clients" :key="client.id" v-fade="index">
-          <td class="p-2 flex justify-center">
+  <div class="w-full">
+    <Table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
+      <TableHeader>
+        <TableRow>
+          <TableHead class="w-14" />
+          <TableHead>{{ t("g.fields.fullname") }}</TableHead>
+          <TableHead>{{ t("g.fields.email") }}</TableHead>
+          <TableHead>{{ t("g.fields.phone") }}</TableHead>
+          <TableHead>{{ t("g.fields.address") }}</TableHead>
+          <TableHead>{{ t("g.fields.creditt") }}</TableHead>
+          <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow
+          v-for="(client, index) in clients"
+          :key="client.id"
+          v-fade="index"
+        >
+          <TableCell class="p-2 flex justify-center">
             <Avatar>
               <AvatarImage :src="client.image ?? ''" />
               <AvatarFallback class="text-xs">
                 {{ client.fullname.substring(0, 5) }}
               </AvatarFallback>
             </Avatar>
-          </td>
-          <td class="p-2 whitespace-nowrap font-medium">
+          </TableCell>
+          <TableCell class="p-2 whitespace-nowrap font-medium">
             {{ client?.fullname }}
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{ client.email }}
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{ client.phoneNumber }}
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{ client.address }}
-          </td>
-          <td class="p-2 whitespace-nowrap">
+          </TableCell>
+          <TableCell class="p-2 whitespace-nowrap">
             {{ n(client.credit!, "decimal") }} DH
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             <div class="flex justify-center">
               <DropdownMenu>
                 <DropdownMenuTrigger>
@@ -89,10 +93,10 @@ const toggleThisClient = (client: ClientT, name: string) => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
     <Pagination />
   </div>
 </template>

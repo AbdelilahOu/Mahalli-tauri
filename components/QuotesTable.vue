@@ -76,27 +76,31 @@ const createOrderFromQuote = async (id: string) => {
 </script>
 
 <template>
-  <div>
-    <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
-      <thead>
-        <tr>
-          <th class="w-24"></th>
-          <th>{{ t("g.fields.fullname") }}</th>
-          <th>{{ t("g.fields.items") }}</th>
-          <th class="w-56">{{ t("g.fields.date") }}</th>
-          <th>{{ t("g.fields.total") }}</th>
-          <th class="w-20">{{ t("g.fields.actions") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(quote, index) in quotes" :key="quote.id" v-fade="index">
-          <td class="p-2 text-nowrap font-medium">
+  <div class="w-full">
+    <Table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
+      <TableHeader>
+        <TableRow>
+          <TableHead class="w-24"></TableHead>
+          <TableHead>{{ t("g.fields.fullname") }}</TableHead>
+          <TableHead>{{ t("g.fields.items") }}</TableHead>
+          <TableHead class="w-56">{{ t("g.fields.date") }}</TableHead>
+          <TableHead>{{ t("g.fields.total") }}</TableHead>
+          <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow
+          v-for="(quote, index) in quotes"
+          :key="quote.id"
+          v-fade="index"
+        >
+          <TableCell class="p-2 text-nowrap font-medium">
             {{ quote.identifier }}
-          </td>
-          <td class="p-2 font-medium">
+          </TableCell>
+          <TableCell class="p-2 font-medium">
             {{ quote.fullname }}
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             <Popover v-if="quote.products && quote.products > 0">
               <PopoverTrigger as-child>
                 <Button
@@ -149,15 +153,15 @@ const createOrderFromQuote = async (id: string) => {
                 t("g.plrz.p", { n: Math.ceil(quote?.products ?? 0) })
               }}
             </template>
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{ d(new Date(quote.createdAt!), "long") }}
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{ n(quote.total!, "decimal") }}
             DH
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             <div class="flex justify-center items-center gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger>
@@ -203,10 +207,10 @@ const createOrderFromQuote = async (id: string) => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
     <Pagination />
   </div>
 </template>

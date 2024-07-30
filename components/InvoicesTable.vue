@@ -86,22 +86,22 @@ const updateInvoiceStatus = async (id: string, status: string) => {
 </script>
 
 <template>
-  <div>
-    <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
-      <thead>
-        <tr>
-          <th class="w-24"></th>
-          <th>{{ t("g.fields.fullname") }}</th>
-          <th>{{ t("g.fields.items") }}</th>
-          <th class="w-fit">{{ t("g.fields.status") }}</th>
-          <th class="w-56">{{ t("g.fields.date") }}</th>
-          <th>{{ t("g.fields.total") }}</th>
-          <th>{{ t("g.fields.paid") }}</th>
-          <th class="w-20">{{ t("g.fields.actions") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
+  <div class="w-full">
+    <Table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
+      <TableHeader>
+        <TableRow>
+          <TableHead class="w-24"></TableHead>
+          <TableHead>{{ t("g.fields.fullname") }}</TableHead>
+          <TableHead>{{ t("g.fields.items") }}</TableHead>
+          <TableHead class="w-fit">{{ t("g.fields.status") }}</TableHead>
+          <TableHead class="w-56">{{ t("g.fields.date") }}</TableHead>
+          <TableHead>{{ t("g.fields.total") }}</TableHead>
+          <TableHead>{{ t("g.fields.paid") }}</TableHead>
+          <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow
           v-for="(invoice, index) in invoices"
           :key="invoice.id"
           v-fade="index"
@@ -110,13 +110,13 @@ const updateInvoiceStatus = async (id: string, status: string) => {
               invoice.id == $route.query.id && $route.query.highlight == 'true',
           }"
         >
-          <td class="p-2 text-nowrap font-medium">
+          <TableCell class="p-2 text-nowrap font-medium">
             {{ invoice.identifier }}
-          </td>
-          <td class="p-2 font-medium">
+          </TableCell>
+          <TableCell class="p-2 font-medium">
             {{ invoice.fullname }}
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             <Popover v-if="invoice.products && invoice.products > 0">
               <PopoverTrigger as-child>
                 <Button
@@ -171,8 +171,8 @@ const updateInvoiceStatus = async (id: string, status: string) => {
                 t("g.plrz.p", { n: Math.ceil(invoice.products ?? 0) })
               }}
             </template>
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             <Popover>
               <PopoverTrigger as-child>
                 <Badge
@@ -200,19 +200,19 @@ const updateInvoiceStatus = async (id: string, status: string) => {
                 </Button>
               </PopoverContent>
             </Popover>
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{ d(new Date(invoice.createdAt!), "long") }}
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{ n(invoice.total!, "decimal") }}
             DH
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{ n(invoice.paidAmount, "decimal") }}
             DH
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             <div class="flex justify-center gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger>
@@ -253,10 +253,10 @@ const updateInvoiceStatus = async (id: string, status: string) => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
     <Pagination />
   </div>
 </template>
