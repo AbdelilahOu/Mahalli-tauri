@@ -120,21 +120,21 @@ const createInvoiceFromOrder = async (id: string) => {
 </script>
 
 <template>
-  <div>
-    <table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
-      <thead>
-        <tr>
-          <th class="w-24"></th>
-          <th>{{ t("g.fields.fullname") }}</th>
-          <th>{{ t("g.fields.items") }}</th>
-          <th class="w-fit">{{ t("g.fields.status") }}</th>
-          <th class="w-56">{{ t("g.fields.date") }}</th>
-          <th>{{ t("g.fields.total") }}</th>
-          <th class="w-20">{{ t("g.fields.actions") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
+  <div class="w-full">
+    <Table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
+      <TableHeader>
+        <TableRow>
+          <TableHead class="w-24"></TableHead>
+          <TableHead>{{ t("g.fields.fullname") }}</TableHead>
+          <TableHead>{{ t("g.fields.items") }}</TableHead>
+          <TableHead class="w-fit">{{ t("g.fields.status") }}</TableHead>
+          <TableHead class="w-56">{{ t("g.fields.date") }}</TableHead>
+          <TableHead>{{ t("g.fields.total") }}</TableHead>
+          <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow
           v-for="(order, index) in orders"
           :key="order.id"
           v-fade="index"
@@ -143,13 +143,13 @@ const createInvoiceFromOrder = async (id: string) => {
               order.id == $route.query.id && $route.query.highlight == 'true',
           }"
         >
-          <td class="p-2 text-nowrap font-medium">
+          <TableCell class="p-2 text-nowrap font-medium">
             {{ order.identifier }}
-          </td>
-          <td class="p-2 font-medium">
+          </TableCell>
+          <TableCell class="p-2 font-medium">
             {{ order.fullname }}
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             <Popover v-if="order.products && order.products > 0">
               <PopoverTrigger as-child>
                 <Button
@@ -202,8 +202,8 @@ const createInvoiceFromOrder = async (id: string) => {
                 t("g.plrz.p", { n: Math.ceil(order.products ?? 0) })
               }}
             </template>
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             <Popover>
               <PopoverTrigger as-child>
                 <Badge
@@ -231,15 +231,15 @@ const createInvoiceFromOrder = async (id: string) => {
                 </Button>
               </PopoverContent>
             </Popover>
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{ d(new Date(order.createdAt!), "long") }}
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             {{ n(order.total!, "decimal") }}
             DH
-          </td>
-          <td class="p-2">
+          </TableCell>
+          <TableCell class="p-2">
             <div class="flex justify-center items-center gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger>
@@ -287,10 +287,10 @@ const createInvoiceFromOrder = async (id: string) => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
     <Pagination />
   </div>
 </template>
