@@ -4,9 +4,9 @@ on:
     branches:
       - releases
 
-# env:
-#   TAURI_PRIVATE_KEY: ${{ vars.TAURI_PRIVATE_KEY }}
-#   TAURI_KEY_PASSWORD: ${{ vars.TAURI_KEY_PASSWORD }}
+env:
+  TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+  TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
 
 jobs:
   create-release:

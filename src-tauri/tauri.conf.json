@@ -68,7 +68,15 @@
       "csp": "default-src 'self' blob: data: filesystem: ws: wss: http: https: tauri: 'unsafe-eval' 'unsafe-inline'; script-src-elem 'self' https://accounts.google.com 'unsafe-eval' 'unsafe-hashes' 'unsafe-inline'; style-src 'self' https://accounts.google.com 'unsafe-eval' 'unsafe-hashes' 'unsafe-inline';"
     },
     "updater": {
-      "active": false
+      "active": true,
+      "endpoints": [
+        "https://mahalli.abdelilah4dev.workers.dev/{{target}}/{{arch}}/{{current_version}}"
+      ],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEE1ODFEQ0ZENjNFQzIyNUEKUldSYUl1eGovZHlCcFNaME56bi9KRm1mMTdtZXhvZjhrcWhVdHhqVU00dkhWQ3cxdEc1S0lGcmIK",
+      "windows": {
+        "installMode": "passive"
+      }
     },
     "windows": [
       {
