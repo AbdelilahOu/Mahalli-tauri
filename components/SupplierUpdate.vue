@@ -9,10 +9,17 @@ import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
+const { close } = useModal();
 const { t } = useI18n();
-const route = useRoute();
 const isLoading = ref<boolean>(false);
+
+const props = defineProps<{
+  id: string;
+  fullname: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+}>();
 
 const supplierSchema = toTypedSchema(
   z.object({
@@ -20,10 +27,10 @@ const supplierSchema = toTypedSchema(
       .string()
       .min(2)
       .max(50)
-      .default(route.query.fullname as string),
-    email: z.string().default((route.query.email as string) ?? ""),
-    phoneNumber: z.string().default((route.query.phoneNumber as string) ?? ""),
-    address: z.string().default((route.query.address as string) ?? ""),
+      .default(props.fullname as string),
+    email: z.string().default((props.email as string) ?? ""),
+    phoneNumber: z.string().default((props.phoneNumber as string) ?? ""),
+    address: z.string().default((props.address as string) ?? ""),
   })
 );
 
@@ -35,7 +42,7 @@ const updateTheSupplier = async (supplier: SupplierT) => {
   try {
     await invoke<Res<any>>("update_supplier", {
       supplier: {
-        id: route.query.id,
+        id: props.id,
         full_name: supplier.fullname,
         email: supplier.email,
         phone_number: supplier.phoneNumber,
@@ -46,7 +53,7 @@ const updateTheSupplier = async (supplier: SupplierT) => {
     //
     info(
       `UPDATE SUPPLIER: ${JSON.stringify({
-        id: route.query.id,
+        id: props.id,
         full_name: supplier.fullname,
         email: supplier.email,
         phone_number: supplier.phoneNumber,
@@ -75,11 +82,9 @@ const updateTheSupplier = async (supplier: SupplierT) => {
     }
     error("UPDATE SUPPLIER: " + err);
   } finally {
-    hideModal();
+    close();
   }
 };
-
-const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   updateTheSupplier(values);
@@ -139,12 +144,12 @@ const onSubmit = form.handleSubmit((values) => {
           type="button"
           :disabled="isLoading"
           variant="outline"
-          @click="hideModal"
+          @click="close"
         >
           {{ t("g.b.no") }}
         </Button>
         <Button :disabled="isLoading" type="submit" class="col-span-2">
-          {{ t("g.b.u", { name: $route.query.fullname }) }}
+          {{ t("g.b.u", { name: fullname }) }}
         </Button>
       </CardFooter>
     </Card>

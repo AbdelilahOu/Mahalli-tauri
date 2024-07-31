@@ -8,33 +8,37 @@ import {
   PackagePlus,
   Trash2,
 } from "lucide-vue-next";
+// @ts-ignore
+import { ProductUpdate, ProductDelete, InventoryUpdate } from "#components";
 
 defineProps<{ products: ProductT[] }>();
 
 const { t, d, locale, n } = useI18n();
-const { updateQueryParams } = useUpdateRouteQueryParams();
-const { setModalName, toggleModal } = useStore();
+const modal = useModal();
 
-const toggleThisProduct = (product: ProductT, name: string) => {
-  updateQueryParams({
-    id: product.id,
-    name: product.name,
-    purchasePrice: product.purchasePrice,
-    sellingPrice: product.sellingPrice,
-    description: product.description,
-    minQuantity: product.minQuantity,
-  });
-  setModalName(name);
-  toggleModal(true);
+const toggleThisProduct = (product: ProductT, name: "delete" | "update") => {
+  if (name == "delete") {
+    modal.open(ProductDelete, {
+      id: product.id,
+      identifier: product.name,
+    });
+  } else {
+    modal.open(ProductUpdate, {
+      id: product.id,
+      name: product.name,
+      purchasePrice: product.purchasePrice,
+      sellingPrice: product.sellingPrice,
+      description: product.description,
+      minQuantity: product.minQuantity,
+    });
+  }
 };
 
 const updateProductInventory = (id: string, name: string) => {
-  updateQueryParams({
+  modal.open(InventoryUpdate, {
     id,
     name,
   });
-  setModalName("InventoryUpdate");
-  toggleModal(true);
 };
 </script>
 
@@ -142,7 +146,17 @@ const updateProductInventory = (id: string, name: string) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem
-                    @click="toggleThisProduct(product, 'ProductDelete')"
+                    @click="toggleThisProduct(product, 'update')"
+                  >
+                    <FilePenLine
+                      class="text-slate-800 inline mr-2"
+                      :size="20"
+                    />
+                    {{ t("g.actions.edit") }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    @click="toggleThisProduct(product, 'delete')"
                   >
                     <Trash2 class="text-red-500 inline mr-2" :size="20" />
                     <span>
@@ -150,15 +164,6 @@ const updateProductInventory = (id: string, name: string) => {
                         {{ t("g.actions.delete") }}
                       </span>
                     </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    @click="toggleThisProduct(product, 'ProductUpdate')"
-                  >
-                    <FilePenLine
-                      class="text-slate-800 inline mr-2"
-                      :size="20"
-                    />
-                    {{ t("g.actions.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem

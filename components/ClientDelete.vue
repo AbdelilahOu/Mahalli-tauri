@@ -1,20 +1,24 @@
 <script setup lang="ts">
 import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
-import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
+const { close } = useModal();
 
-const deleteTheClient = async (id: string, fullname: string) => {
+const props = defineProps<{
+  id: string;
+  fullname: string;
+}>();
+
+const deleteTheClient = async () => {
   try {
-    await invoke<Res<any>>("delete_client", { id });
+    await invoke<Res<any>>("delete_client", { id: props.id });
+    //INFO
+    console.info(`DELETE CLIENT: ${props.id}`);
     //
-    info(`DELETE CLIENT: ${id}`);
-    //
-    toast.success(t("notifications.client.deleted", { name: fullname }), {
+    toast.success(t("notifications.client.deleted", { name: props.fullname }), {
       closeButton: true,
     });
     // toggle refresh
@@ -27,41 +31,28 @@ const deleteTheClient = async (id: string, fullname: string) => {
       closeButton: true,
     });
     if (typeof err == "object" && "error" in err) {
-      error("DELETE CLIENT: " + err.error);
+      console.error("DELETE CLIENT: " + err.error);
       return;
     }
-    error("DELETE CLIENT: " + err);
+    console.error("DELETE CLIENT: " + err);
   } finally {
-    cancelDelete();
+    close();
   }
 };
-
-const cancelDelete = () => toggleModal(false);
 </script>
 <template>
   <Card>
     <CardHeader>
-      <CardTitle>
-        {{ t("c.d.title") }} {{ $route.query.fullname }} ?
-      </CardTitle>
+      <CardTitle> {{ t("c.d.title") }} {{ fullname }} ? </CardTitle>
     </CardHeader>
     <CardContent>
       <div />
     </CardContent>
     <CardFooter>
-      <Button variant="outline" @click="cancelDelete">
+      <Button variant="outline" @click="close">
         {{ t("g.b.no") }}
       </Button>
-      <Button
-        class="col-span-2"
-        @click="
-            () =>
-              deleteTheClient(
-                $route.query.id as string,
-                $route.query.fullname as string,
-              )
-          "
-      >
+      <Button class="col-span-2" @click="deleteTheClient">
         {{ t("g.b.d") }}
       </Button>
     </CardFooter>

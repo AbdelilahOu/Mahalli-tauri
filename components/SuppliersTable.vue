@@ -1,35 +1,31 @@
 <script setup lang="ts">
 import { FilePenLine, GripHorizontal, Trash2 } from "lucide-vue-next";
 import type { SupplierT } from "@/schemas/supplier.schema";
+// @ts-ignore
+import { SupplierUpdate, SupplierDelete } from "#components";
 
 defineProps<{
   suppliers: SupplierT[];
 }>();
 
 const { t, locale } = useI18n();
-const { updateQueryParams } = useUpdateRouteQueryParams();
-const { setModalName, toggleModal } = useStore();
+const modal = useModal();
 
-const toggleThisSupplier = (supplier: SupplierT, name: string) => {
-  updateQueryParams({
-    id: supplier.id,
-    fullname: supplier.fullname,
-    email: supplier.email,
-    phoneNumber: supplier.phoneNumber,
-    address: supplier.address,
-  });
-  setModalName(name);
-  toggleModal(true);
-};
-
-const toggleSupplierProfile = (supplier: SupplierT) => {
-  updateQueryParams({
-    id: supplier.id,
-    fullname: supplier.fullname,
-    email: supplier.email,
-    phoneNumber: supplier.phoneNumber,
-    address: supplier.address,
-  });
+const toggleThisSupplier = (supplier: SupplierT, name: "delete" | "update") => {
+  if (name == "delete") {
+    modal.open(SupplierDelete, {
+      id: supplier.id,
+      fullname: supplier.fullname,
+    });
+  } else {
+    modal.open(SupplierUpdate, {
+      id: supplier.id,
+      fullname: supplier.fullname,
+      email: supplier.email,
+      phoneNumber: supplier.phoneNumber,
+      address: supplier.address,
+    });
+  }
 };
 </script>
 
@@ -80,21 +76,22 @@ const toggleSupplierProfile = (supplier: SupplierT) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem
-                    @click="toggleThisSupplier(supplier, 'supplierDelete')"
-                  >
-                    <Trash2 :size="20" class="text-red-500 inline mr-2" />
-                    <span class="text-red-500">
-                      {{ t("g.actions.delete") }}
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    @click="toggleThisSupplier(supplier, 'supplierUpdate')"
+                    @click="toggleThisSupplier(supplier, 'update')"
                   >
                     <FilePenLine
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
                     {{ t("g.actions.edit") }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    @click="toggleThisSupplier(supplier, 'delete')"
+                  >
+                    <Trash2 :size="20" class="text-red-500 inline mr-2" />
+                    <span class="text-red-500">
+                      {{ t("g.actions.delete") }}
+                    </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

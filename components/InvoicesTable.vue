@@ -4,9 +4,11 @@ import { invoke } from "@tauri-apps/api";
 import { FilePenLine, GripHorizontal, Printer, Trash2 } from "lucide-vue-next";
 import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
+// @ts-ignore
+import { InvoiceUpdate, InvoiceDelete } from "#components";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { setModalName, toggleModal } = useStore();
+const modal = useModal();
 const { t, d, locale, n } = useI18n();
 const localePath = useLocalePath();
 
@@ -42,14 +44,18 @@ const previewProducts = (id: string) => {
 };
 const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 
-const toggleThisInvoices = (Invoice: InvoiceT, name: string) => {
-  updateQueryParams({
-    id: Invoice.id,
-    identifier: Invoice.identifier,
-    highlight: false,
-  });
-  setModalName(name);
-  toggleModal(true);
+const toggleThisInvoice = (invoice: InvoiceT, name: "delete" | "update") => {
+  if (name == "delete") {
+    modal.open(InvoiceDelete, {
+      id: invoice.id,
+      identifier: invoice.identifier,
+    });
+  } else {
+    modal.open(InvoiceUpdate, {
+      id: invoice.id,
+      identifier: invoice.identifier,
+    });
+  }
 };
 
 const updateInvoiceStatus = async (id: string, status: string) => {
@@ -220,15 +226,7 @@ const updateInvoiceStatus = async (id: string, status: string) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem
-                    @click="toggleThisInvoices(invoice, 'InvoiceDelete')"
-                  >
-                    <Trash2 :size="20" class="text-red-500 inline mr-2" />
-                    <span class="text-red-500">
-                      {{ t("g.actions.delete") }}
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    @click="toggleThisInvoices(invoice, 'InvoiceUpdate')"
+                    @click="toggleThisInvoice(invoice, 'update')"
                   >
                     <FilePenLine
                       :size="20"
@@ -249,6 +247,15 @@ const updateInvoiceStatus = async (id: string, status: string) => {
                         class="text-slate-800 inline mr-2"
                       />{{ t("g.actions.print") }}
                     </NuxtLink>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    @click="toggleThisInvoice(invoice, 'delete')"
+                  >
+                    <Trash2 :size="20" class="text-red-500 inline mr-2" />
+                    <span class="text-red-500">
+                      {{ t("g.actions.delete") }}
+                    </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

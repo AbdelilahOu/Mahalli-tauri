@@ -1,26 +1,36 @@
 <script setup lang="ts">
-const { isShowModal, modalName } = useStore();
+const { isOpen } = useModal();
 const isCollapse = ref<boolean>(true);
 </script>
 
 <template>
-  <main class="w-screen h-screen fixed top-0 left-0 bg-[#FFFAFA] flex">
+  <main class="w-screen h-screen fixed top-0 left-0 grainy-light flex">
     <SideBar v-model:collapse="isCollapse" />
     <div class="grid grid-rows-[50px_1fr] w-full">
       <Navigation />
       <ScrollArea
         class="w-full scroll-smooth flex flex-col border-t border-slate-100"
       >
-        <div class="w-full bg-[#FFFAFA] p-2 rounded-md h-full">
+        <div class="w-full grainy-light p-2 rounded-md h-full">
           <slot />
         </div>
       </ScrollArea>
     </div>
     <div
-      v-if="isShowModal"
+      v-if="isOpen"
       class="w-full h-full flex items-center justify-center fixed bg-black z-50 top-0 left-0 bg-opacity-30"
     >
-      <ModalComponentsRenderer :name="modalName" />
+      <Transition
+        :appear="true"
+        enter-active-class="delay-100 ease-out duration-300"
+        enter-from-class="delay-100 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        enter-to-class="delay-100 opacity-100 translate-y-0 sm:scale-100"
+        leave-class="delay-100 ease-in duration-200"
+        leave-from-class="delay-100 opacity-100 translate-y-0 sm:scale-100"
+        leave-to-class="delay-100 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      >
+        <Modals />
+      </Transition>
     </div>
     <Toaster position="top-center" />
   </main>

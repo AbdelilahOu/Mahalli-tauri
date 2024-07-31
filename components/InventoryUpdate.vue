@@ -2,31 +2,34 @@
 import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { toTypedSchema } from "@vee-validate/zod";
-import { error, info } from "tauri-plugin-log-api";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
+const { close } = useModal();
 const { t } = useI18n();
-const route = useRoute();
+
+const props = defineProps<{
+  id: string;
+  name: string;
+}>();
 
 const isUpdating = ref<boolean>(false);
 
-const stock = z.object({
+const inventory = z.object({
   quantity: z.number().default(0),
 });
 
-const stockSchema = toTypedSchema(stock);
+const inventorySchema = toTypedSchema(inventory);
 
 const form = useForm({
-  validationSchema: stockSchema,
+  validationSchema: inventorySchema,
 });
 
-const updateTheProduct = async ({ quantity }: z.infer<typeof stock>) => {
+const updateTheProduct = async ({ quantity }: z.infer<typeof inventory>) => {
   try {
-    const id = route.query.id;
+    const id = props.id;
     await invoke<Res<any>>("create_inventory", {
       transaction: {
         transaction_type: "IN",
@@ -34,19 +37,17 @@ const updateTheProduct = async ({ quantity }: z.infer<typeof stock>) => {
         quantity: Number(quantity),
       },
     });
-    info(
+    //INFO
+    console.info(
       `UPDATE PRODUCT INVENTORY: ${JSON.stringify({
         id,
         quantity: Number(quantity),
       })}`
     );
     //
-    toast.success(
-      t("notifications.product.updated", { name: route.query.name }),
-      {
-        closeButton: true,
-      }
-    );
+    toast.success(t("notifications.product.updated", { name: props.name }), {
+      closeButton: true,
+    });
     // toggle refresh
     updateQueryParams({
       refresh: "refresh-update-" + Math.random() * 9999,
@@ -57,16 +58,14 @@ const updateTheProduct = async ({ quantity }: z.infer<typeof stock>) => {
       closeButton: true,
     });
     if (typeof err == "object" && "error" in err) {
-      error("UPDATE PRODUCT INVENTORY: " + err.error);
+      console.error("UPDATE PRODUCT INVENTORY: " + err.error);
       return;
     }
-    error("UPDATE PRODUCT INVENTORY: " + err);
+    console.error("UPDATE PRODUCT INVENTORY: " + err);
   } finally {
-    hideModal();
+    close();
   }
 };
-
-const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   updateTheProduct(values);
@@ -102,12 +101,12 @@ const onSubmit = form.handleSubmit((values) => {
           type="button"
           :disabled="isUpdating"
           variant="outline"
-          @click="hideModal"
+          @click="close"
         >
           {{ t("g.b.no") }}
         </Button>
         <Button :disabled="isUpdating" type="submit" class="col-span-2">
-          {{ t("g.b.u", { name: $route.query.name }) }}
+          {{ t("g.b.u", { name: name }) }}
         </Button>
       </CardFooter>
     </Card>

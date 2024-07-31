@@ -8,14 +8,13 @@ import {
 } from "radix-vue";
 
 const router = useRouter();
+const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const defaultPage = computed(() =>
   Number(router.currentRoute.value.query.page)
 );
 
 const LIMIT = 25;
-
-const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const rowsCount = inject<Ref<number>>("count");
 const itemsPerPage = inject<Ref<number>>("itemsPerPage");

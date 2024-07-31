@@ -10,10 +10,18 @@ import { z } from "zod";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
+const { close } = useModal();
 const route = useRoute();
 
 const isUpdating = ref<boolean>(false);
+
+const props = defineProps<{
+  id: string;
+  fullname: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+}>();
 
 const clientSchema = toTypedSchema(
   z.object({
@@ -21,10 +29,10 @@ const clientSchema = toTypedSchema(
       .string()
       .min(2)
       .max(50)
-      .default(route.query.fullname as string),
-    email: z.string().default((route.query.email as string) ?? ""),
-    phoneNumber: z.string().default((route.query.phoneNumber as string) ?? ""),
-    address: z.string().default((route.query.address as string) ?? ""),
+      .default(props.fullname as string),
+    email: z.string().default((props.email as string) ?? ""),
+    phoneNumber: z.string().default((props.phoneNumber as string) ?? ""),
+    address: z.string().default((props.address as string) ?? ""),
   })
 );
 
@@ -36,7 +44,7 @@ const updateTheClient = async (client: ClientT) => {
   try {
     await invoke<Res<any>>("update_client", {
       client: {
-        id: route.query.id,
+        id: props.id,
         full_name: client.fullname,
         email: client.email,
         phone_number: client.phoneNumber,
@@ -47,7 +55,7 @@ const updateTheClient = async (client: ClientT) => {
     //
     info(
       `UPDATE CLIENT: ${JSON.stringify({
-        id: route.query.id,
+        id: props.id,
         full_name: client.fullname,
         email: client.email,
         phone_number: client.phoneNumber,
@@ -76,11 +84,9 @@ const updateTheClient = async (client: ClientT) => {
     }
     error("UPDATE CLIENT: " + err);
   } finally {
-    hideModal();
+    close();
   }
 };
-
-const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   updateTheClient(values);
@@ -140,12 +146,12 @@ const onSubmit = form.handleSubmit((values) => {
           type="button"
           :disabled="isUpdating"
           variant="outline"
-          @click="hideModal"
+          @click="close"
         >
           {{ t("g.b.no") }}</Button
         >
         <Button :disabled="isUpdating" type="submit" class="col-span-2">
-          {{ t("g.b.u", { name: $route.query.fullname }) }}
+          {{ t("g.b.u", { name: fullname }) }}
         </Button>
       </CardFooter>
     </Card>
