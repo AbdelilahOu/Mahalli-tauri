@@ -131,8 +131,8 @@ const createInvoiceFromOrder = async (id: string) => {
           <TableHead class="w-24"></TableHead>
           <TableHead>{{ t("g.fields.fullname") }}</TableHead>
           <TableHead>{{ t("g.fields.items") }}</TableHead>
-          <TableHead class="w-fit">{{ t("g.fields.status") }}</TableHead>
-          <TableHead class="w-56">{{ t("g.fields.date") }}</TableHead>
+          <TableHead class="w-24">{{ t("g.fields.status") }}</TableHead>
+          <TableHead>{{ t("g.fields.date") }}</TableHead>
           <TableHead>{{ t("g.fields.total") }}</TableHead>
           <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
         </TableRow>
@@ -201,7 +201,7 @@ const createInvoiceFromOrder = async (id: string) => {
             </Popover>
             <template v-else>
               {{
-                order.products +
+                (order.products == 0 ? "" : order.products) +
                 " " +
                 t("g.plrz.p", { n: Math.ceil(order.products ?? 0) })
               }}
@@ -249,7 +249,7 @@ const createInvoiceFromOrder = async (id: string) => {
                 <DropdownMenuTrigger>
                   <GripHorizontal class="text-slate-800 inline" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent :class="locale == 'ar' ? 'ml-6' : 'mr-6'">
                   <DropdownMenuItem @click="toggleThisOrder(order, 'update')">
                     <FilePenLine
                       :size="20"

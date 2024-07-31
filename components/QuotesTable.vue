@@ -87,7 +87,7 @@ const createOrderFromQuote = async (id: string) => {
           <TableHead class="w-24"></TableHead>
           <TableHead>{{ t("g.fields.fullname") }}</TableHead>
           <TableHead>{{ t("g.fields.items") }}</TableHead>
-          <TableHead class="w-56">{{ t("g.fields.date") }}</TableHead>
+          <TableHead>{{ t("g.fields.date") }}</TableHead>
           <TableHead>{{ t("g.fields.total") }}</TableHead>
           <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
         </TableRow>
@@ -152,7 +152,7 @@ const createOrderFromQuote = async (id: string) => {
             </Popover>
             <template v-else>
               {{
-                quote.products +
+                (quote.products == 0 ? "" : quote.products) +
                 " " +
                 t("g.plrz.p", { n: Math.ceil(quote?.products ?? 0) })
               }}
@@ -171,7 +171,7 @@ const createOrderFromQuote = async (id: string) => {
                 <DropdownMenuTrigger>
                   <GripHorizontal class="text-slate-800 inline" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent :class="locale == 'ar' ? 'ml-6' : 'mr-6'">
                   <DropdownMenuItem @click="toggleThisQuote(quote, 'update')">
                     <FilePenLine
                       :size="20"

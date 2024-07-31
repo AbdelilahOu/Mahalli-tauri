@@ -92,7 +92,7 @@
       "labels": ["GEKAUFT", "VERKAUFT"],
       "revenue": "Gesamtumsatz",
       "expenses": "Gesamtausgaben",
-      "growth": " {n} % vom letzten Monat",
+      "growth": "{n} vom letzten Monat",
       "b3c": "Beste Kunden basierend auf den Ausgaben",
       "bp": "Meistverkaufte Produkte (Menge)",
       "b3s": "Beste Lieferanten basierend auf den Kosten"
