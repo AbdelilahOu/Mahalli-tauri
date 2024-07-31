@@ -194,16 +194,16 @@ const createOrderFromQuote = async (id: string) => {
                     </NuxtLink>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem @click="createOrderFromQuote(quote.id!)">
+                    <Truck :size="20" class="text-slate-800 inline mr-2" />
+                    {{ t("g.actions.toOrder") }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem @click="toggleThisQuote(quote, 'delete')">
                     <Trash2 :size="20" class="text-red-500 inline mr-2" />
                     <span class="text-red-500">
                       {{ t("g.actions.delete") }}
                     </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem @click="createOrderFromQuote(quote.id!)">
-                    <Truck :size="20" class="text-slate-800 inline mr-2" />
-                    {{ t("g.actions.toOrder") }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
