@@ -194,6 +194,14 @@ const drawHeader = (
     size: 13,
     color: config.color,
   });
+  //
+  page.drawText(t("i.u.d.c.title").toUpperCase(), {
+    x: config.marginX,
+    y: height - config.marginTop,
+    font,
+    size: 14,
+    color: config.color,
+  });
   page.drawText(quote.client.fullname, {
     x: config.marginX,
     y: height - config.marginTop - 20,

@@ -156,6 +156,17 @@ const updateProductInventory = (id: string, name: string) => {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
+                    @click="updateProductInventory(product.id!, product.name!)"
+                  >
+                    <PackagePlus
+                      :size="20"
+                      class="text-slate-800 inline mr-2"
+                    />
+                    {{ t("g.actions.inventoryUpdate") }}
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
                     @click="toggleThisProduct(product, 'delete')"
                   >
                     <Trash2 class="text-red-500 inline mr-2" :size="20" />
@@ -164,16 +175,6 @@ const updateProductInventory = (id: string, name: string) => {
                         {{ t("g.actions.delete") }}
                       </span>
                     </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    @click="updateProductInventory(product.id!, product.name!)"
-                  >
-                    <PackagePlus
-                      :size="20"
-                      class="text-slate-800 inline mr-2"
-                    />
-                    {{ t("g.actions.inventoryUpdate") }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
