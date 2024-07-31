@@ -16,10 +16,9 @@ import {
 import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 //@ts-ignore
-import { NuxtLink } from "#components";
+import { QuoteUpdate, QuoteDelete, NuxtLink } from "#components";
 
-const { updateQueryParams } = useUpdateRouteQueryParams();
-const { setModalName, toggleModal } = useStore();
+const modal = useModal();
 const { t, d, locale, n } = useI18n();
 const localePath = useLocalePath();
 
@@ -37,13 +36,18 @@ const previewProducts = (id: string) => {
 };
 const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 
-const toggleThisQuotes = (Quote: QuoteT, name: string) => {
-  updateQueryParams({
-    id: Quote.id,
-    identifier: Quote.identifier,
-  });
-  setModalName(name);
-  toggleModal(true);
+const toggleThisQuote = (quote: QuoteT, name: "delete" | "update") => {
+  if (name == "delete") {
+    modal.open(QuoteDelete, {
+      id: quote.id,
+      identifier: quote.identifier,
+    });
+  } else {
+    modal.open(QuoteUpdate, {
+      id: quote.id,
+      identifier: quote.identifier,
+    });
+  }
 };
 
 const createOrderFromQuote = async (id: string) => {
@@ -168,17 +172,7 @@ const createOrderFromQuote = async (id: string) => {
                   <GripHorizontal class="text-slate-800 inline" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem
-                    @click="toggleThisQuotes(quote, 'QuoteDelete')"
-                  >
-                    <Trash2 :size="20" class="text-red-500 inline mr-2" />
-                    <span class="text-red-500">
-                      {{ t("g.actions.delete") }}
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    @click="toggleThisQuotes(quote, 'QuoteUpdate')"
-                  >
+                  <DropdownMenuItem @click="toggleThisQuote(quote, 'update')">
                     <FilePenLine
                       :size="20"
                       class="text-slate-800 inline mr-2"
@@ -198,6 +192,13 @@ const createOrderFromQuote = async (id: string) => {
                         class="text-slate-800 inline mr-2"
                       />{{ t("g.actions.print") }}
                     </NuxtLink>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem @click="toggleThisQuote(quote, 'delete')">
+                    <Trash2 :size="20" class="text-red-500 inline mr-2" />
+                    <span class="text-red-500">
+                      {{ t("g.actions.delete") }}
+                    </span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem @click="createOrderFromQuote(quote.id!)">

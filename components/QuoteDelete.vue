@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
-import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
+const { close } = useModal();
 
-const deleteTheQuotes = async (id: string) => {
+const props = defineProps<{
+  id: string;
+  identifier: string;
+}>();
+
+const deleteTheQuotes = async () => {
   try {
-    await invoke<Res<any>>("delete_quote", { id });
-    //
-    info(`DELETE QUOTE: ${id}`);
+    await invoke<Res<any>>("delete_quote", { id: props.id });
+    //INFO
+    console.info(`DELETE QUOTE: ${props.id}`);
     //
     toast.success(t("notifications.quote.deleted"), {
       closeButton: true,
@@ -27,36 +31,29 @@ const deleteTheQuotes = async (id: string) => {
       closeButton: true,
     });
     if (typeof err == "object" && "error" in err) {
-      error("DELETE QUOTE: " + err.error);
+      console.error("DELETE QUOTE: " + err.error);
       return;
     }
-    error("DELETE QUOTE: " + err);
+    console.error("DELETE QUOTE: " + err);
   } finally {
-    toggleModal(false);
+    close();
   }
 };
-
-const cancelDelete = () => toggleModal(false);
 </script>
 
 <template>
   <Card>
     <CardHeader>
-      <CardTitle>
-        {{ t("q.d.title") }}n° {{ $route.query?.identifier }} ?
-      </CardTitle>
+      <CardTitle> {{ t("q.d.title") }}n° {{ identifier }} ? </CardTitle>
     </CardHeader>
     <CardContent>
       <div />
     </CardContent>
     <CardFooter>
-      <Button variant="outline" @click="cancelDelete">
+      <Button variant="outline" @click="close">
         {{ t("g.b.no") }}
       </Button>
-      <Button
-        class="col-span-2"
-        @click="deleteTheQuotes($route.query?.id as string)"
-      >
+      <Button class="col-span-2" @click="deleteTheQuotes">
         {{ t("g.b.d") }}
       </Button>
     </CardFooter>

@@ -9,7 +9,7 @@ import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
+const { close } = useModal();
 
 const clientSchema = toTypedSchema(CreateClientSchema);
 
@@ -63,11 +63,9 @@ const createNewClient = async (client: ClientT) => {
     error("CREATE CLIENT: " + err);
   } finally {
     isCreating.value = false;
-    hideModal();
+    close();
   }
 };
-
-const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   createNewClient(values);
@@ -134,7 +132,7 @@ const setImage = (image: string) => {
           type="button"
           :disabled="isCreating"
           variant="outline"
-          @click="hideModal"
+          @click="close"
         >
           {{ t("g.b.no") }}</Button
         >

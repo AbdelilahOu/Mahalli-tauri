@@ -8,10 +8,12 @@ import { toast } from "vue-sonner";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
+const { close } = useModal();
+
 const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
 const isLoading = ref<boolean>(false);
+
 const invoice = reactive<InvoiceForCreateT>({
   clientId: "",
   paidAmount: 0,
@@ -65,7 +67,7 @@ const createInvoice = async () => {
   isLoading.value = true;
   if (invoice?.clientId && invoice.items?.length !== 0) {
     try {
-      const invoiceRes = await invoke<Res<string>>("create_invoice", {
+      await invoke<Res<string>>("create_invoice", {
         invoice: {
           client_id: invoice.clientId,
           status: "DRAFT",
@@ -95,15 +97,13 @@ const createInvoice = async () => {
       error("CREATE INVOICE: " + err);
     } finally {
       isLoading.value = false;
-      hideModal();
+      close();
     }
     return;
   }
 
   isLoading.value = false;
 };
-
-const hideModal = () => toggleModal(false);
 </script>
 
 <template>
@@ -202,7 +202,7 @@ const hideModal = () => toggleModal(false);
       </div>
     </CardContent>
     <CardFooter>
-      <Button variant="outline" @click="hideModal">
+      <Button variant="outline" @click="close">
         {{ t("g.b.no") }}
       </Button>
       <Button class="col-span-2" @click="createInvoice()">

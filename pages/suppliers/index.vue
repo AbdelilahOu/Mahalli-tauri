@@ -6,10 +6,12 @@ import type { Res, QueryParams } from "@/types";
 import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
+// @ts-ignore
+import { SupplierCreate } from "#components";
 
 const route = useRoute();
 const { t } = useI18n();
-const { toggleModal, setModalName } = useStore();
+const modal = useModal();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const searchQuery = ref<string>(route.query.search as string);
@@ -65,10 +67,7 @@ const debouncedSearch = useDebounceFn(() => {
 
 watch(searchQuery, debouncedSearch);
 
-const updateModal = (name: string) => {
-  setModalName(name);
-  toggleModal(true);
-};
+const openCreateSupplierModal = () => modal.open(SupplierCreate, {});
 </script>
 
 <template>
@@ -79,16 +78,12 @@ const updateModal = (name: string) => {
           <Input v-model="searchQuery" type="text" :placeholder="t('g.s')" />
         </div>
         <div class="w-fit flex gap-2">
-          <Button
-            class="gap-2 text-nowrap"
-            @click="updateModal('SupplierCreate')"
-          >
+          <Button class="gap-2 text-nowrap" @click="openCreateSupplierModal">
             <PlusCircleIcon :size="20" />
             {{ t("s.i.addButton") }}
           </Button>
         </div>
       </div>
-
       <SuppliersTable :suppliers="suppliers" />
     </div>
   </main>

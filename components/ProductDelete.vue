@@ -1,19 +1,25 @@
 <script setup lang="ts">
-import { invoke } from "@tauri-apps/api";
-import { error, info } from "tauri-plugin-log-api";
 import type { Res } from "@/types";
+import { invoke } from "@tauri-apps/api";
 import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
+const { close } = useModal();
 const { t } = useI18n();
 
-const deleteTheProduct = async (id: string, name: string) => {
+const props = defineProps<{
+  id: string;
+  name: string;
+}>();
+
+const deleteTheProduct = async () => {
   try {
-    await invoke<Res<string>>("delete_product", { id });
-    info(`DELETE PRODUCT: ${id}`);
+    await invoke<Res<string>>("delete_product", { id: props.id });
+
+    //INFO
+    console.info(`DELETE PRODUCT: ${props.id}`);
     //
-    toast.success(t("notifications.product.deleted", { name }), {
+    toast.success(t("notifications.product.deleted", { name: props.name }), {
       closeButton: true,
     });
     // toggle refresh
@@ -26,40 +32,29 @@ const deleteTheProduct = async (id: string, name: string) => {
       closeButton: true,
     });
     if (typeof err == "object" && "error" in err) {
-      error("DELETE PRODUCT: " + err.error);
+      console.error("DELETE PRODUCT: " + err.error);
       return;
     }
-    error("DELETE PRODUCT: " + err);
+    console.error("DELETE PRODUCT: " + err);
   } finally {
-    cancelDelete();
+    close();
   }
 };
-
-const cancelDelete = () => toggleModal(false);
 </script>
 
 <template>
   <Card>
     <CardHeader>
-      <CardTitle> {{ t("p.d.title") }} {{ $route.query.name }} ? </CardTitle>
+      <CardTitle> {{ t("p.d.title") }} {{ name }} ? </CardTitle>
     </CardHeader>
     <CardContent>
       <div />
     </CardContent>
     <CardFooter>
-      <Button variant="outline" @click="cancelDelete">
+      <Button variant="outline" @click="close">
         {{ t("g.b.no") }}
       </Button>
-      <Button
-        class="col-span-2"
-        @click="
-            () =>
-              deleteTheProduct(
-                $route.query.id as string,
-                $route.query.name as string,
-              )
-          "
-      >
+      <Button class="col-span-2" @click="deleteTheProduct">
         {{ t("g.b.d") }}
       </Button>
     </CardFooter>

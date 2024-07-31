@@ -6,10 +6,12 @@ import type { Res, QueryParams } from "@/types";
 import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
+// @ts-ignore
+import { InvoiceCreate } from "#components";
 
 const route = useRoute();
 const { t, d } = useI18n();
-const { toggleModal, setModalName } = useStore();
+const modal = useModal();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const invoiceProducts = ref<InvoiceProductT[]>([]);
@@ -104,10 +106,7 @@ const listInvoiceProduct = async (id?: string) => {
   }
 };
 
-const updateModal = (name: string) => {
-  setModalName(name);
-  toggleModal(true);
-};
+const openCreateInvoiceModal = () => modal.open(InvoiceCreate, {});
 </script>
 
 <template>
@@ -172,10 +171,7 @@ const updateModal = (name: string) => {
           </Select>
         </div>
         <div class="w-fit flex gap-1">
-          <Button
-            class="gap-2 text-nowrap"
-            @click="updateModal('InvoiceCreate')"
-          >
+          <Button class="gap-2 text-nowrap" @click="openCreateInvoiceModal()">
             <PlusCircleIcon :size="20" />
 
             {{ t("i.i.addButton") }}

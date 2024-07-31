@@ -11,7 +11,7 @@ import type { Res } from "@/types";
 import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
+const { close } = useModal();
 const { t } = useI18n();
 const isLoading = ref<boolean>(false);
 
@@ -65,11 +65,9 @@ const createNewSupplier = async (supplier: SupplierT) => {
     error("CREATE SUPPLIER: " + err);
   } finally {
     isLoading.value = false;
-    hideModal();
+    close();
   }
 };
-
-const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   createNewSupplier(values);
@@ -138,7 +136,7 @@ const saveImage = (image: string) => {
           type="button"
           :disabled="isLoading"
           variant="outline"
-          @click="hideModal"
+          @click="close"
         >
           {{ t("g.b.no") }}
         </Button>
