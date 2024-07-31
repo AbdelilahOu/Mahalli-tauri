@@ -13,11 +13,13 @@ import {
   Quote,
   Store,
 } from "lucide-vue-next";
+// @ts-ignore
+import { TranslationModal } from "#components";
 
 const collapse = defineModel<boolean>("collapse", { required: true });
 const { t, locale } = useI18n();
 const localePath = useLocalePath();
-const { setModalName, toggleModal } = useStore();
+const modal = useModal();
 
 const LOCALE_TEXT = {
   en: "English",
@@ -26,10 +28,7 @@ const LOCALE_TEXT = {
   de: "Deutsch",
 } as const;
 
-const openTranslationModal = () => {
-  toggleModal(true);
-  setModalName("TranslationModal");
-};
+const openTranslationModal = () => modal.open(TranslationModal, {});
 </script>
 
 <template>

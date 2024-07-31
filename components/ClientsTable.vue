@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { ClientT } from "@/schemas/client.schema";
 import { FilePenLine, Trash2, GripHorizontal } from "lucide-vue-next";
+// @ts-ignore
+import { ClientUpdate, ClientDelete } from "#components";
 
 defineProps<{
   clients: ClientT[];
@@ -8,18 +10,23 @@ defineProps<{
 
 const { t, locale, n } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { setModalName, toggleModal } = useStore();
+const modal = useModal();
 
-const toggleThisClient = (client: ClientT, name: string) => {
-  updateQueryParams({
-    id: client.id,
-    fullname: client.fullname,
-    email: client.email,
-    phoneNumber: client.phoneNumber,
-    address: client.address,
-  });
-  setModalName(name);
-  toggleModal(true);
+const toggleThisClient = (client: ClientT, name: "delete" | "update") => {
+  if (name == "delete") {
+    modal.open(ClientDelete, {
+      id: client.id,
+      fullname: client.fullname,
+    });
+  } else {
+    modal.open(ClientUpdate, {
+      id: client.id,
+      fullname: client.fullname,
+      email: client.email,
+      phoneNumber: client.phoneNumber,
+      address: client.address,
+    });
+  }
 };
 </script>
 
@@ -73,22 +80,19 @@ const toggleThisClient = (client: ClientT, name: string) => {
                   <GripHorizontal class="text-slate-800 inline" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem
-                    @click="toggleThisClient(client, 'ClientDelete')"
-                  >
-                    <Trash2 :size="20" class="text-red-500 inline mr-2" />
-                    <span class="text-red-500">
-                      {{ t("g.actions.delete") }}
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    @click="toggleThisClient(client, 'ClientUpdate')"
-                  >
+                  <DropdownMenuItem @click="toggleThisClient(client, 'update')">
                     <FilePenLine
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
                     {{ t("g.actions.edit") }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem @click="toggleThisClient(client, 'delete')">
+                    <Trash2 :size="20" class="text-red-500 inline mr-2" />
+                    <span class="text-red-500">
+                      {{ t("g.actions.delete") }}
+                    </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

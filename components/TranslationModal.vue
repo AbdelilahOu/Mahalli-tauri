@@ -2,8 +2,7 @@
 import { buttonVariants } from "./ui/button";
 const { t } = useI18n();
 const switchLocalePath = useSwitchLocalePath();
-const { toggleModal } = useStore();
-const hideModal = () => toggleModal(false);
+const { close } = useModal();
 </script>
 
 <template>
@@ -113,12 +112,7 @@ const hideModal = () => toggleModal(false);
       </div>
     </CardContent>
     <CardFooter>
-      <Button
-        class="col-span-3"
-        type="button"
-        variant="outline"
-        @click="hideModal"
-      >
+      <Button class="col-span-3" type="button" variant="outline" @click="close">
         {{ t("g.b.no") }}
       </Button>
     </CardFooter>

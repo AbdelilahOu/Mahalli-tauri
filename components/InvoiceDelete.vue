@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
-import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
+const { close } = useModal();
 const { t } = useI18n();
 
-const deleteTheInvoice = async (id: string) => {
+const props = defineProps<{
+  id: string;
+  identifier: string;
+}>();
+
+const deleteTheInvoice = async () => {
   try {
-    await invoke<Res<any>>("delete_invoice", { id });
-    //
-    info(`DELETE INVOICE: ${id}`);
+    await invoke<Res<any>>("delete_invoice", { id: props.id });
+    //INFO
+    console.info(`DELETE INVOICE: ${props.id}`);
     //
     toast.success(t("notifications.invoice.deleted"), {
       closeButton: true,
@@ -27,36 +31,29 @@ const deleteTheInvoice = async (id: string) => {
       closeButton: true,
     });
     if (typeof err == "object" && "error" in err) {
-      error("DELETE INVOICE: " + err.error);
+      console.error("DELETE INVOICE: " + err.error);
       return;
     }
-    error("DELETE INVOICE: " + err);
+    console.error("DELETE INVOICE: " + err);
   } finally {
-    toggleModal(false);
+    close();
   }
 };
-
-const cancelDelete = () => toggleModal(false);
 </script>
 
 <template>
   <Card>
     <CardHeader>
-      <CardTitle>
-        {{ t("i.d.title") }} n° {{ $route.query?.identifier }} ?
-      </CardTitle>
+      <CardTitle> {{ t("i.d.title") }} n° {{ identifier }} ? </CardTitle>
     </CardHeader>
     <CardContent>
       <div />
     </CardContent>
     <CardFooter>
-      <Button variant="outline" @click="cancelDelete">
+      <Button variant="outline" @click="close">
         {{ t("g.b.no") }}
       </Button>
-      <Button
-        class="col-span-2"
-        @click="deleteTheInvoice($route.query.id as string)"
-      >
+      <Button class="col-span-2" @click="deleteTheInvoice()">
         {{ t("g.b.d") }}
       </Button>
     </CardFooter>
