@@ -117,7 +117,7 @@ const updateProductInventory = (id: string, name: string) => {
               "
             >
               {{
-                product?.inventory +
+                (product?.inventory == 0 ? "" : product?.inventory) +
                 " " +
                 t("g.plrz.i", { n: Math.ceil(product?.inventory ?? 0) })
               }}
@@ -125,7 +125,7 @@ const updateProductInventory = (id: string, name: string) => {
           </TableCell>
           <TableCell class="p-2">
             {{
-              product.minQuantity +
+              (product.minQuantity == 0 ? "" : product.minQuantity) +
               " " +
               t("g.plrz.i", { n: Math.ceil(product.minQuantity ?? 0) })
             }}
@@ -144,7 +144,7 @@ const updateProductInventory = (id: string, name: string) => {
                 <DropdownMenuTrigger>
                   <GripHorizontal class="text-slate-800 inline" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent :class="locale == 'ar' ? 'ml-6' : 'mr-6'">
                   <DropdownMenuItem
                     @click="toggleThisProduct(product, 'update')"
                   >

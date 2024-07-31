@@ -99,8 +99,8 @@ const updateInvoiceStatus = async (id: string, status: string) => {
           <TableHead class="w-24"></TableHead>
           <TableHead>{{ t("g.fields.fullname") }}</TableHead>
           <TableHead>{{ t("g.fields.items") }}</TableHead>
-          <TableHead class="w-fit">{{ t("g.fields.status") }}</TableHead>
-          <TableHead class="w-56">{{ t("g.fields.date") }}</TableHead>
+          <TableHead class="w-24">{{ t("g.fields.status") }}</TableHead>
+          <TableHead>{{ t("g.fields.date") }}</TableHead>
           <TableHead>{{ t("g.fields.total") }}</TableHead>
           <TableHead>{{ t("g.fields.paid") }}</TableHead>
           <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
@@ -172,7 +172,7 @@ const updateInvoiceStatus = async (id: string, status: string) => {
             </Popover>
             <template v-else>
               {{
-                invoice.products +
+                (invoice.products == 0 ? "" : invoice.products) +
                 " " +
                 t("g.plrz.p", { n: Math.ceil(invoice.products ?? 0) })
               }}
@@ -224,7 +224,7 @@ const updateInvoiceStatus = async (id: string, status: string) => {
                 <DropdownMenuTrigger>
                   <GripHorizontal class="text-slate-800 inline" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent :class="locale == 'ar' ? 'ml-6' : 'mr-6'">
                   <DropdownMenuItem
                     @click="toggleThisInvoice(invoice, 'update')"
                   >
