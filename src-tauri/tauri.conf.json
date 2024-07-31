@@ -73,7 +73,7 @@
         "https://mahalli.abdelilah4dev.workers.dev/{{target}}/{{arch}}/{{current_version}}"
       ],
       "dialog": true,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEE1ODFEQ0ZENjNFQzIyNUEKUldSYUl1eGovZHlCcFNaME56bi9KRm1mMTdtZXhvZjhrcWhVdHhqVU00dkhWQ3cxdEc1S0lGcmIK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdGMTJGNUYzMjQ4MEIxRDEKUldUUnNZQWs4L1VTZjNMb3VKWCs1OHJXUWlzVUR3U0JUT29GcGd1WU9hZ2hLNGdwSEJ2eWNZOVUK",
       "windows": {
         "installMode": "passive"
       }
