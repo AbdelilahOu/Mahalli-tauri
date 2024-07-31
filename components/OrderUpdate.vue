@@ -7,9 +7,8 @@ import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
+const { close } = useModal();
 const { t } = useI18n();
-const route = useRoute();
 
 const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
@@ -22,10 +21,15 @@ const order = reactive<OrderForUpdateT>({
   items: [],
 });
 
+const props = defineProps<{
+  id: string;
+  identifier: string;
+}>();
+
 onBeforeMount(async () => {
   // @ts-ignore
   const res = await invoke<Res<OrderForUpdateT>>("get_order", {
-    id: route.query.id,
+    id: props.id,
   });
 
   if (!res.error) {
@@ -101,11 +105,9 @@ const updateTheOrders = async () => {
     }
     error("UPDATE ORDER: " + err);
   } finally {
-    hideModal();
+    close();
   }
 };
-
-const hideModal = () => toggleModal(false);
 
 async function deleteOneOrderItem(id: string) {
   try {
@@ -133,9 +135,7 @@ const deleteOrderItem = (index: number) => {
     class="w-5/6 lg:w-1/2 relative h-fit rounded-md z-50 gap-3 flex flex-col bg-white min-w-[350px]"
   >
     <CardHeader>
-      <CardTitle>
-        {{ t("o.u.title") }} N° {{ $route.query?.identifier }}
-      </CardTitle>
+      <CardTitle> {{ t("o.u.title") }} N° {{ identifier }} </CardTitle>
     </CardHeader>
     <CardContent>
       <div class="h-full w-full grid grid-cols-1 gap-2">
@@ -227,7 +227,7 @@ const deleteOrderItem = (index: number) => {
       </div>
     </CardContent>
     <CardFooter>
-      <Button variant="outline" @click="hideModal">
+      <Button variant="outline" @click="close">
         {{ t("g.b.no") }}
       </Button>
       <Button class="col-span-2" @click="updateTheOrders">

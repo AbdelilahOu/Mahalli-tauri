@@ -6,10 +6,12 @@ import type { Res, QueryParams } from "@/types";
 import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
+// @ts-ignore
+import { QuoteCreate } from "#components";
 
 const route = useRoute();
 const { t, d } = useI18n();
-const { toggleModal, setModalName } = useStore();
+const modal = useModal();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const searchQuery = ref<string>(route.query.search as string);
@@ -98,12 +100,8 @@ const listQuoteProduct = async (id?: string) => {
   }
 };
 
-const updateModal = (name: string) => {
-  setModalName(name);
-  toggleModal(true);
-};
+const openCreateQuoteModal = () => modal.open(QuoteCreate, {});
 </script>
-
 <template>
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col items-start justify-start">
@@ -133,9 +131,8 @@ const updateModal = (name: string) => {
           </Popover>
         </div>
         <div class="w-fit flex gap-1">
-          <Button class="gap-2 text-nowrap" @click="updateModal('QuoteCreate')">
+          <Button class="gap-2 text-nowrap" @click="openCreateQuoteModal">
             <PlusCircleIcon :size="20" />
-
             {{ t("q.i.addButton") }}
           </Button>
         </div>

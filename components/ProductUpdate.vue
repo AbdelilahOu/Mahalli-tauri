@@ -9,11 +9,20 @@ import { toast } from "vue-sonner";
 import { z } from "zod";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { toggleModal } = useStore();
+const { close } = useModal();
 const { t } = useI18n();
 const route = useRoute();
 
 const isUpdating = ref<boolean>(false);
+
+const props = defineProps<{
+  id: string;
+  name: string;
+  purchasePrice: number;
+  sellingPrice: number;
+  description: string;
+  minQuantity: number;
+}>();
 
 const productSchema = toTypedSchema(
   z.object({
@@ -21,21 +30,20 @@ const productSchema = toTypedSchema(
       .string()
       .min(2)
       .max(50)
-      .default(route.query.name as string),
+      .default(props.name as string),
     purchasePrice: z
       .number()
       .min(0)
-      .default(Number(route.query.purchasePrice ?? 0)),
+      .default(Number(props.purchasePrice ?? 0)),
     sellingPrice: z
       .number()
       .min(0)
-      .default(Number(route.query.sellingPrice ?? 0)),
+      .default(Number(props.sellingPrice ?? 0)),
     description: z
       .string()
       .min(2)
-      .default((route.query.description as string) ?? ""),
-    // image: z.string().default((route.query.image ?? "") as string),
-    minQuantity: z.number().default(Number(route.query.minQuantity) ?? 0),
+      .default((props.description as string) ?? ""),
+    minQuantity: z.number().default(Number(props.minQuantity) ?? 0),
   })
 );
 
@@ -45,7 +53,7 @@ const form = useForm({
 
 const updateTheProduct = async (product: ProductT) => {
   try {
-    const id = route.query.id;
+    const id = props.id;
     await invoke<Res<string>>("update_product", {
       product: {
         name: product.name,
@@ -87,11 +95,9 @@ const updateTheProduct = async (product: ProductT) => {
     }
     error("UPDATE PRODUCT: " + err);
   } finally {
-    hideModal();
+    close();
   }
 };
-
-const hideModal = () => toggleModal(false);
 
 const onSubmit = form.handleSubmit((values) => {
   updateTheProduct(values);
@@ -179,12 +185,12 @@ const onSubmit = form.handleSubmit((values) => {
           type="button"
           :disabled="isUpdating"
           variant="outline"
-          @click="hideModal"
+          @click="close"
         >
           {{ t("g.b.no") }}
         </Button>
         <Button :disabled="isUpdating" type="submit" class="col-span-2">
-          {{ t("g.b.u", { name: $route.query.name }) }}
+          {{ t("g.b.u", { name: name }) }}
         </Button>
       </CardFooter>
     </Card>

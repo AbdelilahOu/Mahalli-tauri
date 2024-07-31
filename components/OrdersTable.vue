@@ -16,10 +16,10 @@ import {
 import type { Res } from "@/types";
 import { toast } from "vue-sonner";
 //@ts-ignore
-import { NuxtLink } from "#components";
+import { NuxtLink, OrderDelete, OrderUpdate } from "#components";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
-const { setModalName, toggleModal } = useStore();
+const modal = useModal();
 const { t, d, locale, n } = useI18n();
 const localePath = useLocalePath();
 
@@ -53,14 +53,18 @@ const previewProducts = (id: string) => {
 };
 const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 
-const toggleThisOrders = (Order: OrderT, name: string) => {
-  updateQueryParams({
-    id: Order.id,
-    identifier: Order.identifier,
-    highlight: false,
-  });
-  setModalName(name);
-  toggleModal(true);
+const toggleThisOrder = (order: OrderT, name: "delete" | "update") => {
+  if (name == "delete") {
+    modal.open(OrderDelete, {
+      id: order.id,
+      identifier: order.identifier,
+    });
+  } else {
+    modal.open(OrderUpdate, {
+      id: order.id,
+      identifier: order.identifier,
+    });
+  }
 };
 
 const updateOrderStatus = async (id: string, status: string) => {
@@ -246,17 +250,7 @@ const createInvoiceFromOrder = async (id: string) => {
                   <GripHorizontal class="text-slate-800 inline" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem
-                    @click="toggleThisOrders(order, 'OrderDelete')"
-                  >
-                    <Trash2 :size="20" class="text-red-500 inline mr-2" />
-                    <span class="text-red-500">
-                      {{ t("g.actions.delete") }}
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    @click="toggleThisOrders(order, 'OrderUpdate')"
-                  >
+                  <DropdownMenuItem @click="toggleThisOrder(order, 'update')">
                     <FilePenLine
                       :size="20"
                       class="text-slate-800 inline mr-2"
@@ -283,6 +277,13 @@ const createInvoiceFromOrder = async (id: string) => {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />{{ t("g.actions.toInvoice") }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem @click="toggleThisOrder(order, 'delete')">
+                    <Trash2 :size="20" class="text-red-500 inline mr-2" />
+                    <span class="text-red-500">
+                      {{ t("g.actions.delete") }}
+                    </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
