@@ -144,7 +144,7 @@ const updateProductInventory = (id: string, name: string) => {
                 <DropdownMenuTrigger>
                   <GripHorizontal class="text-slate-800 inline" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent :class="locale == 'ar' ? 'ml-6' : 'mr-6'">
+                <DropdownMenuContent class="rtl:ml-6 ltr:mr-6">
                   <DropdownMenuItem
                     @click="toggleThisProduct(product, 'update')"
                   >
