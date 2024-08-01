@@ -30,8 +30,11 @@ const STATUS_COLORS = {
 
 const transactionsLabels = ref<string[]>([]);
 const tickFormatToDate = (i: number) => {
-  return d(transactionsLabels.value[i], "short");
+  return transactionsLabels.value[i]
+    ? d(transactionsLabels.value[i], "short")
+    : "";
 };
+
 const barQuantityTriggers = {
   [GroupedBar.selectors.bar]: (d: groupedTransaction[string], i: number) => {
     const transactionType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
