@@ -63,8 +63,8 @@ const { data: invoicesData } = await useAsyncData("invoices", fetchInvoices, {
   watch: [queryParams],
 });
 
-const invoices = computed(() => invoicesData.value?.invoices ?? []);
-const totalRows = computed(() => invoicesData.value?.count ?? 0);
+const invoices = computed<InvoiceT[]>(() => invoicesData.value?.invoices ?? []);
+const totalRows = computed<number>(() => invoicesData.value?.count ?? 0);
 
 provide("count", totalRows);
 provide("itemsPerPage", LIMIT);

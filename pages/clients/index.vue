@@ -55,8 +55,8 @@ const { data } = useAsyncData(
   { watch: [queryParams] }
 );
 
-const clients = computed(() => data.value?.clients ?? []);
-const totalRows = computed(() => data.value?.count ?? 0);
+const clients = computed<ClientT[]>(() => data.value?.clients ?? []);
+const totalRows = computed<number>(() => data.value?.count ?? 0);
 
 provide("count", totalRows);
 provide("itemsPerPage", LIMIT);
