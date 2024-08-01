@@ -63,8 +63,8 @@ const { data: ordersData } = await useAsyncData("orders", fetchOrders, {
   watch: [queryParams],
 });
 
-const orders = computed(() => ordersData.value?.orders ?? []);
-const totalRows = computed(() => ordersData.value?.count ?? 0);
+const orders = computed<OrderT[]>(() => ordersData.value?.orders ?? []);
+const totalRows = computed<number>(() => ordersData.value?.count ?? 0);
 
 provide("count", totalRows);
 provide("itemsPerPage", LIMIT);

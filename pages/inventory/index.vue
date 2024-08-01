@@ -60,8 +60,8 @@ const { data } = useAsyncData(
   { watch: [queryParams] }
 );
 
-const inventory = computed(() => data.value?.inventory ?? []);
-const totalRows = computed(() => data.value?.count ?? 0);
+const inventory = computed<InventoryT[]>(() => data.value?.inventory ?? []);
+const totalRows = computed<number>(() => data.value?.count ?? 0);
 
 provide("count", totalRows);
 provide("itemsPerPage", LIMIT);
