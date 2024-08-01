@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "mahalli",
-    "version": "1.8.5"
+    "version": "1.8.6"
   },
   "tauri": {
     "allowlist": {
@@ -70,7 +70,7 @@
     "updater": {
       "active": true,
       "endpoints": [
-        "https://mahalli.abdelilah4dev.workers.dev/{{target}}/{{arch}}/{{current_version}}"
+        "https://mahalli.abdelilah4dev.workers.dev/check/AbdelilahOu/Mahalli-nuxt/{{target}}/{{arch}}/{{current_version}}"
       ],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdGMTJGNUYzMjQ4MEIxRDEKUldUUnNZQWs4L1VTZjNMb3VKWCs1OHJXUWlzVUR3U0JUT29GcGd1WU9hZ2hLNGdwSEJ2eWNZOVUK",
