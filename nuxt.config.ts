@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@nuxt/eslint",
   ],
+  sourcemap: false,
   ssr: false,
   eslint: {},
   routeRules: {

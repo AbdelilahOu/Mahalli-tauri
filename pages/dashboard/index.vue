@@ -31,7 +31,7 @@ const STATUS_COLORS = {
 const transactionsLabels = ref<string[]>([]);
 const tickFormatToDate = (i: number) => {
   return transactionsLabels.value[i]
-    ? d(transactionsLabels.value[i], "short")
+    ? d(transactionsLabels.value[i], "monthOnly")
     : "";
 };
 
@@ -56,6 +56,7 @@ const { data: inventoryTransactions } = useAsyncData(
   async () => {
     try {
       const res = await invoke<Res<transactionsT[]>>("list_inventory_stats");
+      console.log(res);
       const result = res.data.reduce((acc, item) => {
         const { createdAt: date, transactionType, quantity, price } = item;
         const createdAt = new Date(date).toISOString().split("T")[0];
@@ -110,47 +111,13 @@ const { data: statusCounts } = useAsyncData("statusCounts", async () => {
   }
 });
 
-const { data: revenue } = useAsyncData("revenue", async () => {
+const { data: financials } = useAsyncData("financialMetrices", async () => {
   try {
-    const res = await invoke<Res<any>>("list_revenue");
-    const data = res.data.revenue[0];
-    let growth =
-      ((data?.currentRevenue - data?.lastMonthRevenue) /
-        data?.lastMonthRevenue) *
-      100;
-    if (!data?.lastMonthRevenue) growth = 0;
-    return {
-      growth,
-      currentRevenue: data.currentRevenue,
-    };
-  } catch (err: any) {
-    handleError(err, "STATS REVENUE");
-    return {
-      growth: 0,
-      currentRevenue: 0,
-    };
-  }
-});
-
-const { data: expenses } = useAsyncData("expenses", async () => {
-  try {
-    const res = await invoke<Res<any>>("list_expenses");
-    const data = res.data.expenses[0];
-    let growth =
-      ((data?.currentExpenses - data?.lastMonthExpenses) /
-        data?.lastMonthExpenses) *
-      100;
-    if (!data?.lastMonthExpenses) growth = 0;
-    return {
-      growth,
-      currentExpenses: data.currentExpenses,
-    };
+    const res = await invoke<Res<any>>("list_financial_metrices");
+    return res.data;
   } catch (err: any) {
     handleError(err, "STATS EXPENSES");
-    return {
-      growth: 0,
-      currentExpenses: 0,
-    };
+    return {};
   }
 });
 
@@ -182,13 +149,13 @@ function handleError(err: any, context: string) {
           </CardHeader>
           <CardContent class="pt-0">
             <div class="text-2xl font-bold">
-              {{ n(revenue?.currentRevenue ?? 0, "decimal") }}
+              {{ n(financials?.current_revenue || 0, "decimal") }}
               DH
             </div>
             <p class="text-xs text-muted-foreground">
               {{
                 t("dashboard.i.growth", {
-                  n: n(revenue?.growth! ?? 0, {
+                  n: n(financials?.revenue_growth_percentage || 0, {
                     style: "percent",
                   }),
                 })
@@ -207,13 +174,13 @@ function handleError(err: any, context: string) {
           </CardHeader>
           <CardContent class="pt-0">
             <div class="text-2xl font-bold">
-              {{ n(expenses?.currentExpenses ?? 0, "decimal") }}
+              {{ n(financials?.current_expenses || 0, "decimal") }}
               DH
             </div>
             <p class="text-xs text-muted-foreground">
               {{
                 t("dashboard.i.growth", {
-                  n: n(expenses?.growth! ?? 0, {
+                  n: n(financials?.expenses_growth_percentage || 0, {
                     style: "percent",
                   }),
                 })
