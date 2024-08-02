@@ -41,6 +41,8 @@ const DEFAULT_NUMBER_FORMATS = {
     percent: {
       style: "percent",
       useGrouping: false,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     },
   },
   EU: {
@@ -57,6 +59,8 @@ const DEFAULT_NUMBER_FORMATS = {
     percent: {
       style: "percent",
       useGrouping: false,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     },
   },
   AR: {
@@ -73,6 +77,8 @@ const DEFAULT_NUMBER_FORMATS = {
     percent: {
       style: "percent",
       useGrouping: false,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     },
   },
 };

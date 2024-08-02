@@ -999,8 +999,10 @@ impl QueriesService {
     pub async fn list_inventory_stats(db: &DbConn) -> Result<Vec<JsonValue>, DbErr> {
         let (sql, values) = Query::select().from(InventoryTransactions).columns([
             (InventoryTransactions, inventory_transactions::Column::TransactionType),
-            (InventoryTransactions, inventory_transactions::Column::CreatedAt),
         ]).expr_as(
+            Expr::cust("strftime('%Y-%m', inventory_transactions.created_at)"),
+            Alias::new("created_at"),
+        ).expr_as(
             Expr::col((InventoryTransactions, inventory_transactions::Column::Quantity)).sum(),
             Alias::new("quantity"),
         ).expr_as(
@@ -1192,106 +1194,115 @@ impl QueriesService {
             "invoices": invoice_res,
         }))
     }
-    pub async fn list_revenue(db: &DbConn) -> Result<JsonValue, DbErr> {
-        let (sql, values) = Query::select().from(InventoryTransactions).expr_as(
-            Func::coalesce([
-                Func::sum(
-                    Expr::col((InventoryTransactions, inventory_transactions::Column::Quantity)).mul(Expr::col((OrderItems, order_items::Column::Price))),
-                ).into(),
-                Expr::val(0.0).into(),
-            ]),
-            Alias::new("current_revenue"),
-        ).expr_as(
+    pub async fn list_financial_metrices(db: &DbConn) -> Result<JsonValue, DbErr> {
+        let (sql, values) = Query::select().expr_as(Expr::expr(
             Expr::expr(SimpleExpr::SubQuery(
                 None,
                 Box::new(SubQueryStatement::SelectStatement(
-                    Query::select().from(InventoryTransactions).expr(Func::coalesce([
+                    Query::select().expr(Func::coalesce([
                         Func::sum(
-                            Expr::col((InventoryTransactions, inventory_transactions::Column::Quantity)).mul(Expr::col((OrderItems, order_items::Column::Price))),
+                            Expr::case(
+                                Expr::col((Invoices, invoices::Column::Status)).eq("PAID"),
+                                Expr::col((InventoryTransactions, inventory_transactions::Column::Quantity)).mul(Expr::col((OrderItems, order_items::Column::Price))),
+                            ).case(
+                                Expr::col((Invoices, invoices::Column::Status)).eq("PARTIALLY_PAID"),
+                                Expr::col((Invoices, invoices::Column::PaidAmount)),
+                            ).finally(Expr::val(0))
                         ).into(),
                         Expr::val(0.0).into(),
-                    ])).join(
-                        JoinType::Join,
-                        OrderItems,
-                        Expr::col((OrderItems, order_items::Column::InventoryId)).equals((InventoryTransactions, inventory_transactions::Column::Id)),
-                    ).join(
-                        JoinType::Join,
-                        Orders,
-                        Expr::col((Orders, orders::Column::Id)).equals((OrderItems, order_items::Column::OrderId)),
-                    ).join(
-                        JoinType::Join,
-                        Invoices,
-                        Expr::col((Invoices, invoices::Column::OrderId)).equals((Orders, orders::Column::Id)),
-                    ).cond_where(
-                        Cond::all().add(Expr::col((Invoices, invoices::Column::Status)).eq("PAID")).add(Expr::col((Invoices, invoices::Column::IsDeleted)).eq(false)).add(Expr::cust("inventory_transactions.created_at < strftime('%Y-%m-01', CURRENT_DATE)"))
-                    ).to_owned(),
+                    ])).from(InventoryTransactions).join(JoinType::InnerJoin, OrderItems,
+                        Expr::col((OrderItems, order_items::Column::InventoryId)).equals((InventoryTransactions, inventory_transactions::Column::Id))).join(JoinType::InnerJoin, Orders,
+                        Expr::col((Orders, orders::Column::Id)).equals((OrderItems, order_items::Column::OrderId))).join(JoinType::InnerJoin, Invoices,
+                        Expr::col((Invoices, invoices::Column::OrderId)).equals((Orders, orders::Column::Id))).cond_where(
+                        Expr::cust("invoices.created_at >= strftime('%Y-%m-01', CURRENT_DATE)").and(Expr::col((Invoices, invoices::Column::Status)).is_in(vec!["PAID", "PARTIALLY_PAID"])).and(Expr::col((Invoices, invoices::Column::IsDeleted)).eq(false))
+                    ).to_owned()
                 )),
-            )),
-            Alias::new("last_month_revenue"),
-        ).join(
-            JoinType::Join,
-            OrderItems,
-            Expr::col((OrderItems, order_items::Column::InventoryId)).equals((InventoryTransactions, inventory_transactions::Column::Id)),
-        ).join(
-            JoinType::Join,
-            Orders,
-            Expr::col((Orders, orders::Column::Id)).equals((OrderItems, order_items::Column::OrderId)),
-        ).join(
-            JoinType::Join,
-            Invoices,
-            Expr::col((Invoices, invoices::Column::OrderId)).equals((Orders, orders::Column::Id)),
-        ).cond_where(
-            Cond::all().add(Expr::col((Invoices, invoices::Column::Status)).eq("PAID")).add(Expr::col((Invoices, invoices::Column::IsDeleted)).eq(false))
-        ).to_owned().build(SqliteQueryBuilder);
-
-        let res = SelectRevenue::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
-
-        Ok(json!({
-            "revenue": res.into_iter().map(|r| json!({
-                "currentRevenue": r.current_revenue,
-                "lastMonthRevenue": r.last_month_revenue,
-            })).collect::<Vec<JsonValue>>()
-        }))
-    }
-    pub async fn list_expenses(db: &DbConn) -> Result<JsonValue, DbErr> {
-        let (sql, values) = Query::select().from(InventoryTransactions).expr_as(
-            Func::coalesce([
-                Func::sum(
-                    Expr::col((InventoryTransactions, inventory_transactions::Column::Quantity)).mul(Expr::col((Products, products::Column::PurchasePrice))),
-                ).into(),
-                Expr::val(0.0).into(),
-            ]),
-            Alias::new("current_expenses"),
-        ).expr_as(
+            ))
+        ), Alias::new("current_revenue")).expr_as(Expr::expr(
             Expr::expr(SimpleExpr::SubQuery(
                 None,
                 Box::new(SubQueryStatement::SelectStatement(
-                    Query::select().from(InventoryTransactions).expr(Func::coalesce([
+                    Query::select().expr(Func::coalesce([
                         Func::sum(
-                            Expr::col((InventoryTransactions, inventory_transactions::Column::Quantity)).mul(Expr::col((Products, products::Column::PurchasePrice))),
+                            Expr::case(
+                                Expr::col((Invoices, invoices::Column::Status)).eq("PAID"),
+                                Expr::col((InventoryTransactions, inventory_transactions::Column::Quantity)).mul(Expr::col((OrderItems, order_items::Column::Price))),
+                            ).case(
+                                Expr::col((Invoices, invoices::Column::Status)).eq("PARTIALLY_PAID"),
+                                Expr::col((Invoices, invoices::Column::PaidAmount)),
+                            ).finally(Expr::val(0))
                         ).into(),
                         Expr::val(0.0).into(),
-                    ])).join(
-                        JoinType::Join,
-                        Products,
-                        Expr::col((Products, products::Column::Id)).equals((InventoryTransactions, inventory_transactions::Column::ProductId)),
-                    ).and_where(Expr::col((InventoryTransactions, inventory_transactions::Column::TransactionType)).eq("IN")).and_where(Expr::cust("inventory_transactions.created_at < strftime('%Y-%m-01', CURRENT_DATE)")).to_owned(),
+                    ])).from(InventoryTransactions).join(JoinType::InnerJoin, OrderItems,
+                        Expr::col((OrderItems, order_items::Column::InventoryId)).equals((InventoryTransactions, inventory_transactions::Column::Id))).join(JoinType::InnerJoin, Orders,
+                        Expr::col((Orders, orders::Column::Id)).equals((OrderItems, order_items::Column::OrderId))).join(JoinType::InnerJoin, Invoices,
+                        Expr::col((Invoices, invoices::Column::OrderId)).equals((Orders, orders::Column::Id))).cond_where(
+                        Expr::cust("invoices.created_at < strftime('%Y-%m-01', CURRENT_DATE)").and(Expr::cust("invoices.created_at >= strftime('%Y-%m-01', CURRENT_DATE, '-1 month')")).and(Expr::col((Invoices, invoices::Column::Status)).is_in(vec!["PAID", "PARTIALLY_PAID"])).and(Expr::col((Invoices, invoices::Column::IsDeleted)).eq(false))
+                    ).to_owned()
                 )),
-            )),
-            Alias::new("last_month_expenses"),
-        ).join(
-            JoinType::Join,
-            Products,
-            Expr::col((Products, products::Column::Id)).equals((InventoryTransactions, inventory_transactions::Column::ProductId)),
-        ).and_where(Expr::col((InventoryTransactions, inventory_transactions::Column::TransactionType)).eq("IN")).to_owned().build(SqliteQueryBuilder);
+            ))
+        ), Alias::new("last_month_revenue")).expr_as(Expr::expr(
+            Expr::expr(SimpleExpr::SubQuery(
+                None,
+                Box::new(SubQueryStatement::SelectStatement(
+                    Query::select().expr(Func::coalesce([
+                        Func::sum(
+                            Expr::col((InventoryTransactions, inventory_transactions::Column::Quantity)).mul(Expr::col((Products, products::Column::PurchasePrice)))
+                        ).into(),
+                        Expr::val(0.0).into(),
+                    ])).from(InventoryTransactions).join(JoinType::InnerJoin, Products,
+                        Expr::col((Products, products::Column::Id)).equals((InventoryTransactions, inventory_transactions::Column::ProductId))).cond_where(
+                        Expr::cust("inventory_transactions.created_at >= strftime('%Y-%m-01', CURRENT_DATE)").and(Expr::col((InventoryTransactions, inventory_transactions::Column::TransactionType)).eq("IN"))
+                    ).to_owned()
+                )),
+            ))
+        ), Alias::new("current_expenses")).expr_as(Expr::expr(
+            Expr::expr(SimpleExpr::SubQuery(
+                None,
+                Box::new(SubQueryStatement::SelectStatement(
+                    Query::select().expr(Func::coalesce([
+                        Func::sum(
+                            Expr::col((InventoryTransactions, inventory_transactions::Column::Quantity)).mul(Expr::col((Products, products::Column::PurchasePrice)))
+                        ).into(),
+                        Expr::val(0.0).into(),
+                    ])).from(InventoryTransactions).join(JoinType::InnerJoin, Products,
+                        Expr::col((Products, products::Column::Id)).equals((InventoryTransactions, inventory_transactions::Column::ProductId))).cond_where(
+                        Expr::cust("inventory_transactions.created_at < strftime('%Y-%m-01', CURRENT_DATE)").and(Expr::cust("inventory_transactions.created_at >= strftime('%Y-%m-01', CURRENT_DATE, '-1 month')")).and(Expr::col((InventoryTransactions, inventory_transactions::Column::TransactionType)).eq("IN"))
+                    ).to_owned()
+                )),
+            ))
+        ), Alias::new("last_month_expenses")).to_owned().build(SqliteQueryBuilder);
 
-        let res = SelectExpenses::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).all(db).await?;
+        let res: FiniacialMetrices = FiniacialMetrices::find_by_statement(Statement::from_sql_and_values(DbBackend::Sqlite, sql, values)).one(db).await?.ok_or(DbErr::Custom("No data found".to_string()))?;
+
+        let current_net_profit = res.current_revenue - res.current_expenses;
+        let last_month_net_profit = res.last_month_revenue - res.last_month_expenses;
+        let revenue_growth_percentage = if res.last_month_revenue != 0.0 {
+            (res.current_revenue - res.last_month_revenue) / res.last_month_revenue
+        } else {
+            0.0
+        };
+        let expenses_growth_percentage = if res.last_month_expenses != 0.0 {
+            (res.current_expenses - res.last_month_expenses) / res.last_month_expenses
+        } else {
+            0.0
+        };
+        let net_profit_growth_percentage = if last_month_net_profit != 0.0 {
+            (current_net_profit - last_month_net_profit) / last_month_net_profit
+        } else {
+            0.0
+        };
 
         Ok(json!({
-            "expenses": res.into_iter().map(|r| json!({
-                "currentExpenses": r.current_expenses,
-                "lastMonthExpenses": r.last_month_expenses,
-            })).collect::<Vec<JsonValue>>()
+            "current_revenue": res.current_revenue,
+            "last_month_revenue": res.last_month_revenue,
+            "current_expenses": res.current_expenses,
+            "last_month_expenses": res.last_month_expenses,
+            "current_net_profit": current_net_profit,
+            "last_month_net_profit": last_month_net_profit,
+            "revenue_growth_percentage": revenue_growth_percentage,
+            "expenses_growth_percentage": expenses_growth_percentage,
+            "net_profit_growth_percentage": net_profit_growth_percentage,
         }))
     }
 }
