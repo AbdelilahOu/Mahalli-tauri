@@ -16,7 +16,7 @@ import {
 // @ts-ignore
 import { TranslationModal } from "#components";
 
-const collapse = defineModel<boolean>("collapse", { required: true });
+const collapse = ref(true);
 const { t, locale } = useI18n();
 const localePath = useLocalePath();
 const modal = useModal();
@@ -90,7 +90,9 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
           </NuxtLink>
           <NuxtLink
             class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="localePath({ path: '/products/', query: { page: 1 } })"
+            :to="
+              localePath({ path: '/products/', query: { page: 1, limit: 25 } })
+            "
           >
             <span class="w-[30px] shrink-0">
               <Package
@@ -107,7 +109,9 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
           </NuxtLink>
           <NuxtLink
             class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="localePath({ path: '/quotes/', query: { page: 1 } })"
+            :to="
+              localePath({ path: '/quotes/', query: { page: 1, limit: 25 } })
+            "
           >
             <span class="w-[30px] shrink-0">
               <Quote
@@ -124,7 +128,9 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
           </NuxtLink>
           <NuxtLink
             class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="localePath({ path: '/orders/', query: { page: 1 } })"
+            :to="
+              localePath({ path: '/orders/', query: { page: 1, limit: 25 } })
+            "
           >
             <span class="w-[30px] shrink-0">
               <Truck
@@ -141,7 +147,9 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
           </NuxtLink>
           <NuxtLink
             class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="localePath({ path: '/invoices/', query: { page: 1 } })"
+            :to="
+              localePath({ path: '/invoices/', query: { page: 1, limit: 25 } })
+            "
           >
             <span class="w-[30px] shrink-0">
               <NotepadText
@@ -158,7 +166,9 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
           </NuxtLink>
           <NuxtLink
             class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="localePath({ path: '/inventory/', query: { page: 1 } })"
+            :to="
+              localePath({ path: '/inventory/', query: { page: 1, limit: 25 } })
+            "
           >
             <span class="w-[30px] shrink-0">
               <Archive
