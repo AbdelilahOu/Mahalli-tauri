@@ -13,8 +13,6 @@ import { DollarSign, NotepadText, Truck } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
-const { t, d, n } = useI18n();
-
 const STATUS_COLORS = {
   DRAFT: "bg-gray-100 border-gray-500 text-gray-900",
   SENT: "bg-blue-100 border-blue-500 text-blue-900",
@@ -28,38 +26,16 @@ const STATUS_COLORS = {
   DELIVERED: "bg-green-100 border-green-500 text-green-900",
 } as const;
 
-const transactionsLabels = ref<string[]>([]);
-const tickFormatToDate = (i: number) => {
-  return transactionsLabels.value[i]
-    ? d(transactionsLabels.value[i], "monthOnly")
-    : "";
-};
-
-const barQuantityTriggers = {
-  [GroupedBar.selectors.bar]: (d: groupedTransaction[string], i: number) => {
-    const transactionType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
-    const quantity = d[transactionType].quantity;
-    return (
-      n(quantity, "decimal") + " " + t("g.plrz.i", { n: Math.ceil(quantity) })
-    );
-  },
-};
-const barPriceTriggers = {
-  [GroupedBar.selectors.bar]: (d: groupedTransaction[string], i: number) => {
-    const transactionType = (i % 2 == 0 ? "IN" : "OUT") as "IN" | "OUT";
-    return n(d[transactionType].price, "decimal") + " DH";
-  },
-};
+const { t, d, n } = useI18n();
 
 const { data: inventoryTransactions } = useAsyncData(
   "inventoryTransactions",
   async () => {
     try {
       const res = await invoke<Res<transactionsT[]>>("list_inventory_stats");
-      console.log(res);
       const result = res.data.reduce((acc, item) => {
         const { createdAt: date, transactionType, quantity, price } = item;
-        const createdAt = new Date(date).toISOString().split("T")[0];
+        const createdAt = d(new Date(date), "monthOnly");
         if (!acc[createdAt]) {
           acc[createdAt] = {
             IN: { quantity: 0, price: 0 },
@@ -71,12 +47,16 @@ const { data: inventoryTransactions } = useAsyncData(
         return acc;
       }, {} as groupedTransaction);
 
-      const transactionLabelsSet = new Set<string>(Object.keys(result));
-      transactionsLabels.value = [...transactionLabelsSet];
-      return result;
+      return {
+        result,
+        transactionLabels: [...new Set<string>(Object.keys(result))],
+      };
     } catch (err: any) {
       handleError(err, "STATS INVENTORY MOUVEMENTS");
-      return {};
+      return {
+        result: {},
+        transactionLabels: [],
+      };
     }
   }
 );
@@ -320,17 +300,30 @@ function handleError(err: any, context: string) {
           <template #default>
             <VisXYContainer
               v-if="inventoryTransactions"
-              :data="Object.values(inventoryTransactions)"
+              :data="Object.values(inventoryTransactions.result)"
               :height="500"
             >
               <VisGroupedBar
                 :bar-padding="0.1"
-                :x="(d: any, index: number) => index"
+                :x="(_:any, index: number) => index"
                 :y="[(d: any) => d.IN.quantity, (d: any) => d.OUT.quantity]"
               />
-              <VisAxis type="x" :tick-format="tickFormatToDate" />
+              <VisAxis
+                type="x"
+                :tickFormat="(i:number) => inventoryTransactions?.transactionLabels[i]||''"
+              />
               <VisAxis type="y" :label="t('g.fields.quantity')" />
-              <VisTooltip :triggers="barQuantityTriggers" />
+              <VisTooltip
+                :triggers="{
+                  [GroupedBar.selectors.bar]: (d: groupedTransaction[string], i: number) => {
+                    const transactionType = (i % 2 == 0 ? 'IN' : 'OUT') as 'IN' | 'OUT';
+                    const quantity = d[transactionType].quantity;
+                    return (
+                      n(quantity, 'decimal') + ' ' + t('g.plrz.i', { n: Math.ceil(quantity) })
+                    );
+                  },
+                }"
+              />
               <VisBulletLegend
                 class="my-2 m-auto w-fit"
                 :items="
@@ -353,17 +346,27 @@ function handleError(err: any, context: string) {
           <template #default>
             <VisXYContainer
               v-if="inventoryTransactions"
-              :data="Object.values(inventoryTransactions)"
+              :data="Object.values(inventoryTransactions.result)"
               :height="500"
             >
               <VisGroupedBar
                 :bar-padding="0.1"
-                :x="(d: any, index: number) => index"
+                :x="(_:any, index: number) => index"
                 :y="[(d: any) => d.IN.price, (d: any) => d.OUT.price]"
               />
-              <VisAxis type="x" :tick-format="tickFormatToDate" />
+              <VisAxis
+                type="x"
+                :tickFormat="(i:number) => inventoryTransactions?.transactionLabels[i]||''"
+              />
               <VisAxis type="y" :label="t('g.fields.price') + ' (DH)'" />
-              <VisTooltip :triggers="barPriceTriggers" />
+              <VisTooltip
+                :triggers="{
+                  [GroupedBar.selectors.bar]: (d: groupedTransaction[string], i: number) => {
+                    const transactionType = (i % 2 == 0 ? 'IN' : 'OUT') as 'IN' | 'OUT';
+                    return n(d[transactionType].price, 'decimal') + ' DH';
+                  },
+                }"
+              />
               <VisBulletLegend
                 class="my-2 m-auto w-fit"
                 :items="
