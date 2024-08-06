@@ -1,4 +1,8 @@
 # Mahalli
+
+<div>
+   <img src="/public/clean-snap (3).png" alt="preview">
+</div>
 <div>
    <a href="https://github.com/AbdelilahOu/Mahalli-tauri/releases"><img src="https://img.shields.io/github/release/AbdelilahOu/Mahalli-tauri.svg" alt="Latest Release"></a>
 </div>
