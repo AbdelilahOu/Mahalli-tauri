@@ -116,7 +116,7 @@ function handleError(err: any, context: string) {
 
 <template>
   <main class="w-full h-full">
-    <div class="w-full h-full flex flex-col lg:grid lg:grid-cols-2 gap-2">
+    <div class="w-full h-full flex flex-col xl:grid xl:grid-cols-2 gap-2">
       <div class="grid grid-cols-1 lg:grid-cols-2 col-span-2 gap-2">
         <Card class="h-fit w-full">
           <CardHeader
@@ -233,7 +233,7 @@ function handleError(err: any, context: string) {
               <VisAxis
                 type="x"
                 :tick-format="
-                  (i: number) => (bestClients ? bestClients[i].Fullname : i)
+                  (i: number) => (bestClients ? bestClients[i]?.Fullname : i)
                 "
               />
               <VisAxis type="y" :label="t('g.fields.price') + ' (DH)'" />
@@ -269,7 +269,7 @@ function handleError(err: any, context: string) {
               <VisAxis
                 type="x"
                 :tick-format="
-                  (i: number) => (bestProducts ? bestProducts[i].name : i)
+                  (i: number) => (bestProducts ? bestProducts[i]?.name : i)
                 "
               />
               <VisAxis type="y" :label="t('g.fields.quantity')" />
