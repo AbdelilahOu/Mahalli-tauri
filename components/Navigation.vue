@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { HomeIcon, ChevronLeft, ChevronRight } from "lucide-vue-next";
+import { ChevronLeft, ChevronRight, HomeIcon } from "lucide-vue-next";
+
 const localePath = useLocalePath();
 </script>
 

@@ -2,18 +2,12 @@
 import { toTypedSchema } from "@vee-validate/zod";
 import { invoke } from "@tauri-apps/api";
 import { useForm } from "vee-validate";
-import {
-  CreateSupplierSchema,
-  type SupplierT,
-} from "@/schemas/supplier.schema";
 import { error, info } from "tauri-plugin-log-api";
-import type { Res } from "@/types";
 import { toast } from "vue-sonner";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
 const { t } = useI18n();
-const isLoading = ref<boolean>(false);
 
 const supplierSchema = toTypedSchema(CreateSupplierSchema);
 
@@ -23,12 +17,11 @@ const form = useForm({
   validationSchema: supplierSchema,
 });
 
-const createNewSupplier = async (supplier: SupplierT) => {
-  isLoading.value = true;
+async function createNewSupplier(supplier: SupplierT) {
   try {
     await invoke<Res<string>>("create_supplier", {
       supplier: {
-        full_name: supplier.fullname,
+        full_name: supplier.fullName,
         email: supplier.email,
         phone_number: supplier.phoneNumber,
         address: supplier.address,
@@ -44,38 +37,37 @@ const createNewSupplier = async (supplier: SupplierT) => {
     );
     //
     toast.success(
-      t("notifications.supplier.created", { name: supplier.fullname }),
+      t("notifications.supplier.created", { name: supplier.fullName }),
       {
         closeButton: true,
       }
     );
     // toggle refresh
     updateQueryParams({
-      refresh: "refresh-create-" + Math.random() * 9999,
+      refresh: `refresh-create-${Math.random() * 9999}`,
     });
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("CREATE SUPPLIER: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`CREATE SUPPLIER: ${err.error}`);
       return;
     }
-    error("CREATE SUPPLIER: " + err);
+    error(`CREATE SUPPLIER: ${err}`);
   } finally {
-    isLoading.value = false;
     close();
   }
-};
+}
 
 const onSubmit = form.handleSubmit((values) => {
   createNewSupplier(values);
 });
 
-const saveImage = (image: string) => {
+function saveImage(image: string) {
   imagePath.value = image;
-};
+}
 </script>
 
 <template>
@@ -83,7 +75,7 @@ const saveImage = (image: string) => {
     <Card>
       <CardHeader>
         <CardTitle>
-          {{ t("s.c.title") }}
+          {{ t("titles.suppliers.create") }}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -92,12 +84,12 @@ const saveImage = (image: string) => {
           :extensions="['png', 'jpeg', 'webp']"
           @save:base64="saveImage"
         />
-        <FormField v-slot="{ componentField }" name="fullname">
+        <FormField v-slot="{ componentField }" name="fullName">
           <FormItem>
-            <FormLabel>{{ t("g.fields.fullname") }}</FormLabel>
+            <FormLabel>{{ t("fields.full-name") }}</FormLabel>
             <FormControl>
               <Input
-                :placeholder="t('g.fields.fullname')"
+                :placeholder="t('fields.full-name')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -105,7 +97,7 @@ const saveImage = (image: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="email">
           <FormItem>
-            <FormLabel>{{ t("g.fields.email") }}</FormLabel>
+            <FormLabel>{{ t("fields.email") }}</FormLabel>
             <FormControl>
               <Input placeholder="example@gmail.com" v-bind="componentField" />
             </FormControl>
@@ -113,7 +105,7 @@ const saveImage = (image: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="phoneNumber">
           <FormItem>
-            <FormLabel>{{ t("g.fields.phone") }}</FormLabel>
+            <FormLabel>{{ t("fields.phone") }}</FormLabel>
             <FormControl>
               <Input placeholder="+2126********" v-bind="componentField" />
             </FormControl>
@@ -121,10 +113,10 @@ const saveImage = (image: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="address">
           <FormItem>
-            <FormLabel>{{ t("g.fields.address") }}</FormLabel>
+            <FormLabel>{{ t("fields.address") }}</FormLabel>
             <FormControl>
               <Input
-                :placeholder="t('g.fields.address')"
+                :placeholder="t('fields.address')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -132,16 +124,11 @@ const saveImage = (image: string) => {
         </FormField>
       </CardContent>
       <CardFooter>
-        <Button
-          type="button"
-          :disabled="isLoading"
-          variant="outline"
-          @click="close"
-        >
-          {{ t("g.b.no") }}
+        <Button type="button" variant="outline" @click="close">
+          {{ t("buttons.cancel") }}
         </Button>
-        <Button :disabled="isLoading" type="submit" class="col-span-2">
-          {{ t("g.b.c") }}
+        <Button type="submit" class="col-span-2">
+          {{ t("buttons.add") }}
         </Button>
       </CardFooter>
     </Card>

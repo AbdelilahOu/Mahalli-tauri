@@ -2,6 +2,20 @@ const animate = require("tailwindcss-animate");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  content: [
+    `./components/**/*.{vue,js,ts}`,
+    `./layouts/**/*.vue`,
+    `./consts/status.ts`,
+    `./pages/**/*.vue`,
+    `./composables/**/*.{js,ts}`,
+    `./plugins/**/*.{js,ts}`,
+    `./utils/**/*.{js,ts}`,
+    `./App.{js,ts,vue}`,
+    `./app.{js,ts,vue}`,
+    `./Error.{js,ts,vue}`,
+    `./error.{js,ts,vue}`,
+    `./app.config.{js,ts}`,
+  ],
   darkMode: ["class"],
   safelist: ["dark"],
   prefix: "",
@@ -73,7 +87,7 @@ module.exports = {
           from: { height: "var(--radix-collapsible-content-height)" },
           to: { height: 0 },
         },
-        highlight: {
+        "highlight": {
           "0%": { "background-color": "transparent" },
           "50%": { "background-color": "#e5e7eb" },
           "100%": { "background-color": "transparent" },

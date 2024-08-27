@@ -202,7 +202,7 @@ impl QueriesService {
         res.into_iter().for_each(|row| {
             result.push(json!({
                 "id": row.id,
-                "fullname": row.full_name,
+                "fullName": row.full_name,
                 "address": row.address,
                 "image": row.image,
                 "email": row.email,
@@ -253,7 +253,7 @@ impl QueriesService {
         res.into_iter().for_each(|row| {
             result.push(json!({
                 "id": row.id,
-                "fullname": row.full_name,
+                "fullName": row.full_name,
                 "address": row.address,
                 "image": row.image,
                 "email": row.email,
@@ -345,7 +345,7 @@ impl QueriesService {
                 "id": row.id,
                 "clientId": row.client_id,
                 "createdAt": row.created_at,
-                "fullname": row.full_name,
+                "fullName": row.full_name,
                 "status": row.status,
                 "identifier": row.identifier,
                 "products": row.products,
@@ -397,7 +397,7 @@ impl QueriesService {
                     "createdAt": order.0.created_at,
                     "status": order.0.status,
                     "identifier": order.0.identifier,
-                    "fullname": order.1.unwrap().full_name,
+                    "fullName": order.1.unwrap().full_name,
                     "items": result,
                 }))
             }
@@ -477,7 +477,7 @@ impl QueriesService {
                     "total": order.total,
                     "identifier": order.identifier,
                     "client": json!({
-                        "fullname": order.full_name,
+                        "fullName": order.full_name,
                         "email": order.email,
                         "address":order.address,
                         "phoneNumber":order.phone_number,
@@ -570,7 +570,7 @@ impl QueriesService {
                 "paidAmount": row.paid_amount,
                 "createdAt": row.created_at,
                 "identifier": row.identifier,
-                "fullname": row.full_name,
+                "fullName": row.full_name,
                 "status": row.status,
                 "products": row.products,
                 "total": row.total,
@@ -622,7 +622,7 @@ impl QueriesService {
                     "createdAt": invoice.0.created_at,
                     "status": invoice.0.status,
                     "identifier": invoice.0.identifier,
-                    "fullname": invoice.1.unwrap().full_name,
+                    "fullName": invoice.1.unwrap().full_name,
                     "items": result,
                 }))
             }
@@ -708,7 +708,7 @@ impl QueriesService {
                     "identifier": invoice.identifier,
                     "total": invoice.total,
                     "client": json!({
-                        "fullname": invoice.full_name,
+                        "fullName": invoice.full_name,
                         "email": invoice.email,
                         "address":invoice.address,
                         "phoneNumber":invoice.phone_number,
@@ -782,7 +782,7 @@ impl QueriesService {
                 "clientId": row.client_id,
                 "createdAt": row.created_at,
                 "identifier": row.identifier,
-                "fullname": row.full_name,
+                "fullName": row.full_name,
                 "products": row.products,
                 "total": row.total,
             }));
@@ -825,7 +825,7 @@ impl QueriesService {
                     "clientId": quote.0.client_id,
                     "createdAt": quote.0.created_at,
                     "identifier": quote.0.identifier,
-                    "fullname": quote.1.unwrap().full_name,
+                    "fullName": quote.1.unwrap().full_name,
                     "items": result,
                 }))
             }
@@ -894,7 +894,7 @@ impl QueriesService {
                     "total": quote.total,
                     "identifier": quote.identifier,
                     "client": json!({
-                        "fullname": quote.full_name,
+                        "fullName": quote.full_name,
                         "email": quote.email,
                         "address":quote.address,
                         "phoneNumber":quote.phone_number,

@@ -16,17 +16,17 @@ export const CreateInvoiceSchema = z.object({
 });
 
 export type InvoiceT = z.infer<typeof CreateInvoiceSchema> & {
-  fullname?: string;
+  fullName?: string;
   products?: number;
   total?: number;
   createdAt?: string;
   identifier: string;
 };
 
-export type InvoiceForUpdateT = {
+export interface InvoiceForUpdateT {
   id: string;
   clientId: string;
-  fullname: string;
+  fullName: string;
   paidAmount: number;
   createdAt: string;
   status: string;
@@ -38,9 +38,9 @@ export type InvoiceForUpdateT = {
     quantity?: number;
     price?: number;
   }[];
-};
+}
 
-export type InvoiceForCreateT = {
+export interface InvoiceForCreateT {
   clientId: string;
   status: string;
   paidAmount: number;
@@ -49,10 +49,10 @@ export type InvoiceForCreateT = {
     quantity?: number;
     price?: number;
   }[];
-};
+}
 
-export type InvoiceProductT = {
+export interface InvoiceProductT {
   price: number;
   name: string;
   quantity: number;
-};
+}

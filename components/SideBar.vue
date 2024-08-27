@@ -1,19 +1,17 @@
 <script setup lang="ts">
-//
 import {
   Archive,
   BarChartBig,
   ChevronsLeft,
+  Contact,
   Languages,
   NotepadText,
   Package,
-  Settings,
-  Truck,
-  Contact,
   Quote,
   Store,
+  Truck,
 } from "lucide-vue-next";
-// @ts-ignore
+// @ts-expect-error
 import { TranslationModal } from "#components";
 
 const collapse = ref(true);
@@ -36,17 +34,17 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
     :class="
       cn(
         'transition-all print:hidden sticky h-screen top-0 border-x border-slate-100 z-50 flex justify-center duration-200',
-        collapse ? 'w-12 min-w-[48px]' : 'w-52 min-w-[12rem]'
+        collapse ? 'w-12 min-w-[48px]' : 'w-52 min-w-[12rem]',
       )
     "
   >
-    <div class="w-full h-screen sticky top-0 z-50 flex flex-col gap-3 bg-white">
+    <div class="w-full h-screen sticky top-0 z-50 flex flex-col gap-1 bg-white">
       <div class="w-full min-h-[51px] border-b border-slate-100">
         <div
           :class="
             cn(
               'font-medium flex h-full items-center px-1',
-              collapse ? 'justify-around' : 'justify-between'
+              collapse ? 'justify-around' : 'justify-between',
             )
           "
         >
@@ -59,9 +57,9 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
           </span>
           <ChevronsLeft
             :size="20"
+            class="transition-all duration-200 cursor-pointer mx-2 transform"
             :class="{
-              'rotate-180': locale == 'ar' ? !collapse : collapse,
-              'transition-all duration-200 cursor-pointer mx-2 transform': true,
+              'rotate-180': locale === 'ar' ? !collapse : collapse,
             }"
             @click="collapse = !collapse"
           />
@@ -72,7 +70,10 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
           <NuxtLink
             class="w-full flex flex-nowrap h-9 rounded-md items-center p-1 group transition-all duration-300"
             :to="
-              localePath({ path: '/clients/', query: { page: 1, limit: 25 } })
+              localePath({
+                path: '/clients/',
+                query: { page: 1, limit: 25 },
+              })
             "
           >
             <span class="w-[30px] shrink-0">
@@ -85,14 +86,12 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
               v-if="!collapse"
               class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
             >
-              {{ t("g.r.Clients") }}
+              {{ t("routes.clients") }}
             </span>
           </NuxtLink>
           <NuxtLink
             class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="
-              localePath({ path: '/products/', query: { page: 1, limit: 25 } })
-            "
+            :to="localePath({ path: '/products/', query: { page: 1 } })"
           >
             <span class="w-[30px] shrink-0">
               <Package
@@ -104,14 +103,12 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
               v-if="!collapse"
               class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
             >
-              {{ t("g.r.Products") }}
+              {{ t("routes.products") }}
             </span>
           </NuxtLink>
           <NuxtLink
             class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="
-              localePath({ path: '/quotes/', query: { page: 1, limit: 25 } })
-            "
+            :to="localePath({ path: '/quotes/', query: { page: 1 } })"
           >
             <span class="w-[30px] shrink-0">
               <Quote
@@ -123,14 +120,12 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
               v-if="!collapse"
               class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
             >
-              {{ t("g.r.Quotes") }}
+              {{ t("routes.quotes") }}
             </span>
           </NuxtLink>
           <NuxtLink
             class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="
-              localePath({ path: '/orders/', query: { page: 1, limit: 25 } })
-            "
+            :to="localePath({ path: '/orders/', query: { page: 1 } })"
           >
             <span class="w-[30px] shrink-0">
               <Truck
@@ -142,14 +137,12 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
               v-if="!collapse"
               class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
             >
-              {{ t("g.r.Orders") }}
+              {{ t("routes.orders") }}
             </span>
           </NuxtLink>
           <NuxtLink
             class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="
-              localePath({ path: '/invoices/', query: { page: 1, limit: 25 } })
-            "
+            :to="localePath({ path: '/invoices/', query: { page: 1 } })"
           >
             <span class="w-[30px] shrink-0">
               <NotepadText
@@ -161,14 +154,12 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
               v-if="!collapse"
               class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
             >
-              {{ t("g.r.Invoices") }}
+              {{ t("routes.invoices") }}
             </span>
           </NuxtLink>
           <NuxtLink
             class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="
-              localePath({ path: '/inventory/', query: { page: 1, limit: 25 } })
-            "
+            :to="localePath({ path: '/inventory/', query: { page: 1 } })"
           >
             <span class="w-[30px] shrink-0">
               <Archive
@@ -180,7 +171,7 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
               v-if="!collapse"
               class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
             >
-              {{ t("g.r.Inventory") }}
+              {{ t("routes.inventory") }}
             </span>
           </NuxtLink>
           <NuxtLink
@@ -197,7 +188,7 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
               v-if="!collapse"
               class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
             >
-              {{ t("g.r.Dashboard") }}
+              {{ t("routes.dashboard") }}
             </span>
           </NuxtLink>
         </div>
@@ -216,7 +207,7 @@ const openTranslationModal = () => modal.open(TranslationModal, {});
             class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
           >
             {{
-              //@ts-ignore
+              //@ts-expect-error
               LOCALE_TEXT[locale]
             }}
           </span>

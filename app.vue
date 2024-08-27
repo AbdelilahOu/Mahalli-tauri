@@ -13,7 +13,7 @@ useSeoMeta({
 useHead({
   htmlAttrs: {
     lang: locale,
-    dir: computed(() => (locale.value == "ar" ? "rtl" : "ltr")),
+    dir: computed(() => (locale.value === "ar" ? "rtl" : "ltr")),
   },
   link: [
     {

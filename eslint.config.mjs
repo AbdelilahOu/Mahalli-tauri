@@ -1,12 +1,17 @@
-// @ts-check
-import withNuxt from "./.nuxt/eslint.config.mjs";
+import antfu from "@antfu/eslint-config";
 
-export default withNuxt({
-  rules: {
-    "no-unused-vars": "warn",
-    "vue/no-unused-refs": "warn",
-    "@typescript-eslint/no-explicit-any": "off",
+export default antfu(
+  {
+    stylistic: {
+      indent: 2,
+      quotes: "double",
+      semi: true,
+    },
+    ignores: [".output", "**/src-tauri/**"],
   },
-  ignores: [".output", "**/src-tauri/**"],
-});
-// Your custom configs here
+  {
+    rules: {
+      "node/prefer-global/process": "off",
+    },
+  },
+);

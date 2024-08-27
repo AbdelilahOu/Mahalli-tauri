@@ -11,7 +11,7 @@ const props = defineProps<{
     :class="
       cn(
         'font-semibold text-lg text-gray-900 uppercase text-center leading-none tracking-tight',
-        props.class
+        props.class,
       )
     "
   >

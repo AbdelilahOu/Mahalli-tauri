@@ -1,9 +1,9 @@
 export default defineI18nConfig(() => ({
   legacy: false,
   availableLocales: ["en", "fr", "ar", "de"],
-  //@ts-ignore
+  // @ts-ignore
   datetimeFormats,
-  //@ts-ignore
+  // @ts-ignore
   numberFormats,
 }));
 

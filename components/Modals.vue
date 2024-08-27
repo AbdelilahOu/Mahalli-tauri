@@ -1,3 +1,12 @@
+<script lang="ts" setup>
+import { inject } from "vue";
+import { modalInjectionKey, useModal } from "@/composables/useModal";
+
+const modalState = inject(modalInjectionKey);
+
+const { isOpen, reset } = useModal();
+</script>
+
 <template>
   <component
     :is="modalState.component"
@@ -7,12 +16,3 @@
     @after-leave="reset"
   />
 </template>
-
-<script lang="ts" setup>
-import { inject } from "vue";
-import { useModal, modalInjectionKey } from "@/composables/useModal";
-
-const modalState = inject(modalInjectionKey);
-
-const { isOpen, reset } = useModal();
-</script>

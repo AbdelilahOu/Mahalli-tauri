@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import { computed, inject, type Ref } from "vue";
+import { type Ref, computed, inject } from "vue";
 import { useRouter } from "vue-router";
-import {
-  PaginationRoot as PaginationRoot,
-  PaginationList,
-  PaginationListItem,
-} from "radix-vue";
+import { PaginationList, PaginationListItem, PaginationRoot } from "radix-vue";
 
 const router = useRouter();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const defaultPage = computed(() =>
-  Number(router.currentRoute.value.query.page)
+  Number(router.currentRoute.value.query.page),
 );
 
 const LIMIT = 25;
@@ -19,41 +15,41 @@ const LIMIT = 25;
 const rowsCount = inject<Ref<number>>("count");
 const itemsPerPage = inject<Ref<number>>("itemsPerPage");
 
-const goBackward = () => {
+function goBackward() {
   if (defaultPage.value > 1) {
     updateQueryParams({ page: defaultPage.value - 1 });
   }
-};
+}
 
-const goForward = () => {
+function goForward() {
   if (
-    defaultPage.value <
-    Math.ceil(
-      (rowsCount?.value ?? 1) /
-        (itemsPerPage?.value ? itemsPerPage?.value : LIMIT)
+    defaultPage.value
+    < Math.ceil(
+      (rowsCount?.value ?? 1)
+      / (itemsPerPage?.value ? itemsPerPage?.value : LIMIT),
     )
   ) {
     updateQueryParams({ page: defaultPage.value + 1 });
   }
-};
+}
 
-const goToPage = (page: number) => {
+function goToPage(page: number) {
   updateQueryParams({ page });
-};
+}
 
-const goToFirst = () => {
+function goToFirst() {
   updateQueryParams({ page: 1 });
-};
+}
 
-const goToLast = () => {
+function goToLast() {
   if (rowsCount?.value) {
     updateQueryParams({
       page: Math.ceil(
-        rowsCount?.value / (itemsPerPage?.value ? itemsPerPage?.value : LIMIT)
+        rowsCount?.value / (itemsPerPage?.value ? itemsPerPage?.value : LIMIT),
       ),
     });
   }
-};
+}
 </script>
 
 <template>

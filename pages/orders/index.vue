@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { Calendar as CalendarIcon, PlusCircleIcon } from "lucide-vue-next";
-import type { OrderProductT, OrderT } from "@/schemas/order.schema";
-import type { Res, QueryParams } from "@/types";
+import { Calendar as CalendarIcon, Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 // @ts-ignore
 import { OrderCreate } from "#components";
+import { ORDER_STATUSES } from "@/consts/status";
 
 const route = useRoute();
 const { t, d } = useI18n();
@@ -31,7 +30,7 @@ const queryParams = computed<QueryParams>(() => ({
   created_at: route.query.created_at,
 }));
 
-const fetchOrders = async () => {
+async function fetchOrders() {
   try {
     const res: Res<any> = await invoke("list_orders", {
       args: {
@@ -50,14 +49,14 @@ const fetchOrders = async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("LIST ORDERS: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`LIST ORDERS: ${err.error}`);
     } else {
-      error("LIST ORDERS: " + err);
+      error(`LIST ORDERS: ${err}`);
     }
     throw err;
   }
-};
+}
 
 const { data: ordersData } = await useAsyncData("orders", fetchOrders, {
   watch: [queryParams],
@@ -87,7 +86,7 @@ watch([status, createdAt], () => {
   });
 });
 
-const listOrderProduct = async (id?: string) => {
+async function listOrderProduct(id?: string) {
   try {
     const res = await invoke<Res<any>>("list_order_products", {
       id,
@@ -98,13 +97,13 @@ const listOrderProduct = async (id?: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("ERROR LIST ORDER PRODUCTS: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`ERROR LIST ORDER PRODUCTS: ${err.error}`);
       return;
     }
-    error("ERROR LIST ORDER PRODUCTS: " + err);
+    error(`ERROR LIST ORDER PRODUCTS: ${err}`);
   }
-};
+}
 
 const openCreateOrderModal = () => modal.open(OrderCreate, {});
 </script>
@@ -118,7 +117,7 @@ const openCreateOrderModal = () => modal.open(OrderCreate, {});
             v-model="searchQuery"
             name="search"
             type="text"
-            :placeholder="t('g.s')"
+            :placeholder="t('search')"
           />
           <Popover>
             <PopoverTrigger as-child>
@@ -133,7 +132,7 @@ const openCreateOrderModal = () => modal.open(OrderCreate, {});
               >
                 <CalendarIcon class="mr-2 h-4 w-4" />
                 <span class="text-nowrap">{{
-                  createdAt ? d(new Date(createdAt), "short") : t("g.pick-date")
+                  createdAt ? d(new Date(createdAt), "short") : t("pick-date")
                 }}</span>
               </Button>
             </PopoverTrigger>
@@ -145,33 +144,24 @@ const openCreateOrderModal = () => modal.open(OrderCreate, {});
             <SelectTrigger>
               <SelectValue
                 class="text-muted-foreground"
-                :placeholder="t('o.c.d.o.placeholder[2]')"
+                :placeholder="t('select-status')"
               />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="PENDING">
-                {{ t("g.status.pending") }}
-              </SelectItem>
-              <SelectItem value="PROCESSING">
-                {{ t("g.status.processing") }}
-              </SelectItem>
-              <SelectItem value="SHIPPED">
-                {{ t("g.status.shipped") }}
-              </SelectItem>
-              <SelectItem value="DELIVERED">
-                {{ t("g.status.delivered") }}
-              </SelectItem>
-              <SelectItem value="CANCELLED">
-                {{ t("g.status.cancelled") }}
+              <SelectItem
+                v-for="orderStatus in ORDER_STATUSES"
+                :key="orderStatus"
+                :value="orderStatus"
+              >
+                {{ t(`status.${orderStatus.toLowerCase()}`) }}
               </SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div class="w-fit flex gap-1">
           <Button class="gap-2 text-nowrap" @click="openCreateOrderModal">
-            <PlusCircleIcon :size="20" />
-
-            {{ t("o.i.addButton") }}
+            <Plus :size="20" />
+            {{ t("buttons.toggle-create-order") }}
           </Button>
         </div>
       </div>

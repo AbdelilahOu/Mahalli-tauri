@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { Calendar as CalendarIcon, PlusCircleIcon } from "lucide-vue-next";
-import type { InvoiceProductT, InvoiceT } from "@/schemas/invoice.schema";
-import type { Res, QueryParams } from "@/types";
+import { Calendar as CalendarIcon, Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 // @ts-ignore
 import { InvoiceCreate } from "#components";
+import { INVOICE_STATUSES } from "@/consts/status";
 
 const route = useRoute();
 const { t, d } = useI18n();
@@ -31,7 +30,7 @@ const queryParams = computed<QueryParams>(() => ({
   created_at: route.query.created_at,
 }));
 
-const fetchInvoices = async () => {
+async function fetchInvoices() {
   try {
     const res: Res<any> = await invoke("list_invoices", {
       args: {
@@ -50,14 +49,14 @@ const fetchInvoices = async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("LIST INVOICESS: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`LIST INVOICESS: ${err.error}`);
     } else {
-      error("LIST INVOICESS: " + err);
+      error(`LIST INVOICESS: ${err}`);
     }
     throw err;
   }
-};
+}
 
 const { data: invoicesData } = await useAsyncData("invoices", fetchInvoices, {
   watch: [queryParams],
@@ -87,7 +86,7 @@ watch([status, createdAt], () => {
   });
 });
 
-const listInvoiceProduct = async (id?: string) => {
+async function listInvoiceProduct(id?: string) {
   try {
     const res = await invoke<Res<any>>("list_invoice_products", {
       id,
@@ -98,13 +97,13 @@ const listInvoiceProduct = async (id?: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("ERROR LIST INVOICES PRODUCTS: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`ERROR LIST INVOICES PRODUCTS: ${err.error}`);
       return;
     }
-    error("ERROR LIST INVOICES PRODUCTS: " + err);
+    error(`ERROR LIST INVOICES PRODUCTS: ${err}`);
   }
-};
+}
 
 const openCreateInvoiceModal = () => modal.open(InvoiceCreate, {});
 </script>
@@ -118,7 +117,7 @@ const openCreateInvoiceModal = () => modal.open(InvoiceCreate, {});
             v-model="searchQuery"
             name="search"
             type="text"
-            :placeholder="t('g.s')"
+            :placeholder="t('search')"
           />
           <Popover>
             <PopoverTrigger as-child>
@@ -133,7 +132,7 @@ const openCreateInvoiceModal = () => modal.open(InvoiceCreate, {});
               >
                 <CalendarIcon class="mr-2 h-4 w-4" />
                 <span class="text-nowrap">{{
-                  createdAt ? d(new Date(createdAt), "short") : t("g.pick-date")
+                  createdAt ? d(new Date(createdAt), "short") : t("pick-date")
                 }}</span>
               </Button>
             </PopoverTrigger>
@@ -145,36 +144,24 @@ const openCreateInvoiceModal = () => modal.open(InvoiceCreate, {});
             <SelectTrigger>
               <SelectValue
                 class="text-muted-foreground"
-                :placeholder="t('o.c.d.o.placeholder[2]')"
+                :placeholder="t('select-status')"
               />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="DRAFT">
-                {{ t("g.status.draft") }}
-              </SelectItem>
-              <SelectItem value="SENT">
-                {{ t("g.status.sent") }}
-              </SelectItem>
-              <SelectItem value="PAID">
-                {{ t("g.status.paid") }}
-              </SelectItem>
-              <SelectItem value="PARTIALLY_PAID">
-                {{ t("g.status.partially_paid") }}
-              </SelectItem>
-              <SelectItem value="OVERDUE">
-                {{ t("g.status.overdue") }}
-              </SelectItem>
-              <SelectItem value="CANCELLED">
-                {{ t("g.status.cancelled") }}
+              <SelectItem
+                v-for="invoiceStatus in INVOICE_STATUSES"
+                :key="invoiceStatus"
+                :value="invoiceStatus"
+              >
+                {{ t(`status.${invoiceStatus.toLowerCase()}`) }}
               </SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div class="w-fit flex gap-1">
           <Button class="gap-2 text-nowrap" @click="openCreateInvoiceModal()">
-            <PlusCircleIcon :size="20" />
-
-            {{ t("i.i.addButton") }}
+            <Plus :size="20" />
+            {{ t("buttons.toggle-create-invoice") }}
           </Button>
         </div>
       </div>

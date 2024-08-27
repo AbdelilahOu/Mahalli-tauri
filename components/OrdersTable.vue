@@ -1,60 +1,38 @@
 <script setup lang="ts">
-import type {
-  OrderForUpdateT,
-  OrderProductT,
-  OrderT,
-} from "@/schemas/order.schema";
 import { invoke } from "@tauri-apps/api";
 import { error, info } from "tauri-plugin-log-api";
 import {
   FilePenLine,
-  Printer,
-  Trash2,
   GripHorizontal,
   NotepadText,
+  Printer,
+  Trash2,
 } from "lucide-vue-next";
-import type { Res } from "@/types";
 import { toast } from "vue-sonner";
-//@ts-ignore
+// @ts-ignore
 import { NuxtLink, OrderDelete, OrderUpdate } from "#components";
-
-const { updateQueryParams } = useUpdateRouteQueryParams();
-const modal = useModal();
-const { t, d, locale, n } = useI18n();
-const localePath = useLocalePath();
+import { ORDER_STATUSES, STATUS_COLORS } from "@/consts/status";
 
 defineProps<{ orders: OrderT[]; orderProducts: OrderProductT[] }>();
 const emits = defineEmits<{
   (e: "listOrderProducts", id?: string): void;
 }>();
-
-const STATUS_COLORS = {
-  PENDING: "bg-yellow-100 border-yellow-500 text-yellow-900",
-  PROCESSING: "bg-blue-100 border-blue-500 text-blue-900",
-  SHIPPED: "bg-indigo-100 border-indigo-500 text-indigo-900",
-  DELIVERED: "bg-green-100 border-green-500 text-green-900",
-  CANCELLED: "bg-red-100 border-red-500 text-red-900",
-} as const;
-
-const STATUSES = [
-  "PENDING",
-  "PROCESSING",
-  "SHIPPED",
-  "DELIVERED",
-  "CANCELLED",
-] as const;
+const { updateQueryParams } = useUpdateRouteQueryParams();
+const modal = useModal();
+const { t, d, locale, n } = useI18n();
+const localePath = useLocalePath();
 
 let previewProductsTimer: any;
-const previewProducts = (id: string) => {
+function previewProducts(id: string) {
   clearTimeout(previewProductsTimer);
   previewProductsTimer = setTimeout(() => {
     emits("listOrderProducts", id);
   }, 400);
-};
+}
 const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 
-const toggleThisOrder = (order: OrderT, name: "delete" | "update") => {
-  if (name == "delete") {
+function toggleThisOrder(order: OrderT, name: "delete" | "update") {
+  if (name === "delete") {
     modal.open(OrderDelete, {
       id: order.id,
       identifier: order.identifier,
@@ -65,9 +43,9 @@ const toggleThisOrder = (order: OrderT, name: "delete" | "update") => {
       identifier: order.identifier,
     });
   }
-};
+}
 
-const updateOrderStatus = async (id: string, status: string) => {
+async function updateOrderStatus(id: string, status: string) {
   try {
     await invoke("update_order_status", {
       order: {
@@ -79,27 +57,27 @@ const updateOrderStatus = async (id: string, status: string) => {
     info(`UPDATE ORDER STATUS: ${JSON.stringify({ id, status })}`);
     // toggle refresh
     updateQueryParams({
-      refresh: "refresh-update-" + Math.random() * 9999,
+      refresh: `refresh-update-${Math.random() * 9999}`,
     });
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("UPDATE ORDER STATUS: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`UPDATE ORDER STATUS: ${err.error}`);
       return;
     }
-    error("UPDATE ORDER STATUS: " + err);
+    error(`UPDATE ORDER STATUS: ${err}`);
   }
-};
+}
 
-const createInvoiceFromOrder = async (id: string) => {
+async function createInvoiceFromOrder(id: string) {
   try {
     const res = await invoke<Res<OrderForUpdateT>>(
       "create_invoice_from_order",
       {
-        id: id,
+        id,
       }
     );
     //
@@ -108,33 +86,39 @@ const createInvoiceFromOrder = async (id: string) => {
     toast.success(t("notifications.invoice.created"), {
       closeButton: true,
       description: h(NuxtLink, {
-        to: localePath("/invoices/?page=1&highlight=true&id=" + res.data),
+        to: localePath(`/invoices/?page=1&highlight=true&id=${res.data}`),
         class: "underline",
         innerHTML: "go to invoice",
       }),
     });
   } catch (err: any) {
-    if (typeof err == "object" && "error" in err) {
-      error("GET ORDER FOR INVOICE: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`GET ORDER FOR INVOICE: ${err.error}`);
       return;
     }
-    error("GET ORDER FOR INVOICE: " + err);
+    error(`GET ORDER FOR INVOICE: ${err}`);
   }
-};
+}
 </script>
 
 <template>
   <div class="w-full">
-    <Table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
+    <Table :dir="locale === 'ar' ? 'rtl' : 'ltr'">
       <TableHeader>
         <TableRow>
-          <TableHead class="w-24"></TableHead>
-          <TableHead>{{ t("g.fields.fullname") }}</TableHead>
-          <TableHead>{{ t("g.fields.items") }}</TableHead>
-          <TableHead class="w-24">{{ t("g.fields.status") }}</TableHead>
-          <TableHead>{{ t("g.fields.date") }}</TableHead>
-          <TableHead>{{ t("g.fields.total") }}</TableHead>
-          <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
+          <TableHead class="w-24" />
+          <TableHead>{{ t("fields.full-name") }}</TableHead>
+          <TableHead>{{ t("fields.items") }}</TableHead>
+          <TableHead class="w-fit">
+            {{ t("fields.status") }}
+          </TableHead>
+          <TableHead class="w-56">
+            {{ t("fields.date") }}
+          </TableHead>
+          <TableHead>{{ t("fields.total") }}</TableHead>
+          <TableHead class="w-20">
+            {{ t("fields.actions") }}
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -144,14 +128,14 @@ const createInvoiceFromOrder = async (id: string) => {
           v-fade="index"
           :class="{
             'animate-highlight-row':
-              order.id == $route.query.id && $route.query.highlight == 'true',
+              order.id === $route.query.id && $route.query.highlight === 'true',
           }"
         >
           <TableCell class="p-2 text-nowrap font-medium">
             {{ order.identifier }}
           </TableCell>
           <TableCell class="p-2 font-medium">
-            {{ order.fullname }}
+            {{ order.fullName }}
           </TableCell>
           <TableCell class="p-2">
             <Popover v-if="order.products && order.products > 0">
@@ -164,9 +148,9 @@ const createInvoiceFromOrder = async (id: string) => {
                   @mouseleave.passive="cancelPreviewProducts"
                 >
                   {{
-                    order.products +
-                    " " +
-                    t("g.plrz.p", { n: Math.ceil(order.products) })
+                    `${order.products} ${t("plrz.p", {
+                      n: Math.ceil(order.products),
+                    })}`
                   }}
                 </Button>
               </PopoverTrigger>
@@ -177,21 +161,23 @@ const createInvoiceFromOrder = async (id: string) => {
                   <table class="w-full not-default">
                     <thead>
                       <tr>
-                        <th v-for="index in 3" :key="index" />
+                        <th v-for="i in 3" :key="i" />
                       </tr>
                     </thead>
                     <tbody>
                       <tr
-                        v-for="(orderProduct, index) in orderProducts"
-                        :key="index"
+                        v-for="(product, i) in orderProducts"
+                        :key="i"
                         class="space-y-1 text-sm flex justify-between w-full items-center"
                       >
-                        <td class="underline w-1/2">{{ orderProduct.name }}</td>
+                        <td class="underline w-1/2">
+                          {{ product.name }}
+                        </td>
                         <td class="min-w-1/4 w-20 text-end text-nowrap">
-                          {{ orderProduct.price }} Dh
+                          {{ product.price }} Dh
                         </td>
                         <td class="w-1/4 text-slate-700 text-end">
-                          <i> x{{ orderProduct.quantity }} </i>
+                          <i> x{{ product.quantity }} </i>
                         </td>
                       </tr>
                     </tbody>
@@ -201,9 +187,9 @@ const createInvoiceFromOrder = async (id: string) => {
             </Popover>
             <template v-else>
               {{
-                (order.products == 0 ? "" : order.products) +
-                " " +
-                t("g.plrz.p", { n: Math.ceil(order.products ?? 0) })
+                `${order.products} ${t("plrz.p", {
+                  n: Math.ceil(order.products ?? 0),
+                })}`
               }}
             </template>
           </TableCell>
@@ -219,19 +205,20 @@ const createInvoiceFromOrder = async (id: string) => {
                     )
                   "
                 >
-                  {{ t(`g.status.${order.status.toLowerCase()}`) }}
+                  {{ t(`status.${order.status.toLowerCase()}`) }}
                 </Badge>
               </PopoverTrigger>
               <PopoverContent class="w-40 p-1 flex flex-col gap-1">
                 <Button
-                  v-for="status in STATUSES"
+                  v-for="status in ORDER_STATUSES"
+                  :key="status"
                   type="button"
                   variant="secondary"
                   size="sm"
                   :class="cn('border', STATUS_COLORS[status])"
                   @click="() => updateOrderStatus(order.id as string, status)"
                 >
-                  {{ t(`g.status.` + status.toLowerCase()) }}
+                  {{ t(`status.${status.toLowerCase()}`) }}
                 </Button>
               </PopoverContent>
             </Popover>
@@ -255,20 +242,20 @@ const createInvoiceFromOrder = async (id: string) => {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    {{ t("g.actions.edit") }}
+                    {{ t("actions.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <NuxtLink
                       :to="
                         localePath({
-                          path: '/orders/' + order.id,
+                          path: `/orders/${order.id}`,
                         })
                       "
                     >
                       <Printer
                         :size="20"
                         class="text-slate-800 inline mr-2"
-                      />{{ t("g.actions.print") }}
+                      />{{ t("actions.print") }}
                     </NuxtLink>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -276,13 +263,13 @@ const createInvoiceFromOrder = async (id: string) => {
                     <NotepadText
                       :size="20"
                       class="text-slate-800 inline mr-2"
-                    />{{ t("g.actions.toInvoice") }}
+                    />{{ t("actions.to-invoice") }}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem @click="toggleThisOrder(order, 'delete')">
                     <Trash2 :size="20" class="text-red-500 inline mr-2" />
                     <span class="text-red-500">
-                      {{ t("g.actions.delete") }}
+                      {{ t("actions.delete") }}
                     </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

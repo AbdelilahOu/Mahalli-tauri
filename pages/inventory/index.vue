@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { CalendarIcon } from "lucide-vue-next";
-import type { InventoryT } from "@/schemas/inventory.schema";
-import type { Res, QueryParams } from "@/types";
 import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
@@ -12,8 +10,8 @@ const { t, d } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const searchQuery = ref<string>(route.query.search as string);
-const status = ref<string | undefined>(
-  route.query.status as string | undefined
+const transactionType = ref<string | undefined>(
+  route.query.transactionType as string | undefined
 );
 const createdAt = ref<string | number | undefined>(route.query.created_at);
 
@@ -24,18 +22,18 @@ const queryParams = computed<QueryParams>(() => ({
   page: route.query.page,
   refresh: route.query.refresh,
   limit: route.query.limit,
-  status: route.query.status,
+  transaction_type: route.query.transaction_type,
   created_at: route.query.created_at,
 }));
 
-const fetchInventory = async (params: QueryParams) => {
+async function fetchInventory(params: QueryParams) {
   try {
     const res: Res<any> = await invoke("list_inventory", {
       args: {
         search: params.search ?? "",
         page: Number(params.page) ?? 1,
         limit: params.limit ? Number(params.limit) : LIMIT,
-        status: params.status,
+        status: params.transaction_type,
         created_at: params.created_at,
       },
     });
@@ -45,14 +43,14 @@ const fetchInventory = async (params: QueryParams) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
+    if (typeof err === "object" && "error" in err) {
       error(`LIST INVENTORY: ${err.error}`);
     } else {
       error(`LIST INVENTORY: ${err}`);
     }
     return { inventory: [], count: 0 };
   }
-};
+}
 
 const { data } = useAsyncData(
   "inventory",
@@ -72,9 +70,9 @@ const debouncedSearch = useDebounceFn(() => {
 
 watch(searchQuery, debouncedSearch);
 
-watch([status, createdAt], () => {
+watch([transactionType, createdAt], () => {
   updateQueryParams({
-    status: status.value,
+    transaction_type: transactionType.value,
     created_at: createdAt.value
       ? new Date(createdAt.value).toISOString()
       : undefined,
@@ -87,8 +85,7 @@ watch([status, createdAt], () => {
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
         <div class="w-full lg:max-w-[50%] max-w-[70%] grid grid-cols-3 gap-2">
-          <Input v-model="searchQuery" type="text" :placeholder="t('g.s')" />
-
+          <Input v-model="searchQuery" type="text" :placeholder="t('search')" />
           <Popover>
             <PopoverTrigger as-child>
               <Button
@@ -102,7 +99,7 @@ watch([status, createdAt], () => {
               >
                 <CalendarIcon class="mr-2 h-4 w-4" />
                 <span class="text-nowrap">{{
-                  createdAt ? d(new Date(createdAt), "short") : t("g.pick-date")
+                  createdAt ? d(new Date(createdAt), "short") : t("pick-date")
                 }}</span>
               </Button>
             </PopoverTrigger>
@@ -110,26 +107,25 @@ watch([status, createdAt], () => {
               <Calendar v-model="createdAt" />
             </PopoverContent>
           </Popover>
-          <Select v-model="status">
+          <Select v-model="transactionType">
             <SelectTrigger>
               <SelectValue
                 class="text-muted-foreground"
-                :placeholder="t('o.c.d.o.placeholder[2]')"
+                :placeholder="t('select-status')"
               />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="OUT">
-                {{ t("g.status.out") }}
+                {{ t("status.out") }}
               </SelectItem>
               <SelectItem value="IN">
-                {{ t("g.status.in") }}
+                {{ t("status.in") }}
               </SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div />
       </div>
-
       <InventoryTable :inventory="inventory" />
     </div>
   </main>

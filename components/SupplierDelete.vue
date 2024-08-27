@@ -1,63 +1,63 @@
 <script setup lang="ts">
-import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { toast } from "vue-sonner";
 
+const props = defineProps<{
+  id: string;
+  fullName: string;
+}>();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
 const { t } = useI18n();
 
-const props = defineProps<{
-  id: string;
-  fullname: string;
-}>();
-
-const deleteTheSupplier = async () => {
+async function deleteTheSupplier() {
   try {
     await invoke<Res<string>>("delete_supplier", { id: props.id });
-    //INFO
+    // INFO
     console.info(`DELETE SUPPLIER: ${props.id}`);
     //
     toast.success(
-      t("notifications.supplier.deleted", { name: props.fullname }),
+      t("notifications.supplier.deleted", { name: props.fullName }),
       {
         closeButton: true,
       }
     );
     // toggle refresh
     updateQueryParams({
-      refresh: "refresh-delete-" + Math.random() * 9999,
+      refresh: `refresh-delete-${Math.random() * 9999}`,
     });
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      console.error("DELETE SUPPLIER: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      console.error(`DELETE SUPPLIER: ${err.error}`);
       return;
     }
-    console.error("DELETE SUPPLIER: " + err);
+    console.error(`DELETE SUPPLIER: ${err}`);
   } finally {
     close();
   }
-};
+}
 </script>
 
 <template>
   <Card>
     <CardHeader>
-      <CardTitle> {{ t("s.d.title") }} {{ fullname }} ? </CardTitle>
+      <CardTitle>
+        {{ t("titles.suppliers.delete") }} {{ fullName }} ?
+      </CardTitle>
     </CardHeader>
     <CardContent>
       <div />
     </CardContent>
     <CardFooter>
       <Button variant="outline" @click="close">
-        {{ t("g.b.no") }}
+        {{ t("buttons.cancel") }}
       </Button>
       <Button class="col-span-2" @click="deleteTheSupplier">
-        {{ t("g.b.d") }}
+        {{ t("buttons.confirme") }}
       </Button>
     </CardFooter>
   </Card>

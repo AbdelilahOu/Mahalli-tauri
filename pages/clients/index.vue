@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { PlusCircleIcon } from "lucide-vue-next";
-import type { ClientT } from "@/schemas/client.schema";
-import type { Res, QueryParams } from "@/types";
+import { Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
@@ -25,7 +23,7 @@ const queryParams = computed<QueryParams>(() => ({
   limit: route.query.limit,
 }));
 
-const fetchClients = async (params: QueryParams) => {
+async function fetchClients(params: QueryParams) {
   try {
     const res: Res<any> = await invoke("list_clients", {
       args: {
@@ -40,14 +38,14 @@ const fetchClients = async (params: QueryParams) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("LIST CLIENTS: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`LIST CLIENTS: ${err.error}`);
     } else {
-      error("LIST CLIENTS: " + err);
+      error(`LIST CLIENTS: ${err}`);
     }
     throw err;
   }
-};
+}
 
 const { data } = useAsyncData(
   "clients",
@@ -75,12 +73,12 @@ const openCreateClientModal = () => modal.open(ClientCreate, {});
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
         <div class="w-1/3">
-          <Input v-model="searchQuery" type="text" :placeholder="t('g.s')" />
+          <Input v-model="searchQuery" type="text" :placeholder="t('search')" />
         </div>
         <div class="w-fit flex gap-2">
           <Button class="gap-2 text-nowrap" @click="openCreateClientModal()">
-            <PlusCircleIcon :size="20" />
-            {{ t("c.i.addButton") }}
+            <Plus :size="20" />
+            {{ t("buttons.toggle-create-client") }}
           </Button>
         </div>
       </div>

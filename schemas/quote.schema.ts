@@ -6,17 +6,17 @@ export const CreateQuoteSchema = z.object({
 });
 
 export type QuoteT = z.infer<typeof CreateQuoteSchema> & {
-  fullname?: string;
+  fullName?: string;
   products?: number;
   total?: number;
   createdAt?: string;
   identifier: string;
 };
 
-export type QuoteForUpdateT = {
+export interface QuoteForUpdateT {
   id: string;
   clientId: string;
-  fullname: string;
+  fullName: string;
   createdAt: string;
   items: {
     id?: string;
@@ -25,19 +25,19 @@ export type QuoteForUpdateT = {
     quantity?: number;
     price?: number;
   }[];
-};
+}
 
-export type QuoteForCreateT = {
+export interface QuoteForCreateT {
   clientId: string;
   items: {
     product_id?: string;
     quantity?: number;
     price?: number;
   }[];
-};
+}
 
-export type QuoteProductT = {
+export interface QuoteProductT {
   price: number;
   name: string;
   quantity: number;
-};
+}

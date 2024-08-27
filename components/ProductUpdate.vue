@@ -1,19 +1,10 @@
 <script setup lang="ts">
-import type { ProductT } from "@/schemas/products.schema";
-import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { toTypedSchema } from "@vee-validate/zod";
 import { error, info } from "tauri-plugin-log-api";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
-
-const { updateQueryParams } = useUpdateRouteQueryParams();
-const { close } = useModal();
-const { t } = useI18n();
-const route = useRoute();
-
-const isUpdating = ref<boolean>(false);
 
 const props = defineProps<{
   id: string;
@@ -23,6 +14,9 @@ const props = defineProps<{
   description: string;
   minQuantity: number;
 }>();
+const { updateQueryParams } = useUpdateRouteQueryParams();
+const { close } = useModal();
+const { t } = useI18n();
 
 const productSchema = toTypedSchema(
   z.object({
@@ -51,7 +45,7 @@ const form = useForm({
   validationSchema: productSchema,
 });
 
-const updateTheProduct = async (product: ProductT) => {
+async function updateTheProduct(product: ProductT) {
   try {
     const id = props.id;
     await invoke<Res<string>>("update_product", {
@@ -82,22 +76,22 @@ const updateTheProduct = async (product: ProductT) => {
     });
     // toggle refresh
     updateQueryParams({
-      refresh: "refresh-update-" + Math.random() * 9999,
+      refresh: `refresh-update-${Math.random() * 9999}`,
     });
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("UPDATE PRODUCT: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`UPDATE PRODUCT: ${err.error}`);
       return;
     }
-    error("UPDATE PRODUCT: " + err);
+    error(`UPDATE PRODUCT: ${err}`);
   } finally {
     close();
   }
-};
+}
 
 const onSubmit = form.handleSubmit((values) => {
   updateTheProduct(values);
@@ -109,28 +103,26 @@ const onSubmit = form.handleSubmit((values) => {
     <Card>
       <CardHeader>
         <CardTitle>
-          {{ t("p.u.title") }}
+          {{ t("titles.products.update") }}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <FormField v-slot="{ componentField }" name="name">
           <FormItem>
-            <FormLabel>{{ t("g.fields.name") }}</FormLabel>
+            <FormLabel>{{ t("fields.name") }}</FormLabel>
             <FormControl>
-              <Input
-                :placeholder="t('g.fields.name')"
-                v-bind="componentField"
-              />
+              <Input :placeholder="t('fields.name')" v-bind="componentField" />
             </FormControl>
           </FormItem>
         </FormField>
         <FormField v-slot="{ componentField }" name="purchasePrice">
           <FormItem>
-            <FormLabel>{{ t("g.fields.purchase-price") }}</FormLabel>
+            <FormLabel>{{ t("fields.purchase-price") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
-                :placeholder="t('g.fields.purchase-price')"
+                step="0.01"
+                :placeholder="t('fields.purchase-price')"
                 v-bind="componentField"
               >
                 <template #unite> DH </template>
@@ -140,11 +132,12 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="sellingPrice">
           <FormItem>
-            <FormLabel>{{ t("g.fields.selling-price") }}</FormLabel>
+            <FormLabel>{{ t("fields.selling-price") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
-                :placeholder="t('g.fields.selling-price')"
+                step="0.01"
+                :placeholder="t('fields.selling-price')"
                 v-bind="componentField"
               >
                 <template #unite> DH </template>
@@ -154,14 +147,17 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="minQuantity">
           <FormItem>
-            <FormLabel>{{ t("g.fields.min-quantity") }}</FormLabel>
+            <FormLabel>{{ t("fields.min-quantity") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
-                :placeholder="t('g.fields.min-quantity')"
+                step="0.01"
+                :placeholder="t('fields.min-quantity')"
                 v-bind="componentField"
               >
-                <template #unite> {{ t("g.fields.item") }} </template>
+                <template #unite>
+                  {{ t("fields.item") }}
+                </template>
               </Input>
             </FormControl>
           </FormItem>
@@ -169,11 +165,11 @@ const onSubmit = form.handleSubmit((values) => {
         <FormField v-slot="{ componentField }" name="description">
           <FormItem>
             <FormLabel>
-              {{ t("g.fields.description") }}
+              {{ t("fields.description") }}
             </FormLabel>
             <FormControl>
               <Textarea
-                :placeholder="t('g.fields.description')"
+                :placeholder="t('fields.description')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -181,16 +177,11 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
       </CardContent>
       <CardFooter>
-        <Button
-          type="button"
-          :disabled="isUpdating"
-          variant="outline"
-          @click="close"
-        >
-          {{ t("g.b.no") }}
+        <Button type="button" variant="outline" @click="close">
+          {{ t("buttons.cancel") }}
         </Button>
-        <Button :disabled="isUpdating" type="submit" class="col-span-2">
-          {{ t("g.b.u", { name: name }) }}
+        <Button type="submit" class="col-span-2">
+          {{ t("buttons.update", { name }) }}
         </Button>
       </CardFooter>
     </Card>

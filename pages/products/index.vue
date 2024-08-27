@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { PlusCircleIcon } from "lucide-vue-next";
-import type { ProductT } from "@/schemas/products.schema";
+import { Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
-import type { QueryParams } from "@/types";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 // @ts-ignore
@@ -25,7 +23,7 @@ const queryParams = computed<QueryParams>(() => ({
   limit: route.query.limit,
 }));
 
-const fetchProducts = async () => {
+async function fetchProducts() {
   try {
     const res: any = await invoke("list_products", {
       args: {
@@ -42,14 +40,14 @@ const fetchProducts = async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("LIST PRODUCTS: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`LIST PRODUCTS: ${err.error}`);
     } else {
-      error("LIST PRODUCTS: " + err);
+      error(`LIST PRODUCTS: ${err}`);
     }
     throw err;
   }
-};
+}
 
 const { data: productsData, refresh: refreshProducts } = await useAsyncData(
   "products",
@@ -79,12 +77,12 @@ const openCreateProductModal = () => modal.open(ProductCreate, {});
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
         <div class="w-1/3">
-          <Input v-model="searchQuery" type="text" :placeholder="t('g.s')" />
+          <Input v-model="searchQuery" type="text" :placeholder="t('search')" />
         </div>
         <div class="w-fit flex gap-2">
           <Button class="gap-2 text-nowrap" @click="openCreateProductModal">
-            <PlusCircleIcon :size="20" />
-            {{ t("p.i.addButton") }}
+            <Plus :size="20" />
+            {{ t("buttons.toggle-create-product") }}
           </Button>
         </div>
       </div>

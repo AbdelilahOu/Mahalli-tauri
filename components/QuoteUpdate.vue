@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import type { QuoteForUpdateT } from "@/schemas/quote.schema";
-import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { Trash2 } from "lucide-vue-next";
 import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
+const props = defineProps<{
+  id: string;
+  identifier: string;
+}>();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
 const { t } = useI18n();
@@ -15,15 +17,10 @@ const products = ref<{ label: string; value: string }[]>([]);
 const quote = reactive<QuoteForUpdateT>({
   id: "",
   clientId: "",
-  fullname: "",
+  fullName: "",
   createdAt: "",
   items: [],
 });
-
-const props = defineProps<{
-  id: string;
-  identifier: string;
-}>();
 
 onBeforeMount(async () => {
   // @ts-ignore
@@ -35,12 +32,12 @@ onBeforeMount(async () => {
     quote.id = res.data.id;
     quote.clientId = res.data.clientId;
     quote.createdAt = res.data.createdAt;
-    quote.fullname = res.data.fullname;
+    quote.fullName = res.data.fullName;
     quote.items = res.data.items;
   }
 });
 
-const searchClients = async (search: string | number) => {
+async function searchClients(search: string | number) {
   const res = await invoke<Res<{ label: string; value: string }[]>>(
     "search_clients",
     {
@@ -50,9 +47,9 @@ const searchClients = async (search: string | number) => {
   if (!res.error) {
     clients.value = res.data;
   }
-};
+}
 
-const searchProducts = async (search: string | number) => {
+async function searchProducts(search: string | number) {
   const res = await invoke<Res<{ label: string; value: string }[]>>(
     "search_products",
     {
@@ -62,17 +59,17 @@ const searchProducts = async (search: string | number) => {
   if (!res.error) {
     products.value = res.data;
   }
-};
+}
 
-const addQuoteItem = () => {
+function addQuoteItem() {
   quote.items?.push({
     product_id: undefined,
     quantity: undefined,
     price: undefined,
   });
-};
+}
 
-const updateTheQuotes = async () => {
+async function updateTheQuotes() {
   try {
     await invoke<Res<string>>("update_quote", {
       quote: {
@@ -88,22 +85,22 @@ const updateTheQuotes = async () => {
     });
     // toggle refresh
     updateQueryParams({
-      refresh: "refresh-update-" + Math.random() * 9999,
+      refresh: `refresh-update-${Math.random() * 9999}`,
     });
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("UPDATE QUOTE: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`UPDATE QUOTE: ${err.error}`);
       return;
     }
-    error("UPDATE QUOTE: " + err);
+    error(`UPDATE QUOTE: ${err}`);
   } finally {
     close();
   }
-};
+}
 
 async function deleteOneQuoteItem(id: string) {
   try {
@@ -113,17 +110,16 @@ async function deleteOneQuoteItem(id: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("ERROR DELETE QUOTE ITEM : " + err.error);
-      return;
+    if (typeof err === "object" && "error" in err) {
+      error(`ERROR DELETE QUOTE ITEM : ${err.error}`);
     }
   }
 }
 
-const deleteQuoteItem = (index: number) => {
+function deleteQuoteItem(index: number) {
   const item = quote.items?.splice(index, 1)[0];
   if (item?.id) deleteOneQuoteItem(item.id);
-};
+}
 </script>
 
 <template>
@@ -131,18 +127,20 @@ const deleteQuoteItem = (index: number) => {
     class="w-5/6 lg:w-1/2 relative h-fit rounded-md z-50 gap-3 flex flex-col bg-white min-w-[350px]"
   >
     <CardHeader>
-      <CardTitle> {{ t("q.u.title") }} N° {{ identifier }} </CardTitle>
+      <CardTitle>
+        {{ t("titles.quotes.update") }} N° {{ identifier }}
+      </CardTitle>
     </CardHeader>
     <CardContent>
       <div class="h-full w-full grid grid-cols-1 gap-2">
         <div class="flex w-full h-fit gap-1">
           <div class="w-full h-full flex flex-col gap-1">
             <Label for="client_id">
-              {{ t("g.fields.fullname") }}
+              {{ t("fields.full-name") }}
             </Label>
             <SearchableItems
-              v-if="quote.fullname"
-              :default-value="quote.fullname"
+              v-if="quote.fullName"
+              :default-value="quote.fullName"
               :items="clients"
               @update:items="(s) => searchClients(s)"
               @on:select="(id) => (quote.clientId = id)"
@@ -152,7 +150,7 @@ const deleteQuoteItem = (index: number) => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Button @click="addQuoteItem">
-            {{ t("q.u.d.o.add") }}
+            {{ t("buttons.add-product") }}
           </Button>
           <div
             class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] items-center overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
@@ -169,15 +167,17 @@ const deleteQuoteItem = (index: number) => {
               <Input
                 v-model="item.quantity"
                 class="order-r-0"
-                :placeholder="t('o.c.d.o.placeholder[0]')"
+                :placeholder="t('fields.quantity')"
                 type="number"
               >
-                <template #unite> {{ t("g.fields.item") }} </template>
+                <template #unite>
+                  {{ t("fields.item") }}
+                </template>
               </Input>
               <Input
                 v-model="item.price"
                 class="order-r-0"
-                :placeholder="t('o.c.d.o.placeholder[1]')"
+                :placeholder="t('fields.price')"
                 type="number"
               >
                 <template #unite> DH </template>
@@ -194,10 +194,10 @@ const deleteQuoteItem = (index: number) => {
     </CardContent>
     <CardFooter>
       <Button variant="outline" @click="close">
-        {{ t("g.b.no") }}
+        {{ t("buttons.cancel") }}
       </Button>
       <Button class="col-span-2" @click="updateTheQuotes">
-        {{ t("g.b.d") }}
+        {{ t("buttons.confirme") }}
       </Button>
     </CardFooter>
   </Card>

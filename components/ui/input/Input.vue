@@ -15,6 +15,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
   defaultValue: props.defaultValue,
 });
 </script>
+
 <template>
   <div :class="cn('w-full h-fit flex')">
     <input
@@ -25,7 +26,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
           'flex h-10 w-full border px-2 focus-visible:border-2 focus-visible:border-black focus:outline-0 rounded-md border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 transform transition-color duration-100',
           $slots.unite
             ? 'rounded-r-none border-r-0 focus-visible:border-r-0'
-            : ''
+            : '',
         )
       "
     >
@@ -36,7 +37,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
       <span
         class="h-full text-gray-400 rounded-md px-2 flex items-center text-sm font-light justify-center"
       >
-        <slot name="unite"/>
+        <slot name="unite" />
       </span>
     </div>
   </div>

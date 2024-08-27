@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { error } from "tauri-plugin-log-api";
-import type { Res } from "@/types";
-import { PDFDocument, rgb, PageSizes, PDFName, PDFPage } from "pdf-lib";
+import { PDFDocument, PDFName, PDFPage, PageSizes, rgb } from "pdf-lib";
 import type { PDFFont } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
-import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 import { toast } from "vue-sonner";
 import { useDebounceFn } from "@vueuse/core";
+import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 
 const { t, locale } = useI18n();
 const { numberToText } = useNumberToText();
@@ -18,7 +17,7 @@ const pdfRef = ref<HTMLIFrameElement | null>();
 const config = reactive({
   marginTop: 40,
   marginX: 20,
-  marginBottom: 40,
+  marginBottom: 120,
   templateBase64: null as string | null,
   color: rgb(0.34, 0.34, 0.34),
 });
@@ -42,9 +41,8 @@ onBeforeMount(async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("ERROR QUOTE DETAILS: " + err.error);
-      return;
+    if (typeof err === "object" && "error" in err) {
+      error(`ERROR QUOTE DETAILS: ${err.error}`);
     }
   }
 });
@@ -58,7 +56,7 @@ onMounted(async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("ERROR PDF-LIB: " + err);
+    error(`ERROR PDF-LIB: ${err}`);
   }
 });
 
@@ -78,7 +76,7 @@ watch(
   debouncedRegenerate
 );
 
-const initPdfDoc = async () => {
+async function initPdfDoc() {
   try {
     pdfDoc = await PDFDocument.create();
     pdfDoc.registerFontkit(fontkit);
@@ -91,17 +89,17 @@ const initPdfDoc = async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("ERROR PDF-LIB: " + err);
+    error(`ERROR PDF-LIB: ${err}`);
   }
-};
+}
 
-const generatePdf = async () => {
+async function generatePdf() {
   try {
     let page: PDFPage;
     let Tempalte: PDFPage | undefined;
     if (config.templateBase64) {
       const sourcePdfDoc = await PDFDocument.load(
-        "data:application/pdf;base64," + config.templateBase64
+        `data:application/pdf;base64,${config.templateBase64}`
       );
       const [template] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
       Tempalte = template;
@@ -135,16 +133,11 @@ const generatePdf = async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error("ERROR PDF-LIB: " + err);
+    error(`ERROR PDF-LIB: ${err}`);
   }
-};
+}
 
-const drawHeader = (
-  page: PDFPage,
-  width: number,
-  height: number,
-  quote: any
-) => {
+function drawHeader(page: PDFPage, width: number, height: number, quote: any) {
   let QuoteText = "";
   switch (locale.value) {
     case "en":
@@ -195,14 +188,14 @@ const drawHeader = (
     color: config.color,
   });
   //
-  page.drawText(t("i.u.d.c.title").toUpperCase(), {
+  page.drawText(t("fields.bill-to").toUpperCase(), {
     x: config.marginX,
     y: height - config.marginTop,
     font,
     size: 14,
     color: config.color,
   });
-  page.drawText(quote.client.fullname, {
+  page.drawText(quote.client.fullName, {
     x: config.marginX,
     y: height - config.marginTop - 20,
     font,
@@ -238,14 +231,14 @@ const drawHeader = (
     color: config.color,
     opacity: 0.75,
   });
-  page.drawText(t("g.fields.name"), {
+  page.drawText(t("fields.name"), {
     x: config.marginX + 5,
     y: height - config.marginTop - 20 * 6,
     font,
     size: 14,
     color: config.color,
   });
-  page.drawText(t("g.fields.quantity"), {
+  page.drawText(t("fields.quantity"), {
     x: config.marginX + 5 + width / 4,
     y: height - config.marginTop - 20 * 6,
     font,
@@ -253,7 +246,7 @@ const drawHeader = (
     color: config.color,
   });
 
-  page.drawText(t("g.fields.price"), {
+  page.drawText(t("fields.price"), {
     x: config.marginX + 5 + width / 2,
     y: height - config.marginTop - 20 * 6,
     font,
@@ -261,22 +254,22 @@ const drawHeader = (
     color: config.color,
   });
 
-  page.drawText(t("g.fields.total"), {
+  page.drawText(t("fields.total"), {
     x: config.marginX + 5 + (width * 3) / 4,
     y: height - config.marginTop - 20 * 6,
     font,
     size: 14,
     color: config.color,
   });
-};
+}
 
-const drawItems = (
+function drawItems(
   page: PDFPage,
   width: number,
   items: any[],
   currentY: number,
   template?: PDFPage
-) => {
+) {
   if (items.length === 0) {
     drawSummary(page, width, currentY);
     return;
@@ -297,14 +290,14 @@ const drawItems = (
     size: 12,
     color: config.color,
   });
-  page.drawText("DH " + item.price.toFixed(2), {
+  page.drawText(`DH ${item.price.toFixed(2)}`, {
     x: config.marginX + 5 + width / 2,
     y: currentY - 10,
     font,
     size: 12,
     color: config.color,
   });
-  page.drawText("DH " + (item.price * item.quantity).toFixed(2), {
+  page.drawText(`DH ${(item.price * item.quantity).toFixed(2)}`, {
     x: config.marginX + 5 + (width * 3) / 4,
     y: currentY - 10,
     font,
@@ -341,9 +334,9 @@ const drawItems = (
   } else {
     drawItems(page, width, items, currentY - lineHeight, template);
   }
-};
+}
 
-const drawSummary = (page: PDFPage, width: number, currentY: number) => {
+function drawSummary(page: PDFPage, width: number, currentY: number) {
   let SummaryX = 0;
   switch (locale.value) {
     case "en":
@@ -358,7 +351,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
       break;
   }
 
-  page.drawText("DH " + quote.value.total.toFixed(2), {
+  page.drawText(`DH ${quote.value.total.toFixed(2)}`, {
     x: config.marginX + 5 + (width * 3) / 4,
     y: currentY - 10,
     font,
@@ -366,7 +359,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     color: config.color,
   });
 
-  page.drawText(t("g.fields.sub-total").toUpperCase(), {
+  page.drawText(t("fields.sub-total").toUpperCase(), {
     x: SummaryX,
     y: currentY - 10,
     font,
@@ -395,7 +388,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     color: config.color,
   });
 
-  page.drawText(t("g.fields.vat-rate").toUpperCase(), {
+  page.drawText(t("fields.vat-rate").toUpperCase(), {
     x: SummaryX,
     y: currentY - 40,
     font,
@@ -417,7 +410,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     opacity: 0.75,
   });
 
-  page.drawText("DH " + (quote.value.total * 0.2).toFixed(2), {
+  page.drawText(`DH ${(quote.value.total * 0.2).toFixed(2)}`, {
     x: config.marginX + 5 + (width * 3) / 4,
     y: currentY - 70,
     font,
@@ -425,7 +418,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     color: config.color,
   });
 
-  page.drawText(t("g.fields.vat-amount").toUpperCase(), {
+  page.drawText(t("fields.vat-amount").toUpperCase(), {
     x: SummaryX,
     y: currentY - 70,
     font,
@@ -448,7 +441,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
   });
 
   page.drawText(
-    "DH " + (quote.value.total + quote.value.total * 0.2).toFixed(2),
+    `DH ${(quote.value.total + quote.value.total * 0.2).toFixed(2)}`,
     {
       x: config.marginX + 5 + (width * 3) / 4,
       y: currentY - 100,
@@ -458,7 +451,7 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     }
   );
 
-  page.drawText(t("g.fields.grand-total").toUpperCase(), {
+  page.drawText(t("fields.grand-total").toUpperCase(), {
     x: SummaryX,
     y: currentY - 100,
     font,
@@ -491,9 +484,9 @@ const drawSummary = (page: PDFPage, width: number, currentY: number) => {
     size: 13,
     color: config.color,
   });
-};
+}
 
-const copyPage = (originalPage: any) => {
+function copyPage(originalPage: any) {
   const cloneNode = originalPage.node.clone();
 
   const { Contents } = originalPage.node.normalizedEntries();
@@ -502,7 +495,7 @@ const copyPage = (originalPage: any) => {
   const cloneRef = originalPage.doc.context.register(cloneNode);
   const clonePage = PDFPage.of(cloneNode, cloneRef, originalPage.doc);
   return clonePage;
-};
+}
 </script>
 
 <template>
@@ -510,18 +503,18 @@ const copyPage = (originalPage: any) => {
     <iframe ref="pdfRef" class="flex-1" />
     <Card class="w-1/2 md:w-1/3 min-w-[500px]">
       <CardHeader>
-        <CardTitle> {{ t("g.fields.configuration") }} </CardTitle>
+        <CardTitle> {{ t("fields.configuration") }} </CardTitle>
       </CardHeader>
       <CardContent>
-        <Label> {{ t("g.fields.template") }} </Label>
+        <Label> {{ t("fields.template") }} </Label>
         <UiUploader
-          @save:base64="setDocumentTemplate"
           name="Pdf"
           :extensions="['pdf']"
+          @save:base64="setDocumentTemplate"
         />
-        <Label>{{ t("g.fields.top-margin") }} </Label>
+        <Label>{{ t("fields.top-margin") }} </Label>
         <Input v-model="config.marginTop" />
-        <Label> {{ t("g.fields.bottom-margin") }} </Label>
+        <Label> {{ t("fields.bottom-margin") }} </Label>
         <Input v-model="config.marginBottom" />
       </CardContent>
     </Card>
