@@ -1,10 +1,4 @@
 <script setup lang="ts">
-import type {
-  QuoteForUpdateT,
-  QuoteProductT,
-  QuoteT,
-} from "@/schemas/quote.schema";
-import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import {
   FilePenLine,
@@ -15,29 +9,28 @@ import {
 } from "lucide-vue-next";
 import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-//@ts-ignore
-import { QuoteUpdate, QuoteDelete, NuxtLink } from "#components";
-
-const modal = useModal();
-const { t, d, locale, n } = useI18n();
-const localePath = useLocalePath();
+// @ts-ignore
+import { NuxtLink, QuoteDelete, QuoteUpdate } from "#components";
 
 defineProps<{ quotes: QuoteT[]; quoteProducts: QuoteProductT[] }>();
 const emits = defineEmits<{
   (e: "listQuoteProducts", id?: string): void;
 }>();
+const modal = useModal();
+const { t, d, locale, n } = useI18n();
+const localePath = useLocalePath();
 
 let previewProductsTimer: any;
-const previewProducts = (id: string) => {
+function previewProducts(id: string) {
   clearTimeout(previewProductsTimer);
   previewProductsTimer = setTimeout(() => {
     emits("listQuoteProducts", id);
   }, 400);
-};
+}
 const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 
-const toggleThisQuote = (quote: QuoteT, name: "delete" | "update") => {
-  if (name == "delete") {
+function toggleThisQuote(quote: QuoteT, name: "delete" | "update") {
+  if (name === "delete") {
     modal.open(QuoteDelete, {
       id: quote.id,
       identifier: quote.identifier,
@@ -48,19 +41,19 @@ const toggleThisQuote = (quote: QuoteT, name: "delete" | "update") => {
       identifier: quote.identifier,
     });
   }
-};
+}
 
-const createOrderFromQuote = async (id: string) => {
+async function createOrderFromQuote(id: string) {
   try {
     const res = await invoke<Res<QuoteForUpdateT>>("create_order_from_quote", {
-      id: id,
+      id,
     });
     info(`CREATE ORDER FROM QUOTE: ${id}`);
     //
     toast.success(t("notifications.order.created"), {
       closeButton: true,
       description: h(NuxtLink, {
-        to: localePath("/orders/?page=1&highlight=true&id=" + res.data),
+        to: localePath(`/orders/?page=1&highlight=true&id=${res.data}`),
         class: "underline",
         innerHTML: "go to order",
       }),
@@ -70,26 +63,30 @@ const createOrderFromQuote = async (id: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("GET QUOTE FOR ORDER: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`GET QUOTE FOR ORDER: ${err.error}`);
       return;
     }
-    error("GET QUOTE FOR ORDER: " + err);
+    error(`GET QUOTE FOR ORDER: ${err}`);
   }
-};
+}
 </script>
 
 <template>
   <div class="w-full">
-    <Table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
+    <Table :dir="locale === 'ar' ? 'rtl' : 'ltr'">
       <TableHeader>
         <TableRow>
-          <TableHead class="w-24"></TableHead>
-          <TableHead>{{ t("g.fields.fullname") }}</TableHead>
-          <TableHead>{{ t("g.fields.items") }}</TableHead>
-          <TableHead>{{ t("g.fields.date") }}</TableHead>
-          <TableHead>{{ t("g.fields.total") }}</TableHead>
-          <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
+          <TableHead class="w-24" />
+          <TableHead>{{ t("fields.full-name") }}</TableHead>
+          <TableHead>{{ t("fields.items") }}</TableHead>
+          <TableHead class="w-56">
+            {{ t("fields.date") }}
+          </TableHead>
+          <TableHead>{{ t("fields.total") }}</TableHead>
+          <TableHead class="w-20">
+            {{ t("fields.actions") }}
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -102,7 +99,7 @@ const createOrderFromQuote = async (id: string) => {
             {{ quote.identifier }}
           </TableCell>
           <TableCell class="p-2 font-medium">
-            {{ quote.fullname }}
+            {{ quote.fullName }}
           </TableCell>
           <TableCell class="p-2">
             <Popover v-if="quote.products && quote.products > 0">
@@ -115,9 +112,9 @@ const createOrderFromQuote = async (id: string) => {
                   @mouseleave.passive="cancelPreviewProducts"
                 >
                   {{
-                    quote.products +
-                    " " +
-                    t("g.plrz.p", { n: Math.ceil(quote.products) })
+                    `${quote.products} ${t("plrz.p", {
+                      n: Math.ceil(quote.products),
+                    })}`
                   }}
                 </Button>
               </PopoverTrigger>
@@ -128,16 +125,18 @@ const createOrderFromQuote = async (id: string) => {
                   <table class="w-full not-default">
                     <thead>
                       <tr>
-                        <th v-for="index in 3" :key="index" />
+                        <th v-for="i in 3" :key="i" />
                       </tr>
                     </thead>
                     <tbody>
                       <tr
-                        v-for="(quoteProduct, index) in quoteProducts"
-                        :key="index"
+                        v-for="(quoteProduct, i) in quoteProducts"
+                        :key="i"
                         class="space-y-1 text-sm flex justify-between w-full items-center"
                       >
-                        <td class="underline w-1/2">{{ quoteProduct.name }}</td>
+                        <td class="underline w-1/2">
+                          {{ quoteProduct.name }}
+                        </td>
                         <td class="min-w-1/4 w-20 text-end text-nowrap">
                           {{ quoteProduct.price }} Dh
                         </td>
@@ -152,9 +151,9 @@ const createOrderFromQuote = async (id: string) => {
             </Popover>
             <template v-else>
               {{
-                (quote.products == 0 ? "" : quote.products) +
-                " " +
-                t("g.plrz.p", { n: Math.ceil(quote?.products ?? 0) })
+                `${quote.products} ${t("plrz.p", {
+                  n: Math.ceil(quote?.products ?? 0),
+                })}`
               }}
             </template>
           </TableCell>
@@ -177,33 +176,33 @@ const createOrderFromQuote = async (id: string) => {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    {{ t("g.actions.edit") }}
+                    {{ t("actions.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <NuxtLink
                       :to="
                         localePath({
-                          path: '/quotes/' + quote.id,
+                          path: `/quotes/${quote.id}`,
                         })
                       "
                     >
                       <Printer
                         :size="20"
                         class="text-slate-800 inline mr-2"
-                      />{{ t("g.actions.print") }}
+                      />{{ t("actions.print") }}
                     </NuxtLink>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem @click="createOrderFromQuote(quote.id!)">
-                    <Truck :size="20" class="text-slate-800 inline mr-2" />
-                    {{ t("g.actions.toOrder") }}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem @click="toggleThisQuote(quote, 'delete')">
                     <Trash2 :size="20" class="text-red-500 inline mr-2" />
                     <span class="text-red-500">
-                      {{ t("g.actions.delete") }}
+                      {{ t("actions.delete") }}
                     </span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem @click="createOrderFromQuote(quote.id!)">
+                    <Truck :size="20" class="text-slate-800 inline mr-2" />
+                    {{ t("actions.to-order") }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { Trash2 } from "lucide-vue-next";
-import type { InvoiceForCreateT } from "@/schemas/invoice.schema";
-import type { Res } from "@/types";
 import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
@@ -12,7 +10,7 @@ const { close } = useModal();
 
 const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
-const isLoading = ref<boolean>(false);
+const isPosting = ref<boolean>(false);
 
 const invoice = reactive<InvoiceForCreateT>({
   clientId: "",
@@ -27,19 +25,19 @@ const invoice = reactive<InvoiceForCreateT>({
   ],
 });
 
-const addInvoiceItem = () => {
+function addInvoiceItem() {
   invoice.items?.push({
     product_id: undefined,
     quantity: undefined,
     price: undefined,
   });
-};
+}
 
-const deleteInvoiceItem = (index: number) => {
+function deleteInvoiceItem(index: number) {
   invoice.items?.splice(index, 1);
-};
+}
 
-const searchSuppliers = async (search: string | number) => {
+async function searchClients(search: string | number) {
   const res = await invoke<Res<{ label: string; value: string }[]>>(
     "search_clients",
     {
@@ -49,9 +47,9 @@ const searchSuppliers = async (search: string | number) => {
   if (!res.error) {
     clients.value = res.data;
   }
-};
+}
 
-const searchProducts = async (search: string | number) => {
+async function searchProducts(search: string | number) {
   const res = await invoke<Res<{ label: string; value: string }[]>>(
     "search_products",
     {
@@ -61,10 +59,10 @@ const searchProducts = async (search: string | number) => {
   if (!res.error) {
     products.value = res.data;
   }
-};
+}
 
-const createInvoice = async () => {
-  isLoading.value = true;
+async function createInvoice() {
+  isPosting.value = true;
   if (invoice?.clientId && invoice.items?.length !== 0) {
     try {
       await invoke<Res<string>>("create_invoice", {
@@ -83,27 +81,27 @@ const createInvoice = async () => {
       });
       // toggle refresh
       updateQueryParams({
-        refresh: "refresh-create-" + Math.random() * 9999,
+        refresh: `refresh-create-${Math.random() * 9999}`,
       });
     } catch (err: any) {
       toast.error(t("notifications.error.title"), {
         description: t("notifications.error.description"),
         closeButton: true,
       });
-      if (typeof err == "object" && "error" in err) {
-        error("CREATE INVOICE: " + err.error);
+      if (typeof err === "object" && "error" in err) {
+        error(`CREATE INVOICE: ${err.error}`);
         return;
       }
-      error("CREATE INVOICE: " + err);
+      error(`CREATE INVOICE: ${err}`);
     } finally {
-      isLoading.value = false;
+      isPosting.value = false;
       close();
     }
     return;
   }
 
-  isLoading.value = false;
-};
+  isPosting.value = false;
+}
 </script>
 
 <template>
@@ -112,7 +110,7 @@ const createInvoice = async () => {
   >
     <CardHeader>
       <CardTitle>
-        {{ t("i.c.title") }}
+        {{ t("titles.invoices.create") }}
       </CardTitle>
     </CardHeader>
     <CardContent>
@@ -120,49 +118,25 @@ const createInvoice = async () => {
         <div class="flex w-full h-fit gap-1">
           <div class="w-full h-full flex flex-col gap-1">
             <Label for="client_id">
-              {{ t("g.fields.fullname") }}
+              {{ t("fields.full-name") }}
             </Label>
             <SearchableItems
               :items="clients"
-              @update:items="(s) => searchSuppliers(s)"
+              @update:items="(s) => searchClients(s)"
               @on:select="(id) => (invoice.clientId = id)"
             />
           </div>
-          <!-- <div class="w-full h-full flex flex-col gap-1">
-            <Label for="status">
-              {{ t("g.fields.status") }}
-            </Label>
-            <Select v-model="invoice.status">
-              <SelectTrigger>
-                <SelectValue
-                  class="text-muted-foreground"
-                  :placeholder="t('o.c.d.o.placeholder[2]')"
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="PAID">
-                  {{ t("g.status.paid") }}
-                </SelectItem>
-                <SelectItem value="CANCELLED">
-                  {{ t("g.status.canceled") }}
-                </SelectItem>
-                <SelectItem value="PENDING">
-                  {{ t("g.status.pending") }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div> -->
         </div>
         <div class="w-full h-full flex flex-col gap-1">
           <Label for="status">
-            {{ t("g.fields.paid") }}
+            {{ t("fields.paid") }}
           </Label>
           <Input v-model="invoice.paidAmount" placeholder="" type="number" />
         </div>
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Button @click="addInvoiceItem">
-            {{ t("i.c.d.i.add") }}
+            {{ t("buttons.add-product") }}
           </Button>
           <div
             class="w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] items-center overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
@@ -178,15 +152,17 @@ const createInvoice = async () => {
               <Input
                 v-model="item.quantity"
                 class="border-r-0"
-                :placeholder="t('o.c.d.o.placeholder[0]')"
+                :placeholder="t('fields.quantity')"
                 type="number"
               >
-                <template #unite> {{ t("g.fields.item") }} </template>
+                <template #unite>
+                  {{ t("fields.item") }}
+                </template>
               </Input>
               <Input
                 v-model="item.price"
                 class="border-r-0"
-                :placeholder="t('o.c.d.o.placeholder[1]')"
+                :placeholder="t('fields.price')"
                 type="number"
               >
                 <template #unite> DH </template>
@@ -203,10 +179,10 @@ const createInvoice = async () => {
     </CardContent>
     <CardFooter>
       <Button variant="outline" @click="close">
-        {{ t("g.b.no") }}
+        {{ t("buttons.cancel") }}
       </Button>
       <Button class="col-span-2" @click="createInvoice()">
-        {{ t("g.b.c") }}
+        {{ t("buttons.add") }}
       </Button>
     </CardFooter>
   </Card>

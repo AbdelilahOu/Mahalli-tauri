@@ -1,19 +1,21 @@
 import { BaseDirectory, readBinaryFile } from "@tauri-apps/api/fs";
 
-export const getFileBytes = async (path?: string) => {
-  if (!path) return null;
+export async function getFileBytes(path?: string) {
+  if (!path)
+    return null;
   try {
     const content = await readBinaryFile(path, {
       dir: BaseDirectory.Home,
     });
     return btoa(String.fromCharCode(...content));
-  } catch (error) {
+  }
+  catch (error) {
     console.log("sth went wrong", error);
     return null;
   }
-};
+}
 
-export const getBytesArray = (file: File): Promise<Uint8Array> => {
+export function getBytesArray(file: File): Promise<Uint8Array> {
   //
   const fileData = new Blob([file]);
   //
@@ -28,4 +30,4 @@ export const getBytesArray = (file: File): Promise<Uint8Array> => {
       resolve(arrayBuffer);
     };
   });
-};
+}

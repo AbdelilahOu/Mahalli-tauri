@@ -1,103 +1,105 @@
 {
-  "g": {
-    "s": "Recherche",
-    "pick-date": "Sélectionnez une date",
-    "r": {
-      "Clients": "Clientèle",
-      "Suppliers": "Fournisseurs",
-      "Products": "Produits",
-      "Orders": "Commandes",
-      "Invoices": "Factures",
-      "Inventory": "Inventaire",
-      "Dashboard": "Tableau de bord",
-      "Payment": "Paiement",
-      "Settings": "Paramètres",
-      "Quotes": "Devis",
-      "Notifications": "Notifications"
-    },
-    "b": {
-      "no": "Annuler",
-      "c": "Ajouter",
-      "d": "Confirmer",
-      "u": "Mettre à jour {name}",
-      "a": "Ajouter",
-      "csv": "Télécharger vers {table}"
-    },
-    "translationTitle": "Changer de langue",
-    "dropZone": "Glissez-déposez ou sélectionnez",
-    "plrz": {
-      "i": "aucun article | article | articles",
-      "p": "aucun produit | produit | produits"
-    },
-    "fields": {
-      "fullname": "Nom et prénom",
-      "name": "Nom du produit",
-      "email": "E-mail",
-      "phone": "Numéro de téléphone",
-      "address": "Adresse",
-      "actions": "Actions",
-      "description": "Description",
-      "status": "Statut",
-      "price": "Prix",
-      "purchase-price": "Prix d'achat",
-      "selling-price": "Prix de vente",
-      "date": "Date",
-      "paid": "Avance",
-      "rest": "Repos",
-      "items": "Articles",
-      "total": "Total",
-      "inventory": "Inventaire",
-      "init-quantity": "Quantité initiale",
-      "min-quantity": "Quantité minimum",
-      "quantity": "Quantité",
-      "creditt": "Crédit",
-      "threshold": "Seuil",
-      "item": "Article",
-      "sub-total": "sous-total",
-      "vat-rate": "taux de TVA",
-      "vat-amount": "montant de TVA",
-      "grand-total": "total TTC",
-      "template": "Modèle",
-      "configuration": "Configuration",
-      "top-margin": "Marge supérieure",
-      "bottom-margin": "Marge inférieure"
-    },
-    "status": {
-      "pending": "En attente",
-      "processing": "En cours de traitement",
-      "shipped": "Expédié",
-      "delivered": "Livré",
-      "cancelled": "Annulé",
-      "draft": "Brouillon",
-      "sent": "Envoyé",
-      "paid": "Payé",
-      "partially_paid": "Partiellement payé",
-      "overdue": "En retard",
-      "in": "Acheté",
-      "out": "Vendu"
-    },
-    "actions": {
-      "edit": "Modifier",
-      "delete": "Supprimer",
-      "print": "Imprimer",
-      "toOrder": "Créer une commande",
-      "toInvoice": "Créer une facture",
-      "inventoryUpdate": "Ajouter à l'inventaire"
-    }
+  "search": "Recherche",
+  "pick-date": "Choisissez une date",
+  "select-status": "Sélectionnez un statut",
+  "routes": {
+    "home": "Accueil",
+    "clients": "Clients",
+    "suppliers": "Fournisseurs",
+    "products": "Produits",
+    "orders": "Commandes",
+    "invoices": "Factures",
+    "inventory": "Inventaire",
+    "dashboard": "Tableau de bord",
+    "settings": "Paramètres",
+    "quotes": "Devis",
+    "notifications": "Notifications"
   },
-  "csv": { "title": "Téléchargez des fichiers csv" },
+  "buttons": {
+    "cancel": "Annuler",
+    "add": "Ajouter",
+    "confirme": "Confirmer",
+    "update": "Mettre à jour {name}",
+    "add-product": "Ajouter un produit",
+    "toggle-create-client": "Ajouter un nouveau client",
+    "toggle-create-supplier": "Ajouter un nouveau fournisseur",
+    "toggle-create-product": "Ajouter un nouveau produit",
+    "toggle-create-order": "Ajouter une nouvelle commande",
+    "toggle-create-quote": "Ajouter un nouveau devis",
+    "toggle-create-invoice": "Ajouter une nouvelle facture",
+    "toggle-create-org": "Créer une organisation"
+  },
+  "translationTitle": "Changer de langue",
+  "dropZone": "Glissez-déposez ou sélectionnez",
+  "plrz": {
+    "i": "aucun élément | élément | éléments",
+    "p": "aucun produit | produit | produits"
+  },
+  "fields": {
+    "full-name": "Nom complet",
+    "name": "Nom",
+    "email": "E-mail",
+    "phone": "Numéro de téléphone",
+    "address": "Adresse",
+    "actions": "Actions",
+    "description": "Description",
+    "status": "Statut",
+    "price": "Prix",
+    "purchase-price": "Prix d'achat",
+    "selling-price": "Prix de vente",
+    "date": "Date",
+    "paid": "Payé",
+    "rest": "Reste",
+    "items": "Articles",
+    "total": "Total",
+    "inventory": "Inventaire",
+    "init-quantity": "Quantité initiale",
+    "min-quantity": "Quantité minimale",
+    "quantity": "Quantité",
+    "credit": "Crédit",
+    "threshold": "Seuil",
+    "item": "Article",
+    "sub-total": "Sous-total",
+    "vat-rate": "Taux de TVA",
+    "vat-amount": "Montant de la TVA",
+    "grand-total": "Grand total",
+    "template": "Modèle",
+    "configuration": "Configuration",
+    "top-margin": "Marge supérieure",
+    "bottom-margin": "Marge inférieure",
+    "bill-to": "Facturer à :"
+  },
+  "status": {
+    "pending": "En attente",
+    "processing": "En cours de traitement",
+    "shipped": "Expédié",
+    "delivered": "Livré",
+    "cancelled": "Annulé",
+    "draft": "Brouillon",
+    "sent": "Envoyé",
+    "paid": "Payé",
+    "partially_paid": "Partiellement payé",
+    "overdue": "En retard",
+    "in": "Acheté",
+    "out": "Vendu"
+  },
+  "actions": {
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "print": "Imprimer",
+    "to-order": "Créer une commande",
+    "to-invoice": "Créer une facture",
+    "inventory-update": "Mettre à jour l'inventaire"
+  },
   "dashboard": {
-    "i": {
-      "title": "Articles vendus et achetés au cours des trois derniers mois",
-      "labels": ["ACHETÉ", "VENDU"],
-      "revenue": "Chiffre d'affaires total",
-      "expenses": "Dépenses totales",
-      "growth": "{n} du mois dernier",
-      "b3c": "Meilleurs clients en fonction des dépenses",
-      "bp": "Produits les plus vendus (quantité)",
-      "b3s": "Meilleurs fournisseurs en fonction des dépenses"
-    },
-    "de": { "title": "Produits achetés au cours des trois derniers mois" }
+    "title": "Articles vendus et achetés au cours des trois derniers mois",
+    "labels": ["ACHETÉ", "VENDU"],
+    "revenue": "Revenu total",
+    "expenses": "Dépenses totales",
+    "growth": " {n} par rapport au mois dernier",
+    "b3c": "Meilleurs clients en fonction des dépenses",
+    "bp": "Meilleurs produits vendus (quantité)",
+    "b3s": "Meilleurs fournisseurs en fonction des dépenses"
   },
   "notifications": {
     "product": {
@@ -131,211 +133,46 @@
       "deleted": "Le devis a été supprimé"
     },
     "error": {
-      "title": "Oups ! Une erreur s'est produite de notre côté.",
-      "description": "Vous pouvez réessayer."
+      "title": "Oups ! Quelque chose s'est mal passé de notre côté.",
+      "description": "Vous pouvez réessayer"
     }
   },
-  "c": {
-    "i": { "addButton": "Ajouter un nouveau client" },
-    "c": { "title": "ajouter un client" },
-    "u": { "title": "mettre à jour le client" },
-    "d": { "title": "es-tu sûr de vouloir supprimer le client" }
-  },
-  "s": {
-    "i": { "addButton": "Ajouter un nouveau fournisseur" },
-    "c": { "title": "ajouter un fournisseur" },
-    "u": { "title": "mettre à jour le fournisseur" },
-    "d": { "title": "es-tu sûr de vouloir supprimer le fournisseur" }
-  },
-  "p": {
-    "i": { "addButton": "Ajouter un nouveau produit" },
-    "c": { "title": "ajouter un produit" },
-    "u": { "title": "MISE À JOUR du produit" },
-    "d": { "title": "es-tu sûr de vouloir supprimer le produit" }
-  },
-  "o": {
-    "i": { "addButton": "Ajouter une nouvelle commande" },
-    "c": {
-      "title": "ajouter une nouvelle commande",
-      "d": {
-        "s": { "title": "Client", "select": "Rechercher un client" },
-        "o": {
-          "title": "Statut de la commande",
-          "products": "Des produits",
-          "add": "Ajouter un produit",
-          "select": "choisissez un produit",
-          "placeholder": [
-            "La quantité de produit",
-            "Nouveau prix",
-            "Sélectionnez un statut"
-          ]
-        }
-      },
-      "button": "Ajouter une commande"
+  "titles": {
+    "clients": {
+      "create": "ajouter un client",
+      "update": "mettre à jour le client",
+      "delete": "êtes-vous sûr de vouloir supprimer le client"
     },
-    "u": {
-      "title": "mise à jour de la commande",
-      "d": {
-        "s": {
-          "title": "détails du client",
-          "select": "Sélectionnez un client"
-        },
-        "o": {
-          "title": "détails de la commande",
-          "select": "choisissez un produit",
-          "add": "Ajouter un produit"
-        }
-      },
-      "button": "Mettre à jour les commandes"
+    "suppliers": {
+      "create": "ajouter un fournisseur",
+      "update": "mettre à jour le fournisseur",
+      "delete": "êtes-vous sûr de vouloir supprimer le fournisseur"
     },
-    "d": {
-      "title": "es-tu sûr de vouloir supprimer la commande",
-      "yes": "Confirmer",
-      "no": "Annuler"
-    }
-  },
-  "q": {
-    "i": { "addButton": "Ajouter un nouveau devis" },
-    "c": {
-      "title": "ajouter un nouveau devis",
-      "d": {
-        "s": { "title": "Client", "select": "Rechercher un client" },
-        "o": {
-          "title": "Statut du devis",
-          "products": "Des produits",
-          "add": "Ajouter un produit",
-          "select": "choisissez un produit",
-          "placeholder": ["La quantité de produit", "Nouveau prix"]
-        }
-      },
-      "button": "Ajouter un devis"
+    "products": {
+      "create": "ajouter un produit",
+      "update": "mettre à jour le produit",
+      "update-inventory": "mettre à jour l'inventaire du produit",
+      "delete": "êtes-vous sûr de vouloir supprimer le produit"
     },
-    "u": {
-      "title": "mettre à jour le devis",
-      "d": {
-        "s": {
-          "title": "détails du client",
-          "select": "Sélectionnez un client"
-        },
-        "o": {
-          "title": "détails du devis",
-          "select": "choisissez un produit",
-          "add": "Ajouter un produit"
-        }
-      },
-      "button": "Mettre à jour les devis"
+    "orders": {
+      "create": "ajouter une nouvelle commande",
+      "update": "mettre à jour la commande",
+      "delete": "êtes-vous sûr de vouloir supprimer la commande"
     },
-    "d": {
-      "title": "es-tu sûr de vouloir supprimer la citation",
-      "yes": "Confirmer",
-      "no": "Annuler"
-    }
-  },
-  "oq": {
-    "d": {
-      "o": { "title": "détails du devis", "id": "identifiant", "date": "date" },
-      "s": {
-        "title": "détails du client",
-        "id": "identifiant",
-        "name": "nom",
-        "phone": "numéro de téléphone",
-        "email": "e-mail",
-        "address": "adresse"
-      },
-      "i": {
-        "title": "détails des articles du devis",
-        "fields": ["nom", "description", "quantité", "prix", "total"]
-      },
-      "button": "imprimer"
-    }
-  },
-  "od": {
-    "d": {
-      "o": {
-        "title": "détails de la commande",
-        "id": "identifiant",
-        "date": "date",
-        "status": "statut"
-      },
-      "s": {
-        "title": "détails du client",
-        "id": "identifiant",
-        "name": "nom",
-        "phone": "numéro de téléphone",
-        "email": "e-mail",
-        "address": "adresse"
-      },
-      "i": {
-        "title": "détails des articles commandés",
-        "fields": ["nom", "description", "quantité", "prix", "total"]
-      },
-      "button": "imprimer"
-    }
-  },
-  "id": {
-    "d": {
-      "i": {
-        "title": "Détails de la facture",
-        "id": "identifiant",
-        "date": "date"
-      },
-      "c": {
-        "title": "détails du client",
-        "id": "identifiant",
-        "name": "nom",
-        "phone": "numéro de téléphone",
-        "email": "e-mail",
-        "address": "adresse"
-      },
-      "it": {
-        "title": "détails des éléments de la facture",
-        "fields": ["nom", "description", "quantité", "prix", "total"]
-      },
-      "button": "imprimer"
-    }
-  },
-  "i": {
-    "i": { "addButton": "Ajouter une nouvelle facture" },
-    "c": {
-      "title": "ajouter une nouvelle facture",
-      "d": {
-        "c": {
-          "title": "détails du client",
-          "select": "Sélectionnez un client"
-        },
-        "i": {
-          "title": "Détails de la facture",
-          "add": "Ajouter un produit",
-          "select": "choisissez un produit",
-          "placeholder": ["La quantité de produit", "Nouveau prix"]
-        }
-      },
-      "button": "Ajouter une facture"
+    "quotes": {
+      "create": "ajouter un nouveau devis",
+      "update": "mettre à jour le devis",
+      "delete": "êtes-vous sûr de vouloir supprimer le devis"
     },
-    "u": {
-      "title": "mettre à jour la facture",
-      "d": {
-        "c": { "title": "détails du client", "select": "--" },
-        "i": {
-          "title": "Détails de la facture",
-          "add": "Ajouter un produit",
-          "select": "--"
-        }
-      },
-      "button": "Mettre à jour la facture"
+    "invoices": {
+      "create": "ajouter une nouvelle facture",
+      "update": "mettre à jour la facture",
+      "delete": "êtes-vous sûr de vouloir supprimer la facture"
     },
-    "d": {
-      "title": "es-tu sûr de vouloir supprimer la facture",
-      "yes": "Confirmer",
-      "no": "Annuler"
-    }
-  },
-  "im": {
-    "i": { "addButton": "Ajouter à l'inventaire" },
-    "c": {
-      "title": "ajouter des articles à l'inventaire",
-      "l": { "a": "Produit", "b": "Quantité" },
-      "p": { "a": "choisissez un produit", "b": "Quantité" }
+    "organizations": {
+      "create": "ajouter une nouvelle organisation",
+      "update": "mettre à jour l'organisation",
+      "delete": "êtes-vous sûr de vouloir supprimer l'organisation ?"
     }
   }
 }

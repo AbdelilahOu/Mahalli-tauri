@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { isOpen } = useModal();
 </script>
+
 <template>
   <Transition
     enter-active-class="ease-out duration-300"

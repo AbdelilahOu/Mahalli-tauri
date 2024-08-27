@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { ProductT } from "@/schemas/products.schema";
 import {
   CalendarDays,
   FilePenLine,
@@ -9,15 +8,15 @@ import {
   Trash2,
 } from "lucide-vue-next";
 // @ts-ignore
-import { ProductUpdate, ProductDelete, InventoryUpdate } from "#components";
+import { InventoryUpdate, ProductDelete, ProductUpdate } from "#components";
 
 defineProps<{ products: ProductT[] }>();
 
 const { t, d, locale, n } = useI18n();
 const modal = useModal();
 
-const toggleThisProduct = (product: ProductT, name: "delete" | "update") => {
-  if (name == "delete") {
+function toggleThisProduct(product: ProductT, name: "delete" | "update") {
+  if (name === "delete") {
     modal.open(ProductDelete, {
       id: product.id,
       identifier: product.name,
@@ -32,28 +31,34 @@ const toggleThisProduct = (product: ProductT, name: "delete" | "update") => {
       minQuantity: product.minQuantity,
     });
   }
-};
+}
 
-const updateProductInventory = (id: string, name: string) => {
+function updateProductInventory(id: string, name: string) {
   modal.open(InventoryUpdate, {
     id,
     name,
   });
-};
+}
 </script>
 
 <template>
   <div class="w-full">
-    <Table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
+    <Table :dir="locale === 'ar' ? 'rtl' : 'ltr'">
       <TableHeader>
         <TableRow>
           <TableHead class="w-14" />
-          <TableHead class="w-20">{{ t("g.fields.name") }}</TableHead>
-          <TableHead class="w-fit">{{ t("g.fields.inventory") }}</TableHead>
-          <TableHead>{{ t("g.fields.threshold") }}</TableHead>
-          <TableHead>{{ t("g.fields.purchase-price") }}</TableHead>
-          <TableHead>{{ t("g.fields.selling-price") }}</TableHead>
-          <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
+          <TableHead class="w-20">
+            {{ t("fields.name") }}
+          </TableHead>
+          <TableHead class="w-fit">
+            {{ t("fields.inventory") }}
+          </TableHead>
+          <TableHead>{{ t("fields.threshold") }}</TableHead>
+          <TableHead>{{ t("fields.purchase-price") }}</TableHead>
+          <TableHead>{{ t("fields.selling-price") }}</TableHead>
+          <TableHead class="w-20">
+            {{ t("fields.actions") }}
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -104,7 +109,7 @@ const updateProductInventory = (id: string, name: string) => {
               :class="
                 cn(
                   'whitespace-nowrap',
-                  product.inventory != undefined
+                  product.inventory !== undefined
                     ? product?.inventory <= 0
                       ? 'bg-red-100 border-red-500 text-red-900'
                       : product?.inventory < product.minQuantity
@@ -117,17 +122,17 @@ const updateProductInventory = (id: string, name: string) => {
               "
             >
               {{
-                (product?.inventory == 0 ? "" : product?.inventory) +
-                " " +
-                t("g.plrz.i", { n: Math.ceil(product?.inventory ?? 0) })
+                `${product?.inventory} ${t("plrz.i", {
+                  n: Math.ceil(product?.inventory ?? 0),
+                })}`
               }}
             </Badge>
           </TableCell>
           <TableCell class="p-2">
             {{
-              (product.minQuantity == 0 ? "" : product.minQuantity) +
-              " " +
-              t("g.plrz.i", { n: Math.ceil(product.minQuantity ?? 0) })
+              `${product.minQuantity} ${t("plrz.i", {
+                n: Math.ceil(product.minQuantity ?? 0),
+              })}`
             }}
           </TableCell>
           <TableCell class="p-2">
@@ -152,7 +157,18 @@ const updateProductInventory = (id: string, name: string) => {
                       class="text-slate-800 inline mr-2"
                       :size="20"
                     />
-                    {{ t("g.actions.edit") }}
+                    {{ t("actions.edit") }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    @click="toggleThisProduct(product, 'delete')"
+                  >
+                    <Trash2 class="text-red-500 inline mr-2" :size="20" />
+                    <span>
+                      <span class="text-red-500">
+                        {{ t("actions.delete") }}
+                      </span>
+                    </span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -162,19 +178,7 @@ const updateProductInventory = (id: string, name: string) => {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    {{ t("g.actions.inventoryUpdate") }}
-                  </DropdownMenuItem>
-
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    @click="toggleThisProduct(product, 'delete')"
-                  >
-                    <Trash2 class="text-red-500 inline mr-2" :size="20" />
-                    <span>
-                      <span class="text-red-500">
-                        {{ t("g.actions.delete") }}
-                      </span>
-                    </span>
+                    {{ t("actions.inventory-update") }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

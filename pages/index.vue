@@ -4,12 +4,12 @@ const localePath = useLocalePath();
 const pages = ref([
   {
     image: "/clients.jpg",
-    text: "Clients",
+    text: "clients",
     path: "/clients/",
   },
   {
     image: "/products.jpg",
-    text: "Products",
+    text: "products",
     path: "/products",
   },
   // {
@@ -19,27 +19,27 @@ const pages = ref([
   // },
   {
     image: "/devis.webp",
-    text: "Quotes",
+    text: "quotes",
     path: "/quotes/",
   },
   {
     image: "/orders.jpg",
-    text: "Orders",
+    text: "orders",
     path: "/orders/",
   },
   {
     image: "/invoices.jpg",
-    text: "Invoices",
+    text: "invoices",
     path: "/invoices/",
   },
   {
     image: "/inventory.jpg",
-    text: "Inventory",
+    text: "inventory",
     path: "/inventory",
   },
   {
     image: "/dashboard.jpg",
-    text: "Dashboard",
+    text: "dashboard",
     path: "/dashboard",
   },
 ]);
@@ -51,30 +51,34 @@ const pages = ref([
       <div
         class="md:h-[700px] m-auto w-full max-w-3xl h-full p-3 gap-3 grid-cols-3 grid-rows-3 grid"
       >
-        <div
-          v-for="(page, index) in pages"
-          :key="index"
-          v-fade="index + 1"
-          class="w-full h-full"
-        >
-          <NuxtLink
-            :to="localePath({ path: page.path, query: { page: 1, limit: 25 } })"
+        <ClientOnly>
+          <div
+            v-for="(page, index) in pages"
+            :key="index"
+            v-fade="index + 1"
+            class="w-full h-full"
           >
-            <div
-              class="w-full h-full overflow-hidden cursor-pointer relative hover:-translate-y-1 group transition-all duration-250 flex justify-center rounded-md items-center bg-gray-400"
+            <NuxtLink
+              :to="
+                localePath({ path: page.path, query: { page: 1, limit: 25 } })
+              "
             >
-              <img
-                class="absolute top-0 left-0 w-full object-fill opacity-20 group-hover:opacity-60 h-full transition-all duration-250"
-                :src="page.image"
-              />
-              <span
-                class="text-center text-xl text-gray-900 font-bold bg-white rounded-md px-4 z-20 py-2 flex justify-center items-center transition-all duration-250"
+              <div
+                class="w-full h-full overflow-hidden cursor-pointer relative hover:-translate-y-1 group transition-all duration-250 flex justify-center rounded-md items-center bg-gray-400"
               >
-                {{ t(`g.r.${page.text}`) }}
-              </span>
-            </div>
-          </NuxtLink>
-        </div>
+                <img
+                  class="absolute top-0 left-0 w-full object-fill opacity-20 group-hover:opacity-60 h-full transition-all duration-250"
+                  :src="page.image"
+                >
+                <span
+                  class="text-center text-xl text-gray-900 font-bold bg-white rounded-md px-4 z-20 py-2 flex justify-center items-center transition-all duration-250"
+                >
+                  {{ t(`routes.${page.text}`) }}
+                </span>
+              </div>
+            </NuxtLink>
+          </div>
+        </ClientOnly>
       </div>
     </div>
   </div>

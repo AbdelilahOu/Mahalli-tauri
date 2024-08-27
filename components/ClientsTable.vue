@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import type { ClientT } from "@/schemas/client.schema";
-import { FilePenLine, Trash2, GripHorizontal } from "lucide-vue-next";
+import { FilePenLine, GripHorizontal, Trash2 } from "lucide-vue-next";
 // @ts-ignore
-import { ClientUpdate, ClientDelete } from "#components";
+import { ClientDelete, ClientUpdate } from "#components";
 
 defineProps<{
   clients: ClientT[];
@@ -11,36 +10,38 @@ defineProps<{
 const { t, locale, n } = useI18n();
 const modal = useModal();
 
-const toggleThisClient = (client: ClientT, name: "delete" | "update") => {
-  if (name == "delete") {
+function toggleThisClient(client: ClientT, name: "delete" | "update") {
+  if (name === "delete") {
     modal.open(ClientDelete, {
       id: client.id,
-      fullname: client.fullname,
+      fullName: client.fullName,
     });
   } else {
     modal.open(ClientUpdate, {
       id: client.id,
-      fullname: client.fullname,
+      fullName: client.fullName,
       email: client.email,
       phoneNumber: client.phoneNumber,
       address: client.address,
     });
   }
-};
+}
 </script>
 
 <template>
   <div class="w-full">
-    <Table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
+    <Table :dir="locale === 'ar' ? 'rtl' : 'ltr'">
       <TableHeader>
         <TableRow>
           <TableHead class="w-14" />
-          <TableHead>{{ t("g.fields.fullname") }}</TableHead>
-          <TableHead>{{ t("g.fields.email") }}</TableHead>
-          <TableHead>{{ t("g.fields.phone") }}</TableHead>
-          <TableHead>{{ t("g.fields.address") }}</TableHead>
-          <TableHead>{{ t("g.fields.creditt") }}</TableHead>
-          <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
+          <TableHead>{{ t("fields.full-name") }}</TableHead>
+          <TableHead>{{ t("fields.email") }}</TableHead>
+          <TableHead>{{ t("fields.phone") }}</TableHead>
+          <TableHead>{{ t("fields.address") }}</TableHead>
+          <TableHead>{{ t("fields.credit") }}</TableHead>
+          <TableHead class="w-20">
+            {{ t("fields.actions") }}
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -53,12 +54,12 @@ const toggleThisClient = (client: ClientT, name: "delete" | "update") => {
             <Avatar>
               <AvatarImage :src="client.image ?? ''" />
               <AvatarFallback class="text-xs">
-                {{ client.fullname.substring(0, 5) }}
+                {{ client.fullName.substring(0, 5) }}
               </AvatarFallback>
             </Avatar>
           </TableCell>
           <TableCell class="p-2 whitespace-nowrap font-medium">
-            {{ client?.fullname }}
+            {{ client?.fullName }}
           </TableCell>
           <TableCell class="p-2">
             {{ client.email }}
@@ -84,13 +85,13 @@ const toggleThisClient = (client: ClientT, name: "delete" | "update") => {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    {{ t("g.actions.edit") }}
+                    {{ t("actions.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem @click="toggleThisClient(client, 'delete')">
                     <Trash2 :size="20" class="text-red-500 inline mr-2" />
                     <span class="text-red-500">
-                      {{ t("g.actions.delete") }}
+                      {{ t("actions.delete") }}
                     </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

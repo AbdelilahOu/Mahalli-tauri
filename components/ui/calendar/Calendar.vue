@@ -38,7 +38,7 @@ const props = withDefaults(
   {
     type: "single",
     columns: 1,
-  }
+  },
 );
 const emits = defineEmits<{
   (e: "update:modelValue", payload: typeof props.modelValue): void;
@@ -51,13 +51,15 @@ const modelValue = useVModel(props, "modelValue", emits, {
 const datePicker = ref<InstanceType<typeof DatePicker>>();
 // @ts-expect-error in this current version of v-calendar has the calendaRef instance, which is required to handle arrow nav.
 const calendarRef = computed<InstanceType<typeof Calendar>>(
-  () => datePicker.value?.calendarRef
+  () => datePicker.value?.calendarRef,
 );
 
 function handleNav(direction: "prev" | "next") {
-  if (!calendarRef.value) return;
+  if (!calendarRef.value)
+    return;
 
-  if (direction === "prev") calendarRef.value.movePrev();
+  if (direction === "prev")
+    calendarRef.value.movePrev();
   else calendarRef.value.moveNext();
 }
 
@@ -70,7 +72,7 @@ onMounted(async () => {
 const $slots = useSlots();
 const vCalendarSlots = computed(() => {
   return Object.keys($slots)
-    .filter((name) => isVCalendarSlot(name))
+    .filter(name => isVCalendarSlot(name))
     .reduce((obj: Record<string, any>, key: string) => {
       obj[key] = $slots[key];
       return obj;
@@ -88,7 +90,7 @@ const vCalendarSlots = computed(() => {
         :class="
           cn(
             buttonVariants({ variant: 'outline' }),
-            'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
+            'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100',
           )
         "
         @click="handleNav('prev')"
@@ -99,7 +101,7 @@ const vCalendarSlots = computed(() => {
         :class="
           cn(
             buttonVariants({ variant: 'outline' }),
-            'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
+            'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100',
           )
         "
         @click="handleNav('next')"
@@ -115,7 +117,7 @@ const vCalendarSlots = computed(() => {
       :model-modifiers="modelModifiers"
       class="calendar"
       trim-weeks
-      :transition="'none'"
+      transition="none"
       :columns="columns"
     >
       <template v-for="(_, slot) of vCalendarSlots" #[slot]="scope">

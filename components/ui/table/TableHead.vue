@@ -12,7 +12,7 @@ const props = defineProps<{
     :class="
       cn(
         'h-8 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0',
-        props.class
+        props.class,
       )
     "
   >

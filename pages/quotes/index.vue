@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { Calendar as CalendarIcon, PlusCircleIcon } from "lucide-vue-next";
-import type { QuoteProductT, QuoteT } from "@/schemas/quote.schema";
-import type { Res, QueryParams } from "@/types";
+import { Calendar as CalendarIcon, Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
@@ -29,7 +27,7 @@ const queryParams = computed<QueryParams>(() => ({
   created_at: route.query.created_at,
 }));
 
-const fetchQuotes = async () => {
+async function fetchQuotes() {
   try {
     const res: Res<any> = await invoke("list_quotes", {
       args: {
@@ -47,14 +45,14 @@ const fetchQuotes = async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("LIST QUOTES: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`LIST QUOTES: ${err.error}`);
     } else {
-      error("LIST QUOTES: " + err);
+      error(`LIST QUOTES: ${err}`);
     }
     throw err;
   }
-};
+}
 
 const { data: quotesData } = await useAsyncData("quotes", fetchQuotes, {
   watch: [queryParams],
@@ -80,7 +78,7 @@ watch(createdAt, () => {
   });
 });
 
-const listQuoteProduct = async (id?: string) => {
+async function listQuoteProduct(id?: string) {
   try {
     const res = await invoke<Res<any>>("list_quote_products", {
       id,
@@ -91,23 +89,24 @@ const listQuoteProduct = async (id?: string) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("LIST QUOTE PRODUCTS: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`LIST QUOTE PRODUCTS: ${err.error}`);
     } else {
-      error("LIST QUOTE PRODUCTS: " + err);
+      error(`LIST QUOTE PRODUCTS: ${err}`);
     }
     throw err;
   }
-};
+}
 
 const openCreateQuoteModal = () => modal.open(QuoteCreate, {});
 </script>
+
 <template>
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
         <div class="w-2/3 lg:max-w-[50%] grid grid-cols-3 gap-2">
-          <Input v-model="searchQuery" type="text" :placeholder="t('g.s')" />
+          <Input v-model="searchQuery" type="text" :placeholder="t('search')" />
           <Popover>
             <PopoverTrigger as-child>
               <Button
@@ -121,7 +120,7 @@ const openCreateQuoteModal = () => modal.open(QuoteCreate, {});
               >
                 <CalendarIcon class="mr-2 h-4 w-4" />
                 <span class="text-nowrap">{{
-                  createdAt ? d(new Date(createdAt), "short") : t("g.pick-date")
+                  createdAt ? d(new Date(createdAt), "short") : t("pick-date")
                 }}</span>
               </Button>
             </PopoverTrigger>
@@ -132,8 +131,8 @@ const openCreateQuoteModal = () => modal.open(QuoteCreate, {});
         </div>
         <div class="w-fit flex gap-1">
           <Button class="gap-2 text-nowrap" @click="openCreateQuoteModal">
-            <PlusCircleIcon :size="20" />
-            {{ t("q.i.addButton") }}
+            <Plus :size="20" />
+            {{ t("buttons.toggle-create-quote") }}
           </Button>
         </div>
       </div>

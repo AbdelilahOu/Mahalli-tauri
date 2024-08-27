@@ -1,10 +1,10 @@
 {
   "name": "mahalli",
-  "version": "1.8.8",
-  "private": true,
-  "author": "abdelilah ouaadouch",
-  "description": "inventory & invoicing management app",
   "type": "module",
+  "version": "1.8.9",
+  "private": true,
+  "description": "inventory & invoicing management app",
+  "author": "abdelilah ouaadouch",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -16,7 +16,6 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@nuxt/eslint": "^0.3.13",
     "@nuxtjs/i18n": "^8.3.1",
     "@pdf-lib/fontkit": "^1.1.1",
     "@tauri-apps/api": "^1.5.3",
@@ -43,8 +42,8 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^2.27.1",
     "@nuxtjs/tailwindcss": "^6.12.0",
-    "@tauri-apps/cli": "^1.5.9",
-    "typescript": "^5.4.5"
+    "@tauri-apps/cli": "^1.5.9"
   }
 }

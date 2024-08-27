@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { buttonVariants } from "./ui/button";
+
 const { t } = useI18n();
 const switchLocalePath = useSwitchLocalePath();
 const { close } = useModal();
@@ -9,7 +10,7 @@ const { close } = useModal();
   <Card>
     <CardHeader>
       <CardTitle>
-        {{ t("g.translationTitle") }}
+        {{ t("translationTitle") }}
       </CardTitle>
     </CardHeader>
     <CardContent>
@@ -113,7 +114,7 @@ const { close } = useModal();
     </CardContent>
     <CardFooter>
       <Button class="col-span-3" type="button" variant="outline" @click="close">
-        {{ t("g.b.no") }}
+        {{ t("buttons.cancel") }}
       </Button>
     </CardFooter>
   </Card>

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { CreateClientSchema, type ClientT } from "@/schemas/client.schema";
-import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { toTypedSchema } from "@vee-validate/zod";
 import { error, info } from "tauri-plugin-log-api";
@@ -19,14 +17,11 @@ const form = useForm({
 
 const imagePath = ref<string>();
 
-const isCreating = ref<boolean>(false);
-
-const createNewClient = async (client: ClientT) => {
-  isCreating.value = true;
+async function createNewClient(client: ClientT) {
   try {
     await invoke<Res<null>>("create_client", {
       client: {
-        full_name: client.fullname,
+        full_name: client.fullName,
         email: client.email,
         phone_number: client.phoneNumber,
         address: client.address,
@@ -42,45 +37,44 @@ const createNewClient = async (client: ClientT) => {
     );
     //
     toast.success(
-      t("notifications.client.created", { name: client.fullname }),
+      t("notifications.client.created", { name: client.fullName }),
       {
         closeButton: true,
       }
     );
     // toggle refresh
     updateQueryParams({
-      refresh: "refresh-create-" + Math.random() * 9999,
+      refresh: `refresh-create-${Math.random() * 9999}`,
     });
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("CREATE CLIENT: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`CREATE CLIENT: ${err.error}`);
       return;
     }
-    error("CREATE CLIENT: " + err);
+    error(`CREATE CLIENT: ${err}`);
   } finally {
-    isCreating.value = false;
     close();
   }
-};
+}
 
 const onSubmit = form.handleSubmit((values) => {
   createNewClient(values);
 });
 
-const setImage = (image: string) => {
+function setImage(image: string) {
   imagePath.value = image;
-};
+}
 </script>
 
 <template>
   <form class="w-full flex justify-center" @submit="onSubmit">
     <Card>
       <CardHeader>
-        <CardTitle> {{ t("c.c.title") }} </CardTitle>
+        <CardTitle> {{ t("titles.clients.create") }} </CardTitle>
       </CardHeader>
       <CardContent>
         <UiUploader
@@ -88,12 +82,12 @@ const setImage = (image: string) => {
           :extensions="['png', 'jpeg', 'webp']"
           @save:base64="setImage"
         />
-        <FormField v-slot="{ componentField }" name="fullname">
+        <FormField v-slot="{ componentField }" name="fullName">
           <FormItem>
-            <FormLabel>{{ t("g.fields.fullname") }}</FormLabel>
+            <FormLabel>{{ t("fields.full-name") }}</FormLabel>
             <FormControl>
               <Input
-                :placeholder="t('g.fields.fullname')"
+                :placeholder="t('fields.full-name')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -101,7 +95,7 @@ const setImage = (image: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="email">
           <FormItem>
-            <FormLabel>{{ t("g.fields.email") }}</FormLabel>
+            <FormLabel>{{ t("fields.email") }}</FormLabel>
             <FormControl>
               <Input placeholder="example@gmail.com" v-bind="componentField" />
             </FormControl>
@@ -109,7 +103,7 @@ const setImage = (image: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="phoneNumber">
           <FormItem>
-            <FormLabel>{{ t("g.fields.phone") }}</FormLabel>
+            <FormLabel>{{ t("fields.phone") }}</FormLabel>
             <FormControl>
               <Input placeholder="+2126********" v-bind="componentField" />
             </FormControl>
@@ -117,10 +111,10 @@ const setImage = (image: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="address">
           <FormItem>
-            <FormLabel>{{ t("g.fields.address") }}</FormLabel>
+            <FormLabel>{{ t("fields.address") }}</FormLabel>
             <FormControl>
               <Input
-                :placeholder="t('g.fields.address')"
+                :placeholder="t('fields.address')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -128,16 +122,11 @@ const setImage = (image: string) => {
         </FormField>
       </CardContent>
       <CardFooter>
-        <Button
-          type="button"
-          :disabled="isCreating"
-          variant="outline"
-          @click="close"
-        >
-          {{ t("g.b.no") }}</Button
-        >
-        <Button :disabled="isCreating" type="submit" class="col-span-2">
-          {{ t("g.b.c") }}
+        <Button type="button" variant="outline" @click="close">
+          {{ t("buttons.cancel") }}
+        </Button>
+        <Button type="submit" class="col-span-2">
+          {{ t("buttons.add") }}
         </Button>
       </CardFooter>
     </Card>

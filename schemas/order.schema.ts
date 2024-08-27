@@ -13,17 +13,17 @@ export const CreateOrderSchema = z.object({
 });
 
 export type OrderT = z.infer<typeof CreateOrderSchema> & {
-  fullname?: string;
+  fullName?: string;
   products?: number;
   total?: number;
   createdAt?: string;
   identifier: string;
 };
 
-export type OrderForUpdateT = {
+export interface OrderForUpdateT {
   id: string;
   clientId: string;
-  fullname: string;
+  fullName: string;
   createdAt: string;
   identifier?: string;
   status: string;
@@ -35,9 +35,9 @@ export type OrderForUpdateT = {
     quantity?: number;
     price?: number;
   }[];
-};
+}
 
-export type OrderForCreateT = {
+export interface OrderForCreateT {
   clientId: string;
   status: string;
   items: {
@@ -45,10 +45,10 @@ export type OrderForCreateT = {
     quantity?: number;
     price?: number;
   }[];
-};
+}
 
-export type OrderProductT = {
+export interface OrderProductT {
   price: number;
   name: string;
   quantity: number;
-};
+}

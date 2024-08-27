@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { QuoteForCreateT } from "@/schemas/quote.schema";
-import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { Trash2 } from "lucide-vue-next";
 import { error, info } from "tauri-plugin-log-api";
@@ -11,7 +9,7 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
 const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
-const isLoading = ref<boolean>(false);
+const isPosting = ref<boolean>(false);
 const quote = reactive<QuoteForCreateT>({
   clientId: "",
   items: [
@@ -23,19 +21,19 @@ const quote = reactive<QuoteForCreateT>({
   ],
 });
 
-const addQuoteItem = () => {
+function addQuoteItem() {
   quote.items?.push({
     product_id: undefined,
     quantity: undefined,
     price: undefined,
   });
-};
+}
 
-const deleteQuoteItem = (index: number) => {
+function deleteQuoteItem(index: number) {
   quote.items?.splice(index, 1);
-};
+}
 
-const searchClients = async (search: string | number) => {
+async function searchClients(search: string | number) {
   const res = await invoke<Res<{ label: string; value: string }[]>>(
     "search_clients",
     {
@@ -45,9 +43,9 @@ const searchClients = async (search: string | number) => {
   if (!res.error) {
     clients.value = res.data;
   }
-};
+}
 
-const searchProducts = async (search: string | number) => {
+async function searchProducts(search: string | number) {
   const res = await invoke<Res<{ label: string; value: string }[]>>(
     "search_products",
     {
@@ -57,10 +55,10 @@ const searchProducts = async (search: string | number) => {
   if (!res.error) {
     products.value = res.data;
   }
-};
+}
 
-const createQuote = async () => {
-  isLoading.value = true;
+async function createQuote() {
+  isPosting.value = true;
   try {
     await invoke<Res<string>>("create_quote", {
       quote: {
@@ -75,24 +73,24 @@ const createQuote = async () => {
     });
     // toggle refresh
     updateQueryParams({
-      refresh: "refresh-create-" + Math.random() * 9999,
+      refresh: `refresh-create-${Math.random() * 9999}`,
     });
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("CREATE QUOTE: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`CREATE QUOTE: ${err.error}`);
       return;
     }
-    error("CREATE QUOTE: " + err);
+    error(`CREATE QUOTE: ${err}`);
   } finally {
-    isLoading.value = false;
+    isPosting.value = false;
     close();
   }
-  isLoading.value = false;
-};
+  isPosting.value = false;
+}
 </script>
 
 <template>
@@ -101,7 +99,7 @@ const createQuote = async () => {
   >
     <CardHeader>
       <CardTitle>
-        {{ t("q.c.title") }}
+        {{ t("titles.quotes.create") }}
       </CardTitle>
     </CardHeader>
     <CardContent>
@@ -109,7 +107,7 @@ const createQuote = async () => {
         <div class="flex w-full h-fit gap-1">
           <div class="w-full h-full flex flex-col gap-1">
             <Label for="client_id">
-              {{ t("g.fields.fullname") }}
+              {{ t("fields.full-name") }}
             </Label>
             <SearchableItems
               :items="clients"
@@ -121,7 +119,7 @@ const createQuote = async () => {
         <Separator />
         <div class="w-full h-full flex flex-col gap-1">
           <Button @click="addQuoteItem">
-            {{ t("q.c.d.o.add") }}
+            {{ t("buttons.add-product") }}
           </Button>
           <div
             class="products w-full grid pt-1 grid-cols-[1fr_1fr_1fr_36px] items-center overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
@@ -137,15 +135,17 @@ const createQuote = async () => {
               <Input
                 v-model="item.quantity"
                 class="border-r-0"
-                :placeholder="t('o.c.d.o.placeholder[0]')"
+                :placeholder="t('fields.quantity')"
                 type="number"
               >
-                <template #unite> {{ t("g.fields.item") }} </template>
+                <template #unite>
+                  {{ t("fields.item") }}
+                </template>
               </Input>
               <Input
                 v-model="item.price"
                 class="border-r-0"
-                :placeholder="t('o.c.d.o.placeholder[1]')"
+                :placeholder="t('fields.price')"
                 type="number"
               >
                 <template #unite> DH </template>
@@ -162,10 +162,10 @@ const createQuote = async () => {
     </CardContent>
     <CardFooter>
       <Button variant="outline" @click="close">
-        {{ t("g.b.no") }}
+        {{ t("buttons.cancel") }}
       </Button>
       <Button class="col-span-2" @click="createQuote()">
-        {{ t("g.b.c") }}
+        {{ t("buttons.add") }}
       </Button>
     </CardFooter>
   </Card>

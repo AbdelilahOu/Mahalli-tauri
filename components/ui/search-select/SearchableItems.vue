@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { onClickOutside } from "@vueuse/core";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { onClickOutside } from "@vueuse/core";
 
 const props = defineProps<{
   defaultValue?: string;
@@ -28,21 +28,21 @@ const dropdownParent = ref<HTMLElement | null>(null);
 const inputValue = ref<string | number>(props.defaultValue ?? "");
 
 let timer: any;
-const updateInput = (s: string | number) => {
+function updateInput(s: string | number) {
   clearTimeout(timer);
   timer = setTimeout(() => {
     emits("update:items", s);
     open.value = true;
   }, 500);
-};
+}
 
 onClickOutside(dropdownParent, () => (open.value = false));
 
-const selectItem = (item: { label: string; value: string; price?: number }) => {
+function selectItem(item: { label: string; value: string; price?: number }) {
   inputValue.value = item.label;
   emits("on:select", item.value, item.price);
   open.value = false;
-};
+}
 </script>
 
 <template>
@@ -51,7 +51,7 @@ const selectItem = (item: { label: string; value: string; price?: number }) => {
       <PopoverTrigger class="w-full" aria-disabled="true">
         <Input
           v-model:model-value="inputValue"
-          :placeholder="t('g.s')"
+          :placeholder="t('search')"
           @update:model-value="updateInput"
         />
       </PopoverTrigger>
@@ -63,7 +63,7 @@ const selectItem = (item: { label: string; value: string; price?: number }) => {
               'space-y-1',
               items.length > 5
                 ? 'max-h-60 overflow-auto scrollbar-thin scrollbar-thumb-transparent'
-                : 'h-fit'
+                : 'h-fit',
             )
           "
         >

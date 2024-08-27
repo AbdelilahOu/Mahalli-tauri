@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { CreateProductSchema, type ProductT } from "@/schemas/products.schema";
-import type { Res } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { toTypedSchema } from "@vee-validate/zod";
 import { error, info } from "tauri-plugin-log-api";
@@ -11,7 +9,6 @@ const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
 
-const isCreating = ref<boolean>(false);
 const imagePath = ref<string>();
 const quantity = ref<number>(0);
 
@@ -20,8 +17,7 @@ const form = useForm({
   validationSchema: productSchema,
 });
 
-const createNewProduct = async (product: ProductT) => {
-  isCreating.value = true;
+async function createNewProduct(product: ProductT) {
   try {
     const createRes = await invoke<Res<string>>("create_product", {
       product: {
@@ -53,31 +49,30 @@ const createNewProduct = async (product: ProductT) => {
     });
     // toggle refresh
     updateQueryParams({
-      refresh: "refresh-create-" + Math.random() * 9999,
+      refresh: `refresh-create-${Math.random() * 9999}`,
     });
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("CREATE PRODUCT: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`CREATE PRODUCT: ${err.error}`);
       return;
     }
-    error("CREATE PRODUCT: " + err);
+    error(`CREATE PRODUCT: ${err}`);
   } finally {
-    isCreating.value = false;
     close();
   }
-};
+}
 
 const onSubmit = form.handleSubmit((values) => {
   createNewProduct(values);
 });
 
-const setImage = (image: string) => {
+function setImage(image: string) {
   imagePath.value = image;
-};
+}
 </script>
 
 <template>
@@ -85,7 +80,7 @@ const setImage = (image: string) => {
     <Card>
       <CardHeader>
         <CardTitle>
-          {{ t("p.c.title") }}
+          {{ t("titles.products.create") }}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -96,22 +91,19 @@ const setImage = (image: string) => {
         />
         <FormField v-slot="{ componentField }" name="name">
           <FormItem>
-            <FormLabel>{{ t("g.fields.name") }}</FormLabel>
+            <FormLabel>{{ t("fields.name") }}</FormLabel>
             <FormControl>
-              <Input
-                :placeholder="t('g.fields.name')"
-                v-bind="componentField"
-              />
+              <Input :placeholder="t('fields.name')" v-bind="componentField" />
             </FormControl>
           </FormItem>
         </FormField>
         <FormField v-slot="{ componentField }" name="purchasePrice">
           <FormItem>
-            <FormLabel>{{ t("g.fields.purchase-price") }}</FormLabel>
+            <FormLabel>{{ t("fields.purchase-price") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
-                :placeholder="t('g.fields.purchase-price')"
+                :placeholder="t('fields.purchase-price')"
                 v-bind="componentField"
               >
                 <template #unite> DH </template>
@@ -121,11 +113,11 @@ const setImage = (image: string) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="sellingPrice">
           <FormItem>
-            <FormLabel>{{ t("g.fields.selling-price") }}</FormLabel>
+            <FormLabel>{{ t("fields.selling-price") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
-                :placeholder="t('g.fields.selling-price')"
+                :placeholder="t('fields.selling-price')"
                 v-bind="componentField"
               >
                 <template #unite> DH </template>
@@ -135,28 +127,32 @@ const setImage = (image: string) => {
         </FormField>
         <FormField name="">
           <FormItem>
-            <FormLabel>{{ t("g.fields.init-quantity") }}</FormLabel>
+            <FormLabel>{{ t("fields.init-quantity") }}</FormLabel>
             <FormControl>
               <Input
                 v-model="quantity"
                 type="number"
-                :placeholder="t('g.fields.init-quantity')"
+                :placeholder="t('fields.init-quantity')"
               >
-                <template #unite> {{ t("g.fields.item") }} </template>
+                <template #unite>
+                  {{ t("fields.item") }}
+                </template>
               </Input>
             </FormControl>
           </FormItem>
         </FormField>
         <FormField v-slot="{ componentField }" name="minQuantity">
           <FormItem>
-            <FormLabel>{{ t("g.fields.min-quantity") }}</FormLabel>
+            <FormLabel>{{ t("fields.min-quantity") }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
-                :placeholder="t('g.fields.min-quantity')"
+                :placeholder="t('fields.min-quantity')"
                 v-bind="componentField"
               >
-                <template #unite> {{ t("g.fields.item") }} </template>
+                <template #unite>
+                  {{ t("fields.item") }}
+                </template>
               </Input>
             </FormControl>
           </FormItem>
@@ -164,11 +160,11 @@ const setImage = (image: string) => {
         <FormField v-slot="{ componentField }" name="description">
           <FormItem>
             <FormLabel>
-              {{ t("g.fields.description") }}
+              {{ t("fields.description") }}
             </FormLabel>
             <FormControl>
               <Textarea
-                :placeholder="t('g.fields.description')"
+                :placeholder="t('fields.description')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -176,16 +172,11 @@ const setImage = (image: string) => {
         </FormField>
       </CardContent>
       <CardFooter>
-        <Button
-          type="button"
-          :disabled="isCreating"
-          variant="outline"
-          @click="close"
-        >
-          {{ t("g.b.no") }}
+        <Button type="button" variant="outline" @click="close">
+          {{ t("buttons.cancel") }}
         </Button>
-        <Button :disabled="isCreating" type="submit" class="col-span-2">
-          {{ t("g.b.c") }}
+        <Button type="submit" class="col-span-2">
+          {{ t("buttons.add") }}
         </Button>
       </CardFooter>
     </Card>

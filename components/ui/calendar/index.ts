@@ -1,4 +1,5 @@
 import type { CalendarSlotName } from "v-calendar/dist/types/src/components/Calendar/CalendarSlot.vue.d.ts";
+
 export { default as Calendar } from "./Calendar.vue";
 
 export function isVCalendarSlot(

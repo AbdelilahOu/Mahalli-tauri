@@ -1,30 +1,22 @@
 <script setup lang="ts">
-import type { Res, groupedTransaction, transactionsT } from "@/types";
 import { invoke } from "@tauri-apps/api";
 import { GroupedBar } from "@unovis/ts";
 import {
   VisAxis,
-  VisGroupedBar,
   VisBulletLegend,
+  VisGroupedBar,
   VisTooltip,
   VisXYContainer,
 } from "@unovis/vue";
 import { DollarSign, NotepadText, Truck } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-
-const STATUS_COLORS = {
-  DRAFT: "bg-gray-100 border-gray-500 text-gray-900",
-  SENT: "bg-blue-100 border-blue-500 text-blue-900",
-  PAID: "bg-green-100 border-green-500 text-green-900",
-  PARTIALLY_PAID: "bg-teal-100 border-teal-500 text-teal-900",
-  OVERDUE: "bg-orange-100 border-orange-500 text-orange-900",
-  CANCELLED: "bg-red-100 border-red-500 text-red-900",
-  PENDING: "bg-yellow-100 border-yellow-500 text-yellow-900",
-  PROCESSING: "bg-blue-100 border-blue-500 text-blue-900",
-  SHIPPED: "bg-indigo-100 border-indigo-500 text-indigo-900",
-  DELIVERED: "bg-green-100 border-green-500 text-green-900",
-} as const;
+import type { Res, groupedTransaction, transactionsT } from "@/types";
+import {
+  INVOICE_STATUSES,
+  ORDER_STATUSES,
+  STATUS_COLORS,
+} from "@/consts/status";
 
 const { t, d, n } = useI18n();
 
@@ -51,21 +43,23 @@ const { data: inventoryTransactions } = useAsyncData(
         result,
         transactionLabels: [...new Set<string>(Object.keys(result))],
       };
-    } catch (err: any) {
+    }
+    catch (err: any) {
       handleError(err, "STATS INVENTORY MOUVEMENTS");
       return {
         result: {},
         transactionLabels: [],
       };
     }
-  }
+  },
 );
 
 const { data: bestClients } = useAsyncData("bestClients", async () => {
   try {
     const res = await invoke<Res<any[]>>("list_top_clients");
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     handleError(err, "STATS BEST CLIENTS");
     return [];
   }
@@ -75,7 +69,8 @@ const { data: bestProducts } = useAsyncData("bestProducts", async () => {
   try {
     const res = await invoke<Res<any[]>>("list_top_products");
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     handleError(err, "STATS BEST PRODUCTS");
     return [];
   }
@@ -84,8 +79,32 @@ const { data: bestProducts } = useAsyncData("bestProducts", async () => {
 const { data: statusCounts } = useAsyncData("statusCounts", async () => {
   try {
     const res = await invoke<Res<any>>("list_status_count");
-    return res.data;
-  } catch (err: any) {
+    if (!res?.data)
+      return { orders: {}, invoices: {} };
+
+    const result: {
+      orders: Record<string, number>;
+      invoices: Record<string, number>;
+    } = {
+      orders: {},
+      invoices: {},
+    };
+
+    res.data.orders.forEach(
+      (item: { status: string; status_count: number }) => {
+        result.orders[item.status] = item.status_count;
+      },
+    );
+
+    res.data.invoices.forEach(
+      (item: { status: string; status_count: number }) => {
+        result.invoices[item.status] = item.status_count;
+      },
+    );
+
+    return result;
+  }
+  catch (err: any) {
     handleError(err, "STATS STATUS COUNT");
     return null;
   }
@@ -95,7 +114,8 @@ const { data: financials } = useAsyncData("financialMetrices", async () => {
   try {
     const res = await invoke<Res<any>>("list_financial_metrices");
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     handleError(err, "STATS EXPENSES");
     return {};
   }
@@ -106,9 +126,10 @@ function handleError(err: any, context: string) {
     description: t("notifications.error.description"),
     closeButton: true,
   });
-  if (typeof err == "object" && "error" in err) {
+  if (typeof err === "object" && "error" in err) {
     error(`${context}: ${err.error}`);
-  } else {
+  }
+  else {
     error(`${context}: ${err}`);
   }
 }
@@ -116,14 +137,14 @@ function handleError(err: any, context: string) {
 
 <template>
   <main class="w-full h-full">
-    <div class="w-full h-full flex flex-col xl:grid xl:grid-cols-2 gap-2">
+    <div class="w-full h-full flex flex-col lg:grid lg:grid-cols-2 gap-2">
       <div class="grid grid-cols-1 lg:grid-cols-2 col-span-2 gap-2">
         <Card class="h-fit w-full">
           <CardHeader
             class="flex border-b-0 flex-row items-center justify-between space-y-0 pb-2"
           >
             <CardTitle class="text-sm font-medium">
-              {{ t("dashboard.i.revenue") }}
+              {{ t("dashboard.revenue") }}
             </CardTitle>
             <DollarSign class="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -134,7 +155,7 @@ function handleError(err: any, context: string) {
             </div>
             <p class="text-xs text-muted-foreground">
               {{
-                t("dashboard.i.growth", {
+                t("dashboard.growth", {
                   n: n(financials?.revenue_growth_percentage || 0, {
                     style: "percent",
                   }),
@@ -148,7 +169,7 @@ function handleError(err: any, context: string) {
             class="flex border-b-0 flex-row items-center justify-between space-y-0 pb-2"
           >
             <CardTitle class="text-sm font-medium">
-              {{ t("dashboard.i.expenses") }}
+              {{ t("dashboard.expenses") }}
             </CardTitle>
             <DollarSign class="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -159,7 +180,7 @@ function handleError(err: any, context: string) {
             </div>
             <p class="text-xs text-muted-foreground">
               {{
-                t("dashboard.i.growth", {
+                t("dashboard.growth", {
                   n: n(financials?.expenses_growth_percentage || 0, {
                     style: "percent",
                   }),
@@ -173,22 +194,19 @@ function handleError(err: any, context: string) {
             class="flex flex-row border-b-0 items-center justify-between space-y-0 pb-2"
           >
             <CardTitle class="text-sm font-medium">
-              {{ t("g.r.Orders") }}</CardTitle
-            >
+              {{ t("routes.orders") }}
+            </CardTitle>
             <Truck class="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent class="flex justify-start flex-row gap-2 py-3">
             <Badge
-              v-for="(status, index) in statusCounts?.orders"
+              v-for="(status, index) in ORDER_STATUSES"
               :key="index"
               variant="secondary"
-              :class="
-                // @ts-ignore
-                cn('rounded-sm h-8 w-full', STATUS_COLORS[status.status])
-              "
+              :class="cn('rounded-sm h-8 w-full', STATUS_COLORS[status])"
             >
-              {{ status.status_count }}
-              {{ t("g.status." + status.status.toLowerCase()) }}
+              {{ statusCounts?.orders[status] || 0 }}
+              {{ t(`status.${status.toLowerCase()}`) }}
             </Badge>
           </CardContent>
         </Card>
@@ -197,22 +215,19 @@ function handleError(err: any, context: string) {
             class="flex flex-row items-center justify-between border-b-0 space-y-0 pb-2"
           >
             <CardTitle class="text-sm font-medium">
-              {{ t("g.r.Invoices") }}
+              {{ t("routes.invoices") }}
             </CardTitle>
             <NotepadText class="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent class="flex flex-row justify-start gap-2 py-3">
             <Badge
-              v-for="(status, index) in statusCounts?.invoices"
+              v-for="(status, index) in INVOICE_STATUSES"
               :key="index"
               variant="secondary"
-              :class="
-                // @ts-ignore
-                cn('rounded-sm h-8 w-full', STATUS_COLORS[status.status])
-              "
+              :class="cn('rounded-sm h-8 w-full', STATUS_COLORS[status])"
             >
-              {{ status.status_count }}
-              {{ t("g.status." + status.status.toLowerCase()) }}
+              {{ statusCounts?.invoices[status] || 0 }}
+              {{ t(`status.${status.toLowerCase()}`) }}
             </Badge>
           </CardContent>
         </Card>
@@ -236,11 +251,11 @@ function handleError(err: any, context: string) {
                   (i: number) => (bestClients ? bestClients[i]?.Fullname : i)
                 "
               />
-              <VisAxis type="y" :label="t('g.fields.price') + ' (DH)'" />
+              <VisAxis type="y" :label="`${t('fields.price')} (DH)`" />
               <VisTooltip
                 :triggers="{
                   [GroupedBar.selectors.bar]: (d: any) => {
-                    return n(d.price, 'decimal') +' DH';
+                    return `${n(d.price, 'decimal')} DH`;
                   },
                 }"
               />
@@ -248,7 +263,7 @@ function handleError(err: any, context: string) {
           </template>
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>{{ t("dashboard.i.b3c") }}</i>
+              <i>{{ t("dashboard.b3c") }}</i>
             </h1>
           </template>
         </ChartHolder>
@@ -272,16 +287,16 @@ function handleError(err: any, context: string) {
                   (i: number) => (bestProducts ? bestProducts[i]?.name : i)
                 "
               />
-              <VisAxis type="y" :label="t('g.fields.quantity')" />
+              <VisAxis type="y" :label="t('fields.quantity')" />
               <VisTooltip
                 :triggers="{
                   [GroupedBar.selectors.bar]: (d: any) => {
                     return (
-                      d.name +
-                      ': ' +
-                      n(d.quantity, 'decimal')
-                      + ' ' +
-                      t('g.plrz.i', { n: Math.ceil(d.quantity) })
+                      `${d.name
+                      }: ${
+                        n(d.quantity, 'decimal')
+                      } ${
+                        t('plrz.i', { n: Math.ceil(d.quantity) })}`
                     );
                   },
                 }"
@@ -290,7 +305,7 @@ function handleError(err: any, context: string) {
           </template>
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>{{ t("dashboard.i.bp") }}</i>
+              <i>{{ t("dashboard.bp") }}</i>
             </h1>
           </template>
         </ChartHolder>
@@ -310,16 +325,16 @@ function handleError(err: any, context: string) {
               />
               <VisAxis
                 type="x"
-                :tickFormat="(i:number) => inventoryTransactions?.transactionLabels[i]||''"
+                :tick-format="(i:number) => inventoryTransactions?.transactionLabels[i] || ''"
               />
-              <VisAxis type="y" :label="t('g.fields.quantity')" />
+              <VisAxis type="y" :label="t('fields.quantity')" />
               <VisTooltip
                 :triggers="{
-                  [GroupedBar.selectors.bar]: (d: groupedTransaction[string], i: number) => {
-                    const transactionType = (i % 2 == 0 ? 'IN' : 'OUT') as 'IN' | 'OUT';
+                  [GroupedBar.selectors.bar]: (d: any, i: number) => {
+                    const transactionType = (i % 2 === 0 ? 'IN' : 'OUT') as 'IN' | 'OUT';
                     const quantity = d[transactionType].quantity;
                     return (
-                      n(quantity, 'decimal') + ' ' + t('g.plrz.i', { n: Math.ceil(quantity) })
+                      `${n(quantity, 'decimal')} ${t('plrz.i', { n: Math.ceil(quantity) })}`
                     );
                   },
                 }"
@@ -328,7 +343,7 @@ function handleError(err: any, context: string) {
                 class="my-2 m-auto w-fit"
                 :items="
                   ['in', 'out'].map((a) => ({
-                    name: t('g.status.' + a),
+                    name: t(`status.${a}`),
                   }))
                 "
               />
@@ -336,7 +351,7 @@ function handleError(err: any, context: string) {
           </template>
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>{{ t("dashboard.i.title") }} ({{ t("g.fields.item") }})</i>
+              <i>{{ t("dashboard.title") }} ({{ t("fields.item") }})</i>
             </h1>
           </template>
         </ChartHolder>
@@ -356,14 +371,14 @@ function handleError(err: any, context: string) {
               />
               <VisAxis
                 type="x"
-                :tickFormat="(i:number) => inventoryTransactions?.transactionLabels[i]||''"
+                :tick-format="(i:number) => inventoryTransactions?.transactionLabels[i] || ''"
               />
-              <VisAxis type="y" :label="t('g.fields.price') + ' (DH)'" />
+              <VisAxis type="y" :label="`${t('fields.price')} (DH)`" />
               <VisTooltip
                 :triggers="{
-                  [GroupedBar.selectors.bar]: (d: groupedTransaction[string], i: number) => {
-                    const transactionType = (i % 2 == 0 ? 'IN' : 'OUT') as 'IN' | 'OUT';
-                    return n(d[transactionType].price, 'decimal') + ' DH';
+                  [GroupedBar.selectors.bar]: (d: any, i: number) => {
+                    const transactionType = (i % 2 === 0 ? 'IN' : 'OUT') as 'IN' | 'OUT';
+                    return `${n(d[transactionType].price, 'decimal')} DH`;
                   },
                 }"
               />
@@ -371,7 +386,7 @@ function handleError(err: any, context: string) {
                 class="my-2 m-auto w-fit"
                 :items="
                   ['in', 'out'].map((a) => ({
-                    name: t('g.status.' + a),
+                    name: t(`status.${a}`),
                   }))
                 "
               />
@@ -379,7 +394,7 @@ function handleError(err: any, context: string) {
           </template>
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>{{ t("dashboard.i.title") }} (DH)</i>
+              <i>{{ t("dashboard.title") }} (DH)</i>
             </h1>
           </template>
         </ChartHolder>

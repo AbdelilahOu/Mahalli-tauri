@@ -2,7 +2,8 @@
 import { open } from "@tauri-apps/api/dialog";
 import { downloadDir, pictureDir } from "@tauri-apps/api/path";
 import { useDropZone } from "@vueuse/core";
-import { Trash2, Upload, FileCheck, File } from "lucide-vue-next";
+import type { File } from "lucide-vue-next";
+import { FileCheck, Trash2, Upload } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
@@ -18,6 +19,7 @@ const emits = defineEmits<{
 const { t } = useI18n();
 const dropZone = ref<HTMLDivElement>();
 const isFileSelected = ref(false);
+const selectedFile = ref<string | null>();
 
 async function onDrop(files: File[] | null) {
   if (files) {
@@ -25,7 +27,7 @@ async function onDrop(files: File[] | null) {
     if (filePath) {
       const base64 = btoa(String.fromCharCode(...filePath));
       emits("save:base64", base64);
-      if (name == "Image") {
+      if (name === "Image") {
         selectedFile.value = base64;
       } else {
         isFileSelected.value = true;
@@ -36,20 +38,19 @@ async function onDrop(files: File[] | null) {
 
 const { isOverDropZone } = useDropZone(dropZone, onDrop);
 
-const selectedFile = ref<string | null>();
-const OpenDialog = async () => {
+async function OpenDialog() {
   try {
     const filePath = (await open({
       multiple: false,
       filters: [{ name, extensions }],
-      defaultPath: name == "Image" ? await pictureDir() : await downloadDir(),
+      defaultPath: name === "Image" ? await pictureDir() : await downloadDir(),
     })) as string | null;
 
     if (filePath) {
       const base64 = await getFileBytes(filePath);
       if (base64) {
         emits("save:base64", base64);
-        if (name == "Image") {
+        if (name === "Image") {
           selectedFile.value = base64;
         } else {
           isFileSelected.value = true;
@@ -62,9 +63,9 @@ const OpenDialog = async () => {
       closeButton: true,
     });
 
-    error("ERROR PDF-LIB: " + error);
+    error(`ERROR PDF-LIB: ${error}`);
   }
-};
+}
 </script>
 
 <template>
@@ -79,15 +80,15 @@ const OpenDialog = async () => {
       <Trash2 :size="20" />
     </span>
     <img
-      v-if="name == 'Image' && selectedFile"
+      v-if="name === 'Image' && selectedFile"
       class="absolute top-0 border border-gray-300 rounded-md object-cover w-full h-full"
       :src="`data:image/png;base64,${selectedFile}`"
     />
     <div
       v-else
       ref="dropZone"
+      class="w-full relative h-full rounded-md transition-all duration-200 transform z-50 border-2 border-dashed border-spacing-4 flex items-center justify-center"
       :class="[
-        'w-full relative h-full rounded-md transition-all duration-200 transform z-50 border-2 border-dashed border-spacing-4 flex items-center justify-center',
         isOverDropZone
           ? 'fill-sky-500 border-sky-500 bg-sky-200'
           : isFileSelected
@@ -97,22 +98,20 @@ const OpenDialog = async () => {
     >
       <button
         type="button"
-        :class="[
-          'w-full h-full flex flex-col gap-2 justify-center items-center',
-          isOverDropZone ? 'text-sky-500' : 'text-gray-400',
-        ]"
+        class="w-full h-full flex flex-col gap-2 justify-center items-center"
+        :class="[isOverDropZone ? 'text-sky-500' : 'text-gray-400']"
         @mouseenter="isOverDropZone = true"
         @mouseleave="isOverDropZone = false"
         @click="OpenDialog"
       >
         <span v-if="!isFileSelected">
-          {{ t("g.dropZone") }}
+          {{ t("dropZone") }}
         </span>
-        <Upload :size="26" v-if="!isFileSelected" />
+        <Upload v-if="!isFileSelected" :size="26" />
         <FileCheck
+          v-if="isFileSelected && name === 'Pdf'"
           class="fill-green-200 stroke-green-800"
           :size="30"
-          v-if="isFileSelected && name == 'Pdf'"
         />
       </button>
     </div>

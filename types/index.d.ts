@@ -1,33 +1,18 @@
-export type Res<T> = {
-  error?: string;
-  message?: string;
-  data: T;
-};
+import type { LocationQueryValue } from "vue-router";
 
-export type QueryParams = {
-  search: string;
-  page: number;
-  refresh: string;
-  date?: string;
-  status?: string;
-  limit: number;
-  created_at?: string;
-};
+declare global {
+  interface Res<T> {
+    error?: string;
+    message?: string;
+    data: T;
+  }
 
-export interface transactionsT {
-  createdAt: string;
-  transactionType: "IN" | "OUT";
-  quantity: number;
-  price: number;
+  interface QueryParams {
+    search: LocationQueryValue | LocationQueryValue[];
+    page: number | LocationQueryValue | LocationQueryValue[];
+    status?: LocationQueryValue | LocationQueryValue[];
+    limit: number | LocationQueryValue | LocationQueryValue[];
+    transaction_type?: LocationQueryValue | LocationQueryValue[];
+    created_at?: LocationQueryValue | LocationQueryValue[];
+  }
 }
-
-export type groupedTransaction = Record<
-  string,
-  Record<
-    "IN" | "OUT",
-    {
-      quantity: number;
-      price: number;
-    }
-  >
->;

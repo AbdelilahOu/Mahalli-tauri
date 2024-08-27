@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { InventoryT } from "@/schemas/inventory.schema";
-
 defineProps<{
   inventory: InventoryT[];
 }>();
@@ -10,35 +8,29 @@ const { t, d, locale, n } = useI18n();
 
 <template>
   <div class="w-full">
-    <Table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
+    <Table :dir="locale === 'ar' ? 'rtl' : 'ltr'">
       <TableHeader>
         <TableRow>
-          <TableHead>{{ t("g.fields.name") }}</TableHead>
-          <TableHead>{{ t("g.fields.price") }}</TableHead>
-          <TableHead>{{ t("g.fields.quantity") }}</TableHead>
-          <TableHead>{{ t("g.fields.status") }}</TableHead>
-          <TableHead class="w-56">{{ t("g.fields.date") }}</TableHead>
+          <TableHead>{{ t("fields.name") }}</TableHead>
+          <TableHead>{{ t("fields.price") }}</TableHead>
+          <TableHead>{{ t("fields.quantity") }}</TableHead>
+          <TableHead>{{ t("fields.status") }}</TableHead>
+          <TableHead class="w-56">
+            {{ t("fields.date") }}
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow
-          v-for="(transaction, index) in inventory"
-          :key="transaction.id"
-          v-fade="index"
-        >
+        <TableRow v-for="(tx, index) in inventory" :key="tx.id" v-fade="index">
           <TableCell class="p-2 font-medium">
-            {{ transaction?.name }}
+            {{ tx?.name }}
           </TableCell>
           <TableCell class="p-2">
-            {{ n(transaction?.price, "decimal") }}
+            {{ n(tx?.price, "decimal") }}
             DH
           </TableCell>
           <TableCell class="p-2">
-            {{
-              transaction.quantity +
-              " " +
-              t("g.plrz.i", { n: Math.ceil(transaction.quantity) })
-            }}
+            {{ `${tx.quantity} ${t("plrz.i", { n: Math.ceil(tx.quantity) })}` }}
           </TableCell>
           <TableCell class="p-2">
             <Badge
@@ -46,17 +38,17 @@ const { t, d, locale, n } = useI18n();
               :class="
                 cn(
                   'cursor-pointer whitespace-nowrap',
-                  transaction?.transactionType == 'OUT'
+                  tx?.transactionType === 'OUT'
                     ? 'bg-green-100 border-green-500 text-green-900'
                     : 'bg-sky-100 border-sky-500 text-sky-900'
                 )
               "
             >
-              {{ t("g.status." + transaction?.transactionType.toLowerCase()) }}
+              {{ t(`status.${tx?.transactionType.toLowerCase()}`) }}
             </Badge>
           </TableCell>
           <TableCell class="p-2">
-            {{ d(new Date(transaction.createdAt), "long") }}
+            {{ d(new Date(tx.createdAt), "long") }}
           </TableCell>
         </TableRow>
       </TableBody>

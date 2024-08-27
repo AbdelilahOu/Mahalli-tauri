@@ -3,31 +3,27 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { invoke } from "@tauri-apps/api";
 import { useForm } from "vee-validate";
 import { z } from "zod";
-import type { SupplierT } from "@/schemas/supplier.schema";
-import type { Res } from "@/types";
 import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
-const { updateQueryParams } = useUpdateRouteQueryParams();
-const { close } = useModal();
-const { t } = useI18n();
-const isLoading = ref<boolean>(false);
-
 const props = defineProps<{
   id: string;
-  fullname: string;
+  fullName: string;
   email: string;
   phoneNumber: string;
   address: string;
 }>();
+const { updateQueryParams } = useUpdateRouteQueryParams();
+const { close } = useModal();
+const { t } = useI18n();
 
 const supplierSchema = toTypedSchema(
   z.object({
-    fullname: z
+    fullName: z
       .string()
       .min(2)
       .max(50)
-      .default(props.fullname as string),
+      .default(props.fullName as string),
     email: z.string().default((props.email as string) ?? ""),
     phoneNumber: z.string().default((props.phoneNumber as string) ?? ""),
     address: z.string().default((props.address as string) ?? ""),
@@ -38,12 +34,12 @@ const form = useForm({
   validationSchema: supplierSchema,
 });
 
-const updateTheSupplier = async (supplier: SupplierT) => {
+async function updateTheSupplier(supplier: SupplierT) {
   try {
     await invoke<Res<any>>("update_supplier", {
       supplier: {
         id: props.id,
-        full_name: supplier.fullname,
+        full_name: supplier.fullName,
         email: supplier.email,
         phone_number: supplier.phoneNumber,
         address: supplier.address,
@@ -54,7 +50,7 @@ const updateTheSupplier = async (supplier: SupplierT) => {
     info(
       `UPDATE SUPPLIER: ${JSON.stringify({
         id: props.id,
-        full_name: supplier.fullname,
+        full_name: supplier.fullName,
         email: supplier.email,
         phone_number: supplier.phoneNumber,
         address: supplier.address,
@@ -62,29 +58,29 @@ const updateTheSupplier = async (supplier: SupplierT) => {
     );
     //
     toast.success(
-      t("notifications.supplier.updated", { name: supplier.fullname }),
+      t("notifications.supplier.updated", { name: supplier.fullName }),
       {
         closeButton: true,
       }
     );
     // toggle refresh
     updateQueryParams({
-      refresh: "refresh-update-" + Math.random() * 9999,
+      refresh: `refresh-update-${Math.random() * 9999}`,
     });
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err == "object" && "error" in err) {
-      error("UPDATE SUPPLIER: " + err.error);
+    if (typeof err === "object" && "error" in err) {
+      error(`UPDATE SUPPLIER: ${err.error}`);
       return;
     }
-    error("UPDATE SUPPLIER: " + err);
+    error(`UPDATE SUPPLIER: ${err}`);
   } finally {
     close();
   }
-};
+}
 
 const onSubmit = form.handleSubmit((values) => {
   updateTheSupplier(values);
@@ -96,16 +92,16 @@ const onSubmit = form.handleSubmit((values) => {
     <Card>
       <CardHeader>
         <CardTitle>
-          {{ t("s.u.title") }}
+          {{ t("titles.suppliers.update") }}
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <FormField v-slot="{ componentField }" name="fullname">
+        <FormField v-slot="{ componentField }" name="fullName">
           <FormItem>
-            <FormLabel>{{ t("g.fields.fullname") }}</FormLabel>
+            <FormLabel>{{ t("fields.full-name") }}</FormLabel>
             <FormControl>
               <Input
-                :placeholder="t('g.fields.fullname')"
+                :placeholder="t('fields.full-name')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -113,7 +109,7 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="email">
           <FormItem>
-            <FormLabel>{{ t("g.fields.email") }}</FormLabel>
+            <FormLabel>{{ t("fields.email") }}</FormLabel>
             <FormControl>
               <Input placeholder="example@gmail.com" v-bind="componentField" />
             </FormControl>
@@ -121,7 +117,7 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="phoneNumber">
           <FormItem>
-            <FormLabel>{{ t("g.fields.phone") }}</FormLabel>
+            <FormLabel>{{ t("fields.phone") }}</FormLabel>
             <FormControl>
               <Input placeholder="+2126********" v-bind="componentField" />
             </FormControl>
@@ -129,10 +125,10 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
         <FormField v-slot="{ componentField }" name="address">
           <FormItem>
-            <FormLabel>{{ t("g.fields.address") }}</FormLabel>
+            <FormLabel>{{ t("fields.address") }}</FormLabel>
             <FormControl>
               <Input
-                :placeholder="t('g.fields.address')"
+                :placeholder="t('fields.address')"
                 v-bind="componentField"
               />
             </FormControl>
@@ -140,16 +136,11 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
       </CardContent>
       <CardFooter>
-        <Button
-          type="button"
-          :disabled="isLoading"
-          variant="outline"
-          @click="close"
-        >
-          {{ t("g.b.no") }}
+        <Button type="button" variant="outline" @click="close">
+          {{ t("buttons.cancel") }}
         </Button>
-        <Button :disabled="isLoading" type="submit" class="col-span-2">
-          {{ t("g.b.u", { name: fullname }) }}
+        <Button type="submit" class="col-span-2">
+          {{ t("buttons.update", { name: fullName }) }}
         </Button>
       </CardFooter>
     </Card>

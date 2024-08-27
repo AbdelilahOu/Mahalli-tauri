@@ -1,23 +1,27 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: false },
-  modules: [
-    "@nuxtjs/tailwindcss",
-    "shadcn-nuxt",
-    "@nuxtjs/i18n",
-    "@nuxt/eslint",
-  ],
+
+  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxtjs/i18n"],
+
   sourcemap: false,
+
   ssr: false,
-  eslint: {},
+
   routeRules: {
     "/": {
       prerender: true,
     },
   },
+
+  imports: {
+    dirs: ["./schemas"],
+  },
+
   shadcn: {
     componentDir: "./components/ui",
   },
+
   i18n: {
     locales: [
       {

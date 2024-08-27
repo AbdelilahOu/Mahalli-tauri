@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { FilePenLine, GripHorizontal, Trash2 } from "lucide-vue-next";
-import type { SupplierT } from "@/schemas/supplier.schema";
 // @ts-ignore
-import { SupplierUpdate, SupplierDelete } from "#components";
+import { SupplierDelete, SupplierUpdate } from "#components";
 
 defineProps<{
   suppliers: SupplierT[];
@@ -11,35 +10,37 @@ defineProps<{
 const { t, locale } = useI18n();
 const modal = useModal();
 
-const toggleThisSupplier = (supplier: SupplierT, name: "delete" | "update") => {
-  if (name == "delete") {
+function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
+  if (name === "delete") {
     modal.open(SupplierDelete, {
       id: supplier.id,
-      fullname: supplier.fullname,
+      fullName: supplier.fullName,
     });
   } else {
     modal.open(SupplierUpdate, {
       id: supplier.id,
-      fullname: supplier.fullname,
+      fullName: supplier.fullName,
       email: supplier.email,
       phoneNumber: supplier.phoneNumber,
       address: supplier.address,
     });
   }
-};
+}
 </script>
 
 <template>
   <div class="w-full">
-    <Table :dir="locale == 'ar' ? 'rtl' : 'ltr'">
+    <Table :dir="locale === 'ar' ? 'rtl' : 'ltr'">
       <TableHeader>
         <TableRow>
           <TableHead class="w-14" />
-          <TableHead>{{ t("g.fields.fullname") }}</TableHead>
-          <TableHead>{{ t("g.fields.email") }}</TableHead>
-          <TableHead>{{ t("g.fields.phone") }}</TableHead>
-          <TableHead>{{ t("g.fields.address") }}</TableHead>
-          <TableHead class="w-20">{{ t("g.fields.actions") }}</TableHead>
+          <TableHead>{{ t("fields.full-name") }}</TableHead>
+          <TableHead>{{ t("fields.email") }}</TableHead>
+          <TableHead>{{ t("fields.phone") }}</TableHead>
+          <TableHead>{{ t("fields.address") }}</TableHead>
+          <TableHead class="w-20">
+            {{ t("fields.actions") }}
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -52,12 +53,12 @@ const toggleThisSupplier = (supplier: SupplierT, name: "delete" | "update") => {
             <Avatar>
               <AvatarImage :src="supplier.image ?? ''" />
               <AvatarFallback class="text-xs">
-                {{ supplier.fullname.substring(0, 5) }}
+                {{ supplier.fullName.substring(0, 5) }}
               </AvatarFallback>
             </Avatar>
           </TableCell>
           <TableCell class="p-2 whitespace-nowrap font-medium">
-            {{ supplier?.fullname }}
+            {{ supplier?.fullName }}
           </TableCell>
           <TableCell class="p-2">
             {{ supplier.email }}
@@ -82,7 +83,7 @@ const toggleThisSupplier = (supplier: SupplierT, name: "delete" | "update") => {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    {{ t("g.actions.edit") }}
+                    {{ t("actions.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -90,7 +91,7 @@ const toggleThisSupplier = (supplier: SupplierT, name: "delete" | "update") => {
                   >
                     <Trash2 :size="20" class="text-red-500 inline mr-2" />
                     <span class="text-red-500">
-                      {{ t("g.actions.delete") }}
+                      {{ t("actions.delete") }}
                     </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
