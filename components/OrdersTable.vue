@@ -168,16 +168,17 @@ async function createInvoiceFromOrder(id: string) {
                       <tr
                         v-for="(product, i) in orderProducts"
                         :key="i"
-                        class="space-y-1 text-sm flex justify-between w-full items-center"
+                        class="text-sm"
                       >
-                        <td class="underline w-1/2">
+                        <td class="underline">
                           {{ product.name }}
                         </td>
-                        <td class="min-w-1/4 w-20 text-end text-nowrap">
-                          {{ product.price }} Dh
-                        </td>
-                        <td class="w-1/4 text-slate-700 text-end">
+                        <td class="text-slate-700 text-end">
                           <i> x{{ product.quantity }} </i>
+                        </td>
+                        <td class="text-nowrap text-end">
+                          {{ n(product.price, "decimal") }}
+                          <span class="text-xs text-slate-700"> MAD </span>
                         </td>
                       </tr>
                     </tbody>
@@ -227,8 +228,7 @@ async function createInvoiceFromOrder(id: string) {
             {{ d(new Date(order.createdAt!), "long") }}
           </TableCell>
           <TableCell class="p-2">
-            {{ n(order.total!, "decimal") }}
-            DH
+            {{ n(order.total!, "currency") }}
           </TableCell>
           <TableCell class="p-2">
             <div class="flex justify-center items-center gap-3">

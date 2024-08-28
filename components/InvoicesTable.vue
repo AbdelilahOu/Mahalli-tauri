@@ -141,16 +141,17 @@ async function updateInvoiceStatus(id: string, status: string) {
                       <tr
                         v-for="(product, i) in invoiceProducts"
                         :key="i"
-                        class="space-y-1 text-sm flex justify-between w-full items-center"
+                        class="text-sm"
                       >
-                        <td class="underline w-1/2">
+                        <td class="underline">
                           {{ product.name }}
                         </td>
-                        <td class="min-w-1/4 w-20 text-end text-nowrap">
-                          {{ product.price }} Dh
-                        </td>
-                        <td class="w-1/4 text-slate-700 text-end">
+                        <td class="text-slate-700 text-end">
                           <i> x{{ product.quantity }} </i>
+                        </td>
+                        <td class="text-nowrap text-end">
+                          {{ n(product.price, "decimal") }}
+                          <span class="text-xs text-slate-700"> MAD </span>
                         </td>
                       </tr>
                     </tbody>
@@ -200,12 +201,10 @@ async function updateInvoiceStatus(id: string, status: string) {
             {{ d(new Date(invoice.createdAt!), "long") }}
           </TableCell>
           <TableCell class="p-2">
-            {{ n(invoice.total!, "decimal") }}
-            DH
+            {{ n(invoice.total!, "currency") }}
           </TableCell>
           <TableCell class="p-2">
-            {{ n(invoice.paidAmount, "decimal") }}
-            DH
+            {{ n(invoice.paidAmount, "currency") }}
           </TableCell>
           <TableCell class="p-2">
             <div class="flex justify-center gap-3">

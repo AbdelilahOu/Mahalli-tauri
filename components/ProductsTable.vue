@@ -136,12 +136,10 @@ function updateProductInventory(id: string, name: string) {
             }}
           </TableCell>
           <TableCell class="p-2">
-            {{ n(product.purchasePrice, "decimal") }}
-            DH
+            {{ n(product.purchasePrice, "currency") }}
           </TableCell>
           <TableCell class="p-2">
-            {{ n(product.sellingPrice, "decimal") }}
-            DH
+            {{ n(product.sellingPrice, "currency") }}
           </TableCell>
           <TableCell class="p-2">
             <div class="flex justify-center gap-3">

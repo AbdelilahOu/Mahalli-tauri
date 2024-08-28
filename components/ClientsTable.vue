@@ -71,7 +71,7 @@ function toggleThisClient(client: ClientT, name: "delete" | "update") {
             {{ client.address }}
           </TableCell>
           <TableCell class="p-2 whitespace-nowrap">
-            {{ n(client.credit!, "decimal") }} DH
+            {{ n(client.credit!, "currency") }}
           </TableCell>
           <TableCell class="p-2">
             <div class="flex justify-center">
