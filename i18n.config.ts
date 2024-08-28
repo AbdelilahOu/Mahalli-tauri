@@ -27,42 +27,6 @@ const DEFAULT_DATE_TIME_FORMAT = {
 };
 
 const DEFAULT_NUMBER_FORMATS = {
-  US: {
-    currency: {
-      style: "currency",
-      currency: "USD",
-      notation: "standard",
-    },
-    decimal: {
-      style: "decimal",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    },
-    percent: {
-      style: "percent",
-      useGrouping: false,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    },
-  },
-  EU: {
-    currency: {
-      style: "currency",
-      currency: "EUR",
-      notation: "standard",
-    },
-    decimal: {
-      style: "decimal",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    },
-    percent: {
-      style: "percent",
-      useGrouping: false,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    },
-  },
   AR: {
     currency: {
       style: "currency",
@@ -91,8 +55,8 @@ const datetimeFormats = {
 };
 
 const numberFormats = {
-  en: DEFAULT_NUMBER_FORMATS.US,
-  fr: DEFAULT_NUMBER_FORMATS.EU,
-  ar: DEFAULT_NUMBER_FORMATS.EU,
+  en: DEFAULT_NUMBER_FORMATS.AR,
+  fr: DEFAULT_NUMBER_FORMATS.AR,
+  ar: DEFAULT_NUMBER_FORMATS.AR,
   de: DEFAULT_NUMBER_FORMATS.AR,
 };

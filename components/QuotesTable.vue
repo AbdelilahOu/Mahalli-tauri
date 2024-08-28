@@ -130,18 +130,19 @@ async function createOrderFromQuote(id: string) {
                     </thead>
                     <tbody>
                       <tr
-                        v-for="(quoteProduct, i) in quoteProducts"
+                        v-for="(product, i) in quoteProducts"
                         :key="i"
-                        class="space-y-1 text-sm flex justify-between w-full items-center"
+                        class="text-sm"
                       >
-                        <td class="underline w-1/2">
-                          {{ quoteProduct.name }}
+                        <td class="underline">
+                          {{ product.name }}
                         </td>
-                        <td class="min-w-1/4 w-20 text-end text-nowrap">
-                          {{ quoteProduct.price }} Dh
+                        <td class="text-slate-700 text-end">
+                          <i> x{{ product.quantity }} </i>
                         </td>
-                        <td class="w-1/4 text-slate-700 text-end">
-                          <i> x{{ quoteProduct.quantity }} </i>
+                        <td class="text-nowrap text-end">
+                          {{ n(product.price, "decimal") }}
+                          <span class="text-xs text-slate-700"> MAD </span>
                         </td>
                       </tr>
                     </tbody>
@@ -161,8 +162,7 @@ async function createOrderFromQuote(id: string) {
             {{ d(new Date(quote.createdAt!), "long") }}
           </TableCell>
           <TableCell class="p-2">
-            {{ n(quote.total!, "decimal") }}
-            DH
+            {{ n(quote.total!, "currency") }}
           </TableCell>
           <TableCell class="p-2">
             <div class="flex justify-center items-center gap-3">

@@ -8,7 +8,7 @@ import { toast } from "vue-sonner";
 import { useDebounceFn } from "@vueuse/core";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 
-const { t, locale } = useI18n();
+const { t, locale, n } = useI18n();
 const { numberToText } = useNumberToText();
 const id = useRoute().params.id;
 const order = ref<any | null>(null);
@@ -17,7 +17,7 @@ const pdfRef = ref<HTMLIFrameElement | null>();
 const config = reactive({
   marginTop: 40,
   marginX: 20,
-  marginBottom: 120,
+  marginBottom: 90,
   templateBase64: null as string | null,
   color: rgb(0.34, 0.34, 0.34),
 });
@@ -292,21 +292,21 @@ function drawItems(
     size: 12,
     color: config.color,
   });
-  page.drawText(item.quantity.toFixed(0), {
+  page.drawText(n(item.quantity, "decimal"), {
     x: config.marginX + 5 + width / 4,
     y: currentY - 10,
     font,
     size: 12,
     color: config.color,
   });
-  page.drawText(`DH ${item.price.toFixed(2)}`, {
+  page.drawText(n(item.price, "currency"), {
     x: config.marginX + 5 + width / 2,
     y: currentY - 10,
     font,
     size: 12,
     color: config.color,
   });
-  page.drawText(`DH ${(item.price * item.quantity).toFixed(2)}`, {
+  page.drawText(n(item.price * item.quantity, "currency"), {
     x: config.marginX + 5 + (width * 3) / 4,
     y: currentY - 10,
     font,
@@ -360,7 +360,7 @@ function drawSummary(page: PDFPage, width: number, currentY: number) {
       break;
   }
 
-  page.drawText(`DH ${order.value.total.toFixed(2)}`, {
+  page.drawText(n(order.value.total, "currency"), {
     x: config.marginX + 5 + (width * 3) / 4,
     y: currentY - 10,
     font,
@@ -419,7 +419,7 @@ function drawSummary(page: PDFPage, width: number, currentY: number) {
     opacity: 0.75,
   });
 
-  page.drawText(`DH ${(order.value.total * 0.2).toFixed(2)}`, {
+  page.drawText(n(order.value.total * 0.2, "currency"), {
     x: config.marginX + 5 + (width * 3) / 4,
     y: currentY - 70,
     font,
@@ -449,16 +449,13 @@ function drawSummary(page: PDFPage, width: number, currentY: number) {
     opacity: 0.75,
   });
 
-  page.drawText(
-    `DH ${(order.value.total + order.value.total * 0.2).toFixed(2)}`,
-    {
-      x: config.marginX + 5 + (width * 3) / 4,
-      y: currentY - 100,
-      font,
-      size: 12,
-      color: config.color,
-    }
-  );
+  page.drawText(n(order.value.total + order.value.total * 0.2, "currency"), {
+    x: config.marginX + 5 + (width * 3) / 4,
+    y: currentY - 100,
+    font,
+    size: 12,
+    color: config.color,
+  });
 
   page.drawText(t("fields.grand-total").toUpperCase(), {
     x: SummaryX,

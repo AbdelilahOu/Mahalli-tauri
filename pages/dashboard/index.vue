@@ -11,7 +11,6 @@ import {
 import { DollarSign, NotepadText, Truck } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-import type { Res, groupedTransaction, transactionsT } from "@/types";
 import {
   INVOICE_STATUSES,
   ORDER_STATUSES,
@@ -24,7 +23,7 @@ const { data: inventoryTransactions } = useAsyncData(
   "inventoryTransactions",
   async () => {
     try {
-      const res = await invoke<Res<transactionsT[]>>("list_inventory_stats");
+      const res = await invoke<Res<any[]>>("list_inventory_stats");
       const result = res.data.reduce((acc, item) => {
         const { createdAt: date, transactionType, quantity, price } = item;
         const createdAt = d(new Date(date), "monthOnly");
@@ -37,29 +36,27 @@ const { data: inventoryTransactions } = useAsyncData(
         acc[createdAt][transactionType].quantity += quantity;
         acc[createdAt][transactionType].price += price;
         return acc;
-      }, {} as groupedTransaction);
+      }, {});
 
       return {
         result,
         transactionLabels: [...new Set<string>(Object.keys(result))],
       };
-    }
-    catch (err: any) {
+    } catch (err: any) {
       handleError(err, "STATS INVENTORY MOUVEMENTS");
       return {
         result: {},
         transactionLabels: [],
       };
     }
-  },
+  }
 );
 
 const { data: bestClients } = useAsyncData("bestClients", async () => {
   try {
     const res = await invoke<Res<any[]>>("list_top_clients");
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     handleError(err, "STATS BEST CLIENTS");
     return [];
   }
@@ -69,8 +66,7 @@ const { data: bestProducts } = useAsyncData("bestProducts", async () => {
   try {
     const res = await invoke<Res<any[]>>("list_top_products");
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     handleError(err, "STATS BEST PRODUCTS");
     return [];
   }
@@ -79,8 +75,7 @@ const { data: bestProducts } = useAsyncData("bestProducts", async () => {
 const { data: statusCounts } = useAsyncData("statusCounts", async () => {
   try {
     const res = await invoke<Res<any>>("list_status_count");
-    if (!res?.data)
-      return { orders: {}, invoices: {} };
+    if (!res?.data) return { orders: {}, invoices: {} };
 
     const result: {
       orders: Record<string, number>;
@@ -93,18 +88,17 @@ const { data: statusCounts } = useAsyncData("statusCounts", async () => {
     res.data.orders.forEach(
       (item: { status: string; status_count: number }) => {
         result.orders[item.status] = item.status_count;
-      },
+      }
     );
 
     res.data.invoices.forEach(
       (item: { status: string; status_count: number }) => {
         result.invoices[item.status] = item.status_count;
-      },
+      }
     );
 
     return result;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     handleError(err, "STATS STATUS COUNT");
     return null;
   }
@@ -114,8 +108,7 @@ const { data: financials } = useAsyncData("financialMetrices", async () => {
   try {
     const res = await invoke<Res<any>>("list_financial_metrices");
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     handleError(err, "STATS EXPENSES");
     return {};
   }
@@ -128,8 +121,7 @@ function handleError(err: any, context: string) {
   });
   if (typeof err === "object" && "error" in err) {
     error(`${context}: ${err.error}`);
-  }
-  else {
+  } else {
     error(`${context}: ${err}`);
   }
 }
@@ -150,8 +142,7 @@ function handleError(err: any, context: string) {
           </CardHeader>
           <CardContent class="pt-0">
             <div class="text-2xl font-bold">
-              {{ n(financials?.current_revenue || 0, "decimal") }}
-              DH
+              {{ n(financials?.current_revenue || 0, "currency") }}
             </div>
             <p class="text-xs text-muted-foreground">
               {{
@@ -175,8 +166,7 @@ function handleError(err: any, context: string) {
           </CardHeader>
           <CardContent class="pt-0">
             <div class="text-2xl font-bold">
-              {{ n(financials?.current_expenses || 0, "decimal") }}
-              DH
+              {{ n(financials?.current_expenses || 0, "currency") }}
             </div>
             <p class="text-xs text-muted-foreground">
               {{
@@ -251,11 +241,11 @@ function handleError(err: any, context: string) {
                   (i: number) => (bestClients ? bestClients[i]?.Fullname : i)
                 "
               />
-              <VisAxis type="y" :label="`${t('fields.price')} (DH)`" />
+              <VisAxis type="y" :label="`${t('fields.price')} (MAD)`" />
               <VisTooltip
                 :triggers="{
                   [GroupedBar.selectors.bar]: (d: any) => {
-                    return `${n(d.price, 'decimal')} DH`;
+                    return `${n(d.price || 0, 'currency')} `;
                   },
                 }"
               />
@@ -373,12 +363,12 @@ function handleError(err: any, context: string) {
                 type="x"
                 :tick-format="(i:number) => inventoryTransactions?.transactionLabels[i] || ''"
               />
-              <VisAxis type="y" :label="`${t('fields.price')} (DH)`" />
+              <VisAxis type="y" :label="`${t('fields.price')} (MAD)`" />
               <VisTooltip
                 :triggers="{
                   [GroupedBar.selectors.bar]: (d: any, i: number) => {
                     const transactionType = (i % 2 === 0 ? 'IN' : 'OUT') as 'IN' | 'OUT';
-                    return `${n(d[transactionType].price, 'decimal')} DH`;
+                    return `${n(d[transactionType].price, 'currency')} `;
                   },
                 }"
               />
@@ -394,7 +384,7 @@ function handleError(err: any, context: string) {
           </template>
           <template #title>
             <h1 class="m-2 w-full text-center text-base font-medium">
-              <i>{{ t("dashboard.title") }} (DH)</i>
+              <i>{{ t("dashboard.title") }} ()</i>
             </h1>
           </template>
         </ChartHolder>
