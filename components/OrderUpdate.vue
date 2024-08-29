@@ -44,7 +44,7 @@ async function searchClients(search: string | number) {
     "search_clients",
     {
       search,
-    }
+    },
   );
   if (!res.error) {
     clients.value = res.data;
@@ -56,7 +56,7 @@ async function searchProducts(search: string | number) {
     "search_products",
     {
       search,
-    }
+    },
   );
   if (!res.error) {
     products.value = res.data;
@@ -91,7 +91,8 @@ async function updateTheOrder() {
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -101,7 +102,8 @@ async function updateTheOrder() {
       return;
     }
     error(`UPDATE ORDER: ${err}`);
-  } finally {
+  }
+  finally {
     close();
   }
 }
@@ -109,7 +111,8 @@ async function updateTheOrder() {
 async function deleteOneOrderItem(id: string) {
   try {
     await invoke("delete_inventory", { id });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -122,7 +125,8 @@ async function deleteOneOrderItem(id: string) {
 
 function deleteOrderItem(index: number) {
   const item = order.items?.splice(index, 1)[0];
-  if (item?.inventory_id) deleteOneOrderItem(item.inventory_id);
+  if (item?.inventory_id)
+    deleteOneOrderItem(item.inventory_id);
 }
 </script>
 
@@ -206,7 +210,9 @@ function deleteOrderItem(index: number) {
                 :placeholder="t('fields.price')"
                 type="number"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
               <Trash2
                 class="cursor-pointer m-auto"

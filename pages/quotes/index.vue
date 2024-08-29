@@ -13,7 +13,7 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const searchQuery = ref<string>(route.query.search as string);
 const createdAt = ref<string | number | undefined>(
-  route.query.created_at as any
+  route.query.created_at as any,
 );
 
 const quoteProducts = ref<QuoteProductT[]>([]);
@@ -41,14 +41,16 @@ async function fetchQuotes() {
       },
     });
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
       error(`LIST QUOTES: ${err.error}`);
-    } else {
+    }
+    else {
       error(`LIST QUOTES: ${err}`);
     }
     throw err;
@@ -85,14 +87,16 @@ async function listQuoteProduct(id?: string) {
       id,
     });
     quoteProducts.value = res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
       error(`LIST QUOTE PRODUCTS: ${err.error}`);
-    } else {
+    }
+    else {
       error(`LIST QUOTE PRODUCTS: ${err}`);
     }
     throw err;
@@ -115,7 +119,7 @@ const openCreateQuoteModal = () => modal.open(QuoteCreate, {});
                 :class="
                   cn(
                     'w-full justify-start text-left font-normal',
-                    !createdAt && 'text-muted-foreground'
+                    !createdAt && 'text-muted-foreground',
                   )
                 "
               >

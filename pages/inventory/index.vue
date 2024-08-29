@@ -11,7 +11,7 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const searchQuery = ref<string>(route.query.search as string);
 const transactionType = ref<string | undefined>(
-  route.query.transactionType as string | undefined
+  route.query.transactionType as string | undefined,
 );
 const createdAt = ref<string | number | undefined>(route.query.created_at);
 
@@ -38,14 +38,16 @@ async function fetchInventory(params: QueryParams) {
       },
     });
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
       error(`LIST INVENTORY: ${err.error}`);
-    } else {
+    }
+    else {
       error(`LIST INVENTORY: ${err}`);
     }
     return { inventory: [], count: 0 };
@@ -55,7 +57,7 @@ async function fetchInventory(params: QueryParams) {
 const { data } = useAsyncData(
   "inventory",
   () => fetchInventory(queryParams.value),
-  { watch: [queryParams] }
+  { watch: [queryParams] },
 );
 
 const inventory = computed<InventoryT[]>(() => data.value?.inventory ?? []);
@@ -93,7 +95,7 @@ watch([transactionType, createdAt], () => {
                 :class="
                   cn(
                     'w-full justify-start text-left font-normal',
-                    !createdAt && 'text-muted-foreground'
+                    !createdAt && 'text-muted-foreground',
                   )
                 "
               >
