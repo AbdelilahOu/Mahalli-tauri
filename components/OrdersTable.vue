@@ -9,7 +9,6 @@ import {
   Trash2,
 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
-// @ts-ignore
 import { NuxtLink, OrderDelete, OrderUpdate } from "#components";
 import { ORDER_STATUSES, STATUS_COLORS } from "@/consts/status";
 
@@ -34,12 +33,12 @@ const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 function toggleThisOrder(order: OrderT, name: "delete" | "update") {
   if (name === "delete") {
     modal.open(OrderDelete, {
-      id: order.id,
+      id: order.id!,
       identifier: order.identifier,
     });
   } else {
     modal.open(OrderUpdate, {
-      id: order.id,
+      id: order.id!,
       identifier: order.identifier,
     });
   }

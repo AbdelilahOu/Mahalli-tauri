@@ -4,7 +4,6 @@ import { Calendar as CalendarIcon, Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-// @ts-ignore
 import { OrderCreate } from "#components";
 import { ORDER_STATUSES } from "@/consts/status";
 
@@ -15,9 +14,11 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const orderProducts = ref<OrderProductT[]>([]);
 
-const searchQuery = ref<string>(route.query.search);
-const status = ref<string | undefined>(route.query.status);
-const createdAt = ref<string | number | undefined>(route.query.created_at);
+const searchQuery = ref<string>(route.query.search as any);
+const status = ref<string | undefined>(route.query.status as any);
+const createdAt = ref<string | number | undefined>(
+  route.query.created_at as any
+);
 
 const LIMIT = 25;
 

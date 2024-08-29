@@ -25,7 +25,6 @@ const order = reactive<OrderForUpdateT>({
 });
 
 onBeforeMount(async () => {
-  // @ts-ignore
   const res = await invoke<Res<OrderForUpdateT>>("get_order", {
     id: props.id,
   });

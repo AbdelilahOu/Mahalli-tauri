@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { FilePenLine, GripHorizontal, Trash2 } from "lucide-vue-next";
-// @ts-ignore
 import { ClientDelete, ClientUpdate } from "#components";
 
 defineProps<{
@@ -13,12 +12,12 @@ const modal = useModal();
 function toggleThisClient(client: ClientT, name: "delete" | "update") {
   if (name === "delete") {
     modal.open(ClientDelete, {
-      id: client.id,
+      id: client.id!,
       fullName: client.fullName,
     });
   } else {
     modal.open(ClientUpdate, {
-      id: client.id,
+      id: client.id!,
       fullName: client.fullName,
       email: client.email,
       phoneNumber: client.phoneNumber,

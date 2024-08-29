@@ -3,7 +3,6 @@ import { invoke } from "@tauri-apps/api";
 import { FilePenLine, GripHorizontal, Printer, Trash2 } from "lucide-vue-next";
 import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-// @ts-ignore
 import { InvoiceDelete, InvoiceUpdate } from "#components";
 import { INVOICE_STATUSES, STATUS_COLORS } from "@/consts/status";
 
@@ -28,12 +27,12 @@ const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 function toggleThisInvoice(invoice: InvoiceT, name: "delete" | "update") {
   if (name === "delete") {
     modal.open(InvoiceDelete, {
-      id: invoice.id,
+      id: invoice.id!,
       identifier: invoice.identifier,
     });
   } else {
     modal.open(InvoiceUpdate, {
-      id: invoice.id,
+      id: invoice.id!,
       identifier: invoice.identifier,
     });
   }

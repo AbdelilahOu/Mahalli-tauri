@@ -9,7 +9,6 @@ import {
 } from "lucide-vue-next";
 import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-// @ts-ignore
 import { NuxtLink, QuoteDelete, QuoteUpdate } from "#components";
 
 defineProps<{ quotes: QuoteT[]; quoteProducts: QuoteProductT[] }>();
@@ -32,12 +31,12 @@ const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 function toggleThisQuote(quote: QuoteT, name: "delete" | "update") {
   if (name === "delete") {
     modal.open(QuoteDelete, {
-      id: quote.id,
+      id: quote.id!,
       identifier: quote.identifier,
     });
   } else {
     modal.open(QuoteUpdate, {
-      id: quote.id,
+      id: quote.id!,
       identifier: quote.identifier,
     });
   }
