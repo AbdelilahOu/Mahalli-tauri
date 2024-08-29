@@ -46,7 +46,7 @@ async function searchClients(search: string | number) {
     "search_clients",
     {
       search,
-    }
+    },
   );
   if (!res.error) {
     clients.value = res.data;
@@ -58,7 +58,7 @@ async function searchProducts(search: string | number) {
     "search_products",
     {
       search,
-    }
+    },
   );
   if (!res.error) {
     products.value = res.data;
@@ -94,13 +94,15 @@ async function updateTheInvoices() {
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     if (typeof err === "object" && "error" in err) {
       error(`UPDATE INVOICE: ${err.error}`);
       return;
     }
     error(`UPDATE INVOICE: ${err}`);
-  } finally {
+  }
+  finally {
     close();
   }
 }
@@ -108,7 +110,8 @@ async function updateTheInvoices() {
 async function deleteOneInvoiceItem(id: string) {
   try {
     await invoke("delete_inventory", { id });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -121,7 +124,8 @@ async function deleteOneInvoiceItem(id: string) {
 
 function deleteInvoiceItem(index: number) {
   const item = invoice.items?.splice(index, 1)[0];
-  if (item?.inventory_id) deleteOneInvoiceItem(item.inventory_id);
+  if (item?.inventory_id)
+    deleteOneInvoiceItem(item.inventory_id);
 }
 </script>
 
@@ -211,7 +215,9 @@ function deleteInvoiceItem(index: number) {
                 :placeholder="t('fields.price')"
                 type="number"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
               <Trash2
                 class="cursor-pointer m-auto"

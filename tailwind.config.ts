@@ -1,4 +1,4 @@
-const animate = require("tailwindcss-animate");
+import animate from "tailwindcss-animate";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -87,7 +87,7 @@ module.exports = {
           from: { height: "var(--radix-collapsible-content-height)" },
           to: { height: 0 },
         },
-        "highlight": {
+        highlight: {
           "0%": { "background-color": "transparent" },
           "50%": { "background-color": "#e5e7eb" },
           "100%": { "background-color": "transparent" },

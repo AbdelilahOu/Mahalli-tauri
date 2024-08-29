@@ -32,14 +32,16 @@ async function fetchClients(params: QueryParams) {
       },
     });
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
       error(`LIST CLIENTS: ${err.error}`);
-    } else {
+    }
+    else {
       error(`LIST CLIENTS: ${err}`);
     }
     throw err;
@@ -49,7 +51,7 @@ async function fetchClients(params: QueryParams) {
 const { data } = useAsyncData(
   "clients",
   () => fetchClients(queryParams.value),
-  { watch: [queryParams] }
+  { watch: [queryParams] },
 );
 
 const clients = computed<ClientT[]>(() => data.value?.clients ?? []);

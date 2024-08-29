@@ -41,7 +41,7 @@ async function searchClients(search: string | number) {
     "search_clients",
     {
       search,
-    }
+    },
   );
   if (!res.error) {
     clients.value = res.data;
@@ -53,7 +53,7 @@ async function searchProducts(search: string | number) {
     "search_products",
     {
       search,
-    }
+    },
   );
   if (!res.error) {
     products.value = res.data;
@@ -81,7 +81,8 @@ async function createOrder() {
       updateQueryParams({
         refresh: `refresh-create-${Math.random() * 9999}`,
       });
-    } catch (err: any) {
+    }
+    catch (err: any) {
       toast.error(t("notifications.error.title"), {
         description: t("notifications.error.description"),
         closeButton: true,
@@ -91,7 +92,8 @@ async function createOrder() {
         return;
       }
       error(`CREATE ORDER: ${err}`);
-    } finally {
+    }
+    finally {
       isPosting.value = false;
       close();
     }
@@ -157,7 +159,9 @@ async function createOrder() {
                 :placeholder="t('fields.price')"
                 type="number"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
               <Trash2
                 class="cursor-pointer m-auto"

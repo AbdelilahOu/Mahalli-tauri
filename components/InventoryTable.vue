@@ -39,7 +39,7 @@ const { t, d, locale, n } = useI18n();
                   'cursor-pointer whitespace-nowrap',
                   tx?.transactionType === 'OUT'
                     ? 'bg-green-100 border-green-500 text-green-900'
-                    : 'bg-sky-100 border-sky-500 text-sky-900'
+                    : 'bg-sky-100 border-sky-500 text-sky-900',
                 )
               "
             >

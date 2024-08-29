@@ -15,7 +15,8 @@ function toggleThisClient(client: ClientT, name: "delete" | "update") {
       id: client.id!,
       fullName: client.fullName,
     });
-  } else {
+  }
+  else {
     modal.open(ClientUpdate, {
       id: client.id!,
       fullName: client.fullName,

@@ -41,7 +41,7 @@ async function createNewProduct(product: ProductT) {
         ...product,
         image: `data:image/png;base64,${imagePath.value}`,
         quantity: quantity.value,
-      })}`
+      })}`,
     );
     //
     toast.success(t("notifications.product.created", { name: product.name }), {
@@ -51,7 +51,8 @@ async function createNewProduct(product: ProductT) {
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -61,7 +62,8 @@ async function createNewProduct(product: ProductT) {
       return;
     }
     error(`CREATE PRODUCT: ${err}`);
-  } finally {
+  }
+  finally {
     close();
   }
 }
@@ -106,7 +108,9 @@ function setImage(image: string) {
                 :placeholder="t('fields.purchase-price')"
                 v-bind="componentField"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
             </FormControl>
           </FormItem>
@@ -120,7 +124,9 @@ function setImage(image: string) {
                 :placeholder="t('fields.selling-price')"
                 v-bind="componentField"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
             </FormControl>
           </FormItem>
