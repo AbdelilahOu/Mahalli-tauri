@@ -7,7 +7,6 @@ import {
   PackagePlus,
   Trash2,
 } from "lucide-vue-next";
-// @ts-ignore
 import { InventoryUpdate, ProductDelete, ProductUpdate } from "#components";
 
 defineProps<{ products: ProductT[] }>();
@@ -18,12 +17,12 @@ const modal = useModal();
 function toggleThisProduct(product: ProductT, name: "delete" | "update") {
   if (name === "delete") {
     modal.open(ProductDelete, {
-      id: product.id,
-      identifier: product.name,
+      id: product.id!,
+      name: product.name,
     });
   } else {
     modal.open(ProductUpdate, {
-      id: product.id,
+      id: product.id!,
       name: product.name,
       purchasePrice: product.purchasePrice,
       sellingPrice: product.sellingPrice,

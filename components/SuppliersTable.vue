@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { FilePenLine, GripHorizontal, Trash2 } from "lucide-vue-next";
-// @ts-ignore
 import { SupplierDelete, SupplierUpdate } from "#components";
 
 defineProps<{
@@ -13,12 +12,12 @@ const modal = useModal();
 function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
   if (name === "delete") {
     modal.open(SupplierDelete, {
-      id: supplier.id,
+      id: supplier.id!,
       fullName: supplier.fullName,
     });
   } else {
     modal.open(SupplierUpdate, {
-      id: supplier.id,
+      id: supplier.id!,
       fullName: supplier.fullName,
       email: supplier.email,
       phoneNumber: supplier.phoneNumber,

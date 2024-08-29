@@ -26,7 +26,6 @@ const invoice = reactive<InvoiceForUpdateT>({
 });
 
 onBeforeMount(async () => {
-  // @ts-ignore
   const res = await invoke<Res<InvoiceForUpdateT>>("get_invoice", {
     id: props.id,
   });

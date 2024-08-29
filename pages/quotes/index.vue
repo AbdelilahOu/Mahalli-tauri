@@ -4,7 +4,6 @@ import { Calendar as CalendarIcon, Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-// @ts-ignore
 import { QuoteCreate } from "#components";
 
 const route = useRoute();
@@ -13,7 +12,9 @@ const modal = useModal();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const searchQuery = ref<string>(route.query.search as string);
-const createdAt = ref<string | number | undefined>(route.query.created_at);
+const createdAt = ref<string | number | undefined>(
+  route.query.created_at as any
+);
 
 const quoteProducts = ref<QuoteProductT[]>([]);
 

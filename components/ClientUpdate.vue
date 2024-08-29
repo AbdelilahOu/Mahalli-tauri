@@ -9,9 +9,9 @@ import { z } from "zod";
 const props = defineProps<{
   id: string;
   fullName: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
+  email?: string;
+  phoneNumber?: string;
+  address?: string;
 }>();
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();

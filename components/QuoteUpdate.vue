@@ -23,7 +23,6 @@ const quote = reactive<QuoteForUpdateT>({
 });
 
 onBeforeMount(async () => {
-  // @ts-ignore
   const res = await invoke<Res<QuoteForUpdateT>>("get_quote", {
     id: props.id,
   });

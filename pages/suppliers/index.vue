@@ -4,7 +4,6 @@ import { Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-// @ts-ignore
 import { SupplierCreate } from "#components";
 
 const route = useRoute();

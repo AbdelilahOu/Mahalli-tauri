@@ -11,7 +11,7 @@ const props = defineProps<{
   name: string;
   purchasePrice: number;
   sellingPrice: number;
-  description: string;
+  description?: string;
   minQuantity: number;
 }>();
 const { updateQueryParams } = useUpdateRouteQueryParams();

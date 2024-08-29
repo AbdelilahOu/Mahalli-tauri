@@ -9,9 +9,9 @@ import { toast } from "vue-sonner";
 const props = defineProps<{
   id: string;
   fullName: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
+  email?: string;
+  phoneNumber?: string;
+  address?: string;
 }>();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
