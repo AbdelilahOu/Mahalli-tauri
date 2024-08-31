@@ -27,7 +27,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.387.0",
-    "nuxt": "^3.11.2",
+    "nuxt": "^3.13.0",
     "pdf-lib": "^1.17.1",
     "radix-vue": "^1.8.3",
     "shadcn-nuxt": "^0.10.4",
