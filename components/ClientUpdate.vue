@@ -13,10 +13,10 @@ const props = defineProps<{
   phoneNumber?: string;
   address?: string;
 }>();
+
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
-const route = useRoute();
 
 const clientSchema = toTypedSchema(
   z.object({

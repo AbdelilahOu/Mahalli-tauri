@@ -146,7 +146,7 @@ function deleteQuoteItem(index: number) {
               :default-value="quote.fullName"
               :items="clients"
               @update:items="(s) => searchClients(s)"
-              @on:select="(id) => (quote.clientId = id)"
+              @on-select="(id) => (quote.clientId = id)"
             />
           </div>
         </div>
@@ -163,7 +163,7 @@ function deleteQuoteItem(index: number) {
                 :default-value="item.name"
                 :items="products"
                 @update:items="(s) => searchProducts(s)"
-                @on:select="
+                @on-select="
                   (id, price) => ((item.product_id = id), (item.price = price))
                 "
               />

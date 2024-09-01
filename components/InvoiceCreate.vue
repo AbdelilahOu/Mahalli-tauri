@@ -125,7 +125,7 @@ async function createInvoice() {
             <SearchableItems
               :items="clients"
               @update:items="(s) => searchClients(s)"
-              @on:select="(id) => (invoice.clientId = id)"
+              @on-select="(id) => (invoice.clientId = id)"
             />
           </div>
         </div>
@@ -147,7 +147,7 @@ async function createInvoice() {
               <SearchableItems
                 :items="products"
                 @update:items="(s) => searchProducts(s)"
-                @on:select="
+                @on-select="
                   (id, price) => ((item.product_id = id), (item.price = price))
                 "
               />

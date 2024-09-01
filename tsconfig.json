@@ -2,7 +2,6 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "target": "ESNext",
-    "baseUrl": "./",
     "jsx": "preserve",
     "lib": ["ESNext", "ESNext.AsyncIterable", "DOM"],
     "experimentalDecorators": true,

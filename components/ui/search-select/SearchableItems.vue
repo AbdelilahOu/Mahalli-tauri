@@ -18,7 +18,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
   (e: "update:items", s: string | number): () => void;
-  (e: "on:select", s: string, a?: number): () => void;
+  (e: "OnSelect", s: string, a?: number): () => void;
 }>();
 
 const { t } = useI18n();
@@ -40,7 +40,7 @@ onClickOutside(dropdownParent, () => (open.value = false));
 
 function selectItem(item: { label: string; value: string; price?: number }) {
   inputValue.value = item.label;
-  emits("on:select", item.value, item.price);
+  emits("OnSelect", item.value, item.price);
   open.value = false;
 }
 </script>
