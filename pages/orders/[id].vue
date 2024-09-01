@@ -5,13 +5,24 @@ import { PDFDocument, PDFName, PDFPage, PageSizes, rgb } from "pdf-lib";
 import type { PDFFont } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 import { toast } from "vue-sonner";
-import { useDebounceFn } from "@vueuse/core";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 
 const { t, locale, n } = useI18n();
 const { numberToText } = useNumberToText();
 const id = useRoute().params.id;
-const order = ref<any | null>(null);
+const order = ref({
+  id: "",
+  identifier: "",
+  total: 0,
+  createdAt: "",
+  client: {
+    fullName: "",
+    address: "",
+    email: "",
+    phoneNumber: "",
+  },
+  items: [],
+});
 const pdfRef = ref<HTMLIFrameElement | null>();
 // pdf layout setting
 const config = reactive({
@@ -20,10 +31,16 @@ const config = reactive({
   marginBottom: 90,
   templateBase64: null as string | null,
   color: rgb(0.34, 0.34, 0.34),
+  clientFields: {
+    fullname: true,
+    email: true,
+    address: true,
+    phone: true,
+  },
 });
 //
 let resolveWaitForFetch: (value?: unknown) => void;
-const waitForFetch = new Promise(r => (resolveWaitForFetch = r));
+const waitForFetch = new Promise((r) => (resolveWaitForFetch = r));
 let pdfDoc: PDFDocument;
 let font: PDFFont;
 
@@ -38,8 +55,7 @@ onBeforeMount(async () => {
     });
     order.value = res.data;
     resolveWaitForFetch();
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -54,8 +70,7 @@ onMounted(async () => {
   try {
     await waitForFetch;
     initPdfDoc();
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -68,16 +83,7 @@ watch(
   () => config.templateBase64,
   () => {
     initPdfDoc();
-  },
-);
-
-const debouncedRegenerate = useDebounceFn(() => {
-  initPdfDoc();
-}, 700);
-
-watch(
-  () => [config.marginTop, config.marginX, config.marginBottom],
-  debouncedRegenerate,
+  }
 );
 
 async function initPdfDoc() {
@@ -88,8 +94,7 @@ async function initPdfDoc() {
     const fontBytes = await res.arrayBuffer();
     font = await pdfDoc.embedFont(fontBytes);
     generatePdf();
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -104,13 +109,12 @@ async function generatePdf() {
     let Tempalte: PDFPage | undefined;
     if (config.templateBase64) {
       const sourcePdfDoc = await PDFDocument.load(
-        `data:application/pdf;base64,${config.templateBase64}`,
+        `data:application/pdf;base64,${config.templateBase64}`
       );
       const [template] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
       Tempalte = template;
       page = pdfDoc.addPage(copyPage(Tempalte));
-    }
-    else {
+    } else {
       page = pdfDoc.addPage();
     }
     page.setSize(...PageSizes.A4);
@@ -134,8 +138,7 @@ async function generatePdf() {
 
     const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
     pdfRef.value?.setAttribute("src", pdfDataUri);
-  }
-  catch (err) {
+  } catch (err) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -165,12 +168,12 @@ function drawHeader(page: PDFPage, width: number, height: number, order: any) {
     case "en":
     case "fr":
     case "de":
-      OrderDetailsX
-        = width - font.widthOfTextAtSize(OrderText, 30) - config.marginX;
+      OrderDetailsX =
+        width - font.widthOfTextAtSize(OrderText, 30) - config.marginX;
       break;
     case "ar":
-      OrderDetailsX
-        = width - font.widthOfTextAtSize(order.identifier, 13) - config.marginX;
+      OrderDetailsX =
+        width - font.widthOfTextAtSize(order.identifier, 13) - config.marginX;
       break;
   }
   page.drawText(OrderText, {
@@ -209,34 +212,30 @@ function drawHeader(page: PDFPage, width: number, height: number, order: any) {
     size: 14,
     color: config.color,
   });
-  page.drawText(order.client.fullName, {
-    x: config.marginX,
-    y: height - config.marginTop - 20,
-    font,
-    size: 13,
-    color: config.color,
-  });
-  page.drawText(order.client.address, {
-    x: config.marginX,
-    y: height - config.marginTop - 20 * 2,
-    font,
-    size: 13,
-    color: config.color,
-  });
-  page.drawText(order.client.phoneNumber, {
-    x: config.marginX,
-    y: height - config.marginTop - 20 * 3,
-    font,
-    size: 13,
-    color: config.color,
-  });
-  page.drawText(order.client.email, {
-    x: config.marginX,
-    y: height - config.marginTop - 20 * 4,
-    font,
-    size: 13,
-    color: config.color,
-  });
+  let clientFields: string[] = [];
+  if (config.clientFields.fullname) {
+    clientFields.push(order.client.fullName);
+  }
+  if (config.clientFields.email) {
+    clientFields.push(order.client.email);
+  }
+  if (config.clientFields.phone) {
+    clientFields.push(order.client.phoneNumber);
+  }
+  if (config.clientFields.address) {
+    clientFields.push(order.client.address);
+  }
+
+  for (let i = 0; i < clientFields.length; i++) {
+    page.drawText(clientFields[i], {
+      x: config.marginX,
+      y: height - config.marginTop - 20 * (i + 1),
+      font,
+      size: 13,
+      color: config.color,
+    });
+  }
+
   //
   page.drawLine({
     start: { x: config.marginX, y: height - config.marginTop - 20 * 5 },
@@ -282,7 +281,7 @@ function drawItems(
   width: number,
   items: any[],
   currentY: number,
-  template?: PDFPage,
+  template?: PDFPage
 ) {
   if (items.length === 0) {
     drawSummary(page, width, currentY);
@@ -334,8 +333,7 @@ function drawItems(
     let newPage: PDFPage;
     if (template) {
       newPage = pdfDoc.addPage(copyPage(template));
-    }
-    else {
+    } else {
       newPage = pdfDoc.addPage();
     }
     newPage.setSize(...PageSizes.A4);
@@ -344,10 +342,9 @@ function drawItems(
       width,
       items,
       newPage.getHeight() - config.marginTop,
-      template,
+      template
     );
-  }
-  else {
+  } else {
     drawItems(page, width, items, currentY - lineHeight, template);
   }
 }
@@ -488,7 +485,7 @@ function drawSummary(page: PDFPage, width: number, currentY: number) {
 
   const totalAsText = numberToText(
     order.value.total + order.value.total * 0.2,
-    locale.value as any,
+    locale.value as any
   );
   page.drawText(totalAsText, {
     x: (width - config.marginX - font.widthOfTextAtSize(totalAsText, 13)) / 2,
@@ -503,8 +500,7 @@ function copyPage(originalPage: any) {
   const cloneNode = originalPage.node.clone();
 
   const { Contents } = originalPage.node.normalizedEntries();
-  if (Contents)
-    cloneNode.set(PDFName.of("Contents"), Contents.clone());
+  if (Contents) cloneNode.set(PDFName.of("Contents"), Contents.clone());
 
   const cloneRef = originalPage.doc.context.register(cloneNode);
   const clonePage = PDFPage.of(cloneNode, cloneRef, originalPage.doc);
@@ -515,11 +511,11 @@ function copyPage(originalPage: any) {
 <template>
   <main class="w-full h-full flex gap-2 min-h-[calc(100vh-68px)]">
     <iframe ref="pdfRef" class="flex-1" />
-    <Card class="w-1/2 md:w-1/3 min-w-[500px]">
+    <Card class="w-1/2 md:w-1/3 min-w-[500px] flex flex-col">
       <CardHeader>
         <CardTitle> {{ t("fields.configuration") }} </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent class="flex-1">
         <Label> {{ t("fields.template") }} </Label>
         <UiUploader
           name="Pdf"
@@ -530,7 +526,75 @@ function copyPage(originalPage: any) {
         <Input v-model="config.marginTop" />
         <Label> {{ t("fields.bottom-margin") }} </Label>
         <Input v-model="config.marginBottom" />
+        <Separator class="my-2" />
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between items-center">
+            <Label>
+              {{ t("fields.full-name") }}
+            </Label>
+            <Switch
+              :default-checked="config.clientFields.fullname"
+              @update:checked="
+                (checked) => (config.clientFields.fullname = checked)
+              "
+            />
+          </div>
+          <Input
+            v-model="order.client.fullName"
+            :disabled="!config.clientFields.fullname"
+          />
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between items-center">
+            <Label>{{ t("fields.address") }}</Label>
+            <Switch
+              :default-checked="config.clientFields.address"
+              @update:checked="
+                (checked) => (config.clientFields.address = checked)
+              "
+            />
+          </div>
+          <Input
+            v-model="order.client.address"
+            :disabled="!config.clientFields.address"
+          />
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between items-center">
+            <Label>{{ t("fields.email") }}</Label>
+            <Switch
+              :default-checked="config.clientFields.email"
+              @update:checked="
+                (checked) => (config.clientFields.email = checked)
+              "
+            />
+          </div>
+          <Input
+            v-model="order.client.email"
+            :disabled="!config.clientFields.email"
+          />
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between items-center">
+            <Label>{{ t("fields.phone") }}</Label>
+            <Switch
+              :default-checked="config.clientFields.phone"
+              @update:checked="
+                (checked) => (config.clientFields.phone = checked)
+              "
+            />
+          </div>
+          <Input
+            v-model="order.client.phoneNumber"
+            :disabled="!config.clientFields.phone"
+          />
+        </div>
       </CardContent>
+      <CardFooter>
+        <Button class="col-span-3" @click="initPdfDoc">
+          {{ t("buttons.save") }}
+        </Button>
+      </CardFooter>
     </Card>
   </main>
 </template>
