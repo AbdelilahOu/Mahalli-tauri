@@ -50,13 +50,9 @@ async function fetchProducts() {
   }
 }
 
-const { data: productsData, refresh: refreshProducts } = await useAsyncData(
-  "products",
-  fetchProducts,
-  {
-    watch: [queryParams],
-  },
-);
+const { data: productsData } = await useAsyncData("products", fetchProducts, {
+  watch: [queryParams],
+});
 
 const products = computed<ProductT[]>(() => productsData.value?.products ?? []);
 const totalRows = computed<number>(() => productsData.value?.count ?? 0);

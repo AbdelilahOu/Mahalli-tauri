@@ -151,7 +151,7 @@ function deleteOrderItem(index: number) {
               :default-value="order.fullName"
               :items="clients"
               @update:items="(s) => searchClients(s)"
-              @on:select="(id) => (order.clientId = id)"
+              @on-select="(id) => (order.clientId = id)"
             />
           </div>
           <div class="w-full h-full flex flex-col gap-1">
@@ -190,7 +190,7 @@ function deleteOrderItem(index: number) {
                 :default-value="item.name"
                 :items="products"
                 @update:items="(s) => searchProducts(s)"
-                @on:select="
+                @on-select="
                   (id, price) => ((item.product_id = id), (item.price = price))
                 "
               />

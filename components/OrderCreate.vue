@@ -123,7 +123,7 @@ async function createOrder() {
             <SearchableItems
               :items="clients"
               @update:items="(s) => searchClients(s)"
-              @on:select="(id) => (order.clientId = id)"
+              @on-select="(id) => (order.clientId = id)"
             />
           </div>
         </div>
@@ -139,7 +139,7 @@ async function createOrder() {
               <SearchableItems
                 :items="products"
                 @update:items="(s) => searchProducts(s)"
-                @on:select="
+                @on-select="
                   (id, price) => ((item.product_id = id), (item.price = price))
                 "
               />

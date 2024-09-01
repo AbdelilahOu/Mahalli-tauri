@@ -150,7 +150,7 @@ function deleteInvoiceItem(index: number) {
               :default-value="invoice.fullName"
               :items="clients"
               @update:items="(s) => searchClients(s)"
-              @on:select="(id) => (invoice.clientId = id)"
+              @on-select="(id) => (invoice.clientId = id)"
             />
           </div>
           <div class="w-full h-full flex flex-col gap-1">
@@ -195,7 +195,7 @@ function deleteInvoiceItem(index: number) {
                 :default-value="item.name"
                 :items="products"
                 @update:items="(s) => searchProducts(s)"
-                @on:select="
+                @on-select="
                   (id, price) => ((item.product_id = id), (item.price = price))
                 "
               />
