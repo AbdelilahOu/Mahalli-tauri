@@ -17,6 +17,7 @@
   },
   "buttons": {
     "cancel": "Cancel",
+    "save": "Save",
     "add": "Add",
     "confirme": "Confirme",
     "update": "Update {name}",

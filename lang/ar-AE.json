@@ -17,6 +17,7 @@
   },
   "buttons": {
     "cancel": "إلغاء",
+    "save": "حفظ",
     "add": "إضافة",
     "confirme": "تأكيد",
     "update": "تحديث {name}",

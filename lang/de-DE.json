@@ -17,6 +17,7 @@
   },
   "buttons": {
     "cancel": "Abbrechen",
+    "save": "Speichern",
     "add": "Hinzufügen",
     "confirme": "Bestätigen",
     "update": "Aktualisieren {name}",
