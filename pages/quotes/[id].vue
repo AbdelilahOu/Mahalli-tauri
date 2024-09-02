@@ -7,7 +7,7 @@ import fontkit from "@pdf-lib/fontkit";
 import { toast } from "vue-sonner";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 
-const { t, locale, n } = useI18n();
+const { t, locale, n, d } = useI18n();
 const { numberToText } = useNumberToText();
 const id = useRoute().params.id;
 const quote = ref({
@@ -193,7 +193,7 @@ function drawHeader(page: PDFPage, width: number, height: number, quote: any) {
     size: 13,
     color: config.color,
   });
-  page.drawText(quote.createdAt.split(" ")[0], {
+  page.drawText(d(new Date(quote?.createdAt)), {
     x: QuoteDetailsX,
     y: height - config.marginTop - 40,
     font,
@@ -222,7 +222,13 @@ function drawHeader(page: PDFPage, width: number, height: number, quote: any) {
   if (config.clientFields.address) {
     clientFields.push(quote.client.address);
   }
-
+  page.drawText(t("fields.bill-to").toUpperCase(), {
+    x: config.marginX,
+    y: height - config.marginTop,
+    font,
+    size: 14,
+    color: config.color,
+  });
   for (let i = 0; i < clientFields.length; i++) {
     page.drawText(clientFields[i], {
       x: config.marginX,

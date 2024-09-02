@@ -7,7 +7,7 @@ import fontkit from "@pdf-lib/fontkit";
 import { toast } from "vue-sonner";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 
-const { t, locale, n } = useI18n();
+const { t, locale, n, d } = useI18n();
 const { numberToText } = useNumberToText();
 const id = useRoute().params.id;
 const invoice = ref({
@@ -201,7 +201,7 @@ function drawHeader(
     size: 13,
     color: config.color,
   });
-  page.drawText(invoice.createdAt.split(" ")[0], {
+  page.drawText(d(new Date(invoice?.createdAt)), {
     x: InvoiceDetailsX,
     y: height - config.marginTop - 40,
     font,

@@ -7,7 +7,7 @@ import fontkit from "@pdf-lib/fontkit";
 import { toast } from "vue-sonner";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 
-const { t, locale, n } = useI18n();
+const { t, locale, n, d } = useI18n();
 const { numberToText } = useNumberToText();
 const id = useRoute().params.id;
 const order = ref({
@@ -195,7 +195,7 @@ function drawHeader(page: PDFPage, width: number, height: number, order: any) {
     size: 13,
     color: config.color,
   });
-  page.drawText(order.createdAt.split(" ")[0], {
+  page.drawText(d(new Date(order?.createdAt)), {
     x: OrderDetailsX,
     y: height - config.marginTop - 40,
     font,
