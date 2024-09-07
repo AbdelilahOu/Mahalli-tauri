@@ -33,21 +33,20 @@ async function createNewSupplier(supplier: SupplierT) {
       `CREATE SUPPLIER: ${JSON.stringify({
         ...supplier,
         image: `data:image/png;base64,${imagePath.value}`,
-      })}`,
+      })}`
     );
     //
     toast.success(
       t("notifications.supplier.created", { name: supplier.fullName }),
       {
         closeButton: true,
-      },
+      }
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -57,8 +56,7 @@ async function createNewSupplier(supplier: SupplierT) {
       return;
     }
     error(`CREATE SUPPLIER: ${err}`);
-  }
-  finally {
+  } finally {
     close();
   }
 }
@@ -84,7 +82,7 @@ function saveImage(image: string) {
         <UiUploader
           name="Image"
           :extensions="['png', 'jpeg', 'webp']"
-          @save-base64="saveImage"
+          @save:base64="saveImage"
         />
         <FormField v-slot="{ componentField }" name="fullName">
           <FormItem>

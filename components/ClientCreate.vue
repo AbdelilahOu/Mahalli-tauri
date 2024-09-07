@@ -33,21 +33,20 @@ async function createNewClient(client: ClientT) {
       `CREATE CLIENT: ${JSON.stringify({
         ...client,
         image: `data:image/png;base64,${imagePath.value}`,
-      })}`,
+      })}`
     );
     //
     toast.success(
       t("notifications.client.created", { name: client.fullName }),
       {
         closeButton: true,
-      },
+      }
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -57,8 +56,7 @@ async function createNewClient(client: ClientT) {
       return;
     }
     error(`CREATE CLIENT: ${err}`);
-  }
-  finally {
+  } finally {
     close();
   }
 }
@@ -82,7 +80,7 @@ function setImage(image: string) {
         <UiUploader
           name="Image"
           :extensions="['png', 'jpeg', 'webp']"
-          @save-base64="setImage"
+          @save:base64="setImage"
         />
         <FormField v-slot="{ componentField }" name="fullName">
           <FormItem>
