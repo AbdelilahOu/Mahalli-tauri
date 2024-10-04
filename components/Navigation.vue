@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ChevronLeft, ChevronRight, HomeIcon } from "lucide-vue-next";
-
-const localePath = useLocalePath();
+import { ChevronLeft, ChevronRight } from "lucide-vue-next";
 </script>
 
 <template>
@@ -22,9 +20,6 @@ const localePath = useLocalePath();
           class="cursor-pointer"
           @click="$router.forward()"
         />
-        <NuxtLink :to="localePath('/')">
-          <HomeIcon :size="18" class="bg-white" />
-        </NuxtLink>
       </div>
     </div>
   </header>
