@@ -110,15 +110,6 @@ body {
   transform: translateX(30px);
 }
 
-.router-link-active {
-  @apply bg-white transition-colors rounded-md transform duration-200;
-}
-
-.router-link-active > span,
-.router-link-active > span > svg {
-  @apply text-primary;
-}
-
 div:has(> table:not(.not-default)) {
   @apply flex flex-col h-full w-full mb-14 rounded-md overflow-hidden border border-gray-200 bg-white;
 }

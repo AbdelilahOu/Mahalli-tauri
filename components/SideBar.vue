@@ -2,8 +2,8 @@
 import {
   Archive,
   BarChartBig,
-  ChevronsLeft,
   Contact,
+  HomeIcon,
   Languages,
   NotepadText,
   Package,
@@ -11,10 +11,8 @@ import {
   Store,
   Truck,
 } from "lucide-vue-next";
-// @ts-expect-error
 import { TranslationModal } from "#components";
 
-const collapse = ref(true);
 const { t, locale } = useI18n();
 const localePath = useLocalePath();
 const modal = useModal();
@@ -27,192 +25,132 @@ const LOCALE_TEXT = {
 } as const;
 
 const openTranslationModal = () => modal.open(TranslationModal, {});
+
+const hoveredItem = ref<string | null>(null);
+
+const menuItems = [
+  { icon: HomeIcon, label: "routes.home", path: "/" },
+  {
+    icon: Contact,
+    label: "routes.clients",
+    path: "/clients/",
+    query: { page: 1, limit: 25 },
+  },
+  {
+    icon: Package,
+    label: "routes.products",
+    path: "/products/",
+    query: { page: 1 },
+  },
+  {
+    icon: Quote,
+    label: "routes.quotes",
+    path: "/quotes/",
+    query: { page: 1 },
+  },
+  {
+    icon: Truck,
+    label: "routes.orders",
+    path: "/orders/",
+    query: { page: 1 },
+  },
+  {
+    icon: NotepadText,
+    label: "routes.invoices",
+    path: "/invoices/",
+    query: { page: 1 },
+  },
+  {
+    icon: Archive,
+    label: "routes.inventory",
+    path: "/inventory/",
+    query: { page: 1 },
+  },
+  { icon: BarChartBig, label: "routes.dashboard", path: "/dashboard" },
+];
 </script>
 
 <template>
   <aside
-    :class="
-      cn(
-        'transition-all print:hidden sticky h-screen top-0 border-x border-slate-100 z-50 flex justify-center duration-200',
-        collapse ? 'w-12 min-w-[48px]' : 'w-52 min-w-[12rem]',
-      )
-    "
+    class="w-12 min-w-[48px] transition-all print:hidden sticky h-screen top-0 border-x border-slate-100 z-50 flex justify-center bg-white"
   >
-    <div class="w-full h-screen sticky top-0 z-50 flex flex-col gap-1 bg-white">
-      <div class="w-full min-h-[51px] border-b border-slate-100">
-        <div
-          :class="
-            cn(
-              'font-medium flex h-full items-center px-1',
-              collapse ? 'justify-around' : 'justify-between',
-            )
-          "
-        >
-          <span
-            v-if="!collapse"
-            class="whitespace-nowrap flex items-center gap-2 px-2 font-semibold text-base text-primary overflow-hidden"
-          >
-            <Store :size="20" class="text-primary inline shrink-0 m-auto" />
-            Mahalli
-          </span>
-          <ChevronsLeft
-            :size="20"
-            class="transition-all duration-200 cursor-pointer mx-2 transform"
-            :class="{
-              'rotate-180': locale === 'ar' ? !collapse : collapse,
-            }"
-            @click="collapse = !collapse"
-          />
-        </div>
+    <div class="w-full h-screen sticky top-0 z-50 flex flex-col gap-1">
+      <div
+        class="w-full min-h-[51px] border-b border-slate-100 flex items-center justify-center"
+      >
+        <Store :size="20" class="text-primary" />
       </div>
-      <div class="w-full px-1 flex flex-col justify-around h-full pb-2">
+      <div class="w-full px-1 flex flex-col justify-between h-full pb-2">
         <div class="w-full h-full flex flex-col gap-1">
           <NuxtLink
-            class="w-full flex flex-nowrap h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="
-              localePath({
-                path: '/clients/',
-                query: { page: 1, limit: 25 },
-              })
-            "
+            v-for="item in menuItems"
+            :key="item.path"
+            class="w-full flex flex-nowrap h-9 rounded-md items-center justify-center p-1 group transition-all duration-300 relative hover:bg-gray-50"
+            :to="localePath({ path: item.path, query: item.query })"
+            @mouseenter="hoveredItem = item.label"
+            @mouseleave="hoveredItem = null"
           >
-            <span class="w-[30px] shrink-0">
-              <Contact
-                class="m-auto text-gray-700 group-hover:text-black"
-                :size="20"
-              />
-            </span>
-            <span
-              v-if="!collapse"
-              class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
-            >
-              {{ t("routes.clients") }}
-            </span>
-          </NuxtLink>
-          <NuxtLink
-            class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="localePath({ path: '/products/', query: { page: 1 } })"
-          >
-            <span class="w-[30px] shrink-0">
-              <Package
-                class="m-auto text-gray-700 group-hover:text-black"
-                :size="20"
-              />
-            </span>
-            <span
-              v-if="!collapse"
-              class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
-            >
-              {{ t("routes.products") }}
-            </span>
-          </NuxtLink>
-          <NuxtLink
-            class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="localePath({ path: '/quotes/', query: { page: 1 } })"
-          >
-            <span class="w-[30px] shrink-0">
-              <Quote
-                class="m-auto text-gray-700 group-hover:text-black"
-                :size="20"
-              />
-            </span>
-            <span
-              v-if="!collapse"
-              class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
-            >
-              {{ t("routes.quotes") }}
-            </span>
-          </NuxtLink>
-          <NuxtLink
-            class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="localePath({ path: '/orders/', query: { page: 1 } })"
-          >
-            <span class="w-[30px] shrink-0">
-              <Truck
-                class="m-auto text-gray-700 group-hover:text-black"
-                :size="20"
-              />
-            </span>
-            <span
-              v-if="!collapse"
-              class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
-            >
-              {{ t("routes.orders") }}
-            </span>
-          </NuxtLink>
-          <NuxtLink
-            class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="localePath({ path: '/invoices/', query: { page: 1 } })"
-          >
-            <span class="w-[30px] shrink-0">
-              <NotepadText
-                class="m-auto text-gray-700 group-hover:text-black"
-                :size="20"
-              />
-            </span>
-            <span
-              v-if="!collapse"
-              class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
-            >
-              {{ t("routes.invoices") }}
-            </span>
-          </NuxtLink>
-          <NuxtLink
-            class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="localePath({ path: '/inventory/', query: { page: 1 } })"
-          >
-            <span class="w-[30px] shrink-0">
-              <Archive
-                class="m-auto text-gray-700 group-hover:text-black"
-                :size="20"
-              />
-            </span>
-            <span
-              v-if="!collapse"
-              class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
-            >
-              {{ t("routes.inventory") }}
-            </span>
-          </NuxtLink>
-          <NuxtLink
-            class="w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
-            :to="localePath({ path: '/dashboard' })"
-          >
-            <span class="w-[30px] shrink-0">
-              <BarChartBig
-                class="m-auto text-gray-700 group-hover:text-black"
-                :size="20"
-              />
-            </span>
-            <span
-              v-if="!collapse"
-              class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
-            >
-              {{ t("routes.dashboard") }}
-            </span>
+            <component
+              :is="item.icon"
+              class="m-auto text-gray-700 group-hover:text-primary"
+              :size="20"
+            />
+
+            <Transition name="fade">
+              <div
+                v-if="hoveredItem === item.label"
+                class="absolute left-full rtl:right-full w-fit ml-2 rtl:mr-2 bg-white border border-gray-200 rounded-md shadow-md px-3 py-2 whitespace-nowrap"
+              >
+                <span class="text-sm font-medium text-gray-700">{{
+                  t(item.label)
+                }}</span>
+              </div>
+            </Transition>
           </NuxtLink>
         </div>
         <div
-          class="cursor-pointer w-full flex h-9 rounded-md items-center p-1 group transition-all duration-300"
+          class="cursor-pointer w-full flex h-9 rounded-md items-center justify-center p-1 group transition-all duration-300 relative hover:bg-gray-50"
           @click="openTranslationModal"
+          @mouseenter="hoveredItem = 'language'"
+          @mouseleave="hoveredItem = null"
         >
-          <span class="w-[30px] shrink-0">
-            <Languages
-              class="m-auto text-gray-700 group-hover:text-black"
-              :size="20"
-            />
-          </span>
-          <span
-            v-if="!collapse"
-            class="text-gray-500 text-nowrap overflow-hidden ml-1 text-sm group-hover:text-primary font-medium"
-          >
-            {{
-              //@ts-expect-error
-              LOCALE_TEXT[locale]
-            }}
-          </span>
+          <Languages
+            class="m-auto text-gray-700 group-hover:text-primary"
+            :size="20"
+          />
+
+          <Transition name="fade">
+            <div
+              v-if="hoveredItem === 'language'"
+              class="absolute left-full ml-2 bg-white border border-gray-200 rounded-md shadow-md px-3 py-2 whitespace-nowrap"
+            >
+              <span class="text-sm font-medium text-gray-700">{{
+                LOCALE_TEXT[locale]
+              }}</span>
+            </div>
+          </Transition>
         </div>
       </div>
     </div>
   </aside>
 </template>
+
+<style scoped>
+.router-link-active {
+  @apply bg-white transition-colors rounded-md transform duration-200;
+}
+
+.router-link-active > svg {
+  @apply text-black;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
