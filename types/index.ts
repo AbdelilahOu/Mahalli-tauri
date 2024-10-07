@@ -13,4 +13,4 @@ export interface QueryParams {
   limit: number | LocationQueryValue | LocationQueryValue[];
   transaction_type?: LocationQueryValue | LocationQueryValue[];
   created_at?: LocationQueryValue | LocationQueryValue[];
-}*
+}
