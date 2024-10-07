@@ -20,15 +20,14 @@ function toggleThisProduct(product: ProductT, name: "delete" | "update") {
       id: product.id!,
       name: product.name,
     });
-  }
-  else {
+  } else {
     modal.open(ProductUpdate, {
       id: product.id!,
       name: product.name,
-      purchasePrice: product.purchasePrice,
-      sellingPrice: product.sellingPrice,
+      purchase_price: product.purchase_price,
+      selling_price: product.selling_price,
       description: product.description,
-      minQuantity: product.minQuantity,
+      min_quantity: product.min_quantity,
     });
   }
 }
@@ -94,7 +93,7 @@ function updateProductInventory(id: string, name: string) {
                       <div class="flex items-center pt-2">
                         <CalendarDays class="mr-2 h-4 w-4 opacity-70" />
                         <span class="text-xs text-muted-foreground">
-                          Created at {{ d(product.createdAt!, "short") }}
+                          Created at {{ d(product.created_at!, "short") }}
                         </span>
                       </div>
                     </div>
@@ -112,12 +111,12 @@ function updateProductInventory(id: string, name: string) {
                   product.inventory !== undefined
                     ? product?.inventory <= 0
                       ? 'bg-red-100 border-red-500 text-red-900'
-                      : product?.inventory < product.minQuantity
-                        ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
-                        : product?.inventory >= product.minQuantity
-                          ? 'bg-green-100 border-green-500 text-green-900'
-                          : ''
-                    : '',
+                      : product?.inventory < product.min_quantity
+                      ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
+                      : product?.inventory >= product.min_quantity
+                      ? 'bg-green-100 border-green-500 text-green-900'
+                      : ''
+                    : ''
                 )
               "
             >
@@ -130,16 +129,16 @@ function updateProductInventory(id: string, name: string) {
           </TableCell>
           <TableCell class="p-2">
             {{
-              `${product.minQuantity} ${t("plrz.i", {
-                n: Math.ceil(product.minQuantity ?? 0),
+              `${product.min_quantity} ${t("plrz.i", {
+                n: Math.ceil(product.min_quantity ?? 0),
               })}`
             }}
           </TableCell>
           <TableCell class="p-2">
-            {{ n(product.purchasePrice, "currency") }}
+            {{ n(product.purchase_price, "currency") }}
           </TableCell>
           <TableCell class="p-2">
-            {{ n(product.sellingPrice, "currency") }}
+            {{ n(product.selling_price, "currency") }}
           </TableCell>
           <TableCell class="p-2">
             <div class="flex justify-center gap-3">

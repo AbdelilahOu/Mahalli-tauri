@@ -6,7 +6,10 @@ import { toast } from "vue-sonner";
 import { InvoiceDelete, InvoiceUpdate } from "#components";
 import { INVOICE_STATUSES, STATUS_COLORS } from "@/consts/status";
 
-defineProps<{ invoices: InvoiceT[]; invoiceProducts: InvoiceProductT[] }>();
+defineProps<{
+  invoices: ListInvoiceT[];
+  invoiceProducts: InvoiceProductsPreviewT[];
+}>();
 const emits = defineEmits<{
   (e: "listInvoiceProducts", id?: string): void;
 }>();
@@ -24,14 +27,13 @@ function previewProducts(id: string) {
 }
 const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 
-function toggleThisInvoice(invoice: InvoiceT, name: "delete" | "update") {
+function toggleThisInvoice(invoice: ListInvoiceT, name: "delete" | "update") {
   if (name === "delete") {
     modal.open(InvoiceDelete, {
       id: invoice.id!,
       identifier: invoice.identifier,
     });
-  }
-  else {
+  } else {
     modal.open(InvoiceUpdate, {
       id: invoice.id!,
       identifier: invoice.identifier,
@@ -52,14 +54,13 @@ async function updateInvoiceStatus(id: string, status: string) {
       `UPDATE INVOICE STATUS: ${JSON.stringify({
         id,
         status,
-      })}`,
+      })}`
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -101,15 +102,15 @@ async function updateInvoiceStatus(id: string, status: string) {
           v-fade="index"
           :class="{
             'animate-highlight-row':
-              invoice.id === $route.query.id
-              && $route.query.highlight === 'true',
+              invoice.id === $route.query.id &&
+              $route.query.highlight === 'true',
           }"
         >
           <TableCell class="p-2 text-nowrap font-medium">
             {{ invoice.identifier }}
           </TableCell>
           <TableCell class="p-2 font-medium">
-            {{ invoice.fullName }}
+            {{ invoice.full_name }}
           </TableCell>
           <TableCell class="p-2">
             <Popover v-if="invoice.products && invoice.products > 0">
@@ -199,13 +200,13 @@ async function updateInvoiceStatus(id: string, status: string) {
             </Popover>
           </TableCell>
           <TableCell class="p-2">
-            {{ d(new Date(invoice.createdAt!), "long") }}
+            {{ d(new Date(invoice.created_at!), "long") }}
           </TableCell>
           <TableCell class="p-2">
             {{ n(invoice.total!, "currency") }}
           </TableCell>
           <TableCell class="p-2">
-            {{ n(invoice.paidAmount, "currency") }}
+            {{ n(invoice.paid_amount, "currency") }}
           </TableCell>
           <TableCell class="p-2">
             <div class="flex justify-center gap-3">

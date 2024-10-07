@@ -4,10 +4,21 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { error, info } from "tauri-plugin-log-api";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
+import { z } from "zod";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
+
+const CreateClientSchema = z.object({
+  id: z.string().optional(),
+  full_name: z.string().min(2).max(50),
+  email: z.string().optional(),
+  phone_number: z.string().optional(),
+  address: z.string().optional(),
+  image: z.string().optional(),
+  credit: z.number().optional(),
+});
 
 const clientSchema = toTypedSchema(CreateClientSchema);
 
@@ -21,10 +32,7 @@ async function createNewClient(client: ClientT) {
   try {
     await invoke<Res<null>>("create_client", {
       client: {
-        full_name: client.fullName,
-        email: client.email,
-        phone_number: client.phoneNumber,
-        address: client.address,
+        ...client,
         image: `data:image/png;base64,${imagePath.value}`,
       },
     });
@@ -37,7 +45,7 @@ async function createNewClient(client: ClientT) {
     );
     //
     toast.success(
-      t("notifications.client.created", { name: client.fullName }),
+      t("notifications.client.created", { name: client.full_name }),
       {
         closeButton: true,
       }
@@ -72,7 +80,7 @@ function setImage(image: string) {
 
 <template>
   <form class="w-full flex justify-center" @submit="onSubmit">
-    <Card>
+    <Card class="w-4/6 lg:w-1/2">
       <CardHeader>
         <CardTitle> {{ t("titles.clients.create") }} </CardTitle>
       </CardHeader>
@@ -82,7 +90,7 @@ function setImage(image: string) {
           :extensions="['png', 'jpeg', 'webp']"
           @save:base64="setImage"
         />
-        <FormField v-slot="{ componentField }" name="fullName">
+        <FormField v-slot="{ componentField }" name="full_name">
           <FormItem>
             <FormLabel>{{ t("fields.full-name") }}</FormLabel>
             <FormControl>
@@ -101,7 +109,7 @@ function setImage(image: string) {
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="phoneNumber">
+        <FormField v-slot="{ componentField }" name="phone_number">
           <FormItem>
             <FormLabel>{{ t("fields.phone") }}</FormLabel>
             <FormControl>

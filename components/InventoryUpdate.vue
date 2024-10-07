@@ -38,7 +38,7 @@ async function updateTheProduct({ quantity }: z.infer<typeof inventory>) {
       `UPDATE PRODUCT INVENTORY: ${JSON.stringify({
         id,
         quantity: Number(quantity),
-      })}`,
+      })}`
     );
     //
     toast.success(t("notifications.product.updated", { name: props.name }), {
@@ -48,8 +48,7 @@ async function updateTheProduct({ quantity }: z.infer<typeof inventory>) {
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -59,8 +58,7 @@ async function updateTheProduct({ quantity }: z.infer<typeof inventory>) {
       return;
     }
     console.error(`UPDATE PRODUCT INVENTORY: ${err}`);
-  }
-  finally {
+  } finally {
     close();
   }
 }
@@ -72,7 +70,7 @@ const onSubmit = form.handleSubmit((values) => {
 
 <template>
   <form class="w-full flex justify-center" @submit="onSubmit">
-    <Card>
+    <Card class="w-4/6 lg:w-1/2">
       <CardHeader>
         <CardTitle>
           {{ t("titles.products.update-inventory") }}

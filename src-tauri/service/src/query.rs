@@ -94,11 +94,11 @@ impl QueriesService {
                 "name": row.name,
                 "description": row.description,
                 "image": row.image,
-                "purchasePrice": row.purchase_price,
-                "sellingPrice": row.selling_price,
-                "minQuantity": row.min_quantity,
+                "purchase_price": row.purchase_price,
+                "selling_price": row.selling_price,
+                "min_quantity": row.min_quantity,
                 "inventory": row.inventory,
-                "createdAt": row.created_at,
+                "created_at": row.created_at,
             }));
         });
         Ok(json!({
@@ -202,11 +202,11 @@ impl QueriesService {
         res.into_iter().for_each(|row| {
             result.push(json!({
                 "id": row.id,
-                "fullName": row.full_name,
+                "full_name": row.full_name,
                 "address": row.address,
                 "image": row.image,
                 "email": row.email,
-                "phoneNumber": row.phone_number,
+                "phone_number": row.phone_number,
                 "credit": row.credit,
             }));
         });
@@ -253,11 +253,11 @@ impl QueriesService {
         res.into_iter().for_each(|row| {
             result.push(json!({
                 "id": row.id,
-                "fullName": row.full_name,
+                "full_name": row.full_name,
                 "address": row.address,
                 "image": row.image,
                 "email": row.email,
-                "phoneNumber": row.phone_number,
+                "phone_number": row.phone_number,
             }));
         });
         Ok(json!({
@@ -343,9 +343,9 @@ impl QueriesService {
         res.into_iter().for_each(|row| {
             result.push(json!({
                 "id": row.id,
-                "clientId": row.client_id,
-                "createdAt": row.created_at,
-                "fullName": row.full_name,
+                "client_id": row.client_id,
+                "created_at": row.created_at,
+                "full_name": row.full_name,
                 "status": row.status,
                 "identifier": row.identifier,
                 "products": row.products,
@@ -393,11 +393,11 @@ impl QueriesService {
                 });
                 Ok(json!({
                     "id": order.0.id,
-                    "clientId": order.0.client_id,
-                    "createdAt": order.0.created_at,
+                    "client_id": order.0.client_id,
+                    "created_at": order.0.created_at,
                     "status": order.0.status,
                     "identifier": order.0.identifier,
-                    "fullName": order.1.unwrap().full_name,
+                    "full_name": order.1.unwrap().full_name,
                     "items": result,
                 }))
             }
@@ -472,15 +472,15 @@ impl QueriesService {
                 });
                 Ok(json!({
                     "id": order.id,
-                    "createdAt": order.created_at,
+                    "created_at": order.created_at,
                     "status": order.status,
                     "total": order.total,
                     "identifier": order.identifier,
                     "client": json!({
-                        "fullName": order.full_name,
+                        "full_name": order.full_name,
                         "email": order.email,
                         "address":order.address,
-                        "phoneNumber":order.phone_number,
+                        "phone_number":order.phone_number,
                     }),
                     "items": result,
                 }))
@@ -566,11 +566,11 @@ impl QueriesService {
         res.into_iter().for_each(|row| {
             result.push(json!({
                 "id": row.id,
-                "clientId": row.client_id,
-                "paidAmount": row.paid_amount,
-                "createdAt": row.created_at,
+                "client_id": row.client_id,
+                "paid_amount": row.paid_amount,
+                "created_at": row.created_at,
                 "identifier": row.identifier,
-                "fullName": row.full_name,
+                "full_name": row.full_name,
                 "status": row.status,
                 "products": row.products,
                 "total": row.total,
@@ -617,12 +617,12 @@ impl QueriesService {
                 });
                 Ok(json!({
                     "id": invoice.0.id,
-                    "clientId": invoice.0.client_id,
-                    "paidAmount": invoice.0.paid_amount,
-                    "createdAt": invoice.0.created_at,
+                    "client_id": invoice.0.client_id,
+                    "paid_amount": invoice.0.paid_amount,
+                    "created_at": invoice.0.created_at,
                     "status": invoice.0.status,
                     "identifier": invoice.0.identifier,
-                    "fullName": invoice.1.unwrap().full_name,
+                    "full_name": invoice.1.unwrap().full_name,
                     "items": result,
                 }))
             }
@@ -702,16 +702,16 @@ impl QueriesService {
                 });
                 Ok(json!({
                     "id": invoice.id,
-                    "paidAmount": invoice.paid_amount,
-                    "createdAt": invoice.created_at,
+                    "paid_amount": invoice.paid_amount,
+                    "created_at": invoice.created_at,
                     "status": invoice.status,
                     "identifier": invoice.identifier,
                     "total": invoice.total,
                     "client": json!({
-                        "fullName": invoice.full_name,
+                        "full_name": invoice.full_name,
                         "email": invoice.email,
                         "address":invoice.address,
-                        "phoneNumber":invoice.phone_number,
+                        "phone_number":invoice.phone_number,
                     }),
                     "items": result,
                 }))
@@ -779,10 +779,10 @@ impl QueriesService {
         res.into_iter().for_each(|row| {
             result.push(json!({
                 "id": row.id,
-                "clientId": row.client_id,
-                "createdAt": row.created_at,
+                "client_id": row.client_id,
+                "created_at": row.created_at,
                 "identifier": row.identifier,
-                "fullName": row.full_name,
+                "full_name": row.full_name,
                 "products": row.products,
                 "total": row.total,
             }));
@@ -822,10 +822,10 @@ impl QueriesService {
                 });
                 Ok(json!({
                     "id": quote.0.id,
-                    "clientId": quote.0.client_id,
-                    "createdAt": quote.0.created_at,
+                    "client_id": quote.0.client_id,
+                    "created_at": quote.0.created_at,
                     "identifier": quote.0.identifier,
-                    "fullName": quote.1.unwrap().full_name,
+                    "full_name": quote.1.unwrap().full_name,
                     "items": result,
                 }))
             }
@@ -890,14 +890,14 @@ impl QueriesService {
                 });
                 Ok(json!({
                     "id": quote.id,
-                    "createdAt": quote.created_at,
+                    "created_at": quote.created_at,
                     "total": quote.total,
                     "identifier": quote.identifier,
                     "client": json!({
-                        "fullName": quote.full_name,
+                        "full_name": quote.full_name,
                         "email": quote.email,
                         "address":quote.address,
-                        "phoneNumber":quote.phone_number,
+                        "phone_number":quote.phone_number,
                     }),
                     "items": result,
                 }))
@@ -986,9 +986,9 @@ impl QueriesService {
                 "id": row.id,
                 "name": row.name,
                 "price": row.price,
-                "createdAt": row.created_at,
+                "created_at": row.created_at,
                 "quantity": row.quantity,
-                "transactionType": row.transaction_type,
+                "transaction_type": row.transaction_type,
             }));
         });
         Ok(json!({
@@ -1043,9 +1043,9 @@ impl QueriesService {
         res.into_iter().for_each(|row| {
             result.push(json!({
                 "price": row.price,
-                "createdAt": row.created_at,
+                "created_at": row.created_at,
                 "quantity": row.quantity,
-                "transactionType": row.transaction_type,
+                "transaction_type": row.transaction_type,
             }));
         });
         Ok(result)

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { Trash2 } from "lucide-vue-next";
 import { error, info } from "tauri-plugin-log-api";
+import { Trash2 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import { useFieldArray, useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import * as z from "zod";
 import { ORDER_STATUSES } from "@/consts/status";
 
 const props = defineProps<{
@@ -15,36 +18,58 @@ const { t } = useI18n();
 
 const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
-const order = reactive<OrderForUpdateT>({
-  id: "",
-  clientId: "",
-  fullName: "",
-  createdAt: "",
-  status: "",
-  items: [],
+
+const orderSchema = z.object({
+  id: z.string(),
+  client_id: z.string().min(1, t("validation.required")),
+  status: z.enum(ORDER_STATUSES),
+  full_name: z.string(),
+  items: z.array(
+    z.object({
+      id: z.string().optional(),
+      inventory_id: z.string().optional(),
+      product_id: z.string().min(1, t("validation.required")),
+      quantity: z.number().min(1, t("validation.min", { min: 1 })),
+      price: z.number().min(0, t("validation.min", { min: 0 })),
+      name: z.string().optional(),
+    })
+  ),
 });
 
-onBeforeMount(async () => {
-  const res = await invoke<Res<OrderForUpdateT>>("get_order", {
-    id: props.id,
+const { handleSubmit, resetForm, setFieldValue, values } = useForm({
+  validationSchema: toTypedSchema(orderSchema),
+});
+
+type item = z.infer<typeof orderSchema>["items"][number];
+
+const { fields, remove, push } = useFieldArray<item>("items");
+
+const res = await invoke<Res<OrderForUpdateT>>("get_order", {
+  id: props.id,
+});
+
+if (res.data) {
+  resetForm({
+    values: {
+      ...res.data,
+    },
   });
+}
 
-  if (!res.error) {
-    order.id = res.data.id;
-    order.clientId = res.data.clientId;
-    order.createdAt = res.data.createdAt;
-    order.status = res.data.status;
-    order.fullName = res.data.fullName;
-    order.items = res.data.items;
-  }
-});
+function addOrderItem() {
+  push({
+    product_id: "",
+    quantity: 1,
+    price: 0,
+  });
+}
 
 async function searchClients(search: string | number) {
   const res = await invoke<Res<{ label: string; value: string }[]>>(
     "search_clients",
     {
       search,
-    },
+    }
   );
   if (!res.error) {
     clients.value = res.data;
@@ -56,33 +81,20 @@ async function searchProducts(search: string | number) {
     "search_products",
     {
       search,
-    },
+    }
   );
   if (!res.error) {
     products.value = res.data;
   }
 }
 
-function addOrderItem() {
-  order.items?.push({
-    product_id: undefined,
-    quantity: undefined,
-    price: undefined,
-  });
-}
-
-async function updateTheOrder() {
+const onSubmit = handleSubmit(async (values) => {
   try {
     await invoke<Res<string>>("update_order", {
-      order: {
-        id: order.id,
-        client_id: order.clientId,
-        status: order.status,
-        items: order.items,
-      },
+      order: values,
     });
     //
-    info(`UPDATE ORDER: ${JSON.stringify(order)}`);
+    info(`UPDATE ORDER: ${JSON.stringify(values)}`);
     //
     toast.success(t("notifications.order.updated"), {
       closeButton: true,
@@ -91,8 +103,7 @@ async function updateTheOrder() {
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -102,17 +113,15 @@ async function updateTheOrder() {
       return;
     }
     error(`UPDATE ORDER: ${err}`);
-  }
-  finally {
+  } finally {
     close();
   }
-}
+});
 
 async function deleteOneOrderItem(id: string) {
   try {
     await invoke("delete_inventory", { id });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -124,113 +133,159 @@ async function deleteOneOrderItem(id: string) {
 }
 
 function deleteOrderItem(index: number) {
-  const item = order.items?.splice(index, 1)[0];
-  if (item?.inventory_id)
-    deleteOneOrderItem(item.inventory_id);
+  // @ts-ignore
+  const item = values.items[index];
+  if (item?.id) {
+    deleteOneOrderItem(item.id);
+  }
+  remove(index);
 }
 </script>
 
 <template>
-  <Card
-    class="w-5/6 lg:w-1/2 relative h-fit rounded-md z-50 gap-3 flex flex-col bg-white min-w-[350px]"
-  >
-    <CardHeader>
-      <CardTitle>
-        {{ t("titles.orders.update") }} N° {{ identifier }}
-      </CardTitle>
-    </CardHeader>
-    <CardContent>
-      <div class="h-full w-full grid grid-cols-1 gap-2">
-        <div class="flex w-full h-fit gap-1">
-          <div class="w-full h-full flex flex-col gap-1">
-            <Label for="client_id">
-              {{ t("fields.full-name") }}
-            </Label>
-            <SearchableItems
-              v-if="order.fullName"
-              :default-value="order.fullName"
-              :items="clients"
-              @update:items="(s) => searchClients(s)"
-              @on-select="(id) => (order.clientId = id)"
-            />
+  <form class="w-full flex justify-center" @submit="onSubmit">
+    <Card class="w-4/6 lg:w-1/2">
+      <CardHeader>
+        <CardTitle>
+          {{ t("titles.orders.update") }} N° {{ identifier }}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div class="h-full w-full grid grid-cols-1 gap-2">
+          <div class="flex w-full h-fit gap-1">
+            <div class="w-full h-full">
+              <FormField v-slot="{ field }" name="client_id">
+                <FormItem>
+                  <FormLabel>{{ t("fields.full-name") }}</FormLabel>
+                  <FormControl>
+                    <SearchableItems
+                      :default-value="values.full_name"
+                      :items="clients"
+                      @update-items="searchClients"
+                      @on-select="field.onChange"
+                    />
+                  </FormControl>
+                </FormItem>
+              </FormField>
+            </div>
+            <div class="w-full h-full flex flex-col gap-2">
+              <FormField v-slot="{ componentField }" name="status">
+                <FormItem>
+                  <FormLabel>
+                    {{ t("fields.status") }}
+                  </FormLabel>
+                </FormItem>
+                <Select v-bind="componentField" :default-value="values.status">
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue
+                        class="text-muted-foreground"
+                        :placeholder="t('select-status')"
+                      />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem
+                        v-for="status in ORDER_STATUSES"
+                        :key="status"
+                        :value="status"
+                      >
+                        {{ t(`status.${status.toLowerCase()}`) }}
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormField>
+            </div>
           </div>
+          <Separator />
           <div class="w-full h-full flex flex-col gap-1">
-            <Label for="status">
-              {{ t("fields.status") }}
-            </Label>
-            <Select v-model="order.status">
-              <SelectTrigger>
-                <SelectValue
-                  class="text-muted-foreground"
-                  :placeholder="t('select-status')"
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem
-                  v-for="status in ORDER_STATUSES"
-                  :key="status"
-                  :value="status"
+            <Button type="button" @click="addOrderItem">
+              {{ t("buttons.add-product") }}
+            </Button>
+            <ScrollArea :class="{ 'h-60': fields.length > 5 }">
+              <div class="flex flex-col space-y-1 my-1">
+                <div
+                  v-for="(field, index) in fields"
+                  :key="field.key"
+                  class="grid grid-flow-col gap-1"
                 >
-                  {{ t(`status.${status.toLowerCase()}`) }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
+                  <FormField
+                    v-slot="{ field: productField }"
+                    :name="`items[${index}].product_id`"
+                  >
+                    <FormItem>
+                      <FormControl>
+                        <SearchableItems
+                          :default-value="field.value.name"
+                          :items="products"
+                          @update-items="searchProducts"
+                          @on-select="
+                            (id, price) => {
+                              productField.onChange(id);
+                              setFieldValue(`items.${index}.price`, price!);
+                            }
+                          "
+                        />
+                      </FormControl>
+                    </FormItem>
+                  </FormField>
+                  <FormField
+                    v-slot="{ componentField }"
+                    :name="`items[${index}].quantity`"
+                  >
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          :placeholder="t('fields.quantity')"
+                          type="number"
+                          step="0.01"
+                          v-bind="componentField"
+                        >
+                          <template #unite>
+                            {{ t("fields.item") }}
+                          </template>
+                        </Input>
+                      </FormControl>
+                    </FormItem>
+                  </FormField>
+                  <FormField
+                    v-slot="{ componentField }"
+                    :name="`items[${index}].price`"
+                  >
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          :placeholder="t('fields.price')"
+                          type="number"
+                          step="0.01"
+                          v-bind="componentField"
+                        >
+                          <template #unite> DH </template>
+                        </Input>
+                      </FormControl>
+                    </FormItem>
+                  </FormField>
+                  <Trash2
+                    class="cursor-pointer m-auto"
+                    :size="20"
+                    @click="deleteOrderItem(index)"
+                  />
+                </div>
+              </div>
+            </ScrollArea>
           </div>
         </div>
-        <Separator />
-        <div class="w-full h-full flex flex-col gap-1">
-          <Button @click="addOrderItem">
-            {{ t("buttons.add-product") }}
-          </Button>
-          <div
-            class="w-full pt-1 grid grid-cols-[1fr_1fr_1fr_36px] items-center overflow-auto scrollbar-thin scrollbar-thumb-transparent max-h-64 gap-1"
-          >
-            <template v-for="(item, index) in order.items" :key="index">
-              <SearchableItems
-                :default-value="item.name"
-                :items="products"
-                @update:items="(s) => searchProducts(s)"
-                @on-select="
-                  (id, price) => ((item.product_id = id), (item.price = price))
-                "
-              />
-              <Input
-                v-model="item.quantity"
-                class="border-r-0"
-                :placeholder="t('fields.quantity')"
-                type="number"
-              >
-                <template #unite>
-                  {{ t("fields.item") }}
-                </template>
-              </Input>
-              <Input
-                v-model="item.price"
-                class="border-r-0"
-                :placeholder="t('fields.price')"
-                type="number"
-              >
-                <template #unite>
-                  DH
-                </template>
-              </Input>
-              <Trash2
-                class="cursor-pointer m-auto"
-                :size="20"
-                @click="deleteOrderItem(index)"
-              />
-            </template>
-          </div>
-        </div>
-      </div>
-    </CardContent>
-    <CardFooter>
-      <Button variant="outline" @click="close">
-        {{ t("buttons.cancel") }}
-      </Button>
-      <Button class="col-span-2" @click="updateTheOrder">
-        {{ t("buttons.confirme") }}
-      </Button>
-    </CardFooter>
-  </Card>
+      </CardContent>
+      <CardFooter>
+        <Button type="button" variant="outline" @click="close">
+          {{ t("buttons.cancel") }}
+        </Button>
+        <Button type="submit" class="col-span-2">
+          {{ t("buttons.confirme") }}
+        </Button>
+      </CardFooter>
+    </Card>
+  </form>
 </template>

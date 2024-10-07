@@ -12,7 +12,7 @@ import { toast } from "vue-sonner";
 import { NuxtLink, OrderDelete, OrderUpdate } from "#components";
 import { ORDER_STATUSES, STATUS_COLORS } from "@/consts/status";
 
-defineProps<{ orders: OrderT[]; orderProducts: OrderProductT[] }>();
+defineProps<{ orders: OrderT[]; orderProducts: OrderProductsPreviewT[] }>();
 const emits = defineEmits<{
   (e: "listOrderProducts", id?: string): void;
 }>();
@@ -36,8 +36,7 @@ function toggleThisOrder(order: OrderT, name: "delete" | "update") {
       id: order.id!,
       identifier: order.identifier,
     });
-  }
-  else {
+  } else {
     modal.open(OrderUpdate, {
       id: order.id!,
       identifier: order.identifier,
@@ -59,8 +58,7 @@ async function updateOrderStatus(id: string, status: string) {
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -79,7 +77,7 @@ async function createInvoiceFromOrder(id: string) {
       "create_invoice_from_order",
       {
         id,
-      },
+      }
     );
     //
     info(`CREATE INVOICE FROM ORDER: ${id}`);
@@ -92,8 +90,7 @@ async function createInvoiceFromOrder(id: string) {
         innerHTML: "go to invoice",
       }),
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     if (typeof err === "object" && "error" in err) {
       error(`GET ORDER FOR INVOICE: ${err.error}`);
       return;
@@ -137,7 +134,7 @@ async function createInvoiceFromOrder(id: string) {
             {{ order.identifier }}
           </TableCell>
           <TableCell class="p-2 font-medium">
-            {{ order.fullName }}
+            {{ order.full_name }}
           </TableCell>
           <TableCell class="p-2">
             <Popover v-if="order.products && order.products > 0">
@@ -204,7 +201,7 @@ async function createInvoiceFromOrder(id: string) {
                   :class="
                     cn(
                       'cursor-pointer whitespace-nowrap',
-                      STATUS_COLORS[order.status],
+                      STATUS_COLORS[order.status]
                     )
                   "
                 >
@@ -227,7 +224,7 @@ async function createInvoiceFromOrder(id: string) {
             </Popover>
           </TableCell>
           <TableCell class="p-2">
-            {{ d(new Date(order.createdAt!), "long") }}
+            {{ d(new Date(order.created_at!), "long") }}
           </TableCell>
           <TableCell class="p-2">
             {{ n(order.total!, "currency") }}

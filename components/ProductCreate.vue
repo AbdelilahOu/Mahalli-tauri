@@ -4,6 +4,7 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { error, info } from "tauri-plugin-log-api";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
+import { z } from "zod";
 
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -11,6 +12,18 @@ const { close } = useModal();
 
 const imagePath = ref<string>();
 const quantity = ref<number>(0);
+
+const CreateProductSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(2).max(50),
+  selling_price: z.number().min(0),
+  purchase_price: z.number().min(0),
+  image: z.string().optional(),
+  description: z.string().optional(),
+  min_quantity: z.number().min(0),
+  inventory: z.number().optional(),
+  created_at: z.number().optional(),
+});
 
 const productSchema = toTypedSchema(CreateProductSchema);
 const form = useForm({
@@ -22,10 +35,10 @@ async function createNewProduct(product: ProductT) {
     const createRes = await invoke<Res<string>>("create_product", {
       product: {
         name: product.name,
-        selling_price: Number(product.sellingPrice),
-        purchase_price: Number(product.purchasePrice),
+        selling_price: Number(product.selling_price),
+        purchase_price: Number(product.purchase_price),
         description: product.description,
-        min_quantity: product.minQuantity,
+        min_quantity: product.min_quantity,
         image: `data:image/png;base64,${imagePath.value}`,
       },
     });
@@ -77,7 +90,7 @@ function setImage(image: string) {
 
 <template>
   <form class="w-full flex justify-center" @submit="onSubmit">
-    <Card>
+    <Card class="w-4/6 lg:w-1/2">
       <CardHeader>
         <CardTitle>
           {{ t("titles.products.create") }}
@@ -97,7 +110,7 @@ function setImage(image: string) {
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="purchasePrice">
+        <FormField v-slot="{ componentField }" name="purchase_price">
           <FormItem>
             <FormLabel>{{ t("fields.purchase-price") }}</FormLabel>
             <FormControl>
@@ -111,7 +124,7 @@ function setImage(image: string) {
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="sellingPrice">
+        <FormField v-slot="{ componentField }" name="selling_price">
           <FormItem>
             <FormLabel>{{ t("fields.selling-price") }}</FormLabel>
             <FormControl>
@@ -141,7 +154,7 @@ function setImage(image: string) {
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="minQuantity">
+        <FormField v-slot="{ componentField }" name="min_quantity">
           <FormItem>
             <FormLabel>{{ t("fields.min-quantity") }}</FormLabel>
             <FormControl>

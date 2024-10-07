@@ -11,7 +11,7 @@ import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { NuxtLink, QuoteDelete, QuoteUpdate } from "#components";
 
-defineProps<{ quotes: QuoteT[]; quoteProducts: QuoteProductT[] }>();
+defineProps<{ quotes: QuoteT[]; quoteProducts: QuoteProductsPreviewT[] }>();
 const emits = defineEmits<{
   (e: "listQuoteProducts", id?: string): void;
 }>();
@@ -34,8 +34,7 @@ function toggleThisQuote(quote: QuoteT, name: "delete" | "update") {
       id: quote.id!,
       identifier: quote.identifier,
     });
-  }
-  else {
+  } else {
     modal.open(QuoteUpdate, {
       id: quote.id!,
       identifier: quote.identifier,
@@ -58,8 +57,7 @@ async function createOrderFromQuote(id: string) {
         innerHTML: "go to order",
       }),
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -100,7 +98,7 @@ async function createOrderFromQuote(id: string) {
             {{ quote.identifier }}
           </TableCell>
           <TableCell class="p-2 font-medium">
-            {{ quote.fullName }}
+            {{ quote.full_name }}
           </TableCell>
           <TableCell class="p-2">
             <Popover v-if="quote.products && quote.products > 0">
@@ -160,7 +158,7 @@ async function createOrderFromQuote(id: string) {
             </template>
           </TableCell>
           <TableCell class="p-2">
-            {{ d(new Date(quote.createdAt!), "long") }}
+            {{ d(new Date(quote.created_at!), "long") }}
           </TableCell>
           <TableCell class="p-2">
             {{ n(quote.total!, "currency") }}

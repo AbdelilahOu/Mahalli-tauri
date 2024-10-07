@@ -9,10 +9,10 @@ import { z } from "zod";
 const props = defineProps<{
   id: string;
   name: string;
-  purchasePrice: number;
-  sellingPrice: number;
+  purchase_price: number;
+  selling_price: number;
   description?: string;
-  minQuantity: number;
+  min_quantity: number;
 }>();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
@@ -25,20 +25,20 @@ const productSchema = toTypedSchema(
       .min(2)
       .max(50)
       .default(props.name as string),
-    purchasePrice: z
+    purchase_price: z
       .number()
       .min(0)
-      .default(Number(props.purchasePrice ?? 0)),
-    sellingPrice: z
+      .default(Number(props.purchase_price ?? 0)),
+    selling_price: z
       .number()
       .min(0)
-      .default(Number(props.sellingPrice ?? 0)),
+      .default(Number(props.selling_price ?? 0)),
     description: z
       .string()
       .min(2)
       .default((props.description as string) ?? ""),
-    minQuantity: z.number().default(Number(props.minQuantity) ?? 0),
-  }),
+    min_quantity: z.number().default(Number(props.min_quantity) ?? 0),
+  })
 );
 
 const form = useForm({
@@ -51,10 +51,10 @@ async function updateTheProduct(product: ProductT) {
     await invoke<Res<string>>("update_product", {
       product: {
         name: product.name,
-        selling_price: Number(product.sellingPrice),
-        purchase_price: Number(product.purchasePrice),
+        selling_price: Number(product.selling_price),
+        purchase_price: Number(product.purchase_price),
         description: product.description,
-        min_quantity: Number(product.minQuantity),
+        min_quantity: Number(product.min_quantity),
         image: "",
         id,
       },
@@ -63,12 +63,12 @@ async function updateTheProduct(product: ProductT) {
     info(
       `UPDATE PRODUCT: ${JSON.stringify({
         name: product.name,
-        selling_price: Number(product.sellingPrice),
-        purchase_price: Number(product.purchasePrice),
+        selling_price: Number(product.selling_price),
+        purchase_price: Number(product.purchase_price),
         description: product.description,
-        min_quantity: Number(product.minQuantity),
+        min_quantity: Number(product.min_quantity),
         id,
-      })}`,
+      })}`
     );
     //
     toast.success(t("notifications.product.updated", { name: product.name }), {
@@ -78,8 +78,7 @@ async function updateTheProduct(product: ProductT) {
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -89,8 +88,7 @@ async function updateTheProduct(product: ProductT) {
       return;
     }
     error(`UPDATE PRODUCT: ${err}`);
-  }
-  finally {
+  } finally {
     close();
   }
 }
@@ -102,7 +100,7 @@ const onSubmit = form.handleSubmit((values) => {
 
 <template>
   <form class="w-full flex justify-center" @submit="onSubmit">
-    <Card>
+    <Card class="w-4/6 lg:w-1/2">
       <CardHeader>
         <CardTitle>
           {{ t("titles.products.update") }}
@@ -117,7 +115,7 @@ const onSubmit = form.handleSubmit((values) => {
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="purchasePrice">
+        <FormField v-slot="{ componentField }" name="purchase_price">
           <FormItem>
             <FormLabel>{{ t("fields.purchase-price") }}</FormLabel>
             <FormControl>
@@ -127,14 +125,12 @@ const onSubmit = form.handleSubmit((values) => {
                 :placeholder="t('fields.purchase-price')"
                 v-bind="componentField"
               >
-                <template #unite>
-                  DH
-                </template>
+                <template #unite> DH </template>
               </Input>
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="sellingPrice">
+        <FormField v-slot="{ componentField }" name="selling_price">
           <FormItem>
             <FormLabel>{{ t("fields.selling-price") }}</FormLabel>
             <FormControl>
@@ -144,14 +140,12 @@ const onSubmit = form.handleSubmit((values) => {
                 :placeholder="t('fields.selling-price')"
                 v-bind="componentField"
               >
-                <template #unite>
-                  DH
-                </template>
+                <template #unite> DH </template>
               </Input>
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="minQuantity">
+        <FormField v-slot="{ componentField }" name="min_quantity">
           <FormItem>
             <FormLabel>{{ t("fields.min-quantity") }}</FormLabel>
             <FormControl>

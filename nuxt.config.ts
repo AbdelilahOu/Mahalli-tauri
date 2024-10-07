@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxtjs/i18n"],
   ssr: false,
   routeRules: { "/": { prerender: true } },
-  imports: { dirs: ["./schemas"] },
+  imports: { dirs: ["./types", "./utils"] },
   shadcn: { componentDir: "./components/ui" },
   i18n: {
     locales: [

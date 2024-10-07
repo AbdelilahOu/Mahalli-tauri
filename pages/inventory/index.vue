@@ -10,10 +10,10 @@ const { t, d } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const searchQuery = ref<string>(route.query.search as string);
-const transactionType = ref<string | undefined>(
-  route.query.transactionType as string | undefined
+const transaction_type = ref<string | undefined>(
+  route.query.transaction_type as string | undefined
 );
-const createdAt = ref<string | number | undefined>(route.query.created_at);
+const created_at = ref<string | number | undefined>(route.query.created_at);
 
 const LIMIT = 25;
 
@@ -70,12 +70,12 @@ const debouncedSearch = useDebounceFn(() => {
 
 watch(searchQuery, debouncedSearch);
 
-watch([transactionType, createdAt], () => {
+watch([transaction_type, created_at], () => {
   updateQueryParams({
-    transaction_type: transactionType.value,
+    transaction_type: transaction_type.value,
     page: 1,
-    created_at: createdAt.value
-      ? new Date(createdAt.value).toISOString()
+    created_at: created_at.value
+      ? new Date(created_at.value).toISOString()
       : undefined,
   });
 });
@@ -94,21 +94,21 @@ watch([transactionType, createdAt], () => {
                 :class="
                   cn(
                     'w-full justify-start text-left font-normal',
-                    !createdAt && 'text-muted-foreground'
+                    !created_at && 'text-muted-foreground'
                   )
                 "
               >
                 <CalendarIcon class="mr-2 h-4 w-4" />
                 <span class="text-nowrap">{{
-                  createdAt ? d(new Date(createdAt), "short") : t("pick-date")
+                  created_at ? d(new Date(created_at), "short") : t("pick-date")
                 }}</span>
               </Button>
             </PopoverTrigger>
             <PopoverContent class="w-auto p-0">
-              <Calendar v-model="createdAt" />
+              <Calendar v-model="created_at" />
             </PopoverContent>
           </Popover>
-          <Select v-model="transactionType">
+          <Select v-model="transaction_type">
             <SelectTrigger>
               <SelectValue
                 class="text-muted-foreground"
