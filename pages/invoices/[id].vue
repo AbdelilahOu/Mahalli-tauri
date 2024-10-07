@@ -172,7 +172,7 @@ function drawHeader(
     size: 13,
     color: config.color,
   });
-  page.drawText(d(new Date(invoice?.createdAt)), {
+  page.drawText(d(new Date(invoice?.created_at)), {
     x: InvoiceDetailsX,
     y: height - config.marginTop - 40,
     font,
@@ -197,13 +197,13 @@ function drawHeader(
 
   const clientFields: string[] = [];
   if (config.clientFields.fullname) {
-    clientFields.push(invoice.client.fullName);
+    clientFields.push(invoice.client.full_name);
   }
   if (config.clientFields.email) {
     clientFields.push(invoice.client.email);
   }
   if (config.clientFields.phone) {
-    clientFields.push(invoice.client.phoneNumber);
+    clientFields.push(invoice.client.phone_number);
   }
   if (config.clientFields.address) {
     clientFields.push(invoice.client.address);
@@ -526,7 +526,7 @@ function copyPage(originalPage: any) {
             />
           </div>
           <Input
-            v-model="invoice.client.fullName"
+            v-model="invoice.client.full_name"
             :disabled="!config.clientFields.fullname"
           />
         </div>
@@ -571,7 +571,7 @@ function copyPage(originalPage: any) {
             />
           </div>
           <Input
-            v-model="invoice.client.phoneNumber"
+            v-model="invoice.client.phone_number"
             :disabled="!config.clientFields.phone"
           />
         </div>

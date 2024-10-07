@@ -17,8 +17,8 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: "update:items", s: string | number): () => void;
-  (e: "OnSelect", s: string, a?: number): () => void;
+  (e: "UpdateItems", s: string | number): void;
+  (e: "OnSelect", s: string, a?: number): void;
 }>();
 
 const { t } = useI18n();
@@ -31,7 +31,7 @@ let timer: any;
 function updateInput(s: string | number) {
   clearTimeout(timer);
   timer = setTimeout(() => {
-    emits("update:items", s);
+    emits("UpdateItems", s);
     open.value = true;
   }, 500);
 }
@@ -63,7 +63,7 @@ function selectItem(item: { label: string; value: string; price?: number }) {
               'space-y-1',
               items.length > 5
                 ? 'max-h-60 overflow-auto scrollbar-thin scrollbar-thumb-transparent'
-                : 'h-fit',
+                : 'h-fit'
             )
           "
         >

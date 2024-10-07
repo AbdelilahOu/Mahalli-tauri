@@ -13,15 +13,14 @@ function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
   if (name === "delete") {
     modal.open(SupplierDelete, {
       id: supplier.id!,
-      fullName: supplier.fullName,
+      full_name: supplier.full_name,
     });
-  }
-  else {
+  } else {
     modal.open(SupplierUpdate, {
       id: supplier.id!,
-      fullName: supplier.fullName,
+      full_name: supplier.full_name,
       email: supplier.email,
-      phoneNumber: supplier.phoneNumber,
+      phone_number: supplier.phone_number,
       address: supplier.address,
     });
   }
@@ -53,18 +52,18 @@ function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
             <Avatar>
               <AvatarImage :src="supplier.image ?? ''" />
               <AvatarFallback class="text-xs">
-                {{ supplier.fullName.substring(0, 5) }}
+                {{ supplier.full_name.substring(0, 5) }}
               </AvatarFallback>
             </Avatar>
           </TableCell>
           <TableCell class="p-2 whitespace-nowrap font-medium">
-            {{ supplier?.fullName }}
+            {{ supplier?.full_name }}
           </TableCell>
           <TableCell class="p-2">
             {{ supplier.email }}
           </TableCell>
           <TableCell class="p-2">
-            {{ supplier.phoneNumber }}
+            {{ supplier.phone_number }}
           </TableCell>
           <TableCell class="p-2">
             {{ supplier.address }}

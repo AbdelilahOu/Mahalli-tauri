@@ -8,9 +8,9 @@ import { z } from "zod";
 
 const props = defineProps<{
   id: string;
-  fullName: string;
+  full_name: string;
   email?: string;
-  phoneNumber?: string;
+  phone_number?: string;
   address?: string;
 }>();
 
@@ -20,15 +20,15 @@ const { close } = useModal();
 
 const clientSchema = toTypedSchema(
   z.object({
-    fullName: z
+    full_name: z
       .string()
       .min(2)
       .max(50)
-      .default(props.fullName as string),
+      .default(props.full_name as string),
     email: z.string().default((props.email as string) ?? ""),
-    phoneNumber: z.string().default((props.phoneNumber as string) ?? ""),
+    phone_number: z.string().default((props.phone_number as string) ?? ""),
     address: z.string().default((props.address as string) ?? ""),
-  }),
+  })
 );
 
 const form = useForm({
@@ -40,9 +40,9 @@ async function updateTheClient(client: ClientT) {
     await invoke<Res<any>>("update_client", {
       client: {
         id: props.id,
-        full_name: client.fullName,
+        full_name: client.full_name,
         email: client.email,
-        phone_number: client.phoneNumber,
+        phone_number: client.phone_number,
         address: client.address,
         image: "",
       },
@@ -51,25 +51,24 @@ async function updateTheClient(client: ClientT) {
     info(
       `UPDATE CLIENT: ${JSON.stringify({
         id: props.id,
-        full_name: client.fullName,
+        full_name: client.full_name,
         email: client.email,
-        phone_number: client.phoneNumber,
+        phone_number: client.phone_number,
         address: client.address,
-      })}`,
+      })}`
     );
     //
     toast.success(
-      t("notifications.client.updated", { name: client.fullName }),
+      t("notifications.client.updated", { name: client.full_name }),
       {
         closeButton: true,
-      },
+      }
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -79,8 +78,7 @@ async function updateTheClient(client: ClientT) {
       return;
     }
     error(`UPDATE CLIENT: ${err}`);
-  }
-  finally {
+  } finally {
     close();
   }
 }
@@ -92,14 +90,14 @@ const onSubmit = form.handleSubmit((values) => {
 
 <template>
   <form class="w-full flex justify-center" @submit="onSubmit">
-    <Card>
+    <Card class="w-4/6 lg:w-1/2">
       <CardHeader>
         <CardTitle>
           {{ t("titles.clients.update") }}
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <FormField v-slot="{ componentField }" name="fullName">
+        <FormField v-slot="{ componentField }" name="full_name">
           <FormItem>
             <FormLabel>{{ t("fields.full-name") }}</FormLabel>
             <FormControl>
@@ -118,7 +116,7 @@ const onSubmit = form.handleSubmit((values) => {
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="phoneNumber">
+        <FormField v-slot="{ componentField }" name="phone_number">
           <FormItem>
             <FormLabel>{{ t("fields.phone") }}</FormLabel>
             <FormControl>
@@ -143,7 +141,7 @@ const onSubmit = form.handleSubmit((values) => {
           {{ t("buttons.cancel") }}
         </Button>
         <Button type="submit" class="col-span-2">
-          {{ t("buttons.update", { name: fullName }) }}
+          {{ t("buttons.update", { name: full_name }) }}
         </Button>
       </CardFooter>
     </Card>

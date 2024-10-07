@@ -37,17 +37,17 @@ const { t, d, locale, n } = useI18n();
               :class="
                 cn(
                   'cursor-pointer whitespace-nowrap',
-                  tx?.transactionType === 'OUT'
+                  tx?.transaction_type === 'OUT'
                     ? 'bg-green-100 border-green-500 text-green-900'
-                    : 'bg-sky-100 border-sky-500 text-sky-900',
+                    : 'bg-sky-100 border-sky-500 text-sky-900'
                 )
               "
             >
-              {{ t(`status.${tx?.transactionType.toLowerCase()}`) }}
+              {{ t(`status.${tx?.transaction_type.toLowerCase()}`) }}
             </Badge>
           </TableCell>
           <TableCell class="p-2">
-            {{ d(new Date(tx.createdAt), "long") }}
+            {{ d(new Date(tx.created_at), "long") }}
           </TableCell>
         </TableRow>
       </TableBody>

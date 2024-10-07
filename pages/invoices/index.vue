@@ -12,12 +12,12 @@ const { t, d } = useI18n();
 const modal = useModal();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const invoiceProducts = ref<InvoiceProductT[]>([]);
+const invoiceProducts = ref<InvoiceProductsPreviewT[]>([]);
 
 const searchQuery = ref<string>(route.query.search as any);
 const status = ref<string | undefined>(route.query.status as any);
-const createdAt = ref<string | number | undefined>(
-  route.query.created_at as any,
+const created_at = ref<string | number | undefined>(
+  route.query.created_at as any
 );
 
 const LIMIT = 25;
@@ -45,16 +45,14 @@ async function fetchInvoices() {
       },
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
       error(`LIST INVOICESS: ${err.error}`);
-    }
-    else {
+    } else {
       error(`LIST INVOICESS: ${err}`);
     }
     throw err;
@@ -65,7 +63,9 @@ const { data: invoicesData } = await useAsyncData("invoices", fetchInvoices, {
   watch: [queryParams],
 });
 
-const invoices = computed<InvoiceT[]>(() => invoicesData.value?.invoices ?? []);
+const invoices = computed<ListInvoiceT[]>(
+  () => invoicesData.value?.invoices ?? []
+);
 const totalRows = computed<number>(() => invoicesData.value?.count ?? 0);
 
 provide("count", totalRows);
@@ -79,11 +79,11 @@ const debouncedSearch = useDebounceFn(() => {
 
 watch(searchQuery, debouncedSearch);
 
-watch([status, createdAt], () => {
+watch([status, created_at], () => {
   updateQueryParams({
     status: status.value,
-    created_at: createdAt.value
-      ? new Date(createdAt.value).toISOString()
+    created_at: created_at.value
+      ? new Date(created_at.value).toISOString()
       : undefined,
     page: 1,
   });
@@ -95,8 +95,7 @@ async function listInvoiceProduct(id?: string) {
       id,
     });
     invoiceProducts.value = res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -130,18 +129,18 @@ const openCreateInvoiceModal = () => modal.open(InvoiceCreate, {});
                 :class="
                   cn(
                     'w-full justify-start text-left font-normal',
-                    !createdAt && 'text-muted-foreground',
+                    !created_at && 'text-muted-foreground'
                   )
                 "
               >
                 <CalendarIcon class="mr-2 h-4 w-4" />
                 <span class="text-nowrap">{{
-                  createdAt ? d(new Date(createdAt), "short") : t("pick-date")
+                  created_at ? d(new Date(created_at), "short") : t("pick-date")
                 }}</span>
               </Button>
             </PopoverTrigger>
             <PopoverContent class="w-auto p-0">
-              <Calendar v-model="createdAt" />
+              <Calendar v-model="created_at" />
             </PopoverContent>
           </Popover>
           <Select v-model="status" name="status">

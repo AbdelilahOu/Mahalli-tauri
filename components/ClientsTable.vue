@@ -13,15 +13,14 @@ function toggleThisClient(client: ClientT, name: "delete" | "update") {
   if (name === "delete") {
     modal.open(ClientDelete, {
       id: client.id!,
-      fullName: client.fullName,
+      full_name: client.full_name,
     });
-  }
-  else {
+  } else {
     modal.open(ClientUpdate, {
       id: client.id!,
-      fullName: client.fullName,
+      full_name: client.full_name,
       email: client.email,
-      phoneNumber: client.phoneNumber,
+      phone_number: client.phone_number,
       address: client.address,
     });
   }
@@ -54,18 +53,18 @@ function toggleThisClient(client: ClientT, name: "delete" | "update") {
             <Avatar>
               <AvatarImage :src="client.image ?? ''" />
               <AvatarFallback class="text-xs">
-                {{ client.fullName.substring(0, 5) }}
+                {{ client.full_name.substring(0, 5) }}
               </AvatarFallback>
             </Avatar>
           </TableCell>
           <TableCell class="p-2 whitespace-nowrap font-medium">
-            {{ client?.fullName }}
+            {{ client?.full_name }}
           </TableCell>
           <TableCell class="p-2">
             {{ client.email }}
           </TableCell>
           <TableCell class="p-2">
-            {{ client.phoneNumber }}
+            {{ client.phone_number }}
           </TableCell>
           <TableCell class="p-2">
             {{ client.address }}

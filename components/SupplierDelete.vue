@@ -4,7 +4,7 @@ import { toast } from "vue-sonner";
 
 const props = defineProps<{
   id: string;
-  fullName: string;
+  full_name: string;
 }>();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
@@ -17,17 +17,16 @@ async function deleteTheSupplier() {
     console.info(`DELETE SUPPLIER: ${props.id}`);
     //
     toast.success(
-      t("notifications.supplier.deleted", { name: props.fullName }),
+      t("notifications.supplier.deleted", { name: props.full_name }),
       {
         closeButton: true,
-      },
+      }
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-delete-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -37,8 +36,7 @@ async function deleteTheSupplier() {
       return;
     }
     console.error(`DELETE SUPPLIER: ${err}`);
-  }
-  finally {
+  } finally {
     close();
   }
 }
@@ -48,7 +46,7 @@ async function deleteTheSupplier() {
   <Card>
     <CardHeader>
       <CardTitle>
-        {{ t("titles.suppliers.delete") }} {{ fullName }} ?
+        {{ t("titles.suppliers.delete") }} {{ full_name }} ?
       </CardTitle>
     </CardHeader>
     <CardContent>

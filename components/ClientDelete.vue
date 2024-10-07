@@ -4,7 +4,7 @@ import { toast } from "vue-sonner";
 
 const props = defineProps<{
   id: string;
-  fullName: string;
+  full_name: string;
 }>();
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -16,15 +16,17 @@ async function deleteTheClient() {
     // INFO
     console.info(`DELETE CLIENT: ${props.id}`);
     //
-    toast.success(t("notifications.client.deleted", { name: props.fullName }), {
-      closeButton: true,
-    });
+    toast.success(
+      t("notifications.client.deleted", { name: props.full_name }),
+      {
+        closeButton: true,
+      }
+    );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-delete-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -34,8 +36,7 @@ async function deleteTheClient() {
       return;
     }
     console.error(`DELETE CLIENT: ${err}`);
-  }
-  finally {
+  } finally {
     close();
   }
 }
@@ -44,7 +45,9 @@ async function deleteTheClient() {
 <template>
   <Card>
     <CardHeader>
-      <CardTitle> {{ t("titles.clients.delete") }} {{ fullName }} ? </CardTitle>
+      <CardTitle>
+        {{ t("titles.clients.delete") }} {{ full_name }} ?
+      </CardTitle>
     </CardHeader>
     <CardContent>
       <div />

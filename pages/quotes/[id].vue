@@ -164,7 +164,7 @@ function drawHeader(page: PDFPage, width: number, height: number, quote: any) {
     size: 13,
     color: config.color,
   });
-  page.drawText(d(new Date(quote?.createdAt)), {
+  page.drawText(d(new Date(quote?.created_at)), {
     x: QuoteDetailsX,
     y: height - config.marginTop - 40,
     font,
@@ -182,13 +182,13 @@ function drawHeader(page: PDFPage, width: number, height: number, quote: any) {
 
   const clientFields: string[] = [];
   if (config.clientFields.fullname) {
-    clientFields.push(quote.client.fullName);
+    clientFields.push(quote.client.full_name);
   }
   if (config.clientFields.email) {
     clientFields.push(quote.client.email);
   }
   if (config.clientFields.phone) {
-    clientFields.push(quote.client.phoneNumber);
+    clientFields.push(quote.client.phone_number);
   }
   if (config.clientFields.address) {
     clientFields.push(quote.client.address);
@@ -514,7 +514,7 @@ function copyPage(originalPage: any) {
             />
           </div>
           <Input
-            v-model="quote.client.fullName"
+            v-model="quote.client.full_name"
             :disabled="!config.clientFields.fullname"
           />
         </div>
@@ -559,7 +559,7 @@ function copyPage(originalPage: any) {
             />
           </div>
           <Input
-            v-model="quote.client.phoneNumber"
+            v-model="quote.client.phone_number"
             :disabled="!config.clientFields.phone"
           />
         </div>

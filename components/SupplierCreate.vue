@@ -4,10 +4,20 @@ import { invoke } from "@tauri-apps/api";
 import { useForm } from "vee-validate";
 import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
+import { z } from "zod";
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
 const { t } = useI18n();
+
+const CreateSupplierSchema = z.object({
+  id: z.string().optional(),
+  full_name: z.string().min(2).max(50),
+  email: z.string().optional(),
+  phone_number: z.string().optional(),
+  address: z.string().optional(),
+  image: z.string().optional(),
+});
 
 const supplierSchema = toTypedSchema(CreateSupplierSchema);
 
@@ -21,9 +31,9 @@ async function createNewSupplier(supplier: SupplierT) {
   try {
     await invoke<Res<string>>("create_supplier", {
       supplier: {
-        full_name: supplier.fullName,
+        full_name: supplier.full_name,
         email: supplier.email,
-        phone_number: supplier.phoneNumber,
+        phone_number: supplier.phone_number,
         address: supplier.address,
         image: `data:image/png;base64,${imagePath.value}`,
       },
@@ -37,7 +47,7 @@ async function createNewSupplier(supplier: SupplierT) {
     );
     //
     toast.success(
-      t("notifications.supplier.created", { name: supplier.fullName }),
+      t("notifications.supplier.created", { name: supplier.full_name }),
       {
         closeButton: true,
       }
@@ -72,7 +82,7 @@ function saveImage(image: string) {
 
 <template>
   <form class="w-full flex justify-center" @submit="onSubmit">
-    <Card>
+    <Card class="w-4/6 lg:w-1/2">
       <CardHeader>
         <CardTitle>
           {{ t("titles.suppliers.create") }}
@@ -84,7 +94,7 @@ function saveImage(image: string) {
           :extensions="['png', 'jpeg', 'webp']"
           @save:base64="saveImage"
         />
-        <FormField v-slot="{ componentField }" name="fullName">
+        <FormField v-slot="{ componentField }" name="full_name">
           <FormItem>
             <FormLabel>{{ t("fields.full-name") }}</FormLabel>
             <FormControl>
@@ -103,7 +113,7 @@ function saveImage(image: string) {
             </FormControl>
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="phoneNumber">
+        <FormField v-slot="{ componentField }" name="phone_number">
           <FormItem>
             <FormLabel>{{ t("fields.phone") }}</FormLabel>
             <FormControl>
