@@ -41,7 +41,8 @@ const { data: invoice } = await useAsyncData(
         id,
       });
       return res.data;
-    } catch (err: any) {
+    }
+    catch (err: any) {
       toast.error(t("notifications.error.title"), {
         description: t("notifications.error.description"),
         closeButton: true,
@@ -51,7 +52,7 @@ const { data: invoice } = await useAsyncData(
       }
       throw err;
     }
-  }
+  },
 );
 
 initPdfDoc();
@@ -60,7 +61,7 @@ watch(
   () => config.templateBase64,
   () => {
     initPdfDoc();
-  }
+  },
 );
 
 async function initPdfDoc() {
@@ -71,7 +72,8 @@ async function initPdfDoc() {
     const fontBytes = await res.arrayBuffer();
     font = await pdfDoc.embedFont(fontBytes);
     generatePdf();
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -86,12 +88,13 @@ async function generatePdf() {
     let Tempalte: PDFPage | undefined;
     if (config.templateBase64) {
       const sourcePdfDoc = await PDFDocument.load(
-        `data:application/pdf;base64,${config.templateBase64}`
+        `data:application/pdf;base64,${config.templateBase64}`,
       );
       const [template] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
       Tempalte = template;
       page = pdfDoc.addPage(copyPage(Tempalte));
-    } else {
+    }
+    else {
       page = pdfDoc.addPage();
     }
     page.setSize(...PageSizes.A4);
@@ -115,7 +118,8 @@ async function generatePdf() {
 
     const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
     pdfContent.value = pdfDataUri;
-  } catch (err) {
+  }
+  catch (err) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -128,7 +132,7 @@ function drawHeader(
   page: PDFPage,
   width: number,
   height: number,
-  invoice: any
+  invoice: any,
 ) {
   let InvoiceText = "";
   switch (locale.value) {
@@ -150,12 +154,12 @@ function drawHeader(
     case "en":
     case "fr":
     case "de":
-      InvoiceDetailsX =
-        width - font.widthOfTextAtSize(InvoiceText, 30) - config.marginX;
+      InvoiceDetailsX
+        = width - font.widthOfTextAtSize(InvoiceText, 30) - config.marginX;
       break;
     case "ar":
-      InvoiceDetailsX =
-        width - font.widthOfTextAtSize(invoice.identifier, 13) - config.marginX;
+      InvoiceDetailsX
+        = width - font.widthOfTextAtSize(invoice.identifier, 13) - config.marginX;
       break;
   }
   page.drawText(InvoiceText, {
@@ -264,7 +268,7 @@ function drawItems(
   width: number,
   items: any[],
   currentY: number,
-  template?: PDFPage
+  template?: PDFPage,
 ) {
   if (items.length === 0) {
     drawSummary(page, width, currentY);
@@ -316,7 +320,8 @@ function drawItems(
     let newPage: PDFPage;
     if (template) {
       newPage = pdfDoc.addPage(copyPage(template));
-    } else {
+    }
+    else {
       newPage = pdfDoc.addPage();
     }
     newPage.setSize(...PageSizes.A4);
@@ -325,9 +330,10 @@ function drawItems(
       width,
       items,
       newPage.getHeight() - config.marginTop,
-      template
+      template,
     );
-  } else {
+  }
+  else {
     drawItems(page, width, items, currentY - lineHeight, template);
   }
 }
@@ -444,7 +450,7 @@ function drawSummary(page: PDFPage, width: number, currentY: number) {
       font,
       size: 12,
       color: config.color,
-    }
+    },
   );
 
   page.drawText(t("fields.grand-total").toUpperCase(), {
@@ -471,7 +477,7 @@ function drawSummary(page: PDFPage, width: number, currentY: number) {
 
   const totalAsText = numberToText(
     invoice.value.total + invoice.value.total * 0.2,
-    locale.value as any
+    locale.value as any,
   );
   page.drawText(totalAsText, {
     x: (width - config.marginX - font.widthOfTextAtSize(totalAsText, 13)) / 2,
@@ -486,7 +492,8 @@ function copyPage(originalPage: any) {
   const cloneNode = originalPage.node.clone();
 
   const { Contents } = originalPage.node.normalizedEntries();
-  if (Contents) cloneNode.set(PDFName.of("Contents"), Contents.clone());
+  if (Contents)
+    cloneNode.set(PDFName.of("Contents"), Contents.clone());
 
   const cloneRef = originalPage.doc.context.register(cloneNode);
   const clonePage = PDFPage.of(cloneNode, cloneRef, originalPage.doc);

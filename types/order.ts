@@ -1,4 +1,4 @@
-import { ORDER_STATUSES } from "~/consts/status";
+import type { ORDER_STATUSES } from "~/consts/status";
 
 export interface OrderT {
   id: string;

@@ -63,7 +63,7 @@ function selectItem(item: { label: string; value: string; price?: number }) {
               'space-y-1',
               items.length > 5
                 ? 'max-h-60 overflow-auto scrollbar-thin scrollbar-thumb-transparent'
-                : 'h-fit'
+                : 'h-fit',
             )
           "
         >

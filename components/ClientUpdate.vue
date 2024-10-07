@@ -28,7 +28,7 @@ const clientSchema = toTypedSchema(
     email: z.string().default((props.email as string) ?? ""),
     phone_number: z.string().default((props.phone_number as string) ?? ""),
     address: z.string().default((props.address as string) ?? ""),
-  })
+  }),
 );
 
 const form = useForm({
@@ -55,20 +55,21 @@ async function updateTheClient(client: ClientT) {
         email: client.email,
         phone_number: client.phone_number,
         address: client.address,
-      })}`
+      })}`,
     );
     //
     toast.success(
       t("notifications.client.updated", { name: client.full_name }),
       {
         closeButton: true,
-      }
+      },
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -78,7 +79,8 @@ async function updateTheClient(client: ClientT) {
       return;
     }
     error(`UPDATE CLIENT: ${err}`);
-  } finally {
+  }
+  finally {
     close();
   }
 }

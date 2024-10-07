@@ -34,7 +34,7 @@ const invoiceSchema = z.object({
       quantity: z.number().min(1, t("validation.min", { min: 1 })),
       price: z.number().min(0, t("validation.min", { min: 0 })),
       name: z.string().optional(),
-    })
+    }),
   ),
 });
 
@@ -69,7 +69,7 @@ async function searchClients(search: string | number) {
     "search_clients",
     {
       search,
-    }
+    },
   );
   if (!res.error) {
     clients.value = res.data;
@@ -81,7 +81,7 @@ async function searchProducts(search: string | number) {
     "search_products",
     {
       search,
-    }
+    },
   );
   if (!res.error) {
     products.value = res.data;
@@ -103,13 +103,15 @@ const onSubmit = handleSubmit(async (values) => {
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     if (typeof err === "object" && "error" in err) {
       error(`UPDATE INVOICE: ${err.error}`);
       return;
     }
     error(`UPDATE INVOICE: ${err}`);
-  } finally {
+  }
+  finally {
     close();
   }
 });
@@ -117,7 +119,8 @@ const onSubmit = handleSubmit(async (values) => {
 async function deleteOneInvoiceItem(id: string) {
   try {
     await invoke("delete_inventory", { id });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -270,7 +273,9 @@ function deleteInvoiceItem(index: number) {
                           step="0.01"
                           v-bind="componentField"
                         >
-                          <template #unite> DH </template>
+                          <template #unite>
+                            DH
+                          </template>
                         </Input>
                       </FormControl>
                     </FormItem>

@@ -20,13 +20,14 @@ async function deleteTheClient() {
       t("notifications.client.deleted", { name: props.full_name }),
       {
         closeButton: true,
-      }
+      },
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-delete-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -36,7 +37,8 @@ async function deleteTheClient() {
       return;
     }
     console.error(`DELETE CLIENT: ${err}`);
-  } finally {
+  }
+  finally {
     close();
   }
 }
