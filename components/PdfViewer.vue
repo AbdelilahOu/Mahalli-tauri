@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-
-const pdfRef = ref<HTMLIFrameElement | null>(null);
+import { ref } from "vue";
 
 defineProps<{
   pdfContent: string;
 }>();
+
+const pdfRef = ref<HTMLIFrameElement | null>(null);
 </script>
 
 <template>

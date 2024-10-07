@@ -15,7 +15,8 @@ function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
       id: supplier.id!,
       full_name: supplier.full_name,
     });
-  } else {
+  }
+  else {
     modal.open(SupplierUpdate, {
       id: supplier.id!,
       full_name: supplier.full_name,

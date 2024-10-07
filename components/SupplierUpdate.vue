@@ -27,7 +27,7 @@ const supplierSchema = toTypedSchema(
     email: z.string().default((props.email as string) ?? ""),
     phone_number: z.string().default((props.phone_number as string) ?? ""),
     address: z.string().default((props.address as string) ?? ""),
-  })
+  }),
 );
 
 const form = useForm({
@@ -54,20 +54,21 @@ async function updateTheSupplier(supplier: SupplierT) {
         email: supplier.email,
         phone_number: supplier.phone_number,
         address: supplier.address,
-      })}`
+      })}`,
     );
     //
     toast.success(
       t("notifications.supplier.updated", { name: supplier.full_name }),
       {
         closeButton: true,
-      }
+      },
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -77,7 +78,8 @@ async function updateTheSupplier(supplier: SupplierT) {
       return;
     }
     error(`UPDATE SUPPLIER: ${err}`);
-  } finally {
+  }
+  finally {
     close();
   }
 }
