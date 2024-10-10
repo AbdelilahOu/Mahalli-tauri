@@ -262,7 +262,7 @@ export function usePdfGenerator() {
       newPage.setSize(...PageSizes.A4);
       const { width, height } = newPage.getSize();
       Width.value = width;
-      Height.value = height - 40;
+      Height.value = height - config.marginTop;
       drawItems(newPage, items, data, template);
     } else {
       Height.value = Height.value - 30;
