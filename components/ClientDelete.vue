@@ -4,7 +4,7 @@ import { toast } from "vue-sonner";
 
 const props = defineProps<{
   id: string;
-  full_name: string;
+  fullName: string;
 }>();
 const { t } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
@@ -16,12 +16,9 @@ async function deleteTheClient() {
     // INFO
     console.info(`DELETE CLIENT: ${props.id}`);
     //
-    toast.success(
-      t("notifications.client.deleted", { name: props.full_name }),
-      {
-        closeButton: true,
-      },
-    );
+    toast.success(t("notifications.client.deleted", { name: props.fullName }), {
+      closeButton: true,
+    });
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-delete-${Math.random() * 9999}`,
@@ -47,9 +44,7 @@ async function deleteTheClient() {
 <template>
   <Card>
     <CardHeader>
-      <CardTitle>
-        {{ t("titles.clients.delete") }} {{ full_name }} ?
-      </CardTitle>
+      <CardTitle> {{ t("titles.clients.delete") }} {{ fullName }} ? </CardTitle>
     </CardHeader>
     <CardContent>
       <div />

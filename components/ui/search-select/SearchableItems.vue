@@ -17,8 +17,8 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: "UpdateItems", s: string | number): void;
-  (e: "OnSelect", s: string, a?: number): void;
+  (e: "updateItems", s: string | number): void;
+  (e: "onSelect", s: string, a?: number): void;
 }>();
 
 const { t } = useI18n();
@@ -31,7 +31,7 @@ let timer: any;
 function updateInput(s: string | number) {
   clearTimeout(timer);
   timer = setTimeout(() => {
-    emits("UpdateItems", s);
+    emits("updateItems", s);
     open.value = true;
   }, 500);
 }
@@ -40,7 +40,7 @@ onClickOutside(dropdownParent, () => (open.value = false));
 
 function selectItem(item: { label: string; value: string; price?: number }) {
   inputValue.value = item.label;
-  emits("OnSelect", item.value, item.price);
+  emits("onSelect", item.value, item.price);
   open.value = false;
 }
 </script>

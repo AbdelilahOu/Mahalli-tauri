@@ -90,7 +90,7 @@ function setImage(image: string) {
         <UiUploader
           name="Image"
           :extensions="['png', 'jpeg', 'webp']"
-          @save:base64="setImage"
+          @save-base64="setImage"
         />
         <FormField v-slot="{ componentField }" name="full_name">
           <FormItem>

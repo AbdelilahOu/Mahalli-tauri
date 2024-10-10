@@ -8,9 +8,9 @@ import { z } from "zod";
 
 const props = defineProps<{
   id: string;
-  full_name: string;
+  fullName: string;
   email?: string;
-  phone_number?: string;
+  phoneNumber?: string;
   address?: string;
 }>();
 
@@ -24,9 +24,9 @@ const clientSchema = toTypedSchema(
       .string()
       .min(2)
       .max(50)
-      .default(props.full_name as string),
+      .default(props.fullName as string),
     email: z.string().default((props.email as string) ?? ""),
-    phone_number: z.string().default((props.phone_number as string) ?? ""),
+    phone_number: z.string().default((props.phoneNumber as string) ?? ""),
     address: z.string().default((props.address as string) ?? ""),
   }),
 );
@@ -143,7 +143,7 @@ const onSubmit = form.handleSubmit((values) => {
           {{ t("buttons.cancel") }}
         </Button>
         <Button type="submit" class="col-span-2">
-          {{ t("buttons.update", { name: full_name }) }}
+          {{ t("buttons.update", { name: fullName }) }}
         </Button>
       </CardFooter>
     </Card>

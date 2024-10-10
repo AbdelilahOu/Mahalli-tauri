@@ -13,15 +13,15 @@ function toggleThisClient(client: ClientT, name: "delete" | "update") {
   if (name === "delete") {
     modal.open(ClientDelete, {
       id: client.id!,
-      full_name: client.full_name,
+      fullName: client.full_name,
     });
   }
   else {
     modal.open(ClientUpdate, {
       id: client.id!,
-      full_name: client.full_name,
+      fullName: client.full_name,
       email: client.email,
-      phone_number: client.phone_number,
+      phoneNumber: client.phone_number,
       address: client.address,
     });
   }

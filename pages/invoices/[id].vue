@@ -17,7 +17,8 @@ const { data: invoice } = await useAsyncData(
         id,
       });
       return res.data;
-    } catch (err: any) {
+    }
+    catch (err: any) {
       toast.error(t("notifications.error.title"), {
         description: t("notifications.error.description"),
         closeButton: true,
@@ -27,7 +28,7 @@ const { data: invoice } = await useAsyncData(
       }
       throw err;
     }
-  }
+  },
 );
 
 async function handleGeneratePdf() {
@@ -36,7 +37,8 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -54,7 +56,7 @@ watch(
   () => config.templateBase64,
   () => {
     handleGeneratePdf();
-  }
+  },
 );
 </script>
 
@@ -70,7 +72,7 @@ watch(
         <UiUploader
           name="Pdf"
           :extensions="['pdf']"
-          @save:base64="setDocumentTemplate"
+          @save-base64="setDocumentTemplate"
         />
         <Label>{{ t("fields.top-margin") }} </Label>
         <Input v-model="config.marginTop" />

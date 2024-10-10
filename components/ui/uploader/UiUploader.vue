@@ -12,7 +12,7 @@ const { name, extensions } = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  "save:base64": [payload: string];
+  saveBase64: [payload: string];
 }>();
 
 const { t } = useI18n();
@@ -25,7 +25,7 @@ async function onDrop(files: File[] | null) {
     const filePath = await getBytesArray(files[0]);
     if (filePath) {
       const base64 = btoa(String.fromCharCode(...filePath));
-      emits("save:base64", base64);
+      emits("saveBase64", base64);
       if (name === "Image") {
         selectedFile.value = base64;
       }
@@ -49,7 +49,7 @@ async function OpenDialog() {
     if (filePath) {
       const base64 = await getFileBytes(filePath);
       if (base64) {
-        emits("save:base64", base64);
+        emits("saveBase64", base64);
         if (name === "Image") {
           selectedFile.value = base64;
         }
