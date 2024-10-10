@@ -54,12 +54,18 @@ export function usePdfGenerator() {
   async function generatePdf(data: any, type: DocType) {
     await initPdfDoc();
 
+    pdfDoc.setTitle(data.identifier);
+    pdfDoc.setAuthor("trymahalli.com");
+    pdfDoc.setSubject(type);
+    pdfDoc.setProducer("trymahalli.com");
+    pdfDoc.setCreator("trymahalli.com");
+
     try {
       let page: PDFPage;
       let template: PDFPage | undefined;
       if (config.templateBase64) {
         const sourcePdfDoc = await PDFDocument.load(
-          `data:application/pdf;base64,${config.templateBase64}`,
+          `data:application/pdf;headers=filename%3D${data.identifier};base64,${config.templateBase64}`,
         );
         const [templatePage] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
         template = templatePage;
@@ -94,7 +100,7 @@ export function usePdfGenerator() {
     const headerText = capitalizeFirstLetter(t(`fields.${type}`));
 
     page.drawText(headerText, {
-      x: config.marginX - 2,
+      x: config.marginX - 1,
       y: Height.value - config.marginTop,
       font,
       size: 30,
