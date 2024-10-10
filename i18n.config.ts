@@ -1,12 +1,3 @@
-export default defineI18nConfig(() => ({
-  legacy: false,
-  availableLocales: ["en", "fr", "ar", "de"],
-  // @ts-ignore
-  datetimeFormats,
-  // @ts-ignore
-  numberFormats,
-}));
-
 const DEFAULT_DATE_TIME_FORMAT = {
   short: {
     year: "numeric",
@@ -47,16 +38,23 @@ const DEFAULT_NUMBER_FORMATS = {
   },
 };
 
-const datetimeFormats = {
+const datetimeFormats: { [x: string]: any } = {
   en: DEFAULT_DATE_TIME_FORMAT,
   fr: DEFAULT_DATE_TIME_FORMAT,
   ar: DEFAULT_DATE_TIME_FORMAT,
   de: DEFAULT_DATE_TIME_FORMAT,
 };
 
-const numberFormats = {
+const numberFormats: { [x: string]: any } = {
   en: DEFAULT_NUMBER_FORMATS.AR,
   fr: DEFAULT_NUMBER_FORMATS.AR,
   ar: DEFAULT_NUMBER_FORMATS.AR,
   de: DEFAULT_NUMBER_FORMATS.AR,
 };
+
+export default defineI18nConfig(() => ({
+  legacy: false,
+  availableLocales: ["en", "fr", "ar", "de"],
+  datetimeFormats,
+  numberFormats,
+}));

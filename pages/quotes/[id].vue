@@ -15,7 +15,8 @@ const { data: quote } = await useAsyncData("get_quote_details", async () => {
       id,
     });
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -33,7 +34,8 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -51,7 +53,7 @@ watch(
   () => config.templateBase64,
   () => {
     handleGeneratePdf();
-  }
+  },
 );
 </script>
 
@@ -67,7 +69,7 @@ watch(
         <UiUploader
           name="Pdf"
           :extensions="['pdf']"
-          @save:base64="setDocumentTemplate"
+          @save-base64="setDocumentTemplate"
         />
         <Label>{{ t("fields.top-margin") }} </Label>
         <Input v-model="config.marginTop" />

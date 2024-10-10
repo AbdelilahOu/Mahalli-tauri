@@ -4,7 +4,7 @@ import { toast } from "vue-sonner";
 
 const props = defineProps<{
   id: string;
-  full_name: string;
+  fullName: string;
 }>();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
@@ -17,7 +17,7 @@ async function deleteTheSupplier() {
     console.info(`DELETE SUPPLIER: ${props.id}`);
     //
     toast.success(
-      t("notifications.supplier.deleted", { name: props.full_name }),
+      t("notifications.supplier.deleted", { name: props.fullName }),
       {
         closeButton: true,
       },
@@ -48,7 +48,7 @@ async function deleteTheSupplier() {
   <Card>
     <CardHeader>
       <CardTitle>
-        {{ t("titles.suppliers.delete") }} {{ full_name }} ?
+        {{ t("titles.suppliers.delete") }} {{ fullName }} ?
       </CardTitle>
     </CardHeader>
     <CardContent>

@@ -25,10 +25,10 @@ function toggleThisProduct(product: ProductT, name: "delete" | "update") {
     modal.open(ProductUpdate, {
       id: product.id!,
       name: product.name,
-      purchase_price: product.purchase_price,
-      selling_price: product.selling_price,
+      purchasePrice: product.purchase_price,
+      sellingPrice: product.selling_price,
       description: product.description,
-      min_quantity: product.min_quantity,
+      minQuantity: product.min_quantity,
     });
   }
 }

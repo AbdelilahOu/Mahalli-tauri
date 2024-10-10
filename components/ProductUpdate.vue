@@ -9,10 +9,10 @@ import { z } from "zod";
 const props = defineProps<{
   id: string;
   name: string;
-  purchase_price: number;
-  selling_price: number;
+  purchasePrice: number;
+  sellingPrice: number;
   description?: string;
-  min_quantity: number;
+  minQuantity: number;
 }>();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 const { close } = useModal();
@@ -28,16 +28,16 @@ const productSchema = toTypedSchema(
     purchase_price: z
       .number()
       .min(0)
-      .default(Number(props.purchase_price ?? 0)),
+      .default(Number(props.purchasePrice ?? 0)),
     selling_price: z
       .number()
       .min(0)
-      .default(Number(props.selling_price ?? 0)),
+      .default(Number(props.sellingPrice ?? 0)),
     description: z
       .string()
       .min(2)
       .default((props.description as string) ?? ""),
-    min_quantity: z.number().default(Number(props.min_quantity) ?? 0),
+    min_quantity: z.number().default(Number(props.minQuantity) ?? 0),
   }),
 );
 

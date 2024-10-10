@@ -13,15 +13,15 @@ function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
   if (name === "delete") {
     modal.open(SupplierDelete, {
       id: supplier.id!,
-      full_name: supplier.full_name,
+      fullName: supplier.full_name,
     });
   }
   else {
     modal.open(SupplierUpdate, {
       id: supplier.id!,
-      full_name: supplier.full_name,
+      fullName: supplier.full_name,
       email: supplier.email,
-      phone_number: supplier.phone_number,
+      phoneNumber: supplier.phone_number,
       address: supplier.address,
     });
   }
