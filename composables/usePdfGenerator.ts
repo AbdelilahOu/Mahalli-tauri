@@ -8,6 +8,9 @@ export function usePdfGenerator() {
   const { t, locale, n, d } = useI18n();
   const { numberToText } = useNumberToText();
 
+  const Width = ref(0);
+  const Height = ref(0);
+
   const config = reactive({
     marginTop: 40,
     marginX: 20,
@@ -64,31 +67,13 @@ export function usePdfGenerator() {
       page.setSize(...PageSizes.A4);
       const { width, height } = page.getSize();
 
-      drawHeader(page, width, height, data, type);
+      Width.value = width;
+      Height.value = height;
 
-      page.drawLine({
-        start: {
-          x: config.marginX,
-          y: height - config.marginTop - 20 * 7 + 10,
-        },
-        end: {
-          x: width - config.marginX,
-          y: height - config.marginTop - 20 * 7 + 10,
-        },
-        thickness: 1,
-        color: config.color,
-        opacity: 0.75,
-      });
+      drawHeader(page, data, type);
 
       const items = [...data.items];
-      drawItems(
-        page,
-        width,
-        items,
-        height - config.marginTop - 20 * 7,
-        data,
-        template
-      );
+      drawItems(page, items, data, template);
 
       return await pdfDoc.saveAsBase64({ dataUri: true });
     } catch (err) {
@@ -100,47 +85,23 @@ export function usePdfGenerator() {
     }
   }
 
-  function drawHeader(
-    page: PDFPage,
-    width: number,
-    height: number,
-    data: any,
-    type: "order" | "invoice" | "quote"
-  ) {
-    let headerText = "";
-    switch (type) {
-      case "order":
-        headerText = getOrderText();
-        break;
-      case "invoice":
-        headerText = getInvoiceText();
-        break;
-      case "quote":
-        headerText = getQuoteText();
-        break;
-    }
+  type DocType = "order" | "invoice" | "quote";
 
-    let headerDetailsX = getHeaderDetailsX(width, headerText, data.identifier);
+  function drawHeader(page: PDFPage, data: any, type: DocType) {
+    let headerText = capitalizeFirstLetter(t(`fields.${type}`));
+    let headerTextWidth = getTextWidth(headerText, 30);
 
     page.drawText(headerText, {
-      x: headerDetailsX,
-      y: height - config.marginTop,
+      x: config.marginX,
+      y: Height.value - config.marginTop,
       font,
       size: 30,
       color: config.color,
     });
 
     page.drawText(data.identifier, {
-      x: headerDetailsX,
-      y: height - config.marginTop - 20,
-      font,
-      size: 13,
-      color: config.color,
-    });
-
-    page.drawText(d(new Date(data.created_at)), {
-      x: headerDetailsX,
-      y: height - config.marginTop - 40,
+      x: headerTextWidth + config.marginX + 10,
+      y: Height.value - config.marginTop,
       font,
       size: 13,
       color: config.color,
@@ -148,26 +109,38 @@ export function usePdfGenerator() {
 
     if (type !== "quote") {
       page.drawText(t(`status.${data.status.toLowerCase()}`), {
-        x: headerDetailsX,
-        y: height - config.marginTop - 60,
+        x: getMiddleX(
+          t(`status.${data.status.toLowerCase()}`),
+          Width.value,
+          13
+        ),
+        y: Height.value - config.marginTop,
         font,
         size: 13,
         color: config.color,
       });
     }
 
-    drawClientInfo(page, width, height, data.client);
+    page.drawText(d(new Date(data.created_at)), {
+      x:
+        Width.value -
+        config.marginX -
+        getTextWidth(d(new Date(data.created_at)), 13),
+      y: Height.value - config.marginTop,
+      font,
+      size: 13,
+      color: config.color,
+    });
+
+    Height.value = Height.value - 30;
+
+    drawClientInfo(page, data.client);
   }
 
-  function drawClientInfo(
-    page: PDFPage,
-    width: number,
-    height: number,
-    client: any
-  ) {
+  function drawClientInfo(page: PDFPage, client: any) {
     page.drawText(t("fields.bill-to").toUpperCase(), {
       x: config.marginX,
-      y: height - config.marginTop,
+      y: Height.value - config.marginTop,
       font,
       size: 14,
       color: config.color,
@@ -182,20 +155,25 @@ export function usePdfGenerator() {
     clientFields.forEach((field, index) => {
       page.drawText(field, {
         x: config.marginX,
-        y: height - config.marginTop - 20 * (index + 1),
+        y: Height.value - config.marginTop - 20 * (index + 1),
         font,
         size: 13,
         color: config.color,
       });
     });
 
-    drawTableHeaders(page, width, height);
+    Height.value = Height.value - 20 * 5;
+
+    drawTableHeaders(page);
   }
 
-  function drawTableHeaders(page: PDFPage, width: number, height: number) {
+  function drawTableHeaders(page: PDFPage) {
     page.drawLine({
-      start: { x: config.marginX, y: height - config.marginTop - 20 * 5 },
-      end: { x: width - config.marginX, y: height - config.marginTop - 20 * 5 },
+      start: { x: config.marginX, y: Height.value - config.marginTop },
+      end: {
+        x: Width.value - config.marginX,
+        y: Height.value - config.marginTop,
+      },
       thickness: 1,
       color: config.color,
       opacity: 0.75,
@@ -204,67 +182,78 @@ export function usePdfGenerator() {
     const headers = ["name", "quantity", "price", "total"];
     headers.forEach((header, index) => {
       page.drawText(t(`fields.${header}`), {
-        x: config.marginX + 5 + (width * index) / 4,
-        y: height - config.marginTop - 20 * 6,
+        x: config.marginX + 5 + (Width.value * index) / 4,
+        y: Height.value - config.marginTop - 20,
         font,
         size: 14,
         color: config.color,
       });
     });
+
+    page.drawLine({
+      start: { x: config.marginX, y: Height.value - config.marginTop - 30 },
+      end: {
+        x: Width.value - config.marginX,
+        y: Height.value - config.marginTop - 30,
+      },
+      thickness: 1,
+      color: config.color,
+      opacity: 0.75,
+    });
+
+    Height.value = Height.value - config.marginTop - 40;
   }
 
   function drawItems(
     page: PDFPage,
-    width: number,
     items: any[],
-    currentY: number,
     data: any,
     template?: PDFPage
   ) {
     if (items.length === 0) {
-      drawSummary(page, width, currentY, data);
+      drawSummary(page, data);
       return;
     }
 
     const item = items.shift();
     page.drawText(item.name, {
       x: config.marginX + 5,
-      y: currentY - 10,
+      y: Height.value - 10,
       font,
       size: 12,
       color: config.color,
     });
+
     page.drawText(n(item?.quantity, "decimal"), {
-      x: config.marginX + 5 + width / 4,
-      y: currentY - 10,
+      x: config.marginX + 5 + Width.value / 4,
+      y: Height.value - 10,
       font,
       size: 12,
       color: config.color,
     });
     page.drawText(n(item.price, "currency"), {
-      x: config.marginX + 5 + width / 2,
-      y: currentY - 10,
+      x: config.marginX + 5 + Width.value / 2,
+      y: Height.value - 10,
       font,
       size: 12,
       color: config.color,
     });
     page.drawText(n(item.price * item.quantity, "currency"), {
-      x: config.marginX + 5 + (width * 3) / 4,
-      y: currentY - 10,
+      x: config.marginX + 5 + (Width.value * 3) / 4,
+      y: Height.value - 10,
       font,
       size: 12,
       color: config.color,
     });
     page.drawLine({
-      start: { x: config.marginX, y: currentY - 20 },
-      end: { x: width - config.marginX, y: currentY - 20 },
+      start: { x: config.marginX, y: Height.value - 20 },
+      end: { x: Width.value - config.marginX, y: Height.value - 20 },
       thickness: 1,
       color: config.color,
       opacity: 0.75,
     });
 
-    const lineHeight = 30;
-    if (currentY < config.marginBottom) {
+    if (Height.value < config.marginBottom) {
       let newPage: PDFPage;
       if (template) {
         newPage = pdfDoc.addPage(copyPage(template));
@@ -272,26 +261,18 @@ export function usePdfGenerator() {
         newPage = pdfDoc.addPage();
       }
       newPage.setSize(...PageSizes.A4);
-      drawItems(
-        newPage,
-        width,
-        items,
-        newPage.getHeight() - config.marginTop,
-        data,
-        template
-      );
+      const { width, height } = newPage.getSize();
+      Width.value = width;
+      Height.value = height - 40;
+      drawItems(newPage, items, data, template);
     } else {
-      drawItems(page, width, items, currentY - lineHeight, data, template);
+      Height.value = Height.value - 30;
+      drawItems(page, items, data, template);
     }
   }
 
-  function drawSummary(
-    page: PDFPage,
-    width: number,
-    currentY: number,
-    data: any
-  ) {
-    let summaryX = getSummaryX(width);
+  function drawSummary(page: PDFPage, data: any) {
+    let summaryX = getSummaryX(Width.value);
 
     const summaryItems = [
       { label: "sub-total", value: n(data.total, "currency") },
@@ -305,8 +286,8 @@ export function usePdfGenerator() {
 
     summaryItems.forEach((item, index) => {
       page.drawText(item.value, {
-        x: config.marginX + 5 + (width * 3) / 4,
-        y: currentY - 10 - index * 30,
+        x: config.marginX + 5 + (Width.value * 3) / 4,
+        y: Height.value - 10 - index * 30,
         font,
         size: 12,
         color: config.color,
@@ -314,15 +295,18 @@ export function usePdfGenerator() {
 
       page.drawText(t(`fields.${item.label}`).toUpperCase(), {
         x: summaryX,
-        y: currentY - 10 - index * 30,
+        y: Height.value - 10 - index * 30,
         font,
         size: 12,
         color: config.color,
       });
 
       page.drawLine({
-        start: { x: summaryX, y: currentY - 20 - index * 30 },
-        end: { x: width - config.marginX, y: currentY - 20 - index * 30 },
+        start: { x: summaryX, y: Height.value - 20 - index * 30 },
+        end: {
+          x: Width.value - config.marginX,
+          y: Height.value - 20 - index * 30,
+        },
         thickness: 1,
         color: config.color,
         opacity: 0.75,
@@ -334,8 +318,8 @@ export function usePdfGenerator() {
       locale.value as any
     );
     page.drawText(totalAsText, {
-      x: (width - config.marginX - font.widthOfTextAtSize(totalAsText, 13)) / 2,
-      y: currentY - 130,
+      x: getMiddleX(totalAsText, Width.value, 13),
+      y: Height.value - 130,
       font,
       size: 13,
       color: config.color,
@@ -350,66 +334,16 @@ export function usePdfGenerator() {
     return PDFPage.of(cloneNode, cloneRef, originalPage.doc);
   }
 
-  function getOrderText() {
-    switch (locale.value) {
-      case "en":
-        return "O R D E R";
-      case "fr":
-        return "C O M M A N D E";
-      case "de":
-        return "A U F T R A G";
-      case "ar":
-        return "طلب";
-      default:
-        return "O R D E R";
-    }
+  function getTextWidth(text: string, fontSize: number) {
+    return font.widthOfTextAtSize(text, fontSize);
   }
 
-  function getInvoiceText() {
-    switch (locale.value) {
-      case "en":
-        return "I N V O I C E";
-      case "fr":
-        return "F A C T U R E";
-      case "de":
-        return "R E C H N U N G";
-      case "ar":
-        return "فاتورة";
-      default:
-        return "I N V O I C E";
-    }
+  function getMiddleX(text: string, width: number, fontSize: number) {
+    return (width - font.widthOfTextAtSize(text, fontSize)) / 2;
   }
 
-  function getQuoteText() {
-    switch (locale.value) {
-      case "en":
-        return "Q U O T E";
-      case "fr":
-        return "D E V I";
-      case "de":
-        return "Z I T A T E";
-      case "ar":
-        return "اقتباس";
-      default:
-        return "Q U O T E";
-    }
-  }
-
-  function getHeaderDetailsX(
-    width: number,
-    headerText: string,
-    identifier: string
-  ) {
-    switch (locale.value) {
-      case "en":
-      case "fr":
-      case "de":
-        return width - font.widthOfTextAtSize(headerText, 30) - config.marginX;
-      case "ar":
-        return width - font.widthOfTextAtSize(identifier, 13) - config.marginX;
-      default:
-        return width - font.widthOfTextAtSize(headerText, 30) - config.marginX;
-    }
+  function capitalizeFirstLetter(text: string) {
+    return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
   function getSummaryX(width: number) {

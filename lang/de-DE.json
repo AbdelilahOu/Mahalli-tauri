@@ -68,7 +68,10 @@
     "configuration": "Konfiguration",
     "top-margin": "Oberer Rand",
     "bottom-margin": "Unterer Rand",
-    "bill-to": "Rechnung an :"
+    "bill-to": "Rechnung an :",
+    "invoice": "Rechnung",
+    "order": "Bestellung",
+    "quote": "Angebot"
   },
   "status": {
     "pending": "Ausstehend",
