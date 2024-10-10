@@ -68,7 +68,10 @@
     "configuration": "Configuration",
     "top-margin": "Marge supérieure",
     "bottom-margin": "Marge inférieure",
-    "bill-to": "Facturer à :"
+    "bill-to": "Facturer à :",
+    "invoice": "facture",
+    "order": "commande",
+    "quote": "devis"
   },
   "status": {
     "pending": "En attente",

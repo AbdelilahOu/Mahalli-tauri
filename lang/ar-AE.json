@@ -68,7 +68,10 @@
     "configuration": "التكوين",
     "top-margin": "الهوامش العلوية",
     "bottom-margin": "الهوامش السفلية",
-    "bill-to": "فاتورة إلى :"
+    "bill-to": "فاتورة إلى :",
+    "invoice": "فاتورة",
+    "order": "طلب",
+    "quote": "عرض أسعار"
   },
   "status": {
     "pending": "قيد الانتظار",

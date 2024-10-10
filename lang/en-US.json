@@ -68,7 +68,10 @@
     "configuration": "Configuration",
     "top-margin": "Top margin",
     "bottom-margin": "Bottom margin",
-    "bill-to": "Bill to :"
+    "bill-to": "Bill to :",
+    "invoice": "invoice",
+    "order": "order",
+    "quote": "quote"
   },
   "status": {
     "pending": "Pending",
