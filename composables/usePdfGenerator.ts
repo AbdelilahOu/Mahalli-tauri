@@ -48,7 +48,9 @@ export function usePdfGenerator() {
     config.templateBase64 = data;
   }
 
-  async function generatePdf(data: any, type: "order" | "invoice" | "quote") {
+  type DocType = "order" | "invoice" | "quote";
+
+  async function generatePdf(data: any, type: DocType) {
     await initPdfDoc();
 
     try {
@@ -85,14 +87,11 @@ export function usePdfGenerator() {
     }
   }
 
-  type DocType = "order" | "invoice" | "quote";
-
   function drawHeader(page: PDFPage, data: any, type: DocType) {
     let headerText = capitalizeFirstLetter(t(`fields.${type}`));
-    let headerTextWidth = getTextWidth(headerText, 30);
 
     page.drawText(headerText, {
-      x: config.marginX,
+      x: config.marginX - 2,
       y: Height.value - config.marginTop,
       font,
       size: 30,
@@ -100,8 +99,8 @@ export function usePdfGenerator() {
     });
 
     page.drawText(data.identifier, {
-      x: headerTextWidth + config.marginX + 10,
-      y: Height.value - config.marginTop,
+      x: config.marginX,
+      y: Height.value - config.marginTop - 20,
       font,
       size: 13,
       color: config.color,
@@ -114,7 +113,7 @@ export function usePdfGenerator() {
           Width.value,
           13
         ),
-        y: Height.value - config.marginTop,
+        y: Height.value - config.marginTop - 20,
         font,
         size: 13,
         color: config.color,
@@ -126,13 +125,13 @@ export function usePdfGenerator() {
         Width.value -
         config.marginX -
         getTextWidth(d(new Date(data.created_at)), 13),
-      y: Height.value - config.marginTop,
+      y: Height.value - config.marginTop - 20,
       font,
       size: 13,
       color: config.color,
     });
 
-    Height.value = Height.value - 30;
+    Height.value = Height.value - 50;
 
     drawClientInfo(page, data.client);
   }
