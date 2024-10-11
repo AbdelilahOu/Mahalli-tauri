@@ -11,6 +11,9 @@ export function usePdfGenerator() {
   const Width = ref(0);
   const Height = ref(0);
 
+  let pdfDoc: PDFDocument;
+  let font: PDFFont;
+
   const config = reactive({
     marginTop: 40,
     marginX: 20,
@@ -25,9 +28,6 @@ export function usePdfGenerator() {
     },
   });
 
-  let pdfDoc: PDFDocument;
-  let font: PDFFont;
-
   async function initPdfDoc() {
     try {
       pdfDoc = await PDFDocument.create();
@@ -35,8 +35,7 @@ export function usePdfGenerator() {
       const res: any = await $fetch(CairoRegular);
       const fontBytes = await res.arrayBuffer();
       font = await pdfDoc.embedFont(fontBytes);
-    }
-    catch (err: any) {
+    } catch (err: any) {
       toast.error(t("notifications.error.title"), {
         description: t("notifications.error.description"),
         closeButton: true,
@@ -65,13 +64,12 @@ export function usePdfGenerator() {
       let template: PDFPage | undefined;
       if (config.templateBase64) {
         const sourcePdfDoc = await PDFDocument.load(
-          `data:application/pdf;headers=filename%3D${data.identifier};base64,${config.templateBase64}`,
+          `data:application/pdf;headers=filename%3D${data.identifier};base64,${config.templateBase64}`
         );
         const [templatePage] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
         template = templatePage;
         page = pdfDoc.addPage(copyPage(template));
-      }
-      else {
+      } else {
         page = pdfDoc.addPage();
       }
       page.setSize(...PageSizes.A4);
@@ -86,8 +84,7 @@ export function usePdfGenerator() {
       drawItems(page, items, data, template);
 
       return await pdfDoc.saveAsBase64({ dataUri: true });
-    }
-    catch (err) {
+    } catch (err) {
       toast.error(t("notifications.error.title"), {
         description: t("notifications.error.description"),
         closeButton: true,
@@ -107,7 +104,7 @@ export function usePdfGenerator() {
       color: config.color,
     });
     const totalText = n(data.total + data.total * 0.2, "currency");
-    page.drawText(n(data.total + data.total * 0.2, "currency"), {
+    page.drawText(reverseText(totalText), {
       x: Width.value - config.marginX - getTextWidth(totalText, 20),
       y: Height.value - config.marginTop,
       font,
@@ -128,7 +125,7 @@ export function usePdfGenerator() {
         x: getMiddleX(
           t(`status.${data.status.toLowerCase()}`),
           Width.value,
-          13,
+          13
         ),
         y: Height.value - config.marginTop - 20,
         font,
@@ -139,9 +136,9 @@ export function usePdfGenerator() {
 
     page.drawText(d(new Date(data.created_at)), {
       x:
-        Width.value
-        - config.marginX
-        - getTextWidth(d(new Date(data.created_at)), 13),
+        Width.value -
+        config.marginX -
+        getTextWidth(d(new Date(data.created_at)), 13),
       y: Height.value - config.marginTop - 20,
       font,
       size: 13,
@@ -163,14 +160,10 @@ export function usePdfGenerator() {
     });
 
     const clientFields: string[] = [];
-    if (config.clientFields.fullname)
-      clientFields.push(client.full_name);
-    if (config.clientFields.email)
-      clientFields.push(client.email);
-    if (config.clientFields.phone)
-      clientFields.push(client.phone_number);
-    if (config.clientFields.address)
-      clientFields.push(client.address);
+    if (config.clientFields.fullname) clientFields.push(client.full_name);
+    if (config.clientFields.email) clientFields.push(client.email);
+    if (config.clientFields.phone) clientFields.push(client.phone_number);
+    if (config.clientFields.address) clientFields.push(client.address);
 
     clientFields.forEach((field, index) => {
       page.drawText(field, {
@@ -228,7 +221,7 @@ export function usePdfGenerator() {
     page: PDFPage,
     items: any[],
     data: any,
-    template?: PDFPage,
+    template?: PDFPage
   ) {
     if (items.length === 0) {
       drawSummary(page, data);
@@ -251,14 +244,14 @@ export function usePdfGenerator() {
       size: 12,
       color: config.color,
     });
-    page.drawText(n(item.price, "currency"), {
+    page.drawText(reverseText(n(item.price, "currency")), {
       x: config.marginX + 5 + Width.value / 2,
       y: Height.value - 10,
       font,
       size: 12,
       color: config.color,
     });
-    page.drawText(n(item.price * item.quantity, "currency"), {
+    page.drawText(reverseText(n(item.price * item.quantity, "currency")), {
       x: config.marginX + 5 + (Width.value * 3) / 4,
       y: Height.value - 10,
       font,
@@ -277,8 +270,7 @@ export function usePdfGenerator() {
       let newPage: PDFPage;
       if (template) {
         newPage = pdfDoc.addPage(copyPage(template));
-      }
-      else {
+      } else {
         newPage = pdfDoc.addPage();
       }
       newPage.setSize(...PageSizes.A4);
@@ -286,8 +278,7 @@ export function usePdfGenerator() {
       Width.value = width;
       Height.value = height - config.marginTop;
       drawItems(newPage, items, data, template);
-    }
-    else {
+    } else {
       Height.value = Height.value - 30;
       drawItems(page, items, data, template);
     }
@@ -297,12 +288,15 @@ export function usePdfGenerator() {
     const summaryX = getSummaryX(Width.value);
 
     const summaryItems = [
-      { label: "sub-total", value: n(data.total, "currency") },
+      { label: "sub-total", value: reverseText(n(data.total, "currency")) },
       { label: "vat-rate", value: "20%" },
-      { label: "vat-amount", value: n(data.total * 0.2, "currency") },
+      {
+        label: "vat-amount",
+        value: reverseText(n(data.total * 0.2, "currency")),
+      },
       {
         label: "grand-total",
-        value: n(data.total + data.total * 0.2, "currency"),
+        value: reverseText(n(data.total + data.total * 0.2, "currency")),
       },
     ];
 
@@ -337,8 +331,9 @@ export function usePdfGenerator() {
 
     const totalAsText = numberToText(
       data.total + data.total * 0.2,
-      locale.value as any,
+      locale.value as any
     );
+    console.log(totalAsText, data.total + data.total * 0.2);
     page.drawText(totalAsText, {
       x: getMiddleX(totalAsText, Width.value, 13),
       y: Height.value - 130,
@@ -351,8 +346,7 @@ export function usePdfGenerator() {
   function copyPage(originalPage: any) {
     const cloneNode = originalPage.node.clone();
     const { Contents } = originalPage.node.normalizedEntries();
-    if (Contents)
-      cloneNode.set(PDFName.of("Contents"), Contents.clone());
+    if (Contents) cloneNode.set(PDFName.of("Contents"), Contents.clone());
     const cloneRef = originalPage.doc.context.register(cloneNode);
     return PDFPage.of(cloneNode, cloneRef, originalPage.doc);
   }
@@ -367,6 +361,17 @@ export function usePdfGenerator() {
 
   function capitalizeFirstLetter(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+
+  function reverseText(text: string) {
+    if (locale.value != "ar") return text;
+    const currency = text.split("").splice(-5).join("");
+    const amount = text
+      .split("")
+      .splice(0, text.split("").length - 6)
+      .reverse()
+      .join("");
+    return `${amount} ${currency}`;
   }
 
   function getSummaryX(width: number) {
