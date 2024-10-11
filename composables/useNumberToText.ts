@@ -126,8 +126,10 @@ export function useNumberToText() {
   const germanScales = ["", "tausend", "Million", "Milliarde", "Billion"];
 
   function convertToArabic(number: number): string {
-    if (number === 0) return "صفر";
-    if (number < 0) return `سالب ${convertToArabic(Math.abs(number))}`;
+    if (number === 0)
+      return "صفر";
+    if (number < 0)
+      return `سالب ${convertToArabic(Math.abs(number))}`;
 
     let result = "";
     let scaleIndex = 0;
@@ -136,10 +138,10 @@ export function useNumberToText() {
       const part = number % 1000;
       if (part > 0) {
         const partText = convertArabicPart(part);
-        result =
-          partText +
-          (scaleIndex > 0 ? ` ${arabicScales[scaleIndex]} ` : "") +
-          result;
+        result
+          = partText
+          + (scaleIndex > 0 ? ` ${arabicScales[scaleIndex]} ` : "")
+          + result;
       }
       number = Math.floor(number / 1000);
       scaleIndex++;
@@ -160,7 +162,8 @@ export function useNumberToText() {
 
     if (tens === 1) {
       result += `${arabicOnes[number % 100]} `;
-    } else {
+    }
+    else {
       if (tens > 1) {
         result += `${arabicTens[tens]} `;
       }
@@ -173,8 +176,10 @@ export function useNumberToText() {
   }
 
   function convertToFrench(number: number): string {
-    if (number === 0) return "zéro";
-    if (number < 0) return `moins ${convertToFrench(Math.abs(number))}`;
+    if (number === 0)
+      return "zéro";
+    if (number < 0)
+      return `moins ${convertToFrench(Math.abs(number))}`;
 
     let result = "";
     let scaleIndex = 0;
@@ -183,10 +188,10 @@ export function useNumberToText() {
       const part = number % 1000;
       if (part > 0) {
         const partText = convertFrenchPart(part);
-        result =
-          partText +
-          (scaleIndex > 0 ? ` ${frenchScales[scaleIndex]} ` : "") +
-          result;
+        result
+          = partText
+          + (scaleIndex > 0 ? ` ${frenchScales[scaleIndex]} ` : "")
+          + result;
       }
       number = Math.floor(number / 1000);
       scaleIndex++;
@@ -207,13 +212,15 @@ export function useNumberToText() {
 
     if (tens === 1) {
       result += `${frenchTens[1]}-${frenchOnes[ones]} `;
-    } else if (tens > 1) {
+    }
+    else if (tens > 1) {
       result += frenchTens[tens];
       if (ones > 0) {
         result += `-${frenchOnes[ones]}`;
       }
       result += " ";
-    } else if (ones > 0) {
+    }
+    else if (ones > 0) {
       result += `${frenchOnes[ones]} `;
     }
 
@@ -221,8 +228,10 @@ export function useNumberToText() {
   }
 
   function convertToEnglish(number: number): string {
-    if (number === 0) return "zero";
-    if (number < 0) return `negative ${convertToEnglish(Math.abs(number))}`;
+    if (number === 0)
+      return "zero";
+    if (number < 0)
+      return `negative ${convertToEnglish(Math.abs(number))}`;
 
     let result = "";
     let scaleIndex = 0;
@@ -231,10 +240,10 @@ export function useNumberToText() {
       const part = number % 1000;
       if (part > 0) {
         const partText = convertEnglishPart(part);
-        result =
-          partText +
-          (scaleIndex > 0 ? ` ${englishScales[scaleIndex]} ` : "") +
-          result;
+        result
+          = partText
+          + (scaleIndex > 0 ? ` ${englishScales[scaleIndex]} ` : "")
+          + result;
       }
       number = Math.floor(number / 1000);
       scaleIndex++;
@@ -268,7 +277,8 @@ export function useNumberToText() {
           "nineteen",
         ][ones]
       } `;
-    } else {
+    }
+    else {
       if (tens > 1) {
         result += `${englishTens[tens]}-`;
       }
@@ -281,8 +291,10 @@ export function useNumberToText() {
   }
 
   function convertToGerman(number: number): string {
-    if (number === 0) return "null";
-    if (number < 0) return `minus ${convertToGerman(Math.abs(number))}`;
+    if (number === 0)
+      return "null";
+    if (number < 0)
+      return `minus ${convertToGerman(Math.abs(number))}`;
 
     let result = "";
     let scaleIndex = 0;
@@ -291,10 +303,10 @@ export function useNumberToText() {
       const part = number % 1000;
       if (part > 0) {
         const partText = convertGermanPart(part);
-        result =
-          partText +
-          (scaleIndex > 0 ? ` ${germanScales[scaleIndex]} ` : "") +
-          result;
+        result
+          = partText
+          + (scaleIndex > 0 ? ` ${germanScales[scaleIndex]} ` : "")
+          + result;
       }
       number = Math.floor(number / 1000);
       scaleIndex++;
@@ -315,7 +327,8 @@ export function useNumberToText() {
 
     if (tens === 1) {
       result += `${germanOnes[ones]}zehn`;
-    } else {
+    }
+    else {
       if (ones > 0) {
         result += germanOnes[ones];
       }

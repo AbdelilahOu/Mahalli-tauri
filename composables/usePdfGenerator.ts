@@ -364,7 +364,7 @@ export function usePdfGenerator() {
   }
 
   function reverseText(text: string) {
-    if (locale.value != "ar") return text;
+    if (locale.value !== "ar") return text;
     const currency = text.split("").splice(-5).join("");
     const amount = text
       .split("")
