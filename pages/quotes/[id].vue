@@ -15,8 +15,7 @@ const { data: quote } = await useAsyncData("get_quote_details", async () => {
       id,
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -34,8 +33,7 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -53,7 +51,7 @@ watch(
   () => config.templateBase64,
   () => {
     handleGeneratePdf();
-  },
+  }
 );
 </script>
 
@@ -82,15 +80,15 @@ watch(
               {{ t("fields.full-name") }}
             </Label>
             <Switch
-              :default-checked="config.clientFields.fullname"
+              :default-checked="config.clientFields.full_name"
               @update:checked="
-                (checked) => (config.clientFields.fullname = checked)
+                (checked) => (config.clientFields.full_name = checked)
               "
             />
           </div>
           <Input
             v-model="quote.client.full_name"
-            :disabled="!config.clientFields.fullname"
+            :disabled="!config.clientFields.full_name"
           />
         </div>
         <div class="flex flex-col gap-2">
@@ -127,15 +125,15 @@ watch(
           <div class="flex justify-between items-center">
             <Label>{{ t("fields.phone") }}</Label>
             <Switch
-              :default-checked="config.clientFields.phone"
+              :default-checked="config.clientFields.phone_number"
               @update:checked="
-                (checked) => (config.clientFields.phone = checked)
+                (checked) => (config.clientFields.phone_number = checked)
               "
             />
           </div>
           <Input
             v-model="quote.client.phone_number"
-            :disabled="!config.clientFields.phone"
+            :disabled="!config.clientFields.phone_number"
           />
         </div>
       </CardContent>

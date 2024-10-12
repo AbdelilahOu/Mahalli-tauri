@@ -23,10 +23,10 @@ export function usePdfGenerator() {
     templateBase64: null as string | null,
     color: rgb(0.34, 0.34, 0.34),
     clientFields: {
-      fullname: true,
+      full_name: true,
       email: true,
       address: true,
-      phone: true,
+      phone_number: true,
     },
   });
 
@@ -55,7 +55,7 @@ export function usePdfGenerator() {
     setPdfMetadata(pdfDoc, data, type);
 
     try {
-      await setupPage(data);
+      await setupPage(data.identifier);
       drawContent(data, type);
       return await pdfDoc.saveAsBase64({ dataUri: true });
     } catch (err) {
@@ -71,12 +71,12 @@ export function usePdfGenerator() {
     pdfDoc.setCreator("trymahalli.com");
   }
 
-  async function setupPage(data: any) {
+  async function setupPage(identifier: string) {
     if (!pdfDoc) return;
 
     if (config.templateBase64) {
       const sourcePdfDoc = await PDFDocument.load(
-        `data:application/pdf;headers=filename%3D${data.identifier};base64,${config.templateBase64}`
+        `data:application/pdf;headers=filename%3D${identifier};base64,${config.templateBase64}`
       );
       const [templatePage] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
       template = templatePage;
@@ -183,16 +183,7 @@ export function usePdfGenerator() {
   function getClientFields(client: any): string[] {
     return Object.entries(config.clientFields)
       .filter(([_, value]) => value)
-      .map(
-        ([key, _]) =>
-          client[
-            key === "fullname"
-              ? "full_name"
-              : key === "phone"
-              ? "phone_number"
-              : key
-          ]
-      );
+      .map(([key, _]) => client[key]);
   }
 
   function drawTableHeaders() {
