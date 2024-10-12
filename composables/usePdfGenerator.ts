@@ -111,7 +111,7 @@ export function usePdfGenerator() {
     page.drawText(headerText, {
       x: config.marginX - 1,
       y: Height.value,
-      font: font,
+      font,
       size: 30,
       color: config.color,
     });
@@ -119,7 +119,7 @@ export function usePdfGenerator() {
     page.drawText(reverseText(totalText), {
       x: Width.value - config.marginX - getTextWidth(totalText, 20),
       y: Height.value,
-      font: font,
+      font,
       size: 20,
       color: config.color,
     });
@@ -127,7 +127,7 @@ export function usePdfGenerator() {
     page.drawText(data.identifier, {
       x: config.marginX,
       y: Height.value - 20,
-      font: font,
+      font,
       size: 13,
       color: config.color,
     });
@@ -137,7 +137,7 @@ export function usePdfGenerator() {
       page.drawText(statusText, {
         x: getMiddleX(statusText, Width.value, 13),
         y: Height.value - 20,
-        font: font,
+        font,
         size: 13,
         color: config.color,
       });
@@ -147,7 +147,7 @@ export function usePdfGenerator() {
     page.drawText(dateText, {
       x: Width.value - config.marginX - getTextWidth(dateText, 13),
       y: Height.value - 20,
-      font: font,
+      font,
       size: 13,
       color: config.color,
     });
@@ -161,7 +161,7 @@ export function usePdfGenerator() {
     page.drawText(t("fields.bill-to").toUpperCase(), {
       x: config.marginX,
       y: Height.value,
-      font: font,
+      font,
       size: 14,
       color: config.color,
     });
@@ -218,7 +218,7 @@ export function usePdfGenerator() {
       page.drawText(item.name, {
         x: config.marginX + 5,
         y: Height.value - 10,
-        font: font,
+        font,
         size: 12,
         color: config.color,
       });
@@ -226,7 +226,7 @@ export function usePdfGenerator() {
       page.drawText(n(item?.quantity, "decimal"), {
         x: config.marginX + 5 + Width.value / 4,
         y: Height.value - 10,
-        font: font,
+        font,
         size: 12,
         color: config.color,
       });
@@ -234,7 +234,7 @@ export function usePdfGenerator() {
       page.drawText(reverseText(n(item.price, "currency")), {
         x: config.marginX + 5 + Width.value / 2,
         y: Height.value - 10,
-        font: font,
+        font,
         size: 12,
         color: config.color,
       });
@@ -242,7 +242,7 @@ export function usePdfGenerator() {
       page.drawText(reverseText(n(item.price * item.quantity, "currency")), {
         x: config.marginX + 5 + (Width.value * 3) / 4,
         y: Height.value - 10,
-        font: font,
+        font,
         size: 12,
         color: config.color,
       });
@@ -254,7 +254,7 @@ export function usePdfGenerator() {
   }
 
   function drawSummary(summaryItems: any[]) {
-    summaryItems.forEach((item, index) => {
+    summaryItems.forEach((item) => {
       if (Height.value < config.marginBottom) {
         addNewPage();
       }
@@ -266,7 +266,7 @@ export function usePdfGenerator() {
       page.drawText(item.value, {
         x: config.marginX + 5 + (Width.value * 3) / 4,
         y: Height.value - 10,
-        font: font,
+        font,
         size: 12,
         color: config.color,
       });
@@ -274,7 +274,7 @@ export function usePdfGenerator() {
       page.drawText(t(`fields.${item.label}`).toUpperCase(), {
         x: summaryX,
         y: Height.value - 10,
-        font: font,
+        font,
         size: 12,
         color: config.color,
       });
@@ -293,7 +293,7 @@ export function usePdfGenerator() {
     page.drawText(totalAsText, {
       x: getMiddleX(totalAsText, Width.value, 13),
       y: Height.value - 30,
-      font: font,
+      font,
       size: 13,
       color: config.color,
     });
