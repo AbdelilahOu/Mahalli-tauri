@@ -1,6 +1,6 @@
 [package]
 name = "mahalli"
-version = "1.9.2"
+version = "1.9.3"
 description = "Inventory & invoicing management app"
 authors = ["AbdelilahOu"]
 license = ""
