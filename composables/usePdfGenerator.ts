@@ -99,7 +99,7 @@ export function usePdfGenerator() {
     drawTableHeaders();
     drawItems(data.items);
     drawSummary(getSummaryItems(data));
-    drawTotalAsText(data.total);
+    drawTotalAsText(data.total + data.total * 0.2);
   }
 
   function drawHeader(data: any, type: DocType) {
@@ -322,9 +322,14 @@ export function usePdfGenerator() {
   }
 
   function reverseText(text: string) {
-    if (locale.value !== "ar") return text;
-    const [amount, currency] = text.split(" ");
-    return `${amount.split("").reverse().join("")} ${currency}`;
+    if (locale.value != "ar") return text;
+    const currency = text.split("").splice(-5).join("");
+    const amount = text
+      .split("")
+      .splice(0, text.split("").length - 6)
+      .reverse()
+      .join("");
+    return `${amount} ${currency}`;
   }
 
   function getSummaryX(width: number) {
