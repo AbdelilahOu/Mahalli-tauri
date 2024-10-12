@@ -13,6 +13,8 @@ export function usePdfGenerator() {
 
   let pdfDoc: PDFDocument;
   let font: PDFFont;
+  let page: PDFPage;
+  let template: PDFPage | undefined;
 
   const config = reactive({
     marginTop: 40,
@@ -36,11 +38,7 @@ export function usePdfGenerator() {
       const fontBytes = await res.arrayBuffer();
       font = await pdfDoc.embedFont(fontBytes);
     } catch (err: any) {
-      toast.error(t("notifications.error.title"), {
-        description: t("notifications.error.description"),
-        closeButton: true,
-      });
-      console.error(`ERROR PDF-LIB: ${err}`);
+      handleError(err);
     }
   }
 
@@ -52,242 +50,301 @@ export function usePdfGenerator() {
 
   async function generatePdf(data: any, type: DocType) {
     await initPdfDoc();
+    if (!pdfDoc || !font) return;
 
+    setPdfMetadata(pdfDoc, data, type);
+
+    try {
+      await setupPage(data);
+      drawContent(data, type);
+      return await pdfDoc.saveAsBase64({ dataUri: true });
+    } catch (err) {
+      handleError(err);
+    }
+  }
+
+  function setPdfMetadata(pdfDoc: PDFDocument, data: any, type: DocType) {
     pdfDoc.setTitle(data.identifier);
     pdfDoc.setAuthor("trymahalli.com");
     pdfDoc.setSubject(type);
     pdfDoc.setProducer("trymahalli.com");
     pdfDoc.setCreator("trymahalli.com");
-
-    try {
-      let page: PDFPage;
-      let template: PDFPage | undefined;
-      if (config.templateBase64) {
-        const sourcePdfDoc = await PDFDocument.load(
-          `data:application/pdf;headers=filename%3D${data.identifier};base64,${config.templateBase64}`
-        );
-        const [templatePage] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
-        template = templatePage;
-        page = pdfDoc.addPage(copyPage(template));
-      } else {
-        page = pdfDoc.addPage();
-      }
-      page.setSize(...PageSizes.A4);
-      const { width, height } = page.getSize();
-
-      Width.value = width;
-      Height.value = height;
-
-      drawHeader(page, data, type);
-
-      const items = [...data.items];
-      drawItems(page, items, data, template);
-
-      return await pdfDoc.saveAsBase64({ dataUri: true });
-    } catch (err) {
-      toast.error(t("notifications.error.title"), {
-        description: t("notifications.error.description"),
-        closeButton: true,
-      });
-      console.error(`ERROR PDF-LIB: ${err}`);
-    }
   }
 
-  function drawHeader(page: PDFPage, data: any, type: DocType) {
+  async function setupPage(data: any) {
+    if (!pdfDoc) return;
+
+    if (config.templateBase64) {
+      const sourcePdfDoc = await PDFDocument.load(
+        `data:application/pdf;headers=filename%3D${data.identifier};base64,${config.templateBase64}`
+      );
+      const [templatePage] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
+      template = templatePage;
+      page = pdfDoc.addPage(copyPage(template));
+    } else {
+      page = pdfDoc.addPage();
+    }
+
+    page.setSize(...PageSizes.A4);
+    const { width, height } = page.getSize();
+    Width.value = width;
+    Height.value = height;
+  }
+
+  function drawContent(data: any, type: DocType) {
+    if (!page || !font) return;
+    Height.value -= config.marginTop;
+    drawHeader(data, type);
+    drawSenderAndReceiver(data.client);
+    drawTableHeaders();
+    drawItems(data.items);
+    drawSummary(getSummaryItems(data));
+    drawTotalAsText(data.total);
+  }
+
+  function drawHeader(data: any, type: DocType) {
+    if (!page || !font) return;
+
     const headerText = capitalizeFirstLetter(t(`fields.${type}`));
+    const totalText = n(data.total + data.total * 0.2, "currency");
 
     page.drawText(headerText, {
       x: config.marginX - 1,
-      y: Height.value - config.marginTop,
-      font,
+      y: Height.value,
+      font: font,
       size: 30,
       color: config.color,
     });
-    const totalText = n(data.total + data.total * 0.2, "currency");
+
     page.drawText(reverseText(totalText), {
       x: Width.value - config.marginX - getTextWidth(totalText, 20),
-      y: Height.value - config.marginTop,
-      font,
+      y: Height.value,
+      font: font,
       size: 20,
       color: config.color,
     });
 
     page.drawText(data.identifier, {
       x: config.marginX,
-      y: Height.value - config.marginTop - 20,
-      font,
+      y: Height.value - 20,
+      font: font,
       size: 13,
       color: config.color,
     });
 
     if (type !== "quote") {
-      page.drawText(t(`status.${data.status.toLowerCase()}`), {
-        x: getMiddleX(
-          t(`status.${data.status.toLowerCase()}`),
-          Width.value,
-          13
-        ),
-        y: Height.value - config.marginTop - 20,
-        font,
+      const statusText = t(`status.${data.status.toLowerCase()}`);
+      page.drawText(statusText, {
+        x: getMiddleX(statusText, Width.value, 13),
+        y: Height.value - 20,
+        font: font,
         size: 13,
         color: config.color,
       });
     }
 
-    page.drawText(d(new Date(data.created_at)), {
-      x:
-        Width.value -
-        config.marginX -
-        getTextWidth(d(new Date(data.created_at)), 13),
-      y: Height.value - config.marginTop - 20,
-      font,
+    const dateText = d(new Date(data.created_at));
+    page.drawText(dateText, {
+      x: Width.value - config.marginX - getTextWidth(dateText, 13),
+      y: Height.value - 20,
+      font: font,
       size: 13,
       color: config.color,
     });
 
-    Height.value = Height.value - 50;
-
-    drawClientInfo(page, data.client);
+    Height.value -= 50;
   }
 
-  function drawClientInfo(page: PDFPage, client: any) {
+  function drawSenderAndReceiver(client: any) {
+    if (!page || !font) return;
+
     page.drawText(t("fields.bill-to").toUpperCase(), {
       x: config.marginX,
-      y: Height.value - config.marginTop,
-      font,
+      y: Height.value,
+      font: font,
       size: 14,
       color: config.color,
     });
 
-    const clientFields: string[] = [];
-    if (config.clientFields.fullname) clientFields.push(client.full_name);
-    if (config.clientFields.email) clientFields.push(client.email);
-    if (config.clientFields.phone) clientFields.push(client.phone_number);
-    if (config.clientFields.address) clientFields.push(client.address);
-
+    const clientFields = getClientFields(client);
     clientFields.forEach((field, index) => {
-      page.drawText(field, {
+      page?.drawText(field, {
         x: config.marginX,
-        y: Height.value - config.marginTop - 20 * (index + 1),
-        font,
+        y: Height.value - 20 * (index + 1),
+        font: font!,
         size: 13,
         color: config.color,
       });
     });
 
-    Height.value = Height.value - 20 * clientFields.length - 20;
-
-    drawTableHeaders(page);
+    Height.value -= 20 * clientFields.length + 20;
   }
 
-  function drawTableHeaders(page: PDFPage) {
-    page.drawLine({
-      start: { x: config.marginX, y: Height.value - config.marginTop },
-      end: {
-        x: Width.value - config.marginX,
-        y: Height.value - config.marginTop,
-      },
-      thickness: 1,
-      color: config.color,
-      opacity: 0.75,
-    });
+  function getClientFields(client: any): string[] {
+    return Object.entries(config.clientFields)
+      .filter(([_, value]) => value)
+      .map(
+        ([key, _]) =>
+          client[
+            key === "fullname"
+              ? "full_name"
+              : key === "phone"
+              ? "phone_number"
+              : key
+          ]
+      );
+  }
+
+  function drawTableHeaders() {
+    if (!page || !font) return;
+
+    drawHorizontalLine(Height.value);
 
     const headers = ["name", "quantity", "price", "total"];
     headers.forEach((header, index) => {
-      page.drawText(t(`fields.${header}`), {
+      page?.drawText(t(`fields.${header}`), {
         x: config.marginX + 5 + (Width.value * index) / 4,
-        y: Height.value - config.marginTop - 20,
-        font,
+        y: Height.value - 20,
+        font: font!,
         size: 14,
         color: config.color,
       });
     });
 
-    page.drawLine({
-      start: { x: config.marginX, y: Height.value - config.marginTop - 30 },
-      end: {
-        x: Width.value - config.marginX,
-        y: Height.value - config.marginTop - 30,
-      },
-      thickness: 1,
-      color: config.color,
-      opacity: 0.75,
-    });
+    drawHorizontalLine(Height.value - 30);
 
-    Height.value = Height.value - config.marginTop - 40;
+    Height.value -= 40;
   }
 
-  function drawItems(
-    page: PDFPage,
-    items: any[],
-    data: any,
-    template?: PDFPage
-  ) {
-    if (items.length === 0) {
-      drawSummary(page, data);
-      return;
-    }
-
-    const item = items.shift();
-    page.drawText(item.name, {
-      x: config.marginX + 5,
-      y: Height.value - 10,
-      font,
-      size: 12,
-      color: config.color,
-    });
-
-    page.drawText(n(item?.quantity, "decimal"), {
-      x: config.marginX + 5 + Width.value / 4,
-      y: Height.value - 10,
-      font,
-      size: 12,
-      color: config.color,
-    });
-    page.drawText(reverseText(n(item.price, "currency")), {
-      x: config.marginX + 5 + Width.value / 2,
-      y: Height.value - 10,
-      font,
-      size: 12,
-      color: config.color,
-    });
-    page.drawText(reverseText(n(item.price * item.quantity, "currency")), {
-      x: config.marginX + 5 + (Width.value * 3) / 4,
-      y: Height.value - 10,
-      font,
-      size: 12,
-      color: config.color,
-    });
-    page.drawLine({
-      start: { x: config.marginX, y: Height.value - 20 },
-      end: { x: Width.value - config.marginX, y: Height.value - 20 },
-      thickness: 1,
-      color: config.color,
-      opacity: 0.75,
-    });
-
-    if (Height.value < config.marginBottom) {
-      let newPage: PDFPage;
-      if (template) {
-        newPage = pdfDoc.addPage(copyPage(template));
-      } else {
-        newPage = pdfDoc.addPage();
+  function drawItems(items: any[]) {
+    items.forEach((item) => {
+      if (Height.value < config.marginBottom) {
+        addNewPage();
       }
-      newPage.setSize(...PageSizes.A4);
-      const { width, height } = newPage.getSize();
-      Width.value = width;
-      Height.value = height - config.marginTop;
-      drawItems(newPage, items, data, template);
-    } else {
-      Height.value = Height.value - 30;
-      drawItems(page, items, data, template);
-    }
+
+      if (!page || !font) return;
+
+      page.drawText(item.name, {
+        x: config.marginX + 5,
+        y: Height.value - 10,
+        font: font,
+        size: 12,
+        color: config.color,
+      });
+
+      page.drawText(n(item?.quantity, "decimal"), {
+        x: config.marginX + 5 + Width.value / 4,
+        y: Height.value - 10,
+        font: font,
+        size: 12,
+        color: config.color,
+      });
+
+      page.drawText(reverseText(n(item.price, "currency")), {
+        x: config.marginX + 5 + Width.value / 2,
+        y: Height.value - 10,
+        font: font,
+        size: 12,
+        color: config.color,
+      });
+
+      page.drawText(reverseText(n(item.price * item.quantity, "currency")), {
+        x: config.marginX + 5 + (Width.value * 3) / 4,
+        y: Height.value - 10,
+        font: font,
+        size: 12,
+        color: config.color,
+      });
+
+      drawHorizontalLine(Height.value - 20);
+
+      Height.value -= 30;
+    });
   }
 
-  function drawSummary(page: PDFPage, data: any) {
-    const summaryX = getSummaryX(Width.value);
+  function drawSummary(summaryItems: any[]) {
+    summaryItems.forEach((item, index) => {
+      if (Height.value < config.marginBottom) {
+        addNewPage();
+      }
 
-    const summaryItems = [
+      if (!page || !font) return;
+
+      const summaryX = getSummaryX(Width.value);
+
+      page.drawText(item.value, {
+        x: config.marginX + 5 + (Width.value * 3) / 4,
+        y: Height.value - 10,
+        font: font,
+        size: 12,
+        color: config.color,
+      });
+
+      page.drawText(t(`fields.${item.label}`).toUpperCase(), {
+        x: summaryX,
+        y: Height.value - 10,
+        font: font,
+        size: 12,
+        color: config.color,
+      });
+
+      drawHorizontalLine(Height.value - 20, summaryX);
+
+      Height.value -= 30;
+    });
+  }
+
+  function drawTotalAsText(total: number) {
+    if (!page || !font) return;
+
+    const totalAsText = numberToText(total, locale.value as any);
+
+    page.drawText(totalAsText, {
+      x: getMiddleX(totalAsText, Width.value, 13),
+      y: Height.value - 30,
+      font: font,
+      size: 13,
+      color: config.color,
+    });
+  }
+
+  function copyPage(originalPage: PDFPage) {
+    if (!pdfDoc) return originalPage;
+
+    const cloneNode = originalPage.node.clone();
+    const { Contents } = originalPage.node.normalizedEntries();
+    if (Contents) cloneNode.set(PDFName.of("Contents"), Contents.clone());
+    const cloneRef = pdfDoc.context.register(cloneNode);
+    return PDFPage.of(cloneNode, cloneRef, pdfDoc);
+  }
+
+  function getTextWidth(text: string, fontSize: number) {
+    return font?.widthOfTextAtSize(text, fontSize) || 0;
+  }
+
+  function getMiddleX(text: string, width: number, fontSize: number) {
+    return (width - getTextWidth(text, fontSize)) / 2;
+  }
+
+  function capitalizeFirstLetter(text: string) {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+
+  function reverseText(text: string) {
+    if (locale.value !== "ar") return text;
+    const [amount, currency] = text.split(" ");
+    return `${amount.split("").reverse().join("")} ${currency}`;
+  }
+
+  function getSummaryX(width: number) {
+    const offsets = { en: 60, fr: 60, de: -20, ar: 30 };
+    return (
+      width - width / 2 + (offsets[locale.value as keyof typeof offsets] || 60)
+    );
+  }
+
+  function getSummaryItems(data: any) {
+    return [
       { label: "sub-total", value: reverseText(n(data.total, "currency")) },
       { label: "vat-rate", value: "20%" },
       {
@@ -299,93 +356,40 @@ export function usePdfGenerator() {
         value: reverseText(n(data.total + data.total * 0.2, "currency")),
       },
     ];
-
-    summaryItems.forEach((item, index) => {
-      page.drawText(item.value, {
-        x: config.marginX + 5 + (Width.value * 3) / 4,
-        y: Height.value - 10 - index * 30,
-        font,
-        size: 12,
-        color: config.color,
-      });
-
-      page.drawText(t(`fields.${item.label}`).toUpperCase(), {
-        x: summaryX,
-        y: Height.value - 10 - index * 30,
-        font,
-        size: 12,
-        color: config.color,
-      });
-
-      page.drawLine({
-        start: { x: summaryX, y: Height.value - 20 - index * 30 },
-        end: {
-          x: Width.value - config.marginX,
-          y: Height.value - 20 - index * 30,
-        },
-        thickness: 1,
-        color: config.color,
-        opacity: 0.75,
-      });
-    });
-
-    const totalAsText = numberToText(
-      data.total + data.total * 0.2,
-      locale.value as any
-    );
-    console.log(totalAsText, data.total + data.total * 0.2);
-    page.drawText(totalAsText, {
-      x: getMiddleX(totalAsText, Width.value, 13),
-      y: Height.value - 130,
-      font,
-      size: 13,
-      color: config.color,
-    });
   }
 
-  function copyPage(originalPage: any) {
-    const cloneNode = originalPage.node.clone();
-    const { Contents } = originalPage.node.normalizedEntries();
-    if (Contents) cloneNode.set(PDFName.of("Contents"), Contents.clone());
-    const cloneRef = originalPage.doc.context.register(cloneNode);
-    return PDFPage.of(cloneNode, cloneRef, originalPage.doc);
-  }
+  function addNewPage() {
+    if (!pdfDoc) return;
 
-  function getTextWidth(text: string, fontSize: number) {
-    return font.widthOfTextAtSize(text, fontSize);
-  }
-
-  function getMiddleX(text: string, width: number, fontSize: number) {
-    return (width - font.widthOfTextAtSize(text, fontSize)) / 2;
-  }
-
-  function capitalizeFirstLetter(text: string) {
-    return text.charAt(0).toUpperCase() + text.slice(1);
-  }
-
-  function reverseText(text: string) {
-    if (locale.value !== "ar") return text;
-    const currency = text.split("").splice(-5).join("");
-    const amount = text
-      .split("")
-      .splice(0, text.split("").length - 6)
-      .reverse()
-      .join("");
-    return `${amount} ${currency}`;
-  }
-
-  function getSummaryX(width: number) {
-    switch (locale.value) {
-      case "en":
-      case "fr":
-        return width - width / 2 + 60;
-      case "de":
-        return width - width / 2 - 20;
-      case "ar":
-        return width - width / 2 + 30;
-      default:
-        return width - width / 2 + 60;
+    let newPage: PDFPage;
+    if (template) {
+      newPage = pdfDoc.addPage(copyPage(template));
+    } else {
+      newPage = pdfDoc.addPage();
     }
+    newPage.setSize(...PageSizes.A4);
+    page = newPage;
+    const { width, height } = newPage.getSize();
+    Width.value = width;
+    Height.value = height - config.marginTop;
+  }
+
+  function drawHorizontalLine(y: number, startX = config.marginX) {
+    page?.drawLine({
+      start: { x: startX, y },
+      end: { x: Width.value - config.marginX, y },
+      thickness: 1,
+      color: config.color,
+      opacity: 0.75,
+    });
+  }
+
+  function handleError(err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
+    console.error(`ERROR PDF-LIB: ${err}`);
   }
 
   return {
