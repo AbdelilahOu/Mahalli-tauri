@@ -33,8 +33,7 @@ function toggleThisInvoice(invoice: ListInvoiceT, name: "delete" | "update") {
       id: invoice.id!,
       identifier: invoice.identifier,
     });
-  }
-  else {
+  } else {
     modal.open(InvoiceUpdate, {
       id: invoice.id!,
       identifier: invoice.identifier,
@@ -55,14 +54,13 @@ async function updateInvoiceStatus(id: string, status: string) {
       `UPDATE INVOICE STATUS: ${JSON.stringify({
         id,
         status,
-      })}`,
+      })}`
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -104,8 +102,8 @@ async function updateInvoiceStatus(id: string, status: string) {
           v-fade="index"
           :class="{
             'animate-highlight-row':
-              invoice.id === $route.query.id
-              && $route.query.highlight === 'true',
+              invoice.id === $route.query.id &&
+              $route.query.highlight === 'true',
           }"
         >
           <TableCell class="p-2 text-nowrap font-medium">
@@ -133,7 +131,7 @@ async function updateInvoiceStatus(id: string, status: string) {
               </PopoverTrigger>
               <PopoverContent class="min-w-[13rem] p-2">
                 <ScrollArea
-                  :class="invoiceProducts.length > 16 ? 'h-[400px]' : 'h-fit'"
+                  :class="invoiceProducts.length > 16 ? 'h-[380px]' : 'h-fit'"
                 >
                   <table class="w-full not-default">
                     <thead>
