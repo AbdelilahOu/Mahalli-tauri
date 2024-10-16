@@ -263,16 +263,16 @@ export function usePdfGenerator() {
 
       const summaryX = getSummaryX(Width.value);
 
-      page.drawText(item.value, {
-        x: config.marginX + 5 + (Width.value * 3) / 4,
+      page.drawText(t(`fields.${item.label}`).toUpperCase(), {
+        x: summaryX,
         y: Height.value - 10,
         font,
         size: 12,
         color: config.color,
       });
 
-      page.drawText(t(`fields.${item.label}`).toUpperCase(), {
-        x: summaryX,
+      page.drawText(item.value, {
+        x: config.marginX + 5 + (Width.value * 3) / 4,
         y: Height.value - 10,
         font,
         size: 12,
