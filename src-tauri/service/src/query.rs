@@ -110,6 +110,7 @@ impl QueriesService {
         let products = Products::find().select_only().expr_as_(Expr::col(products::Column::Name), "label").expr_as_(Expr::col(products::Column::Id), "value").expr_as_(Expr::col(products::Column::SellingPrice), "price").filter(products::Column::IsDeleted.eq(false)).filter(products::Column::Name.like(format!("{}%", search))).into_json().all(db).await?;
         Ok(products)
     }
+    // 
     pub async fn list_clients(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Clients::find().filter(
             Cond::all().add(
@@ -219,6 +220,7 @@ impl QueriesService {
         let clients = Clients::find().select_only().expr_as_(Expr::col(clients::Column::FullName), "label").expr_as_(Expr::col(clients::Column::Id), "value").filter(clients::Column::IsDeleted.eq(false)).filter(clients::Column::FullName.like(format!("{}%", search))).into_json().all(db).await?;
         Ok(clients)
     }
+    // 
     pub async fn list_suppliers(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Suppliers::find().filter(
             Cond::all().add(
@@ -269,6 +271,7 @@ impl QueriesService {
         let suppliers = Suppliers::find().select_only().expr_as_(Expr::col(suppliers::Column::FullName), "label").expr_as_(Expr::col(suppliers::Column::Id), "value").filter(clients::Column::IsDeleted.eq(false)).filter(suppliers::Column::FullName.like(format!("{}%", search))).into_json().all(db).await?;
         Ok(suppliers)
     }
+    // 
     pub async fn list_orders(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Orders::find().join(JoinType::Join, orders::Relation::Clients.def()).filter(
             Cond::all().add(
@@ -488,6 +491,7 @@ impl QueriesService {
             None => Err(DbErr::RecordNotFound(String::from("no order"))),
         }
     }
+    // 
     pub async fn list_invoices(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Invoices::find().join(JoinType::Join, invoices::Relation::Clients.def()).filter(
             Cond::all().add(
@@ -719,6 +723,7 @@ impl QueriesService {
             None => Err(DbErr::RecordNotFound(String::from("no invoice"))),
         }
     }
+    // 
     pub async fn list_quotes(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = Quotes::find().join(JoinType::Join, quotes::Relation::Clients.def()).filter(
             Cond::all().add(
@@ -905,6 +910,7 @@ impl QueriesService {
             None => Err(DbErr::RecordNotFound(String::from("no quote"))),
         }
     }
+    // 
     pub async fn list_inventory(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
         let count = InventoryTransactions::find().join(JoinType::Join, inventory_transactions::Relation::Products.def()).join(JoinType::LeftJoin, inventory_transactions::Relation::OrderItems.def()).join(JoinType::LeftJoin, order_items::Relation::Orders.def()).filter(
             Cond::all().add(
@@ -1050,6 +1056,7 @@ impl QueriesService {
         });
         Ok(result)
     }
+    // 
     pub async fn list_top_products(db: &DbConn) -> Result<Vec<JsonValue>, DbErr> {
         let (sql, values) = Query::select().from(Products).column((Products, products::Column::Name)).expr_as(
             Func::sum(Expr::col((InventoryTransactions, inventory_transactions::Column::Quantity))),
