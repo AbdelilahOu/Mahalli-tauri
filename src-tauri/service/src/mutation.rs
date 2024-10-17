@@ -140,6 +140,7 @@ impl MutationsService {
             None => Ok(0),
         }
     }
+    // 
     pub async fn update_order_status(db: &DbConn, data: UpdateStatus) -> Result<(), DbErr> {
         let order_model = Orders::find_by_id(data.id).one(db).await?;
         let mut order_active: OrderActiveModel = order_model.unwrap().into();
@@ -158,6 +159,7 @@ impl MutationsService {
             Err(err) => Err(err),
         }
     }
+    // 
     pub async fn update_invoice_status(db: &DbConn, data: UpdateStatus) -> Result<(), DbErr> {
         let invoice_model = Invoices::find_by_id(data.id).one(db).await?;
         let mut invoice_active: InvoiceActiveModel = invoice_model.unwrap().into();
@@ -176,6 +178,7 @@ impl MutationsService {
             Err(err) => Err(err),
         }
     }
+    // 
     pub async fn delete_quote(db: &DbConn, id: String) -> Result<u64, DbErr> {
         let quote_model = Quotes::find_by_id(id).one(db).await?;
         let mut quote_active: QuoteActiveModel = quote_model.unwrap().into();
