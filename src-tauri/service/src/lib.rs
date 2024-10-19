@@ -1,7 +1,7 @@
 mod models;
-mod mutation;
-mod query;
-mod transaction;
+mod mutations;
+mod queries;
+mod transactions;
 
 mod entities {
     pub use entity::clients::{self, ActiveModel as ClientActiveModel, Entity as Clients };
@@ -16,8 +16,8 @@ mod entities {
 }
 
 pub use models::*;
-pub use mutation::*;
-pub use query::*;
-pub use transaction::*;
+pub use mutations::*;
+pub use queries::*;
+pub use transactions::*;
 
 pub use sea_orm;
