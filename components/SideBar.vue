@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {
-  Archive,
-  BarChartBig,
-  Contact,
+  Container,
+  BarChart3Icon,
+  SquareUser,
   HomeIcon,
   Languages,
-  NotepadText,
+  ReceiptText,
   Package,
   Quote,
   Store,
@@ -31,7 +31,7 @@ const hoveredItem = ref<string | null>(null);
 const menuItems = [
   { icon: HomeIcon, label: "routes.home", path: "/" },
   {
-    icon: Contact,
+    icon: SquareUser,
     label: "routes.clients",
     path: "/clients/",
     query: { page: 1, limit: 25 },
@@ -55,18 +55,18 @@ const menuItems = [
     query: { page: 1 },
   },
   {
-    icon: NotepadText,
+    icon: ReceiptText,
     label: "routes.invoices",
     path: "/invoices/",
     query: { page: 1 },
   },
   {
-    icon: Archive,
+    icon: Container,
     label: "routes.inventory",
     path: "/inventory/",
     query: { page: 1 },
   },
-  { icon: BarChartBig, label: "routes.dashboard", path: "/dashboard" },
+  { icon: BarChart3Icon, label: "routes.dashboard", path: "/dashboard" },
 ];
 </script>
 
