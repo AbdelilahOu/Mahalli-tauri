@@ -55,7 +55,6 @@ async function fetchOrders() {
     } else {
       error(`LIST ORDERS: ${err}`);
     }
-    throw err;
   }
 }
 

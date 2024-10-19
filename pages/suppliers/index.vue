@@ -32,26 +32,23 @@ async function fetchSuppliers(params: QueryParams) {
       },
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
       error(`LIST SUPPLIERS: ${err.error}`);
-    }
-    else {
+    } else {
       error(`LIST SUPPLIERS: ${err}`);
     }
-    throw err;
   }
 }
 
 const { data } = useAsyncData(
   "suppliers",
   () => fetchSuppliers(queryParams.value),
-  { watch: [queryParams] },
+  { watch: [queryParams] }
 );
 
 const suppliers = computed<SupplierT[]>(() => data.value?.suppliers ?? []);
