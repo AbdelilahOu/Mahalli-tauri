@@ -17,8 +17,7 @@ const { data: invoice } = await useAsyncData(
         id,
       });
       return res.data;
-    }
-    catch (err: any) {
+    } catch (err: any) {
       toast.error(t("notifications.error.title"), {
         description: t("notifications.error.description"),
         closeButton: true,
@@ -26,9 +25,8 @@ const { data: invoice } = await useAsyncData(
       if (typeof err === "object" && "error" in err) {
         error(`ERROR INVOICE DETAILS: ${err.error}`);
       }
-      throw err;
     }
-  },
+  }
 );
 
 async function handleGeneratePdf() {
@@ -37,8 +35,7 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -46,7 +43,6 @@ async function handleGeneratePdf() {
     if (typeof err === "object" && "error" in err) {
       error(`ERROR INVOICE DETAILS: ${err.error}`);
     }
-    throw err;
   }
 }
 
@@ -56,7 +52,7 @@ watch(
   () => config.templateBase64,
   () => {
     handleGeneratePdf();
-  },
+  }
 );
 </script>
 
