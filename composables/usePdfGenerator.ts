@@ -183,7 +183,8 @@ export function usePdfGenerator() {
   function getClientFields(client: any): string[] {
     return Object.entries(config.clientFields)
       .filter(([_, value]) => value)
-      .map(([key, _]) => client[key]);
+      .map(([key, _]) => client[key])
+      .filter((value) => value !== null);
   }
 
   function drawTableHeaders() {
