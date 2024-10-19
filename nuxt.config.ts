@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   routeRules: { "/": { prerender: true } },
   imports: { dirs: ["./types", "./utils"] },
   shadcn: { componentDir: "./components/ui" },
+  tailwindcss: { viewer: false },
   i18n: {
     locales: [
       { code: "en", file: "en-US.json" },
