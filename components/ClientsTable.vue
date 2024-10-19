@@ -15,8 +15,7 @@ function toggleThisClient(client: ClientT, name: "delete" | "update") {
       id: client.id!,
       fullName: client.full_name,
     });
-  }
-  else {
+  } else {
     modal.open(ClientUpdate, {
       id: client.id!,
       fullName: client.full_name,
@@ -62,13 +61,13 @@ function toggleThisClient(client: ClientT, name: "delete" | "update") {
             {{ client?.full_name }}
           </TableCell>
           <TableCell class="p-2">
-            {{ client.email }}
+            {{ client.email || "--" }}
           </TableCell>
           <TableCell class="p-2">
-            {{ client.phone_number }}
+            {{ client.phone_number || "--" }}
           </TableCell>
           <TableCell class="p-2">
-            {{ client.address }}
+            {{ client.address || "--" }}
           </TableCell>
           <TableCell class="p-2 whitespace-nowrap">
             {{ n(client.credit!, "currency") }}
