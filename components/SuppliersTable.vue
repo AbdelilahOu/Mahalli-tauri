@@ -15,8 +15,7 @@ function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
       id: supplier.id!,
       fullName: supplier.full_name,
     });
-  }
-  else {
+  } else {
     modal.open(SupplierUpdate, {
       id: supplier.id!,
       fullName: supplier.full_name,
@@ -61,13 +60,13 @@ function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
             {{ supplier?.full_name }}
           </TableCell>
           <TableCell class="p-2">
-            {{ supplier.email }}
+            {{ supplier.email || "--" }}
           </TableCell>
           <TableCell class="p-2">
-            {{ supplier.phone_number }}
+            {{ supplier.phone_number || "--" }}
           </TableCell>
           <TableCell class="p-2">
-            {{ supplier.address }}
+            {{ supplier.address || "--" }}
           </TableCell>
           <TableCell class="p-2">
             <div class="flex justify-center">
