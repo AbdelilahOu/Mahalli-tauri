@@ -71,7 +71,8 @@
     "bill-to": "Rechnung an :",
     "invoice": "Rechnung",
     "order": "Bestellung",
-    "quote": "Angebot"
+    "quote": "Angebot",
+    "no-match": "keine Übereinstimmung gefunden"
   },
   "status": {
     "pending": "Ausstehend",

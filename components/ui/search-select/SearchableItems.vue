@@ -6,6 +6,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
+import { Check } from "lucide-vue-next";
 
 const props = defineProps<{
   defaultValue?: string;
@@ -56,33 +57,32 @@ function selectItem(item: { label: string; value: string; price?: number }) {
         />
       </PopoverTrigger>
       <PopoverContent class="p-1" @open-auto-focus="(e) => e.preventDefault()">
-        <div
-          v-if="items.length > 0"
-          :class="
-            cn(
-              'space-y-1',
-              items.length > 5
-                ? 'max-h-60 overflow-auto scrollbar-thin scrollbar-thumb-transparent'
-                : 'h-fit',
-            )
-          "
+        <ScrollArea
+          :class="cn('space-y-1', items.length > 7 ? 'h-60' : 'h-fit')"
         >
-          <span
+          <div
             v-for="item in items"
             :key="item.value"
-            class="relative flex w-full hover:bg-slate-100 cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+            class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
             @click="() => selectItem(item)"
           >
-            {{ item.label }}
-          </span>
-        </div>
-        <div v-else>
-          <span
-            class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+            <span
+              v-if="defaultValue === item.label"
+              class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center"
+            >
+              <Check :size="16" />
+            </span>
+            <span>
+              {{ item.label }}
+            </span>
+          </div>
+          <div
+            v-if="!items.length"
+            class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 px-2 text-sm outline-none"
           >
-            No elements
-          </span>
-        </div>
+            {{ $t("fields.no-match") }}
+          </div>
+        </ScrollArea>
       </PopoverContent>
     </Popover>
   </div>
