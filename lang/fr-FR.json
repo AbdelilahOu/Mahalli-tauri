@@ -71,7 +71,8 @@
     "bill-to": "Facturer à :",
     "invoice": "facture",
     "order": "commande",
-    "quote": "devis"
+    "quote": "devis",
+    "no-match": "aucune correspondance trouvée"
   },
   "status": {
     "pending": "En attente",
