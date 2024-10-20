@@ -58,7 +58,7 @@ const { data: quotesData } = await useAsyncData("quotes", fetchQuotes, {
   watch: [queryParams],
 });
 
-const quotes = computed<ListQuoteT[]>(() => quotesData.value?.quotes ?? []);
+const quotes = computed<QuoteT[]>(() => quotesData.value?.quotes ?? []);
 const totalRows = computed<number>(() => quotesData.value?.count ?? 0);
 
 provide("count", totalRows);

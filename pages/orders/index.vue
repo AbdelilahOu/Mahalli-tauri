@@ -62,7 +62,7 @@ const { data: ordersData } = await useAsyncData("orders", fetchOrders, {
   watch: [queryParams],
 });
 
-const orders = computed<ListOrderT[]>(() => ordersData.value?.orders ?? []);
+const orders = computed<OrderT[]>(() => ordersData.value?.orders ?? []);
 const totalRows = computed<number>(() => ordersData.value?.count ?? 0);
 
 provide("count", totalRows);

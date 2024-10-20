@@ -1,6 +1,6 @@
 import type { INVOICE_STATUSES } from "~/consts/status";
 
-export interface ListInvoiceT {
+export interface InvoiceT {
   id: string;
   status: (typeof INVOICE_STATUSES)[number];
   paid_amount: number;

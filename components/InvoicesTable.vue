@@ -7,7 +7,7 @@ import { InvoiceDelete, InvoiceUpdate } from "#components";
 import { INVOICE_STATUSES, STATUS_COLORS } from "@/consts/status";
 
 defineProps<{
-  invoices: ListInvoiceT[];
+  invoices: InvoiceT[];
   invoiceProducts: InvoiceProductsPreviewT[];
 }>();
 const emits = defineEmits<{
@@ -27,14 +27,13 @@ function previewProducts(id: string) {
 }
 const cancelPreviewProducts = () => clearTimeout(previewProductsTimer);
 
-function toggleThisInvoice(invoice: ListInvoiceT, name: "delete" | "update") {
+function toggleThisInvoice(invoice: InvoiceT, name: "delete" | "update") {
   if (name === "delete") {
     modal.open(InvoiceDelete, {
       id: invoice.id!,
       identifier: invoice.identifier,
     });
-  }
-  else {
+  } else {
     modal.open(InvoiceUpdate, {
       id: invoice.id!,
       identifier: invoice.identifier,
@@ -55,14 +54,13 @@ async function updateInvoiceStatus(id: string, status: string) {
       `UPDATE INVOICE STATUS: ${JSON.stringify({
         id,
         status,
-      })}`,
+      })}`
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -104,8 +102,8 @@ async function updateInvoiceStatus(id: string, status: string) {
           v-fade="index"
           :class="{
             'animate-highlight-row':
-              invoice.id === $route.query.id
-              && $route.query.highlight === 'true',
+              invoice.id === $route.query.id &&
+              $route.query.highlight === 'true',
           }"
         >
           <TableCell class="p-2 text-nowrap font-medium">
