@@ -80,7 +80,7 @@ function selectItem(item: { label: string; value: string; price?: number }) {
             v-if="!items.length"
             class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 px-2 text-sm outline-none"
           >
-            {{ $t("fields.no-match") }}
+            {{ t("fields.no-match") }}
           </div>
         </ScrollArea>
       </PopoverContent>
