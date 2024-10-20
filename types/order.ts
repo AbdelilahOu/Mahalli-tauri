@@ -1,6 +1,6 @@
 import type { ORDER_STATUSES } from "~/consts/status";
 
-export interface ListOrderT {
+export interface OrderT {
   id: string;
   status: (typeof ORDER_STATUSES)[number];
   client_id: string;

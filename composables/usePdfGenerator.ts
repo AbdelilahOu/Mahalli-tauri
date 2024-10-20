@@ -22,11 +22,12 @@ export function usePdfGenerator() {
     marginBottom: 90,
     templateBase64: null as string | null,
     color: rgb(0.34, 0.34, 0.34),
-    clientFields: {
+    fields: {
       full_name: true,
       email: true,
       address: true,
       phone_number: true,
+      status: true,
     },
   });
 
@@ -132,7 +133,7 @@ export function usePdfGenerator() {
       color: config.color,
     });
 
-    if (type !== "quote") {
+    if (type !== "quote" && config.fields.status) {
       const statusText = t(`status.${data.status.toLowerCase()}`);
       page.drawText(statusText, {
         x: getMiddleX(statusText, Width.value, 13),
@@ -166,8 +167,9 @@ export function usePdfGenerator() {
       color: config.color,
     });
 
-    const clientFields = getClientFields(client);
-    clientFields.forEach((field, index) => {
+    const fields = getfields(client);
+    console.log(fields);
+    fields.forEach((field, index) => {
       page?.drawText(field, {
         x: config.marginX,
         y: Height.value - 20 * (index + 1),
@@ -177,13 +179,13 @@ export function usePdfGenerator() {
       });
     });
 
-    Height.value -= 20 * clientFields.length + 20;
+    Height.value -= 20 * fields.length + 20;
   }
 
-  function getClientFields(client: any): string[] {
-    return Object.entries(config.clientFields)
-      .filter(([_, value]) => value)
-      .map(([key, _]) => client[key])
+  function getfields(client: any): string[] {
+    return ["full_name", "email", "address", "phone_number"]
+      .filter((value) => config.fields[value] == true)
+      .map((key) => client[key])
       .filter((value) => value !== null);
   }
 

@@ -62,9 +62,7 @@ const { data: invoicesData } = await useAsyncData("invoices", fetchInvoices, {
   watch: [queryParams],
 });
 
-const invoices = computed<ListInvoiceT[]>(
-  () => invoicesData.value?.invoices ?? []
-);
+const invoices = computed<InvoiceT[]>(() => invoicesData.value?.invoices ?? []);
 const totalRows = computed<number>(() => invoicesData.value?.count ?? 0);
 
 provide("count", totalRows);

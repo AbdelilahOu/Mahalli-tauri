@@ -2,10 +2,30 @@
 import { invoke } from "@tauri-apps/api";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
+import { INVOICE_STATUSES } from "~/consts/status";
 
 const { t } = useI18n();
 const id = useRoute().params.id;
 const pdfContent = ref("");
+
+const clientFields = [
+  {
+    label: "full-name",
+    field: "full_name",
+  },
+  {
+    label: "email",
+    field: "email",
+  },
+  {
+    label: "phone",
+    field: "phone_number",
+  },
+  {
+    label: "address",
+    field: "address",
+  },
+];
 
 const { config, setDocumentTemplate, generatePdf } = usePdfGenerator();
 
@@ -77,64 +97,52 @@ watch(
         <Separator class="my-2" />
         <div class="flex flex-col gap-2">
           <div class="flex justify-between items-center">
+            <Label>{{ t("fields.status") }}</Label>
+            <Switch
+              :default-checked="config.fields.status"
+              @update:checked="(checked) => (config.fields.status = checked)"
+            />
+          </div>
+          <Select
+            :disabled="!config.fields.status"
+            v-model="invoice.status"
+            :default-value="invoice.status"
+          >
+            <SelectTrigger>
+              <SelectValue
+                class="text-muted-foreground"
+                :placeholder="t('select-status')"
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem
+                  v-for="status in INVOICE_STATUSES"
+                  :key="status"
+                  :value="status"
+                >
+                  {{ t(`status.${status.toLowerCase()}`) }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <Separator class="my-2" />
+        <div v-for="item in clientFields" class="flex flex-col gap-2">
+          <div class="flex justify-between items-center">
             <Label>
-              {{ t("fields.full-name") }}
+              {{ t(`fields.${item.label}`) }}
             </Label>
             <Switch
-              :default-checked="config.clientFields.full_name"
+              :default-checked="config.fields[item.field]"
               @update:checked="
-                (checked) => (config.clientFields.full_name = checked)
+                (checked) => (config.fields[item.field] = checked)
               "
             />
           </div>
           <Input
-            v-model="invoice.client.full_name"
-            :disabled="!config.clientFields.full_name"
-          />
-        </div>
-        <div class="flex flex-col gap-2">
-          <div class="flex justify-between items-center">
-            <Label>{{ t("fields.address") }}</Label>
-            <Switch
-              :default-checked="config.clientFields.address"
-              @update:checked="
-                (checked) => (config.clientFields.address = checked)
-              "
-            />
-          </div>
-          <Input
-            v-model="invoice.client.address"
-            :disabled="!config.clientFields.address"
-          />
-        </div>
-        <div class="flex flex-col gap-2">
-          <div class="flex justify-between items-center">
-            <Label>{{ t("fields.email") }}</Label>
-            <Switch
-              :default-checked="config.clientFields.email"
-              @update:checked="
-                (checked) => (config.clientFields.email = checked)
-              "
-            />
-          </div>
-          <Input
-            v-model="invoice.client.email"
-            :disabled="!config.clientFields.email"
-          />
-        </div>
-        <div class="flex flex-col gap-2">
-          <div class="flex justify-between items-center">
-            <Label>{{ t("fields.phone") }}</Label>
-            <Switch
-              :default-checked="config.clientFields.phone_number"
-              @update:checked="
-                (checked) => (config.clientFields.phone_number = checked)
-              "
-            />
-          </div>
-          <Input
-            v-model="invoice.client.phone_number"
-            :disabled="!config.clientFields.phone_number"
+            v-model="invoice.client[item.field]"
+            :disabled="!config.fields[item.field]"
           />
         </div>
       </CardContent>

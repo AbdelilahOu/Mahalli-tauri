@@ -7,6 +7,25 @@ const { t } = useI18n();
 const id = useRoute().params.id;
 const pdfContent = ref("");
 
+const clientFields = [
+  {
+    label: "full-name",
+    field: "full_name",
+  },
+  {
+    label: "email",
+    field: "email",
+  },
+  {
+    label: "phone",
+    field: "phone_number",
+  },
+  {
+    label: "address",
+    field: "address",
+  },
+];
+
 const { config, setDocumentTemplate, generatePdf } = usePdfGenerator();
 
 const { data: quote } = await useAsyncData("get_quote_details", async () => {
@@ -72,66 +91,21 @@ watch(
         <Label> {{ t("fields.bottom-margin") }} </Label>
         <Input v-model="config.marginBottom" />
         <Separator class="my-2" />
-        <div class="flex flex-col gap-2">
+        <div v-for="item in clientFields" class="flex flex-col gap-2">
           <div class="flex justify-between items-center">
             <Label>
-              {{ t("fields.full-name") }}
+              {{ t(`fields.${item.label}`) }}
             </Label>
             <Switch
-              :default-checked="config.clientFields.full_name"
+              :default-checked="config.fields[item.field]"
               @update:checked="
-                (checked) => (config.clientFields.full_name = checked)
+                (checked) => (config.fields[item.field] = checked)
               "
             />
           </div>
           <Input
-            v-model="quote.client.full_name"
-            :disabled="!config.clientFields.full_name"
-          />
-        </div>
-        <div class="flex flex-col gap-2">
-          <div class="flex justify-between items-center">
-            <Label>{{ t("fields.address") }}</Label>
-            <Switch
-              :default-checked="config.clientFields.address"
-              @update:checked="
-                (checked) => (config.clientFields.address = checked)
-              "
-            />
-          </div>
-          <Input
-            v-model="quote.client.address"
-            :disabled="!config.clientFields.address"
-          />
-        </div>
-        <div class="flex flex-col gap-2">
-          <div class="flex justify-between items-center">
-            <Label>{{ t("fields.email") }}</Label>
-            <Switch
-              :default-checked="config.clientFields.email"
-              @update:checked="
-                (checked) => (config.clientFields.email = checked)
-              "
-            />
-          </div>
-          <Input
-            v-model="quote.client.email"
-            :disabled="!config.clientFields.email"
-          />
-        </div>
-        <div class="flex flex-col gap-2">
-          <div class="flex justify-between items-center">
-            <Label>{{ t("fields.phone") }}</Label>
-            <Switch
-              :default-checked="config.clientFields.phone_number"
-              @update:checked="
-                (checked) => (config.clientFields.phone_number = checked)
-              "
-            />
-          </div>
-          <Input
-            v-model="quote.client.phone_number"
-            :disabled="!config.clientFields.phone_number"
+            v-model="quote.client[item.field]"
+            :disabled="!config.fields[item.field]"
           />
         </div>
       </CardContent>
