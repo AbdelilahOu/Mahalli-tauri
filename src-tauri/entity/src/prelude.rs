@@ -9,3 +9,4 @@ pub use super::products::Entity as Products;
 pub use super::quote_items::Entity as QuoteItems;
 pub use super::quotes::Entity as Quotes;
 pub use super::suppliers::Entity as Suppliers;
+pub use super::templates::Entity as Templates;

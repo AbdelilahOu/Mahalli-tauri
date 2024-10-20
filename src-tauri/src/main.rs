@@ -91,6 +91,10 @@ async fn main() {
             commands::quotes::update_quote,
             commands::quotes::delete_quote,
             commands::quotes::list_quote_products,
+             //
+            // quote items
+            //
+            commands::templates::create_template,
             //
             // quote items
             //
