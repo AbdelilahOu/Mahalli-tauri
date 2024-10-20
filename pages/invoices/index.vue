@@ -88,7 +88,7 @@ watch([status, created_at], () => {
   });
 });
 
-async function listInvoiceProduct(id?: string) {
+async function listInvoiceProducts(id?: string) {
   try {
     const res = await invoke<Res<any>>("list_invoice_products", {
       id,
@@ -170,7 +170,7 @@ const openCreateInvoiceModal = () => modal.open(InvoiceCreate, {});
       <InvoicesTable
         :invoices="invoices"
         :invoice-products="invoiceProducts"
-        @list-invoice-products="listInvoiceProduct"
+        @list-invoice-products="listInvoiceProducts"
       />
     </div>
   </main>

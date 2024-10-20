@@ -62,7 +62,7 @@ const { data: ordersData } = await useAsyncData("orders", fetchOrders, {
   watch: [queryParams],
 });
 
-const orders = computed<OrderT[]>(() => ordersData.value?.orders ?? []);
+const orders = computed<ListOrderT[]>(() => ordersData.value?.orders ?? []);
 const totalRows = computed<number>(() => ordersData.value?.count ?? 0);
 
 provide("count", totalRows);
@@ -86,7 +86,7 @@ watch([status, created_at], () => {
   });
 });
 
-async function listOrderProduct(id?: string) {
+async function listOrderProducts(id?: string) {
   try {
     const res = await invoke<Res<any>>("list_order_products", {
       id,
@@ -168,7 +168,7 @@ const openCreateOrderModal = () => modal.open(OrderCreate, {});
       <OrdersTable
         :orders="orders"
         :order-products="orderProducts"
-        @list-order-products="listOrderProduct"
+        @list-order-products="listOrderProducts"
       />
     </div>
   </main>

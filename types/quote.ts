@@ -1,4 +1,4 @@
-export interface QuoteT {
+export interface ListQuoteT {
   id: string;
   client_id: string;
   full_name?: string;
