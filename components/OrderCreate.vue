@@ -22,7 +22,7 @@ const orderSchema = z.object({
       product_id: z.string().min(1),
       quantity: z.number().min(1),
       price: z.number().min(1),
-    }),
+    })
   ),
 });
 
@@ -61,7 +61,7 @@ async function searchClients(search: string | number) {
     "search_clients",
     {
       search,
-    },
+    }
   );
   if (!res.error) {
     clients.value = res.data;
@@ -73,7 +73,7 @@ async function searchProducts(search: string | number) {
     "search_products",
     {
       search,
-    },
+    }
   );
   if (!res.error) {
     products.value = res.data;
@@ -100,8 +100,7 @@ const onSubmit = handleSubmit(async (values) => {
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -111,8 +110,7 @@ const onSubmit = handleSubmit(async (values) => {
       return;
     }
     error(`CREATE ORDER: ${err}`);
-  }
-  finally {
+  } finally {
     isPosting.value = false;
     close();
   }
@@ -206,16 +204,13 @@ const onSubmit = handleSubmit(async (values) => {
                           step="0.01"
                           v-bind="componentField"
                         >
-                          <template #unite>
-                            DH
-                          </template>
+                          <template #unite> DH </template>
                         </Input>
                       </FormControl>
                     </FormItem>
                   </FormField>
                   <Trash2
-                    class="cursor-pointer w-14 m-auto"
-                    :size="20"
+                    class="cursor-pointer size-6 m-auto"
                     @click="deleteOrderItem(index)"
                   />
                 </div>

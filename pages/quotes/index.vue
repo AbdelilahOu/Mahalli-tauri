@@ -58,7 +58,7 @@ const { data: quotesData } = await useAsyncData("quotes", fetchQuotes, {
   watch: [queryParams],
 });
 
-const quotes = computed<QuoteT[]>(() => quotesData.value?.quotes ?? []);
+const quotes = computed<ListQuoteT[]>(() => quotesData.value?.quotes ?? []);
 const totalRows = computed<number>(() => quotesData.value?.count ?? 0);
 
 provide("count", totalRows);
@@ -78,7 +78,7 @@ watch(created_at, () => {
   });
 });
 
-async function listQuoteProduct(id?: string) {
+async function listQuoteProducts(id?: string) {
   try {
     const res = await invoke<Res<any>>("list_quote_products", {
       id,
@@ -138,7 +138,7 @@ const openCreateQuoteModal = () => modal.open(QuoteCreate, {});
       <QuotesTable
         :quotes="quotes"
         :quote-products="quoteProducts"
-        @list-quote-products="listQuoteProduct"
+        @list-quote-products="listQuoteProducts"
       />
     </div>
   </main>
