@@ -13,6 +13,7 @@ mod entities {
     pub use entity::quote_items::{self, ActiveModel as QuoteItemActiveModel, Entity as QuoteItems };
     pub use entity::quotes::{self, ActiveModel as QuoteActiveModel, Entity as Quotes };
     pub use entity::suppliers::{self, ActiveModel as SupplierActiveModel, Entity as Suppliers };
+    pub use entity::templates::{ActiveModel as TemplateActiveModel};
 }
 
 pub use models::*;

@@ -9,6 +9,7 @@ pub mod products;
 pub mod quote_items;
 pub mod quotes;
 pub mod suppliers;
+pub mod templates;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Seccess<T> {

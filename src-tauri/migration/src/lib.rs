@@ -4,6 +4,9 @@ mod utils;
 
 mod m20220101_000001_init_;
 mod m20240216_201704_seed_init_;
+mod m20241020_121048_templates;
+
+
 
 
 pub struct Migrator;
@@ -15,6 +18,7 @@ impl MigratorTrait for Migrator {
         vec![
             Box::new(m20220101_000001_init_::Migration),
             Box::new(m20240216_201704_seed_init_::Migration),
+            Box::new(m20241020_121048_templates::Migration),
         ]
     }
     //

@@ -10,6 +10,7 @@ mod quote;
 mod quote_item;
 mod supplier;
 mod shared;
+mod template;
 
 pub use client::*;
 pub use dashboard::*;
@@ -23,3 +24,4 @@ pub use quote::*;
 pub use quote_item::*;
 pub use supplier::*;
 pub use shared::*;
+pub use template::*;
