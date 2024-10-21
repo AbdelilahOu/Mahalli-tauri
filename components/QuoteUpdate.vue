@@ -158,7 +158,7 @@ function deleteQuoteItem(index: number) {
                 <FormItem>
                   <FormLabel>{{ t("fields.full-name") }}</FormLabel>
                   <FormControl>
-                    <SearchableItems
+                    <SearchList
                       :default-value="values.full_name"
                       :items="clients"
                       @update-items="searchClients"
@@ -185,7 +185,7 @@ function deleteQuoteItem(index: number) {
                     v-slot="{ field: productField }"
                     :name="`items[${index}].product_id`"
                   >
-                    <SearchableItems
+                    <SearchList
                       :default-value="field.value.name"
                       :items="products"
                       @update-items="searchProducts"

@@ -127,7 +127,7 @@ const onSubmit = handleSubmit(async (values) => {
                 <FormItem>
                   <FormLabel>{{ t("fields.full-name") }}</FormLabel>
                   <FormControl>
-                    <SearchableItems
+                    <SearchList
                       :items="clients"
                       @update-items="searchClients"
                       @on-select="field.onChange"
@@ -155,7 +155,7 @@ const onSubmit = handleSubmit(async (values) => {
                   >
                     <FormItem>
                       <FormControl>
-                        <SearchableItems
+                        <SearchList
                           :items="products"
                           @update-items="searchProducts"
                           @on-select="
