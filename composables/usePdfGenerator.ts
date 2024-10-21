@@ -167,7 +167,7 @@ export function usePdfGenerator() {
       color: config.color,
     });
 
-    const fields = getfields(client);
+    const fields = getClientFields(client);
     console.log(fields);
     fields.forEach((field, index) => {
       page?.drawText(field, {
@@ -182,7 +182,7 @@ export function usePdfGenerator() {
     Height.value -= 20 * fields.length + 20;
   }
 
-  function getfields(client: any): string[] {
+  function getClientFields(client: any): string[] {
     return ["full_name", "email", "address", "phone_number"]
       .filter((value) => config.fields[value] == true)
       .map((key) => client[key])
