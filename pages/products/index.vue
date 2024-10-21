@@ -34,14 +34,16 @@ async function fetchProducts() {
       },
     });
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
       error(`LIST PRODUCTS: ${err.error}`);
-    } else {
+    }
+    else {
       error(`LIST PRODUCTS: ${err}`);
     }
   }

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import {
-  Container,
   BarChart3Icon,
-  SquareUser,
+  Container,
   HomeIcon,
   Languages,
-  ReceiptText,
   Package,
   Quote,
+  ReceiptText,
+  SquareUser,
   Store,
   Truck,
 } from "lucide-vue-next";

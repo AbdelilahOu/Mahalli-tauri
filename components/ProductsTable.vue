@@ -20,7 +20,8 @@ function toggleThisProduct(product: ProductT, name: "delete" | "update") {
       id: product.id!,
       name: product.name,
     });
-  } else {
+  }
+  else {
     modal.open(ProductUpdate, {
       id: product.id!,
       name: product.name,
@@ -112,11 +113,11 @@ function updateProductInventory(id: string, name: string) {
                     ? product?.inventory <= 0
                       ? 'bg-red-100 border-red-500 text-red-900'
                       : product?.inventory < product.min_quantity
-                      ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
-                      : product?.inventory >= product.min_quantity
-                      ? 'bg-green-100 border-green-500 text-green-900'
-                      : ''
-                    : ''
+                        ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
+                        : product?.inventory >= product.min_quantity
+                          ? 'bg-green-100 border-green-500 text-green-900'
+                          : ''
+                    : '',
                 )
               "
             >

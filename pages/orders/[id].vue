@@ -2,7 +2,7 @@
 import { invoke } from "@tauri-apps/api";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-import { ORDER_STATUSES, CLIENT_FIELDS } from "~/consts";
+import { CLIENT_FIELDS, ORDER_STATUSES } from "~/consts";
 
 const { t } = useI18n();
 const id = useRoute().params.id;
@@ -16,7 +16,8 @@ const { data: order } = await useAsyncData("get_order_details", async () => {
       id,
     });
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -33,7 +34,8 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -44,18 +46,18 @@ async function handleGeneratePdf() {
   }
 }
 
-const handleFileBytesUpload = async (bytes: Uint8Array, name: string) => {
+async function handleFileBytesUpload(bytes: Uint8Array, name: string) {
   config.template.bytes = bytes;
   config.template.name = name;
   handleGeneratePdf();
-};
+}
 
-const saveConfig = async () => {
+async function saveConfig() {
   if (config.template.bytes && config.template.name) {
     const filePath = await uploadFileToDataDir(
       "pdf-templates",
       config.template.bytes,
-      config.template.name
+      config.template.name,
     );
     config.template.path = filePath;
   }
@@ -70,7 +72,7 @@ const saveConfig = async () => {
       }),
     },
   });
-};
+}
 
 handleGeneratePdf();
 </script>
@@ -103,8 +105,8 @@ handleGeneratePdf();
             />
           </div>
           <Select
-            :disabled="!config.fields.status"
             v-model="order.status"
+            :disabled="!config.fields.status"
             :default-value="order.status"
           >
             <SelectTrigger>
