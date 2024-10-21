@@ -20,7 +20,11 @@ export function usePdfGenerator() {
     marginTop: 40,
     marginX: 20,
     marginBottom: 90,
-    templateBase64: null as string | null,
+    template: {
+      bytes: null as Uint8Array | null,
+      name: null as string | null,
+      path: null as string | null,
+    },
     color: rgb(0.34, 0.34, 0.34),
     fields: {
       full_name: true,
@@ -43,10 +47,6 @@ export function usePdfGenerator() {
     }
   }
 
-  function setDocumentTemplate(data: string) {
-    config.templateBase64 = data;
-  }
-
   type DocType = "order" | "invoice" | "quote";
 
   async function generatePdf(data: any, type: DocType) {
@@ -56,7 +56,7 @@ export function usePdfGenerator() {
     setPdfMetadata(pdfDoc, data, type);
 
     try {
-      await setupPage(data.identifier);
+      await setupPage();
       drawContent(data, type);
       return await pdfDoc.saveAsBase64({ dataUri: true });
     } catch (err) {
@@ -72,13 +72,11 @@ export function usePdfGenerator() {
     pdfDoc.setCreator("trymahalli.com");
   }
 
-  async function setupPage(identifier: string) {
+  async function setupPage() {
     if (!pdfDoc) return;
 
-    if (config.templateBase64) {
-      const sourcePdfDoc = await PDFDocument.load(
-        `data:application/pdf;headers=filename%3D${identifier};base64,${config.templateBase64}`
-      );
+    if (config.template.bytes) {
+      const sourcePdfDoc = await PDFDocument.load(config.template.bytes);
       const [templatePage] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
       template = templatePage;
       page = pdfDoc.addPage(copyPage(template));
@@ -392,7 +390,6 @@ export function usePdfGenerator() {
 
   return {
     config,
-    setDocumentTemplate,
     generatePdf,
   };
 }

@@ -15,8 +15,7 @@ function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
       id: supplier.id!,
       fullName: supplier.full_name,
     });
-  }
-  else {
+  } else {
     modal.open(SupplierUpdate, {
       id: supplier.id!,
       fullName: supplier.full_name,
@@ -83,7 +82,7 @@ function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    {{ t("actions.edit") }}
+                    {{ t("buttons.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -91,7 +90,7 @@ function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
                   >
                     <Trash2 :size="20" class="text-red-500 inline mr-2" />
                     <span class="text-red-500">
-                      {{ t("actions.delete") }}
+                      {{ t("buttons.delete") }}
                     </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

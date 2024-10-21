@@ -5,7 +5,7 @@ module.exports = {
   content: [
     `./components/**/*.{vue,js,ts}`,
     `./layouts/**/*.vue`,
-    `./consts/status.ts`,
+    `./consts/*`,
     `./pages/**/*.vue`,
     `./composables/**/*.{js,ts}`,
     `./plugins/**/*.{js,ts}`,
@@ -87,7 +87,7 @@ module.exports = {
           from: { height: "var(--radix-collapsible-content-height)" },
           to: { height: 0 },
         },
-        "highlight": {
+        highlight: {
           "0%": { "background-color": "transparent" },
           "50%": { "background-color": "#e5e7eb" },
           "100%": { "background-color": "transparent" },

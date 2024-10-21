@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { open } from "@tauri-apps/api/dialog";
-import { downloadDir, pictureDir } from "@tauri-apps/api/path";
+import { downloadDir, pictureDir, sep } from "@tauri-apps/api/path";
 import { useDropZone } from "@vueuse/core";
 import { FileCheck, Trash2, Upload } from "lucide-vue-next";
 import { error } from "tauri-plugin-log-api";
@@ -13,6 +13,7 @@ const { name, extensions } = defineProps<{
 
 const emits = defineEmits<{
   saveBase64: [payload: string];
+  saveBytes: [payload: Uint8Array, name: string];
 }>();
 
 const { t } = useI18n();
@@ -22,16 +23,15 @@ const selectedFile = ref<string | null>();
 
 async function onDrop(files: File[] | null) {
   if (files) {
-    const filePath = await getBytesArray(files[0]);
-    if (filePath) {
-      const base64 = btoa(String.fromCharCode(...filePath));
+    const file = files[0];
+    const fileBytes = await getBytesArray(file);
+    emits("saveBytes", fileBytes, file.name);
+    if (name === "Image") {
+      const base64 = btoa(String.fromCharCode(...fileBytes));
       emits("saveBase64", base64);
-      if (name === "Image") {
-        selectedFile.value = base64;
-      }
-      else {
-        isFileSelected.value = true;
-      }
+      selectedFile.value = base64;
+    } else {
+      isFileSelected.value = true;
     }
   }
 }
@@ -47,19 +47,19 @@ async function OpenDialog() {
     })) as string | null;
 
     if (filePath) {
-      const base64 = await getFileBytes(filePath);
-      if (base64) {
-        emits("saveBase64", base64);
+      const fileBytes = await getFileBytes(filePath);
+      if (fileBytes) {
+        emits("saveBytes", fileBytes, filePath.split(sep).at(-1)!);
         if (name === "Image") {
+          const base64 = btoa(String.fromCharCode(...fileBytes));
+          emits("saveBase64", base64);
           selectedFile.value = base64;
-        }
-        else {
+        } else {
           isFileSelected.value = true;
         }
       }
     }
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -84,7 +84,7 @@ async function OpenDialog() {
       v-if="name === 'Image' && selectedFile"
       class="absolute top-0 border border-gray-300 rounded-md object-cover w-full h-full"
       :src="`data:image/png;base64,${selectedFile}`"
-    >
+    />
     <div
       v-else
       ref="dropZone"
@@ -93,8 +93,8 @@ async function OpenDialog() {
         isOverDropZone
           ? 'fill-sky-500 border-sky-500 bg-sky-200'
           : isFileSelected
-            ? 'fill-green-400 border-green-300 bg-green-200'
-            : 'fill-gray-400 border-gray-300 bg-white',
+          ? 'fill-green-400 border-green-300 bg-green-200'
+          : 'fill-gray-400 border-gray-300 bg-white',
       ]"
     >
       <button

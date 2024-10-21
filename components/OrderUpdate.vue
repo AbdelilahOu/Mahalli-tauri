@@ -6,7 +6,7 @@ import { toast } from "vue-sonner";
 import { useFieldArray, useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
-import { ORDER_STATUSES } from "@/consts/status";
+import { ORDER_STATUSES } from "@/consts";
 
 const props = defineProps<{
   id: string;

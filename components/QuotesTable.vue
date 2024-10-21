@@ -175,7 +175,7 @@ async function createOrderFromQuote(id: string) {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    {{ t("actions.edit") }}
+                    {{ t("buttons.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <NuxtLink
@@ -188,19 +188,19 @@ async function createOrderFromQuote(id: string) {
                       <Printer
                         :size="20"
                         class="text-slate-800 inline mr-2"
-                      />{{ t("actions.print") }}
+                      />{{ t("buttons.print") }}
                     </NuxtLink>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem @click="createOrderFromQuote(quote.id!)">
                     <Truck :size="20" class="text-slate-800 inline mr-2" />
-                    {{ t("actions.to-order") }}
+                    {{ t("buttons.to-order") }}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem @click="toggleThisQuote(quote, 'delete')">
                     <Trash2 :size="20" class="text-red-500 inline mr-2" />
                     <span class="text-red-500">
-                      {{ t("actions.delete") }}
+                      {{ t("buttons.delete") }}
                     </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

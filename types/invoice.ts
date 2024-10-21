@@ -1,4 +1,4 @@
-import type { INVOICE_STATUSES } from "~/consts/status";
+import type { INVOICE_STATUSES } from "~/consts";
 
 export interface InvoiceT {
   id: string;

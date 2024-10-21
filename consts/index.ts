@@ -1,3 +1,22 @@
+export const CLIENT_FIELDS = [
+  {
+    label: "full-name",
+    field: "full_name",
+  },
+  {
+    label: "email",
+    field: "email",
+  },
+  {
+    label: "phone",
+    field: "phone_number",
+  },
+  {
+    label: "address",
+    field: "address",
+  },
+];
+
 export const STATUS_COLORS = {
   DRAFT: "bg-gray-100 border-gray-500 text-gray-900",
   SENT: "bg-blue-100 border-blue-500 text-blue-900",

@@ -5,7 +5,7 @@ import { useDebounceFn } from "@vueuse/core";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { OrderCreate } from "#components";
-import { ORDER_STATUSES } from "@/consts/status";
+import { ORDER_STATUSES } from "@/consts";
 
 const route = useRoute();
 const { t, d } = useI18n();
