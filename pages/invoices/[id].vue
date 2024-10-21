@@ -2,7 +2,7 @@
 import { invoke } from "@tauri-apps/api";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-import { INVOICE_STATUSES, CLIENT_FIELDS } from "~/consts";
+import { CLIENT_FIELDS, INVOICE_STATUSES } from "~/consts";
 
 const { t } = useI18n();
 const id = useRoute().params.id;
@@ -18,7 +18,8 @@ const { data: invoice } = await useAsyncData(
         id,
       });
       return res.data;
-    } catch (err: any) {
+    }
+    catch (err: any) {
       toast.error(t("notifications.error.title"), {
         description: t("notifications.error.description"),
         closeButton: true,
@@ -27,7 +28,7 @@ const { data: invoice } = await useAsyncData(
         error(`ERROR INVOICE DETAILS: ${err.error}`);
       }
     }
-  }
+  },
 );
 
 async function handleGeneratePdf() {
@@ -36,7 +37,8 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -47,18 +49,18 @@ async function handleGeneratePdf() {
   }
 }
 
-const handleFileBytesUpload = async (bytes: Uint8Array, name: string) => {
+async function handleFileBytesUpload(bytes: Uint8Array, name: string) {
   config.template.bytes = bytes;
   config.template.name = name;
   handleGeneratePdf();
-};
+}
 
-const saveConfig = async () => {
+async function saveConfig() {
   if (config.template.bytes && config.template.name) {
     const filePath = await uploadFileToDataDir(
       "pdf-templates",
       config.template.bytes,
-      config.template.name
+      config.template.name,
     );
     config.template.path = filePath;
   }
@@ -73,7 +75,7 @@ const saveConfig = async () => {
       }),
     },
   });
-};
+}
 
 handleGeneratePdf();
 </script>
@@ -106,8 +108,8 @@ handleGeneratePdf();
             />
           </div>
           <Select
-            :disabled="!config.fields.status"
             v-model="invoice.status"
+            :disabled="!config.fields.status"
             :default-value="invoice.status"
           >
             <SelectTrigger>

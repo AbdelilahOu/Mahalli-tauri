@@ -16,7 +16,8 @@ const { data: quote } = await useAsyncData("get_quote_details", async () => {
       id,
     });
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -33,7 +34,8 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -44,18 +46,18 @@ async function handleGeneratePdf() {
   }
 }
 
-const handleFileBytesUpload = async (bytes: Uint8Array, name: string) => {
+async function handleFileBytesUpload(bytes: Uint8Array, name: string) {
   config.template.bytes = bytes;
   config.template.name = name;
   handleGeneratePdf();
-};
+}
 
-const saveConfig = async () => {
+async function saveConfig() {
   if (config.template.bytes && config.template.name) {
     const filePath = await uploadFileToDataDir(
       "pdf-templates",
       config.template.bytes,
-      config.template.name
+      config.template.name,
     );
     config.template.path = filePath;
   }
@@ -70,7 +72,7 @@ const saveConfig = async () => {
       }),
     },
   });
-};
+}
 
 handleGeneratePdf();
 </script>

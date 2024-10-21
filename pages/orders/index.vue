@@ -17,7 +17,7 @@ const orderProducts = ref<OrderProductsPreviewT[]>([]);
 const searchQuery = ref<string>(route.query.search as any);
 const status = ref<string | undefined>(route.query.status as any);
 const created_at = ref<string | number | undefined>(
-  route.query.created_at as any
+  route.query.created_at as any,
 );
 
 const LIMIT = 25;
@@ -45,14 +45,16 @@ async function fetchOrders() {
       },
     });
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
       error(`LIST ORDERS: ${err.error}`);
-    } else {
+    }
+    else {
       error(`LIST ORDERS: ${err}`);
     }
   }
@@ -92,7 +94,8 @@ async function listOrderProducts(id?: string) {
       id,
     });
     orderProducts.value = res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -126,7 +129,7 @@ const openCreateOrderModal = () => modal.open(OrderCreate, {});
                 :class="
                   cn(
                     'w-full justify-start text-left font-normal',
-                    !created_at && 'text-muted-foreground'
+                    !created_at && 'text-muted-foreground',
                   )
                 "
               >
