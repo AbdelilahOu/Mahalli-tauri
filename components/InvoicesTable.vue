@@ -4,7 +4,7 @@ import { FilePenLine, GripHorizontal, Printer, Trash2 } from "lucide-vue-next";
 import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { InvoiceDelete, InvoiceUpdate } from "#components";
-import { INVOICE_STATUSES, STATUS_COLORS } from "@/consts/status";
+import { INVOICE_STATUSES, STATUS_COLORS } from "@/consts";
 
 defineProps<{
   invoices: InvoiceT[];
@@ -222,7 +222,7 @@ async function updateInvoiceStatus(id: string, status: string) {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    {{ t("actions.edit") }}
+                    {{ t("buttons.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <NuxtLink
@@ -235,7 +235,7 @@ async function updateInvoiceStatus(id: string, status: string) {
                       <Printer
                         :size="20"
                         class="text-slate-800 inline mr-2"
-                      />{{ t("actions.print") }}
+                      />{{ t("buttons.print") }}
                     </NuxtLink>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -244,7 +244,7 @@ async function updateInvoiceStatus(id: string, status: string) {
                   >
                     <Trash2 :size="20" class="text-red-500 inline mr-2" />
                     <span class="text-red-500">
-                      {{ t("actions.delete") }}
+                      {{ t("buttons.delete") }}
                     </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

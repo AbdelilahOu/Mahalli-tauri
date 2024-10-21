@@ -10,7 +10,7 @@ import {
 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 import { NuxtLink, OrderDelete, OrderUpdate } from "#components";
-import { ORDER_STATUSES, STATUS_COLORS } from "@/consts/status";
+import { ORDER_STATUSES, STATUS_COLORS } from "@/consts";
 
 defineProps<{ orders: OrderT[]; orderProducts: OrderProductsPreviewT[] }>();
 const emits = defineEmits<{
@@ -36,8 +36,7 @@ function toggleThisOrder(order: OrderT, name: "delete" | "update") {
       id: order.id!,
       identifier: order.identifier,
     });
-  }
-  else {
+  } else {
     modal.open(OrderUpdate, {
       id: order.id!,
       identifier: order.identifier,
@@ -59,8 +58,7 @@ async function updateOrderStatus(id: string, status: string) {
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -79,7 +77,7 @@ async function createInvoiceFromOrder(id: string) {
       "create_invoice_from_order",
       {
         id,
-      },
+      }
     );
     //
     info(`CREATE INVOICE FROM ORDER: ${id}`);
@@ -92,8 +90,7 @@ async function createInvoiceFromOrder(id: string) {
         innerHTML: "go to invoice",
       }),
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     if (typeof err === "object" && "error" in err) {
       error(`GET ORDER FOR INVOICE: ${err.error}`);
       return;
@@ -204,7 +201,7 @@ async function createInvoiceFromOrder(id: string) {
                   :class="
                     cn(
                       'cursor-pointer whitespace-nowrap',
-                      STATUS_COLORS[order.status],
+                      STATUS_COLORS[order.status]
                     )
                   "
                 >
@@ -244,7 +241,7 @@ async function createInvoiceFromOrder(id: string) {
                       :size="20"
                       class="text-slate-800 inline mr-2"
                     />
-                    {{ t("actions.edit") }}
+                    {{ t("buttons.edit") }}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <NuxtLink
@@ -257,7 +254,7 @@ async function createInvoiceFromOrder(id: string) {
                       <Printer
                         :size="20"
                         class="text-slate-800 inline mr-2"
-                      />{{ t("actions.print") }}
+                      />{{ t("buttons.print") }}
                     </NuxtLink>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -265,13 +262,13 @@ async function createInvoiceFromOrder(id: string) {
                     <NotepadText
                       :size="20"
                       class="text-slate-800 inline mr-2"
-                    />{{ t("actions.to-invoice") }}
+                    />{{ t("buttons.to-invoice") }}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem @click="toggleThisOrder(order, 'delete')">
                     <Trash2 :size="20" class="text-red-500 inline mr-2" />
                     <span class="text-red-500">
-                      {{ t("actions.delete") }}
+                      {{ t("buttons.delete") }}
                     </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

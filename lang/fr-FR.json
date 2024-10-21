@@ -28,7 +28,13 @@
     "toggle-create-order": "Ajouter une nouvelle commande",
     "toggle-create-quote": "Ajouter un nouveau devis",
     "toggle-create-invoice": "Ajouter une nouvelle facture",
-    "toggle-create-org": "Créer une organisation"
+    "toggle-create-org": "Créer une organisation",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "print": "Imprimer",
+    "to-order": "Créer une commande",
+    "to-invoice": "Créer une facture",
+    "inventory-update": "Mettre à jour l'inventaire"
   },
   "translationTitle": "Changer de langue",
   "dropZone": "Glissez-déposez ou sélectionnez",
@@ -87,14 +93,6 @@
     "overdue": "En retard",
     "in": "Acheté",
     "out": "Vendu"
-  },
-  "actions": {
-    "edit": "Modifier",
-    "delete": "Supprimer",
-    "print": "Imprimer",
-    "to-order": "Créer une commande",
-    "to-invoice": "Créer une facture",
-    "inventory-update": "Mettre à jour l'inventaire"
   },
   "dashboard": {
     "title": "Articles vendus et achetés au cours des trois derniers mois",

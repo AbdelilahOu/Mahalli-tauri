@@ -2,32 +2,13 @@
 import { invoke } from "@tauri-apps/api";
 import { error } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-import { ORDER_STATUSES } from "~/consts/status";
+import { ORDER_STATUSES, CLIENT_FIELDS } from "~/consts";
 
 const { t } = useI18n();
 const id = useRoute().params.id;
 const pdfContent = ref("");
 
-const clientFields = [
-  {
-    label: "full-name",
-    field: "full_name",
-  },
-  {
-    label: "email",
-    field: "email",
-  },
-  {
-    label: "phone",
-    field: "phone_number",
-  },
-  {
-    label: "address",
-    field: "address",
-  },
-];
-
-const { config, setDocumentTemplate, generatePdf } = usePdfGenerator();
+const { config, generatePdf } = usePdfGenerator();
 
 const { data: order } = await useAsyncData("get_order_details", async () => {
   try {
@@ -63,14 +44,35 @@ async function handleGeneratePdf() {
   }
 }
 
-handleGeneratePdf();
+const handleFileBytesUpload = async (bytes: Uint8Array, name: string) => {
+  config.template.bytes = bytes;
+  config.template.name = name;
+  handleGeneratePdf();
+};
 
-watch(
-  () => config.templateBase64,
-  () => {
-    handleGeneratePdf();
+const saveConfig = async () => {
+  if (config.template.bytes && config.template.name) {
+    const filePath = await uploadFileToDataDir(
+      "pdf-templates",
+      config.template.bytes,
+      config.template.name
+    );
+    config.template.path = filePath;
   }
-);
+  await invoke("create_template", {
+    template: {
+      values_json: JSON.stringify({
+        ...config,
+        template: {
+          path: config.template.path,
+          name: config.template.name,
+        },
+      }),
+    },
+  });
+};
+
+handleGeneratePdf();
 </script>
 
 <template>
@@ -85,7 +87,7 @@ watch(
         <UiUploader
           name="Pdf"
           :extensions="['pdf']"
-          @save-base64="setDocumentTemplate"
+          @save-bytes="handleFileBytesUpload"
         />
         <Label>{{ t("fields.top-margin") }} </Label>
         <Input v-model="config.marginTop" />
@@ -125,7 +127,7 @@ watch(
           </Select>
         </div>
         <Separator class="my-2" />
-        <div v-for="item in clientFields" class="flex flex-col gap-2">
+        <div v-for="item in CLIENT_FIELDS" class="flex flex-col gap-2">
           <div class="flex justify-between items-center">
             <Label>
               {{ t(`fields.${item.label}`) }}
@@ -145,7 +147,7 @@ watch(
       </CardContent>
       <CardFooter>
         <Button class="col-span-3" @click="handleGeneratePdf">
-          {{ t("buttons.save") }}
+          {{ t("buttons.update") }}
         </Button>
       </CardFooter>
     </Card>

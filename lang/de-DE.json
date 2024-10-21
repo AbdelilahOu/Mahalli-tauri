@@ -28,7 +28,13 @@
     "toggle-create-order": "Neue Bestellung hinzufügen",
     "toggle-create-quote": "Neues Angebot hinzufügen",
     "toggle-create-invoice": "Neue Rechnung hinzufügen",
-    "toggle-create-org": "Organisation erstellen"
+    "toggle-create-org": "Organisation erstellen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "print": "Drucken",
+    "to-order": "Bestellung erstellen",
+    "to-invoice": "Rechnung erstellen",
+    "inventory-update": "Lagerbestand aktualisieren"
   },
   "translationTitle": "Sprache ändern",
   "dropZone": "Ziehen und ablegen oder auswählen",
@@ -88,14 +94,7 @@
     "in": "Gekauft",
     "out": "Verkauft"
   },
-  "actions": {
-    "edit": "Bearbeiten",
-    "delete": "Löschen",
-    "print": "Drucken",
-    "to-order": "Bestellung erstellen",
-    "to-invoice": "Rechnung erstellen",
-    "inventory-update": "Lagerbestand aktualisieren"
-  },
+
   "dashboard": {
     "title": "Verkaufte und gekaufte Artikel in den letzten drei Monaten",
     "labels": ["GEKAUFT", "VERKAUFT"],
