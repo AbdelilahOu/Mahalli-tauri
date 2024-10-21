@@ -168,7 +168,6 @@ export function usePdfGenerator() {
     });
 
     const fields = getClientFields(client);
-    console.log(fields);
     fields.forEach((field, index) => {
       page?.drawText(field, {
         x: config.marginX,
