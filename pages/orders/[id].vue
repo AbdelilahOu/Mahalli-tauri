@@ -16,8 +16,7 @@ const { data: order } = await useAsyncData("get_order_details", async () => {
       id,
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -34,8 +33,7 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -57,7 +55,7 @@ async function saveConfig() {
     const filePath = await uploadFileToDataDir(
       "pdf-templates",
       config.template.bytes,
-      config.template.name,
+      config.template.name
     );
     config.template.path = filePath;
   }
@@ -72,8 +70,11 @@ async function saveConfig() {
       }),
     },
   });
+  toast(t("notifications.error.title"), {
+    description: t("notifications.error.description"),
+    closeButton: true,
+  });
 }
-
 handleGeneratePdf();
 </script>
 
@@ -129,7 +130,11 @@ handleGeneratePdf();
           </Select>
         </div>
         <Separator class="my-2" />
-        <div v-for="item in CLIENT_FIELDS" class="flex flex-col gap-2">
+        <div
+          v-for="item in CLIENT_FIELDS"
+          :key="item.field"
+          class="flex flex-col gap-2"
+        >
           <div class="flex justify-between items-center">
             <Label>
               {{ t(`fields.${item.label}`) }}
@@ -148,7 +153,10 @@ handleGeneratePdf();
         </div>
       </CardContent>
       <CardFooter>
-        <Button class="col-span-3" @click="handleGeneratePdf">
+        <Button variant="secondary" @click="saveConfig">
+          {{ t("buttons.save") }}
+        </Button>
+        <Button class="col-span-2" @click="handleGeneratePdf">
           {{ t("buttons.update") }}
         </Button>
       </CardFooter>
