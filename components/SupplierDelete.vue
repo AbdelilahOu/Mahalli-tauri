@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
+import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const props = defineProps<{
@@ -14,31 +15,29 @@ async function deleteTheSupplier() {
   try {
     await invoke<Res<string>>("delete_supplier", { id: props.id });
     // INFO
-    console.info(`DELETE SUPPLIER: ${props.id}`);
+    info(`DELETE SUPPLIER: ${props.id}`);
     //
     toast.success(
       t("notifications.supplier.deleted", { name: props.fullName }),
       {
         closeButton: true,
-      },
+      }
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-delete-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      console.error(`DELETE SUPPLIER: ${err.error}`);
+      error(`ERROR DELETE SUPPLIER: ${err.error}`);
       return;
     }
-    console.error(`DELETE SUPPLIER: ${err}`);
-  }
-  finally {
+    error(`ERROR DELETE SUPPLIER: ${err}`);
+  } finally {
     close();
   }
 }

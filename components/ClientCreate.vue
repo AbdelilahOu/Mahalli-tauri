@@ -41,32 +41,30 @@ async function createNewClient(client: ClientT) {
       `CREATE CLIENT: ${JSON.stringify({
         ...client,
         image: `data:image/png;base64,${imagePath.value}`,
-      })}`,
+      })}`
     );
     //
     toast.success(
       t("notifications.client.created", { name: client.full_name }),
       {
         closeButton: true,
-      },
+      }
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`CREATE CLIENT: ${err.error}`);
+      error(`ERROR CREATE CLIENT: ${err.error}`);
       return;
     }
-    error(`CREATE CLIENT: ${err}`);
-  }
-  finally {
+    error(`ERROR CREATE CLIENT: ${err}`);
+  } finally {
     close();
   }
 }

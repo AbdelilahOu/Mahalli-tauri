@@ -51,29 +51,39 @@ async function handleFileBytesUpload(bytes: Uint8Array, name: string) {
 }
 
 async function saveConfig() {
-  if (config.template.bytes && config.template.name) {
-    const filePath = await uploadFileToDataDir(
-      "pdf-templates",
-      config.template.bytes,
-      config.template.name
-    );
-    config.template.path = filePath;
+  try {
+    if (config.template.bytes && config.template.name) {
+      const filePath = await uploadFileToDataDir(
+        "pdf-templates",
+        config.template.bytes,
+        config.template.name
+      );
+      config.template.path = filePath;
+    }
+    await invoke("create_template", {
+      template: {
+        values_json: JSON.stringify({
+          ...config,
+          template: {
+            path: config.template.path,
+            name: config.template.name,
+          },
+        }),
+      },
+    });
+    toast(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
+  } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
+    if (typeof err === "object" && "error" in err) {
+      error(`ERROR CREATE TEMPLATE: ${err.error}`);
+    }
   }
-  await invoke("create_template", {
-    template: {
-      values_json: JSON.stringify({
-        ...config,
-        template: {
-          path: config.template.path,
-          name: config.template.name,
-        },
-      }),
-    },
-  });
-  toast(t("notifications.error.title"), {
-    description: t("notifications.error.description"),
-    closeButton: true,
-  });
 }
 handleGeneratePdf();
 </script>
