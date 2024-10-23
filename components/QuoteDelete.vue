@@ -24,7 +24,8 @@ async function deleteTheQuotes() {
     updateQueryParams({
       refresh: `refresh-delete-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -34,7 +35,8 @@ async function deleteTheQuotes() {
       return;
     }
     Logger.error(`ERROR DELETE QUOTE: ${err}`);
-  } finally {
+  }
+  finally {
     close();
   }
 }

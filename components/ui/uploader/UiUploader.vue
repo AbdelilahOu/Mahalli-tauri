@@ -30,7 +30,8 @@ async function onDrop(files: File[] | null) {
       const base64 = btoa(String.fromCharCode(...fileBytes));
       emits("saveBase64", base64);
       selectedFile.value = base64;
-    } else {
+    }
+    else {
       isFileSelected.value = true;
     }
   }
@@ -54,12 +55,14 @@ async function OpenDialog() {
           const base64 = btoa(String.fromCharCode(...fileBytes));
           emits("saveBase64", base64);
           selectedFile.value = base64;
-        } else {
+        }
+        else {
           isFileSelected.value = true;
         }
       }
     }
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -84,7 +87,7 @@ async function OpenDialog() {
       v-if="name === 'Image' && selectedFile"
       class="absolute top-0 border border-gray-300 rounded-md object-cover w-full h-full"
       :src="`data:image/png;base64,${selectedFile}`"
-    />
+    >
     <div
       v-else
       ref="dropZone"
@@ -93,8 +96,8 @@ async function OpenDialog() {
         isOverDropZone
           ? 'fill-sky-500 border-sky-500 bg-sky-200'
           : isFileSelected
-          ? 'fill-green-400 border-green-300 bg-green-200'
-          : 'fill-gray-400 border-gray-300 bg-white',
+            ? 'fill-green-400 border-green-300 bg-green-200'
+            : 'fill-gray-400 border-gray-300 bg-white',
       ]"
     >
       <button
