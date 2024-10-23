@@ -23,7 +23,7 @@ const invoiceSchema = z.object({
       product_id: z.string().min(1),
       quantity: z.number().min(1),
       price: z.number().min(1),
-    }),
+    })
   ),
 });
 
@@ -63,7 +63,7 @@ async function searchClients(search: string | number) {
     "search_clients",
     {
       search,
-    },
+    }
   );
   console.log(res);
   if (!res.error) {
@@ -76,7 +76,7 @@ async function searchProducts(search: string | number) {
     "search_products",
     {
       search,
-    },
+    }
   );
   if (!res.error) {
     products.value = res.data;
@@ -103,19 +103,17 @@ const onSubmit = handleSubmit(async (values) => {
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`CREATE INVOICE: ${err.error}`);
+      error(`ERROR CREATE INVOICE: ${err.error}`);
       return;
     }
-    error(`CREATE INVOICE: ${err}`);
-  }
-  finally {
+    error(`ERROR CREATE INVOICE: ${err}`);
+  } finally {
     isPosting.value = false;
     close();
   }
@@ -224,9 +222,7 @@ const onSubmit = handleSubmit(async (values) => {
                           step="0.01"
                           v-bind="componentField"
                         >
-                          <template #unite>
-                            DH
-                          </template>
+                          <template #unite> DH </template>
                         </Input>
                       </FormControl>
                     </FormItem>

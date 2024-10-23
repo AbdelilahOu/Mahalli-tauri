@@ -43,32 +43,30 @@ async function createNewSupplier(supplier: SupplierT) {
       `CREATE SUPPLIER: ${JSON.stringify({
         ...supplier,
         image: `data:image/png;base64,${imagePath.value}`,
-      })}`,
+      })}`
     );
     //
     toast.success(
       t("notifications.supplier.created", { name: supplier.full_name }),
       {
         closeButton: true,
-      },
+      }
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`CREATE SUPPLIER: ${err.error}`);
+      error(`ERROR CREATE SUPPLIER: ${err.error}`);
       return;
     }
-    error(`CREATE SUPPLIER: ${err}`);
-  }
-  finally {
+    error(`ERROR CREATE SUPPLIER: ${err}`);
+  } finally {
     close();
   }
 }

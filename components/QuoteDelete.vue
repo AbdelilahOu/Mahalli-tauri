@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
+import { error, info } from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const props = defineProps<{
@@ -14,7 +15,7 @@ async function deleteTheQuotes() {
   try {
     await invoke<Res<any>>("delete_quote", { id: props.id });
     // INFO
-    console.info(`DELETE QUOTE: ${props.id}`);
+    info(`DELETE QUOTE: ${props.id}`);
     //
     toast.success(t("notifications.quote.deleted"), {
       closeButton: true,
@@ -23,19 +24,17 @@ async function deleteTheQuotes() {
     updateQueryParams({
       refresh: `refresh-delete-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      console.error(`DELETE QUOTE: ${err.error}`);
+      error(`ERROR DELETE QUOTE: ${err.error}`);
       return;
     }
-    console.error(`DELETE QUOTE: ${err}`);
-  }
-  finally {
+    error(`ERROR DELETE QUOTE: ${err}`);
+  } finally {
     close();
   }
 }
