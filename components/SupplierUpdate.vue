@@ -3,7 +3,7 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { invoke } from "@tauri-apps/api";
 import { useForm } from "vee-validate";
 import { z } from "zod";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const props = defineProps<{
@@ -47,7 +47,7 @@ async function updateTheSupplier(supplier: SupplierT) {
       },
     });
     //
-    info(
+    Logger.info(
       `UPDATE SUPPLIER: ${JSON.stringify({
         id: props.id,
         full_name: supplier.full_name,
@@ -73,10 +73,10 @@ async function updateTheSupplier(supplier: SupplierT) {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR UPDATE SUPPLIER: ${err.error}`);
+      Logger.error(`ERROR UPDATE SUPPLIER: ${err.error}`);
       return;
     }
-    error(`ERROR UPDATE SUPPLIER: ${err}`);
+    Logger.error(`ERROR UPDATE SUPPLIER: ${err}`);
   } finally {
     close();
   }

@@ -2,7 +2,7 @@
 import { invoke } from "@tauri-apps/api";
 import { Calendar as CalendarIcon, Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
-import { error } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { InvoiceCreate } from "#components";
 import { INVOICE_STATUSES } from "@/consts";
@@ -17,7 +17,7 @@ const invoiceProducts = ref<InvoiceProductsPreviewT[]>([]);
 const searchQuery = ref<string>(route.query.search as any);
 const status = ref<string | undefined>(route.query.status as any);
 const created_at = ref<string | number | undefined>(
-  route.query.created_at as any,
+  route.query.created_at as any
 );
 
 const LIMIT = 25;
@@ -45,17 +45,15 @@ async function fetchInvoices() {
       },
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`LIST INVOICESS: ${err.error}`);
-    }
-    else {
-      error(`LIST INVOICESS: ${err}`);
+      Logger.error(`LIST INVOICESS: ${err.error}`);
+    } else {
+      Logger.error(`LIST INVOICESS: ${err}`);
     }
   }
 }
@@ -94,17 +92,16 @@ async function listInvoiceProducts(id?: string) {
       id,
     });
     invoiceProducts.value = res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR LIST INVOICES PRODUCTS: ${err.error}`);
+      Logger.error(`ERROR LIST INVOICES PRODUCTS: ${err.error}`);
       return;
     }
-    error(`ERROR LIST INVOICES PRODUCTS: ${err}`);
+    Logger.error(`ERROR LIST INVOICES PRODUCTS: ${err}`);
   }
 }
 
@@ -129,7 +126,7 @@ const openCreateInvoiceModal = () => modal.open(InvoiceCreate, {});
                 :class="
                   cn(
                     'w-full justify-start text-left font-normal',
-                    !created_at && 'text-muted-foreground',
+                    !created_at && 'text-muted-foreground'
                   )
                 "
               >

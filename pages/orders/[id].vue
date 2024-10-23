@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { error } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { CLIENT_FIELDS, ORDER_STATUSES } from "~/consts";
 
@@ -22,7 +22,7 @@ const { data: order } = await useAsyncData("get_order_details", async () => {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR ORDER DETAILS: ${err.error}`);
+      Logger.error(`ERROR ORDER DETAILS: ${err.error}`);
     }
   }
 });
@@ -39,7 +39,7 @@ async function handleGeneratePdf() {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR ORDER DETAILS: ${err.error}`);
+      Logger.error(`ERROR ORDER DETAILS: ${err.error}`);
     }
   }
 }
@@ -81,7 +81,7 @@ async function saveConfig() {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR CREATE TEMPLATE: ${err.error}`);
+      Logger.error(`ERROR CREATE TEMPLATE: ${err.error}`);
     }
   }
 }

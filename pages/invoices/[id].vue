@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { error } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { CLIENT_FIELDS, INVOICE_STATUSES } from "~/consts";
 
@@ -24,7 +24,7 @@ const { data: invoice } = await useAsyncData(
         closeButton: true,
       });
       if (typeof err === "object" && "error" in err) {
-        error(`ERROR INVOICE DETAILS: ${err.error}`);
+        Logger.error(`ERROR INVOICE DETAILS: ${err.error}`);
       }
     }
   }
@@ -42,7 +42,7 @@ async function handleGeneratePdf() {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR INVOICE DETAILS: ${err.error}`);
+      Logger.error(`ERROR INVOICE DETAILS: ${err.error}`);
     }
   }
 }
@@ -84,7 +84,7 @@ async function saveConfig() {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR CREATE TEMPLATE: ${err.error}`);
+      Logger.error(`ERROR CREATE TEMPLATE: ${err.error}`);
     }
   }
 }

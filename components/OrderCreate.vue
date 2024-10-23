@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { Trash2 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 import { useFieldArray, useForm } from "vee-validate";
@@ -91,7 +91,7 @@ const onSubmit = handleSubmit(async (values) => {
       },
     });
     //
-    info(`CREATE ORDER: ${JSON.stringify(values)}`);
+    Logger.info(`CREATE ORDER: ${JSON.stringify(values)}`);
     //
     toast.success(t("notifications.order.created"), {
       closeButton: true,
@@ -106,10 +106,10 @@ const onSubmit = handleSubmit(async (values) => {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR CREATE ORDER: ${err.error}`);
+      Logger.error(`ERROR CREATE ORDER: ${err.error}`);
       return;
     }
-    error(`ERROR CREATE ORDER: ${err}`);
+    Logger.error(`ERROR CREATE ORDER: ${err}`);
   } finally {
     isPosting.value = false;
     close();

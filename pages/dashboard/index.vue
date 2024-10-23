@@ -9,7 +9,7 @@ import {
   VisXYContainer,
 } from "@unovis/vue";
 import { DollarSign, NotepadText, Truck } from "lucide-vue-next";
-import { error } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { INVOICE_STATUSES, ORDER_STATUSES, STATUS_COLORS } from "@/consts";
 
@@ -38,23 +38,21 @@ const { data: inventoryTransactions } = useAsyncData(
         result,
         transactionLabels: [...new Set<string>(Object.keys(result))],
       };
-    }
-    catch (err: any) {
+    } catch (err: any) {
       handleError(err, "STATS INVENTORY MOUVEMENTS");
       return {
         result: {},
         transactionLabels: [],
       };
     }
-  },
+  }
 );
 
 const { data: bestClients } = useAsyncData("bestClients", async () => {
   try {
     const res = await invoke<Res<any[]>>("list_top_clients");
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     handleError(err, "STATS BEST CLIENTS");
     return [];
   }
@@ -64,8 +62,7 @@ const { data: bestProducts } = useAsyncData("bestProducts", async () => {
   try {
     const res = await invoke<Res<any[]>>("list_top_products");
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     handleError(err, "STATS BEST PRODUCTS");
     return [];
   }
@@ -74,8 +71,7 @@ const { data: bestProducts } = useAsyncData("bestProducts", async () => {
 const { data: statusCounts } = useAsyncData("statusCounts", async () => {
   try {
     const res = await invoke<Res<any>>("list_status_count");
-    if (!res?.data)
-      return { orders: {}, invoices: {} };
+    if (!res?.data) return { orders: {}, invoices: {} };
 
     const result: {
       orders: Record<string, number>;
@@ -88,18 +84,17 @@ const { data: statusCounts } = useAsyncData("statusCounts", async () => {
     res.data.orders.forEach(
       (item: { status: string; status_count: number }) => {
         result.orders[item.status] = item.status_count;
-      },
+      }
     );
 
     res.data.invoices.forEach(
       (item: { status: string; status_count: number }) => {
         result.invoices[item.status] = item.status_count;
-      },
+      }
     );
 
     return result;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     handleError(err, "STATS STATUS COUNT");
     return null;
   }
@@ -109,8 +104,7 @@ const { data: financials } = useAsyncData("financialMetrices", async () => {
   try {
     const res = await invoke<Res<any>>("list_financial_metrices");
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     handleError(err, "STATS EXPENSES");
     return {};
   }
@@ -122,10 +116,9 @@ function handleError(err: any, context: string) {
     closeButton: true,
   });
   if (typeof err === "object" && "error" in err) {
-    error(`${context}: ${err.error}`);
-  }
-  else {
-    error(`${context}: ${err}`);
+    Logger.error(`${context}: ${err.error}`);
+  } else {
+    Logger.error(`${context}: ${err}`);
   }
 }
 </script>

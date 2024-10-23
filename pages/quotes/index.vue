@@ -2,7 +2,7 @@
 import { invoke } from "@tauri-apps/api";
 import { Calendar as CalendarIcon, Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
-import { error } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { QuoteCreate } from "#components";
 
@@ -13,7 +13,7 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const searchQuery = ref<string>(route.query.search as string);
 const created_at = ref<string | number | undefined>(
-  route.query.created_at as any,
+  route.query.created_at as any
 );
 
 const quoteProducts = ref<QuoteProductsPreviewT[]>([]);
@@ -41,17 +41,15 @@ async function fetchQuotes() {
       },
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`LIST QUOTES: ${err.error}`);
-    }
-    else {
-      error(`LIST QUOTES: ${err}`);
+      Logger.error(`LIST QUOTES: ${err.error}`);
+    } else {
+      Logger.error(`LIST QUOTES: ${err}`);
     }
   }
 }
@@ -86,17 +84,15 @@ async function listQuoteProducts(id?: string) {
       id,
     });
     quoteProducts.value = res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`LIST QUOTE PRODUCTS: ${err.error}`);
-    }
-    else {
-      error(`LIST QUOTE PRODUCTS: ${err}`);
+      Logger.error(`LIST QUOTE PRODUCTS: ${err.error}`);
+    } else {
+      Logger.error(`LIST QUOTE PRODUCTS: ${err}`);
     }
   }
 }
@@ -117,7 +113,7 @@ const openCreateQuoteModal = () => modal.open(QuoteCreate, {});
                 :class="
                   cn(
                     'w-full justify-start text-left font-normal',
-                    !created_at && 'text-muted-foreground',
+                    !created_at && 'text-muted-foreground'
                   )
                 "
               >

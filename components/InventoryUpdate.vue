@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { toTypedSchema } from "@vee-validate/zod";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
@@ -35,7 +35,7 @@ async function updateTheProduct({ quantity }: z.infer<typeof inventory>) {
       },
     });
     // INFO
-    info(
+    Logger.info(
       `UPDATE PRODUCT INVENTORY: ${JSON.stringify({
         id,
         quantity: Number(quantity),
@@ -55,10 +55,10 @@ async function updateTheProduct({ quantity }: z.infer<typeof inventory>) {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR UPDATE PRODUCT INVENTORY: ${err.error}`);
+      Logger.error(`ERROR UPDATE PRODUCT INVENTORY: ${err.error}`);
       return;
     }
-    error(`ERROR UPDATE PRODUCT INVENTORY: ${err}`);
+    Logger.error(`ERROR UPDATE PRODUCT INVENTORY: ${err}`);
   } finally {
     close();
   }

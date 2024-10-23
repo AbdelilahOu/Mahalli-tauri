@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { toTypedSchema } from "@vee-validate/zod";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
@@ -37,7 +37,7 @@ async function createNewClient(client: ClientT) {
       },
     });
     //
-    info(
+    Logger.info(
       `CREATE CLIENT: ${JSON.stringify({
         ...client,
         image: `data:image/png;base64,${imagePath.value}`,
@@ -60,10 +60,10 @@ async function createNewClient(client: ClientT) {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR CREATE CLIENT: ${err.error}`);
+      Logger.error(`ERROR CREATE CLIENT: ${err.error}`);
       return;
     }
-    error(`ERROR CREATE CLIENT: ${err}`);
+    Logger.error(`ERROR CREATE CLIENT: ${err}`);
   } finally {
     close();
   }

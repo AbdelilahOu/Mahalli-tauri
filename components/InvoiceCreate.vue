@@ -4,7 +4,7 @@ import { Trash2 } from "lucide-vue-next";
 import { useFieldArray, useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const { t } = useI18n();
@@ -94,7 +94,7 @@ const onSubmit = handleSubmit(async (values) => {
       },
     });
     //
-    info(`CREATE INVOICE: ${JSON.stringify(values)}`);
+    Logger.info(`CREATE INVOICE: ${JSON.stringify(values)}`);
     //
     toast.success(t("notifications.invoice.created"), {
       closeButton: true,
@@ -109,10 +109,10 @@ const onSubmit = handleSubmit(async (values) => {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR CREATE INVOICE: ${err.error}`);
+      Logger.error(`ERROR CREATE INVOICE: ${err.error}`);
       return;
     }
-    error(`ERROR CREATE INVOICE: ${err}`);
+    Logger.error(`ERROR CREATE INVOICE: ${err}`);
   } finally {
     isPosting.value = false;
     close();

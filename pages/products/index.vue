@@ -2,7 +2,7 @@
 import { invoke } from "@tauri-apps/api";
 import { Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
-import { error } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { ProductCreate } from "#components";
 
@@ -34,17 +34,15 @@ async function fetchProducts() {
       },
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`LIST PRODUCTS: ${err.error}`);
-    }
-    else {
-      error(`LIST PRODUCTS: ${err}`);
+      Logger.error(`LIST PRODUCTS: ${err.error}`);
+    } else {
+      Logger.error(`LIST PRODUCTS: ${err}`);
     }
   }
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { Trash2 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 import { useFieldArray, useForm } from "vee-validate";
@@ -94,7 +94,7 @@ const onSubmit = handleSubmit(async (values) => {
       invoice: values,
     });
     //
-    info(`UPDATE INVOICE: ${JSON.stringify(values)}`);
+    Logger.info(`UPDATE INVOICE: ${JSON.stringify(values)}`);
     //
     toast.success(t("notifications.invoice.updated"), {
       closeButton: true,
@@ -105,10 +105,10 @@ const onSubmit = handleSubmit(async (values) => {
     });
   } catch (err: any) {
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR UPDATE INVOICE: ${err.error}`);
+      Logger.error(`ERROR UPDATE INVOICE: ${err.error}`);
       return;
     }
-    error(`ERROR UPDATE INVOICE: ${err}`);
+    Logger.error(`ERROR UPDATE INVOICE: ${err}`);
   } finally {
     close();
   }
@@ -123,7 +123,7 @@ async function deleteOneInvoiceItem(id: string) {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR DELETE INVOICE ITEM: ${err.error}`);
+      Logger.error(`ERROR DELETE INVOICE ITEM: ${err.error}`);
     }
   }
 }
