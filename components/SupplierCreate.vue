@@ -2,7 +2,7 @@
 import { toTypedSchema } from "@vee-validate/zod";
 import { invoke } from "@tauri-apps/api";
 import { useForm } from "vee-validate";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { z } from "zod";
 
@@ -39,7 +39,7 @@ async function createNewSupplier(supplier: SupplierT) {
       },
     });
     //
-    info(
+    Logger.info(
       `CREATE SUPPLIER: ${JSON.stringify({
         ...supplier,
         image: `data:image/png;base64,${imagePath.value}`,
@@ -62,10 +62,10 @@ async function createNewSupplier(supplier: SupplierT) {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR CREATE SUPPLIER: ${err.error}`);
+      Logger.error(`ERROR CREATE SUPPLIER: ${err.error}`);
       return;
     }
-    error(`ERROR CREATE SUPPLIER: ${err}`);
+    Logger.error(`ERROR CREATE SUPPLIER: ${err}`);
   } finally {
     close();
   }

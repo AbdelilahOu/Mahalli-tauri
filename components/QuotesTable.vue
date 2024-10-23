@@ -7,7 +7,7 @@ import {
   Trash2,
   Truck,
 } from "lucide-vue-next";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { NuxtLink, QuoteDelete, QuoteUpdate } from "#components";
 
@@ -34,8 +34,7 @@ function toggleThisQuote(quote: QuoteT, name: "delete" | "update") {
       id: quote.id!,
       identifier: quote.identifier,
     });
-  }
-  else {
+  } else {
     modal.open(QuoteUpdate, {
       id: quote.id!,
       identifier: quote.identifier,
@@ -48,7 +47,7 @@ async function createOrderFromQuote(id: string) {
     const res = await invoke<Res<QuoteForUpdateT>>("create_order_from_quote", {
       id,
     });
-    info(`CREATE ORDER FROM QUOTE: ${id}`);
+    Logger.info(`CREATE ORDER FROM QUOTE: ${id}`);
     //
     toast.success(t("notifications.order.created"), {
       closeButton: true,
@@ -58,17 +57,16 @@ async function createOrderFromQuote(id: string) {
         innerHTML: "go to order",
       }),
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`GET QUOTE FOR ORDER: ${err.error}`);
+      Logger.error(`GET QUOTE FOR ORDER: ${err.error}`);
       return;
     }
-    error(`GET QUOTE FOR ORDER: ${err}`);
+    Logger.error(`GET QUOTE FOR ORDER: ${err}`);
   }
 }
 </script>

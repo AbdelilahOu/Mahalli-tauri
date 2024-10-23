@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { FilePenLine, GripHorizontal, Printer, Trash2 } from "lucide-vue-next";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { InvoiceDelete, InvoiceUpdate } from "#components";
 import { INVOICE_STATUSES, STATUS_COLORS } from "@/consts";
@@ -50,7 +50,7 @@ async function updateInvoiceStatus(id: string, status: string) {
       },
     });
     //
-    info(
+    Logger.info(
       `UPDATE INVOICE STATUS: ${JSON.stringify({
         id,
         status,
@@ -66,10 +66,10 @@ async function updateInvoiceStatus(id: string, status: string) {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR UPDATE INVOICE STATUS: ${err.error}`);
+      Logger.error(`ERROR UPDATE INVOICE STATUS: ${err.error}`);
       return;
     }
-    error(`ERROR UPDATE INVOICE STATUS: ${err}`);
+    Logger.error(`ERROR UPDATE INVOICE STATUS: ${err}`);
   }
 }
 </script>

@@ -2,7 +2,7 @@
 import { invoke } from "@tauri-apps/api";
 import { Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
-import { error } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { ClientCreate } from "#components";
 
@@ -32,17 +32,15 @@ async function fetchClients(params: QueryParams) {
       },
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`LIST CLIENTS: ${err.error}`);
-    }
-    else {
-      error(`LIST CLIENTS: ${err}`);
+      Logger.error(`LIST CLIENTS: ${err.error}`);
+    } else {
+      Logger.error(`LIST CLIENTS: ${err}`);
     }
   }
 }
@@ -50,7 +48,7 @@ async function fetchClients(params: QueryParams) {
 const { data } = useAsyncData(
   "clients",
   () => fetchClients(queryParams.value),
-  { watch: [queryParams] },
+  { watch: [queryParams] }
 );
 
 const clients = computed<ClientT[]>(() => data.value?.clients ?? []);

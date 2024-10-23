@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import {
   FilePenLine,
   GripHorizontal,
@@ -53,7 +53,7 @@ async function updateOrderStatus(id: string, status: string) {
       },
     });
     //
-    info(`UPDATE ORDER STATUS: ${JSON.stringify({ id, status })}`);
+    Logger.info(`UPDATE ORDER STATUS: ${JSON.stringify({ id, status })}`);
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
@@ -64,10 +64,10 @@ async function updateOrderStatus(id: string, status: string) {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR UPDATE ORDER STATUS: ${err.error}`);
+      Logger.error(`ERROR UPDATE ORDER STATUS: ${err.error}`);
       return;
     }
-    error(`ERROR UPDATE ORDER STATUS: ${err}`);
+    Logger.error(`ERROR UPDATE ORDER STATUS: ${err}`);
   }
 }
 
@@ -80,7 +80,7 @@ async function createInvoiceFromOrder(id: string) {
       }
     );
     //
-    info(`CREATE INVOICE FROM ORDER: ${id}`);
+    Logger.info(`CREATE INVOICE FROM ORDER: ${id}`);
     //
     toast.success(t("notifications.invoice.created"), {
       closeButton: true,
@@ -92,10 +92,10 @@ async function createInvoiceFromOrder(id: string) {
     });
   } catch (err: any) {
     if (typeof err === "object" && "error" in err) {
-      error(`GET ORDER FOR INVOICE: ${err.error}`);
+      Logger.error(`GET ORDER FOR INVOICE: ${err.error}`);
       return;
     }
-    error(`GET ORDER FOR INVOICE: ${err}`);
+    Logger.error(`GET ORDER FOR INVOICE: ${err}`);
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { Trash2 } from "lucide-vue-next";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { useFieldArray, useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
@@ -94,7 +94,7 @@ const onSubmit = handleSubmit(async (values) => {
     await invoke<Res<string>>("update_quote", {
       quote: values,
     });
-    info(`UPDATE QUOTE: ${JSON.stringify(values)}`);
+    Logger.info(`UPDATE QUOTE: ${JSON.stringify(values)}`);
     //
     toast.success(t("notifications.quote.updated"), {
       closeButton: true,
@@ -109,10 +109,10 @@ const onSubmit = handleSubmit(async (values) => {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR UPDATE QUOTE: ${err.error}`);
+      Logger.error(`ERROR UPDATE QUOTE: ${err.error}`);
       return;
     }
-    error(`ERROR UPDATE QUOTE: ${err}`);
+    Logger.error(`ERROR UPDATE QUOTE: ${err}`);
   } finally {
     close();
   }
@@ -127,7 +127,7 @@ async function deleteOneQuoteItem(id: string) {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR DELETE QUOTE ITEM : ${err.error}`);
+      Logger.error(`ERROR DELETE QUOTE ITEM : ${err.error}`);
     }
   }
 }

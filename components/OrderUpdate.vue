@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { Trash2 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 import { useFieldArray, useForm } from "vee-validate";
@@ -94,7 +94,7 @@ const onSubmit = handleSubmit(async (values) => {
       order: values,
     });
     //
-    info(`UPDATE ORDER: ${JSON.stringify(values)}`);
+    Logger.info(`UPDATE ORDER: ${JSON.stringify(values)}`);
     //
     toast.success(t("notifications.order.updated"), {
       closeButton: true,
@@ -109,10 +109,10 @@ const onSubmit = handleSubmit(async (values) => {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR UPDATE ORDER: ${err.error}`);
+      Logger.error(`ERROR UPDATE ORDER: ${err.error}`);
       return;
     }
-    error(`ERROR UPDATE ORDER: ${err}`);
+    Logger.error(`ERROR UPDATE ORDER: ${err}`);
   } finally {
     close();
   }
@@ -127,7 +127,7 @@ async function deleteOneOrderItem(id: string) {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR DELETE ORDER ITEM: ${err.error}`);
+      Logger.error(`ERROR DELETE ORDER ITEM: ${err.error}`);
     }
   }
 }

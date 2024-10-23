@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { toTypedSchema } from "@vee-validate/zod";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
@@ -48,7 +48,7 @@ async function updateTheClient(client: ClientT) {
       },
     });
     //
-    info(
+    Logger.info(
       `UPDATE CLIENT: ${JSON.stringify({
         id: props.id,
         full_name: client.full_name,
@@ -74,10 +74,10 @@ async function updateTheClient(client: ClientT) {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR UPDATE CLIENT: ${err.error}`);
+      Logger.error(`ERROR UPDATE CLIENT: ${err.error}`);
       return;
     }
-    error(`ERROR UPDATE CLIENT: ${err}`);
+    Logger.error(`ERROR UPDATE CLIENT: ${err}`);
   } finally {
     close();
   }

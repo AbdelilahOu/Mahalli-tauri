@@ -3,7 +3,7 @@ import type { PDFFont } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 import { toast } from "vue-sonner";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
-import { error } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 
 export function usePdfGenerator() {
   const { t, locale, n, d } = useI18n();
@@ -386,7 +386,7 @@ export function usePdfGenerator() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    error(`ERROR PDF-LIB: ${err}`);
+    Logger.error(`ERROR PDF-LIB: ${err}`);
   }
 
   return {

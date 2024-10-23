@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const props = defineProps<{
@@ -15,7 +15,7 @@ async function deleteTheProduct() {
   try {
     await invoke<Res<string>>("delete_product", { id: props.id });
     // INFO
-    info(`DELETE PRODUCT: ${props.id}`);
+    Logger.info(`DELETE PRODUCT: ${props.id}`);
     //
     toast.success(t("notifications.product.deleted", { name: props.name }), {
       closeButton: true,
@@ -30,10 +30,10 @@ async function deleteTheProduct() {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR DELETE PRODUCT: ${err.error}`);
+      Logger.error(`ERROR DELETE PRODUCT: ${err.error}`);
       return;
     }
-    error(`ERROR DELETE PRODUCT: ${err}`);
+    Logger.error(`ERROR DELETE PRODUCT: ${err}`);
   } finally {
     close();
   }

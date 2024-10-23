@@ -2,7 +2,7 @@
 import { invoke } from "@tauri-apps/api";
 import { Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
-import { error } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { SupplierCreate } from "#components";
 
@@ -32,17 +32,15 @@ async function fetchSuppliers(params: QueryParams) {
       },
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`LIST SUPPLIERS: ${err.error}`);
-    }
-    else {
-      error(`LIST SUPPLIERS: ${err}`);
+      Logger.error(`LIST SUPPLIERS: ${err.error}`);
+    } else {
+      Logger.error(`LIST SUPPLIERS: ${err}`);
     }
   }
 }
@@ -50,7 +48,7 @@ async function fetchSuppliers(params: QueryParams) {
 const { data } = useAsyncData(
   "suppliers",
   () => fetchSuppliers(queryParams.value),
-  { watch: [queryParams] },
+  { watch: [queryParams] }
 );
 
 const suppliers = computed<SupplierT[]>(() => data.value?.suppliers ?? []);

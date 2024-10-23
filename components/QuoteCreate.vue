@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { Trash2 } from "lucide-vue-next";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 import { useFieldArray, useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
@@ -86,7 +86,7 @@ const onSubmit = handleSubmit(async (values) => {
     await invoke<Res<string>>("create_quote", {
       quote: values,
     });
-    info(`CREATE QUOTE: ${JSON.stringify(values)}`);
+    Logger.info(`CREATE QUOTE: ${JSON.stringify(values)}`);
     //
     toast.success(t("notifications.quote.created"), {
       closeButton: true,
@@ -101,10 +101,10 @@ const onSubmit = handleSubmit(async (values) => {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR CREATE QUOTE: ${err.error}`);
+      Logger.error(`ERROR CREATE QUOTE: ${err.error}`);
       return;
     }
-    error(`ERROR CREATE QUOTE: ${err}`);
+    Logger.error(`ERROR CREATE QUOTE: ${err}`);
   } finally {
     isPosting.value = false;
     close();

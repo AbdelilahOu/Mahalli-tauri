@@ -6,7 +6,7 @@ import {
   writeBinaryFile,
 } from "@tauri-apps/api/fs";
 import { appDataDir, join } from "@tauri-apps/api/path";
-import { error } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 
 async function createFolder(folder: string) {
   if (!(await checkIfExistsInFs(folder))) {
@@ -16,9 +16,8 @@ async function createFolder(folder: string) {
         recursive: true,
       });
       return true;
-    }
-    catch (err: any) {
-      error(`CANT CREATE FOLDER :${err}`);
+    } catch (err: any) {
+      Logger.error(`CANT CREATE FOLDER :${err}`);
       return false;
     }
   }
@@ -30,14 +29,17 @@ async function checkIfExistsInFs(fileOrFolder: string) {
     return await exists(fileOrFolder, {
       dir: BaseDirectory.AppData,
     });
-  }
-  catch (err: any) {
-    error(`ERROR CHECKING IF EXISTS :${err}`);
+  } catch (err: any) {
+    Logger.error(`ERROR CHECKING IF EXISTS :${err}`);
     return false;
   }
 }
 
-export async function uploadFileToDataDir(folder: string, bytes: ArrayBuffer, name: string) {
+export async function uploadFileToDataDir(
+  folder: string,
+  bytes: ArrayBuffer,
+  name: string
+) {
   try {
     await createFolder(folder);
     const path = await join(await appDataDir(), folder, name);
@@ -45,24 +47,21 @@ export async function uploadFileToDataDir(folder: string, bytes: ArrayBuffer, na
       dir: BaseDirectory.AppData,
     });
     return path;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     return null;
-    error(`ERROR UPLOADING FILE TO APP DATA DIR : ${err}`);
+    Logger.error(`ERROR UPLOADING FILE TO APP DATA DIR : ${err}`);
   }
 }
 
 export async function getFileBytes(path?: string) {
-  if (!path)
-    return null;
+  if (!path) return null;
   try {
     const content = await readBinaryFile(path, {
       dir: BaseDirectory.Home,
     });
     return content;
-  }
-  catch (err: any) {
-    error(`ERROR READING BINARY FILE :${err}`);
+  } catch (err: any) {
+    Logger.error(`ERROR READING BINARY FILE :${err}`);
     return null;
   }
 }

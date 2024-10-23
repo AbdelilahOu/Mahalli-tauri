@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { toTypedSchema } from "@vee-validate/zod";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
@@ -49,7 +49,7 @@ async function createNewProduct(product: ProductT) {
         quantity: Number(quantity.value),
       },
     });
-    info(
+    Logger.info(
       `CREATE PRODUCT: ${JSON.stringify({
         ...product,
         image: `data:image/png;base64,${imagePath.value}`,
@@ -70,10 +70,10 @@ async function createNewProduct(product: ProductT) {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR CREATE PRODUCT: ${err.error}`);
+      Logger.error(`ERROR CREATE PRODUCT: ${err.error}`);
       return;
     }
-    error(`ERROR CREATE PRODUCT: ${err}`);
+    Logger.error(`ERROR CREATE PRODUCT: ${err}`);
   } finally {
     close();
   }

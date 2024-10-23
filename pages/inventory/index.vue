@@ -2,7 +2,7 @@
 import { invoke } from "@tauri-apps/api";
 import { CalendarIcon } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
-import { error } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const route = useRoute();
@@ -11,7 +11,7 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const searchQuery = ref<string>(route.query.search as string);
 const transaction_type = ref<string | undefined>(
-  route.query.transaction_type as string | undefined,
+  route.query.transaction_type as string | undefined
 );
 const created_at = ref<string | number | undefined>(route.query.created_at);
 
@@ -38,17 +38,15 @@ async function fetchInventory(params: QueryParams) {
       },
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`LIST INVENTORY: ${err.error}`);
-    }
-    else {
-      error(`LIST INVENTORY: ${err}`);
+      Logger.error(`LIST INVENTORY: ${err.error}`);
+    } else {
+      Logger.error(`LIST INVENTORY: ${err}`);
     }
     return { inventory: [], count: 0 };
   }
@@ -57,7 +55,7 @@ async function fetchInventory(params: QueryParams) {
 const { data } = useAsyncData(
   "inventory",
   () => fetchInventory(queryParams.value),
-  { watch: [queryParams] },
+  { watch: [queryParams] }
 );
 
 const inventory = computed<InventoryT[]>(() => data.value?.inventory ?? []);
@@ -96,7 +94,7 @@ watch([transaction_type, created_at], () => {
                 :class="
                   cn(
                     'w-full justify-start text-left font-normal',
-                    !created_at && 'text-muted-foreground',
+                    !created_at && 'text-muted-foreground'
                   )
                 "
               >

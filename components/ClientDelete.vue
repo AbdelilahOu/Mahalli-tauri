@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import { error, info } from "tauri-plugin-log-api";
+import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const props = defineProps<{
@@ -15,7 +15,7 @@ async function deleteTheClient() {
   try {
     await invoke<Res<any>>("delete_client", { id: props.id });
     // INFO
-    info(`DELETE CLIENT: ${props.id}`);
+    Logger.info(`DELETE CLIENT: ${props.id}`);
     //
     toast.success(t("notifications.client.deleted", { name: props.fullName }), {
       closeButton: true,
@@ -30,10 +30,10 @@ async function deleteTheClient() {
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
-      error(`ERROR DELETE CLIENT: ${err.error}`);
+      Logger.error(`ERROR DELETE CLIENT: ${err.error}`);
       return;
     }
-    error(`ERROR DELETE CLIENT: ${err}`);
+    Logger.error(`ERROR DELETE CLIENT: ${err}`);
   } finally {
     close();
   }
