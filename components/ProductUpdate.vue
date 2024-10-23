@@ -38,7 +38,7 @@ const productSchema = toTypedSchema(
       .min(2)
       .default((props.description as string) ?? ""),
     min_quantity: z.number().default(Number(props.minQuantity) ?? 0),
-  })
+  }),
 );
 
 const form = useForm({
@@ -68,7 +68,7 @@ async function updateTheProduct(product: ProductT) {
         description: product.description,
         min_quantity: Number(product.min_quantity),
         id,
-      })}`
+      })}`,
     );
     //
     toast.success(t("notifications.product.updated", { name: product.name }), {
@@ -78,7 +78,8 @@ async function updateTheProduct(product: ProductT) {
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -88,7 +89,8 @@ async function updateTheProduct(product: ProductT) {
       return;
     }
     Logger.error(`ERROR UPDATE PRODUCT: ${err}`);
-  } finally {
+  }
+  finally {
     close();
   }
 }
@@ -125,7 +127,9 @@ const onSubmit = form.handleSubmit((values) => {
                 :placeholder="t('fields.purchase-price')"
                 v-bind="componentField"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
             </FormControl>
           </FormItem>
@@ -140,7 +144,9 @@ const onSubmit = form.handleSubmit((values) => {
                 :placeholder="t('fields.selling-price')"
                 v-bind="componentField"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
             </FormControl>
           </FormItem>

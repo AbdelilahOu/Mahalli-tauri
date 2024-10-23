@@ -16,7 +16,8 @@ async function createFolder(folder: string) {
         recursive: true,
       });
       return true;
-    } catch (err: any) {
+    }
+    catch (err: any) {
       Logger.error(`CANT CREATE FOLDER :${err}`);
       return false;
     }
@@ -29,7 +30,8 @@ async function checkIfExistsInFs(fileOrFolder: string) {
     return await exists(fileOrFolder, {
       dir: BaseDirectory.AppData,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     Logger.error(`ERROR CHECKING IF EXISTS :${err}`);
     return false;
   }
@@ -38,7 +40,7 @@ async function checkIfExistsInFs(fileOrFolder: string) {
 export async function uploadFileToDataDir(
   folder: string,
   bytes: ArrayBuffer,
-  name: string
+  name: string,
 ) {
   try {
     await createFolder(folder);
@@ -47,20 +49,23 @@ export async function uploadFileToDataDir(
       dir: BaseDirectory.AppData,
     });
     return path;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     return null;
     Logger.error(`ERROR UPLOADING FILE TO APP DATA DIR : ${err}`);
   }
 }
 
 export async function getFileBytes(path?: string) {
-  if (!path) return null;
+  if (!path)
+    return null;
   try {
     const content = await readBinaryFile(path, {
       dir: BaseDirectory.Home,
     });
     return content;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     Logger.error(`ERROR READING BINARY FILE :${err}`);
     return null;
   }

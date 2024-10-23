@@ -21,13 +21,14 @@ async function deleteTheSupplier() {
       t("notifications.supplier.deleted", { name: props.fullName }),
       {
         closeButton: true,
-      }
+      },
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-delete-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -37,7 +38,8 @@ async function deleteTheSupplier() {
       return;
     }
     Logger.error(`ERROR DELETE SUPPLIER: ${err}`);
-  } finally {
+  }
+  finally {
     close();
   }
 }

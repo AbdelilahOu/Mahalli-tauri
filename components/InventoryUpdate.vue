@@ -39,7 +39,7 @@ async function updateTheProduct({ quantity }: z.infer<typeof inventory>) {
       `UPDATE PRODUCT INVENTORY: ${JSON.stringify({
         id,
         quantity: Number(quantity),
-      })}`
+      })}`,
     );
     //
     toast.success(t("notifications.product.updated", { name: props.name }), {
@@ -49,7 +49,8 @@ async function updateTheProduct({ quantity }: z.infer<typeof inventory>) {
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -59,7 +60,8 @@ async function updateTheProduct({ quantity }: z.infer<typeof inventory>) {
       return;
     }
     Logger.error(`ERROR UPDATE PRODUCT INVENTORY: ${err}`);
-  } finally {
+  }
+  finally {
     close();
   }
 }

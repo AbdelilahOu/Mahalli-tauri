@@ -16,7 +16,8 @@ const { data: order } = await useAsyncData("get_order_details", async () => {
       id,
     });
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -33,7 +34,8 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -56,7 +58,7 @@ async function saveConfig() {
       const filePath = await uploadFileToDataDir(
         "pdf-templates",
         config.template.bytes,
-        config.template.name
+        config.template.name,
       );
       config.template.path = filePath;
     }
@@ -75,7 +77,8 @@ async function saveConfig() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
