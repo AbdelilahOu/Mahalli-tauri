@@ -2,7 +2,7 @@
 import { invoke } from "@tauri-apps/api";
 import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-import { CLIENT_FIELDS, INVOICE_STATUSES } from "~/consts";
+import { INVOICE_STATUSES } from "~/consts";
 
 const { t } = useI18n();
 const id = useRoute().params.id;
@@ -10,26 +10,22 @@ const pdfContent = ref("");
 
 const { config, generatePdf } = usePdfGenerator();
 
-const { data: invoice } = await useAsyncData(
-  "get_invoice_details",
-  async () => {
-    try {
-      const res = await invoke<Res<any>>("get_invoice_details", {
-        id,
-      });
-      return res.data;
+const { data: invoice } = await useAsyncData(async () => {
+  try {
+    const res = await invoke<Res<any>>("get_invoice_details", {
+      id,
+    });
+    return res.data;
+  } catch (err: any) {
+    toast.error(t("notifications.error.title"), {
+      description: t("notifications.error.description"),
+      closeButton: true,
+    });
+    if (typeof err === "object" && "error" in err) {
+      Logger.error(`ERROR INVOICE DETAILS: ${err.error}`);
     }
-    catch (err: any) {
-      toast.error(t("notifications.error.title"), {
-        description: t("notifications.error.description"),
-        closeButton: true,
-      });
-      if (typeof err === "object" && "error" in err) {
-        Logger.error(`ERROR INVOICE DETAILS: ${err.error}`);
-      }
-    }
-  },
-);
+  }
+});
 
 async function handleGeneratePdf() {
   try {
@@ -37,8 +33,7 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -49,19 +44,13 @@ async function handleGeneratePdf() {
   }
 }
 
-async function handleFileBytesUpload(bytes: Uint8Array, name: string) {
-  config.template.bytes = bytes;
-  config.template.name = name;
-  handleGeneratePdf();
-}
-
 async function saveConfig() {
   try {
     if (config.template.bytes && config.template.name) {
       const filePath = await uploadFileToDataDir(
         "pdf-templates",
         config.template.bytes,
-        config.template.name,
+        config.template.name
       );
       config.template.path = filePath;
     }
@@ -80,8 +69,7 @@ async function saveConfig() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -91,91 +79,23 @@ async function saveConfig() {
     }
   }
 }
+
+async function updateConfig(configAndValues: any) {
+  console.log(configAndValues);
+}
+
 handleGeneratePdf();
 </script>
 
 <template>
   <main class="w-full h-full flex gap-2 min-h-[calc(100vh-68px)]">
     <PdfViewer :pdf-content="pdfContent" />
-    <Card class="w-1/2 md:w-1/3 min-w-[500px] flex flex-col">
-      <CardHeader>
-        <CardTitle> {{ t("fields.configuration") }} </CardTitle>
-      </CardHeader>
-      <CardContent class="flex-1">
-        <Label> {{ t("fields.template") }} </Label>
-        <UiUploader
-          name="Pdf"
-          :extensions="['pdf']"
-          @save-bytes="handleFileBytesUpload"
-        />
-        <Label>{{ t("fields.top-margin") }} </Label>
-        <Input v-model="config.marginTop" />
-        <Label> {{ t("fields.bottom-margin") }} </Label>
-        <Input v-model="config.marginBottom" />
-        <Separator class="my-2" />
-        <div class="flex flex-col gap-2">
-          <div class="flex justify-between items-center">
-            <Label>{{ t("fields.status") }}</Label>
-            <Switch
-              :default-checked="config.fields.status"
-              @update:checked="(checked) => (config.fields.status = checked)"
-            />
-          </div>
-          <Select
-            v-model="invoice.status"
-            :disabled="!config.fields.status"
-            :default-value="invoice.status"
-          >
-            <SelectTrigger>
-              <SelectValue
-                class="text-muted-foreground"
-                :placeholder="t('select-status')"
-              />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem
-                  v-for="status in INVOICE_STATUSES"
-                  :key="status"
-                  :value="status"
-                >
-                  {{ t(`status.${status.toLowerCase()}`) }}
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-        <Separator class="my-2" />
-        <div
-          v-for="item in CLIENT_FIELDS"
-          :key="item.field"
-          class="flex flex-col gap-2"
-        >
-          <div class="flex justify-between items-center">
-            <Label>
-              {{ t(`fields.${item.label}`) }}
-            </Label>
-            <Switch
-              :default-checked="config.fields[item.field]"
-              @update:checked="
-                (checked) => (config.fields[item.field] = checked)
-              "
-            />
-          </div>
-          <Input
-            v-model="invoice.client[item.field]"
-            :disabled="!config.fields[item.field]"
-          />
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button variant="secondary" @click="saveConfig">
-          {{ t("buttons.save") }}
-        </Button>
-        <Button class="col-span-2" @click="handleGeneratePdf">
-          {{ t("buttons.update") }}
-        </Button>
-      </CardFooter>
-    </Card>
+    <TemplateForm
+      :config="config"
+      :document="invoice"
+      :statues="INVOICE_STATUSES"
+      @update-config="updateConfig"
+      @save-config="saveConfig"
+    />
   </main>
 </template>

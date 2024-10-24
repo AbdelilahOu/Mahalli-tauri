@@ -18,8 +18,8 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: "updateItems", s: string | number): void;
-  (e: "onSelect", s: string, a?: number): void;
+  updateItems: [s: string | number];
+  onSelect: [s: string, a?: number];
 }>();
 
 const { t } = useI18n();

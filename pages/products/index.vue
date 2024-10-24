@@ -34,22 +34,20 @@ async function fetchProducts() {
       },
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     if (typeof err === "object" && "error" in err) {
       Logger.error(`LIST PRODUCTS: ${err.error}`);
-    }
-    else {
+    } else {
       Logger.error(`LIST PRODUCTS: ${err}`);
     }
   }
 }
 
-const { data: productsData } = await useAsyncData("products", fetchProducts, {
+const { data: productsData } = await useAsyncData(fetchProducts, {
   watch: [queryParams],
 });
 
