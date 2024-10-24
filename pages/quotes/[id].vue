@@ -83,11 +83,13 @@ async function saveConfig() {
 }
 
 async function updateConfig(configAndValues: any) {
-  quote.value.client = configAndValues.documentValues.client;
-  config.fields = configAndValues.fields;
-  config.marginBottom = configAndValues.marginBottom;
-  config.marginTop = configAndValues.marginTop;
-  config.template = configAndValues.template;
+  const { documentValues, ...configValues } = configAndValues;
+  quote.value = { ...quote.value, ...documentValues };
+
+  config.fields = configValues.fields;
+  config.marginBottom = configValues.marginBottom;
+  config.marginTop = configValues.marginTop;
+  config.template = configValues.template;
 
   handleGeneratePdf();
 }
