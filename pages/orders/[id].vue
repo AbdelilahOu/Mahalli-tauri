@@ -2,7 +2,7 @@
 import { invoke } from "@tauri-apps/api";
 import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
-import { CLIENT_FIELDS, ORDER_STATUSES } from "~/consts";
+import { ORDER_STATUSES } from "~/consts";
 
 const { t } = useI18n();
 const id = useRoute().params.id;
@@ -16,7 +16,8 @@ const { data: order } = await useAsyncData(async () => {
       id,
     });
     return res.data;
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -33,7 +34,8 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -50,7 +52,7 @@ async function saveConfig() {
       const filePath = await uploadFileToDataDir(
         "pdf-templates",
         config.template.bytes,
-        config.template.name
+        config.template.name,
       );
       config.template.path = filePath;
     }
@@ -69,7 +71,8 @@ async function saveConfig() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
