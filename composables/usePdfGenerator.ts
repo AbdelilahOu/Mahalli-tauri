@@ -24,7 +24,6 @@ export function usePdfGenerator() {
     template: {
       bytes: null as Uint8Array | null,
       name: null as string | null,
-      path: null as string | null,
     },
     color: rgb(0.34, 0.34, 0.34),
     fields: {

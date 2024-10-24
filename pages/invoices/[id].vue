@@ -48,20 +48,20 @@ async function handleGeneratePdf() {
 
 async function saveConfig() {
   try {
+    let filePath: string | null = null;
     if (config.template.bytes && config.template.name) {
-      const filePath = await uploadFileToDataDir(
+      filePath = await uploadFileToDataDir(
         "pdf-templates",
         config.template.bytes,
         config.template.name,
       );
-      config.template.path = filePath;
     }
     await invoke("create_template", {
       template: {
         values_json: JSON.stringify({
           ...config,
           template: {
-            path: config.template.path,
+            path: filePath,
             name: config.template.name,
           },
         }),
