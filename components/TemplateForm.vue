@@ -2,7 +2,18 @@
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { z } from "zod";
-import { ORDER_STATUSES, INVOICE_STATUSES, CLIENT_FIELDS } from "~/consts";
+import { CLIENT_FIELDS, INVOICE_STATUSES, ORDER_STATUSES } from "~/consts";
+
+const props = defineProps<{
+  statues?: typeof INVOICE_STATUSES | typeof ORDER_STATUSES;
+  config: any;
+  document: any;
+}>();
+
+const emits = defineEmits<{
+  (e: "updateConfig", payload: ConfigSchemaT): void;
+  (e: "saveConfig"): void;
+}>();
 
 const { t } = useI18n();
 
@@ -33,17 +44,6 @@ const ConfigSchema = z.object({
 
 type ConfigSchemaT = z.infer<typeof ConfigSchema>;
 
-const props = defineProps<{
-  statues?: typeof INVOICE_STATUSES | typeof ORDER_STATUSES;
-  config: any;
-  document: any;
-}>();
-
-const emits = defineEmits<{
-  (e: "updateConfig", payload: ConfigSchemaT): void;
-  (e: "saveConfig"): void;
-}>();
-
 const configSchema = toTypedSchema(ConfigSchema);
 
 // Form setup
@@ -59,10 +59,10 @@ const { handleSubmit, values, setFieldValue } = useForm<ConfigSchemaT>({
 });
 
 // File handling
-const handleFileBytesUpload = (bytes: Uint8Array, name: string) => {
+function handleFileBytesUpload(bytes: Uint8Array, name: string) {
   setFieldValue("template.bytes", bytes);
   setFieldValue("template.name", name);
-};
+}
 
 const onSubmit = handleSubmit(async (values) => {
   emits("updateConfig", values);
@@ -107,9 +107,9 @@ const onSubmit = handleSubmit(async (values) => {
           </FormItem>
         </FormField>
 
-        <Separator class="my-2" v-if="statues" />
+        <Separator v-if="statues" class="my-2" />
 
-        <div class="space-y-2" v-if="statues">
+        <div v-if="statues" class="space-y-2">
           <FormField v-slot="{ value, handleChange }" name="fields.status">
             <FormItem class="flex justify-between items-end">
               <FormLabel>{{ t("fields.status") }}</FormLabel>
