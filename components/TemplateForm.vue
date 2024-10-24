@@ -11,8 +11,8 @@ const ConfigSchema = z.object({
     name: z.string().nullable(),
     bytes: z.instanceof(Uint8Array).nullable(),
   }),
-  marginTop: z.number().min(0).max(100),
-  marginBottom: z.number().min(0).max(100),
+  marginTop: z.number().min(0),
+  marginBottom: z.number().min(0),
   fields: z.object({
     status: z.boolean(),
     full_name: z.boolean(),
@@ -34,7 +34,7 @@ const ConfigSchema = z.object({
 type ConfigSchemaT = z.infer<typeof ConfigSchema>;
 
 const props = defineProps<{
-  statues: typeof INVOICE_STATUSES | typeof ORDER_STATUSES | undefined;
+  statues?: typeof INVOICE_STATUSES | typeof ORDER_STATUSES;
   config: any;
   document: any;
 }>();
@@ -107,24 +107,21 @@ const onSubmit = handleSubmit(async (values) => {
           </FormItem>
         </FormField>
 
-        <Separator class="my-2" />
+        <Separator class="my-2" v-if="statues" />
 
-        <div class="flex flex-col gap-2">
-          <FormField v-slot="{ componentField }" name="fields.status">
-            <FormItem class="flex justify-between items-center">
+        <div class="space-y-2" v-if="statues">
+          <FormField v-slot="{ value, handleChange }" name="fields.status">
+            <FormItem class="flex justify-between items-end">
               <FormLabel>{{ t("fields.status") }}</FormLabel>
               <FormControl>
-                <Switch
-                  :default-checked="componentField.modelValue"
-                  v-bind="componentField"
-                />
+                <Switch :checked="value" @update:checked="handleChange" />
               </FormControl>
             </FormItem>
           </FormField>
 
           <FormField v-slot="{ componentField }" name="documentValues.status">
             <FormItem>
-              <Select v-bind="componentField">
+              <Select :disabled="!values.fields.status" v-bind="componentField">
                 <SelectTrigger>
                   <SelectValue
                     class="text-muted-foreground"
@@ -134,7 +131,7 @@ const onSubmit = handleSubmit(async (values) => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectItem
-                      v-for="status in INVOICE_STATUSES"
+                      v-for="status in statues"
                       :key="status"
                       :value="status"
                     >
@@ -149,19 +146,15 @@ const onSubmit = handleSubmit(async (values) => {
 
         <Separator class="my-2" />
 
-        <div
-          v-for="item in CLIENT_FIELDS"
-          :key="item.field"
-          class="flex flex-col gap-2"
-        >
-          <FormField v-slot="{ componentField }" :name="`fields.${item.field}`">
-            <FormItem class="flex justify-between items-center">
+        <div v-for="item in CLIENT_FIELDS" :key="item.field" class="space-y-2">
+          <FormField
+            v-slot="{ value, handleChange }"
+            :name="`fields.${item.field}`"
+          >
+            <FormItem class="flex justify-between items-end">
               <FormLabel>{{ t(`fields.${item.label}`) }}</FormLabel>
               <FormControl>
-                <Switch
-                  :default-checked="componentField.modelValue"
-                  v-bind="componentField"
-                />
+                <Switch :checked="value" @update:checked="handleChange" />
               </FormControl>
             </FormItem>
           </FormField>
@@ -172,7 +165,10 @@ const onSubmit = handleSubmit(async (values) => {
           >
             <FormItem>
               <FormControl>
-                <Input v-bind="componentField" />
+                <Input
+                  :disabled="!values.fields[item.field]"
+                  v-bind="componentField"
+                />
               </FormControl>
             </FormItem>
           </FormField>

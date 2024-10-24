@@ -1,12 +1,10 @@
 <template>
-  <main class="w-screen h-screen fixed top-0 left-0 grainy-light flex">
+  <main class="w-screen h-screen fixed inset-0 grainy-light flex">
     <SideBar />
-    <div class="grid grid-rows-[50px_1fr] w-full">
+    <div class="grid grid-rows-[51px_1fr] w-full">
       <Navigation />
-      <ScrollArea
-        class="w-full scroll-smooth flex flex-col border-t border-slate-100"
-      >
-        <div class="w-full grainy-light p-2 rounded-md h-full">
+      <ScrollArea class="scroll-smooth">
+        <div class="h-[calc(100vh-51px)] p-2">
           <slot />
         </div>
       </ScrollArea>
