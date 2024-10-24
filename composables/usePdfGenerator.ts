@@ -190,7 +190,7 @@ export function usePdfGenerator() {
 
   function getClientFields(client: any): string[] {
     return ["full_name", "email", "address", "phone_number"]
-      .filter(value => config.fields[value] == true)
+      .filter(value => config.fields[value])
       .map(key => client[key])
       .filter(value => value !== null);
   }

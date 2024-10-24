@@ -46,7 +46,6 @@ type ConfigSchemaT = z.infer<typeof ConfigSchema>;
 
 const configSchema = toTypedSchema(ConfigSchema);
 
-// Form setup
 const { handleSubmit, values, setFieldValue } = useForm<ConfigSchemaT>({
   validationSchema: configSchema,
   initialValues: {
@@ -58,7 +57,6 @@ const { handleSubmit, values, setFieldValue } = useForm<ConfigSchemaT>({
   },
 });
 
-// File handling
 function handleFileBytesUpload(bytes: Uint8Array, name: string) {
   setFieldValue("template.bytes", bytes);
   setFieldValue("template.name", name);
