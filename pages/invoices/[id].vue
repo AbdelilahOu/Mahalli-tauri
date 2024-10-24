@@ -81,14 +81,21 @@ async function saveConfig() {
 }
 
 async function updateConfig(configAndValues: any) {
-  console.log(configAndValues);
+  invoice.value.client = configAndValues.documentValues.client;
+  invoice.value.status = configAndValues.documentValues.status;
+  config.fields = configAndValues.fields;
+  config.marginBottom = configAndValues.marginBottom;
+  config.marginTop = configAndValues.marginTop;
+  config.template = configAndValues.template;
+
+  handleGeneratePdf();
 }
 
 handleGeneratePdf();
 </script>
 
 <template>
-  <main class="w-full h-full flex gap-2 min-h-[calc(100vh-68px)]">
+  <main class="flex space-x-2 h-full flex-1">
     <PdfViewer :pdf-content="pdfContent" />
     <TemplateForm
       :config="config"
