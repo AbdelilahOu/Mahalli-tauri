@@ -257,7 +257,7 @@ export function usePdfGenerator() {
         color: config.color,
       });
 
-      drawHorizontalLine(Height.value - 20);
+      drawHorizontalLine(Height.value - 20, config.marginX, 0.3);
 
       Height.value -= 30;
     });
@@ -290,7 +290,7 @@ export function usePdfGenerator() {
         color: config.color,
       });
 
-      drawHorizontalLine(Height.value - 20, summaryX);
+      drawHorizontalLine(Height.value - 20, summaryX, 0.3);
 
       Height.value -= 30;
     });
@@ -387,13 +387,13 @@ export function usePdfGenerator() {
     Height.value = height - config.marginTop;
   }
 
-  function drawHorizontalLine(y: number, startX = config.marginX) {
+  function drawHorizontalLine(y: number, startX = config.marginX, o = 0.75) {
     page?.drawLine({
       start: { x: startX, y },
       end: { x: Width.value - config.marginX, y },
       thickness: 1,
       color: config.color,
-      opacity: 0.75,
+      opacity: o,
     });
   }
 
