@@ -14,11 +14,9 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const orderProducts = ref<OrderProductsPreviewT[]>([]);
 
-const searchQuery = ref<string>(route.query.search as any);
-const status = ref<string | undefined>(route.query.status as any);
-const created_at = ref<string | number | undefined>(
-  route.query.created_at as any,
-);
+const searchQuery = ref(route.query.search as any);
+const status = ref(route.query.status as any);
+const created_at = ref(route.query.created_at as any);
 
 const LIMIT = 25;
 

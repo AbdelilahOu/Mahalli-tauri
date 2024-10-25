@@ -9,11 +9,11 @@ const route = useRoute();
 const { t, d } = useI18n();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const searchQuery = ref<string>(route.query.search as string);
+const searchQuery = ref(route.query.search as string);
 const transaction_type = ref<string | undefined>(
   route.query.transaction_type as string | undefined,
 );
-const created_at = ref<string | number | undefined>(route.query.created_at);
+const created_at = ref(route.query.created_at);
 
 const LIMIT = 25;
 
