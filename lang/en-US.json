@@ -34,7 +34,10 @@
     "print": "Print",
     "to-order": "Create order",
     "to-invoice": "Create invoice",
-    "inventory-update": "Update inventory"
+    "inventory-update": "Update inventory",
+    "generate-invoice": "Generate invoice",
+    "generate-order": "Generate order",
+    "generate-quote": "Generate quote"
   },
   "translationTitle": "Change Language",
   "dropZone": "Drag and drop or select",

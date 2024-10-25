@@ -16,8 +16,7 @@ const { data: order } = await useAsyncData(async () => {
       id,
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -34,8 +33,7 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -53,7 +51,7 @@ async function saveConfig() {
       filePath = await uploadFileToDataDir(
         "pdf-templates",
         config.template.bytes,
-        config.template.name,
+        config.template.name
       );
     }
     await invoke("create_template", {
@@ -71,8 +69,7 @@ async function saveConfig() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -104,6 +101,7 @@ handleGeneratePdf();
     <TemplateForm
       :config="config"
       :document="order"
+      document-type="order"
       :statues="ORDER_STATUSES"
       @update-config="updateConfig"
       @save-config="saveConfig"
