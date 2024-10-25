@@ -44,12 +44,7 @@ async function fetchInventory(params: QueryParams) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`LIST INVENTORY: ${err.error}`);
-    }
-    else {
-      Logger.error(`LIST INVENTORY: ${err}`);
-    }
+    Logger.error(`LIST INVENTORY: ${err.error ? err.error : err.message}`);
     return { inventory: [], count: 0 };
   }
 }

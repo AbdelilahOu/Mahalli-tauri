@@ -30,11 +30,7 @@ async function deleteTheQuotes() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR DELETE QUOTE: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR DELETE QUOTE: ${err}`);
+    Logger.error(`ERROR DELETE QUOTE: ${err.error ? err.error : err.message}`);
   }
   finally {
     close();

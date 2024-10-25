@@ -73,11 +73,9 @@ async function updateTheSupplier(supplier: SupplierT) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR UPDATE SUPPLIER: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR UPDATE SUPPLIER: ${err}`);
+    Logger.error(
+      `ERROR UPDATE SUPPLIER: ${err.error ? err.error : err.message}`,
+    );
   }
   finally {
     close();

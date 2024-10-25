@@ -49,12 +49,7 @@ async function fetchInvoices() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`LIST INVOICESS: ${err.error}`);
-    }
-    else {
-      Logger.error(`LIST INVOICESS: ${err}`);
-    }
+    Logger.error(`LIST INVOICESS: ${err.error ? err.error : err.message}`);
   }
 }
 
@@ -98,11 +93,9 @@ async function listInvoiceProducts(id?: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR LIST INVOICES PRODUCTS: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR LIST INVOICES PRODUCTS: ${err}`);
+    Logger.error(
+      `ERROR LIST INVOICES PRODUCTS: ${err.error ? err.error : err.message}`,
+    );
   }
 }
 

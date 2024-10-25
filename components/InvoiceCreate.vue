@@ -109,11 +109,9 @@ const onSubmit = handleSubmit(async (values) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR CREATE INVOICE: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR CREATE INVOICE: ${err}`);
+    Logger.error(
+      `ERROR CREATE INVOICE: ${err.error ? err.error : err.message}`,
+    );
   }
   finally {
     isPosting.value = false;

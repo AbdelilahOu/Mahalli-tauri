@@ -106,11 +106,7 @@ const onSubmit = handleSubmit(async (values) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR CREATE ORDER: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR CREATE ORDER: ${err}`);
+    Logger.error(`ERROR CREATE ORDER: ${err.error ? err.error : err.message}`);
   }
   finally {
     isPosting.value = false;

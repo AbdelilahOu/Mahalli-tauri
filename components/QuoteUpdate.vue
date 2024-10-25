@@ -109,11 +109,7 @@ const onSubmit = handleSubmit(async (values) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR UPDATE QUOTE: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR UPDATE QUOTE: ${err}`);
+    Logger.error(`ERROR UPDATE QUOTE: ${err.error ? err.error : err.message}`);
   }
   finally {
     close();
@@ -129,9 +125,9 @@ async function deleteOneQuoteItem(id: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR DELETE QUOTE ITEM : ${err.error}`);
-    }
+    Logger.error(
+      `ERROR DELETE QUOTE ITEM : ${err.error ? err.error : err.message}`,
+    );
   }
 }
 

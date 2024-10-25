@@ -33,11 +33,9 @@ async function deleteTheSupplier() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR DELETE SUPPLIER: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR DELETE SUPPLIER: ${err}`);
+    Logger.error(
+      `ERROR DELETE SUPPLIER: ${err.error ? err.error : err.message}`,
+    );
   }
   finally {
     close();

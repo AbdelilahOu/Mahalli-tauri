@@ -38,12 +38,7 @@ async function fetchClients(params: QueryParams) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`LIST CLIENTS: ${err.error}`);
-    }
-    else {
-      Logger.error(`LIST CLIENTS: ${err}`);
-    }
+    Logger.error(`LIST CLIENTS: ${err.error ? err.error : err.message}`);
   }
 }
 

@@ -55,11 +55,9 @@ async function updateTheProduct({ quantity }: z.infer<typeof inventory>) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR UPDATE PRODUCT INVENTORY: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR UPDATE PRODUCT INVENTORY: ${err}`);
+    Logger.error(
+      `ERROR UPDATE PRODUCT INVENTORY: ${err.error ? err.error : err.message}`,
+    );
   }
   finally {
     close();

@@ -65,11 +65,9 @@ async function updateOrderStatus(id: string, status: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR UPDATE ORDER STATUS: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR UPDATE ORDER STATUS: ${err}`);
+    Logger.error(
+      `ERROR UPDATE ORDER STATUS: ${err.error ? err.error : err.message}`,
+    );
   }
 }
 
@@ -94,11 +92,9 @@ async function createInvoiceFromOrder(id: string) {
     });
   }
   catch (err: any) {
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`GET ORDER FOR INVOICE: ${err.error}`);
-      return;
-    }
-    Logger.error(`GET ORDER FOR INVOICE: ${err}`);
+    Logger.error(
+      `GET ORDER FOR INVOICE: ${err.error ? err.error : err.message}`,
+    );
   }
 }
 </script>

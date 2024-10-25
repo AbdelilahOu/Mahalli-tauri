@@ -30,11 +30,7 @@ async function deleteTheClient() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR DELETE CLIENT: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR DELETE CLIENT: ${err}`);
+    Logger.error(`ERROR DELETE CLIENT: ${err.error ? err.error : err.message}`);
   }
   finally {
     close();

@@ -67,11 +67,9 @@ async function updateInvoiceStatus(id: string, status: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR UPDATE INVOICE STATUS: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR UPDATE INVOICE STATUS: ${err}`);
+    Logger.error(
+      `ERROR UPDATE INVOICE STATUS: ${err.error ? err.error : err.message}`,
+    );
   }
 }
 </script>

@@ -109,11 +109,7 @@ const onSubmit = handleSubmit(async (values) => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR UPDATE ORDER: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR UPDATE ORDER: ${err}`);
+    Logger.error(`ERROR UPDATE ORDER: ${err.error ? err.error : err.message}`);
   }
   finally {
     close();
@@ -129,9 +125,9 @@ async function deleteOneOrderItem(id: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR DELETE ORDER ITEM: ${err.error}`);
-    }
+    Logger.error(
+      `ERROR DELETE ORDER ITEM: ${err.error ? err.error : err.message}`,
+    );
   }
 }
 
