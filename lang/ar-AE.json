@@ -34,7 +34,10 @@
     "print": "طباعة",
     "to-order": "إنشاء طلب",
     "to-invoice": "إنشاء فاتورة",
-    "inventory-update": "تحديث المخزون"
+    "inventory-update": "تحديث المخزون",
+    "generate-invoice": "إنشاء الفاتورة",
+    "generate-order": "إنشاء الطلب",
+    "generate-quote": "إنشاء عرض السعر"
   },
   "translationTitle": "تغيير اللغة",
   "dropZone": "اسحب وأفلت أو اختر",

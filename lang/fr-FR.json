@@ -34,7 +34,10 @@
     "print": "Imprimer",
     "to-order": "Créer une commande",
     "to-invoice": "Créer une facture",
-    "inventory-update": "Mettre à jour l'inventaire"
+    "inventory-update": "Mettre à jour l'inventaire",
+    "generate-invoice": "Générer la facture",
+    "generate-order": "Générer la commande",
+    "generate-quote": "Générer le devis"
   },
   "translationTitle": "Changer de langue",
   "dropZone": "Glissez-déposez ou sélectionnez",

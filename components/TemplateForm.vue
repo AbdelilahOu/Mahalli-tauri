@@ -6,6 +6,7 @@ import { CLIENT_FIELDS, INVOICE_STATUSES, ORDER_STATUSES } from "~/consts";
 
 const props = defineProps<{
   statues?: typeof INVOICE_STATUSES | typeof ORDER_STATUSES;
+  documentType: "invoice" | "order" | "quote";
   config: any;
   document: any;
 }>();
@@ -62,6 +63,11 @@ function handleFileBytesUpload(bytes: Uint8Array, name: string) {
   setFieldValue("template.name", name);
 }
 
+function clearFileBytes() {
+  setFieldValue("template.bytes", null);
+  setFieldValue("template.name", null);
+}
+
 const onSubmit = handleSubmit(async (values) => {
   emits("updateConfig", values);
 });
@@ -82,6 +88,7 @@ const onSubmit = handleSubmit(async (values) => {
                 name="Pdf"
                 :extensions="['pdf']"
                 @save-bytes="handleFileBytesUpload"
+                @clear="clearFileBytes"
               />
             </FormControl>
           </FormItem>
@@ -105,9 +112,9 @@ const onSubmit = handleSubmit(async (values) => {
           </FormItem>
         </FormField>
 
-        <Separator v-if="statues" class="my-2" />
+        <Separator v-if="documentType !== 'quote'" class="my-2" />
 
-        <div v-if="statues" class="space-y-2">
+        <div v-if="documentType !== 'quote'" class="space-y-2">
           <FormField v-slot="{ value, handleChange }" name="fields.status">
             <FormItem class="flex justify-between items-end">
               <FormLabel>{{ t("fields.status") }}</FormLabel>
@@ -178,7 +185,7 @@ const onSubmit = handleSubmit(async (values) => {
           {{ t("buttons.save") }}
         </Button>
         <Button type="submit" class="col-span-2">
-          {{ t("buttons.update") }}
+          {{ t(`buttons.generate-${documentType}`) }}
         </Button>
       </CardFooter>
     </Card>

@@ -34,7 +34,10 @@
     "print": "Drucken",
     "to-order": "Bestellung erstellen",
     "to-invoice": "Rechnung erstellen",
-    "inventory-update": "Lagerbestand aktualisieren"
+    "inventory-update": "Lagerbestand aktualisieren",
+    "generate-invoice": "Rechnung erstellen",
+    "generate-order": "Bestellung erstellen",
+    "generate-quote": "Angebot erstellen"
   },
   "translationTitle": "Sprache ändern",
   "dropZone": "Ziehen und ablegen oder auswählen",
