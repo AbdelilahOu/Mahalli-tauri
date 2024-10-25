@@ -11,10 +11,8 @@ const { t, d } = useI18n();
 const modal = useModal();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const searchQuery = ref<string>(route.query.search as string);
-const created_at = ref<string | number | undefined>(
-  route.query.created_at as any,
-);
+const searchQuery = ref(route.query.search as string);
+const created_at = ref(route.query.created_at as any);
 
 const quoteProducts = ref<QuoteProductsPreviewT[]>([]);
 

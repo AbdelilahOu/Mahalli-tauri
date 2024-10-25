@@ -111,7 +111,7 @@ body {
 }
 
 div:has(> table:not(.not-default)) {
-  @apply flex flex-col h-full w-full mb-14 rounded-md overflow-hidden border border-gray-200 bg-white;
+  @apply flex flex-col h-full w-full rounded-md overflow-hidden border border-gray-200 bg-white;
 }
 
 table:not(.not-default) {

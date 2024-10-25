@@ -29,7 +29,7 @@ function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="w-full pb-16">
     <Table :dir="locale === 'ar' ? 'rtl' : 'ltr'">
       <TableHeader>
         <TableRow>

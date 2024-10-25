@@ -11,7 +11,7 @@ const { t } = useI18n();
 const modal = useModal();
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
-const searchQuery = ref<string>(route.query.search as string);
+const searchQuery = ref(route.query.search as string);
 
 const LIMIT = 25;
 
