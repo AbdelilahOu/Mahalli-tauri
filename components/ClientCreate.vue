@@ -60,11 +60,7 @@ async function createNewClient(client: ClientT) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR CREATE CLIENT: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR CREATE CLIENT: ${err}`);
+    Logger.error(`ERROR CREATE CLIENT: ${err.error ? err.error : err.message}`);
   }
   finally {
     close();

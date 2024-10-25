@@ -40,12 +40,7 @@ async function fetchProducts() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`LIST PRODUCTS: ${err.error}`);
-    }
-    else {
-      Logger.error(`LIST PRODUCTS: ${err}`);
-    }
+    Logger.error(`LIST PRODUCTS: ${err.error ? err.error : err.message}`);
   }
 }
 

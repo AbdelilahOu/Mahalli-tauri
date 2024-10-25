@@ -84,11 +84,9 @@ async function updateTheProduct(product: ProductT) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR UPDATE PRODUCT: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR UPDATE PRODUCT: ${err}`);
+    Logger.error(
+      `ERROR UPDATE PRODUCT: ${err.error ? err.error : err.message}`,
+    );
   }
   finally {
     close();

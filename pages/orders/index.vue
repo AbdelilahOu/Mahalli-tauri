@@ -49,12 +49,7 @@ async function fetchOrders() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`LIST ORDERS: ${err.error}`);
-    }
-    else {
-      Logger.error(`LIST ORDERS: ${err}`);
-    }
+    Logger.error(`LIST ORDERS: ${err.error ? err.error : err.message}`);
   }
 }
 
@@ -98,11 +93,9 @@ async function listOrderProducts(id?: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR LIST ORDER PRODUCTS: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR LIST ORDER PRODUCTS: ${err}`);
+    Logger.error(
+      `ERROR LIST ORDER PRODUCTS: ${err.error ? err.error : err.message}`,
+    );
   }
 }
 

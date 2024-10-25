@@ -38,12 +38,7 @@ async function fetchSuppliers(params: QueryParams) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`LIST SUPPLIERS: ${err.error}`);
-    }
-    else {
-      Logger.error(`LIST SUPPLIERS: ${err}`);
-    }
+    Logger.error(`LIST SUPPLIERS: ${err.error ? err.error : err.message}`);
   }
 }
 

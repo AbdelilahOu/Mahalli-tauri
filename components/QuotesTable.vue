@@ -64,11 +64,7 @@ async function createOrderFromQuote(id: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`GET QUOTE FOR ORDER: ${err.error}`);
-      return;
-    }
-    Logger.error(`GET QUOTE FOR ORDER: ${err}`);
+    Logger.error(`GET QUOTE FOR ORDER: ${err.error ? err.error : err.message}`);
   }
 }
 </script>

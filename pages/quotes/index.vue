@@ -45,12 +45,7 @@ async function fetchQuotes() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`LIST QUOTES: ${err.error}`);
-    }
-    else {
-      Logger.error(`LIST QUOTES: ${err}`);
-    }
+    Logger.error(`LIST QUOTES: ${err.error ? err.error : err.message}`);
   }
 }
 
@@ -90,12 +85,7 @@ async function listQuoteProducts(id?: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`LIST QUOTE PRODUCTS: ${err.error}`);
-    }
-    else {
-      Logger.error(`LIST QUOTE PRODUCTS: ${err}`);
-    }
+    Logger.error(`LIST QUOTE PRODUCTS: ${err.error ? err.error : err.message}`);
   }
 }
 

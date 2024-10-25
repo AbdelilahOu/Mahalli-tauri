@@ -118,12 +118,7 @@ function handleError(err: any, context: string) {
     description: t("notifications.error.description"),
     closeButton: true,
   });
-  if (typeof err === "object" && "error" in err) {
-    Logger.error(`${context}: ${err.error}`);
-  }
-  else {
-    Logger.error(`${context}: ${err}`);
-  }
+  Logger.error(`${context}: ${err.error ? err.error : err.message}`);
 }
 </script>
 

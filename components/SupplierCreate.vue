@@ -62,11 +62,9 @@ async function createNewSupplier(supplier: SupplierT) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR CREATE SUPPLIER: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR CREATE SUPPLIER: ${err}`);
+    Logger.error(
+      `ERROR CREATE SUPPLIER: ${err.error ? err.error : err.message}`,
+    );
   }
   finally {
     close();

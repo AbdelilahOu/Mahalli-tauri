@@ -22,9 +22,7 @@ const { data: order } = await useAsyncData(async () => {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR ORDER DETAILS: ${err.error}`);
-    }
+    Logger.error(`ERROR ORDER DETAILS: ${err.error ? err.error : err.message}`);
   }
 });
 
@@ -40,9 +38,7 @@ async function handleGeneratePdf() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR ORDER DETAILS: ${err.error}`);
-    }
+    Logger.error(`ERROR ORDER DETAILS: ${err.error ? err.error : err.message}`);
   }
 }
 
@@ -77,9 +73,9 @@ async function saveConfig() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR CREATE TEMPLATE: ${err.error}`);
-    }
+    Logger.error(
+      `ERROR CREATE TEMPLATE: ${err.error ? err.error : err.message}`,
+    );
   }
 }
 

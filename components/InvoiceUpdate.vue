@@ -105,11 +105,9 @@ const onSubmit = handleSubmit(async (values) => {
     });
   }
   catch (err: any) {
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR UPDATE INVOICE: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR UPDATE INVOICE: ${err}`);
+    Logger.error(
+      `ERROR UPDATE INVOICE: ${err.error ? err.error : err.message}`,
+    );
   }
   finally {
     close();
@@ -125,9 +123,9 @@ async function deleteOneInvoiceItem(id: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR DELETE INVOICE ITEM: ${err.error}`);
-    }
+    Logger.error(
+      `ERROR DELETE INVOICE ITEM: ${err.error ? err.error : err.message}`,
+    );
   }
 }
 

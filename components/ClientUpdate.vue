@@ -74,11 +74,7 @@ async function updateTheClient(client: ClientT) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    if (typeof err === "object" && "error" in err) {
-      Logger.error(`ERROR UPDATE CLIENT: ${err.error}`);
-      return;
-    }
-    Logger.error(`ERROR UPDATE CLIENT: ${err}`);
+    Logger.error(`ERROR UPDATE CLIENT: ${err.error ? err.error : err.message}`);
   }
   finally {
     close();
