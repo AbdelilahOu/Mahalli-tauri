@@ -22,13 +22,15 @@ const queryParams = computed<QueryParams>(() => ({
   limit: route.query.limit,
 }));
 
-async function fetchSuppliers(params: QueryParams) {
+async function fetchSuppliers() {
   try {
     const res: Res<any> = await invoke("list_suppliers", {
       args: {
-        search: params.search ?? "",
-        page: Number(params.page) ?? 1,
-        limit: params.limit ? Number(params.limit) : LIMIT,
+        search: queryParams.value.search ?? "",
+        page: Number(queryParams.value.page) ?? 1,
+        limit: queryParams.value.limit
+          ? Number(queryParams.value.limit)
+          : LIMIT,
       },
     });
     return res.data;
@@ -42,17 +44,16 @@ async function fetchSuppliers(params: QueryParams) {
   }
 }
 
-const { data } = useAsyncData(
-  "suppliers",
-  () => fetchSuppliers(queryParams.value),
-  { watch: [queryParams] },
-);
+const { data } = useAsyncData(fetchSuppliers, { watch: [queryParams] });
 
 const suppliers = computed<SupplierT[]>(() => data.value?.suppliers ?? []);
 const totalRows = computed<number>(() => data.value?.count ?? 0);
 
 provide("count", totalRows);
-provide("itemsPerPage", LIMIT);
+provide(
+  "itemsPerPage",
+  queryParams.value.limit ? Number(queryParams.value.limit) : LIMIT,
+);
 
 const debouncedSearch = useDebounceFn(() => {
   updateQueryParams({ search: searchQuery.value });

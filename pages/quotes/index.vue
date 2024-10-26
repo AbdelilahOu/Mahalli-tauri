@@ -57,7 +57,10 @@ const quotes = computed<QuoteT[]>(() => quotesData.value?.quotes ?? []);
 const totalRows = computed<number>(() => quotesData.value?.count ?? 0);
 
 provide("count", totalRows);
-provide("itemsPerPage", LIMIT);
+provide(
+  "itemsPerPage",
+  queryParams.value.limit ? Number(queryParams.value.limit) : LIMIT,
+);
 
 const debouncedSearch = useDebounceFn(() => {
   updateQueryParams({ search: searchQuery.value });

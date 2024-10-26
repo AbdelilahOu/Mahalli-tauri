@@ -61,7 +61,10 @@ const invoices = computed<InvoiceT[]>(() => invoicesData.value?.invoices ?? []);
 const totalRows = computed<number>(() => invoicesData.value?.count ?? 0);
 
 provide("count", totalRows);
-provide("itemsPerPage", LIMIT);
+provide(
+  "itemsPerPage",
+  queryParams.value.limit ? Number(queryParams.value.limit) : LIMIT,
+);
 
 watch(queryParams, fetchInvoices, { deep: true });
 

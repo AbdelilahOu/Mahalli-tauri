@@ -24,15 +24,17 @@ const queryParams = computed<QueryParams>(() => ({
   created_at: route.query.created_at,
 }));
 
-async function fetchInventory(params: QueryParams) {
+async function fetchInventory() {
   try {
     const res: Res<any> = await invoke("list_inventory", {
       args: {
-        search: params.search ?? "",
-        page: Number(params.page) ?? 1,
-        limit: params.limit ? Number(params.limit) : LIMIT,
-        status: params.transaction_type,
-        created_at: params.created_at,
+        search: queryParams.value.search ?? "",
+        page: Number(queryParams.value.page) ?? 1,
+        limit: queryParams.value.limit
+          ? Number(queryParams.value.limit)
+          : LIMIT,
+        status: queryParams.value.transaction_type,
+        created_at: queryParams.value.created_at,
       },
     });
     return res.data;
@@ -47,17 +49,16 @@ async function fetchInventory(params: QueryParams) {
   }
 }
 
-const { data } = useAsyncData(
-  "inventory",
-  () => fetchInventory(queryParams.value),
-  { watch: [queryParams] },
-);
+const { data } = useAsyncData(fetchInventory, { watch: [queryParams] });
 
 const inventory = computed<InventoryT[]>(() => data.value?.inventory ?? []);
 const totalRows = computed<number>(() => data.value?.count ?? 0);
 
 provide("count", totalRows);
-provide("itemsPerPage", LIMIT);
+provide(
+  "itemsPerPage",
+  queryParams.value.limit ? Number(queryParams.value.limit) : LIMIT,
+);
 
 const debouncedSearch = useDebounceFn(() => {
   updateQueryParams({ search: searchQuery.value });
