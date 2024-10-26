@@ -249,7 +249,6 @@ function deleteInvoiceItem(index: number) {
                         <Input
                           :placeholder="t('fields.quantity')"
                           type="number"
-                          step="0.01"
                           v-bind="componentField"
                         >
                           <template #unite>
@@ -268,7 +267,6 @@ function deleteInvoiceItem(index: number) {
                         <Input
                           :placeholder="t('fields.price')"
                           type="number"
-                          step="0.01"
                           v-bind="componentField"
                         >
                           <template #unite>

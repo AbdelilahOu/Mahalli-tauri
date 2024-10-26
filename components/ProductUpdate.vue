@@ -121,7 +121,6 @@ const onSubmit = form.handleSubmit((values) => {
             <FormControl>
               <Input
                 type="number"
-                step="0.01"
                 :placeholder="t('fields.purchase-price')"
                 v-bind="componentField"
               >
@@ -138,7 +137,6 @@ const onSubmit = form.handleSubmit((values) => {
             <FormControl>
               <Input
                 type="number"
-                step="0.01"
                 :placeholder="t('fields.selling-price')"
                 v-bind="componentField"
               >
@@ -155,7 +153,6 @@ const onSubmit = form.handleSubmit((values) => {
             <FormControl>
               <Input
                 type="number"
-                step="0.01"
                 :placeholder="t('fields.min-quantity')"
                 v-bind="componentField"
               >

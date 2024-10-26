@@ -205,7 +205,6 @@ function deleteQuoteItem(index: number) {
                         <Input
                           :placeholder="t('fields.quantity')"
                           type="number"
-                          step="0.01"
                           v-bind="componentField"
                         >
                           <template #unite>
@@ -224,7 +223,6 @@ function deleteQuoteItem(index: number) {
                         <Input
                           :placeholder="t('fields.price')"
                           type="number"
-                          step="0.01"
                           v-bind="componentField"
                         >
                           <template #unite>
