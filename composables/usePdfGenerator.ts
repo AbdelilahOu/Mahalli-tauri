@@ -25,7 +25,8 @@ export function usePdfGenerator() {
       bytes: null as Uint8Array | null,
       name: null as string | null,
     },
-    color: rgb(0, 0, 0),
+    mainColor: rgb(0, 0, 0),
+    secondaryColor: rgb(0.25, 0.25, 0.25),
     fields: {
       full_name: true,
       email: true,
@@ -119,7 +120,7 @@ export function usePdfGenerator() {
       y: Height.value,
       font,
       size: 30,
-      color: config.color,
+      color: config.mainColor,
     });
 
     page.drawText(reverseText(totalText), {
@@ -127,7 +128,7 @@ export function usePdfGenerator() {
       y: Height.value,
       font,
       size: 20,
-      color: config.color,
+      color: config.mainColor,
     });
 
     page.drawText(data.identifier, {
@@ -135,7 +136,7 @@ export function usePdfGenerator() {
       y: Height.value - 20,
       font,
       size: 13,
-      color: config.color,
+      color: config.secondaryColor,
     });
 
     if (type !== "quote" && config.fields.status) {
@@ -145,7 +146,7 @@ export function usePdfGenerator() {
         y: Height.value - 20,
         font,
         size: 13,
-        color: config.color,
+        color: config.secondaryColor,
       });
     }
 
@@ -155,7 +156,7 @@ export function usePdfGenerator() {
       y: Height.value - 20,
       font,
       size: 13,
-      color: config.color,
+      color: config.secondaryColor,
     });
 
     Height.value -= 50;
@@ -170,7 +171,7 @@ export function usePdfGenerator() {
       y: Height.value,
       font,
       size: 14,
-      color: config.color,
+      color: config.mainColor,
     });
 
     const fields = getClientFields(client);
@@ -180,7 +181,7 @@ export function usePdfGenerator() {
         y: Height.value - 20 * (index + 1),
         font: font!,
         size: 13,
-        color: config.color,
+        color: config.secondaryColor,
       });
     });
 
@@ -207,7 +208,7 @@ export function usePdfGenerator() {
         y: Height.value - 20,
         font: font!,
         size: 14,
-        color: config.color,
+        color: config.mainColor,
       });
     });
 
@@ -230,7 +231,7 @@ export function usePdfGenerator() {
         y: Height.value - 10,
         font,
         size: 12,
-        color: config.color,
+        color: config.secondaryColor,
       });
 
       page.drawText(n(item?.quantity, "decimal"), {
@@ -238,7 +239,7 @@ export function usePdfGenerator() {
         y: Height.value - 10,
         font,
         size: 12,
-        color: config.color,
+        color: config.secondaryColor,
       });
 
       page.drawText(reverseText(n(item.price, "currency")), {
@@ -246,7 +247,7 @@ export function usePdfGenerator() {
         y: Height.value - 10,
         font,
         size: 12,
-        color: config.color,
+        color: config.secondaryColor,
       });
 
       page.drawText(reverseText(n(item.price * item.quantity, "currency")), {
@@ -254,7 +255,7 @@ export function usePdfGenerator() {
         y: Height.value - 10,
         font,
         size: 12,
-        color: config.color,
+        color: config.secondaryColor,
       });
 
       drawHorizontalLine(Height.value - 20, config.marginX, 0.3);
@@ -279,7 +280,7 @@ export function usePdfGenerator() {
         y: Height.value - 10,
         font,
         size: 12,
-        color: config.color,
+        color: config.mainColor,
       });
 
       page.drawText(item.value, {
@@ -287,7 +288,7 @@ export function usePdfGenerator() {
         y: Height.value - 10,
         font,
         size: 12,
-        color: config.color,
+        color: config.secondaryColor,
       });
 
       drawHorizontalLine(Height.value - 20, summaryX, 0.3);
@@ -307,7 +308,7 @@ export function usePdfGenerator() {
       y: Height.value - 30,
       font,
       size: 13,
-      color: config.color,
+      color: config.mainColor,
     });
   }
 
@@ -392,7 +393,7 @@ export function usePdfGenerator() {
       start: { x: startX, y },
       end: { x: Width.value - config.marginX, y },
       thickness: 1,
-      color: config.color,
+      color: config.mainColor,
       opacity: o,
     });
   }

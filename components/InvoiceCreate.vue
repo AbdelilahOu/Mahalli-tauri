@@ -65,7 +65,6 @@ async function searchClients(search: string | number) {
       search,
     },
   );
-  console.log(res);
   if (!res.error) {
     clients.value = res.data;
   }

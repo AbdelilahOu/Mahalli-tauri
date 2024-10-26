@@ -91,7 +91,6 @@ async function updateConfig(configAndValues: any) {
   config.marginBottom = configValues.marginBottom;
   config.marginTop = configValues.marginTop;
   config.template = configValues.template;
-  console.log(config.template);
 
   handleGeneratePdf();
 }

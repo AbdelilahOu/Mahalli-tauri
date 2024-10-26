@@ -61,7 +61,10 @@ const orders = computed<OrderT[]>(() => ordersData.value?.orders ?? []);
 const totalRows = computed<number>(() => ordersData.value?.count ?? 0);
 
 provide("count", totalRows);
-provide("itemsPerPage", LIMIT);
+provide(
+  "itemsPerPage",
+  queryParams.value.limit ? Number(queryParams.value.limit) : LIMIT,
+);
 
 watch(queryParams, fetchOrders, { deep: true });
 
