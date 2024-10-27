@@ -12,11 +12,15 @@ import { toast } from "vue-sonner";
 import { NuxtLink, QuoteDelete, QuoteUpdate } from "#components";
 
 defineProps<{ quotes: QuoteT[]; quoteProducts: QuoteProductsPreviewT[] }>();
+
 const emits = defineEmits<{
-  (e: "listQuoteProducts", id?: string): void;
+  listQuoteProducts: [id: string];
 }>();
+
 const modal = useModal();
+
 const { t, d, locale, n } = useI18n();
+
 const localePath = useLocalePath();
 
 let previewProductsTimer: any;

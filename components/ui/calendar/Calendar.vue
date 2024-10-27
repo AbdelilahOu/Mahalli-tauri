@@ -70,6 +70,7 @@ onMounted(async () => {
 });
 
 const $slots = useSlots();
+
 const vCalendarSlots = computed(() => {
   return Object.keys($slots)
     .filter(name => isVCalendarSlot(name))

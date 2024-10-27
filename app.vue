@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { attachConsole } from "tauri-plugin-log-api";
-
 const { locale } = useI18n();
+
 useSeoMeta({
   title: "Mahalli",
   description: "Inventory and invoicing management app",
@@ -25,8 +24,6 @@ useHead({
     },
   ],
 });
-
-await attachConsole();
 </script>
 
 <template>

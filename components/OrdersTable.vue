@@ -13,12 +13,17 @@ import { NuxtLink, OrderDelete, OrderUpdate } from "#components";
 import { ORDER_STATUSES, STATUS_COLORS } from "@/consts";
 
 defineProps<{ orders: OrderT[]; orderProducts: OrderProductsPreviewT[] }>();
+
 const emits = defineEmits<{
-  (e: "listOrderProducts", id?: string): void;
+  listOrderProducts: [id: string];
 }>();
+
 const { updateQueryParams } = useUpdateRouteQueryParams();
+
 const modal = useModal();
+
 const { t, d, locale, n } = useI18n();
+
 const localePath = useLocalePath();
 
 let previewProductsTimer: any;

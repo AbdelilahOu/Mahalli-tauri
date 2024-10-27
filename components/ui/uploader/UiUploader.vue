@@ -23,9 +23,12 @@ const emits = defineEmits<{
 }>();
 
 const { t } = useI18n();
+
 const dropZone = ref<HTMLDivElement>();
+
 const isFileSelected = ref(false);
 const selectedFile = ref<string | null>();
+
 const fileName = ref("");
 const dragCounter = ref(0);
 

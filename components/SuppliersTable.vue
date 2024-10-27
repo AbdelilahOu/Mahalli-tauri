@@ -7,6 +7,7 @@ defineProps<{
 }>();
 
 const { t, locale } = useI18n();
+
 const modal = useModal();
 
 function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {

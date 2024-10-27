@@ -7,8 +7,11 @@ import { toast } from "vue-sonner";
 import { QuoteCreate } from "#components";
 
 const route = useRoute();
+
 const { t, d } = useI18n();
+
 const modal = useModal();
+
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const searchQuery = ref(route.query.search as string);

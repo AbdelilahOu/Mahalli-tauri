@@ -14,8 +14,11 @@ const props = defineProps<{
   description?: string;
   minQuantity: number;
 }>();
+
 const { updateQueryParams } = useUpdateRouteQueryParams();
+
 const { close } = useModal();
+
 const { t } = useI18n();
 
 const productSchema = toTypedSchema(

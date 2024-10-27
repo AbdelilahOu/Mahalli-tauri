@@ -7,6 +7,7 @@ defineProps<{
 }>();
 
 const { t, locale, n } = useI18n();
+
 const modal = useModal();
 
 function toggleThisClient(client: ClientT, name: "delete" | "update") {
