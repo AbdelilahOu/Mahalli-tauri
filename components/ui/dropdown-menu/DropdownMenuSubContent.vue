@@ -10,6 +10,7 @@ import {
 const props = defineProps<
   DropdownMenuSubContentProps & { class?: HTMLAttributes["class"] }
 >();
+
 const emits = defineEmits<DropdownMenuSubContentEmits>();
 
 const delegatedProps = computed(() => {

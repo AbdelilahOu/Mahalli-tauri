@@ -7,8 +7,11 @@ const props = defineProps<{
   id: string;
   identifier: string;
 }>();
+
 const { updateQueryParams } = useUpdateRouteQueryParams();
+
 const { close } = useModal();
+
 const { t } = useI18n();
 
 async function deleteTheInvoice() {

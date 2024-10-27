@@ -6,7 +6,9 @@ import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const route = useRoute();
+
 const { t, d } = useI18n();
+
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const searchQuery = ref(route.query.search as string);

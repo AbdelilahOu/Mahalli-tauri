@@ -7,6 +7,7 @@ import {
 } from "radix-vue";
 
 const props = defineProps<DropdownMenuRadioGroupProps>();
+
 const emits = defineEmits<DropdownMenuRadioGroupEmits>();
 
 const forwarded = useForwardPropsEmits(props, emits);

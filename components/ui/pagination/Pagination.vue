@@ -4,6 +4,7 @@ import { useRouter } from "vue-router";
 import { PaginationList, PaginationListItem, PaginationRoot } from "radix-vue";
 
 const router = useRouter();
+
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const defaultPage = computed(() =>

@@ -12,8 +12,8 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: "updateConfig", payload: ConfigSchemaT): void;
-  (e: "saveConfig"): void;
+  updateConfig: [payload: ConfigSchemaT];
+  saveConfig: [];
 }>();
 
 const { t } = useI18n();
@@ -79,7 +79,7 @@ const onSubmit = handleSubmit(async (values) => {
       <CardHeader>
         <CardTitle>{{ t("fields.configuration") }}</CardTitle>
       </CardHeader>
-      <CardContent class="flex-1">
+      <CardContent>
         <FormField name="template.name">
           <FormItem>
             <FormLabel>{{ t("fields.template") }}</FormLabel>
@@ -112,11 +112,11 @@ const onSubmit = handleSubmit(async (values) => {
           </FormItem>
         </FormField>
 
-        <Separator v-if="documentType !== 'quote'" class="my-2" />
+        <Separator v-if="documentType !== 'quote'" />
 
         <div v-if="documentType !== 'quote'" class="space-y-2">
           <FormField v-slot="{ value, handleChange }" name="fields.status">
-            <FormItem class="flex justify-between items-end">
+            <FormItem class="flex justify-between items-end space-y-0">
               <FormLabel>{{ t("fields.status") }}</FormLabel>
               <FormControl>
                 <Switch :checked="value" @update:checked="handleChange" />
@@ -149,14 +149,14 @@ const onSubmit = handleSubmit(async (values) => {
           </FormField>
         </div>
 
-        <Separator class="my-2" />
+        <Separator />
 
         <div v-for="item in CLIENT_FIELDS" :key="item.field" class="space-y-2">
           <FormField
             v-slot="{ value, handleChange }"
             :name="`fields.${item.field}`"
           >
-            <FormItem class="flex justify-between items-end">
+            <FormItem class="flex justify-between items-end space-y-0">
               <FormLabel>{{ t(`fields.${item.label}`) }}</FormLabel>
               <FormControl>
                 <Switch :checked="value" @update:checked="handleChange" />

@@ -7,8 +7,11 @@ const props = defineProps<{
   id: string;
   identifier: string;
 }>();
+
 const { t } = useI18n();
+
 const { updateQueryParams } = useUpdateRouteQueryParams();
+
 const { close } = useModal();
 
 async function deleteTheQuotes() {

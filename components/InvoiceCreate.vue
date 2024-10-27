@@ -8,7 +8,9 @@ import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const { t } = useI18n();
+
 const { updateQueryParams } = useUpdateRouteQueryParams();
+
 const { close } = useModal();
 
 const clients = ref<{ label: string; value: string }[]>([]);

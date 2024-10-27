@@ -5,6 +5,7 @@ import { toast } from "vue-sonner";
 import { ORDER_STATUSES } from "~/consts";
 
 const { t } = useI18n();
+
 const id = useRoute().params.id;
 const pdfContent = ref("");
 

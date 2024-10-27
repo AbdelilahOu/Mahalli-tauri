@@ -4,6 +4,7 @@ import * as Logger from "tauri-plugin-log-api";
 import { toast } from "vue-sonner";
 
 const { t } = useI18n();
+
 const id = useRoute().params.id;
 const pdfContent = ref("");
 

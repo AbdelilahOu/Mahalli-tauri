@@ -8,8 +8,11 @@ import { OrderCreate } from "#components";
 import { ORDER_STATUSES } from "@/consts";
 
 const route = useRoute();
+
 const { t, d } = useI18n();
+
 const modal = useModal();
+
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const orderProducts = ref<OrderProductsPreviewT[]>([]);

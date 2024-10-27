@@ -12,8 +12,11 @@ const props = defineProps<{
   id: string;
   identifier: string;
 }>();
+
 const { updateQueryParams } = useUpdateRouteQueryParams();
+
 const { close } = useModal();
+
 const { t } = useI18n();
 
 const clients = ref<{ label: string; value: string }[]>([]);

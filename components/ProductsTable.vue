@@ -12,6 +12,7 @@ import { InventoryUpdate, ProductDelete, ProductUpdate } from "#components";
 defineProps<{ products: ProductT[] }>();
 
 const { t, d, locale, n } = useI18n();
+
 const modal = useModal();
 
 function toggleThisProduct(product: ProductT, name: "delete" | "update") {
