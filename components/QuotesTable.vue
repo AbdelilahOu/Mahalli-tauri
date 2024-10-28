@@ -38,8 +38,7 @@ function toggleThisQuote(quote: QuoteT, name: "delete" | "update") {
       id: quote.id!,
       identifier: quote.identifier,
     });
-  }
-  else {
+  } else {
     modal.open(QuoteUpdate, {
       id: quote.id!,
       identifier: quote.identifier,
@@ -62,8 +61,7 @@ async function createOrderFromQuote(id: string) {
         innerHTML: "go to order",
       }),
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -108,7 +106,7 @@ async function createOrderFromQuote(id: string) {
                 <Button
                   size="sm"
                   variant="link"
-                  class="underline px-0 h-fit"
+                  class="underline px-0 h-fit text-nowrap"
                   @mouseenter.passive="previewProducts(quote.id!)"
                   @mouseleave.passive="cancelPreviewProducts"
                 >

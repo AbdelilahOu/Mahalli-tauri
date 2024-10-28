@@ -57,7 +57,7 @@ async function createNewProduct(product: ProductT) {
         ...product,
         image: `data:image/png;base64,${imagePath.value}`,
         quantity: quantity.value,
-      })}`,
+      })}`
     );
     //
     toast.success(t("notifications.product.created", { name: product.name }), {
@@ -67,17 +67,15 @@ async function createNewProduct(product: ProductT) {
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(
-      `ERROR CREATE PRODUCT: ${err.error ? err.error : err.message}`,
+      `ERROR CREATE PRODUCT: ${err.error ? err.error : err.message}`
     );
-  }
-  finally {
+  } finally {
     close();
   }
 }
@@ -102,7 +100,7 @@ function setImage(image: string) {
       <CardContent>
         <UiUploader
           name="Image"
-          :extensions="['png', 'jpeg', 'webp']"
+          :extensions="['png', 'jpeg', 'webp', 'jpg']"
           @save-base64="setImage"
         />
         <FormField v-slot="{ componentField }" name="name">
@@ -122,9 +120,7 @@ function setImage(image: string) {
                 :placeholder="t('fields.purchase-price')"
                 v-bind="componentField"
               >
-                <template #unite>
-                  DH
-                </template>
+                <template #unite> DH </template>
               </Input>
             </FormControl>
           </FormItem>
@@ -138,9 +134,7 @@ function setImage(image: string) {
                 :placeholder="t('fields.selling-price')"
                 v-bind="componentField"
               >
-                <template #unite>
-                  DH
-                </template>
+                <template #unite> DH </template>
               </Input>
             </FormControl>
           </FormItem>
