@@ -21,8 +21,7 @@ function toggleThisProduct(product: ProductT, name: "delete" | "update") {
       id: product.id!,
       name: product.name,
     });
-  }
-  else {
+  } else {
     modal.open(ProductUpdate, {
       id: product.id!,
       name: product.name,
@@ -114,11 +113,11 @@ function updateProductInventory(id: string, name: string) {
                     ? product?.inventory <= 0
                       ? 'bg-red-100 border-red-500 text-red-900'
                       : product?.inventory < product.min_quantity
-                        ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
-                        : product?.inventory >= product.min_quantity
-                          ? 'bg-green-100 border-green-500 text-green-900'
-                          : ''
-                    : '',
+                      ? 'bg-yellow-100 border-yellow-500 text-yellow-900'
+                      : product?.inventory >= product.min_quantity
+                      ? 'bg-green-100 border-green-500 text-green-900'
+                      : ''
+                    : ''
                 )
               "
             >
@@ -160,6 +159,16 @@ function updateProductInventory(id: string, name: string) {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
+                    @click="updateProductInventory(product.id!, product.name!)"
+                  >
+                    <PackagePlus
+                      :size="20"
+                      class="text-slate-800 inline mr-2"
+                    />
+                    {{ t("buttons.inventory-update") }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
                     @click="toggleThisProduct(product, 'delete')"
                   >
                     <Trash2 class="text-red-500 inline mr-2" :size="20" />
@@ -168,16 +177,6 @@ function updateProductInventory(id: string, name: string) {
                         {{ t("buttons.delete") }}
                       </span>
                     </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    @click="updateProductInventory(product.id!, product.name!)"
-                  >
-                    <PackagePlus
-                      :size="20"
-                      class="text-slate-800 inline mr-2"
-                    />
-                    {{ t("buttons.inventory-update") }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
