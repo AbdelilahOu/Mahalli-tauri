@@ -71,7 +71,7 @@ const openCreateSupplierModal = () => modal.open(SupplierCreate, {});
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
-        <div class="w-1/3">
+        <div class="w-full lg:max-w-screen-lg">
           <Input v-model="searchQuery" type="text" :placeholder="t('search')" />
         </div>
         <div class="w-fit flex gap-2">

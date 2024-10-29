@@ -83,7 +83,7 @@ watch([transaction_type, created_at], () => {
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
-        <div class="w-full lg:max-w-[50%] max-w-[70%] grid grid-cols-3 gap-2">
+        <div class="w-full grid grid-cols-3 gap-2 lg:max-w-screen-lg">
           <Input v-model="searchQuery" type="text" :placeholder="t('search')" />
           <Popover>
             <PopoverTrigger as-child>

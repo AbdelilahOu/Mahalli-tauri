@@ -102,7 +102,7 @@ const openCreateQuoteModal = () => modal.open(QuoteCreate, {});
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
-        <div class="w-2/3 lg:max-w-[50%] grid grid-cols-3 gap-2">
+        <div class="w-full grid grid-cols-2 gap-2 lg:max-w-screen-md">
           <Input v-model="searchQuery" type="text" :placeholder="t('search')" />
           <Popover>
             <PopoverTrigger as-child>

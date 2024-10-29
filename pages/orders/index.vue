@@ -112,7 +112,7 @@ const openCreateOrderModal = () => modal.open(OrderCreate, {});
   <main class="w-full h-full">
     <div class="w-full h-full flex flex-col items-start justify-start">
       <div class="flex justify-between w-full gap-9 mb-2">
-        <div class="w-2/3 lg:max-w-[50%] flex gap-2">
+        <div class="w-full grid grid-cols-3 gap-2 lg:max-w-screen-lg">
           <Input
             v-model="searchQuery"
             name="search"
