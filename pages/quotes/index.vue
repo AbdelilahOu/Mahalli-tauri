@@ -126,12 +126,10 @@ const openCreateQuoteModal = () => modal.open(QuoteCreate, {});
             </PopoverContent>
           </Popover>
         </div>
-        <div class="w-fit flex gap-1">
-          <Button class="gap-2 text-nowrap" @click="openCreateQuoteModal">
-            <Plus :size="20" />
-            {{ t("buttons.toggle-create-quote") }}
-          </Button>
-        </div>
+        <Button class="gap-2 text-nowrap" @click="openCreateQuoteModal">
+          <Plus :size="20" />
+          {{ t("buttons.toggle-create-quote") }}
+        </Button>
       </div>
       <QuotesTable
         :quotes="quotes"
