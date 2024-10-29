@@ -74,12 +74,10 @@ const openCreateSupplierModal = () => modal.open(SupplierCreate, {});
         <div class="w-full lg:max-w-screen-lg">
           <Input v-model="searchQuery" type="text" :placeholder="t('search')" />
         </div>
-        <div class="w-fit flex gap-2">
-          <Button class="gap-2 text-nowrap" @click="openCreateSupplierModal">
-            <Plus :size="20" />
-            {{ t("buttons.toggle-create-supplier") }}
-          </Button>
-        </div>
+        <Button class="gap-2 text-nowrap" @click="openCreateSupplierModal">
+          <Plus :size="20" />
+          {{ t("buttons.toggle-create-supplier") }}
+        </Button>
       </div>
       <SuppliersTable :suppliers="suppliers" />
     </div>

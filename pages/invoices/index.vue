@@ -158,12 +158,10 @@ const openCreateInvoiceModal = () => modal.open(InvoiceCreate, {});
             </SelectContent>
           </Select>
         </div>
-        <div class="w-fit flex gap-1">
-          <Button class="gap-2 text-nowrap" @click="openCreateInvoiceModal()">
-            <Plus :size="20" />
-            {{ t("buttons.toggle-create-invoice") }}
-          </Button>
-        </div>
+        <Button class="gap-2 text-nowrap" @click="openCreateInvoiceModal()">
+          <Plus :size="20" />
+          {{ t("buttons.toggle-create-invoice") }}
+        </Button>
       </div>
       <InvoicesTable
         :invoices="invoices"

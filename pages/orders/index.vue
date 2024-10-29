@@ -158,12 +158,10 @@ const openCreateOrderModal = () => modal.open(OrderCreate, {});
             </SelectContent>
           </Select>
         </div>
-        <div class="w-fit flex gap-1">
-          <Button class="gap-2 text-nowrap" @click="openCreateOrderModal">
-            <Plus :size="20" />
-            {{ t("buttons.toggle-create-order") }}
-          </Button>
-        </div>
+        <Button class="gap-2 text-nowrap" @click="openCreateOrderModal">
+          <Plus :size="20" />
+          {{ t("buttons.toggle-create-order") }}
+        </Button>
       </div>
       <OrdersTable
         :orders="orders"
