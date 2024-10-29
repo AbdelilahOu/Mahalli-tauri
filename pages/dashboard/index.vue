@@ -183,7 +183,7 @@ function handleError(err: any, context: string) {
             </CardTitle>
             <Truck class="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent class="flex justify-start flex-row gap-2 py-3">
+          <CardContent class="flex flex-row items-end gap-2 py-3">
             <Badge
               v-for="(status, index) in ORDER_STATUSES"
               :key="index"
@@ -204,7 +204,7 @@ function handleError(err: any, context: string) {
             </CardTitle>
             <NotepadText class="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent class="flex flex-row justify-start gap-2 py-3">
+          <CardContent class="flex flex-row items-end gap-2 py-3">
             <Badge
               v-for="(status, index) in INVOICE_STATUSES"
               :key="index"
@@ -218,7 +218,7 @@ function handleError(err: any, context: string) {
         </Card>
       </div>
       <div class="w-full h-fit">
-        <ChartHolder>
+        <LazyChartHolder>
           <template #default>
             <VisXYContainer
               v-if="bestClients"
@@ -251,10 +251,10 @@ function handleError(err: any, context: string) {
               <i>{{ t("dashboard.b3c") }}</i>
             </h1>
           </template>
-        </ChartHolder>
+        </LazyChartHolder>
       </div>
       <div class="w-full h-fit">
-        <ChartHolder>
+        <LazyChartHolder>
           <template #default>
             <VisXYContainer
               v-if="bestProducts"
@@ -293,10 +293,10 @@ function handleError(err: any, context: string) {
               <i>{{ t("dashboard.bp") }}</i>
             </h1>
           </template>
-        </ChartHolder>
+        </LazyChartHolder>
       </div>
       <div class="w-full h-fit">
-        <ChartHolder>
+        <LazyChartHolder>
           <template #default>
             <VisXYContainer
               v-if="inventoryTransactions"
@@ -339,10 +339,10 @@ function handleError(err: any, context: string) {
               <i>{{ t("dashboard.title") }} ({{ t("fields.item") }})</i>
             </h1>
           </template>
-        </ChartHolder>
+        </LazyChartHolder>
       </div>
       <div class="w-full h-fit">
-        <ChartHolder>
+        <LazyChartHolder>
           <template #default>
             <VisXYContainer
               v-if="inventoryTransactions"
@@ -382,7 +382,7 @@ function handleError(err: any, context: string) {
               <i>{{ t("dashboard.title") }} ()</i>
             </h1>
           </template>
-        </ChartHolder>
+        </LazyChartHolder>
       </div>
     </div>
   </main>

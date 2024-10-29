@@ -21,7 +21,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
     v-model="modelValue"
     :class="
       cn(
-        'min-h-[80px] flex h-10 w-full border p-2 focus-visible:border-2 focus-visible:border-black focus:outline-0 rounded-md border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 transform transition-color duration-100',
+        'min-h-[80px] h-10 block w-full disabled:cursor-not-allowed disabled:opacity-75 focus:outline-none border-0 form-input rounded-md placeholder-gray-400 dark:placeholder-gray-500 text-sm px-2.5 py-2 shadow-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white ring-1 ring-inset ring-input dark:ring-gray-700 focus:ring-2 focus:ring-black dark:focus:ring-primary-400 pe-9',
         ($attrs.class as string) ?? '',
       )
     "

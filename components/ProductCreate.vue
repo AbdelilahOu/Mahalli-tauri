@@ -12,7 +12,7 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const { close } = useModal();
 
-const imagePath = ref<string>();
+const imageBase64 = ref<string | null>(null);
 
 const quantity = ref<number>(0);
 
@@ -42,7 +42,9 @@ async function createNewProduct(product: ProductT) {
         purchase_price: Number(product.purchase_price),
         description: product.description,
         min_quantity: product.min_quantity,
-        image: `data:image/png;base64,${imagePath.value}`,
+        image: imageBase64.value
+          ? `data:image/png;base64,${imageBase64.value}`
+          : null,
       },
     });
     await invoke<Res<string>>("create_inventory", {
@@ -55,9 +57,11 @@ async function createNewProduct(product: ProductT) {
     Logger.info(
       `CREATE PRODUCT: ${JSON.stringify({
         ...product,
-        image: `data:image/png;base64,${imagePath.value}`,
+        image: imageBase64.value
+          ? `data:image/png;base64,${imageBase64.value}`
+          : null,
         quantity: quantity.value,
-      })}`
+      })}`,
     );
     //
     toast.success(t("notifications.product.created", { name: product.name }), {
@@ -67,15 +71,17 @@ async function createNewProduct(product: ProductT) {
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(
-      `ERROR CREATE PRODUCT: ${err.error ? err.error : err.message}`
+      `ERROR CREATE PRODUCT: ${err.error ? err.error : err.message}`,
     );
-  } finally {
+  }
+  finally {
     close();
   }
 }
@@ -85,7 +91,7 @@ const onSubmit = form.handleSubmit((values) => {
 });
 
 function setImage(image: string) {
-  imagePath.value = image;
+  imageBase64.value = image;
 }
 </script>
 
@@ -120,7 +126,9 @@ function setImage(image: string) {
                 :placeholder="t('fields.purchase-price')"
                 v-bind="componentField"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
             </FormControl>
           </FormItem>
@@ -134,7 +142,9 @@ function setImage(image: string) {
                 :placeholder="t('fields.selling-price')"
                 v-bind="componentField"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
             </FormControl>
           </FormItem>
