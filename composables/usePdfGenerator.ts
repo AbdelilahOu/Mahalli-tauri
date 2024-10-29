@@ -21,6 +21,7 @@ export function usePdfGenerator() {
     marginTop: 40,
     marginX: 20,
     marginBottom: 90,
+    vat: 20,
     template: {
       bytes: null as Uint8Array | null,
       name: null as string | null,
@@ -33,6 +34,7 @@ export function usePdfGenerator() {
       address: true,
       phone_number: true,
       status: true,
+      vat: true,
     },
   });
 
@@ -99,13 +101,15 @@ export function usePdfGenerator() {
   function drawContent(data: any, type: DocType) {
     if (!page || !font)
       return;
+    const vat = config.fields.vat ? config.vat : 0;
+    const vatTotal = data.total * (vat / 100);
     Height.value -= config.marginTop;
     drawHeader(data, type);
     drawSenderAndReceiver(data.client);
     drawTableHeaders();
     drawItems(data.items);
-    drawSummary(getSummaryItems(data));
-    drawTotalAsText(data.total + data.total * 0.2);
+    drawSummary(getSummaryItems(data.total, vatTotal));
+    drawTotalAsText(data.total + vatTotal);
   }
 
   function drawHeader(data: any, type: DocType) {
@@ -113,7 +117,10 @@ export function usePdfGenerator() {
       return;
 
     const headerText = capitalizeFirstLetter(t(`fields.${type}`));
-    const totalText = n(data.total + data.total * 0.2, "currency");
+    const totalText = n(
+      data.total + data.total * (config.vat / 100),
+      "currency",
+    );
 
     page.drawText(headerText, {
       x: config.marginX - 1,
@@ -355,17 +362,25 @@ export function usePdfGenerator() {
     );
   }
 
-  function getSummaryItems(data: any) {
+  function getSummaryItems(total: number, vatTotal: number) {
+    if (!config.fields.vat) {
+      return [
+        {
+          label: "total",
+          value: reverseText(n(total, "currency")),
+        },
+      ];
+    }
     return [
-      { label: "sub-total", value: reverseText(n(data.total, "currency")) },
-      { label: "vat-rate", value: "20%" },
+      { label: "sub-total", value: reverseText(n(total, "currency")) },
+      { label: "vat-rate", value: `${config.vat}%` },
       {
         label: "vat-amount",
-        value: reverseText(n(data.total * 0.2, "currency")),
+        value: reverseText(n(vatTotal, "currency")),
       },
       {
         label: "grand-total",
-        value: reverseText(n(data.total + data.total * 0.2, "currency")),
+        value: reverseText(n(total + vatTotal, "currency")),
       },
     ];
   }

@@ -25,12 +25,14 @@ const ConfigSchema = z.object({
   }),
   marginTop: z.number().min(0),
   marginBottom: z.number().min(0),
+  vat: z.number().min(0).max(100),
   fields: z.object({
     status: z.boolean(),
     full_name: z.boolean(),
     email: z.boolean(),
     phone_number: z.boolean(),
     address: z.boolean(),
+    vat: z.boolean(),
   }),
   documentValues: z.object({
     status: z.enum([...INVOICE_STATUSES, ...ORDER_STATUSES]).optional(),
@@ -112,7 +114,7 @@ const onSubmit = handleSubmit(async (values) => {
           </FormItem>
         </FormField>
 
-        <Separator v-if="documentType !== 'quote'" />
+        <Separator />
 
         <div v-if="documentType !== 'quote'" class="space-y-2">
           <FormField v-slot="{ value, handleChange }" name="fields.status">
@@ -145,6 +147,33 @@ const onSubmit = handleSubmit(async (values) => {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+            </FormItem>
+          </FormField>
+        </div>
+
+        <div class="space-y-2">
+          <FormField v-slot="{ value, handleChange }" name="fields.vat">
+            <FormItem class="flex justify-between items-end space-y-0">
+              <FormLabel>{{ t("fields.vat-rate") }}</FormLabel>
+              <FormControl>
+                <Switch :checked="value" @update:checked="handleChange" />
+              </FormControl>
+            </FormItem>
+          </FormField>
+
+          <FormField v-slot="{ componentField }" name="vat">
+            <FormItem>
+              <FormControl>
+                <Input
+                  v-bind="componentField"
+                  :disabled="!values.fields.vat"
+                  type="number"
+                >
+                  <template #unite>
+                    0% - 100%
+                  </template>
+                </Input>
+              </FormControl>
             </FormItem>
           </FormField>
         </div>
