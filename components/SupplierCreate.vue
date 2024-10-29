@@ -23,7 +23,7 @@ const CreateSupplierSchema = z.object({
 
 const supplierSchema = toTypedSchema(CreateSupplierSchema);
 
-const imagePath = ref<string>();
+const imageBase64 = ref<string | null>(null);
 
 const form = useForm({
   validationSchema: supplierSchema,
@@ -37,14 +37,18 @@ async function createNewSupplier(supplier: SupplierT) {
         email: supplier.email,
         phone_number: supplier.phone_number,
         address: supplier.address,
-        image: `data:image/png;base64,${imagePath.value}`,
+        image: imageBase64.value
+          ? `data:image/png;base64,${imageBase64.value}`
+          : null,
       },
     });
     //
     Logger.info(
       `CREATE SUPPLIER: ${JSON.stringify({
         ...supplier,
-        image: `data:image/png;base64,${imagePath.value}`,
+        image: imageBase64.value
+          ? `data:image/png;base64,${imageBase64.value}`
+          : null,
       })}`,
     );
     //
@@ -77,8 +81,8 @@ const onSubmit = form.handleSubmit((values) => {
   createNewSupplier(values);
 });
 
-function saveImage(image: string) {
-  imagePath.value = image;
+function setImage(image: string) {
+  imageBase64.value = image;
 }
 </script>
 
@@ -94,7 +98,7 @@ function saveImage(image: string) {
         <UiUploader
           name="Image"
           :extensions="['png', 'jpeg', 'webp']"
-          @save-base64="saveImage"
+          @save-base64="setImage"
         />
         <FormField v-slot="{ componentField }" name="full_name">
           <FormItem>

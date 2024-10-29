@@ -28,41 +28,47 @@ const form = useForm({
   validationSchema: clientSchema,
 });
 
-const imagePath = ref<string>();
+const imageBase64 = ref<string | null>(null);
 
 async function createNewClient(client: ClientT) {
   try {
     await invoke<Res<null>>("create_client", {
       client: {
         ...client,
-        image: `data:image/png;base64,${imagePath.value}`,
+        image: imageBase64.value
+          ? `data:image/png;base64,${imageBase64.value}`
+          : null,
       },
     });
     //
     Logger.info(
       `CREATE CLIENT: ${JSON.stringify({
         ...client,
-        image: `data:image/png;base64,${imagePath.value}`,
-      })}`
+        image: imageBase64.value
+          ? `data:image/png;base64,${imageBase64.value}`
+          : null,
+      })}`,
     );
     //
     toast.success(
       t("notifications.client.created", { name: client.full_name }),
       {
         closeButton: true,
-      }
+      },
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(`ERROR CREATE CLIENT: ${err.error ? err.error : err.message}`);
-  } finally {
+  }
+  finally {
     close();
   }
 }
@@ -72,7 +78,7 @@ const onSubmit = form.handleSubmit((values) => {
 });
 
 function setImage(image: string) {
-  imagePath.value = image;
+  imageBase64.value = image;
 }
 </script>
 

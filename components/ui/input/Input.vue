@@ -5,11 +5,9 @@ const props = defineProps<{
   defaultValue?: string | number;
   modelValue?: string | number;
 }>();
-
 const emits = defineEmits<{
   (e: "update:modelValue", payload: string | number): void;
 }>();
-
 const modelValue = useVModel(props, "modelValue", emits, {
   passive: true,
   defaultValue: props.defaultValue,
@@ -17,36 +15,20 @@ const modelValue = useVModel(props, "modelValue", emits, {
 </script>
 
 <template>
-  <div :class="cn('w-full h-fit flex')">
+  <div class="relative">
     <input
       v-bind="$attrs"
       v-model="modelValue"
       step="0.01"
-      :class="
-        cn(
-          'flex h-10 w-full border px-2 focus-visible:border-2 focus-visible:border-black focus:outline-0 rounded-md border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 transform transition-color duration-100',
-          $slots.unite
-            ? 'rounded-r-none border-r-0 focus-visible:border-r-0'
-            : '',
-        )
-      "
+      class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none relative h-10 block w-full disabled:cursor-not-allowed disabled:opacity-75 focus:outline-none border-0 form-input rounded-md placeholder-gray-400 dark:placeholder-gray-500 text-sm px-2.5 py-1.5 shadow-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white ring-1 ring-inset ring-input dark:ring-gray-700 focus:ring-2 focus:ring-black dark:focus:ring-primary-400 pe-9"
     >
-    <div
+    <span
       v-if="$slots.unite"
-      class="w-fit h-10 transform transition-color border duration-100 border-l-0 flex rounded-r-md items-center justify-center"
+      class="absolute inset-y-0 end-0 flex items-center pointer-events-none px-2.5"
     >
-      <span
-        class="h-full text-gray-400 rounded-md px-2 flex items-center text-sm font-light justify-center"
-      >
+      <span class="text-slate-500 dark:text-gray-400 text-sm">
         <slot name="unite" />
       </span>
-    </div>
+    </span>
   </div>
 </template>
-
-<style>
-div:has(> input:focus-visible) > div {
-  border: 2px black solid;
-  border-left: 0px;
-}
-</style>
