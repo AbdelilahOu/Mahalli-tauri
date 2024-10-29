@@ -87,6 +87,7 @@ async function updateConfig(configAndValues: any) {
   config.fields = configValues.fields;
   config.marginBottom = configValues.marginBottom;
   config.marginTop = configValues.marginTop;
+  config.vat = configValues.vat;
   config.template = configValues.template;
 
   handleGeneratePdf();
