@@ -26,7 +26,14 @@ const modelValue = useVModel(props, "modelValue", emits, {
       v-if="$slots.unite"
       class="absolute inset-y-0 end-0 flex items-center pointer-events-none px-2.5"
     >
-      <span class="text-slate-500 dark:text-gray-400 text-sm">
+      <span
+        :class="
+          cn(
+            'text-slate-500 dark:text-gray-400 text-sm',
+            $attrs.disabled ? 'opacity-50' : '',
+          )
+        "
+      >
         <slot name="unite" />
       </span>
     </span>
