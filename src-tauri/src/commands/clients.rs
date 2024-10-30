@@ -3,7 +3,10 @@ use tauri::State;
 
 use service::{Client, ListArgs, MutationsService, NewClient, QueriesService};
 
-use crate::AppState;
+use jobs::ImageProcessor;
+
+use crate::{AppState, jobs};
+use crate::jobs::EntityEnum;
 
 use super::{Fail, Seccess, SResult};
 
@@ -46,12 +49,27 @@ pub async fn search_clients(state: State<'_, AppState>, search: String) -> SResu
 #[tauri::command]
 pub async fn create_client(state: State<'_, AppState>, client: NewClient) -> SResult<String> {
     let _ = state.db_conn;
+    let _ = state.job_storage;
+    let image = client.image.clone();
     match MutationsService::create_client(&state.db_conn, client).await {
-        Ok(id) => Ok(Seccess::<String> {
-            error: None,
-            message: Option::Some(String::from("client created successfully")),
-            data: Some(id),
-        }),
+        Ok(id) => {
+            match image {
+                Some(data) => {
+                    let job = ImageProcessor {
+                        id: id.clone(),
+                        entity: EntityEnum::CLIENT,
+                        data
+                    };
+                    state.job_storage.push_job(job).await.expect("error");
+                }
+                None => {}
+            }
+            Ok(Seccess::<String> {
+                error: None,
+                message: Option::Some(String::from("client created successfully")),
+                data: Some(id),
+            })
+        },
         Err(err) => {
             Err(Fail {
                 error: Some(err.to_string()),
