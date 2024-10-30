@@ -1,15 +1,22 @@
 #![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
-mod commands;
-mod db;
-
-use db::establish_connection;
-use migration::{Migrator, MigratorTrait};
-use service::sea_orm::DatabaseConnection;
+use apalis::{layers::tracing::TraceLayer, prelude::*, sqlite::SqliteStorage};
+use apalis::utils::TokioExecutor;
+use sqlx::SqlitePool;
 use tauri_plugin_log::LogTarget;
 
+use db::establish_connection;
+use jobs::{ImageProcessor, process_image, ThreadSafeJobStorage};
+use migration::{Migrator, MigratorTrait};
+use service::sea_orm::DatabaseConnection;
+
+mod commands;
+mod db;
+mod jobs;
+
 pub struct AppState {
-    db_conn: DatabaseConnection,
+	db_conn: DatabaseConnection,
+	pub job_storage: ThreadSafeJobStorage,
 }
 
 #[cfg(debug_assertions)]
@@ -20,25 +27,43 @@ const LOG_TARGETS: [LogTarget; 1] = [LogTarget::LogDir];
 
 #[tokio::main]
 async fn main() {
-    // establish conn
-    let db_conn = establish_connection().await;
-    // run migrations
-    Migrator::up(&db_conn, None).await.unwrap();
-    //
-    tauri::Builder::default()
-        .manage(AppState { db_conn })
-        .plugin(
-            tauri_plugin_log::Builder::default()
-                .targets(LOG_TARGETS)
-                .level_for("tauri", log::LevelFilter::Error)
-                .level_for("hyper", log::LevelFilter::Off)
-                .level_for("tracing", log::LevelFilter::Off)
-                .level_for("sea_orm", log::LevelFilter::Info)
-                .level_for("sqlx", log::LevelFilter::Info)
-                .level_for("tao", log::LevelFilter::Off)
-                .build(),
-        )
-        .invoke_handler(tauri::generate_handler![
+	// db
+	let db_conn = establish_connection().await;
+	Migrator::up(&db_conn, None).await.unwrap();
+    // jobs
+    let pool = SqlitePool::connect("sqlite::memory:").await.unwrap();
+
+	SqliteStorage::setup(&pool).await.expect("unable to run migrations for sqlite");
+
+	let image_processor_storage: SqliteStorage<ImageProcessor> = SqliteStorage::new(pool.clone());
+	let thread_safe_storage = ThreadSafeJobStorage::new(image_processor_storage.clone());
+
+	let monitor = Monitor::<TokioExecutor>::new().register_with_count(2, {
+		WorkerBuilder::new("image-processor")
+            .layer(TraceLayer::new())
+            .data(0usize)
+            .with_storage(image_processor_storage)
+            .build_fn(process_image)
+	});
+
+	tokio::spawn(async move {
+		monitor.run().await.unwrap();
+	});
+
+	tauri::Builder::default().manage(AppState {
+		db_conn,
+		job_storage: thread_safe_storage,
+    }).plugin(
+		tauri_plugin_log::Builder::default()
+            .targets(LOG_TARGETS)
+            .level_for("tauri", log::LevelFilter::Error)
+            .level_for("hyper", log::LevelFilter::Off)
+            .level_for("tracing", log::LevelFilter::Off)
+            .level_for("sea_orm", log::LevelFilter::Info)
+            .level_for("sqlx", log::LevelFilter::Info)
+            .level_for("tao", log::LevelFilter::Off)
+            .build(),
+	).invoke_handler(tauri::generate_handler![
             //
             // products
             //
@@ -120,7 +145,5 @@ async fn main() {
             commands::dashboard::list_top_products,
             commands::dashboard::list_status_count,
             commands::dashboard::list_financial_metrices,
-        ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        ]).run(tauri::generate_context!()).expect("error while running tauri application");
 }

@@ -3,4 +3,4 @@
 /target/
 /.env
 
-mahalli.sqlite*
+*.sqlite*
