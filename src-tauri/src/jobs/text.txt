@@ -1,0 +1,105 @@
+use std::sync::Arc;
+use tokio::sync::Mutex;
+use apalis::{prelude::*, sqlite::SqliteStorage};
+use serde::{Deserialize, Serialize};
+
+use base64::{engine::general_purpose, Engine as _};
+use image::{DynamicImage, GenericImageView, ImageBuffer, ImageFormat, Rgba};
+use tauri::api::path::{home_dir, BaseDirType};
+use std::path::PathBuf;
+use std::io::Write;
+
+
+#[derive(Debug, Deserialize, Serialize)]
+pub enum EntityEnum {
+    CLIENT,
+    PRODUCT,
+    SUPPLIER
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct ImageProcessor {
+    pub id: String,
+    pub entity: EntityEnum,
+    pub data: String
+}
+
+impl Job for ImageProcessor {
+    const NAME: &'static str = "image_processor";
+}
+
+#[derive(Clone)]
+pub struct ImageOptimizerJobStorage {
+    storage: Arc<Mutex<SqliteStorage<ImageProcessor>>>
+}
+
+impl ImageOptimizerJobStorage {
+    pub fn new(storage: SqliteStorage<ImageProcessor>) -> Self {
+        Self {
+            storage: Arc::new(Mutex::new(storage))
+        }
+    }
+
+    pub async fn push_job(&self, job: ImageProcessor) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+        let mut storage = self.storage.lock().await;
+        storage.push(job).await?;
+        Ok(())
+    }
+
+    pub async fn get_storage(&self) -> SqliteStorage<ImageProcessor> {
+        self.storage.lock().await.clone()
+    }
+}
+
+
+pub async fn process_image(_job: ImageProcessor, _data: Data<usize>) -> Result<(), Error> {
+    println!("{:?}", _job);
+    // Specifically handle PNG data URL
+    let base64_data = if _job.data.starts_with("data:image/png;base64,") {
+        _job.data.split("base64,").nth(1)
+            .ok_or("Invalid PNG base64 data URL format")?
+    } else {
+        return Err("Expected PNG data URL starting with data:image/png;base64,".into());
+    };
+
+    // Decode base64 to image bytes
+    let image_bytes = general_purpose::STANDARD.decode(base64_data)?;
+
+    // Load image from bytes (specifically as PNG)
+    let mut img = image::load_from_memory_with_format(&image_bytes, ImageFormat::Png)?;
+
+    // Get the original image dimensions
+    let (orig_width, orig_height) = img.dimensions();
+
+    // Calculate the center crop dimensions
+    let crop_width = 100;
+    let crop_height = 100;
+    let crop_x = (orig_width - crop_width) / 2;
+    let crop_y = (orig_height - crop_height) / 2;
+
+    // Crop the image
+    let cropped = img.crop_imm(crop_x, crop_y, crop_width, crop_height);
+
+    // Resize the cropped image to 100x100
+    let resized = cropped.resize(100, 100, image::imageops::FilterType::Triangle);
+
+    let data_dir = home_dir.join(".mahalli").join("data").join("images");
+    
+    let images_dir = match _job.entity {
+        EntityEnum::CLIENT => data_dir.join("clients"),
+        EntityEnum::PRODUCT => data_dir.join("products"),
+        EntityEnum::SUPPLIER => data_dir.join("suppliers"),
+    }
+
+    if let Err(_) = fs::metadata(&images_dir) {
+        fs::create_dir_all(&data_dir).expect("Could not create images directory");
+    }
+
+    let filepath = images_dir.join(format!("{}.jpg", job.id))
+
+    // Save the optimized image
+    let mut file = std::fs::File::create(&filepath)?;
+    file.write_all(&optimized_bytes)?;
+
+    Ok(())
+}
