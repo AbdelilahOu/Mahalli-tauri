@@ -7,7 +7,7 @@ license = ""
 repository = "https://github.com/AbdelilahOu/Mahalli-desktop"
 default-run = "mahalli"
 edition = "2021"
-rust-version = "1.59"
+rust-version = "1.76"
 build = "src/build.rs"
 
 [workspace]
@@ -19,13 +19,14 @@ tauri-build = { version = "1.5.1", features = [] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.5.4", features = ["updater",
-    "dialog-open",
-    "fs-all",
-    "notification-all",
-    "path-all",
-    "process-command-api",
-    "protocol-all",
+tauri = { version = "1.5.4", features = [
+  "updater",
+  "dialog-open",
+  "fs-all",
+  "notification-all",
+  "path-all",
+  "process-command-api",
+  "protocol-all",
 ] }
 apalis = { version = "0.5", features = [
   "sqlite",
