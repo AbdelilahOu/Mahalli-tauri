@@ -168,6 +168,7 @@ function onDragOver(e: DragEvent) {
     >
 
     <div
+      v-else
       ref="dropZone"
       class="w-full h-full rounded-md transition-all duration-200 transform relative border-2 border-dashed border-spacing-4 flex items-center justify-center"
       :class="[
