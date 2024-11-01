@@ -11,10 +11,10 @@ entity:
 	cd src-tauri && sea-orm-cli generate entity --lib -u sqlite://mahalli.sqlite?mode=rwc -o entity/src
 
 dev:
-	npm run tauri dev
+	bun run tauri dev
 
 build: 
-	npm run tauri build
+	bun run tauri build
 
 check:
 	cd src-tauri && cargo check
