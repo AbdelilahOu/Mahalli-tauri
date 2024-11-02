@@ -4,10 +4,6 @@ on:
     branches:
       - release
 
-# env:
-#   TAURI_PRIVATE_KEY: ${{ vars.TAURI_PRIVATE_KEY }}
-#   TAURI_KEY_PASSWORD: ${{ vars.TAURI_KEY_PASSWORD }}
-
 jobs:
   create-release:
     permissions:
@@ -15,15 +11,14 @@ jobs:
     runs-on: ubuntu-20.04
     outputs:
       release_id: ${{ steps.create-release.outputs.result }}
-
     steps:
       - uses: actions/checkout@v3
-      - name: setup node
-        uses: actions/setup-node@v3
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: 20
+          bun-version: latest
       - name: get version
-        run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+        run: echo "PACKAGE_VERSION=$(bun x -e 'console.log(require("./package.json").version)')" >> $GITHUB_ENV
       - name: create release
         id: create-release
         uses: actions/github-script@v6
@@ -48,16 +43,15 @@ jobs:
       fail-fast: false
       matrix:
         platform: [macos-latest, ubuntu-20.04, windows-latest]
-
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v3
         with:
           lfs: true
-      - name: setup node
-        uses: actions/setup-node@v3
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: 20
+          bun-version: latest
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
       - name: install dependencies (ubuntu only)
@@ -66,7 +60,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
       - name: install frontend dependencies
-        run: npm install # change this to npm or pnpm depending on which one you use
+        run: bun install
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -78,7 +72,6 @@ jobs:
       contents: write
     runs-on: ubuntu-20.04
     needs: [create-release, build-tauri]
-
     steps:
       - name: publish release
         id: publish-release

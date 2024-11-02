@@ -19,7 +19,7 @@ import { onMounted } from "vue";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 
 const { t, d, locale } = useI18n();
-const id = useRoute().params.id;
+const { id } = useRoute().params as any;
 const invoice = ref<any | null>(null);
 const pdfRef = ref<HTMLIFrameElement | null>();
 //
@@ -31,7 +31,7 @@ let color: RGB;
 
 onBeforeMount(async () => {
   try {
-    const res = await invoke<Res<any>>("get_invoice_details", {
+    const res = await invoke<any>("get_invoice_details", {
       id,
     });
     invoice.value = res.data;
