@@ -22,6 +22,8 @@ check:
 lint:
 	npx eslint src/**/** --fix
 	
+update-v:
+	cd scripts && update-version.sh $(v)
 
 migration: 
 	cd src-tauri && sea-orm-cli migrate generate $(name)
