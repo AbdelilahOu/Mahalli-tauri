@@ -1,4 +1,8 @@
 {
+  "seo": {
+    "title": "Einfache Bestands- und Rechnungsverwaltung",
+    "description": "Verwalten Sie Ihre Kunden und Produkte mühelos, erstellen Sie Angebote, Bestellungen und Rechnungen mit Mahalli - Ihrer All-in-One-Geschäftslösung."
+  },
   "search": "Suche",
   "pick-date": "Wähle ein Datum",
   "select-status": "Wähle einen Status",
@@ -138,6 +142,15 @@
       "created": "Ein Angebot wurde erstellt",
       "updated": "Das Angebot wurde aktualisiert",
       "deleted": "Das Angebot wurde gelöscht"
+    },
+    "organization": {
+      "created": "Organisation {name} wurde erstellt",
+      "updated": "Organisation {name} wurde aktualisiert",
+      "deleted": "Organisation {name} wurde gelöscht",
+      "no-org-alert": {
+        "title": "Keine Organisation ausgewählt",
+        "description": "Wählen oder erstellen Sie eine neue Organisation"
+      }
     },
     "error": {
       "title": "Oops! Etwas ist schief gelaufen.",
