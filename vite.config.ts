@@ -5,8 +5,6 @@ import tailwind from "tailwindcss";
 import autoprefixer from "autoprefixer";
 import Vue from "@vitejs/plugin-vue";
 import { defineConfig } from "vite";
-import VueRouter from "unplugin-vue-router/vite";
-import { VueRouterAutoImports } from "unplugin-vue-router";
 import AutoImport from "unplugin-auto-import/vite";
 
 // https://vitejs.dev/config/
@@ -18,14 +16,6 @@ export default defineConfig({
   },
   base: "./",
   plugins: [
-    VueRouter({
-      routesFolder: [
-        {
-          src: "src/pages",
-          path: "",
-        },
-      ],
-    }),
     Vue(),
     svgLoader(),
     VueI18nPlugin({
@@ -41,10 +31,6 @@ export default defineConfig({
         "vue",
         "vue-i18n",
         "@vueuse/core",
-        VueRouterAutoImports,
-        {
-          "unplugin-vue-router/data-loaders/basic": ["defineBasicLoader"],
-        },
       ],
     }),
   ],

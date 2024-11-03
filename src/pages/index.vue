@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { RouterView } from "vue-router";
 import ModalComponentsRenderer from "@/components/ModalComponentsRenderer.vue";
 import Navigation from "@/components/Navigation.vue";
 import SideBar from "@/components/SideBar.vue";
@@ -8,6 +7,7 @@ import { store } from "@/store";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/utils/shadcn";
 import { Toaster } from "@/components/ui/sonner";
+import { RouterView } from "vue-router";
 
 const show = computed(() => store.getters.getModalVisibility());
 const name = computed(() => store.getters.getModalName());
