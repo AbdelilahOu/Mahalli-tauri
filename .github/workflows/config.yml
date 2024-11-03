@@ -3,7 +3,8 @@ on:
   push:
     branches:
       - release
-
+env:
+  RELEASE_VERSION: 1.4.7
 jobs:
   create-release:
     permissions:
@@ -13,12 +14,6 @@ jobs:
       release_id: ${{ steps.create-release.outputs.result }}
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-      - name: get version
-        run: echo "PACKAGE_VERSION=$(bun x -e 'console.log(require("./package.json").version)')" >> $GITHUB_ENV
       - name: create release
         id: create-release
         uses: actions/github-script@v6
@@ -27,8 +22,8 @@ jobs:
             const { data } = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: `app-v${process.env.PACKAGE_VERSION}`,
-              name: `Desktop App v${process.env.PACKAGE_VERSION}`,
+              tag_name: `app-v${process.env.RELEASE_VERSION}`,
+              name: `Desktop App v${process.env.RELEASE_VERSION}`,
               body: 'Take a look at the assets to download and install this app.',
               draft: true,
               prerelease: false
