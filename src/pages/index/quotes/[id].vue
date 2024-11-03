@@ -19,7 +19,7 @@ import { onMounted } from "vue";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 
 const { t, d, locale } = useI18n();
-const { id } = useRoute().params as any;
+const { id } = useRoute().params;
 const quote = ref<any | null>(null);
 const pdfRef = ref<HTMLIFrameElement | null>();
 //
