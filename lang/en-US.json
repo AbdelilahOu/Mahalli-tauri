@@ -1,4 +1,8 @@
 {
+  "seo": {
+    "title": "Easy Inventory and Invoicing Management",
+    "description": "Manage your clients and products easily, generate quotes, orders and invoices with Mahalli - your all-in-one business solution."
+  },
   "search": "Search",
   "pick-date": "Pick a date",
   "select-status": "Select a status",
@@ -138,6 +142,15 @@
       "created": "A Quote has been created",
       "updated": "The Quote has been updated",
       "deleted": "The Quote has been deleted"
+    },
+    "organization": {
+      "created": "Organization {name} has been created",
+      "updated": "Organization {name} has been updated",
+      "deleted": "Organization {name} has been deleted",
+      "no-org-alert": {
+        "title": "There's no selected organization",
+        "description": "Select or create an new organization"
+      }
     },
     "error": {
       "title": "Oops! Something went wrong on our end.",

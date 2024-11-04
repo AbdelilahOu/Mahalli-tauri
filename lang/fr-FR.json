@@ -1,4 +1,8 @@
 {
+  "seo": {
+    "title": "Gestion facile des stocks et de la facturation",
+    "description": "Gérez facilement vos clients et vos produits, générez des devis, des commandes et des factures avec Mahalli - votre solution d'entreprise tout-en-un."
+  },
   "search": "Recherche",
   "pick-date": "Choisissez une date",
   "select-status": "Sélectionnez un statut",
@@ -137,6 +141,15 @@
       "created": "Un devis a été créé",
       "updated": "Le devis a été mis à jour",
       "deleted": "Le devis a été supprimé"
+    },
+    "organization": {
+      "created": "L'organisation {name} a été créée",
+      "updated": "L'organisation {name} a été mise à jour",
+      "deleted": "L'organisation {name} a été supprimée",
+      "no-org-alert": {
+        "title": "Aucune organisation sélectionnée",
+        "description": "Sélectionnez ou créez une nouvelle organisation"
+      }
     },
     "error": {
       "title": "Oups ! Quelque chose s'est mal passé de notre côté.",
