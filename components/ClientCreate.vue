@@ -28,47 +28,53 @@ const form = useForm({
   validationSchema: clientSchema,
 });
 
-const imageBase64 = ref<string | null>(null);
+const image = reactive({
+  bytes: null as Uint8Array | null,
+  name: null as string | null,
+});
 
 async function createNewClient(client: ClientT) {
   try {
+    let ImagePath: null | string = null;
+    if (image.bytes && image.name) {
+      const uploadedImagePath = await uploadFileToDataDir(
+        "temp",
+        image.bytes,
+        image.name
+      );
+      ImagePath = uploadedImagePath;
+    }
     await invoke<Res<null>>("create_client", {
       client: {
         ...client,
-        image: imageBase64.value
-          ? `data:image/png;base64,${imageBase64.value}`
-          : null,
+        image: ImagePath,
       },
     });
     //
     Logger.info(
       `CREATE CLIENT: ${JSON.stringify({
         ...client,
-        image: imageBase64.value
-          ? `data:image/png;base64,${imageBase64.value}`
-          : null,
-      })}`,
+        image: ImagePath,
+      })}`
     );
     //
     toast.success(
       t("notifications.client.created", { name: client.full_name }),
       {
         closeButton: true,
-      },
+      }
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(`ERROR CREATE CLIENT: ${err.error ? err.error : err.message}`);
-  }
-  finally {
+  } finally {
     close();
   }
 }
@@ -77,8 +83,14 @@ const onSubmit = form.handleSubmit((values) => {
   createNewClient(values);
 });
 
-function setImage(image: string) {
-  imageBase64.value = image;
+function setImage(bytes: Uint8Array, name: string) {
+  image.bytes = bytes;
+  image.name = name;
+}
+
+function cleanImage() {
+  image.bytes = null;
+  image.name = null;
 }
 </script>
 
@@ -92,7 +104,8 @@ function setImage(image: string) {
         <UiUploader
           name="Image"
           :extensions="['png', 'jpeg', 'webp', 'jpg']"
-          @save-base64="setImage"
+          @clear="cleanImage"
+          @save-bytes="setImage"
         />
         <FormField v-slot="{ componentField }" name="full_name">
           <FormItem>
