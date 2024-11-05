@@ -7,7 +7,7 @@ license = ""
 repository = "https://github.com/AbdelilahOu/Mahalli-desktop"
 default-run = "mahalli"
 edition = "2021"
-rust-version = "1.76"
+rust-version = "1.82"
 build = "src/build.rs"
 
 [workspace]
@@ -42,6 +42,7 @@ log = "^0.4"
 migration = { path = "./migration" }
 service = { path = "./service" }
 entity = { path = "./entity" }
+image = "0.25.5"
 
 
 [dependencies.sqlx]

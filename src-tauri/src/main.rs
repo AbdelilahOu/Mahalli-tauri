@@ -6,7 +6,7 @@ use sqlx::SqlitePool;
 use tauri_plugin_log::LogTarget;
 
 use db::establish_connection;
-use jobs::{ImageProcessor, process_image, ImageOptimizerJobStorage};
+use jobs::{ImageOptimizerJobStorage, ImageProcessorJob, process_image};
 use migration::{Migrator, MigratorTrait};
 use service::sea_orm::DatabaseConnection;
 
@@ -30,19 +30,21 @@ async fn main() {
 	// db
 	let db_conn = establish_connection().await;
 	Migrator::up(&db_conn, None).await.unwrap();
-  // jobs
-  let pool = SqlitePool::connect("sqlite::memory:").await.unwrap();
+	// jobs
+	let pool = SqlitePool::connect("sqlite::memory:").await.unwrap();
 	SqliteStorage::setup(&pool).await.expect("unable to run migrations for sqlite");
 
-	let image_processor_storage: SqliteStorage<ImageProcessor> = SqliteStorage::new(pool.clone());
+	let image_processor_storage: SqliteStorage<ImageProcessorJob> = SqliteStorage::new(pool.clone());
 	let thread_safe_storage = ImageOptimizerJobStorage::new(image_processor_storage.clone());
+
+	let clone_db_conn = db_conn.clone();
 
 	let monitor = Monitor::<TokioExecutor>::new().register_with_count(2, {
 		WorkerBuilder::new("image-processor")
-      .layer(TraceLayer::new())
-      .data(0usize)
-      .with_storage(image_processor_storage)
-      .build_fn(process_image)
+			.layer(TraceLayer::new())
+			.data(clone_db_conn)
+			.with_storage(image_processor_storage)
+			.build_fn(process_image)
 	});
 
 	tokio::spawn(async move {
@@ -52,16 +54,16 @@ async fn main() {
 	tauri::Builder::default().manage(AppState {
 		db_conn,
 		job_storage: thread_safe_storage,
-  }).plugin(
+	}).plugin(
 		tauri_plugin_log::Builder::default()
-      .targets(LOG_TARGETS)
-      .level_for("tauri", log::LevelFilter::Error)
-      .level_for("hyper", log::LevelFilter::Off)
-      .level_for("tracing", log::LevelFilter::Off)
-      .level_for("sea_orm", log::LevelFilter::Info)
-      .level_for("sqlx", log::LevelFilter::Info)
-      .level_for("tao", log::LevelFilter::Off)
-      .build(),
+			.targets(LOG_TARGETS)
+			.level_for("tauri", log::LevelFilter::Error)
+			.level_for("hyper", log::LevelFilter::Off)
+			.level_for("tracing", log::LevelFilter::Off)
+			.level_for("sea_orm", log::LevelFilter::Info)
+			.level_for("sqlx", log::LevelFilter::Info)
+			.level_for("tao", log::LevelFilter::Off)
+			.build(),
 	).invoke_handler(tauri::generate_handler![
     //
     // products

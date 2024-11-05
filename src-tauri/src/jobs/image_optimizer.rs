@@ -1,51 +1,87 @@
+use std::fs;
+use std::path::Path;
 use std::sync::Arc;
-use tokio::sync::Mutex;
+
 use apalis::{prelude::*, sqlite::SqliteStorage};
 use serde::{Deserialize, Serialize};
+use tokio::sync::Mutex;
+
+use service::{Client, MutationsService, sea_orm::DatabaseConnection};
+
+use super::utils::ImageProcessor;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub enum EntityEnum {
-    CLIENT,
-    PRODUCT,
-    SUPPLIER
+	CLIENT,
+	PRODUCT,
+	SUPPLIER,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct ImageProcessor {
-    pub id: String,
-    pub entity: EntityEnum,
-    pub data: String
+pub struct ImageProcessorJob {
+	pub id: String,
+	pub entity: EntityEnum,
+	pub data: String,
 }
 
-impl Job for ImageProcessor {
-    const NAME: &'static str = "image_processor";
+impl Job for ImageProcessorJob {
+	const NAME: &'static str = "image_processor";
 }
 
 #[derive(Clone)]
 pub struct ImageOptimizerJobStorage {
-    storage: Arc<Mutex<SqliteStorage<ImageProcessor>>>
+	storage: Arc<Mutex<SqliteStorage<ImageProcessorJob>>>,
 }
 
 impl ImageOptimizerJobStorage {
-    pub fn new(storage: SqliteStorage<ImageProcessor>) -> Self {
-        Self {
-            storage: Arc::new(Mutex::new(storage))
-        }
-    }
+	pub fn new(storage: SqliteStorage<ImageProcessorJob>) -> Self {
+		Self {
+			storage: Arc::new(Mutex::new(storage))
+		}
+	}
 
-    pub async fn push_job(&self, job: ImageProcessor) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        let mut storage = self.storage.lock().await;
-        storage.push(job).await?;
-        Ok(())
-    }
+	pub async fn push_job(&self, job: ImageProcessorJob) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+		let mut storage = self.storage.lock().await;
+		storage.push(job).await?;
+		Ok(())
+	}
 
-    pub async fn get_storage(&self) -> SqliteStorage<ImageProcessor> {
-        self.storage.lock().await.clone()
-    }
+	pub async fn get_storage(&self) -> SqliteStorage<ImageProcessorJob> {
+		self.storage.lock().await.clone()
+	}
 }
 
 
-pub async fn process_image(_job: ImageProcessor, _data: Data<usize>) -> Result<(), Error> {
-    println!("{:?}", _job);
-  Ok(())
+pub async fn process_image(job: ImageProcessorJob, _data: Data<DatabaseConnection>) -> Result<(), Error> {
+	let processor = ImageProcessor::new(85, 1920);
+
+	let home_dir = match tauri::api::path::data_dir() {
+		Some(val) => val,
+		None => panic!("Could not get home directory"),
+	};
+
+	let entity = match job.entity {
+		EntityEnum::CLIENT => String::from("clients"),
+		EntityEnum::SUPPLIER => String::from("suppliers"),
+		EntityEnum::PRODUCT => String::from("products"),
+	};
+
+	let output_path = home_dir.join(".mahalli").join("data").join("images").join(entity);
+
+	if let Err(_) = fs::metadata(&output_path) {
+		fs::create_dir_all(&output_path).expect("Could not create data directory");
+	}
+
+	let format = Path::new(&job.data).extension().unwrap_or_else(|| "".as_ref()).to_str().unwrap_or("png");
+
+	let image_path = output_path.join(format!("{}.{}", job.id, format));
+
+	let processed_cropped = processor.process_image(
+		&Path::new(&job.data),
+		&image_path,
+		Some((100, 100, 200, 200)),
+	);
+
+	println!("{:?}", processed_cropped);
+	Ok(())
 }

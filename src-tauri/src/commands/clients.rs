@@ -3,7 +3,7 @@ use tauri::State;
 
 use service::{Client, ListArgs, MutationsService, NewClient, QueriesService};
 
-use jobs::ImageProcessor;
+use jobs::ImageProcessorJob;
 
 use crate::{AppState, jobs};
 use crate::jobs::EntityEnum;
@@ -55,7 +55,7 @@ pub async fn create_client(state: State<'_, AppState>, client: NewClient) -> SRe
         Ok(id) => {
             match image {
                 Some(data) => {
-                    let job = ImageProcessor {
+                    let job = ImageProcessorJob {
                         id: id.clone(),
                         entity: EntityEnum::CLIENT,
                         data
