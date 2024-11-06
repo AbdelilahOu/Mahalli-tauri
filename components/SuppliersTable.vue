@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { FilePenLine, GripHorizontal, Trash2 } from "lucide-vue-next";
-import { convertFileSrc } from "@tauri-apps/api/tauri";
+import { convertFileSrc } from "@tauri-apps/api/core";
 import { SupplierDelete, SupplierUpdate } from "#components";
 
 defineProps<{

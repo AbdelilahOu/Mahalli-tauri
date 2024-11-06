@@ -14,19 +14,12 @@ build = "src/build.rs"
 members = [".", "service", "entity", "migration"]
 
 [build-dependencies]
-tauri-build = { version = "1.5.1", features = [] }
+tauri-build = { version = "2", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.5.4", features = [
-  "updater",
-  "dialog-open",
-  "fs-all",
-  "notification-all",
-  "path-all",
-  "process-command-api",
-  "protocol-all",
+tauri = { version = "2", features = ["protocol-asset"
 ] }
 apalis = { version = "0.5", features = [
   "sqlite",
@@ -34,7 +27,7 @@ apalis = { version = "0.5", features = [
   "tracing",
   "tokio-comp",
 ] }
-tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-log = "2"
 tokio = { version = "1", features = ["full"] }
 libsqlite3-sys = { version = "^0", features = ["bundled"] }
 dotenvy = "0.15.7"
@@ -43,6 +36,10 @@ migration = { path = "./migration" }
 service = { path = "./service" }
 entity = { path = "./entity" }
 image = "0.25.5"
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-notification = "2"
+dirs = "5.0.1"
 
 
 [dependencies.sqlx]
@@ -57,3 +54,6 @@ default = ["custom-protocol"]
 # this feature is used for production builds where `devPath` points to the filesystem
 # DO NOT remove this
 custom-protocol = ["tauri/custom-protocol"]
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-updater = "2"

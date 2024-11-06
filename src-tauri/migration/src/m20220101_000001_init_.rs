@@ -7,7 +7,11 @@ pub struct Migration;
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         let db = manager.get_connection();
-		db.execute(Statement::from_string(sea_orm::DatabaseBackend::Sqlite, r#"PRAGMA journal_mode=WAL;"#)).await?;
+        db.execute(Statement::from_string(
+            sea_orm::DatabaseBackend::Sqlite,
+            r#"PRAGMA journal_mode=WAL;"#,
+        ))
+        .await?;
 
         manager
             .create_table(
@@ -22,8 +26,18 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(Expr::current_timestamp()),
                     )
-                    .col(ColumnDef::new(Client::IsDeleted).boolean().not_null().default(false))
-                    .col(ColumnDef::new(Client::IsArchived).boolean().not_null().default(false))
+                    .col(
+                        ColumnDef::new(Client::IsDeleted)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
+                    .col(
+                        ColumnDef::new(Client::IsArchived)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
                     .col(ColumnDef::new(Client::Phone).string())
                     .col(ColumnDef::new(Client::Email).string())
                     .col(ColumnDef::new(Client::Address).string())
@@ -37,7 +51,12 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Supplier::Table)
                     .if_not_exists()
-                    .col(ColumnDef::new(Supplier::Id).string().not_null().primary_key())
+                    .col(
+                        ColumnDef::new(Supplier::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
                     .col(ColumnDef::new(Supplier::Fullname).string().not_null())
                     .col(
                         ColumnDef::new(Supplier::CreatedAt)
@@ -45,8 +64,18 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(Expr::current_timestamp()),
                     )
-                    .col(ColumnDef::new(Supplier::IsDeleted).boolean().not_null().default(false))
-                    .col(ColumnDef::new(Supplier::IsArchived).boolean().not_null().default(false))
+                    .col(
+                        ColumnDef::new(Supplier::IsDeleted)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
+                    .col(
+                        ColumnDef::new(Supplier::IsArchived)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
                     .col(ColumnDef::new(Supplier::Phone).string())
                     .col(ColumnDef::new(Supplier::Email).string())
                     .col(ColumnDef::new(Supplier::Address).string())
@@ -60,7 +89,12 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Product::Table)
                     .if_not_exists()
-                    .col(ColumnDef::new(Product::Id).string().not_null().primary_key())
+                    .col(
+                        ColumnDef::new(Product::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
                     .col(ColumnDef::new(Product::Name).string().not_null())
                     .col(
                         ColumnDef::new(Product::CreatedAt)
@@ -68,12 +102,37 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(Expr::current_timestamp()),
                     )
-                    .col(ColumnDef::new(Product::IsDeleted).boolean().not_null().default(false))
-                    .col(ColumnDef::new(Product::IsArchived).boolean().not_null().default(false))
+                    .col(
+                        ColumnDef::new(Product::IsDeleted)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
+                    .col(
+                        ColumnDef::new(Product::IsArchived)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
                     .col(ColumnDef::new(Product::Description).string())
-                    .col(ColumnDef::new(Product::PurchasePrice).float().not_null().default(0.0f32))
-                    .col(ColumnDef::new(Product::SellingPrice).float().not_null().default(0.0f32))
-                    .col(ColumnDef::new(Product::MinQuantity).float().not_null().default(0.0f32))
+                    .col(
+                        ColumnDef::new(Product::PurchasePrice)
+                            .float()
+                            .not_null()
+                            .default(0.0f32),
+                    )
+                    .col(
+                        ColumnDef::new(Product::SellingPrice)
+                            .float()
+                            .not_null()
+                            .default(0.0f32),
+                    )
+                    .col(
+                        ColumnDef::new(Product::MinQuantity)
+                            .float()
+                            .not_null()
+                            .default(0.0f32),
+                    )
                     .col(ColumnDef::new(Product::Image).string())
                     .to_owned(),
             )
@@ -84,10 +143,28 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(InventoryTransaction::Table)
                     .if_not_exists()
-                    .col(ColumnDef::new(InventoryTransaction::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(InventoryTransaction::TransactionType).string().not_null())
-                    .col(ColumnDef::new(InventoryTransaction::Quantity).float().not_null().default(0.0f32))
-                    .col(ColumnDef::new(InventoryTransaction::ProductId).string().not_null())
+                    .col(
+                        ColumnDef::new(InventoryTransaction::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
+                    .col(
+                        ColumnDef::new(InventoryTransaction::TransactionType)
+                            .string()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(InventoryTransaction::Quantity)
+                            .float()
+                            .not_null()
+                            .default(0.0f32),
+                    )
+                    .col(
+                        ColumnDef::new(InventoryTransaction::ProductId)
+                            .string()
+                            .not_null(),
+                    )
                     .col(
                         ColumnDef::new(InventoryTransaction::CreatedAt)
                             .date_time()
@@ -119,9 +196,24 @@ impl MigrationTrait for Migration {
                             .to(Client::Table, Client::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    .col(ColumnDef::new(Quote::IsDeleted).boolean().not_null().default(false))
-                    .col(ColumnDef::new(Quote::IsArchived).boolean().not_null().default(false))
-                    .col(ColumnDef::new(Quote::CreatedAt).date_time().not_null().default(Expr::current_timestamp()))
+                    .col(
+                        ColumnDef::new(Quote::IsDeleted)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
+                    .col(
+                        ColumnDef::new(Quote::IsArchived)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
+                    .col(
+                        ColumnDef::new(Quote::CreatedAt)
+                            .date_time()
+                            .not_null()
+                            .default(Expr::current_timestamp()),
+                    )
                     .col(ColumnDef::new(Quote::Identifier).string())
                     .to_owned(),
             )
@@ -132,9 +224,24 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(QuoteItem::Table)
                     .if_not_exists()
-                    .col(ColumnDef::new(QuoteItem::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(QuoteItem::Price).float().not_null().default(0.0f32))
-                    .col(ColumnDef::new(QuoteItem::Quantity).float().not_null().default(0.0f32))
+                    .col(
+                        ColumnDef::new(QuoteItem::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
+                    .col(
+                        ColumnDef::new(QuoteItem::Price)
+                            .float()
+                            .not_null()
+                            .default(0.0f32),
+                    )
+                    .col(
+                        ColumnDef::new(QuoteItem::Quantity)
+                            .float()
+                            .not_null()
+                            .default(0.0f32),
+                    )
                     .col(ColumnDef::new(QuoteItem::ProductId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
@@ -154,7 +261,6 @@ impl MigrationTrait for Migration {
                     .to_owned(),
             )
             .await?;
-
 
         manager
             .create_table(
@@ -178,9 +284,24 @@ impl MigrationTrait for Migration {
                             .to(Quote::Table, Quote::Id)
                             .on_delete(ForeignKeyAction::SetNull),
                     )
-                    .col(ColumnDef::new(Order::IsDeleted).boolean().not_null().default(false))
-                    .col(ColumnDef::new(Order::IsArchived).boolean().not_null().default(false))
-                    .col(ColumnDef::new(Order::CreatedAt).date_time().not_null().default(Expr::current_timestamp()))
+                    .col(
+                        ColumnDef::new(Order::IsDeleted)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
+                    .col(
+                        ColumnDef::new(Order::IsArchived)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
+                    .col(
+                        ColumnDef::new(Order::CreatedAt)
+                            .date_time()
+                            .not_null()
+                            .default(Expr::current_timestamp()),
+                    )
                     .col(ColumnDef::new(Order::Status).string().not_null())
                     .col(ColumnDef::new(Order::Identifier).string())
                     .to_owned(),
@@ -192,8 +313,18 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(OrderItem::Table)
                     .if_not_exists()
-                    .col(ColumnDef::new(OrderItem::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(OrderItem::Price).float().not_null().default(0.0f32))
+                    .col(
+                        ColumnDef::new(OrderItem::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
+                    .col(
+                        ColumnDef::new(OrderItem::Price)
+                            .float()
+                            .not_null()
+                            .default(0.0f32),
+                    )
                     .col(ColumnDef::new(OrderItem::OrderId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
@@ -202,7 +333,12 @@ impl MigrationTrait for Migration {
                             .to(Order::Table, Order::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    .col(ColumnDef::new(OrderItem::InventoryId).string().not_null().unique_key())
+                    .col(
+                        ColumnDef::new(OrderItem::InventoryId)
+                            .string()
+                            .not_null()
+                            .unique_key(),
+                    )
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_order_item_inventory_id")
@@ -219,8 +355,18 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Invoice::Table)
                     .if_not_exists()
-                    .col(ColumnDef::new(Invoice::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(Invoice::PaidAmount).float().not_null().default(0))
+                    .col(
+                        ColumnDef::new(Invoice::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
+                    .col(
+                        ColumnDef::new(Invoice::PaidAmount)
+                            .float()
+                            .not_null()
+                            .default(0),
+                    )
                     .col(ColumnDef::new(Invoice::ClientId).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
@@ -229,7 +375,12 @@ impl MigrationTrait for Migration {
                             .to(Client::Table, Client::Id)
                             .on_delete(ForeignKeyAction::Cascade),
                     )
-                    .col(ColumnDef::new(Invoice::OrderId).string().unique_key().not_null())
+                    .col(
+                        ColumnDef::new(Invoice::OrderId)
+                            .string()
+                            .unique_key()
+                            .not_null(),
+                    )
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_invoice_order_id")
@@ -237,8 +388,18 @@ impl MigrationTrait for Migration {
                             .to(Order::Table, Order::Id)
                             .on_delete(ForeignKeyAction::SetNull),
                     )
-                    .col(ColumnDef::new(Invoice::IsDeleted).boolean().not_null().default(false))
-                    .col(ColumnDef::new(Invoice::IsArchived).boolean().not_null().default(false))
+                    .col(
+                        ColumnDef::new(Invoice::IsDeleted)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
+                    .col(
+                        ColumnDef::new(Invoice::IsArchived)
+                            .boolean()
+                            .not_null()
+                            .default(false),
+                    )
                     .col(ColumnDef::new(Invoice::Status).string().not_null())
                     .col(ColumnDef::new(Invoice::Identifier).string())
                     .col(
@@ -311,7 +472,7 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-         manager
+        manager
             .create_index(
                 sea_query::Index::create()
                     .table(InventoryTransaction::Table)
@@ -490,110 +651,142 @@ impl MigrationTrait for Migration {
         );
         db.execute(q_identifier_generator).await?;
 
-
         Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         let db = manager.get_connection();
-        db.execute_unprepared("DROP TRIGGER IF EXISTS invoice_identifier_generator").await?;
-        db.execute_unprepared("DROP TRIGGER IF EXISTS order_identifier_generator").await?;
-        db.execute_unprepared("DROP TRIGGER IF EXISTS quote_identifier_generator").await?;
+        db.execute_unprepared("DROP TRIGGER IF EXISTS invoice_identifier_generator")
+            .await?;
+        db.execute_unprepared("DROP TRIGGER IF EXISTS order_identifier_generator")
+            .await?;
+        db.execute_unprepared("DROP TRIGGER IF EXISTS quote_identifier_generator")
+            .await?;
 
         manager
             .drop_index(
                 Index::drop()
                     .table(Client::Table)
-                    .name("idx_clients_fullname").to_owned()
+                    .name("idx_clients_fullname")
+                    .to_owned(),
             )
             .await?;
         manager
             .drop_index(
                 Index::drop()
                     .table(Supplier::Table)
-                    .name("idx_suppliers_fullname").to_owned()
+                    .name("idx_suppliers_fullname")
+                    .to_owned(),
             )
             .await?;
         manager
             .drop_index(
                 Index::drop()
                     .table(Product::Table)
-                    .name("idx_products_name").to_owned()
+                    .name("idx_products_name")
+                    .to_owned(),
             )
             .await?;
         manager
             .drop_index(
                 Index::drop()
                     .table(Quote::Table)
-                    .name("idx_quote_client_id").to_owned()
+                    .name("idx_quote_client_id")
+                    .to_owned(),
             )
             .await?;
         manager
             .drop_index(
                 Index::drop()
                     .table(QuoteItem::Table)
-                    .name("idx_quote_item_product_id").to_owned()
+                    .name("idx_quote_item_product_id")
+                    .to_owned(),
             )
             .await?;
         manager
             .drop_index(
                 Index::drop()
                     .table(OrderItem::Table)
-                    .name("idx_order_item_inventory_id").to_owned()
+                    .name("idx_order_item_inventory_id")
+                    .to_owned(),
             )
             .await?;
         manager
             .drop_index(
                 Index::drop()
                     .table(Order::Table)
-                    .name("idx_order_client_id").to_owned()
+                    .name("idx_order_client_id")
+                    .to_owned(),
             )
             .await?;
         manager
             .drop_index(
                 Index::drop()
                     .table(Invoice::Table)
-                    .name("idx_invoice_client_id").to_owned()
+                    .name("idx_invoice_client_id")
+                    .to_owned(),
             )
             .await?;
         manager
             .drop_index(
                 Index::drop()
                     .table(InventoryTransaction::Table)
-                    .name("idx_inventory_product_id").to_owned()
+                    .name("idx_inventory_product_id")
+                    .to_owned(),
             )
             .await?;
         manager
             .drop_index(
                 Index::drop()
                     .table(InventoryTransaction::Table)
-                    .name("idx_inventory_transaction_type").to_owned()
+                    .name("idx_inventory_transaction_type")
+                    .to_owned(),
             )
             .await?;
         manager
             .drop_index(
                 Index::drop()
                     .table(Order::Table)
-                    .name("idx_orders_status").to_owned()
+                    .name("idx_orders_status")
+                    .to_owned(),
             )
             .await?;
         manager
             .drop_index(
                 Index::drop()
                     .table(Invoice::Table)
-                    .name("idx_invoices_status").to_owned()
+                    .name("idx_invoices_status")
+                    .to_owned(),
             )
             .await?;
 
-        manager.drop_table(Table::drop().table(Invoice::Table).to_owned()).await?;
-        manager.drop_table(Table::drop().table(Order::Table).to_owned()).await?;
-        manager.drop_table(Table::drop().table(OrderItem::Table).to_owned()).await?;
-        manager.drop_table(Table::drop().table(Quote::Table).to_owned()).await?;
-        manager.drop_table(Table::drop().table(QuoteItem::Table).to_owned()).await?;
-        manager.drop_table(Table::drop().table(InventoryTransaction::Table).to_owned()).await?;
-        manager.drop_table(Table::drop().table(Product::Table).to_owned()).await?;
-        manager.drop_table(Table::drop().table(Supplier::Table).to_owned()).await?;
-        manager.drop_table(Table::drop().table(Client::Table).to_owned()).await?;
+        manager
+            .drop_table(Table::drop().table(Invoice::Table).to_owned())
+            .await?;
+        manager
+            .drop_table(Table::drop().table(Order::Table).to_owned())
+            .await?;
+        manager
+            .drop_table(Table::drop().table(OrderItem::Table).to_owned())
+            .await?;
+        manager
+            .drop_table(Table::drop().table(Quote::Table).to_owned())
+            .await?;
+        manager
+            .drop_table(Table::drop().table(QuoteItem::Table).to_owned())
+            .await?;
+        manager
+            .drop_table(Table::drop().table(InventoryTransaction::Table).to_owned())
+            .await?;
+        manager
+            .drop_table(Table::drop().table(Product::Table).to_owned())
+            .await?;
+        manager
+            .drop_table(Table::drop().table(Supplier::Table).to_owned())
+            .await?;
+        manager
+            .drop_table(Table::drop().table(Client::Table).to_owned())
+            .await?;
 
         Ok(())
     }

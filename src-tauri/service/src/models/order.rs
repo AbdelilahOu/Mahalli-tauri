@@ -1,6 +1,6 @@
+use crate::{NewOrderItem, UpdateOrderItem};
 use sea_orm::FromQueryResult;
 use serde::{Deserialize, Serialize};
-use crate::{NewOrderItem,UpdateOrderItem};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
 pub struct SelectOrders {

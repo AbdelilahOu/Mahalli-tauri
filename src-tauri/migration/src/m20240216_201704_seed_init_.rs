@@ -1,7 +1,10 @@
 use std::ops::Range;
 
 use crate::{
-    m20220101_000001_init_::{Client, InventoryTransaction, Invoice, Order, OrderItem, Product, Quote, QuoteItem, Supplier},
+    m20220101_000001_init_::{
+        Client, InventoryTransaction, Invoice, Order, OrderItem, Product, Quote, QuoteItem,
+        Supplier,
+    },
     utils::get_random_enum,
 };
 use fake::{
@@ -30,8 +33,20 @@ impl MigrationTrait for Migration {
             let phone: String = PhoneNumber().fake();
             let insert = Query::insert()
                 .into_table(Client::Table)
-                .columns([Client::Id, Client::Fullname, Client::Address, Client::Email, Client::Phone])
-                .values_panic([id.to_string().into(), fullname.into(), address.into(), email.into(), phone.into()])
+                .columns([
+                    Client::Id,
+                    Client::Fullname,
+                    Client::Address,
+                    Client::Email,
+                    Client::Phone,
+                ])
+                .values_panic([
+                    id.to_string().into(),
+                    fullname.into(),
+                    address.into(),
+                    email.into(),
+                    phone.into(),
+                ])
                 .to_owned();
 
             manager.exec_stmt(insert).await?;
@@ -45,8 +60,20 @@ impl MigrationTrait for Migration {
             let phone: String = PhoneNumber().fake();
             let insert = Query::insert()
                 .into_table(Supplier::Table)
-                .columns([Supplier::Id, Supplier::Fullname, Supplier::Address, Supplier::Email, Supplier::Phone])
-                .values_panic([id.to_string().into(), fullname.into(), address.into(), email.into(), phone.into()])
+                .columns([
+                    Supplier::Id,
+                    Supplier::Fullname,
+                    Supplier::Address,
+                    Supplier::Email,
+                    Supplier::Phone,
+                ])
+                .values_panic([
+                    id.to_string().into(),
+                    fullname.into(),
+                    address.into(),
+                    email.into(),
+                    phone.into(),
+                ])
                 .to_owned();
 
             manager.exec_stmt(insert).await?;
@@ -62,7 +89,14 @@ impl MigrationTrait for Migration {
             let quantity: u8 = Faker.fake();
             let insert = Query::insert()
                 .into_table(Product::Table)
-                .columns([Product::Id, Product::Name, Product::Description, Product::PurchasePrice, Product::SellingPrice, Product::MinQuantity])
+                .columns([
+                    Product::Id,
+                    Product::Name,
+                    Product::Description,
+                    Product::PurchasePrice,
+                    Product::SellingPrice,
+                    Product::MinQuantity,
+                ])
                 .values_panic([
                     id.to_string().into(),
                     format!("{}-{}", name, rand).into(),
@@ -103,7 +137,7 @@ impl MigrationTrait for Migration {
             String::from("PROCESSING"),
             String::from("SHIPPED"),
             String::from("DELIVERED"),
-            String::from("CANCELLED")
+            String::from("CANCELLED"),
         ];
 
         for _ in 0..100 {
@@ -142,7 +176,11 @@ impl MigrationTrait for Migration {
                         (SELECT id FROM products ORDER BY RANDOM() LIMIT 1)
                     )
                 "#,
-                [_id.to_string().into(), String::from("OUT").into(), quantity.into()],
+                [
+                    _id.to_string().into(),
+                    String::from("OUT").into(),
+                    quantity.into(),
+                ],
             );
             db.execute(insert_inventory).await?;
             //
@@ -202,7 +240,7 @@ impl MigrationTrait for Migration {
 
         let fix_client_id = Statement::from_string(
             sea_orm::DatabaseBackend::Sqlite,
-            r#"UPDATE invoices SET client_id = (SELECT client_id FROM orders WHERE id = order_id);"#
+            r#"UPDATE invoices SET client_id = (SELECT client_id FROM orders WHERE id = order_id);"#,
         );
 
         db.execute(fix_client_id).await?;
@@ -267,7 +305,9 @@ impl MigrationTrait for Migration {
         let delete = Query::delete().from_table(Quote::Table).to_owned();
         manager.exec_stmt(delete).await?;
 
-        let delete = Query::delete().from_table(InventoryTransaction::Table).to_owned();
+        let delete = Query::delete()
+            .from_table(InventoryTransaction::Table)
+            .to_owned();
         manager.exec_stmt(delete).await?;
 
         let delete = Query::delete().from_table(Product::Table).to_owned();

@@ -7,7 +7,7 @@ import {
   Trash2,
   Truck,
 } from "lucide-vue-next";
-import * as Logger from "tauri-plugin-log-api";
+import * as Logger from "@tauri-apps/plugin-log";
 import { toast } from "vue-sonner";
 import { NuxtLink, QuoteDelete, QuoteUpdate } from "#components";
 
@@ -38,8 +38,7 @@ function toggleThisQuote(quote: QuoteT, name: "delete" | "update") {
       id: quote.id!,
       identifier: quote.identifier,
     });
-  }
-  else {
+  } else {
     modal.open(QuoteUpdate, {
       id: quote.id!,
       identifier: quote.identifier,
@@ -62,8 +61,7 @@ async function createOrderFromQuote(id: string) {
         innerHTML: "go to order",
       }),
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
