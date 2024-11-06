@@ -6,6 +6,9 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        let db = manager.get_connection();
+		db.execute(Statement::from_string(sea_orm::DatabaseBackend::Sqlite, r#"PRAGMA journal_mode=WAL;"#)).await?;
+
         manager
             .create_table(
                 Table::create()
@@ -277,7 +280,7 @@ impl MigrationTrait for Migration {
                     .to_owned(),
             )
             .await?;
-        
+
         manager
             .create_index(
                 sea_query::Index::create()
@@ -307,7 +310,7 @@ impl MigrationTrait for Migration {
                     .to_owned(),
             )
             .await?;
-       
+
          manager
             .create_index(
                 sea_query::Index::create()
