@@ -1,6 +1,6 @@
+use crate::{NewQuoteItem, UpdateQuoteItem};
 use sea_orm::FromQueryResult;
 use serde::{Deserialize, Serialize};
-use crate::{NewQuoteItem,UpdateQuoteItem};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
 pub struct SelectQuotes {
