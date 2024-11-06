@@ -47,8 +47,7 @@ pub async fn search_products(state: State<'_, AppState>, search: String) -> SRes
 
 #[tauri::command]
 pub async fn create_product(state: State<'_, AppState>, product: NewProduct) -> SResult<String> {
-   let _ = state.db_conn;
-    let _ = state.job_storage;
+    let _ = state.db_conn;
     let image = product.image.clone();
     match MutationsService::create_product(&state.db_conn, product).await {
         Ok(id) => {
@@ -59,7 +58,7 @@ pub async fn create_product(state: State<'_, AppState>, product: NewProduct) -> 
                         entity: EntityEnum::PRODUCT,
                         data
                     };
-                    state.job_storage.push_job(job).await.expect("error");
+                    state.job_storage.push_job(job).await.expect("error pushing the job");
                 }
                 None => {}
             }

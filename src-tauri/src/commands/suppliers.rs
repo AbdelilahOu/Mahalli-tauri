@@ -49,7 +49,6 @@ pub async fn search_suppliers(state: State<'_, AppState>, search: String) -> SRe
 #[tauri::command]
 pub async fn create_supplier(state: State<'_, AppState>, supplier: NewSupplier) -> SResult<String> {
     let _ = state.db_conn;
-    let _ = state.job_storage;
     let image = supplier.image.clone();
     match MutationsService::create_supplier(&state.db_conn, supplier).await {
         Ok(id) => {
@@ -60,7 +59,7 @@ pub async fn create_supplier(state: State<'_, AppState>, supplier: NewSupplier) 
                         entity: EntityEnum::SUPPLIER,
                         data
                     };
-                    state.job_storage.push_job(job).await.expect("error");
+                    state.job_storage.push_job(job).await.expect("error pushing the job");
                 }
                 None => {}
             }
