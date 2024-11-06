@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import * as Logger from "tauri-plugin-log-api";
+import * as Logger from "@tauri-apps/plugin-log";
 import { Trash2 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 import { useFieldArray, useForm } from "vee-validate";
@@ -36,7 +36,7 @@ const invoiceSchema = z.object({
       quantity: z.number().min(1),
       price: z.number().min(1),
       name: z.string().optional(),
-    }),
+    })
   ),
 });
 
@@ -71,7 +71,7 @@ async function searchClients(search: string | number) {
     "search_clients",
     {
       search,
-    },
+    }
   );
   if (!res.error) {
     clients.value = res.data;
@@ -83,7 +83,7 @@ async function searchProducts(search: string | number) {
     "search_products",
     {
       search,
-    },
+    }
   );
   if (!res.error) {
     products.value = res.data;
@@ -105,13 +105,11 @@ const onSubmit = handleSubmit(async (values) => {
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     Logger.error(
-      `ERROR UPDATE INVOICE: ${err.error ? err.error : err.message}`,
+      `ERROR UPDATE INVOICE: ${err.error ? err.error : err.message}`
     );
-  }
-  finally {
+  } finally {
     close();
   }
 });
@@ -119,14 +117,13 @@ const onSubmit = handleSubmit(async (values) => {
 async function deleteOneInvoiceItem(id: string) {
   try {
     await invoke("delete_inventory", { id });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(
-      `ERROR DELETE INVOICE ITEM: ${err.error ? err.error : err.message}`,
+      `ERROR DELETE INVOICE ITEM: ${err.error ? err.error : err.message}`
     );
   }
 }
@@ -271,9 +268,7 @@ function deleteInvoiceItem(index: number) {
                           type="number"
                           v-bind="componentField"
                         >
-                          <template #unite>
-                            DH
-                          </template>
+                          <template #unite> DH </template>
                         </Input>
                       </FormControl>
                     </FormItem>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { Trash2 } from "lucide-vue-next";
-import * as Logger from "tauri-plugin-log-api";
+import * as Logger from "@tauri-apps/plugin-log";
 import { toast } from "vue-sonner";
 import { useFieldArray, useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
@@ -24,7 +24,7 @@ const quoteSchema = z.object({
       product_id: z.string().min(1),
       quantity: z.number().min(1),
       price: z.number().min(1),
-    }),
+    })
   ),
 });
 
@@ -63,7 +63,7 @@ async function searchClients(search: string | number) {
     "search_clients",
     {
       search,
-    },
+    }
   );
   if (!res.error) {
     clients.value = res.data;
@@ -75,7 +75,7 @@ async function searchProducts(search: string | number) {
     "search_products",
     {
       search,
-    },
+    }
   );
   if (!res.error) {
     products.value = res.data;
@@ -97,15 +97,13 @@ const onSubmit = handleSubmit(async (values) => {
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(`ERROR CREATE QUOTE: ${err.error ? err.error : err.message}`);
-  }
-  finally {
+  } finally {
     isPosting.value = false;
     close();
   }
@@ -197,9 +195,7 @@ const onSubmit = handleSubmit(async (values) => {
                           type="number"
                           v-bind="componentField"
                         >
-                          <template #unite>
-                            DH
-                          </template>
+                          <template #unite> DH </template>
                         </Input>
                       </FormControl>
                     </FormItem>

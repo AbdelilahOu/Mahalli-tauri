@@ -8,8 +8,8 @@ mod order_item;
 mod product;
 mod quote;
 mod quote_item;
-mod supplier;
 mod shared;
+mod supplier;
 mod template;
 
 pub use client::*;
@@ -22,6 +22,6 @@ pub use order_item::*;
 pub use product::*;
 pub use quote::*;
 pub use quote_item::*;
-pub use supplier::*;
 pub use shared::*;
+pub use supplier::*;
 pub use template::*;

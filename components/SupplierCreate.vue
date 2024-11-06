@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 import { toTypedSchema } from "@vee-validate/zod";
-import * as Logger from "tauri-plugin-log-api";
+import * as Logger from "@tauri-apps/plugin-log";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
@@ -40,7 +40,7 @@ async function createNewSupplier(supplier: SupplierT) {
       const uploadedImagePath = await uploadFileToDataDir(
         "temp",
         image.bytes,
-        image.name,
+        image.name
       );
       ImagePath = uploadedImagePath;
     }
@@ -55,30 +55,28 @@ async function createNewSupplier(supplier: SupplierT) {
       `CREATE SUPPLIER: ${JSON.stringify({
         ...supplier,
         image: ImagePath,
-      })}`,
+      })}`
     );
     //
     toast.success(
       t("notifications.supplier.created", { name: supplier.full_name }),
       {
         closeButton: true,
-      },
+      }
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(
-      `ERROR CREATE SUPPLIER: ${err.error ? err.error : err.message}`,
+      `ERROR CREATE SUPPLIER: ${err.error ? err.error : err.message}`
     );
-  }
-  finally {
+  } finally {
     close();
   }
 }

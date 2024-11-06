@@ -2,7 +2,7 @@
 import { invoke } from "@tauri-apps/api";
 import { Calendar as CalendarIcon, Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
-import * as Logger from "tauri-plugin-log-api";
+import * as Logger from "@tauri-apps/plugin-log";
 import { toast } from "vue-sonner";
 import { InvoiceCreate } from "#components";
 import { INVOICE_STATUSES } from "@/consts";
@@ -46,8 +46,7 @@ async function fetchInvoices() {
       },
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -66,7 +65,7 @@ const totalRows = computed<number>(() => invoicesData.value?.count ?? 0);
 provide("count", totalRows);
 provide(
   "itemsPerPage",
-  queryParams.value.limit ? Number(queryParams.value.limit) : LIMIT,
+  queryParams.value.limit ? Number(queryParams.value.limit) : LIMIT
 );
 
 watch(queryParams, fetchInvoices, { deep: true });
@@ -93,14 +92,13 @@ async function listInvoiceProducts(id?: string) {
       id,
     });
     invoiceProducts.value = res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(
-      `ERROR LIST INVOICES PRODUCTS: ${err.error ? err.error : err.message}`,
+      `ERROR LIST INVOICES PRODUCTS: ${err.error ? err.error : err.message}`
     );
   }
 }
@@ -126,7 +124,7 @@ const openCreateInvoiceModal = () => modal.open(InvoiceCreate, {});
                 :class="
                   cn(
                     'w-full justify-start text-left font-normal',
-                    !created_at && 'text-muted-foreground',
+                    !created_at && 'text-muted-foreground'
                   )
                 "
               >

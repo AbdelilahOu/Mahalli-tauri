@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
-import * as Logger from "tauri-plugin-log-api";
+import * as Logger from "@tauri-apps/plugin-log";
 import { toast } from "vue-sonner";
 
 const { t } = useI18n();
@@ -16,8 +16,7 @@ const { data: quote } = await useAsyncData(async () => {
       id,
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -32,8 +31,7 @@ async function handleGeneratePdf() {
     if (pdfDataUri) {
       pdfContent.value = pdfDataUri;
     }
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -49,7 +47,7 @@ async function saveConfig() {
       filePath = await uploadFileToDataDir(
         "pdf-templates",
         config.template.bytes,
-        config.template.name,
+        config.template.name
       );
     }
     await invoke("create_template", {
@@ -67,14 +65,13 @@ async function saveConfig() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(
-      `ERROR CREATE TEMPLATE: ${err.error ? err.error : err.message}`,
+      `ERROR CREATE TEMPLATE: ${err.error ? err.error : err.message}`
     );
   }
 }

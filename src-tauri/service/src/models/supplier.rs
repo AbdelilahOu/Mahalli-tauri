@@ -30,7 +30,6 @@ pub struct Supplier {
     pub image: Option<String>,
 }
 
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UpdateSupplier {
     pub id: String,
