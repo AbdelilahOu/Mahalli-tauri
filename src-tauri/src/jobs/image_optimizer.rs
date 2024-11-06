@@ -5,6 +5,7 @@ use std::sync::Arc;
 use apalis::{prelude::*, sqlite::SqliteStorage};
 use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
+use log::{warn};
 
 use service::{MutationsService, sea_orm::DatabaseConnection, UpdateClient, UpdateProduct, UpdateSupplier};
 
@@ -66,7 +67,7 @@ pub async fn process_image(job: ImageProcessorJob, data: Data<DatabaseConnection
 		EntityEnum::PRODUCT => String::from("products"),
 	};
 
-	let output_path = home_dir.join(".mahalli").join("data").join("images").join(entity);
+	let output_path = home_dir.join(".mahalli").join("data").join("images").join(&entity);
 
 	if let Err(_) = fs::metadata(&output_path) {
 		fs::create_dir_all(&output_path).expect("Could not create data directory");
@@ -83,7 +84,7 @@ pub async fn process_image(job: ImageProcessorJob, data: Data<DatabaseConnection
 	);
 
 	if processed_cropped.is_err() {
-		println!("processing the image didnt work");
+		warn!("processing the image didnt work");
 		return Ok(());
 	};
 
@@ -123,7 +124,7 @@ pub async fn process_image(job: ImageProcessorJob, data: Data<DatabaseConnection
 
 
 	if updated_entity.is_err() {
-		println!("updating client didnt work");
+		warn!("updating {} didnt work", entity);
 		return Ok(());
 	};
 
