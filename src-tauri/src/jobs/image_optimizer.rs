@@ -6,7 +6,7 @@ use apalis::{prelude::*, sqlite::SqliteStorage};
 use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
 
-use service::{Client, MutationsService, sea_orm::DatabaseConnection};
+use service::{MutationsService, sea_orm::DatabaseConnection, UpdateClient, UpdateProduct, UpdateSupplier};
 
 use super::utils::ImageProcessor;
 
@@ -52,8 +52,8 @@ impl ImageOptimizerJobStorage {
 }
 
 
-pub async fn process_image(job: ImageProcessorJob, _data: Data<DatabaseConnection>) -> Result<(), Error> {
-	let processor = ImageProcessor::new(85, 1920);
+pub async fn process_image(job: ImageProcessorJob, data: Data<DatabaseConnection>) -> Result<(), Error> {
+	let processor = ImageProcessor::new(1920);
 
 	let home_dir = match tauri::api::path::data_dir() {
 		Some(val) => val,
@@ -82,6 +82,50 @@ pub async fn process_image(job: ImageProcessorJob, _data: Data<DatabaseConnectio
 		Some((100, 100, 200, 200)),
 	);
 
-	println!("{:?}", processed_cropped);
+	if processed_cropped.is_err() {
+		println!("processing the image didnt work");
+		return Ok(());
+	};
+
+	let updated_entity = match job.entity {
+		EntityEnum::CLIENT => {
+			MutationsService::partial_update_client(&data, UpdateClient {
+				id: job.id,
+				full_name: Option::None,
+				email: Option::None,
+				address: Option::None,
+				phone_number: Option::None,
+				image: Option::Some(image_path.display().to_string()),
+			}).await
+		}
+		EntityEnum::SUPPLIER => {
+			MutationsService::partial_update_supplier(&data, UpdateSupplier {
+				id: job.id,
+				full_name: Option::None,
+				email: Option::None,
+				address: Option::None,
+				phone_number: Option::None,
+				image: Option::Some(image_path.display().to_string()),
+			}).await
+		}
+		EntityEnum::PRODUCT => {
+			MutationsService::partial_update_product(&data, UpdateProduct {
+				id: job.id,
+				name: Option::None,
+				purchase_price: Option::None,
+				selling_price: Option::None,
+				description: Option::None,
+				min_quantity: Option::None,
+				image: Option::Some(image_path.display().to_string()),
+			}).await
+		}
+	};
+
+
+	if updated_entity.is_err() {
+		println!("updating client didnt work");
+		return Ok(());
+	};
+
 	Ok(())
 }

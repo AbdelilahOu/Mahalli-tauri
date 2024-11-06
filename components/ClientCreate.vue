@@ -40,7 +40,7 @@ async function createNewClient(client: ClientT) {
       const uploadedImagePath = await uploadFileToDataDir(
         "temp",
         image.bytes,
-        image.name
+        image.name,
       );
       ImagePath = uploadedImagePath;
     }
@@ -55,26 +55,28 @@ async function createNewClient(client: ClientT) {
       `CREATE CLIENT: ${JSON.stringify({
         ...client,
         image: ImagePath,
-      })}`
+      })}`,
     );
     //
     toast.success(
       t("notifications.client.created", { name: client.full_name }),
       {
         closeButton: true,
-      }
+      },
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
-  } catch (err: any) {
+  }
+  catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(`ERROR CREATE CLIENT: ${err.error ? err.error : err.message}`);
-  } finally {
+  }
+  finally {
     close();
   }
 }

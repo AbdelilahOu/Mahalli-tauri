@@ -22,15 +22,12 @@ impl From<ImageError> for ImageProcessError {
 }
 
 pub struct ImageProcessor {
-    quality: u8,
     max_dimension: u32,
 }
 
 impl ImageProcessor {
-    pub fn new(quality: u8, max_dimension: u32) -> Self {
-        let quality = quality.clamp(1, 100);
+    pub fn new(max_dimension: u32) -> Self {
         ImageProcessor {
-            quality,
             max_dimension,
         }
     }
@@ -86,7 +83,7 @@ impl ImageProcessor {
     }
 
     /// Save image with optimization
-    fn save_optimized<'a>(&self, img: DynamicImage, output_path: &'a Path) -> Result<&'a Path, ImageProcessError> {
+    fn save_optimized(&self, img: DynamicImage, output_path: &Path) -> Result<(), ImageProcessError> {
         let format = ImageFormat::from_path(output_path)?;
 
         match format {
@@ -116,6 +113,6 @@ impl ImageProcessor {
             }
         }
 
-        Ok(output_path)
+        Ok(())
     }
 }
