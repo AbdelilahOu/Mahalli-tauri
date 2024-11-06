@@ -14,7 +14,7 @@ dev:
 	@bun run tauri dev
 
 build: 
-	@bun run tauri build
+	@bun run tauri build --debug
 
 check:
 	@cd src-tauri && cargo check

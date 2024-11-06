@@ -1,10 +1,10 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
-    "beforeBuildCommand": "bun run build",
     "beforeDevCommand": "bun run dev",
-    "frontendDist": "../.output/public",
-    "devUrl": "http://localhost:3000/"
+    "beforeBuildCommand": "bun run build",
+    "devUrl": "http://localhost:3000",
+    "frontendDist": "../.output/public"
   },
   "bundle": {
     "active": true,
@@ -71,7 +71,7 @@
         "scope": ["**"],
         "enable": true
       },
-      "csp": "default-src 'self' blob: data: filesystem: ws: wss: http: https: tauri: 'unsafe-eval' 'unsafe-inline'; script-src-elem 'self' https://accounts.google.com 'unsafe-eval' 'unsafe-hashes' 'unsafe-inline'; style-src 'self' https://accounts.google.com 'unsafe-eval' 'unsafe-hashes' 'unsafe-inline';; connect-src ipc: http://ipc.localhost"
+      "csp": null
     }
   }
 }
