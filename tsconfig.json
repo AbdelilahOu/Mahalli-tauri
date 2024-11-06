@@ -3,9 +3,9 @@
   "compilerOptions": {
     "target": "esnext",
     "jsx": "preserve",
-    "lib": ["ESNext", "ESNext.AsyncIterable", "DOM"],
+    "lib": ["esnext", "ESNext.AsyncIterable", "DOM"],
     "experimentalDecorators": true,
-    "module": "ESNext",
+    "module": "esnext",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "allowJs": true,
