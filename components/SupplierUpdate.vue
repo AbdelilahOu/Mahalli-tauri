@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { useForm } from "vee-validate";
 import { z } from "zod";
 import * as Logger from "@tauri-apps/plugin-log";
