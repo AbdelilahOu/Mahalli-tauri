@@ -4,6 +4,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxtjs/i18n"],
   ssr: false,
+  devServer: { host: process.env.TAURI_DEV_HOST || "localhost" },
+  vite: {
+    clearScreen: false,
+    envPrefix: ["VITE_", "TAURI_"],
+    server: {
+      strictPort: true,
+    },
+  },
   routeRules: { "/": { prerender: true } },
   imports: { dirs: ["./types", "./utils"] },
   shadcn: { componentDir: "./components/ui" },
