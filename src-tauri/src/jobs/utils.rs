@@ -1,6 +1,6 @@
-use image::{DynamicImage, GenericImageView, ImageFormat, ImageError, ImageEncoder};
-use std::path::Path;
+use image::{DynamicImage, GenericImageView, ImageEncoder, ImageError, ImageFormat};
 use std::fs;
+use std::path::Path;
 
 #[derive(Debug)]
 pub enum ImageProcessError {
@@ -26,9 +26,7 @@ pub struct ImageProcessor {
 
 impl ImageProcessor {
     pub fn new(max_dimension: u32) -> Self {
-        ImageProcessor {
-            max_dimension,
-        }
+        ImageProcessor { max_dimension }
     }
 
     /// Process an image with cropping, resizing, and optimization
@@ -80,16 +78,17 @@ impl ImageProcessor {
     }
 
     /// Save image with optimization
-    fn save_optimized(&self, img: DynamicImage, output_path: &Path) -> Result<(), ImageProcessError> {
+    fn save_optimized(
+        &self,
+        img: DynamicImage,
+        output_path: &Path,
+    ) -> Result<(), ImageProcessError> {
         let format = ImageFormat::from_path(output_path)?;
 
         match format {
             ImageFormat::Jpeg => {
-                img.save_with_format(
-                    output_path,
-                    ImageFormat::Jpeg
-                )?;
-            },
+                img.save_with_format(output_path, ImageFormat::Jpeg)?;
+            }
             ImageFormat::Png => {
                 // For PNG, we can use different compression options
                 let encoder = image::codecs::png::PngEncoder::new_with_quality(
@@ -103,7 +102,7 @@ impl ImageProcessor {
                     img.height(),
                     img.color().into(),
                 )?;
-            },
+            }
             _ => {
                 // For other formats, save normally
                 img.save(output_path)?;

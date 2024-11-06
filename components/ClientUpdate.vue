@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { toTypedSchema } from "@vee-validate/zod";
-import * as Logger from "tauri-plugin-log-api";
+import * as Logger from "@tauri-apps/plugin-log";
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
@@ -30,7 +30,7 @@ const clientSchema = toTypedSchema(
     email: z.string().default((props.email as string) ?? ""),
     phone_number: z.string().default((props.phoneNumber as string) ?? ""),
     address: z.string().default((props.address as string) ?? ""),
-  }),
+  })
 );
 
 const form = useForm({
@@ -57,28 +57,26 @@ async function updateTheClient(client: ClientT) {
         email: client.email,
         phone_number: client.phone_number,
         address: client.address,
-      })}`,
+      })}`
     );
     //
     toast.success(
       t("notifications.client.updated", { name: client.full_name }),
       {
         closeButton: true,
-      },
+      }
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(`ERROR UPDATE CLIENT: ${err.error ? err.error : err.message}`);
-  }
-  finally {
+  } finally {
     close();
   }
 }

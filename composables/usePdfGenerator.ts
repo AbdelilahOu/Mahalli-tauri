@@ -2,7 +2,7 @@ import { PDFDocument, PDFName, PDFPage, PageSizes, rgb } from "pdf-lib";
 import type { PDFFont } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 import { toast } from "vue-sonner";
-import * as Logger from "tauri-plugin-log-api";
+import * as Logger from "@tauri-apps/plugin-log";
 import CairoRegular from "@/assets/fonts/Cairo-Regular.ttf";
 
 export function usePdfGenerator() {
@@ -45,8 +45,7 @@ export function usePdfGenerator() {
       const res: any = await $fetch(CairoRegular);
       const fontBytes = await res.arrayBuffer();
       font = await pdfDoc.embedFont(fontBytes);
-    }
-    catch (err: any) {
+    } catch (err: any) {
       handleError(err);
     }
   }
@@ -55,8 +54,7 @@ export function usePdfGenerator() {
 
   async function generatePdf(data: any, type: DocType) {
     await initPdfDoc();
-    if (!pdfDoc || !font)
-      return;
+    if (!pdfDoc || !font) return;
 
     setPdfMetadata(pdfDoc, data, type);
 
@@ -64,8 +62,7 @@ export function usePdfGenerator() {
       await setupPage();
       drawContent(data, type);
       return await pdfDoc.saveAsBase64({ dataUri: true });
-    }
-    catch (err) {
+    } catch (err) {
       handleError(err);
     }
   }
@@ -79,16 +76,14 @@ export function usePdfGenerator() {
   }
 
   async function setupPage() {
-    if (!pdfDoc)
-      return;
+    if (!pdfDoc) return;
 
     if (config.template.bytes) {
       const sourcePdfDoc = await PDFDocument.load(config.template.bytes);
       const [templatePage] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
       template = templatePage;
       page = pdfDoc.addPage(copyPage(template));
-    }
-    else {
+    } else {
       page = pdfDoc.addPage();
     }
 
@@ -99,8 +94,7 @@ export function usePdfGenerator() {
   }
 
   function drawContent(data: any, type: DocType) {
-    if (!page || !font)
-      return;
+    if (!page || !font) return;
     const vat = config.fields.vat ? config.vat : 0;
     const vatTotal = data.total * (vat / 100);
     Height.value -= config.marginTop;
@@ -113,13 +107,12 @@ export function usePdfGenerator() {
   }
 
   function drawHeader(data: any, type: DocType) {
-    if (!page || !font)
-      return;
+    if (!page || !font) return;
 
     const headerText = capitalizeFirstLetter(t(`fields.${type}`));
     const totalText = n(
       data.total + data.total * (config.vat / 100),
-      "currency",
+      "currency"
     );
 
     page.drawText(headerText, {
@@ -170,8 +163,7 @@ export function usePdfGenerator() {
   }
 
   function drawSenderAndReceiver(client: any) {
-    if (!page || !font)
-      return;
+    if (!page || !font) return;
 
     page.drawText(t("fields.bill-to").toUpperCase(), {
       x: config.marginX,
@@ -197,14 +189,13 @@ export function usePdfGenerator() {
 
   function getClientFields(client: any): string[] {
     return ["full_name", "email", "address", "phone_number"]
-      .filter(value => config.fields[value])
-      .map(key => client[key])
-      .filter(value => value !== null);
+      .filter((value) => config.fields[value])
+      .map((key) => client[key])
+      .filter((value) => value !== null);
   }
 
   function drawTableHeaders() {
-    if (!page || !font)
-      return;
+    if (!page || !font) return;
 
     drawHorizontalLine(Height.value);
 
@@ -230,8 +221,7 @@ export function usePdfGenerator() {
         addNewPage();
       }
 
-      if (!page || !font)
-        return;
+      if (!page || !font) return;
 
       page.drawText(item.name, {
         x: config.marginX + 5,
@@ -277,8 +267,7 @@ export function usePdfGenerator() {
         addNewPage();
       }
 
-      if (!page || !font)
-        return;
+      if (!page || !font) return;
 
       const summaryX = getSummaryX(Width.value);
 
@@ -305,8 +294,7 @@ export function usePdfGenerator() {
   }
 
   function drawTotalAsText(total: number) {
-    if (!page || !font)
-      return;
+    if (!page || !font) return;
 
     const totalAsText = numberToText(total, locale.value as any);
 
@@ -320,13 +308,11 @@ export function usePdfGenerator() {
   }
 
   function copyPage(originalPage: PDFPage) {
-    if (!pdfDoc)
-      return originalPage;
+    if (!pdfDoc) return originalPage;
 
     const cloneNode = originalPage.node.clone();
     const { Contents } = originalPage.node.normalizedEntries();
-    if (Contents)
-      cloneNode.set(PDFName.of("Contents"), Contents.clone());
+    if (Contents) cloneNode.set(PDFName.of("Contents"), Contents.clone());
     const cloneRef = pdfDoc.context.register(cloneNode);
     return PDFPage.of(cloneNode, cloneRef, pdfDoc);
   }
@@ -344,8 +330,7 @@ export function usePdfGenerator() {
   }
 
   function reverseText(text: string) {
-    if (locale.value !== "ar")
-      return text;
+    if (locale.value !== "ar") return text;
     const currency = text.split("").splice(-5).join("");
     const amount = text
       .split("")
@@ -386,14 +371,12 @@ export function usePdfGenerator() {
   }
 
   function addNewPage() {
-    if (!pdfDoc)
-      return;
+    if (!pdfDoc) return;
 
     let newPage: PDFPage;
     if (template) {
       newPage = pdfDoc.addPage(copyPage(template));
-    }
-    else {
+    } else {
       newPage = pdfDoc.addPage();
     }
     newPage.setSize(...PageSizes.A4);

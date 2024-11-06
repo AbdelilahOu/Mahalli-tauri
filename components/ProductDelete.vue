@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { invoke } from "@tauri-apps/api";
-import * as Logger from "tauri-plugin-log-api";
+import { invoke } from "@tauri-apps/api/core";
+import * as Logger from "@tauri-apps/plugin-log";
 import { toast } from "vue-sonner";
 
 const props = defineProps<{
@@ -27,17 +27,15 @@ async function deleteTheProduct() {
     updateQueryParams({
       refresh: `refresh-delete-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(
-      `ERROR DELETE PRODUCT: ${err.error ? err.error : err.message}`,
+      `ERROR DELETE PRODUCT: ${err.error ? err.error : err.message}`
     );
-  }
-  finally {
+  } finally {
     close();
   }
 }
