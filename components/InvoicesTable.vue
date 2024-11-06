@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { FilePenLine, GripHorizontal, Printer, Trash2 } from "lucide-vue-next";
-import * as Logger from "tauri-plugin-log-api";
+import * as Logger from "@tauri-apps/plugin-log";
 import { toast } from "vue-sonner";
 import { InvoiceDelete, InvoiceUpdate } from "#components";
 import { INVOICE_STATUSES, STATUS_COLORS } from "@/consts";
@@ -38,8 +38,7 @@ function toggleThisInvoice(invoice: InvoiceT, name: "delete" | "update") {
       id: invoice.id!,
       identifier: invoice.identifier,
     });
-  }
-  else {
+  } else {
     modal.open(InvoiceUpdate, {
       id: invoice.id!,
       identifier: invoice.identifier,
@@ -60,20 +59,19 @@ async function updateInvoiceStatus(id: string, status: string) {
       `UPDATE INVOICE STATUS: ${JSON.stringify({
         id,
         status,
-      })}`,
+      })}`
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(
-      `ERROR UPDATE INVOICE STATUS: ${err.error ? err.error : err.message}`,
+      `ERROR UPDATE INVOICE STATUS: ${err.error ? err.error : err.message}`
     );
   }
 }
@@ -107,8 +105,8 @@ async function updateInvoiceStatus(id: string, status: string) {
           v-fade="index"
           :class="{
             'animate-highlight-row':
-              invoice.id === $route.query.id
-              && $route.query.highlight === 'true',
+              invoice.id === $route.query.id &&
+              $route.query.highlight === 'true',
           }"
         >
           <TableCell class="p-2 text-nowrap font-medium">

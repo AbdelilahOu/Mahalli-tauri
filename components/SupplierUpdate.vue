@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { useForm } from "vee-validate";
 import { z } from "zod";
-import * as Logger from "tauri-plugin-log-api";
+import * as Logger from "@tauri-apps/plugin-log";
 import { toast } from "vue-sonner";
 
 const props = defineProps<{
@@ -30,7 +30,7 @@ const supplierSchema = toTypedSchema(
     email: z.string().default((props.email as string) ?? ""),
     phone_number: z.string().default((props.phoneNumber as string) ?? ""),
     address: z.string().default((props.address as string) ?? ""),
-  }),
+  })
 );
 
 const form = useForm({
@@ -57,30 +57,28 @@ async function updateTheSupplier(supplier: SupplierT) {
         email: supplier.email,
         phone_number: supplier.phone_number,
         address: supplier.address,
-      })}`,
+      })}`
     );
     //
     toast.success(
       t("notifications.supplier.updated", { name: supplier.full_name }),
       {
         closeButton: true,
-      },
+      }
     );
     // toggle refresh
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(
-      `ERROR UPDATE SUPPLIER: ${err.error ? err.error : err.message}`,
+      `ERROR UPDATE SUPPLIER: ${err.error ? err.error : err.message}`
     );
-  }
-  finally {
+  } finally {
     close();
   }
 }

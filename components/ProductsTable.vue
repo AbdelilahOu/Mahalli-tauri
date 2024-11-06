@@ -7,7 +7,7 @@ import {
   PackagePlus,
   Trash2,
 } from "lucide-vue-next";
-import { convertFileSrc } from "@tauri-apps/api/tauri";
+import { convertFileSrc } from "@tauri-apps/api/core";
 import { InventoryUpdate, ProductDelete, ProductUpdate } from "#components";
 
 defineProps<{ products: ProductT[] }>();

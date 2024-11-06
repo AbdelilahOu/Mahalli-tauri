@@ -1,6 +1,6 @@
+use crate::{NewInvoiceItem, UpdateInvoiceItem};
 use sea_orm::FromQueryResult;
 use serde::{Deserialize, Serialize};
-use crate::{NewInvoiceItem, UpdateInvoiceItem};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
 pub struct SelectInvoices {
