@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { toTypedSchema } from "@vee-validate/zod";
 import { invoke } from "@tauri-apps/api";
-import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
 import * as Logger from "tauri-plugin-log-api";
+import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
 import { z } from "zod";
+
+const { t } = useI18n();
 
 const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const { close } = useModal();
-
-const { t } = useI18n();
 
 const CreateSupplierSchema = z.object({
   id: z.string().optional(),
@@ -19,36 +19,42 @@ const CreateSupplierSchema = z.object({
   phone_number: z.string().optional(),
   address: z.string().optional(),
   image: z.string().optional(),
+  credit: z.number().optional(),
 });
 
 const supplierSchema = toTypedSchema(CreateSupplierSchema);
-
-const imageBase64 = ref<string | null>(null);
 
 const form = useForm({
   validationSchema: supplierSchema,
 });
 
+const image = reactive({
+  bytes: null as Uint8Array | null,
+  name: null as string | null,
+});
+
 async function createNewSupplier(supplier: SupplierT) {
   try {
-    await invoke<Res<string>>("create_supplier", {
+    let ImagePath: null | string = null;
+    if (image.bytes && image.name) {
+      const uploadedImagePath = await uploadFileToDataDir(
+        "temp",
+        image.bytes,
+        image.name,
+      );
+      ImagePath = uploadedImagePath;
+    }
+    await invoke<Res<null>>("create_supplier", {
       supplier: {
-        full_name: supplier.full_name,
-        email: supplier.email,
-        phone_number: supplier.phone_number,
-        address: supplier.address,
-        image: imageBase64.value
-          ? `data:image/png;base64,${imageBase64.value}`
-          : null,
+        ...supplier,
+        image: ImagePath,
       },
     });
     //
     Logger.info(
       `CREATE SUPPLIER: ${JSON.stringify({
         ...supplier,
-        image: imageBase64.value
-          ? `data:image/png;base64,${imageBase64.value}`
-          : null,
+        image: ImagePath,
       })}`,
     );
     //
@@ -81,8 +87,14 @@ const onSubmit = form.handleSubmit((values) => {
   createNewSupplier(values);
 });
 
-function setImage(image: string) {
-  imageBase64.value = image;
+function setImage(bytes: Uint8Array, name: string) {
+  image.bytes = bytes;
+  image.name = name;
+}
+
+function cleanImage() {
+  image.bytes = null;
+  image.name = null;
 }
 </script>
 
@@ -90,15 +102,14 @@ function setImage(image: string) {
   <form class="w-full flex justify-center" @submit="onSubmit">
     <Card class="w-4/6 lg:w-1/2">
       <CardHeader>
-        <CardTitle>
-          {{ t("titles.suppliers.create") }}
-        </CardTitle>
+        <CardTitle> {{ t("titles.suppliers.create") }} </CardTitle>
       </CardHeader>
       <CardContent>
         <UiUploader
           name="Image"
-          :extensions="['png', 'jpeg', 'webp']"
-          @save-base64="setImage"
+          :extensions="['png', 'jpeg', 'webp', 'jpg']"
+          @clear="cleanImage"
+          @save-bytes="setImage"
         />
         <FormField v-slot="{ componentField }" name="full_name">
           <FormItem>

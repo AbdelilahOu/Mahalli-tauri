@@ -12,8 +12,6 @@ const { updateQueryParams } = useUpdateRouteQueryParams();
 
 const { close } = useModal();
 
-const imageBase64 = ref<string | null>(null);
-
 const quantity = ref<number>(0);
 
 const CreateProductSchema = z.object({
@@ -33,8 +31,22 @@ const form = useForm({
   validationSchema: productSchema,
 });
 
+const image = reactive({
+  bytes: null as Uint8Array | null,
+  name: null as string | null,
+});
+
 async function createNewProduct(product: ProductT) {
   try {
+    let ImagePath: null | string = null;
+    if (image.bytes && image.name) {
+      const uploadedImagePath = await uploadFileToDataDir(
+        "temp",
+        image.bytes,
+        image.name,
+      );
+      ImagePath = uploadedImagePath;
+    }
     const createRes = await invoke<Res<string>>("create_product", {
       product: {
         name: product.name,
@@ -42,9 +54,7 @@ async function createNewProduct(product: ProductT) {
         purchase_price: Number(product.purchase_price),
         description: product.description,
         min_quantity: product.min_quantity,
-        image: imageBase64.value
-          ? `data:image/png;base64,${imageBase64.value}`
-          : null,
+        image: ImagePath,
       },
     });
     await invoke<Res<string>>("create_inventory", {
@@ -57,9 +67,8 @@ async function createNewProduct(product: ProductT) {
     Logger.info(
       `CREATE PRODUCT: ${JSON.stringify({
         ...product,
-        image: imageBase64.value
-          ? `data:image/png;base64,${imageBase64.value}`
-          : null,
+        image: ImagePath,
+
         quantity: quantity.value,
       })}`,
     );
@@ -90,8 +99,14 @@ const onSubmit = form.handleSubmit((values) => {
   createNewProduct(values);
 });
 
-function setImage(image: string) {
-  imageBase64.value = image;
+function setImage(bytes: Uint8Array, name: string) {
+  image.bytes = bytes;
+  image.name = name;
+}
+
+function cleanImage() {
+  image.bytes = null;
+  image.name = null;
 }
 </script>
 
@@ -107,7 +122,8 @@ function setImage(image: string) {
         <UiUploader
           name="Image"
           :extensions="['png', 'jpeg', 'webp', 'jpg']"
-          @save-base64="setImage"
+          @clear="cleanImage"
+          @save-bytes="setImage"
         />
         <FormField v-slot="{ componentField }" name="name">
           <FormItem>
