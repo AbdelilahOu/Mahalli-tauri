@@ -6,7 +6,6 @@ use std::fs;
 pub enum ImageProcessError {
     IoError(std::io::Error),
     ImageError(ImageError),
-    InvalidDimensions,
 }
 
 impl From<std::io::Error> for ImageProcessError {
@@ -46,8 +45,6 @@ impl ImageProcessor {
         if let Some((x, y, width, height)) = crop_dimensions {
             if x + width <= img.width() && y + height <= img.height() {
                 img = img.crop(x, y, width, height);
-            } else {
-                return Err(ImageProcessError::InvalidDimensions);
             }
         }
 

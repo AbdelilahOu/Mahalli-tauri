@@ -1,7 +1,6 @@
 #![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
-use apalis::{layers::tracing::TraceLayer, prelude::*, sqlite::SqliteStorage};
-use apalis::utils::TokioExecutor;
+use apalis::{layers::tracing::TraceLayer, prelude::*, sqlite::SqliteStorage, utils::TokioExecutor};
 use sqlx::SqlitePool;
 use tauri_plugin_log::LogTarget;
 

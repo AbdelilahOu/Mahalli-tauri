@@ -47,7 +47,6 @@ pub async fn search_clients(state: State<'_, AppState>, search: String) -> SResu
 #[tauri::command]
 pub async fn create_client(state: State<'_, AppState>, client: NewClient) -> SResult<String> {
 	let _ = state.db_conn;
-	let _ = state.job_storage;
 	let image = client.image.clone();
 	match MutationsService::create_client(&state.db_conn, client).await {
 		Ok(id) => {
@@ -58,7 +57,7 @@ pub async fn create_client(state: State<'_, AppState>, client: NewClient) -> SRe
 						entity: EntityEnum::CLIENT,
 						data,
                     };
-					state.job_storage.push_job(job).await.expect("error");
+					state.job_storage.push_job(job).await.expect("error pushing the job");
 				}
 				None => {}
 			}
