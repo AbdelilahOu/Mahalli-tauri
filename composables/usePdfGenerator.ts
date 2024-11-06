@@ -20,7 +20,7 @@ export function usePdfGenerator() {
   const config = reactive({
     marginTop: 40,
     marginX: 20,
-    marginBottom: 90,
+    marginBottom: 40,
     vat: 20,
     template: {
       bytes: null as Uint8Array | null,
