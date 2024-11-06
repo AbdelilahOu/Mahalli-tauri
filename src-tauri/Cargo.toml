@@ -10,6 +10,10 @@ edition = "2021"
 rust-version = "1.82"
 build = "src/build.rs"
 
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
 [workspace]
 members = [".", "service", "entity", "migration"]
 
@@ -19,15 +23,13 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2", features = ["protocol-asset"
-] }
+tauri = { version = "2", features = ["protocol-asset"] }
 apalis = { version = "0.5", features = [
   "sqlite",
   "limit",
   "tracing",
   "tokio-comp",
 ] }
-tauri-plugin-log = "2"
 tokio = { version = "1", features = ["full"] }
 libsqlite3-sys = { version = "^0", features = ["bundled"] }
 dotenvy = "0.15.7"
@@ -36,6 +38,7 @@ migration = { path = "./migration" }
 service = { path = "./service" }
 entity = { path = "./entity" }
 image = "0.25.5"
+tauri-plugin-log = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-notification = "2"
