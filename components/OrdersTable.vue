@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { invoke } from "@tauri-apps/api";
-import * as Logger from "tauri-plugin-log-api";
+import { invoke } from "@tauri-apps/api/core";
+import * as Logger from "@tauri-apps/plugin-log";
 import {
   FilePenLine,
   GripHorizontal,
@@ -41,8 +41,7 @@ function toggleThisOrder(order: OrderT, name: "delete" | "update") {
       id: order.id!,
       identifier: order.identifier,
     });
-  }
-  else {
+  } else {
     modal.open(OrderUpdate, {
       id: order.id!,
       identifier: order.identifier,
@@ -64,14 +63,13 @@ async function updateOrderStatus(id: string, status: string) {
     updateQueryParams({
       refresh: `refresh-update-${Math.random() * 9999}`,
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
     });
     Logger.error(
-      `ERROR UPDATE ORDER STATUS: ${err.error ? err.error : err.message}`,
+      `ERROR UPDATE ORDER STATUS: ${err.error ? err.error : err.message}`
     );
   }
 }
@@ -82,7 +80,7 @@ async function createInvoiceFromOrder(id: string) {
       "create_invoice_from_order",
       {
         id,
-      },
+      }
     );
     //
     Logger.info(`CREATE INVOICE FROM ORDER: ${id}`);
@@ -95,10 +93,9 @@ async function createInvoiceFromOrder(id: string) {
         innerHTML: "go to invoice",
       }),
     });
-  }
-  catch (err: any) {
+  } catch (err: any) {
     Logger.error(
-      `GET ORDER FOR INVOICE: ${err.error ? err.error : err.message}`,
+      `GET ORDER FOR INVOICE: ${err.error ? err.error : err.message}`
     );
   }
 }
@@ -205,7 +202,7 @@ async function createInvoiceFromOrder(id: string) {
                   :class="
                     cn(
                       'cursor-pointer whitespace-nowrap',
-                      STATUS_COLORS[order.status],
+                      STATUS_COLORS[order.status]
                     )
                   "
                 >

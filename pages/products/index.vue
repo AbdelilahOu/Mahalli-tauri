@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { Plus } from "lucide-vue-next";
 import { useDebounceFn } from "@vueuse/core";
-import * as Logger from "tauri-plugin-log-api";
+import * as Logger from "@tauri-apps/plugin-log";
 import { toast } from "vue-sonner";
 import { ProductCreate } from "#components";
 
@@ -37,8 +37,7 @@ async function fetchProducts() {
       },
     });
     return res.data;
-  }
-  catch (err: any) {
+  } catch (err: any) {
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -57,7 +56,7 @@ const totalRows = computed<number>(() => productsData.value?.count ?? 0);
 provide("count", totalRows);
 provide(
   "itemsPerPage",
-  queryParams.value.limit ? Number(queryParams.value.limit) : LIMIT,
+  queryParams.value.limit ? Number(queryParams.value.limit) : LIMIT
 );
 
 const debouncedSearch = useDebounceFn(() => {

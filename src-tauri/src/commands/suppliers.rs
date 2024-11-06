@@ -3,12 +3,11 @@ use tauri::State;
 
 use service::{ListArgs, MutationsService, NewSupplier, QueriesService, Supplier};
 
-use crate::jobs::{ImageProcessorJob, EntityEnum};
+use crate::jobs::{EntityEnum, ImageProcessorJob};
 
 use crate::AppState;
 
-
-use super::{Fail, Seccess, SResult};
+use super::{Fail, SResult, Seccess};
 
 #[tauri::command]
 pub async fn list_suppliers(state: State<'_, AppState>, args: ListArgs) -> SResult<Value> {
@@ -19,12 +18,10 @@ pub async fn list_suppliers(state: State<'_, AppState>, args: ListArgs) -> SResu
             message: None,
             data: Some(res),
         }),
-        Err(err) => {
-            Err(Fail {
-                error: Some(err.to_string()),
-                message: None,
-            })
-        }
+        Err(err) => Err(Fail {
+            error: Some(err.to_string()),
+            message: None,
+        }),
     }
 }
 
@@ -37,12 +34,10 @@ pub async fn search_suppliers(state: State<'_, AppState>, search: String) -> SRe
             message: None,
             data: Some(res),
         }),
-        Err(err) => {
-            Err(Fail {
-                error: Some(err.to_string()),
-                message: None,
-            })
-        }
+        Err(err) => Err(Fail {
+            error: Some(err.to_string()),
+            message: None,
+        }),
     }
 }
 
@@ -57,9 +52,13 @@ pub async fn create_supplier(state: State<'_, AppState>, supplier: NewSupplier) 
                     let job = ImageProcessorJob {
                         id: id.clone(),
                         entity: EntityEnum::SUPPLIER,
-                        data
+                        data,
                     };
-                    state.job_storage.push_job(job).await.expect("error pushing the job");
+                    state
+                        .job_storage
+                        .push_job(job)
+                        .await
+                        .expect("error pushing the job");
                 }
                 None => {}
             }
@@ -68,13 +67,11 @@ pub async fn create_supplier(state: State<'_, AppState>, supplier: NewSupplier) 
                 message: Option::Some(String::from("supplier created successfully")),
                 data: Some(id),
             })
-        },
-        Err(err) => {
-            Err(Fail {
-                error: Some(err.to_string()),
-                message: None,
-            })
         }
+        Err(err) => Err(Fail {
+            error: Some(err.to_string()),
+            message: None,
+        }),
     }
 }
 
@@ -87,12 +84,10 @@ pub async fn delete_supplier(state: State<'_, AppState>, id: String) -> SResult<
             message: None,
             data: Some(res),
         }),
-        Err(err) => {
-            Err(Fail {
-                error: Some(err.to_string()),
-                message: None,
-            })
-        }
+        Err(err) => Err(Fail {
+            error: Some(err.to_string()),
+            message: None,
+        }),
     }
 }
 
@@ -105,11 +100,9 @@ pub async fn update_supplier(state: State<'_, AppState>, supplier: Supplier) -> 
             message: Option::Some(String::from("update suppliers success")),
             data: None,
         }),
-        Err(err) => {
-            Err(Fail {
-                error: Some(err.to_string()),
-                message: None,
-            })
-        }
+        Err(err) => Err(Fail {
+            error: Some(err.to_string()),
+            message: None,
+        }),
     }
 }

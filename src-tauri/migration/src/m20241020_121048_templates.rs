@@ -11,8 +11,18 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Templates::Table)
                     .if_not_exists()
-                    .col(ColumnDef::new(Templates::Id).string().not_null().primary_key())
-                    .col(ColumnDef::new(Templates::ValuesJson).string().not_null().default("{}"))
+                    .col(
+                        ColumnDef::new(Templates::Id)
+                            .string()
+                            .not_null()
+                            .primary_key(),
+                    )
+                    .col(
+                        ColumnDef::new(Templates::ValuesJson)
+                            .string()
+                            .not_null()
+                            .default("{}"),
+                    )
                     .col(
                         ColumnDef::new(Templates::CreatedAt)
                             .date_time()

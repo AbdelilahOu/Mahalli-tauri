@@ -1,4 +1,5 @@
-use service::sea_orm::{DatabaseConnection,Database};
+use service::sea_orm::{Database, DatabaseConnection};
+use dirs;
 
 #[cfg(not(debug_assertions))]
 use std::fs;
@@ -16,7 +17,7 @@ pub async fn establish_connection() -> DatabaseConnection {
     let db_url = env::var("DATABASE_URL").unwrap();
 
     #[cfg(not(debug_assertions))]
-    let home_dir = match tauri::api::path::data_dir() {
+    let home_dir = match dirs::data_dir() {
         Some(val) => val,
         None => panic!("Could not get home directory"),
     };
