@@ -7,6 +7,7 @@ import {
   PackagePlus,
   Trash2,
 } from "lucide-vue-next";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { InventoryUpdate, ProductDelete, ProductUpdate } from "#components";
 
 defineProps<{ products: ProductT[] }>();
@@ -70,7 +71,10 @@ function updateProductInventory(id: string, name: string) {
         >
           <TableCell class="p-2 flex justify-center">
             <Avatar>
-              <AvatarImage :src="product.image ?? ''" />
+              <AvatarImage
+                v-if="product.image"
+                :src="convertFileSrc(product.image)"
+              />
               <AvatarFallback class="text-xs">
                 {{ product.name.substring(0, 5) }}
               </AvatarFallback>
