@@ -34,3 +34,14 @@ pub struct Product {
     pub min_quantity: f64,
     pub image: Option<String>,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateProduct {
+    pub id: String,
+    pub name: Option<String>,
+    pub description: Option<String>,
+    pub selling_price: Option<f64>,
+    pub purchase_price: Option<f64>,
+    pub min_quantity: Option<f64>,
+    pub image: Option<String>,
+}

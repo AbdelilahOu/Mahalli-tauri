@@ -7,13 +7,11 @@ license = ""
 repository = "https://github.com/AbdelilahOu/Mahalli-desktop"
 default-run = "mahalli"
 edition = "2021"
-rust-version = "1.59"
+rust-version = "1.82"
 build = "src/build.rs"
 
 [workspace]
 members = [".", "service", "entity", "migration"]
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
 tauri-build = { version = "1.5.1", features = [] }
@@ -30,6 +28,12 @@ tauri = { version = "1.5.4", features = [
   "process-command-api",
   "protocol-all",
 ] }
+apalis = { version = "0.5", features = [
+  "sqlite",
+  "limit",
+  "tracing",
+  "tokio-comp",
+] }
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tokio = { version = "1", features = ["full"] }
 libsqlite3-sys = { version = "^0", features = ["bundled"] }
@@ -38,6 +42,13 @@ log = "^0.4"
 migration = { path = "./migration" }
 service = { path = "./service" }
 entity = { path = "./entity" }
+image = "0.25.5"
+
+
+[dependencies.sqlx]
+version = "0.7.0"
+default-features = false
+features = ["sqlite"]
 
 [features]
 # by default Tauri runs in production mode

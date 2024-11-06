@@ -3,7 +3,10 @@ use tauri::State;
 
 use service::{ListArgs, MutationsService, NewSupplier, QueriesService, Supplier};
 
+use crate::jobs::{ImageProcessorJob, EntityEnum};
+
 use crate::AppState;
+
 
 use super::{Fail, Seccess, SResult};
 
@@ -46,12 +49,26 @@ pub async fn search_suppliers(state: State<'_, AppState>, search: String) -> SRe
 #[tauri::command]
 pub async fn create_supplier(state: State<'_, AppState>, supplier: NewSupplier) -> SResult<String> {
     let _ = state.db_conn;
+    let image = supplier.image.clone();
     match MutationsService::create_supplier(&state.db_conn, supplier).await {
-        Ok(id) => Ok(Seccess::<String> {
-            error: None,
-            message: Option::Some(String::from("supplier created successfully")),
-            data: Some(id),
-        }),
+        Ok(id) => {
+            match image {
+                Some(data) => {
+                    let job = ImageProcessorJob {
+                        id: id.clone(),
+                        entity: EntityEnum::SUPPLIER,
+                        data
+                    };
+                    state.job_storage.push_job(job).await.expect("error pushing the job");
+                }
+                None => {}
+            }
+            Ok(Seccess::<String> {
+                error: None,
+                message: Option::Some(String::from("supplier created successfully")),
+                data: Some(id),
+            })
+        },
         Err(err) => {
             Err(Fail {
                 error: Some(err.to_string()),

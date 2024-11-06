@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { FilePenLine, GripHorizontal, Trash2 } from "lucide-vue-next";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { SupplierDelete, SupplierUpdate } from "#components";
 
 defineProps<{
@@ -52,7 +53,10 @@ function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
         >
           <TableCell class="p-2 flex justify-center">
             <Avatar>
-              <AvatarImage :src="supplier.image ?? ''" />
+              <AvatarImage
+                v-if="supplier.image"
+                :src="convertFileSrc(supplier.image)"
+              />
               <AvatarFallback class="text-xs">
                 {{ supplier.full_name.substring(0, 5) }}
               </AvatarFallback>

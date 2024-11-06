@@ -29,3 +29,14 @@ pub struct Supplier {
     pub email: Option<String>,
     pub image: Option<String>,
 }
+
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateSupplier {
+    pub id: String,
+    pub full_name: Option<String>,
+    pub address: Option<String>,
+    pub phone_number: Option<String>,
+    pub email: Option<String>,
+    pub image: Option<String>,
+}

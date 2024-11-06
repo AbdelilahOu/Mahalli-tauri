@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { FilePenLine, GripHorizontal, Trash2 } from "lucide-vue-next";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { ClientDelete, ClientUpdate } from "#components";
 
 defineProps<{
@@ -53,7 +54,10 @@ function toggleThisClient(client: ClientT, name: "delete" | "update") {
         >
           <TableCell class="p-2 flex justify-center">
             <Avatar>
-              <AvatarImage :src="client.image ?? ''" />
+              <AvatarImage
+                v-if="client.image"
+                :src="convertFileSrc(client.image)"
+              />
               <AvatarFallback class="text-xs">
                 {{ client.full_name.substring(0, 5) }}
               </AvatarFallback>
