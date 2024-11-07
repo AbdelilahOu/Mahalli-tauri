@@ -125,7 +125,9 @@ const onSubmit = form.handleSubmit((values) => {
                 :placeholder="t('fields.purchase-price')"
                 v-bind="componentField"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
             </FormControl>
           </FormItem>
@@ -139,7 +141,9 @@ const onSubmit = form.handleSubmit((values) => {
                 :placeholder="t('fields.selling-price')"
                 v-bind="componentField"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
             </FormControl>
           </FormItem>

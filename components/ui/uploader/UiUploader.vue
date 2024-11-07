@@ -54,7 +54,8 @@ function validateFile(file: File): boolean {
 }
 
 async function processFile(file: File | null) {
-  if (!file) return;
+  if (!file) 
+    return;
 
   try {
     if (!validateFile(file)) {
@@ -108,7 +109,7 @@ async function handleOpenDialog() {
     if (filePath) {
       const file = new File(
         [(await getFileBytes(filePath))!],
-        filePath.split(sep).at(-1)!
+        filePath.split(sep()).at(-1)!
       );
       await processFile(file);
     }
@@ -160,7 +161,7 @@ function onDragOver(e: DragEvent) {
       :src="`data:image/png;base64,${selectedFile}`"
       class="absolute top-0 w-full h-full object-cover rounded-md border border-gray-300 shadow-sm transition-all duration-200"
       alt="Selected image preview"
-    />
+    >
 
     <div
       v-else
@@ -170,8 +171,8 @@ function onDragOver(e: DragEvent) {
         isOverDropZone || dragCounter > 0
           ? 'border-sky-500 bg-sky-50'
           : isFileSelected
-          ? 'border-green-500 bg-green-50'
-          : 'border-gray-300 bg-white hover:border-sky-400 hover:bg-sky-50',
+            ? 'border-green-500 bg-green-50'
+            : 'border-gray-300 bg-white hover:border-sky-400 hover:bg-sky-50',
       ]"
       @dragenter="onDragEnter"
       @dragleave="onDragLeave"
@@ -184,8 +185,8 @@ function onDragOver(e: DragEvent) {
           isOverDropZone || dragCounter > 0
             ? 'text-sky-500'
             : isFileSelected
-            ? 'text-green-500'
-            : 'text-gray-400 hover:text-sky-500',
+              ? 'text-green-500'
+              : 'text-gray-400 hover:text-sky-500',
         ]"
         @click="handleOpenDialog"
       >

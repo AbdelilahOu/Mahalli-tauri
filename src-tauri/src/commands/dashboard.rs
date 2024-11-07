@@ -88,9 +88,9 @@ pub async fn list_status_count(state: State<'_, AppState>) -> SResult<Value> {
 }
 
 #[tauri::command]
-pub async fn list_financial_metrices(state: State<'_, AppState>) -> SResult<Value> {
+pub async fn list_financial_metrics(state: State<'_, AppState>) -> SResult<Value> {
     let _ = state.db_conn;
-    match QueriesService::list_financial_metrices(&state.db_conn).await {
+    match QueriesService::list_financial_metrics(&state.db_conn).await {
         Ok(res) => Ok(Seccess {
             error: None,
             message: None,

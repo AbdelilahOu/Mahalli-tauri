@@ -41,7 +41,7 @@ pub struct SelectExpenses {
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
-pub struct FiniacialMetrices {
+pub struct Finiacialmetrics {
     pub current_revenue: f64,
     pub last_month_revenue: f64,
     pub current_expenses: f64,

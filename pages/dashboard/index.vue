@@ -68,7 +68,8 @@ const { data: bestProducts } = useAsyncData(async () => {
 const { data: statusCounts } = useAsyncData(async () => {
   try {
     const res = await invoke<Res<any>>("list_status_count");
-    if (!res?.data) return { orders: {}, invoices: {} };
+    if (!res?.data) 
+      return { orders: {}, invoices: {} };
 
     const result: {
       orders: Record<string, number>;
@@ -99,7 +100,7 @@ const { data: statusCounts } = useAsyncData(async () => {
 
 const { data: financials } = useAsyncData(async () => {
   try {
-    const res = await invoke<Res<any>>("list_financial_metrices");
+    const res = await invoke<Res<any>>("list_financial_metrics");
     return res.data;
   } catch (err: any) {
     handleError(err, "STATS EXPENSES");

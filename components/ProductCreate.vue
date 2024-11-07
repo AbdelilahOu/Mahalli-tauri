@@ -140,7 +140,9 @@ function cleanImage() {
                 :placeholder="t('fields.purchase-price')"
                 v-bind="componentField"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
             </FormControl>
           </FormItem>
@@ -154,7 +156,9 @@ function cleanImage() {
                 :placeholder="t('fields.selling-price')"
                 v-bind="componentField"
               >
-                <template #unite> DH </template>
+                <template #unite>
+                  DH
+                </template>
               </Input>
             </FormControl>
           </FormItem>

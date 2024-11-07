@@ -259,7 +259,9 @@ function deleteOrderItem(index: number) {
                           type="number"
                           v-bind="componentField"
                         >
-                          <template #unite> DH </template>
+                          <template #unite>
+                            DH
+                          </template>
                         </Input>
                       </FormControl>
                     </FormItem>

@@ -109,7 +109,7 @@ const openCreateQuoteModal = () => modal.open(QuoteCreate, {});
                 :class="
                   cn(
                     'w-full justify-start text-left font-normal',
-                    !created_at && 'text-muted-foreground'
+                    !created_at && 'text-muted-foreground',
                   )
                 "
               >

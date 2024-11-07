@@ -1889,7 +1889,7 @@ impl QueriesService {
             "invoices": invoice_res,
         }))
     }
-    pub async fn list_financial_metrices(db: &DbConn) -> Result<JsonValue, DbErr> {
+    pub async fn list_financial_metrics(db: &DbConn) -> Result<JsonValue, DbErr> {
         let (sql, values) = Query::select().expr_as(Expr::expr(
             Expr::expr(SimpleExpr::SubQuery(
                 None,
@@ -1968,7 +1968,7 @@ impl QueriesService {
             ))
         ), Alias::new("last_month_expenses")).to_owned().build(SqliteQueryBuilder);
 
-        let res: FiniacialMetrices = FiniacialMetrices::find_by_statement(
+        let res: Finiacialmetrics = Finiacialmetrics::find_by_statement(
             Statement::from_sql_and_values(DbBackend::Sqlite, sql, values),
         )
         .one(db)
