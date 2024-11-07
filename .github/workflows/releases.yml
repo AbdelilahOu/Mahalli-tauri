@@ -39,7 +39,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-20.04]
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
@@ -54,21 +54,15 @@ jobs:
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-20.04'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libgtk-3-dev libglib2.0-dev build-essential libssl-dev libxcb-composite0-dev libx11-dev
-          # Find and set PKG_CONFIG_PATH
-          echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig" >> $GITHUB_ENV
-          # Verify glib-2.0.pc location
-          find /usr -name "glib-2.0.pc" 2>/dev/null || echo "glib-2.0.pc not found"
-          # Print pkg-config version and status
-          pkg-config --version
-          pkg-config --list-all | grep glib-2.0 || echo "glib-2.0 not found in pkg-config"
+           sudo apt-get update
+        sudo apt-get install -y libgtk-3-dev libglib2.0-dev pkg-config libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+        export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
+      
       - name: install frontend dependencies
         run: bun install
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
         with:
           releaseId: ${{ needs.create-release.outputs.release_id }}
   publish-release:
