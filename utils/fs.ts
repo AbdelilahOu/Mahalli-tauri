@@ -1,7 +1,7 @@
 import {
   BaseDirectory,
-  mkdir,
   exists,
+  mkdir,
   readFile,
   writeFile,
 } from "@tauri-apps/plugin-fs";
@@ -48,13 +48,14 @@ export async function uploadFileToDataDir(
     });
     return path;
   } catch (err: any) {
-    return null;
     Logger.error(`ERROR UPLOADING FILE TO APP DATA DIR : ${err}`);
+    return null;
   }
 }
 
 export async function getFileBytes(path?: string) {
-  if (!path) return null;
+  if (!path) 
+    return null;
   try {
     const content = await readFile(path, {
       baseDir: BaseDirectory.Home,

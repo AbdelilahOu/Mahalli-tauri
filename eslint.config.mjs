@@ -12,6 +12,9 @@ export default antfu(
   {
     rules: {
       "node/prefer-global/process": "off",
+      "style/no-trailing-spaces": "off",
+      "style/brace-style": "off",
+      "style/comma-dangle": "off",
     },
   },
 );

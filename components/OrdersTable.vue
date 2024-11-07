@@ -202,7 +202,7 @@ async function createInvoiceFromOrder(id: string) {
                   :class="
                     cn(
                       'cursor-pointer whitespace-nowrap',
-                      STATUS_COLORS[order.status]
+                      STATUS_COLORS[order.status],
                     )
                   "
                 >

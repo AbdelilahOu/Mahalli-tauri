@@ -7,7 +7,7 @@
   "author": "abdelilah ouaadouch",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --port 3000",
+    "dev": "nuxt dev --port 4727",
     "tauri": "tauri",
     "generate": "nuxt generate",
     "preview": "nuxt preview",

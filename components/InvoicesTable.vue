@@ -105,8 +105,8 @@ async function updateInvoiceStatus(id: string, status: string) {
           v-fade="index"
           :class="{
             'animate-highlight-row':
-              invoice.id === $route.query.id &&
-              $route.query.highlight === 'true',
+              invoice.id === $route.query.id
+              && $route.query.highlight === 'true',
           }"
         >
           <TableCell class="p-2 text-nowrap font-medium">
