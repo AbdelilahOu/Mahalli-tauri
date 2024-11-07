@@ -1,40 +1,25 @@
 use service::sea_orm::{Database, DatabaseConnection};
-
-#[cfg(not(debug_assertions))]
-use dirs;
-
-#[cfg(not(debug_assertions))]
-use std::fs;
-
-#[cfg(debug_assertions)]
-use dotenvy::dotenv;
-#[cfg(debug_assertions)]
 use std::env;
 
 pub async fn establish_connection() -> DatabaseConnection {
-    #[cfg(debug_assertions)]
-    dotenv().ok();
-
-    #[cfg(debug_assertions)]
-    let db_url = env::var("DATABASE_URL").unwrap();
-
-    #[cfg(not(debug_assertions))]
-    let home_dir = match dirs::data_dir() {
-        Some(val) => val,
-        None => panic!("Could not get home directory"),
-    };
-
-    #[cfg(not(debug_assertions))]
-    let data_dir = home_dir.join(".mahalli/data");
-    #[cfg(not(debug_assertions))]
-    if let Err(_) = fs::metadata(&data_dir) {
-        fs::create_dir_all(&data_dir).expect("Could not create data directory");
-    }
-
-    #[cfg(not(debug_assertions))]
-    let db_url = "sqlite://".to_string() + data_dir.to_str().unwrap() + "/db.sqlite?mode=rwc";
-
+    let db_url = get_database_url();
     Database::connect(&db_url)
         .await
         .expect(&format!("Error connecting to {}", &db_url))
+}
+
+fn get_database_url() -> String {
+    #[cfg(debug_assertions)]
+    {
+        dotenvy::dotenv().ok();
+        env::var("DATABASE_URL").unwrap()
+    }
+
+    #[cfg(not(debug_assertions))]
+    {
+        let home_dir = dirs::data_dir().unwrap_or_else(|| panic!("Could not get home directory"));
+        let data_dir = home_dir.join(".mahalli/data");
+        std::fs::create_dir_all(&data_dir).unwrap_or_else(|_| panic!("Could not create data directory"));
+        format!("sqlite://{}db.sqlite?mode=rwc", data_dir.to_string_lossy())
+    }
 }
