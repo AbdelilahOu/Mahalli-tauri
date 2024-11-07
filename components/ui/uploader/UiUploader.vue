@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { open } from "@tauri-apps/plugin-dialog";
 import { downloadDir, pictureDir, sep } from "@tauri-apps/api/path";
-import { useDropZone } from "@vueuse/core";
+import { TauriEvent, type UnlistenFn, listen } from "@tauri-apps/api/event";
 import { FileCheck, Upload, X } from "lucide-vue-next";
 import * as Logger from "@tauri-apps/plugin-log";
 import { toast } from "vue-sonner";
+import { convertFileSrc } from "@tauri-apps/api/core";
 
 interface Props {
   extensions: string[];
@@ -18,6 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emits = defineEmits<{
   saveBytes: [payload: Uint8Array, name: string];
+  savePath: [payload: string];
   clear: [];
 }>();
 
@@ -25,11 +27,42 @@ const { t } = useI18n();
 
 const dropZone = ref<HTMLDivElement>();
 
+const isOverDropZone = ref(false);
 const isFileSelected = ref(false);
 const selectedFile = ref<string | null>();
 
 const fileName = ref("");
 const dragCounter = ref(0);
+
+const unListenFns: UnlistenFn[] = [];
+
+onMounted(async () => {
+  const unListenDrop = await listen(TauriEvent.DRAG_DROP, (e: any) => {
+    try {
+      const filePath = e.payload.paths[0];
+      isOverDropZone.value = false;
+      processFile(filePath);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  const unListenDragLeave = await listen(TauriEvent.DRAG_LEAVE, (e: any) => {
+    isOverDropZone.value = false;
+    dragCounter.value--;
+  });
+  const unListenDragEnter = await listen(TauriEvent.DRAG_ENTER, (e: any) => {
+    isOverDropZone.value = true;
+    dragCounter.value++;
+  });
+
+  unListenFns.push(unListenDragLeave, unListenDragEnter, unListenDrop);
+});
+
+onBeforeUnmount(() => {
+  for (const unListen of unListenFns) {
+    unListen();
+  }
+});
 
 function validateFile(file: File): boolean {
   if (file.size > props.maxFileSize) {
@@ -52,29 +85,22 @@ function validateFile(file: File): boolean {
   return true;
 }
 
-async function processFile(file: File | null) {
-  if (!file) 
-    return;
-
+async function processFile(filePath: string) {
+  const file = new File(
+    [(await getFileBytes(filePath))!],
+    filePath.split(sep()).at(-1)!
+  );
   try {
     if (!validateFile(file)) {
       return;
     }
-    fileName.value = file.name;
-    const fileBytes = await getBytesArray(file);
-    emits("saveBytes", fileBytes, file.name);
-
     if (props.name === "Image") {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const base64 = e.target?.result as string;
-        if (base64) {
-          const base64Data = base64.split(",")[1];
-          selectedFile.value = base64Data;
-        }
-      };
-      reader.readAsDataURL(file);
+      emits("savePath", filePath);
+      selectedFile.value = convertFileSrc(filePath);
     } else {
+      fileName.value = file.name;
+      const fileBytes = await getBytesArray(file);
+      emits("saveBytes", fileBytes, file.name);
       isFileSelected.value = true;
     }
   } catch (err: any) {
@@ -83,17 +109,8 @@ async function processFile(file: File | null) {
       closeButton: true,
     });
     Logger.error(`ERROR Processing File: ${err}`);
-  } finally {
   }
 }
-
-async function onDrop(files: File[] | null) {
-  if (files?.length) {
-    await processFile(files[0]);
-  }
-}
-
-const { isOverDropZone } = useDropZone(dropZone, onDrop);
 
 async function handleOpenDialog() {
   try {
@@ -105,11 +122,7 @@ async function handleOpenDialog() {
     })) as string | null;
 
     if (filePath) {
-      const file = new File(
-        [(await getFileBytes(filePath))!],
-        filePath.split(sep()).at(-1)!
-      );
-      await processFile(file);
+      await processFile(filePath);
     }
   } catch (err: any) {
     toast.error(t("notifications.error.title"), {
@@ -124,20 +137,6 @@ function clearFile() {
   selectedFile.value = null;
   isFileSelected.value = false;
   emits("clear");
-}
-
-function onDragEnter(e: DragEvent) {
-  e.preventDefault();
-  dragCounter.value++;
-}
-
-function onDragLeave(e: DragEvent) {
-  e.preventDefault();
-  dragCounter.value--;
-}
-
-function onDragOver(e: DragEvent) {
-  e.preventDefault();
 }
 </script>
 
@@ -156,7 +155,7 @@ function onDragOver(e: DragEvent) {
 
     <img
       v-if="name === 'Image' && selectedFile"
-      :src="`data:image/png;base64,${selectedFile}`"
+      :src="`${selectedFile}`"
       class="absolute top-0 w-full h-full object-cover rounded-md border border-gray-300 shadow-sm transition-all duration-200"
       alt="Selected image preview"
     >
@@ -172,9 +171,6 @@ function onDragOver(e: DragEvent) {
             ? 'border-green-500 bg-green-50'
             : 'border-gray-300 bg-white hover:border-sky-400 hover:bg-sky-50',
       ]"
-      @dragenter="onDragEnter"
-      @dragleave="onDragLeave"
-      @dragover="onDragOver"
     >
       <button
         type="button"
@@ -204,7 +200,7 @@ function onDragOver(e: DragEvent) {
             :size="30"
             class="transition-transform duration-200 hover:scale-110 m-auto"
           />
-          <p>{{ fileName }}</p>
+          <span>{{ fileName }}</span>
         </span>
       </button>
     </div>
