@@ -4,8 +4,8 @@ use std::path::Path;
 
 #[derive(Debug)]
 pub enum ImageProcessError {
-    IoError(std::io::Error),
-    ImageError(ImageError),
+    IoError(#[allow(dead_code)] std::io::Error),
+    ImageError(#[allow(dead_code)] ImageError),
 }
 
 impl From<std::io::Error> for ImageProcessError {
