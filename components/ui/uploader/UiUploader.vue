@@ -17,7 +17,6 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emits = defineEmits<{
-  saveBase64: [payload: string];
   saveBytes: [payload: Uint8Array, name: string];
   clear: [];
 }>();
@@ -71,7 +70,6 @@ async function processFile(file: File | null) {
         const base64 = e.target?.result as string;
         if (base64) {
           const base64Data = base64.split(",")[1];
-          emits("saveBase64", base64Data);
           selectedFile.value = base64Data;
         }
       };
