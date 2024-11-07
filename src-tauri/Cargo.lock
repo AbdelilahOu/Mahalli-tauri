@@ -3092,7 +3092,7 @@ dependencies = [
 
 [[package]]
 name = "mahalli"
-version = "1.9.8"
+version = "1.9.9"
 dependencies = [
  "apalis",
  "dirs",
