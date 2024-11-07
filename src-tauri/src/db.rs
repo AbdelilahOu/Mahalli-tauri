@@ -1,4 +1,6 @@
 use service::sea_orm::{Database, DatabaseConnection};
+
+#[cfg(not(debug_assertions))]
 use dirs;
 
 #[cfg(not(debug_assertions))]
