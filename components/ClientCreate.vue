@@ -28,33 +28,21 @@ const form = useForm({
   validationSchema: clientSchema,
 });
 
-const image = reactive({
-  bytes: null as Uint8Array | null,
-  name: null as string | null,
-});
+const image = ref<string | null>(null);
 
 async function createNewClient(client: ClientT) {
   try {
-    let ImagePath: null | string = null;
-    if (image.bytes && image.name) {
-      const uploadedImagePath = await uploadFileToDataDir(
-        "temp",
-        image.bytes,
-        image.name
-      );
-      ImagePath = uploadedImagePath;
-    }
     await invoke<Res<null>>("create_client", {
       client: {
         ...client,
-        image: ImagePath,
+        image: image.value,
       },
     });
     //
     Logger.info(
       `CREATE CLIENT: ${JSON.stringify({
         ...client,
-        image: ImagePath,
+        image,
       })}`
     );
     //
@@ -69,6 +57,7 @@ async function createNewClient(client: ClientT) {
       refresh: `refresh-create-${Math.random() * 9999}`,
     });
   } catch (err: any) {
+    console.log(err);
     toast.error(t("notifications.error.title"), {
       description: t("notifications.error.description"),
       closeButton: true,
@@ -83,14 +72,12 @@ const onSubmit = form.handleSubmit((values) => {
   createNewClient(values);
 });
 
-function setImage(bytes: Uint8Array, name: string) {
-  image.bytes = bytes;
-  image.name = name;
+function setImage(imagePath: string | null) {
+  image.value = imagePath;
 }
 
 function cleanImage() {
-  image.bytes = null;
-  image.name = null;
+  image.value = null;
 }
 </script>
 
@@ -105,7 +92,7 @@ function cleanImage() {
           name="Image"
           :extensions="['png', 'jpeg', 'webp', 'jpg']"
           @clear="cleanImage"
-          @save-bytes="setImage"
+          @save-path="setImage"
         />
         <FormField v-slot="{ componentField }" name="full_name">
           <FormItem>

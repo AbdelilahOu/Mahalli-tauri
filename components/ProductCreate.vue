@@ -31,22 +31,10 @@ const form = useForm({
   validationSchema: productSchema,
 });
 
-const image = reactive({
-  bytes: null as Uint8Array | null,
-  name: null as string | null,
-});
+const image = ref<string | null>(null);
 
 async function createNewProduct(product: ProductT) {
   try {
-    let ImagePath: null | string = null;
-    if (image.bytes && image.name) {
-      const uploadedImagePath = await uploadFileToDataDir(
-        "temp",
-        image.bytes,
-        image.name
-      );
-      ImagePath = uploadedImagePath;
-    }
     const createRes = await invoke<Res<string>>("create_product", {
       product: {
         name: product.name,
@@ -54,7 +42,7 @@ async function createNewProduct(product: ProductT) {
         purchase_price: Number(product.purchase_price),
         description: product.description,
         min_quantity: product.min_quantity,
-        image: ImagePath,
+        image: image.value,
       },
     });
     await invoke<Res<string>>("create_inventory", {
@@ -67,8 +55,7 @@ async function createNewProduct(product: ProductT) {
     Logger.info(
       `CREATE PRODUCT: ${JSON.stringify({
         ...product,
-        image: ImagePath,
-
+        image: image.value,
         quantity: quantity.value,
       })}`
     );
@@ -97,14 +84,12 @@ const onSubmit = form.handleSubmit((values) => {
   createNewProduct(values);
 });
 
-function setImage(bytes: Uint8Array, name: string) {
-  image.bytes = bytes;
-  image.name = name;
+function setImage(imagePath: string | null) {
+  image.value = imagePath;
 }
 
 function cleanImage() {
-  image.bytes = null;
-  image.name = null;
+  image.value = null;
 }
 </script>
 
@@ -121,7 +106,7 @@ function cleanImage() {
           name="Image"
           :extensions="['png', 'jpeg', 'webp', 'jpg']"
           @clear="cleanImage"
-          @save-bytes="setImage"
+          @save-path="setImage"
         />
         <FormField v-slot="{ componentField }" name="name">
           <FormItem>

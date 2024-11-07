@@ -28,33 +28,21 @@ const form = useForm({
   validationSchema: supplierSchema,
 });
 
-const image = reactive({
-  bytes: null as Uint8Array | null,
-  name: null as string | null,
-});
+const image = ref<string | null>(null);
 
 async function createNewSupplier(supplier: SupplierT) {
   try {
-    let ImagePath: null | string = null;
-    if (image.bytes && image.name) {
-      const uploadedImagePath = await uploadFileToDataDir(
-        "temp",
-        image.bytes,
-        image.name
-      );
-      ImagePath = uploadedImagePath;
-    }
     await invoke<Res<null>>("create_supplier", {
       supplier: {
         ...supplier,
-        image: ImagePath,
+        image: image.value,
       },
     });
     //
     Logger.info(
       `CREATE SUPPLIER: ${JSON.stringify({
         ...supplier,
-        image: ImagePath,
+        image: image.value,
       })}`
     );
     //
@@ -85,14 +73,12 @@ const onSubmit = form.handleSubmit((values) => {
   createNewSupplier(values);
 });
 
-function setImage(bytes: Uint8Array, name: string) {
-  image.bytes = bytes;
-  image.name = name;
+function setImage(imagePath: string | null) {
+  image.value = imagePath;
 }
 
 function cleanImage() {
-  image.bytes = null;
-  image.name = null;
+  image.value = null;
 }
 </script>
 
@@ -107,7 +93,7 @@ function cleanImage() {
           name="Image"
           :extensions="['png', 'jpeg', 'webp', 'jpg']"
           @clear="cleanImage"
-          @save-bytes="setImage"
+          @save-path="setImage"
         />
         <FormField v-slot="{ componentField }" name="full_name">
           <FormItem>
