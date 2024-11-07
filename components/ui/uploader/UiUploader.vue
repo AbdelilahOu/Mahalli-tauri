@@ -41,9 +41,10 @@ onMounted(async () => {
     try {
       const filePath = e.payload.paths[0];
       isOverDropZone.value = false;
+      dragCounter.value--;
       processFile(filePath);
     } catch (error) {
-      console.log(error);
+      Logger.error(`ERROR FILE DROP : ${error}`);
     }
   });
   const unListenDragLeave = await listen(TauriEvent.DRAG_LEAVE, (e: any) => {
@@ -81,26 +82,20 @@ function validateFile(file: File): boolean {
     });
     return false;
   }
-
   return true;
 }
 
 async function processFile(filePath: string) {
-  const file = new File(
-    [(await getFileBytes(filePath))!],
-    filePath.split(sep()).at(-1)!
-  );
+  fileName.value = filePath.split(sep()).at(-1)!;
+  const file = new File([(await getFileBytes(filePath))!], fileName.value);
   try {
     if (!validateFile(file)) {
       return;
     }
+    emits("savePath", filePath);
     if (props.name === "Image") {
-      emits("savePath", filePath);
       selectedFile.value = convertFileSrc(filePath);
     } else {
-      fileName.value = file.name;
-      const fileBytes = await getBytesArray(file);
-      emits("saveBytes", fileBytes, file.name);
       isFileSelected.value = true;
     }
   } catch (err: any) {
@@ -108,7 +103,7 @@ async function processFile(filePath: string) {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    Logger.error(`ERROR Processing File: ${err}`);
+    Logger.error(`ERROR PROSSESING FILE: ${err}`);
   }
 }
 
@@ -129,13 +124,14 @@ async function handleOpenDialog() {
       description: t("notifications.error.description"),
       closeButton: true,
     });
-    Logger.error(`ERROR Opening Dialog: ${err}`);
+    Logger.error(`ERROR OPENING DIALOG: ${err}`);
   }
 }
 
 function clearFile() {
   selectedFile.value = null;
   isFileSelected.value = false;
+  fileName.value = "";
   emits("clear");
 }
 </script>

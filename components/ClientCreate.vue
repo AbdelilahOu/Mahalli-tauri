@@ -42,7 +42,7 @@ async function createNewClient(client: ClientT) {
     Logger.info(
       `CREATE CLIENT: ${JSON.stringify({
         ...client,
-        image,
+        image: image.value,
       })}`
     );
     //

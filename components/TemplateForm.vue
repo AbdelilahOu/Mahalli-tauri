@@ -19,10 +19,7 @@ const emits = defineEmits<{
 const { t } = useI18n();
 
 const ConfigSchema = z.object({
-  template: z.object({
-    name: z.string().nullable(),
-    bytes: z.instanceof(Uint8Array).nullable(),
-  }),
+  template: z.string().nullable(),
   marginTop: z.number().min(0),
   marginBottom: z.number().min(0),
   vat: z.number().min(0).max(100),
@@ -53,6 +50,7 @@ const { handleSubmit, values, setFieldValue } = useForm<ConfigSchemaT>({
   validationSchema: configSchema,
   initialValues: {
     ...props.config,
+    template: null,
     documentValues: {
       status: props.document.status,
       client: props.document.client,
@@ -60,14 +58,12 @@ const { handleSubmit, values, setFieldValue } = useForm<ConfigSchemaT>({
   },
 });
 
-function handleFileBytesUpload(bytes: Uint8Array, name: string) {
-  setFieldValue("template.bytes", bytes);
-  setFieldValue("template.name", name);
+function handleFileUpload(path: string) {
+  setFieldValue("template", path);
 }
 
 function clearFileBytes() {
-  setFieldValue("template.bytes", null);
-  setFieldValue("template.name", null);
+  setFieldValue("template", null);
 }
 
 const onSubmit = handleSubmit(async (values) => {
@@ -89,7 +85,7 @@ const onSubmit = handleSubmit(async (values) => {
               <UiUploader
                 name="Pdf"
                 :extensions="['pdf']"
-                @save-bytes="handleFileBytesUpload"
+                @save-path="handleFileUpload"
                 @clear="clearFileBytes"
               />
             </FormControl>
