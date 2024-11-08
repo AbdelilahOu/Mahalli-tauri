@@ -78,7 +78,7 @@ const onSubmit = handleSubmit(async (values) => {
         <CardTitle>{{ t("fields.configuration") }}</CardTitle>
       </CardHeader>
       <CardContent>
-        <FormField name="template.name">
+        <FormField name="template">
           <FormItem>
             <FormLabel>{{ t("fields.template") }}</FormLabel>
             <FormControl>

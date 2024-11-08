@@ -47,11 +47,11 @@ onMounted(async () => {
       Logger.error(`ERROR FILE DROP : ${error}`);
     }
   });
-  const unListenDragLeave = await listen(TauriEvent.DRAG_LEAVE, (e: any) => {
+  const unListenDragLeave = await listen(TauriEvent.DRAG_LEAVE, () => {
     isOverDropZone.value = false;
     dragCounter.value--;
   });
-  const unListenDragEnter = await listen(TauriEvent.DRAG_ENTER, (e: any) => {
+  const unListenDragEnter = await listen(TauriEvent.DRAG_ENTER, () => {
     isOverDropZone.value = true;
     dragCounter.value++;
   });

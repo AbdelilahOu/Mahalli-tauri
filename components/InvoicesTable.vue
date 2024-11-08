@@ -148,7 +148,7 @@ async function updateInvoiceStatus(id: string, status: string) {
                         :key="i"
                         class="text-sm"
                       >
-                        <td class="underline">
+                        <td>
                           {{ product.name }}
                         </td>
                         <td class="text-slate-700 text-end">
