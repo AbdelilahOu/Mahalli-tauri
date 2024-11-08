@@ -2,13 +2,15 @@ name: Format Code
 
 on:
   push:
-    branches: [main]
   pull_request:
     branches: [main]
 
 jobs:
   format:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v3
@@ -40,8 +42,7 @@ jobs:
         run: cargo fmt --all
 
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "style: format code with bun lint:fix and rustfmt"
           branch: ${{ github.head_ref }}
-          file_pattern: "**/*.{js,jsx,ts,tsx,rs}"
