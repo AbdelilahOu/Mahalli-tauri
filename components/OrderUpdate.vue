@@ -132,8 +132,7 @@ async function deleteOneOrderItem(id: string) {
 }
 
 function deleteOrderItem(index: number) {
-  // @ts-ignore
-  const item = values.items[index];
+  const item = values.items![index];
   if (item?.id) {
     deleteOneOrderItem(item.id);
   }
