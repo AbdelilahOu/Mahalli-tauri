@@ -15,6 +15,7 @@ export default antfu(
       "style/no-trailing-spaces": "off",
       "style/brace-style": "off",
       "style/comma-dangle": "off",
+      "ts/no-empty-object-type": "off",
     },
-  },
+  }
 );

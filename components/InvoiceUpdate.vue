@@ -129,8 +129,7 @@ async function deleteOneInvoiceItem(id: string) {
 }
 
 function deleteInvoiceItem(index: number) {
-  // @ts-ignore
-  const item = values.items[index];
+  const item = values.items![index];
   if (item?.id) {
     deleteOneInvoiceItem(item.id);
   }

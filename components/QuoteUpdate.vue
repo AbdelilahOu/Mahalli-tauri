@@ -132,8 +132,7 @@ async function deleteOneQuoteItem(id: string) {
 }
 
 function deleteQuoteItem(index: number) {
-  // @ts-ignore
-  const item = values.items[index];
+  const item = values.items![index];
   if (item?.id) {
     deleteOneQuoteItem(item.id);
   }
