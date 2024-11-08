@@ -3,10 +3,10 @@ use std::path::Path;
 use std::sync::Arc;
 
 use apalis::{prelude::*, sqlite::SqliteStorage};
+use dirs;
 use log::warn;
 use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
-use dirs;
 
 use service::{
     sea_orm::DatabaseConnection, MutationsService, UpdateClient, UpdateProduct, UpdateSupplier,
