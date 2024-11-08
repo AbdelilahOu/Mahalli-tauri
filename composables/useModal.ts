@@ -30,29 +30,25 @@ export const modalInjectionKey: InjectionKey<ShallowRef<ModalState>>
 
 function _useModal() {
   const modalState = inject(modalInjectionKey);
-
   const isOpen = ref(false);
 
   function open<T extends Component>(
     component: T,
-    props?: Modal & ComponentProps<T>,
+    props?: Modal & ComponentProps<T>
   ) {
     if (!modalState) {
       throw new Error("useModal() is called without provider");
     }
-
     modalState.value = {
       component,
       props: props ?? {},
     };
-
     isOpen.value = true;
   }
 
   async function close() {
-    if (!modalState)
+    if (!modalState) 
       return;
-
     isOpen.value = false;
   }
 
@@ -66,12 +62,11 @@ function _useModal() {
   /**
    * Allows updating the modal props
    */
-  function patch<T extends Component = {}>(
-    props: Partial<Modal & ComponentProps<T>>,
+  function patch<T extends Component = Component>(
+    props: Partial<Modal & ComponentProps<T>>
   ) {
-    if (!modalState)
+    if (!modalState) 
       return;
-
     modalState.value = {
       ...modalState.value,
       props: {

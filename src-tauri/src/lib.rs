@@ -63,7 +63,7 @@ pub async fn run() {
                 ))
                 .target(tauri_plugin_log::Target::new(
                     tauri_plugin_log::TargetKind::LogDir {
-                      file_name: Some("logs".to_string()),
+                        file_name: Some("logs".to_string()),
                     },
                 ))
                 .level_for("tauri", log::LevelFilter::Error)

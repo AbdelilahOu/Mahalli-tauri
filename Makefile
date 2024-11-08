@@ -20,6 +20,7 @@ check:
 	@cd src-tauri && cargo check
 
 lint:
+	@cd src-tauri && cargo fmt --all
 	@bun run lint:fix 
 	
 update-v:
