@@ -13,11 +13,16 @@ NEW_VERSION=$1
 # Update package.json in root
 sed -i "s/\"version\": \".*\"/\"version\": \"$NEW_VERSION\"/" "$ROOT_DIR/package.json"
 
+# Update package.json in root
+sed -i "s/\"version\": \".*\"/\"version\": \"$NEW_VERSION\"/" "$ROOT_DIR/src-tauri/tauri.conf.json"
+
+
 # Update the first occurrence of version in Cargo.toml
 sed -i "1,/^version = / s/version = \".*\"/version = \"$NEW_VERSION\"/" "$ROOT_DIR/src-tauri/Cargo.toml"
 
 # Update RELEASE_VERSION in GitHub workflow
 sed -i "s/RELEASE_VERSION: .*/RELEASE_VERSION: $NEW_VERSION/" "$ROOT_DIR/.github/workflows/releases.yml"
+
 
 echo "Updated version to $NEW_VERSION in:"
 echo "- package.json"
