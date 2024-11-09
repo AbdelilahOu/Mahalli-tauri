@@ -165,7 +165,9 @@ const onSubmit = handleSubmit(async (values) => {
                   :disabled="!values.fields.vat"
                   type="number"
                 >
-                  <template #unite> 0% - 100% </template>
+                  <template #unite>
+                    0% - 100%
+                  </template>
                 </Input>
               </FormControl>
             </FormItem>
