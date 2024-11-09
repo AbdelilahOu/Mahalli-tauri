@@ -1,5 +1,4 @@
 use service::sea_orm::{Database, DatabaseConnection};
-use std::env;
 
 pub async fn establish_connection() -> DatabaseConnection {
     let db_url = get_database_url();
@@ -12,7 +11,7 @@ fn get_database_url() -> String {
     #[cfg(debug_assertions)]
     {
         dotenvy::dotenv().ok();
-        env::var("DATABASE_URL").unwrap()
+        std::env::var("DATABASE_URL").unwrap()
     }
 
     #[cfg(not(debug_assertions))]
