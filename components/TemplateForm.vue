@@ -165,9 +165,7 @@ const onSubmit = handleSubmit(async (values) => {
                   :disabled="!values.fields.vat"
                   type="number"
                 >
-                  <template #unite>
-                    0% - 100%
-                  </template>
+                  <template #unite> 0% - 100% </template>
                 </Input>
               </FormControl>
             </FormItem>
@@ -206,10 +204,10 @@ const onSubmit = handleSubmit(async (values) => {
       </CardContent>
 
       <CardFooter>
-        <Button variant="secondary" type="button" @click="$emit('saveConfig')">
+        <!-- <Button variant="secondary" type="button" @click="$emit('saveConfig')">
           {{ t("buttons.save") }}
-        </Button>
-        <Button type="submit" class="col-span-2">
+        </Button> -->
+        <Button type="submit" class="col-span-3">
           {{ t(`buttons.generate-${documentType}`) }}
         </Button>
       </CardFooter>
