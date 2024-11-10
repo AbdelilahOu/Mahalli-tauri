@@ -14,7 +14,7 @@ mod jobs;
 
 pub struct AppState {
     db_conn: DatabaseConnection,
-    pub job_storage: ImageOptimizerJobStorage,
+    job_storage: ImageOptimizerJobStorage,
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -29,17 +29,14 @@ pub async fn run() {
         .await
         .expect("unable to run migrations for sqlite");
 
-    let image_processor_storage: SqliteStorage<ImageProcessorJob> =
-        SqliteStorage::new(pool.clone());
-    let thread_safe_storage = ImageOptimizerJobStorage::new(image_processor_storage.clone());
-
-    let clone_db_conn = db_conn.clone();
+    let image_storage: SqliteStorage<ImageProcessorJob> = SqliteStorage::new(pool.clone());
+    let thread_safe_storage = ImageOptimizerJobStorage::new(image_storage.clone());
 
     let monitor = Monitor::<TokioExecutor>::new().register_with_count(2, {
         WorkerBuilder::new("image-processor")
             .layer(TraceLayer::new())
-            .data(clone_db_conn)
-            .with_storage(image_processor_storage)
+            .data(db_conn.clone())
+            .with_storage(image_storage)
             .build_fn(process_image)
     });
 

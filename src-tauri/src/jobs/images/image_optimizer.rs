@@ -21,6 +21,16 @@ pub enum EntityEnum {
     SUPPLIER,
 }
 
+impl ToString for EntityEnum {
+    fn to_string(&self) -> String {
+        match self {
+            EntityEnum::CLIENT => String::from("clients"),
+            EntityEnum::SUPPLIER => String::from("suppliers"),
+            EntityEnum::PRODUCT => String::from("products"),
+        }
+    }
+}
+
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ImageProcessorJob {
     pub id: String,
@@ -52,15 +62,11 @@ impl ImageOptimizerJobStorage {
         storage.push(job).await?;
         Ok(())
     }
-
-    pub async fn get_storage(&self) -> SqliteStorage<ImageProcessorJob> {
-        self.storage.lock().await.clone()
-    }
 }
 
 pub async fn process_image(
     job: ImageProcessorJob,
-    data: Data<DatabaseConnection>,
+    db_conn: Data<DatabaseConnection>,
 ) -> Result<(), Error> {
     let processor = ImageProcessor::new(1920);
 
@@ -69,12 +75,7 @@ pub async fn process_image(
         None => panic!("Could not get home directory"),
     };
 
-    let entity = match job.entity {
-        EntityEnum::CLIENT => String::from("clients"),
-        EntityEnum::SUPPLIER => String::from("suppliers"),
-        EntityEnum::PRODUCT => String::from("products"),
-    };
-
+    let entity = job.entity.to_string();
     let output_path = home_dir
         .join(".mahalli")
         .join("data")
@@ -107,7 +108,7 @@ pub async fn process_image(
     let updated_entity = match job.entity {
         EntityEnum::CLIENT => {
             MutationsService::partial_update_client(
-                &data,
+                &db_conn,
                 UpdateClient {
                     id: job.id,
                     full_name: Option::None,
@@ -121,7 +122,7 @@ pub async fn process_image(
         }
         EntityEnum::SUPPLIER => {
             MutationsService::partial_update_supplier(
-                &data,
+                &db_conn,
                 UpdateSupplier {
                     id: job.id,
                     full_name: Option::None,
@@ -135,7 +136,7 @@ pub async fn process_image(
         }
         EntityEnum::PRODUCT => {
             MutationsService::partial_update_product(
-                &data,
+                &db_conn,
                 UpdateProduct {
                     id: job.id,
                     name: Option::None,
@@ -151,7 +152,7 @@ pub async fn process_image(
     };
 
     if updated_entity.is_err() {
-        warn!("updating {} didnt work", entity);
+        warn!("updating {:?} didnt work", entity);
         return Ok(());
     };
 
