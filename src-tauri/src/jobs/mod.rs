@@ -1,4 +1,3 @@
-mod image_optimizer;
-mod utils;
+mod images;
 
-pub use image_optimizer::*;
+pub use images::*;
