@@ -79,6 +79,10 @@ body {
   user-select: none; /* Standard syntax */
 }
 
+html {
+  overscroll-behavior: none;
+}
+
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.5s ease;
