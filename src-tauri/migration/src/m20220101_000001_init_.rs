@@ -538,36 +538,24 @@ impl MigrationTrait for Migration {
             sea_orm::DatabaseBackend::Sqlite,
             r#"
                 CREATE TRIGGER IF NOT EXISTS invoice_identifier_generator
-                AFTER
-                INSERT
-                    ON invoices BEGIN
-                UPDATE
-                    invoices
-                SET
-                    identifier = (
-                        SELECT
-                            (
-                                SELECT
-                                    format(
-                                        'F-%s-%03d',
-                                        SUBSTRING(strftime('%Y-%m', i2.created_at), 3),
-                                        COUNT(i2.id)
-                                    )
-                                FROM
-                                    invoices AS i2
-                                WHERE
-                                    i2.id <= i.id
-                                    AND i2.created_at >= strftime('%Y-%m-01', i.created_at)
-                                ORDER BY
-                                    i2.created_at
-                            ) as F
-                        FROM
-                            invoices as i
-                        WHERE
-                            i.id = new.id
+                AFTER INSERT ON invoices 
+                BEGIN
+                    UPDATE invoices 
+                    SET identifier = (
+                        WITH current_month_invoices AS (
+                            SELECT COUNT(*) as invoice_count
+                            FROM invoices
+                            WHERE strftime('%Y-%m', created_at) = strftime('%Y-%m', NEW.created_at)
+                            AND id <= NEW.id
+                        )
+                        SELECT format(
+                            'F-%s-%03d',
+                            SUBSTRING(strftime('%Y-%m', NEW.created_at), 3),
+                            invoice_count
+                        )
+                        FROM current_month_invoices
                     )
-                WHERE
-                    id = new.id;
+                    WHERE id = NEW.id;
                 END;
             "#,
         );
@@ -577,36 +565,24 @@ impl MigrationTrait for Migration {
             sea_orm::DatabaseBackend::Sqlite,
             r#"
                 CREATE TRIGGER IF NOT EXISTS order_identifier_generator
-                AFTER
-                INSERT
-                    ON orders BEGIN
-                UPDATE
-                    orders
-                SET
-                    identifier = (
-                        SELECT
-                            (
-                                SELECT
-                                    format(
-                                        'C-%s-%03d',
-                                        SUBSTRING(strftime('%Y-%m', o2.created_at), 3),
-                                        COUNT(o2.id)
-                                    )
-                                FROM
-                                    orders AS o2
-                                WHERE
-                                    o2.id <= o.id
-                                    AND o2.created_at >= strftime('%Y-%m-01', o.created_at)
-                                ORDER BY
-                                    o2.created_at
-                            ) as F
-                        FROM
-                            orders as o
-                        WHERE
-                            o.id = new.id
+                AFTER INSERT ON orders 
+                BEGIN
+                    UPDATE orders 
+                    SET identifier = (
+                        WITH current_month_orders AS (
+                            SELECT COUNT(*) as order_count
+                            FROM orders
+                            WHERE strftime('%Y-%m', created_at) = strftime('%Y-%m', NEW.created_at)
+                            AND id <= NEW.id
+                        )
+                        SELECT format(
+                            'C-%s-%03d',
+                            SUBSTRING(strftime('%Y-%m', NEW.created_at), 3),
+                            order_count
+                        )
+                        FROM current_month_orders
                     )
-                WHERE
-                    id = new.id;
+                    WHERE id = NEW.id;
                 END;
             "#,
         );
@@ -616,36 +592,24 @@ impl MigrationTrait for Migration {
             sea_orm::DatabaseBackend::Sqlite,
             r#"
                 CREATE TRIGGER IF NOT EXISTS quote_identifier_generator
-                AFTER
-                INSERT
-                    ON quotes BEGIN
-                UPDATE
-                    quotes
-                SET
-                    identifier = (
-                        SELECT
-                            (
-                                SELECT
-                                    format(
-                                        'D-%s-%03d',
-                                        SUBSTRING(strftime('%Y-%m', q2.created_at), 3),
-                                        COUNT(q2.id)
-                                    )
-                                FROM
-                                    quotes AS q2
-                                WHERE
-                                    q2.id <= q.id
-                                    AND q2.created_at >= strftime('%Y-%m-01', q.created_at)
-                                ORDER BY
-                                    q2.created_at
-                            ) as F
-                        FROM
-                            quotes as q
-                        WHERE
-                            q.id = new.id
+                AFTER INSERT ON quotes 
+                BEGIN
+                    UPDATE quotes 
+                    SET identifier = (
+                        WITH current_month_quotes AS (
+                            SELECT COUNT(*) as quote_count
+                            FROM quotes
+                            WHERE strftime('%Y-%m', created_at) = strftime('%Y-%m', NEW.created_at)
+                            AND id <= NEW.id
+                        )
+                        SELECT format(
+                            'D-%s-%03d',
+                            SUBSTRING(strftime('%Y-%m', NEW.created_at), 3),
+                            quote_count
+                        )
+                        FROM current_month_quotes
                     )
-                WHERE
-                    id = new.id;
+                    WHERE id = NEW.id;
                 END;
             "#,
         );
