@@ -1,11 +1,9 @@
 use apalis::{
     layers::tracing::TraceLayer, prelude::*, sqlite::SqliteStorage, utils::TokioExecutor,
 };
-use sqlx::SqlitePool;
 
-use db::establish_connection;
-use jobs::{process_image, ImageOptimizerJobStorage, ImageProcessorJob};
-use migration::{Migrator, MigratorTrait};
+use db::setup_db;
+use jobs::{process_image, setup_jobs_db, ImageOptimizerJobStorage, ImageProcessorJob};
 use service::sea_orm::DatabaseConnection;
 
 mod commands;
@@ -21,13 +19,9 @@ pub struct AppState {
 #[tokio::main]
 pub async fn run() {
     // db
-    let db_conn = establish_connection().await;
-    Migrator::up(&db_conn, None).await.unwrap();
+    let db_conn = setup_db().await;
     // jobs
-    let pool = SqlitePool::connect("sqlite::memory:").await.unwrap();
-    SqliteStorage::setup(&pool)
-        .await
-        .expect("unable to run migrations for sqlite");
+    let pool = setup_jobs_db().await;
 
     let image_storage: SqliteStorage<ImageProcessorJob> = SqliteStorage::new(pool.clone());
     let thread_safe_storage = ImageOptimizerJobStorage::new(image_storage.clone());
