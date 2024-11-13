@@ -1,7 +1,7 @@
 use apalis::sqlite::SqliteStorage;
 use sqlx::SqlitePool;
 
-pub async fn setup_jobs_db() -> SqlitePool {
+pub async fn setup_jobs_database() -> SqlitePool {
     let db_url = get_database_url();
     let sqlite_pool = SqlitePool::connect(&db_url)
         .await

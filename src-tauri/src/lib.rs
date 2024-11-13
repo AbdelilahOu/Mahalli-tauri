@@ -2,8 +2,8 @@ use apalis::{
     layers::tracing::TraceLayer, prelude::*, sqlite::SqliteStorage, utils::TokioExecutor,
 };
 
-use db::setup_db;
-use jobs::{process_image, setup_jobs_db, ImageOptimizerJobStorage, ImageProcessorJob};
+use db::setup_database;
+use jobs::{process_image, setup_jobs_database, ImageOptimizerJobStorage, ImageProcessorJob};
 use service::sea_orm::DatabaseConnection;
 
 mod commands;
@@ -19,9 +19,9 @@ pub struct AppState {
 #[tokio::main]
 pub async fn run() {
     // db
-    let db_conn = setup_db().await;
+    let db_conn = setup_database().await;
     // jobs
-    let pool = setup_jobs_db().await;
+    let pool = setup_jobs_database().await;
 
     let image_storage: SqliteStorage<ImageProcessorJob> = SqliteStorage::new(pool.clone());
     let thread_safe_storage = ImageOptimizerJobStorage::new(image_storage.clone());

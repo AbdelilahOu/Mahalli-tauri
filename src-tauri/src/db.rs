@@ -1,7 +1,7 @@
 use migration::{Migrator, MigratorTrait};
 use service::sea_orm::{Database, DatabaseConnection};
 
-pub async fn setup_db() -> DatabaseConnection {
+pub async fn setup_database() -> DatabaseConnection {
     let db_url = get_database_url();
     let db_conn = Database::connect(&db_url)
         .await
