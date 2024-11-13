@@ -1,24 +1,23 @@
-use migration::{Migrator, MigratorTrait};
-use service::sea_orm::{Database, DatabaseConnection};
+use apalis::sqlite::SqliteStorage;
+use sqlx::SqlitePool;
 
-pub async fn setup_db() -> DatabaseConnection {
+pub async fn setup_jobs_db() -> SqlitePool {
     let db_url = get_database_url();
-    let db_conn = Database::connect(&db_url)
+    let sqlite_pool = SqlitePool::connect(&db_url)
         .await
-        .expect(&format!("Error connecting to {}", &db_url));
-
-    Migrator::up(&db_conn, None)
+        .expect(&format!("Error getting sqlitepool to {}", &db_url));
+    SqliteStorage::setup(&sqlite_pool)
         .await
-        .expect("unable to run migrations");
+        .expect("unable to run jobs migrations");
 
-    return db_conn;
+    return sqlite_pool;
 }
 
 fn get_database_url() -> String {
     #[cfg(debug_assertions)]
     {
         dotenvy::dotenv().ok();
-        std::env::var("DATABASE_URL").unwrap()
+        std::env::var("JOBS_DATABASE_URL").unwrap()
     }
 
     #[cfg(not(debug_assertions))]
@@ -27,6 +26,9 @@ fn get_database_url() -> String {
         let data_dir = home_dir.join(".mahalli/data");
         std::fs::create_dir_all(&data_dir)
             .unwrap_or_else(|_| panic!("Could not create data directory"));
-        format!("sqlite://{}db.sqlite?mode=rwc", data_dir.to_string_lossy())
+        format!(
+            "sqlite://{}jobs.sqlite?mode=rwc",
+            data_dir.to_string_lossy()
+        )
     }
 }
