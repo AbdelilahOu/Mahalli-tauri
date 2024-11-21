@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api/core";
+import { sep } from "@tauri-apps/api/path";
 import * as Logger from "@tauri-apps/plugin-log";
 import { toast } from "vue-sonner";
 import { ORDER_STATUSES } from "~/consts";
@@ -85,7 +86,14 @@ async function updateConfig(configAndValues: any) {
   config.marginBottom = configValues.marginBottom;
   config.marginTop = configValues.marginTop;
   config.vat = configValues.vat;
-  config.template = configValues.template;
+  if (configAndValues.template) {
+    const fileBytes = await getFileBytes(configAndValues.template);
+    const fileName = configAndValues.template.split(sep()).at(-1);
+    config.template = {
+      bytes: fileBytes,
+      name: fileName,
+    };
+  }
 
   handleGeneratePdf();
 }
