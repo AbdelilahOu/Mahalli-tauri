@@ -7,11 +7,8 @@ import { toast } from "vue-sonner";
 import { z } from "zod";
 
 const { t } = useI18n();
-
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
 const { close } = useModal();
-
 const CreateClientSchema = z.object({
   id: z.string().optional(),
   full_name: z.string().min(2).max(50),

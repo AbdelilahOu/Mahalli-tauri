@@ -7,11 +7,8 @@ const props = defineProps<{
   id: string;
   fullName: string;
 }>();
-
 const { t } = useI18n();
-
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
 const { close } = useModal();
 
 async function deleteTheClient() {

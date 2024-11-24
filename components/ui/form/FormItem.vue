@@ -7,7 +7,6 @@ import { cn } from "@/utils/shadcn";
 const props = defineProps<{
   class?: HTMLAttributes["class"];
 }>();
-
 const id = useId();
 provide(FORM_ITEM_INJECTION_KEY, id);
 </script>

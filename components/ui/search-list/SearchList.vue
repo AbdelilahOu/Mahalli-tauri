@@ -16,14 +16,11 @@ const props = defineProps<{
     price?: number;
   }[];
 }>();
-
 const emits = defineEmits<{
   updateItems: [s: string | number];
   onSelect: [s: string, a?: number];
 }>();
-
 const { t } = useI18n();
-
 const open = ref(false);
 const dropdownParent = ref<HTMLElement | null>(null);
 const inputValue = ref<string | number>(props.defaultValue ?? "");

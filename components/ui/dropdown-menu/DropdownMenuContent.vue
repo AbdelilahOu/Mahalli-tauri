@@ -12,10 +12,9 @@ const props = withDefaults(
   defineProps<DropdownMenuContentProps & { class?: HTMLAttributes["class"] }>(),
   {
     sideOffset: 4,
-  },
+  }
 );
 const emits = defineEmits<DropdownMenuContentEmits>();
-
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;
 

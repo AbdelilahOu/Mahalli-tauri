@@ -6,7 +6,6 @@ import { cn } from "@/utils/shadcn";
 const props = defineProps<{
   class?: HTMLAttributes["class"];
 }>();
-
 const { formDescriptionId } = useFormField();
 </script>
 

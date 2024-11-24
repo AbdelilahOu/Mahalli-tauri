@@ -14,7 +14,6 @@ import { toast } from "vue-sonner";
 import { INVOICE_STATUSES, ORDER_STATUSES, STATUS_COLORS } from "@/consts";
 
 const { t, d, n } = useI18n();
-
 const { data: inventoryTransactions } = useAsyncData(async () => {
   try {
     const res = await invoke<Res<any[]>>("list_inventory_stats");

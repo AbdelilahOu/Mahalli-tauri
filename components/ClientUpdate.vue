@@ -13,13 +13,9 @@ const props = defineProps<{
   phoneNumber?: string;
   address?: string;
 }>();
-
 const { t } = useI18n();
-
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
 const { close } = useModal();
-
 const clientSchema = toTypedSchema(
   z.object({
     full_name: z
@@ -64,7 +60,7 @@ async function updateTheClient(client: ClientT) {
       t("notifications.client.updated", { name: client.full_name }),
       {
         closeButton: true,
-      },
+      }
     );
     // toggle refresh
     updateQueryParams({

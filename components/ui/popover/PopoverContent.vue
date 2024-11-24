@@ -17,10 +17,9 @@ const props = withDefaults(
   {
     align: "center",
     sideOffset: 4,
-  },
+  }
 );
 const emits = defineEmits<PopoverContentEmits>();
-
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;
 

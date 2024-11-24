@@ -10,17 +10,12 @@ defineProps<{
   invoices: InvoiceT[];
   invoiceProducts: InvoiceProductsPreviewT[];
 }>();
-
 const emits = defineEmits<{
   listInvoiceProducts: [id: string];
 }>();
-
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
 const modal = useModal();
-
 const { t, d, locale, n } = useI18n();
-
 const localePath = useLocalePath();
 
 let previewProductsTimer: any;

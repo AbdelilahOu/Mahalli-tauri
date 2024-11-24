@@ -6,9 +6,7 @@ import { ClientDelete, ClientUpdate } from "#components";
 defineProps<{
   clients: ClientT[];
 }>();
-
 const { t, locale, n } = useI18n();
-
 const modal = useModal();
 
 function toggleThisClient(client: ClientT, name: "delete" | "update") {
@@ -17,8 +15,7 @@ function toggleThisClient(client: ClientT, name: "delete" | "update") {
       id: client.id!,
       fullName: client.full_name,
     });
-  }
-  else {
+  } else {
     modal.open(ClientUpdate, {
       id: client.id!,
       fullName: client.full_name,

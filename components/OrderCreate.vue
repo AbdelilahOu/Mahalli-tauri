@@ -8,11 +8,8 @@ import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
 
 const { t } = useI18n();
-
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
 const { close } = useModal();
-
 const clients = ref<{ label: string; value: string }[]>([]);
 const products = ref<{ label: string; value: string }[]>([]);
 const isPosting = ref<boolean>(false);

@@ -10,7 +10,6 @@ import { ChevronRight } from "lucide-vue-next";
 const props = defineProps<
   DropdownMenuSubTriggerProps & { class?: HTMLAttributes["class"] }
 >();
-
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;
 

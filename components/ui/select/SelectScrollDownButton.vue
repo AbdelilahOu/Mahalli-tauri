@@ -10,7 +10,6 @@ import { ChevronDown } from "lucide-vue-next";
 const props = defineProps<
   SelectScrollDownButtonProps & { class?: HTMLAttributes["class"] }
 >();
-
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;
 

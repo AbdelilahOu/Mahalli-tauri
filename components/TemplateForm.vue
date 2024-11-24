@@ -10,14 +10,11 @@ const props = defineProps<{
   config: any;
   document: any;
 }>();
-
 const emits = defineEmits<{
   updateConfig: [payload: ConfigSchemaT];
   saveConfig: [];
 }>();
-
 const { t } = useI18n();
-
 const ConfigSchema = z.object({
   template: z.string().nullable(),
   marginTop: z.number().min(0),

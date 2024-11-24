@@ -7,9 +7,7 @@ import {
 } from "radix-vue";
 
 const props = defineProps<DropdownMenuRootProps>();
-
 const emits = defineEmits<DropdownMenuRootEmits>();
-
 const forwarded = useForwardPropsEmits(props, emits);
 </script>
 

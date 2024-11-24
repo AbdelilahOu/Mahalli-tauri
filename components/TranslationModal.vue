@@ -2,9 +2,7 @@
 import { buttonVariants } from "./ui/button";
 
 const { t } = useI18n();
-
 const switchLocalePath = useSwitchLocalePath();
-
 const { close } = useModal();
 </script>
 

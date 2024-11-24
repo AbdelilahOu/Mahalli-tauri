@@ -12,7 +12,6 @@ defineOptions({
 });
 
 const props = defineProps<PaginationEllipsisProps>();
-
 const forwarded = useForwardProps(props);
 const { class: className, ...rest } = useAttrs();
 </script>
