@@ -172,28 +172,31 @@ function deleteOrderItem(index: number) {
                   <FormLabel>
                     {{ t("fields.status") }}
                   </FormLabel>
+                  <Select
+                    v-bind="componentField"
+                    :default-value="values.status"
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          class="text-muted-foreground"
+                          :placeholder="t('select-status')"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem
+                          v-for="status in ORDER_STATUSES"
+                          :key="status"
+                          :value="status"
+                        >
+                          {{ t(`status.${status.toLowerCase()}`) }}
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </FormItem>
-                <Select v-bind="componentField" :default-value="values.status">
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue
-                        class="text-muted-foreground"
-                        :placeholder="t('select-status')"
-                      />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem
-                        v-for="status in ORDER_STATUSES"
-                        :key="status"
-                        :value="status"
-                      >
-                        {{ t(`status.${status.toLowerCase()}`) }}
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
               </FormField>
             </div>
           </div>
