@@ -10,7 +10,6 @@ import { ChevronUp } from "lucide-vue-next";
 const props = defineProps<
   SelectScrollUpButtonProps & { class?: HTMLAttributes["class"] }
 >();
-
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;
 

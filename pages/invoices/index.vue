@@ -8,13 +8,9 @@ import { InvoiceCreate } from "#components";
 import { INVOICE_STATUSES } from "@/consts";
 
 const route = useRoute();
-
 const { t, d } = useI18n();
-
 const modal = useModal();
-
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
 const invoiceProducts = ref<InvoiceProductsPreviewT[]>([]);
 
 const searchQuery = ref(route.query.search as any);

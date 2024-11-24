@@ -2,7 +2,6 @@
 defineProps<{
   inventory: InventoryT[];
 }>();
-
 const { t, d, locale, n } = useI18n();
 </script>
 

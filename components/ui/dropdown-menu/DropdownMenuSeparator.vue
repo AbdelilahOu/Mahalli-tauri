@@ -10,7 +10,6 @@ const props = defineProps<
     class?: HTMLAttributes["class"];
   }
 >();
-
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;
 

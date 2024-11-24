@@ -7,11 +7,8 @@ import { toast } from "vue-sonner";
 import { z } from "zod";
 
 const { t } = useI18n();
-
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
 const { close } = useModal();
-
 const quantity = ref<number>(0);
 
 const CreateProductSchema = z.object({

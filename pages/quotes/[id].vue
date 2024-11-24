@@ -5,12 +5,10 @@ import * as Logger from "@tauri-apps/plugin-log";
 import { toast } from "vue-sonner";
 
 const { t } = useI18n();
-
 const id = useRoute().params.id;
 const pdfContent = ref("");
 
 const { config, generatePdf } = usePdfGenerator();
-
 const { data: quote } = await useAsyncData(async () => {
   try {
     const res = await invoke<Res<any>>("get_quote_details", {

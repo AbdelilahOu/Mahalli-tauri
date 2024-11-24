@@ -6,9 +6,7 @@ import { SupplierDelete, SupplierUpdate } from "#components";
 defineProps<{
   suppliers: SupplierT[];
 }>();
-
 const { t, locale } = useI18n();
-
 const modal = useModal();
 
 function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
@@ -17,8 +15,7 @@ function toggleThisSupplier(supplier: SupplierT, name: "delete" | "update") {
       id: supplier.id!,
       fullName: supplier.full_name,
     });
-  }
-  else {
+  } else {
     modal.open(SupplierUpdate, {
       id: supplier.id!,
       fullName: supplier.full_name,

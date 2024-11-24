@@ -6,16 +6,12 @@ import { cn } from "@/utils/shadcn";
 import { Label } from "@/components/ui/label";
 
 const props = defineProps<LabelProps & { class?: HTMLAttributes["class"] }>();
-
 const { error, formItemId } = useFormField();
 </script>
 
 <template>
   <Label
-    :class="cn(
-      error && 'text-destructive',
-      props.class,
-    )"
+    :class="cn(error && 'text-destructive', props.class)"
     :for="formItemId"
   >
     <slot />

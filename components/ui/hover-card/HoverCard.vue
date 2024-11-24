@@ -6,7 +6,6 @@ import {
 } from "radix-vue";
 
 const props = defineProps<HoverCardRootProps>();
-
 const forwardedProps = useForwardProps(props);
 </script>
 

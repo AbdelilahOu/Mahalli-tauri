@@ -12,7 +12,6 @@ import { Check } from "lucide-vue-next";
 const props = defineProps<
   SelectItemProps & { class?: HTMLAttributes["class"] }
 >();
-
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;
 

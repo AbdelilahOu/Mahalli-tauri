@@ -1,8 +1,6 @@
 <script setup lang="ts">
 const { t } = useI18n();
-
 const localePath = useLocalePath();
-
 const pages = ref([
   {
     image: "/clients.jpg",

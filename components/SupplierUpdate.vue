@@ -13,13 +13,9 @@ const props = defineProps<{
   phoneNumber?: string;
   address?: string;
 }>();
-
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
 const { close } = useModal();
-
 const { t } = useI18n();
-
 const supplierSchema = toTypedSchema(
   z.object({
     full_name: z

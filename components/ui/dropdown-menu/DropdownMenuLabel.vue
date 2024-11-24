@@ -9,7 +9,6 @@ import {
 const props = defineProps<
   DropdownMenuLabelProps & { class?: HTMLAttributes["class"]; inset?: boolean }
 >();
-
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;
 

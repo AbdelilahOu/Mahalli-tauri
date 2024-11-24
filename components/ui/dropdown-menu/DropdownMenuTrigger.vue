@@ -6,7 +6,6 @@ import {
 } from "radix-vue";
 
 const props = defineProps<DropdownMenuTriggerProps>();
-
 const forwardedProps = useForwardProps(props);
 </script>
 

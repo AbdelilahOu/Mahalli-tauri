@@ -6,12 +6,10 @@ import { toast } from "vue-sonner";
 import { ORDER_STATUSES } from "~/consts";
 
 const { t } = useI18n();
-
 const id = useRoute().params.id;
 const pdfContent = ref("");
 
 const { config, generatePdf } = usePdfGenerator();
-
 const { data: order } = await useAsyncData(async () => {
   try {
     const res = await invoke<Res<any>>("get_order_details", {

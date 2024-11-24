@@ -22,15 +22,11 @@ const emits = defineEmits<{
   savePath: [payload: string];
   clear: [];
 }>();
-
 const { t } = useI18n();
-
 const dropZone = ref<HTMLDivElement>();
-
 const isOverDropZone = ref(false);
 const isFileSelected = ref(false);
 const selectedFile = ref<string | null>();
-
 const fileName = ref("");
 const dragCounter = ref(0);
 

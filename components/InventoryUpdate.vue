@@ -10,13 +10,9 @@ const props = defineProps<{
   id: string;
   name: string;
 }>();
-
 const { updateQueryParams } = useUpdateRouteQueryParams();
-
 const { close } = useModal();
-
 const { t } = useI18n();
-
 const inventory = z.object({
   quantity: z.number().default(0),
 });
