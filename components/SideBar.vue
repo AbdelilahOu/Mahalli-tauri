@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
+  ArrowLeftRight,
   BarChart3Icon,
-  Container,
   HomeIcon,
   Languages,
   Package,
@@ -56,7 +56,7 @@ const menuItems = [
     query: { page: 1 },
   },
   {
-    icon: Container,
+    icon: ArrowLeftRight,
     label: "routes.inventory",
     path: "/inventory/",
     query: { page: 1 },
@@ -83,7 +83,7 @@ const menuItems = [
           >
             <component
               :is="item.icon"
-              class="m-auto text-gray-700 transition-colors duration-300 group-hover:text-primary"
+              class="m-auto text-gray-600 transition-colors duration-300 group-hover:text-primary"
               :size="20"
             />
             <div
