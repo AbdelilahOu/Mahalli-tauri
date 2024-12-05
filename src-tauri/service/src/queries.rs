@@ -131,7 +131,7 @@ impl QueriesService {
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        let res = SelectProducts::find_by_statement(Statement::from_sql_and_values(
+        let result = SelectProducts::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
             sql,
             values,
@@ -139,20 +139,6 @@ impl QueriesService {
         .all(db)
         .await?;
 
-        let mut result = Vec::<JsonValue>::new();
-        res.into_iter().for_each(|row| {
-            result.push(json!({
-                "id": row.id,
-                "name": row.name,
-                "description": row.description,
-                "image": row.image,
-                "purchase_price": row.purchase_price,
-                "selling_price": row.selling_price,
-                "min_quantity": row.min_quantity,
-                "inventory": row.inventory,
-                "created_at": row.created_at,
-            }));
-        });
         Ok(json!({
             "count": count,
             "products": result
@@ -294,7 +280,7 @@ impl QueriesService {
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        let res = SelectClients::find_by_statement(Statement::from_sql_and_values(
+        let result = SelectClients::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
             sql,
             values,
@@ -302,18 +288,6 @@ impl QueriesService {
         .all(db)
         .await?;
 
-        let mut result = Vec::<JsonValue>::new();
-        res.into_iter().for_each(|row| {
-            result.push(json!({
-                "id": row.id,
-                "full_name": row.full_name,
-                "address": row.address,
-                "image": row.image,
-                "email": row.email,
-                "phone_number": row.phone_number,
-                "credit": row.credit,
-            }));
-        });
         Ok(json!({
             "count": count,
             "clients": result
@@ -371,7 +345,7 @@ impl QueriesService {
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        let res = SelectSuppliers::find_by_statement(Statement::from_sql_and_values(
+        let result = SelectSuppliers::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
             sql,
             values,
@@ -379,17 +353,6 @@ impl QueriesService {
         .all(db)
         .await?;
 
-        let mut result = Vec::<JsonValue>::new();
-        res.into_iter().for_each(|row| {
-            result.push(json!({
-                "id": row.id,
-                "full_name": row.full_name,
-                "address": row.address,
-                "image": row.image,
-                "email": row.email,
-                "phone_number": row.phone_number,
-            }));
-        });
         Ok(json!({
             "count": count,
             "suppliers": result
@@ -512,7 +475,7 @@ impl QueriesService {
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        let res = SelectOrders::find_by_statement(Statement::from_sql_and_values(
+        let result = SelectOrders::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
             sql,
             values,
@@ -520,19 +483,6 @@ impl QueriesService {
         .all(db)
         .await?;
 
-        let mut result = Vec::<JsonValue>::new();
-        res.into_iter().for_each(|row| {
-            result.push(json!({
-                "id": row.id,
-                "client_id": row.client_id,
-                "created_at": row.created_at,
-                "full_name": row.full_name,
-                "status": row.status,
-                "identifier": row.identifier,
-                "products": row.products,
-                "total": row.total,
-            }));
-        });
         Ok(json!({
             "count": count,
             "orders": result
@@ -586,17 +536,6 @@ impl QueriesService {
                 .all(db)
                 .await?;
 
-                let mut result = Vec::<JsonValue>::new();
-                items.into_iter().for_each(|item| {
-                    result.push(json!({
-                        "id": item.id,
-                        "inventory_id": item.inventory_id,
-                        "product_id": item.product_id,
-                        "price": item.price,
-                        "quantity": item.quantity,
-                        "name": item.name,
-                    }));
-                });
                 Ok(json!({
                     "id": order.0.id,
                     "client_id": order.0.client_id,
@@ -604,7 +543,7 @@ impl QueriesService {
                     "status": order.0.status,
                     "identifier": order.0.identifier,
                     "full_name": order.1.unwrap().full_name,
-                    "items": result,
+                    "items": items,
                 }))
             }
             None => Err(DbErr::RecordNotFound(String::from("no order"))),
@@ -729,14 +668,6 @@ impl QueriesService {
                 .all(db)
                 .await?;
 
-                let mut result = Vec::<JsonValue>::new();
-                items.into_iter().for_each(|item| {
-                    result.push(json!({
-                        "price": item.price,
-                        "quantity": item.quantity,
-                        "name": item.name,
-                    }));
-                });
                 Ok(json!({
                     "id": order.id,
                     "created_at": order.created_at,
@@ -749,7 +680,7 @@ impl QueriesService {
                         "address":order.address,
                         "phone_number":order.phone_number,
                     }),
-                    "items": result,
+                    "items": items,
                 }))
             }
             None => Err(DbErr::RecordNotFound(String::from("no order"))),
@@ -866,7 +797,7 @@ impl QueriesService {
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        let res = SelectInvoices::find_by_statement(Statement::from_sql_and_values(
+        let result = SelectInvoices::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
             sql,
             values,
@@ -874,20 +805,6 @@ impl QueriesService {
         .all(db)
         .await?;
 
-        let mut result = Vec::<JsonValue>::new();
-        res.into_iter().for_each(|row| {
-            result.push(json!({
-                "id": row.id,
-                "client_id": row.client_id,
-                "paid_amount": row.paid_amount,
-                "created_at": row.created_at,
-                "identifier": row.identifier,
-                "full_name": row.full_name,
-                "status": row.status,
-                "products": row.products,
-                "total": row.total,
-            }));
-        });
         Ok(json!({
             "count": count,
             "invoices": result
@@ -944,17 +861,6 @@ impl QueriesService {
                 .all(db)
                 .await?;
 
-                let mut result = Vec::<JsonValue>::new();
-                items.into_iter().for_each(|item| {
-                    result.push(json!({
-                        "id": item.id,
-                        "inventory_id": item.inventory_id,
-                        "product_id": item.product_id,
-                        "price": item.price,
-                        "quantity": item.quantity,
-                        "name": item.name,
-                    }));
-                });
                 Ok(json!({
                     "id": invoice.0.id,
                     "client_id": invoice.0.client_id,
@@ -963,7 +869,7 @@ impl QueriesService {
                     "status": invoice.0.status,
                     "identifier": invoice.0.identifier,
                     "full_name": invoice.1.unwrap().full_name,
-                    "items": result,
+                    "items": items,
                 }))
             }
             None => Err(DbErr::RecordNotFound(String::from("no invoice"))),
@@ -1099,14 +1005,6 @@ impl QueriesService {
                 .all(db)
                 .await?;
 
-                let mut result = Vec::<JsonValue>::new();
-                items.into_iter().for_each(|item| {
-                    result.push(json!({
-                        "price": item.price,
-                        "quantity": item.quantity,
-                        "name": item.name,
-                    }));
-                });
                 Ok(json!({
                     "id": invoice.id,
                     "paid_amount": invoice.paid_amount,
@@ -1120,7 +1018,7 @@ impl QueriesService {
                         "address":invoice.address,
                         "phone_number":invoice.phone_number,
                     }),
-                    "items": result,
+                    "items": items,
                 }))
             }
             None => Err(DbErr::RecordNotFound(String::from("no invoice"))),
@@ -1212,7 +1110,7 @@ impl QueriesService {
             .to_owned()
             .build(SqliteQueryBuilder);
 
-        let res = SelectQuotes::find_by_statement(Statement::from_sql_and_values(
+        let result = SelectQuotes::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
             sql,
             values,
@@ -1220,18 +1118,6 @@ impl QueriesService {
         .all(db)
         .await?;
 
-        let mut result = Vec::<JsonValue>::new();
-        res.into_iter().for_each(|row| {
-            result.push(json!({
-                "id": row.id,
-                "client_id": row.client_id,
-                "created_at": row.created_at,
-                "identifier": row.identifier,
-                "full_name": row.full_name,
-                "products": row.products,
-                "total": row.total,
-            }));
-        });
         Ok(json!({
             "count": count,
             "quotes": result
@@ -1273,23 +1159,13 @@ impl QueriesService {
                 .all(db)
                 .await?;
 
-                let mut result = Vec::<JsonValue>::new();
-                items.into_iter().for_each(|item| {
-                    result.push(json!({
-                        "id": item.id,
-                        "product_id": item.product_id,
-                        "price": item.price,
-                        "quantity": item.quantity,
-                        "name": item.name,
-                    }));
-                });
                 Ok(json!({
                     "id": quote.0.id,
                     "client_id": quote.0.client_id,
                     "created_at": quote.0.created_at,
                     "identifier": quote.0.identifier,
                     "full_name": quote.1.unwrap().full_name,
-                    "items": result,
+                    "items": items,
                 }))
             }
             None => Err(DbErr::RecordNotFound(String::from("no quote"))),
@@ -1384,14 +1260,6 @@ impl QueriesService {
                 .all(db)
                 .await?;
 
-                let mut result = Vec::<JsonValue>::new();
-                items.into_iter().for_each(|item| {
-                    result.push(json!({
-                        "price": item.price,
-                        "quantity": item.quantity,
-                        "name": item.name,
-                    }));
-                });
                 Ok(json!({
                     "id": quote.id,
                     "created_at": quote.created_at,
@@ -1403,7 +1271,7 @@ impl QueriesService {
                         "address":quote.address,
                         "phone_number":quote.phone_number,
                     }),
-                    "items": result,
+                    "items": items,
                 }))
             }
             None => Err(DbErr::RecordNotFound(String::from("no quote"))),
@@ -1411,23 +1279,27 @@ impl QueriesService {
     }
     //
     pub async fn list_inventory(db: &DbConn, args: ListArgs) -> Result<JsonValue, DbErr> {
-        let count = InventoryTransactions::find().join(JoinType::Join, inventory_transactions::Relation::Products.def()).join(JoinType::LeftJoin, inventory_transactions::Relation::OrderItems.def()).join(JoinType::LeftJoin, order_items::Relation::Orders.def()).filter(
-            Cond::all().add(
-                Expr::expr(Func::coalesce([
-                    Expr::col((Orders, orders::Column::Status)).into(),
-                    Expr::expr("PENDING").into(),
-                ])).eq("CANCELLED").not(),
-            ).add(Expr::expr(Func::coalesce([
-                Expr::col((Orders, orders::Column::IsDeleted)).into(),
-                Expr::expr(false).into(),
-            ])).eq(false)),
-        ).apply_if(Some(args.search.clone()), |query, v| {
-            query.filter(Expr::col((Products, products::Column::Name)).like(format!("{}%", v)))
-        }).apply_if(args.status.clone(), |query, v| {
-            query.filter(Expr::col((InventoryTransactions, inventory_transactions::Column::TransactionType)).eq(v))
-        }).apply_if(args.created_at.clone(), |query, v| {
-            query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', inventory_transactions.created_at) = strftime('%Y-%m-%d', ?)", [v]))
-        }).count(db).await?;
+        let count = InventoryTransactions::find()
+            .join(JoinType::Join, inventory_transactions::Relation::Products.def())
+            .join(JoinType::LeftJoin, inventory_transactions::Relation::OrderItems.def())
+            .join(JoinType::LeftJoin, order_items::Relation::Orders.def())
+            .filter(
+                Cond::all().add(
+                    Expr::expr(Func::coalesce([
+                        Expr::col((Orders, orders::Column::Status)).into(),
+                        Expr::expr("PENDING").into(),
+                    ])).eq("CANCELLED").not(),
+                ).add(Expr::expr(Func::coalesce([
+                    Expr::col((Orders, orders::Column::IsDeleted)).into(),
+                    Expr::expr(false).into(),
+                ])).eq(false)),
+            ).apply_if(Some(args.search.clone()), |query, v| {
+                query.filter(Expr::col((Products, products::Column::Name)).like(format!("{}%", v)))
+            }).apply_if(args.status.clone(), |query, v| {
+                query.filter(Expr::col((InventoryTransactions, inventory_transactions::Column::TransactionType)).eq(v))
+            }).apply_if(args.created_at.clone(), |query, v| {
+                query.filter(Expr::cust_with_values("strftime('%Y-%m-%d', inventory_transactions.created_at) = strftime('%Y-%m-%d', ?)", [v]))
+            }).count(db).await?;
 
         let (sql, values) = Query::select().from(InventoryTransactions).exprs([
             Expr::col((InventoryTransactions, inventory_transactions::Column::Id)),
@@ -1483,7 +1355,7 @@ impl QueriesService {
             Order::Desc,
         ).limit(args.limit).offset((args.page - 1) * args.limit).to_owned().build(SqliteQueryBuilder);
 
-        let res = SelectInventory::find_by_statement(Statement::from_sql_and_values(
+        let result = SelectInventory::find_by_statement(Statement::from_sql_and_values(
             DbBackend::Sqlite,
             sql,
             values,
@@ -1491,17 +1363,6 @@ impl QueriesService {
         .all(db)
         .await?;
 
-        let mut result = Vec::<JsonValue>::new();
-        res.into_iter().for_each(|row| {
-            result.push(json!({
-                "id": row.id,
-                "name": row.name,
-                "price": row.price,
-                "created_at": row.created_at,
-                "quantity": row.quantity,
-                "transaction_type": row.transaction_type,
-            }));
-        });
         Ok(json!({
             "count": count,
             "inventory": result
