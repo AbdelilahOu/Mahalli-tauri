@@ -119,6 +119,25 @@ const hideModal = () => {
             German
           </span>
         </Button>
+        <Button variant="ghost" @click="changeLocale({ key: 'zh-CN', text: '简体中文' })">
+          <span class="w-3/5 items-center h-full text-start flex justify-center gap-2">
+            <span class="py-2 w-8">
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 30 20">
+                <defs>
+                  <path id="s" d="M0,-1 0.587785,0.809017 -0.951057,-0.309017H0.951057L-0.587785,0.809017z"
+                    fill="#ffde00" />
+                </defs>
+                <rect width="30" height="20" fill="#de2910" />
+                <use xlink:href="#s" transform="translate(5,5) scale(3)" />
+                <use xlink:href="#s" transform="translate(10,2) rotate(23.036243)" />
+                <use xlink:href="#s" transform="translate(12,4) rotate(45.869898)" />
+                <use xlink:href="#s" transform="translate(12,7) rotate(69.945396)" />
+                <use xlink:href="#s" transform="translate(10,9) rotate(20.659808)" />
+              </svg>
+            </span>
+            简体中文
+          </span>
+        </Button>
       </div>
     </template>
     <template #footer>
