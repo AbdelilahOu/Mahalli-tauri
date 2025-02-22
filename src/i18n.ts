@@ -92,7 +92,7 @@ export const i18n = createI18n({
   globalInjection: false,
   locale: locale ? JSON.parse(locale).key : "en-US",
   fallbackLocale: "en-US",
-  availableLocales: ["en-US", "fr-FR", "ar-AE", "de-DE"],
+  availableLocales: ["en-US", "fr-FR", "ar-AE", "de-DE", "zh-CN"],
   messages: messages,
   // @ts-ignore
   datetimeFormats,
