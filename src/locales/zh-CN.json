@@ -1,0 +1,376 @@
+{
+  "g": {
+    "s": "搜索",
+    "pick-date": "选择日期",
+    "r": {
+      "Clients": "客户",
+      "Suppliers": "供应商",
+      "Products": "产品",
+      "Orders": "订单",
+      "Invoices": "发票",
+      "Inventory": "库存",
+      "Dashboard": "仪表盘",
+      "Payment": "支付",
+      "Settings": "设置",
+      "Quotes": "报价",
+      "Notifications": "通知"
+    },
+    "b": {
+      "no": "取消",
+      "c": "添加",
+      "d": "确认",
+      "u": "更新 {name}",
+      "a": "添加",
+      "csv": "上传到 {table}"
+    },
+    "translationTitle": "更改语言",
+    "dropZone": "拖放或选择您的图像",
+    "plrz": {
+      "i": "没有产品 | {n} 产品 | {n} 产品",
+      "p": "没有产品 | {n} 产品 | {n} 产品"
+    },
+    "fields": {
+      "fullname": "全名",
+      "name": "产品名称",
+      "email": "E-mail",
+      "phone": "手机号",
+      "address": "地址",
+      "actions": "操作",
+      "description": "描述",
+      "status": "状态",
+      "price": "价格",
+      "date": "日期",
+      "paid": "支付",
+      "rest": "剩余",
+      "items": "产品",
+      "total": "总计",
+      "inventory": "库存",
+      "init-quantity": "初始数量",
+      "min-quantity": "最小数量",
+      "quantity": "数量",
+      "credit": "卡号",
+      "threshold": "阙值",
+      "item": "产品"
+    },
+    "status": {
+      "delivered": "已交付",
+      "pending": "待定",
+      "canceled": "已取消",
+      "paid": "已支付",
+      "in": "购买",
+      "out": "销售"
+    },
+    "actions": {
+      "edit": "编辑",
+      "delete": "删除",
+      "print": "打印",
+      "toOrder": "创建订单",
+      "toInvoice": "创建发票",
+      "inventoryUpdate": "更新库存"
+    }
+  },
+  "csv": {
+    "title": "上传 csv 文件"
+  },
+  "dashboard": {
+    "i": {
+      "title": "过去 3 个月买卖过的商品",
+      "labels": ["购买", "销售"],
+      "revenue": "总收入",
+      "growth": "{n} 从上个月开始",
+      "b3c": "基于费用的最佳客户",
+      "bp": "畅销产品（数量）",
+      "b3s": "基于费用的最佳供应商"
+    },
+    "de": {
+      "title": "过去三个月购买的产品"
+    }
+  },
+  "notifications": {
+    "product": {
+      "created": "产品 {name} 已添加",
+      "updated": "产品 {name} 已修改",
+      "deleted": "产品 {name} 已删除"
+    },
+    "client": {
+      "created": "客户 {name} 已添加",
+      "updated": "客户 {name} 已修改",
+      "deleted": "客户 {name} 已删除"
+    },
+    "supplier": {
+      "created": "供应商 {name} 已添加",
+      "updated": "供应商 {name} 已修改",
+      "deleted": "供应商 {name} 已删除"
+    },
+    "order": {
+      "created": "订单已创建",
+      "updated": "订单已更新",
+      "deleted": "订单已删除"
+    },
+    "invoice": {
+      "created": "发票已创建",
+      "updated": "发票已更新",
+      "deleted": "发票已删除"
+    },
+    "quote": {
+      "created": "报价单已创建",
+      "updated": "报价单已更新",
+      "deleted": "报价单已删除"
+    }
+  },
+  "c": {
+    "i": {
+      "addButton": "添加客户"
+    },
+    "c": {
+      "title": "客户添加"
+    },
+    "u": {
+      "title": "客户更新"
+    },
+    "d": {
+      "title": "您确认删除客户吗"
+    }
+  },
+  "s": {
+    "i": {
+      "addButton": "添加供应商"
+    },
+    "c": {
+      "title": "供应商添加"
+    },
+    "u": {
+      "title": "供应商更新"
+    },
+    "d": {
+      "title": "您确认删除供应商吗"
+    }
+  },
+  "p": {
+    "i": {
+      "addButton": "添加产品"
+    },
+    "c": {
+      "title": "产品添加"
+    },
+    "u": {
+      "title": "产品更新"
+    },
+    "d": {
+      "title": "您确认删除供应商吗"
+    }
+  },
+  "o": {
+    "i": {
+      "addButton": "添加订单"
+    },
+    "c": {
+      "title": "订单添加",
+      "d": {
+        "s": {
+          "title": "客户",
+          "select": "搜索客户"
+        },
+        "o": {
+          "title": "订单状态",
+          "products": "产品",
+          "add": "添加产品",
+          "select": "选择产品",
+          "placeholder": ["产品数量", "新价格", "选择状态"]
+        }
+      },
+      "button": "添加订单"
+    },
+    "u": {
+      "title": "订单更新",
+      "d": {
+        "s": {
+          "title": "客户",
+          "select": "选择客户"
+        },
+        "o": {
+          "title": "订单详情",
+          "select": "选择产品",
+          "add": "添加产品"
+        }
+      },
+      "button": "更新订单"
+    },
+    "d": {
+      "title": "您确认删除订单吗",
+      "yes": "确认",
+      "no": "取消"
+    }
+  },
+  "q": {
+    "i": {
+      "addButton": "添加报价单"
+    },
+    "c": {
+      "title": "报价单添加",
+      "d": {
+        "s": {
+          "title": "客户",
+          "select": "搜索客户"
+        },
+        "o": {
+          "title": "报价单状态",
+          "products": "产品",
+          "add": "添加产品",
+          "select": "选择产品",
+          "placeholder": ["产品数量", "新价格"]
+        }
+      },
+      "button": "添加报价单"
+    },
+    "u": {
+      "title": "报价单更新",
+      "d": {
+        "s": {
+          "title": "客户状态",
+          "select": "选择客户"
+        },
+        "o": {
+          "title": "报价单详情",
+          "select": "选择产品",
+          "add": "添加产品"
+        }
+      },
+      "button": "更新报价单"
+    },
+    "d": {
+      "title": "您确定要删除报价吗",
+      "yes": "确认",
+      "no": "取消"
+    }
+  },
+  "oq": {
+    "d": {
+      "o": {
+        "title": "报价单详情",
+        "id": "id",
+        "date": "日期"
+      },
+      "s": {
+        "title": "客户详情",
+        "id": "id",
+        "name": "姓名",
+        "phone": "手机号",
+        "email": "email",
+        "address": "地址"
+      },
+      "i": {
+        "title": "报价项目详情",
+        "fields": ["姓名", "描述", "数量", "价格", "总数"]
+      },
+      "button": "打印"
+    }
+  },
+  "od": {
+    "d": {
+      "o": {
+        "title": "订单详情",
+        "id": "id",
+        "date": "日期",
+        "status": "状态"
+      },
+      "s": {
+        "title": "客户状态",
+        "id": "id",
+        "name": "姓名",
+        "phone": "手机号",
+        "email": "email",
+        "address": "地址"
+      },
+      "i": {
+        "title": "订单商品详情",
+        "fields": ["姓名", "描述", "数量", "价格", "总数"]
+      },
+      "button": "打印"
+    }
+  },
+  "id": {
+    "d": {
+      "i": {
+        "title": "发票详情",
+        "id": "id",
+        "date": "日期"
+      },
+      "c": {
+        "title": "客户详情",
+        "id": "id",
+        "name": "姓名",
+        "phone": "手机号",
+        "email": "email",
+        "address": "地址"
+      },
+      "it": {
+        "title": "发票项目详情",
+        "fields": ["姓名", "描述", "数量", "价格", "总数"]
+      },
+      "button": "打印"
+    }
+  },
+  "i": {
+    "i": {
+      "addButton": "添加发票"
+    },
+    "c": {
+      "title": "发票添加",
+      "d": {
+        "c": {
+          "title": "客户详情",
+          "select": "选择客户"
+        },
+        "i": {
+          "title": "发票明细",
+          "add": "添加产品",
+          "select": "选择产品",
+          "placeholder": ["产品数量", "新价格"]
+        }
+      },
+      "button": "添加发票"
+    },
+    "u": {
+      "title": "发票更新",
+      "d": {
+        "c": {
+          "title": "客户详情",
+          "select": ""
+        },
+        "i": {
+          "title": "发票明细",
+          "add": "添加产品",
+          "select": ""
+        }
+      },
+      "button": "更新发票"
+    },
+    "d": {
+      "title": "确定要删除发票吗 ",
+      "yes": "确认",
+      "no": "取消"
+    },
+    "s": {
+      "paid": "支付",
+      "pending": "待定",
+      "canceled": "已取消"
+    }
+  },
+  "im": {
+    "i": {
+      "addButton": "添加到库存"
+    },
+    "c": {
+      "title": "将商品添加到库存中",
+      "l": {
+        "a": "产品",
+        "b": "数量"
+      },
+      "p": {
+        "a": "选择产品",
+        "b": "数量"
+      }
+    }
+  }
+}
