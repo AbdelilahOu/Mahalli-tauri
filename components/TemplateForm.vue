@@ -81,7 +81,7 @@ const onSubmit = handleSubmit(async (values) => {
             <FormControl>
               <UiUploader
                 name="Pdf"
-                :extensions="['pdf']"
+                :extensions="['pdf', 'jpeg', 'png', 'jpg']"
                 @save-path="handleFileUpload"
                 @clear="clearFileBytes"
               />
@@ -89,23 +89,25 @@ const onSubmit = handleSubmit(async (values) => {
           </FormItem>
         </FormField>
 
-        <FormField v-slot="{ componentField }" name="marginTop">
-          <FormItem>
-            <FormLabel>{{ t("fields.top-margin") }}</FormLabel>
-            <FormControl>
-              <Input v-bind="componentField" type="number" />
-            </FormControl>
-          </FormItem>
-        </FormField>
+        <div class="grid grid-cols-2 gap-4">
+          <FormField v-slot="{ componentField }" class="w-full" name="marginTop">
+            <FormItem>
+              <FormLabel>{{ t("fields.top-margin") }}</FormLabel>
+              <FormControl>
+                <Input v-bind="componentField" type="number" />
+              </FormControl>
+            </FormItem>
+          </FormField>
 
-        <FormField v-slot="{ componentField }" name="marginBottom">
-          <FormItem>
-            <FormLabel>{{ t("fields.bottom-margin") }}</FormLabel>
-            <FormControl>
-              <Input v-bind="componentField" type="number" />
-            </FormControl>
-          </FormItem>
-        </FormField>
+          <FormField v-slot="{ componentField }" class="w-full" name="marginBottom">
+            <FormItem>
+              <FormLabel>{{ t("fields.bottom-margin") }}</FormLabel>
+              <FormControl>
+                <Input v-bind="componentField" type="number" />
+              </FormControl>
+            </FormItem>
+          </FormField>
+        </div>
 
         <Separator />
 
@@ -203,9 +205,6 @@ const onSubmit = handleSubmit(async (values) => {
       </CardContent>
 
       <CardFooter>
-        <!-- <Button variant="secondary" type="button" @click="$emit('saveConfig')">
-          {{ t("buttons.save") }}
-        </Button> -->
         <Button type="submit" class="col-span-3">
           {{ t(`buttons.generate-${documentType}`) }}
         </Button>
