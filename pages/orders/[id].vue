@@ -91,6 +91,11 @@ async function updateConfig(configAndValues: any) {
       bytes: fileBytes,
       name: fileName,
     };
+  } else {
+    config.template = {
+      bytes: null,
+      name: null,
+    };
   }
 
   handleGeneratePdf();
