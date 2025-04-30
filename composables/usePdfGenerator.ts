@@ -81,11 +81,60 @@ export function usePdfGenerator() {
       return;
 
     if (config.template.bytes) {
-      const sourcePdfDoc = await PDFDocument.load(config.template.bytes);
-      const [templatePage] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
-      template = templatePage;
-      page = pdfDoc.addPage(copyPage(template));
+      const fileName = config.template.name?.toLowerCase() || "";
+      if (fileName.endsWith(".pdf")) {
+        const sourcePdfDoc = await PDFDocument.load(config.template.bytes);
+        const [templatePage] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
+        template = templatePage;
+        page = pdfDoc.addPage(copyPage(template));
+      } else {
+        // Add empty page first
+        page = pdfDoc.addPage();
+        page.setSize(...PageSizes.A4);
+
+        let image;
+
+        if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+          image = await pdfDoc.embedJpg(config.template.bytes);
+        } else if (fileName.endsWith(".png")) {
+          image = await pdfDoc.embedPng(config.template.bytes);
+        } else {
+          // Default to PNG if can't determine
+          try {
+            image = await pdfDoc.embedPng(config.template.bytes);
+          } catch {
+            try {
+              image = await pdfDoc.embedJpg(config.template.bytes);
+            } catch {
+              handleError(new Error("Unsupported image format"));
+              return;
+            }
+          }
+        }
+
+        // Draw the image as background
+        const { width, height } = page.getSize();
+        const dims = image.scale(1);
+
+        // Scale to fit page while maintaining aspect ratio
+        const scale = Math.min(width / dims.width, height / dims.height);
+
+        // Center the image on the page
+        const x = (width - dims.width * scale) / 2;
+        const y = (height - dims.height * scale) / 2;
+
+        page.drawImage(image, {
+          x,
+          y,
+          width: dims.width * scale,
+          height: dims.height * scale,
+        });
+      }
     } else {
+      page = pdfDoc.addPage();
+    }
+
+    if (!page) {
       page = pdfDoc.addPage();
     }
 
@@ -116,7 +165,7 @@ export function usePdfGenerator() {
     const headerText = capitalizeFirstLetter(t(`fields.${type}`));
     const totalText = n(
       data.total + data.total * (config.vat / 100),
-      "currency"
+      "currency",
     );
 
     page.drawText(headerText, {
@@ -179,15 +228,17 @@ export function usePdfGenerator() {
     });
 
     const fields = getClientFields(client);
-    fields.forEach((field, index) => {
-      page?.drawText(field, {
+    let index = 0;
+    for (const field of fields) {
+      page.drawText(field, {
         x: config.marginX,
         y: Height.value - 20 * (index + 1),
-        font: font!,
+        font,
         size: 13,
         color: config.secondaryColor,
       });
-    });
+      index++;
+    }
 
     Height.value -= 20 * fields.length + 20;
   }
@@ -206,23 +257,25 @@ export function usePdfGenerator() {
     drawHorizontalLine(Height.value);
 
     const headers = ["name", "quantity", "price", "total"];
-    headers.forEach((header, index) => {
-      page?.drawText(t(`fields.${header}`), {
+    let index = 0;
+    for (const header of headers) {
+      page.drawText(t(`fields.${header}`), {
         x: config.marginX + 5 + (Width.value * index) / 4,
         y: Height.value - 20,
-        font: font!,
+        font,
         size: 14,
         color: config.mainColor,
       });
-    });
+      index++;
+    }
 
     drawHorizontalLine(Height.value - 30);
 
     Height.value -= 40;
   }
 
-  function drawItems(items: any[]) {
-    items.forEach((item) => {
+  function drawItems(items: Record<string, string | number>[]) {
+    for (const item of items) {
       if (Height.value < config.marginBottom) {
         addNewPage();
       }
@@ -265,11 +318,11 @@ export function usePdfGenerator() {
       drawHorizontalLine(Height.value - 20, config.marginX, 0.3);
 
       Height.value -= 30;
-    });
+    }
   }
 
-  function drawSummary(summaryItems: any[]) {
-    summaryItems.forEach((item) => {
+  function drawSummary(summaryItems: Record<string, string | number>[]) {
+    for (const item of summaryItems) {
       if (Height.value < config.marginBottom) {
         addNewPage();
       }
@@ -298,7 +351,7 @@ export function usePdfGenerator() {
       drawHorizontalLine(Height.value - 20, summaryX, 0.3);
 
       Height.value -= 30;
-    });
+    }
   }
 
   function drawTotalAsText(total: number) {
