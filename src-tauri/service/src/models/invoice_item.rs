@@ -20,15 +20,17 @@ pub struct SelectInvoicesItems {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NewInvoiceItem {
-    pub invoice_id: String,
-    pub inventory_id: String,
     pub price: f64,
+    pub quantity: f64,
+    pub product_id: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct InvoiceItem {
-    pub id: String,
-    pub invoice_id: String,
-    pub inventory_id: String,
+pub struct UpdateInvoiceItem {
+    pub id: Option<String>,
+    pub invoice_id: Option<String>,
+    pub inventory_id: Option<String>,
     pub price: f64,
+    pub quantity: f64,
+    pub product_id: String,
 }

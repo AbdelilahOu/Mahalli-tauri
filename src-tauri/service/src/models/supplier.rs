@@ -9,7 +9,6 @@ pub struct SelectSuppliers {
     pub phone_number: Option<String>,
     pub email: Option<String>,
     pub image: Option<String>,
-    pub credi: f64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -25,6 +24,16 @@ pub struct NewSupplier {
 pub struct Supplier {
     pub id: String,
     pub full_name: String,
+    pub address: Option<String>,
+    pub phone_number: Option<String>,
+    pub email: Option<String>,
+    pub image: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateSupplier {
+    pub id: String,
+    pub full_name: Option<String>,
     pub address: Option<String>,
     pub phone_number: Option<String>,
     pub email: Option<String>,
