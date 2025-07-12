@@ -8,8 +8,9 @@ pub struct SelectProducts {
     pub created_at: String,
     pub description: Option<String>,
     pub image: Option<String>,
-    pub price: Option<f64>,
-    pub stock: f64,
+    pub selling_price: Option<f64>,
+    pub purchase_price: Option<f64>,
+    pub inventory: f64,
     pub min_quantity: Option<f64>,
 }
 
@@ -17,7 +18,8 @@ pub struct SelectProducts {
 pub struct NewProduct {
     pub name: String,
     pub description: Option<String>,
-    pub price: f64,
+    pub selling_price: f64,
+    pub purchase_price: f64,
     pub min_quantity: f64,
     pub image: Option<String>,
 }
@@ -27,7 +29,19 @@ pub struct Product {
     pub id: String,
     pub name: String,
     pub description: Option<String>,
-    pub price: f64,
+    pub selling_price: f64,
+    pub purchase_price: f64,
     pub min_quantity: f64,
+    pub image: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateProduct {
+    pub id: String,
+    pub name: Option<String>,
+    pub description: Option<String>,
+    pub selling_price: Option<f64>,
+    pub purchase_price: Option<f64>,
+    pub min_quantity: Option<f64>,
     pub image: Option<String>,
 }

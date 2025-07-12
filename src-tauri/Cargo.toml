@@ -1,50 +1,54 @@
 [package]
 name = "mahalli"
-version = "1.4.7"
+version = "1.9.9"
 description = "Inventory & invoicing management app"
 authors = ["AbdelilahOu"]
 license = ""
-repository = "https://github.com/AbdelilahOu/Mahalli-tauri"
+repository = "https://github.com/AbdelilahOu/Mahalli-desktop"
 default-run = "mahalli"
 edition = "2021"
-rust-version = "1.59"
+rust-version = "1.82"
 build = "src/build.rs"
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
 
 [workspace]
 members = [".", "service", "entity", "migration"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [build-dependencies]
-tauri-build = { version = "1.5.1", features = [] }
+tauri-build = { version = "2", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.5.4", features = [
-  "dialog-open",
-  "fs-all",
-  "notification-all",
-  "path-all",
-  "process-command-api",
-  "protocol-all",
+tauri = { version = "2", features = ["protocol-asset"] }
+apalis = { version = "0.5", features = [
+  "sqlite",
+  "limit",
+  "tracing",
+  "tokio-comp",
 ] }
-csv = "1.1"
-tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tokio = { version = "1", features = ["full"] }
-chrono = { version = "0.4", features = ["serde"] }
 libsqlite3-sys = { version = "^0", features = ["bundled"] }
-uuid = { version = "1.7.0", features = [
-  "v7",
-  "std",
-  "fast-rng",
-  "macro-diagnostics",
-] }
 dotenvy = "0.15.7"
 log = "^0.4"
 migration = { path = "./migration" }
 service = { path = "./service" }
 entity = { path = "./entity" }
+image = "0.25.5"
+tauri-plugin-log = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-notification = "2"
+dirs = "5.0.1"
+
+
+[dependencies.sqlx]
+version = "0.7.0"
+default-features = false
+features = ["sqlite"]
 
 [features]
 # by default Tauri runs in production mode
@@ -53,3 +57,6 @@ default = ["custom-protocol"]
 # this feature is used for production builds where `devPath` points to the filesystem
 # DO NOT remove this
 custom-protocol = ["tauri/custom-protocol"]
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-updater = "2"

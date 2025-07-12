@@ -1,0 +1,197 @@
+{
+  "seo": {
+    "title": "إدارة سهلة للمخزون والفواتير",
+    "description": "أدر عملاءك ومنتجاتك بسهولة، وقم بإنشاء عروض الأسعار والطلبات والفواتير مع محلي - حلك الشامل للأعمال."
+  },
+  "search": "البحث",
+  "pick-date": "اختر تاريخًا",
+  "select-status": "اختر حالة",
+  "routes": {
+    "home": "الصفحة الرئيسية",
+    "clients": "العملاء",
+    "suppliers": "الموردين",
+    "products": "المنتجات",
+    "orders": "الطلبات",
+    "invoices": "الفواتير",
+    "inventory": "المخزون",
+    "dashboard": "لوحة التحكم",
+    "settings": "الإعدادات",
+    "quotes": "العروض",
+    "notifications": "الإشعارات"
+  },
+  "buttons": {
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "add": "إضافة",
+    "confirme": "تأكيد",
+    "update": "تحديث {name}",
+    "add-product": "إضافة منتج",
+    "toggle-create-client": "إضافة عميل جديد",
+    "toggle-create-supplier": "إضافة مورد جديد",
+    "toggle-create-product": "إضافة منتج جديد",
+    "toggle-create-order": "إضافة طلب جديد",
+    "toggle-create-quote": "إضافة عرض جديد",
+    "toggle-create-invoice": "إضافة فاتورة جديدة",
+    "toggle-create-org": "إنشاء منظمة",
+    "edit": "تحرير",
+    "delete": "حذف",
+    "print": "طباعة",
+    "to-order": "إنشاء طلب",
+    "to-invoice": "إنشاء فاتورة",
+    "inventory-update": "تحديث المخزون",
+    "generate-invoice": "إنشاء الفاتورة",
+    "generate-order": "إنشاء الطلب",
+    "generate-quote": "إنشاء عرض السعر"
+  },
+  "translationTitle": "تغيير اللغة",
+  "dropZone": "اسحب وأفلت أو اختر",
+  "plrz": {
+    "i": "لا يوجد عنصر | عنصر | عناصر",
+    "p": "لا يوجد منتج | منتج | منتجات"
+  },
+  "fields": {
+    "full-name": "الاسم الكامل",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "address": "العنوان",
+    "actions": "الإجراءات",
+    "description": "الوصف",
+    "status": "الحالة",
+    "price": "السعر",
+    "purchase-price": "سعر الشراء",
+    "selling-price": "سعر البيع",
+    "date": "التاريخ",
+    "paid": "مدفوع",
+    "rest": "الباقي",
+    "items": "العناصر",
+    "total": "المجموع",
+    "inventory": "المخزون",
+    "init-quantity": "الكمية الأولية",
+    "min-quantity": "الكمية الدنيا",
+    "quantity": "الكمية",
+    "credit": "الائتمان",
+    "threshold": "العتبة",
+    "item": "العنصر",
+    "sub-total": "المجموع الفرعي",
+    "vat-rate": "نسبة ضريبة القيمة المضافة",
+    "vat-amount": "مبلغ ضريبة القيمة المضافة",
+    "grand-total": "الإجمالي الكلي",
+    "template": "القالب",
+    "configuration": "التكوين",
+    "top-margin": "الهوامش العلوية",
+    "bottom-margin": "الهوامش السفلية",
+    "bill-to": "فاتورة إلى :",
+    "invoice": "فاتورة",
+    "order": "طلب",
+    "quote": "عرض أسعار",
+    "no-match": "لم يتم العثور على تطابق"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "processing": "قيد المعالجة",
+    "shipped": "شحنت",
+    "delivered": "تم التسليم",
+    "cancelled": "ملغى",
+    "draft": "مسودة",
+    "sent": "تم الإرسال",
+    "paid": "مدفوع",
+    "partially_paid": "مدفوع جزئيًا",
+    "overdue": "متأخر",
+    "in": "مشتراة",
+    "out": "مبيعة"
+  },
+  "dashboard": {
+    "title": "العناصر المباعة والمشتراة خلال الأشهر الثلاثة الماضية",
+    "labels": ["مشتراة", "مبيعة"],
+    "revenue": "الإيرادات الإجمالية",
+    "expenses": "المصاريف الإجمالية",
+    "growth": " {n} من الشهر الماضي",
+    "b3c": "أفضل العملاء بناءً على النفقات",
+    "bp": "أفضل المنتجات مبيعًا (الكمية)",
+    "b3s": "أفضل الموردين بناءً على النفقات"
+  },
+  "notifications": {
+    "product": {
+      "created": "تم إضافة المنتج {name}",
+      "updated": "تم تحديث المنتج {name}",
+      "deleted": "تم حذف المنتج {name}"
+    },
+    "client": {
+      "created": "تم إضافة العميل {name}",
+      "updated": "تم تحديث العميل {name}",
+      "deleted": "تم حذف العميل {name}"
+    },
+    "supplier": {
+      "created": "تم إضافة المورد {name}",
+      "updated": "تم تحديث المورد {name}",
+      "deleted": "تم حذف المورد {name}"
+    },
+    "order": {
+      "created": "تم إنشاء طلب",
+      "updated": "تم تحديث الطلب",
+      "deleted": "تم حذف الطلب"
+    },
+    "invoice": {
+      "created": "تم إنشاء فاتورة",
+      "updated": "تم تحديث الفاتورة",
+      "deleted": "تم حذف الفاتورة"
+    },
+    "quote": {
+      "created": "تم إنشاء عرض",
+      "updated": "تم تحديث العرض",
+      "deleted": "تم حذف العرض"
+    },
+    "organization": {
+      "created": "تم إنشاء المنظمة {name}",
+      "updated": "تم تحديث المنظمة {name}",
+      "deleted": "تم حذف المنظمة {name}",
+      "no-org-alert": {
+        "title": "لا توجد منظمة محددة",
+        "description": "اختر أو أنشئ منظمة جديدة"
+      }
+    },
+    "error": {
+      "title": "عفواً! حدث خطأ ما من جانبنا.",
+      "description": "يمكنك المحاولة مرة أخرى"
+    }
+  },
+  "titles": {
+    "clients": {
+      "create": "إضافة عميل",
+      "update": "تحديث العميل",
+      "delete": "هل أنت متأكد أنك تريد حذف العميل"
+    },
+    "suppliers": {
+      "create": "إضافة مورد",
+      "update": "تحديث المورد",
+      "delete": "هل أنت متأكد أنك تريد حذف المورد"
+    },
+    "products": {
+      "create": "إضافة منتج",
+      "update": "تحديث المنتج",
+      "update-inventory": "تحديث مخزون المنتج",
+      "delete": "هل أنت متأكد أنك تريد حذف المنتج"
+    },
+    "orders": {
+      "create": "إضافة طلب جديد",
+      "update": "تحديث الطلب",
+      "delete": "هل أنت متأكد أنك تريد حذف الطلب"
+    },
+    "quotes": {
+      "create": "إضافة عرض جديد",
+      "update": "تحديث العرض",
+      "delete": "هل أنت متأكد أنك تريد حذف العرض"
+    },
+    "invoices": {
+      "create": "إضافة فاتورة جديدة",
+      "update": "تحديث الفاتورة",
+      "delete": "هل أنت متأكد أنك تريد حذف الفاتورة"
+    },
+    "organizations": {
+      "create": "إضافة منظمة جديدة",
+      "update": "تحديث المنظمة",
+      "delete": "هل أنت متأكد أنك تريد حذف المنظمة؟"
+    }
+  }
+}
