@@ -2,11 +2,11 @@ use sea_orm::FromQueryResult;
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
-pub struct SelectMvm {
+pub struct SelectTransaction {
     pub created_at: String,
     pub price: f64,
     pub quantity: f64,
-    pub mvm_type: String,
+    pub transaction_type: String,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
@@ -36,6 +36,14 @@ pub struct SelectRevenue {
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
 pub struct SelectExpenses {
+    pub current_expenses: f64,
+    pub last_month_expenses: f64,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq, FromQueryResult)]
+pub struct Finiacialmetrics {
+    pub current_revenue: f64,
+    pub last_month_revenue: f64,
     pub current_expenses: f64,
     pub last_month_expenses: f64,
 }

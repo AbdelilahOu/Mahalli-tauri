@@ -3,14 +3,13 @@ use serde::{Deserialize, Serialize};
 pub mod clients;
 pub mod dashboard;
 pub mod inventory;
-pub mod invoice_items;
 pub mod invoices;
-pub mod order_items;
 pub mod orders;
 pub mod products;
 pub mod quote_items;
 pub mod quotes;
 pub mod suppliers;
+pub mod templates;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Seccess<T> {

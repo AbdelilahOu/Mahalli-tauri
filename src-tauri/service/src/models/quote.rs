@@ -1,3 +1,4 @@
+use crate::{NewQuoteItem, UpdateQuoteItem};
 use sea_orm::FromQueryResult;
 use serde::{Deserialize, Serialize};
 
@@ -8,6 +9,7 @@ pub struct SelectQuotes {
     pub client_id: String,
     pub full_name: String,
     pub products: i64,
+    pub identifier: String,
     pub total: f64,
 }
 
@@ -19,16 +21,19 @@ pub struct SelectQuoteDetails {
     pub address: Option<String>,
     pub phone_number: Option<String>,
     pub email: Option<String>,
+    pub identifier: String,
     pub total: f64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NewQuote {
     pub client_id: String,
+    pub items: Vec<NewQuoteItem>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Quote {
+pub struct UpdateQuote {
     pub id: String,
     pub client_id: String,
+    pub items: Vec<UpdateQuoteItem>,
 }

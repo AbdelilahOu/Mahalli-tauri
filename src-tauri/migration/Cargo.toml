@@ -11,7 +11,7 @@ path = "src/lib.rs"
 [dependencies]
 async-std = { version = "1", features = ["attributes", "tokio1"] }
 fake = { version = "2.9.2", features = ["derive"] }
-uuid = { version = "1.7.0", features = ["v7", "std"] }
+ulid = "1.1.2"
 
 
 [dependencies.sea-orm-migration]

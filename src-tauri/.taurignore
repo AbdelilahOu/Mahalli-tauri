@@ -4,3 +4,4 @@ data/
 /data/
 mahalli.sqlite
 migrations/
+mahalli.sqlite-journal
