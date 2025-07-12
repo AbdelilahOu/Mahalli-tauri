@@ -9,9 +9,13 @@ pub struct Model {
     pub id: String,
     pub name: String,
     pub created_at: String,
+    pub is_deleted: bool,
+    pub is_archived: bool,
     pub description: Option<String>,
     #[sea_orm(column_type = "Double")]
-    pub price: f64,
+    pub purchase_price: f64,
+    #[sea_orm(column_type = "Double")]
+    pub selling_price: f64,
     #[sea_orm(column_type = "Double")]
     pub min_quantity: f64,
     pub image: Option<String>,
@@ -19,15 +23,15 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "super::inventory_mouvements::Entity")]
-    InventoryMouvements,
+    #[sea_orm(has_many = "super::inventory_transactions::Entity")]
+    InventoryTransactions,
     #[sea_orm(has_many = "super::quote_items::Entity")]
     QuoteItems,
 }
 
-impl Related<super::inventory_mouvements::Entity> for Entity {
+impl Related<super::inventory_transactions::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::InventoryMouvements.def()
+        Relation::InventoryTransactions.def()
     }
 }
 
@@ -40,7 +44,7 @@ impl Related<super::quote_items::Entity> for Entity {
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {
         Self {
-            id: Set(Uuid::now_v7().to_string()),
+            id: Set(ulid::Ulid::new().to_string()),
             ..ActiveModelTrait::default()
         }
     }

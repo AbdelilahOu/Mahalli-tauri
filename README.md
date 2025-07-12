@@ -1,12 +1,9 @@
 # Mahalli
+<div>
+   <a href="https://github.com/AbdelilahOu/Mahalli-nuxt/releases"><img src="https://img.shields.io/github/release/AbdelilahOu/Mahalli-nuxt.svg" alt="Latest Release"></a>
+</div>
 
-<div>
-   <img src="/public/clean-snap (3).png" alt="preview">
-</div>
-<div>
-   <a href="https://github.com/AbdelilahOu/Mahalli-tauri/releases"><img src="https://img.shields.io/github/release/AbdelilahOu/Mahalli-tauri.svg" alt="Latest Release"></a>
-</div>
-Mahalli is an inventory & invoicing management desktop application, it helps you create and manage clients, products, quotes, commands and invoices.
+Mahalli is a desktop application for inventory and invoicing, it help you create and manage clients, products, quotes, commands and invoices.
 
 ## Getting Started
 

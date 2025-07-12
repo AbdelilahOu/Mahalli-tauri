@@ -1,38 +1,32 @@
-use migration::sea_orm::Database;
-use migration::sea_orm::DatabaseConnection;
+use migration::{Migrator, MigratorTrait};
+use service::sea_orm::{Database, DatabaseConnection};
 
-#[cfg(not(debug_assertions))]
-use std::fs;
+pub async fn setup_database() -> DatabaseConnection {
+    let db_url = get_database_url();
+    let db_conn = Database::connect(&db_url)
+        .await
+        .expect(&format!("Error connecting to {}", &db_url));
 
-#[cfg(debug_assertions)]
-use dotenvy::dotenv;
-#[cfg(debug_assertions)]
-use std::env;
+    Migrator::up(&db_conn, None)
+        .await
+        .expect("unable to run migrations");
 
-pub async fn establish_connection() -> DatabaseConnection {
+    return db_conn;
+}
+
+fn get_database_url() -> String {
     #[cfg(debug_assertions)]
-    dotenv().ok();
-
-    #[cfg(debug_assertions)]
-    let db_url = env::var("DATABASE_URL").expect("DATABASE_URL is missing check .env file in src-taur");
-
-    #[cfg(not(debug_assertions))]
-    let home_dir = match tauri::api::path::data_dir() {
-        Some(val) => val,
-        None => panic!("Could not get home directory"),
-    };
-
-    #[cfg(not(debug_assertions))]
-    let data_dir = home_dir.join(".mahalli/data");
-    #[cfg(not(debug_assertions))]
-    if let Err(_) = fs::metadata(&data_dir) {
-        fs::create_dir_all(&data_dir).expect("Could not create data directory");
+    {
+        dotenvy::dotenv().ok();
+        std::env::var("DATABASE_URL").unwrap()
     }
 
     #[cfg(not(debug_assertions))]
-    let db_url = "sqlite://".to_string() + data_dir.to_str().unwrap() + "/db.sqlite?mode=rwc";
-
-    Database::connect(&db_url)
-        .await
-        .expect(&format!("Error connecting to {}", &db_url))
+    {
+        let home_dir = dirs::data_dir().unwrap_or_else(|| panic!("Could not get home directory"));
+        let data_dir = home_dir.join(".mahalli/data");
+        std::fs::create_dir_all(&data_dir)
+            .unwrap_or_else(|_| panic!("Could not create data directory"));
+        format!("sqlite://{}db.sqlite?mode=rwc", data_dir.to_string_lossy())
+    }
 }

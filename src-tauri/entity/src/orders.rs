@@ -8,8 +8,13 @@ pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: String,
     pub client_id: String,
+    #[sea_orm(unique)]
+    pub quote_id: Option<String>,
+    pub is_deleted: bool,
+    pub is_archived: bool,
     pub created_at: String,
     pub status: String,
+    pub identifier: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
@@ -22,10 +27,18 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Clients,
-    #[sea_orm(has_many = "super::invoices::Entity")]
+    #[sea_orm(has_one = "super::invoices::Entity")]
     Invoices,
     #[sea_orm(has_many = "super::order_items::Entity")]
     OrderItems,
+    #[sea_orm(
+        belongs_to = "super::quotes::Entity",
+        from = "Column::QuoteId",
+        to = "super::quotes::Column::Id",
+        on_update = "NoAction",
+        on_delete = "SetNull"
+    )]
+    Quotes,
 }
 
 impl Related<super::clients::Entity> for Entity {
@@ -46,10 +59,16 @@ impl Related<super::order_items::Entity> for Entity {
     }
 }
 
+impl Related<super::quotes::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Quotes.def()
+    }
+}
+
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {
         Self {
-            id: Set(Uuid::now_v7().to_string()),
+            id: Set(ulid::Ulid::new().to_string()),
             ..ActiveModelTrait::default()
         }
     }

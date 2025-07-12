@@ -19,16 +19,14 @@ pub struct SelectQuotesItems {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NewQuoteItem {
-    pub quote_id: String,
     pub price: f64,
     pub quantity: f64,
     pub product_id: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct QuoteItem {
-    pub id: String,
-    pub quote_id: String,
+pub struct UpdateQuoteItem {
+    pub id: Option<String>,
     pub price: f64,
     pub quantity: f64,
     pub product_id: String,
