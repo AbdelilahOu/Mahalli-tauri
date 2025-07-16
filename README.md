@@ -5,6 +5,26 @@
 
 Mahalli is a desktop application for inventory and invoicing, it help you create and manage clients, products, quotes, commands and invoices.
 
+## Video Showcase
+
+Check out a quick video demonstration of Mahalli's features:
+
+[Watch the Showcase Video](assets/showcase.mp4)
+
+<div>
+    <video src="assets/showcase.mp4" controls></video>
+</div>
+
+## Built for Moroccan B2B Workflow
+
+Mahalli is specifically designed to streamline the business-to-business (B2B) workflow prevalent in Morocco. The typical process involves:
+
+1.  **Quote Generation**: Businesses often start by generating a detailed quote for their clients.
+2.  **Order Creation**: Once the quote is approved, it transitions into an official order.
+3.  **Invoice Generation**: Upon payment or delivery, an invoice is created to finalize the transaction.
+
+Mahalli provides comprehensive tools to manage each step of this process efficiently.
+
 ## Getting Started
 
 Before you begin using Mahalli, ensure you have Node.js and npm (Node Package Manager) installed on your system. You can download and install them from the official Node.js website (https://nodejs.org/en/download/package-manager/current).
